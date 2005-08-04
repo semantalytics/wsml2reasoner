@@ -1,0 +1,75 @@
+/**
+ * WSML Reasoner Implementation.
+ *
+ * Copyright (c) 2005, University of Innsbruck, Austria.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with this library; if not, write to the Free Software Foundation, Inc.,
+ * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * 
+ */
+
+package org.deri.wsml.reasoner.wsmlcore.wrapper;
+
+import org.deri.wsml.reasoner.wsmlcore.datalog.*;
+
+/**
+ * Represents an exception that is caused by an external tool during
+ * the execution of a query.
+ * 
+ * @author Uwe Keller, DERI Innsbruck
+ */
+public class ExternalToolException extends Exception {
+
+    private Query failedQuery;
+
+    /**
+     * Creates an 
+     */
+    public ExternalToolException(Query q) {
+        super();
+        failedQuery = q;
+    }
+
+    /**
+     * @param arg0
+     * @param arg1
+     */
+    public ExternalToolException(String arg0, Throwable arg1, Query q) {
+        super(arg0, arg1);
+        failedQuery = q;
+    }
+
+    /**
+     * @param arg0
+     */
+    public ExternalToolException(String arg0, Query q) {
+        super(arg0);
+        failedQuery = q;
+    }
+
+    /**
+     * @param arg0
+     */
+    public ExternalToolException(Throwable arg0, Query q) {
+        super(arg0);
+        failedQuery = q;
+    }
+
+    /**
+     * @return Returns the failedQuery.
+     */
+    public Query getFailedQuery() {
+        return failedQuery;
+    }
+    
+    
+}

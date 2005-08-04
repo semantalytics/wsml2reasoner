@@ -1,0 +1,39 @@
+/**
+ * WSML Reasoner Implementation.
+ *
+ * Copyright (c) 2005, University of Innsbruck, Austria.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with this library; if not, write to the Free Software Foundation, Inc.,
+ * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * 
+ */
+
+package org.deri.wsml.reasoner.api;
+
+import org.deri.wsml.reasoner.api.queryanswering.QueryAnsweringRequest.QueryAnsweringMode;
+import org.omwg.logexpression.LogicalExpression;
+
+/**
+ *  An interface for reasoning request that refer to 
+ *  a specific reasoning task, namely checking logical entailment between a
+ *  given statement and a knowledegebase (or a set of ontologies, resp.)
+ * 
+ *  Given such a request, reasoners should return objects that are
+ *  instances that implement the interface CheckLogicalEntailmentResult.
+ *  
+ * @author Uwe Keller, DERI Innsbruck
+ */
+public interface CheckLogicalEntailmentRequest extends OntologyBasedRequest {
+
+    public LogicalExpression getStatement();
+    public long getTimeOut();
+}

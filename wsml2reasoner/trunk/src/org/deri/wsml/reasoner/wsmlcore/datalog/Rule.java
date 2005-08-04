@@ -1,0 +1,174 @@
+/**
+ * WSML Reasoner Implementation.
+ *
+ * Copyright (c) 2005, University of Innsbruck, Austria.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with this library; if not, write to the Free Software Foundation, Inc.,
+ * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * 
+ */
+
+package org.deri.wsml.reasoner.wsmlcore.datalog;
+
+import java.util.*;
+/**
+ * Represents a rule of a datalog program.
+ * 
+ * A rule is of the form:  HEAD <- BODY where HEAD is a single literal
+ * and BODY is a list of literals.
+ * 
+ * The BODY literals are combined conjunctively.
+ * A rule with an empty body is called fact. A rule with an empty head is called 
+ * constraint.
+ * 
+ * @author Uwe Keller, DERI Innsbruck
+ */
+
+public class Rule {
+    
+    private static final List<Literal> EMPTY_BODY = new LinkedList<Literal>();
+    
+    private List<Literal> body;
+    private Literal head;
+    
+    
+    /**
+     * @return Returns the body.
+     */
+    public List<Literal> getBody() {
+        return body;
+    }
+
+    /**
+     * @return Returns the head.
+     */
+    public Literal getHead() {
+        return head;
+    }
+   
+    public boolean isFact(){
+        return (body == EMPTY_BODY);
+    }
+    
+    public boolean isConstraint(){
+        return (head == null);
+    }
+     
+    
+    public List<Variable> getHeadVariables(){
+        List<Variable> result = new LinkedList<Variable>();
+        if(head != null){
+            result.addAll(head.getVariables()); 
+        }
+        return result;
+    }
+
+    /**
+     * Computes a list of variables that occur in the body of the rule.
+     * The order of the list coincides with the order of the variable occurrences.
+     * Duplicates of variables are omitted, only the first occurence is considered.
+     * 
+     * @return list of variables of the rule body.
+     */
+    public List<Variable> getBodyVariables(){
+        List<Variable> result = new LinkedList<Variable>();
+        for (Literal bl:body) {
+            List<Variable> blvars = bl.getVariables();
+            for (Variable v:blvars){
+                if( !result.contains(v) ) {
+                    result.add(v); 
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Creates a rule with the given head and body.
+     * 
+     * @param body
+     * @param head
+     */
+    public Rule(Literal head, List<Literal> body) throws DatalogException {
+        super();
+        
+        if (body == null || body.size() == 0){
+            body = EMPTY_BODY;
+        }
+         
+        if (head != null && !head.isPositive()){
+            throw new DatalogException("Only a positive literal is allowed in a rule");
+        }
+            
+        this.body = body;
+        this.head = head;
+    }
+
+    /**
+     * Creates a fact, i.e. a rule with an empty body.
+     * @param head
+     */
+    public Rule(Literal head) throws DatalogException {
+        this(head, EMPTY_BODY);
+    }
+
+    public String toString(){
+        String result;
+        
+        if (this.isConstraint()){
+            result = "";
+        } else {
+            // fact or general rule
+            result = this.getHead().toString();
+        }
+        
+        if (!this.isFact()){
+            result += " :- ";
+            
+            int i = 1;
+            List<Literal> body = this.getBody();
+            for (Literal l : body ){
+                result += l.toString();
+                if (i < body.size()){
+                    result += ", ";
+                }
+                i++;
+            }
+        }
+        
+        result += ".";
+        return result;
+    }
+    
+    /**
+     * TODO: Implement equals on rules to prevent duplicate rules in Set implementations.
+     * Hence we also need to implement equals for Literals, Predicates and Terms
+     */
+
+    public boolean equals(Object o){
+        boolean result = false;
+        
+        if (o == null) return false;
+        if (this == o) return true;
+        if (o instanceof Rule){
+            Rule r = (Rule) o;
+            
+            // TODO continue ...
+        }
+        return result;
+        
+    }
+    
+    
+    
+    
+}
