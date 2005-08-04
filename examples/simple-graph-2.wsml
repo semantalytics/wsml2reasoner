@@ -1,0 +1,71 @@
+/*
+  A simple ontology that can be used to test the WSML Core reasoner.
+  It simply represents a small simple directed graph and some predicates on
+  direct graphs.
+  Queries can then make use of these predicates to find elements of the graph
+  with certain properties.
+*/
+
+wsmlVariant _"http://www.wsmo.org/2004/wsml/wsml-core"
+
+namespace {_"http://www.example.org/example/#",
+    dc _"http://purl.org/dc/elements/1.1#",
+    xsd _"http://www.w3.org/2001/XMLSchema#",
+    wsml _"http://www.wsmo.org/2004/wsml"}
+ 
+ontology _"http://www.example.org/example/test?blabla=blabla.blabla"
+   
+nonFunctionalProperties
+    dc#title hasValue "Simple Graph Ontology"
+    wsml#version hasValue "$Revision: 1.1 $"
+endNonFunctionalProperties
+
+concept Node
+    nonFunctionalProperties
+        dc#description hasValue "Node in a directed graph"
+    endNonFunctionalProperties
+    nodeNumber ofType _integer
+    arc impliesType Node
+
+instance a memberOf Node
+  arc hasValue {b}
+  nodeNumber hasValue 1
+
+instance b memberOf Node
+  arc hasValue {c}
+    nodeNumber hasValue 2
+     
+instance c memberOf Node
+  arc hasValue {d,e,a,f}
+   nodeNumber hasValue 3
+ 
+instance f memberOf Node
+  arc hasValue {g}
+    nodeNumber hasValue 4
+ 
+instance g memberOf Node
+  arc hasValue f 
+  
+instance h memberOf Node
+  arc hasValue g 
+   
+instance g memberOf Node
+  arc hasValue h 
+
+instance h memberOf Node
+  arc hasValue i 
+
+    
+axiom pathDefinition1
+  definedBy
+    path(?x,?y) impliedBy arc(?x,?y).
+    
+axiom pathDefinition2
+  definedBy
+    path(?x,?y) impliedBy arc(?x,?z) and path(?z,?y).
+    
+axiom strongComponentElementDefinition
+  definedBy
+    path(?x,?y) and path(?y,?x) implies scElement(?x).
+    
+    
