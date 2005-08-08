@@ -65,83 +65,83 @@ public abstract class PostfixOrderLogicalExpressionVisitor implements Visitor {
 
     public void visitNeg(Unary arg0) {
         enterNeg(arg0);
-        arg0.getArgument(0).accept(this);
+        arg0.findArgument(0).accept(this);
         handleNeg(arg0);
         leaveNeg(arg0);
     }
 
     public void visitNaf(Unary arg0) {
         enterNaf(arg0);
-        arg0.getArgument(0).accept(this);
+        arg0.findArgument(0).accept(this);
         handleNaf(arg0);
         leaveNaf(arg0);
     }
 
     public void visitConstraint(Unary arg0) {
         enterConstraint(arg0);
-        arg0.getArgument(0).accept(this);
+        arg0.findArgument(0).accept(this);
         handleConstraint(arg0);
         leaveConstraint(arg0);
     }
 
     public void visitAnd(Binary arg0) {
         enterAnd(arg0);
-        arg0.getArgument(0).accept(this);
-        arg0.getArgument(1).accept(this);
+        arg0.findArgument(0).accept(this);
+        arg0.findArgument(1).accept(this);
         handleAnd(arg0);
         leaveAnd(arg0);
     }
 
     public void visitOr(Binary arg0) {
         enterOr(arg0);
-        arg0.getArgument(0).accept(this);
-        arg0.getArgument(1).accept(this);
+        arg0.findArgument(0).accept(this);
+        arg0.findArgument(1).accept(this);
         handleOr(arg0);
         leaveOr(arg0);
     }
 
     public void visitImpliedBy(Binary arg0) {
         enterImpliedBy(arg0);
-        arg0.getArgument(0).accept(this);
-        arg0.getArgument(1).accept(this);
+        arg0.findArgument(0).accept(this);
+        arg0.findArgument(1).accept(this);
         handleImpliedBy(arg0);
         leaveImpliedBy(arg0);
     }
 
     public void visitImplies(Binary arg0) {
         enterImplies(arg0);
-        arg0.getArgument(0).accept(this);
-        arg0.getArgument(1).accept(this);
+        arg0.findArgument(0).accept(this);
+        arg0.findArgument(1).accept(this);
         handleImplies(arg0);
         leaveImplies(arg0);
     }
 
     public void visitEquivalent(Binary arg0) {
         enterEquivalent(arg0);
-        arg0.getArgument(0).accept(this);
-        arg0.getArgument(1).accept(this);
+        arg0.findArgument(0).accept(this);
+        arg0.findArgument(1).accept(this);
         handleEquivalent(arg0);
         leaveEquivalent(arg0);
     }
 
     public void visitImpliesLP(Binary arg0) {
         enterImpliesLP(arg0);
-        arg0.getArgument(0).accept(this);
-        arg0.getArgument(1).accept(this);
+        arg0.findArgument(0).accept(this);
+        arg0.findArgument(1).accept(this);
         handleImpliesLP(arg0);
         leaveImpliesLP(arg0);
     }
 
     public void visitForall(Quantified arg0) {
         enterForall(arg0);
-        arg0.getArgument(0).accept(this);
+        arg0.findArgument(0).accept(this);
         handleForall(arg0);
         leaveForall(arg0);
     }
 
     public void visitExists(Quantified arg0) {
         enterExists(arg0);
-        arg0.getArgument(0).accept(this);
+        arg0.findArgument(0).accept(this);
         handleExists(arg0);
         leaveExists(arg0);
     }
