@@ -19,22 +19,21 @@
 
 package org.deri.wsml.reasoner.normalization;
 
-import java.math.*;
 import java.util.*;
+
+import org.omwg.logexpression.*;
+import org.omwg.logexpression.terms.*;
+import org.omwg.logexpression.terms.Value;
+import org.omwg.logexpression.terms.Variable;
 import org.omwg.ontology.*;
-import org.wsmo.common.*;
+import org.omwg.ontology.LogicalExpression;
+import org.wsmo.common.Identifier;
+import org.wsmo.common.Namespace;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.common.exception.SynchronisationException;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
-import org.omwg.logexpression.AttrSpecification;
-import org.omwg.logexpression.CompoundExpression;
-import org.omwg.logexpression.Constants;
-import org.omwg.logexpression.terms.IRI;
-import org.omwg.logexpression.terms.Term;
-import org.omwg.logexpression.terms.Value;
-import org.omwg.logexpression.terms.Variable;
 
 
 /**
@@ -449,7 +448,7 @@ public class ConceptualSyntax2LogicalExpressionNormalizer implements
         Set memberOfs = new HashSet();
         Set attrSpecs = new HashSet();
       
-        Term iTerm = (org.omwg.logexpression.terms.IRI) i.getIdentifier();
+        Term iTerm = (org.omwg.logexpression.terms.IRI) leFactory.createIRI(i.getIdentifier().toString());
         
         Term t;
         for( Object mo : i.listConcepts() ){
