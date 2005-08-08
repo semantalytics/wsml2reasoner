@@ -63,7 +63,7 @@ import org.wsmo.wsml.Parser;
  *  are taken over as well into the new ontology.
  *  
  *  Technically, the transformation implements Table 8.1 of Deliverable D16.1 v0.3
- *  of the WSML Working Group
+ *  of the WSML Working Group. 
  *  
  * @author Uwe Keller, DERI Innsbruck
  */
@@ -105,8 +105,8 @@ public class ConceptualSyntax2LogicalExpressionNormalizer implements
            
         // Set up factories for creating WSMO/WSML elements 
 
-        String resultIRI = (o.getIdentifier() != null ? o.getIdentifier()
-                .asString() : "iri:normalized-ontology-" + o.hashCode());
+        String resultIRI = (o.getIdentifier() != null ? o.getIdentifier() 
+                .asString()+ "-as-axioms" : "iri:normalized-ontology-" + o.hashCode());
         Ontology result = factory.createOntology(factory.createIRI(resultIRI));
         try {
 
@@ -119,6 +119,7 @@ public class ConceptualSyntax2LogicalExpressionNormalizer implements
 
             result.setDefaultNamespace(o.getDefaultNamespace());
 
+           
             // Axioms
             for (Object a : o.listAxioms()) {
                 result.addAxiom((Axiom) a);
@@ -150,9 +151,11 @@ public class ConceptualSyntax2LogicalExpressionNormalizer implements
                 result.addNFPValue((org.wsmo.common.IRI) entry.getKey(), entry.getValue());
             }
 
+
         } catch (SynchronisationException e) {
             e.printStackTrace();
             result = null;
+        
         } catch (InvalidModelException e) {
             e.printStackTrace();
             result = null;
@@ -196,7 +199,7 @@ public class ConceptualSyntax2LogicalExpressionNormalizer implements
         int i = 1;
         String axPrefix =  "Axiom-" + c.getIdentifier().asString(); 
         for (LogicalExpression l : lExprs) {
-            Axiom ax = factory.createAxiom(factory.createIRI( axPrefix + (i++) ));
+            Axiom ax = factory.createAxiom(factory.createIRI( axPrefix + "-" + (i++) ));
             ax.addDefinition(l);
             o.addAxiom(ax);
         }
@@ -448,7 +451,7 @@ public class ConceptualSyntax2LogicalExpressionNormalizer implements
         Set memberOfs = new HashSet();
         Set attrSpecs = new HashSet();
       
-        Term iTerm = (org.omwg.logexpression.terms.IRI) leFactory.createIRI(i.getIdentifier().toString());
+        Term iTerm = convertIRI((org.wsmo.common.IRI) i.getIdentifier());
         
         Term t;
         for( Object mo : i.listConcepts() ){
@@ -470,7 +473,7 @@ public class ConceptualSyntax2LogicalExpressionNormalizer implements
         int j = 1;
         String axPrefix =  "Axiom-" + i.getIdentifier().asString(); 
         for (LogicalExpression l : lExprs) {
-            Axiom ax = factory.createAxiom(factory.createIRI( axPrefix + (j++) ));
+            Axiom ax = factory.createAxiom(factory.createIRI( axPrefix + "-" + (j++) ));
             ax.addDefinition(l);
             o.addAxiom(ax);
         }
@@ -495,12 +498,12 @@ public class ConceptualSyntax2LogicalExpressionNormalizer implements
         
         Set<Term> valList = new HashSet<Term>(); 
         for (Object obj : aVals) {
-            if (obj instanceof  Instance) {
+            if (obj instanceof  Instance) { // THIS SEEMS NOT TO BE USED RIGHT NOW: 
                 Identifier val = ((Instance) obj).getIdentifier(); 
                 valList.add(convertIRI((org.wsmo.common.IRI) val));
             } else if (obj instanceof  DataValue) {
                 DataValue d = (DataValue) obj;
-                Value dVal = convertDataValue(d);
+                Term dVal = convertDataValue(d);
                 valList.add(dVal);
             }
            
@@ -570,7 +573,7 @@ public class ConceptualSyntax2LogicalExpressionNormalizer implements
           i = 1;
           String axPrefix =  "Axiom-" + rID.asString(); 
           for (LogicalExpression l : lExprs) {
-              Axiom ax = factory.createAxiom(factory.createIRI( axPrefix + (i++) ));
+              Axiom ax = factory.createAxiom(factory.createIRI( axPrefix + "-" + (i++) ));
               ax.addDefinition(l);
               o.addAxiom(ax);
           }
@@ -656,7 +659,7 @@ public class ConceptualSyntax2LogicalExpressionNormalizer implements
                 args.add(convertIRI((org.wsmo.common.IRI) val));
             } else if (v instanceof  DataValue) {
                 DataValue d = (DataValue) v;
-                Value dVal = convertDataValue(d);
+                Term dVal = convertDataValue(d);
                 args.add(dVal);
             }
         }
@@ -690,10 +693,10 @@ public class ConceptualSyntax2LogicalExpressionNormalizer implements
      * to a value object that can be used to construct terms and formulae.
      * 
      * @param d - the data value in the conceptual syntax part that needs to be converted.
-     * @return a org.omwg.logexpression.terms.Value object that represents the same datavalue.
+     * @return a org.omwg.logexpression.terms.Term object that represents the same datavalue.
      */
-    private Value convertDataValue(DataValue d){
-        Value result = null;
+    private Term convertDataValue(DataValue d){
+        Term result = null;
         if (d.getType() instanceof SimpleDataType) {
             if (d.getType() instanceof WsmlInteger){
                 java.math.BigInteger bigint = new java.math.BigInteger(d.asString()); 
