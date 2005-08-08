@@ -19,41 +19,23 @@
 
 package org.deri.wsml.reasoner.impl.test;
 
-import org.deri.wsml.reasoner.api.*;
-import org.deri.wsml.reasoner.api.queryanswering.*;
-import org.deri.wsml.reasoner.impl.*;
-import org.deri.wsmo4j.io.parser.wsml.LogExprParserImpl;
-import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.wsmo.common.*;
-import org.wsmo.common.exception.InvalidModelException;
+import org.deri.wsml.reasoner.normalization.ConceptualSyntax2LogicalExpressionNormalizer;
+import org.omwg.ontology.Ontology;
+import org.wsmo.common.TopEntity;
+import org.wsmo.factory.Factory;
+import org.wsmo.factory.WsmoFactory;
+import org.wsmo.wsml.Parser;
+import org.wsmo.wsml.Serializer;
 
-import java.util.*;
-import java.io.*;
+public class TestWSMLConceptualSyntax2LExprs {
 
-import org.omwg.logexpression.CompoundExpression;
-import org.omwg.logexpression.Constants;
-import org.omwg.logexpression.LogicalExpression;
-import org.omwg.ontology.*;
-import org.wsmo.wsml.*;
-import org.wsmo.factory.*;
-
-
-public class TestWSMLCoreReasoner {
-
-    public static WSMLReasoner wsmlCoreReasoner;
-   
-    
-    private static void performQuery(Request r){
-        QueryAnsweringResult result = (QueryAnsweringResult) wsmlCoreReasoner.execute(r);
-        
-        System.out.println("Found < "+result.size()+" > results to the query:");
-        int i = 0;
-        for(VariableBinding vBinding : result) {
-            System.out.println("("+ (++i) +") -- " + vBinding.toString());
-        }
-    }
-    
     /**
      * Loads a simple ontology from a file, constructs a simple conjunctive query
      * over the ontolgy, evaluates the query and prints the query answer to console.
@@ -61,7 +43,7 @@ public class TestWSMLCoreReasoner {
      */
     public static void main(String[] args) {
         
-        String ONTOLOGY_FILE = "examples/simple-graph.wsml";
+       
         String PARSER_CLASS = "com.ontotext.wsmo4j.parser.WSMLParserImpl";
 
         // Set up factories for creating WSML elements 
@@ -102,6 +84,7 @@ public class TestWSMLCoreReasoner {
         // Read simple ontology from file
         
         Ontology o = null;
+        String ONTOLOGY_FILE = "examples/humanOntology.wsml";
         
         try {
             
@@ -136,84 +119,26 @@ public class TestWSMLCoreReasoner {
             e6.printStackTrace();
         }
         
-        org.omwg.logexpression.io.Serializer logExprSerializer = new LogExprSerializerWSML(o); 
+        System.out.println("Transforming ontology to axioms only ...");
         
+        ConceptualSyntax2LogicalExpressionNormalizer cs2le = new ConceptualSyntax2LogicalExpressionNormalizer();
+        Ontology normalizedOntology = cs2le.normalize(o);
         
-        // Build simple conjunctive query in WSML 
+        System.out.println("... finished.");
         
-        LogicalExpression qExpression1 = null;
-        LogicalExpression qExpression2 = null;
-        LogicalExpression qExpression3 = null;
-  
-        org.omwg.logexpression.io.Parser leParser = 
-            LogExprParserImpl.getInstance(o); // construct queries over the same ontology
-        
-         
         try {
-            String query1 = "scElement(?n) and path(?n,f) and path(f,?n)";
-            qExpression1 = leParser.parse(query1);
-                        
-            String query2 = "path(?n,f)";
-            qExpression2 = leParser.parse(query2);
-            
-            String query3 = "path(?n1,?n2)";
-            qExpression3 = leParser.parse(query3);
-            
-        } catch (IOException e1) {
+            System.out.println("Normalized WSML Ontology:\n");
+            StringWriter sw = new StringWriter();
+            ontologySerializer.serialize(new TopEntity[]{o}, sw);
+            System.out.println(sw.toString());
+            System.out.println("--------------\n\n");
+        } catch (IOException e6) {
             // TODO Auto-generated catch block
-            e1.printStackTrace();
-            return;
-        } catch (ParserException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-            return;
-        } catch (InvalidModelException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-            return;
-        }
-
-        
-        // Print query  
-        
-        System.out.println("WSML Query (1):");
-        System.out.println(logExprSerializer.serialize(qExpression1));
-        System.out.println("\nWSML Query (2):");
-        System.out.println(logExprSerializer.serialize(qExpression2));
-        System.out.println("\nWSML Query (3):");
-        System.out.println(logExprSerializer.serialize(qExpression3));
-        System.out.println("--------------\n\n");
-        
-        // Now get a reasoner, create a query ansering request and print the result.
-        try {
-            
-            Set<Ontology> ontos = new HashSet<Ontology>();
-            ontos.add(o);
-            QueryAnsweringRequest qaRequest1 = new QueryAnsweringRequestImpl(ontos, qExpression1);
-            QueryAnsweringRequest qaRequest2 = new QueryAnsweringRequestImpl(ontos, qExpression2);
-            QueryAnsweringRequest qaRequest3 = new QueryAnsweringRequestImpl(ontos, qExpression3);
-            
-            wsmlCoreReasoner = DefaultWSMLReasonerFactory.getFactory().getWSMLReasoner(WSMLReasonerFactory.WSMLVariant.WSML_CORE);
-            
-            System.out.println("Starting reasoner with query (1) ...");
-            performQuery(qaRequest1);
-            System.out.println("Finished query.");
-            
-            System.out.println("Starting reasoner with query (2) ...");
-            performQuery(qaRequest2);
-            System.out.println("Finished query.");
-            
-            System.out.println("Starting reasoner with query (3) ...");
-            performQuery(qaRequest3);
-            System.out.println("Finished query.");
-            
-        } catch (Exception e) {
-            e.printStackTrace();
+            e6.printStackTrace();
         }
         
-        System.out.println("Finished!");
+        
         
         
     }
-
 }
