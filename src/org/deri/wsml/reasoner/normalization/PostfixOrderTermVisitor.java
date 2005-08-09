@@ -48,7 +48,16 @@ import org.omwg.logexpression.terms.*;
  */
 public class PostfixOrderTermVisitor implements VisitorTerms {
 
-    public void visitConstructedTerm(ConstructedTerm arg0) {
+    /* (non-Javadoc)
+	 * @see org.omwg.logexpression.terms.VisitorTerms#getSerializedObject()
+	 * should be obsolate (next snapshot)
+	 * TODO remove!
+	 */
+	public Object getSerializedObject() {
+		return null;
+	}
+
+	public void visitConstructedTerm(ConstructedTerm arg0) {
         enterConstructedTerm(arg0);
         for(int i=0; i < arg0.getArity(); i++){
             Term nextArg = arg0.getParameter(i);
@@ -86,7 +95,7 @@ public class PostfixOrderTermVisitor implements VisitorTerms {
     }
  
    
-    public void visitAnonymousID(AnonymousID arg0) {
+    public void visitAnonymousID(UnNbAnonymousID arg0) {
         enterAnonymousID(arg0);
         handleAnonymousID(arg0);
         leaveAnonymousID(arg0);        
@@ -104,13 +113,6 @@ public class PostfixOrderTermVisitor implements VisitorTerms {
         leaveIRI(arg0);
     }
     
-    
-
-    public Object getSerializedObject() {
-        return null;
-    }
-
-    
     // -- Additional methods ...
     
     public void enterConstructedTerm(ConstructedTerm arg0) {}
@@ -123,7 +125,7 @@ public class PostfixOrderTermVisitor implements VisitorTerms {
     
     public void enterDecimal(WSMLDecimal arg0) {}
 
-    public void enterAnonymousID(AnonymousID arg0) {}
+    public void enterAnonymousID(UnNbAnonymousID arg0) {}
 
     public void enterNbAnonymousID(NbAnonymousID arg0) {}
 
@@ -141,7 +143,7 @@ public class PostfixOrderTermVisitor implements VisitorTerms {
     
     public void handleDecimal(WSMLDecimal arg0) {}
 
-    public void handleAnonymousID(AnonymousID arg0) {}
+    public void handleAnonymousID(UnNbAnonymousID arg0) {}
 
     public void handleNbAnonymousID(NbAnonymousID arg0) {}
 
@@ -158,7 +160,7 @@ public class PostfixOrderTermVisitor implements VisitorTerms {
     
     public void leaveDecimal(WSMLDecimal arg0) {}
 
-    public void leaveAnonymousID(AnonymousID arg0) {}
+    public void leaveAnonymousID(UnNbAnonymousID arg0) {}
 
     public void leaveNbAnonymousID(NbAnonymousID arg0) {}
 

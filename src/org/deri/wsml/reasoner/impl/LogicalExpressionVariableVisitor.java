@@ -249,11 +249,11 @@ public class LogicalExpressionVariableVisitor extends
         Set<Variable> fvs = new HashSet<Variable>();
         Set<Variable> bvs = new HashSet<Variable>();
         
-        fvs.addAll(freeVars.get(arg0.findArgument(0)));
-        fvs.addAll(freeVars.get(arg0.findArgument(1)));
+        fvs.addAll(freeVars.get(arg0.getArgument(0)));
+        fvs.addAll(freeVars.get(arg0.getArgument(1)));
         
-        bvs.addAll(boundVars.get(arg0.findArgument(0)));
-        bvs.addAll(boundVars.get(arg0.findArgument(1)));
+        bvs.addAll(boundVars.get(arg0.getArgument(0)));
+        bvs.addAll(boundVars.get(arg0.getArgument(1)));
         
         
         freeVars.put(arg0, fvs);
@@ -261,18 +261,18 @@ public class LogicalExpressionVariableVisitor extends
     }
     
     private void internalDoUnary(Unary arg0){
-        freeVars.put(arg0, freeVars.get(arg0.findArgument(0)));
-        boundVars.put(arg0, boundVars.get(arg0.findArgument(0)));
+        freeVars.put(arg0, freeVars.get(arg0.getArgument(0)));
+        boundVars.put(arg0, boundVars.get(arg0.getArgument(0)));
     }
     
     private void internalDoQuantified(Quantified arg0){
         Set<Variable> fvs = new HashSet<Variable>();
         Set<Variable> bvs = new HashSet<Variable>();
              
-        fvs.addAll(freeVars.get(arg0.findArgument(0)));
+        fvs.addAll(freeVars.get(arg0.getArgument(0)));
         fvs.removeAll(arg0.listVariables());
         
-        bvs.addAll(boundVars.get(arg0.findArgument(0)));
+        bvs.addAll(boundVars.get(arg0.getArgument(0)));
         bvs.addAll(arg0.listVariables());
         
         freeVars.put(arg0, fvs);

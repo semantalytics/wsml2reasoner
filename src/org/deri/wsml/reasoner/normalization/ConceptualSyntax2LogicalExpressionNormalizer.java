@@ -192,7 +192,8 @@ public class ConceptualSyntax2LogicalExpressionNormalizer implements
             lExprs.addAll(handleConceptAttribute(a, cTerm));
         }
         
-        expr = leFactory.createMolecule(cTerm, subConceptOfs, null, null);
+        if (subConceptOfs.size()==0) subConceptOfs.add(cTerm);
+		expr = leFactory.createMolecule(cTerm, subConceptOfs, null, null);
         
         lExprs.add(expr);
         
@@ -220,11 +221,11 @@ public class ConceptualSyntax2LogicalExpressionNormalizer implements
        
         org.omwg.logexpression.LogicalExpression moExpr, hvExpr, rangeMoExpr;
         
-        Term v = leFactory.createVariable("?x");
+        Term v = leFactory.createVariable("x");
         moExpr = leFactory.createMolecule(v,toSet(v), null, null);
         
         Term attID = convertIRI((org.wsmo.common.IRI) a.getIdentifier());
-        Term v2 = leFactory.createVariable("?y");
+        Term v2 = leFactory.createVariable("y");
         org.omwg.logexpression.AttrSpecification attSpec = 
             leFactory.createAttrSpecification(AttrSpecification.ATTR_VALUE, attID, toSet(v2));
             
@@ -265,9 +266,9 @@ public class ConceptualSyntax2LogicalExpressionNormalizer implements
         result.add(le);
                 
         // Handle Attribute Feature
-        Term x = leFactory.createVariable("?x");
-        Term y = leFactory.createVariable("?y");
-        Term z = leFactory.createVariable("?z");
+        Term x = leFactory.createVariable("x");
+        Term y = leFactory.createVariable("y");
+        Term z = leFactory.createVariable("z");
         
         org.omwg.logexpression.LogicalExpression m1, m2, m3, m4, m5, m6, m7;
         
@@ -359,7 +360,7 @@ public class ConceptualSyntax2LogicalExpressionNormalizer implements
             Set xAttVals = new HashSet();
             Variable[] auxVars = new Variable[a.getMinCardinality()];
             for (int i = 0; i < a.getMinCardinality(); i++ ) {
-                Variable nextVar = leFactory.createVariable("?y" + (i+1) );
+                Variable nextVar = leFactory.createVariable("y" + (i+1) );
                 auxVars[i] = nextVar;
                 xAttVals.add(nextVar);
             }
@@ -404,7 +405,7 @@ public class ConceptualSyntax2LogicalExpressionNormalizer implements
              Set xAttVals = new HashSet();
              Variable[] auxVars = new Variable[a.getMinCardinality() + 1];
              for (int i = 0; i <= a.getMinCardinality(); i++ ) {
-                 Variable nextVar = leFactory.createVariable("?y" + (i+1) );
+                 Variable nextVar = leFactory.createVariable("y" + (i+1) );
                  auxVars[i] = nextVar;
                  xAttVals.add(nextVar);
              }
@@ -536,7 +537,7 @@ public class ConceptualSyntax2LogicalExpressionNormalizer implements
           List<Term> predArgs = new LinkedList();
           for (int i = 0; i < rArity; i++){
               org.omwg.logexpression.terms.Variable v = 
-                  leFactory.createVariable("?x" + (i+1));
+                  leFactory.createVariable("x" + (i+1));
               predArgs.add(v);
           }
               
@@ -597,7 +598,7 @@ public class ConceptualSyntax2LogicalExpressionNormalizer implements
         List<Variable> paramVars = new LinkedList();
         
         for(int j = 1 ; j <= arity; j++){
-            Variable nextVar = leFactory.createVariable("?x"+j);
+            Variable nextVar = leFactory.createVariable("x"+j);
             paramVars.add(nextVar);
             if (j == pos){ paramVar = nextVar; }
         }

@@ -12,14 +12,6 @@
 		<attributes>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/wsmlparser-20050601.jar">
-		<attributes>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/wsmo4j-20050805.jar">
-		<attributes>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="lib/ext/DLV/DLVWrapper-3_0_beta4.jar">
 		<attributes>
 		</attributes>
@@ -32,7 +24,19 @@
 		<attributes>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/wsmo4jLogExp-20050808.jar">
+	<classpathentry sourcepath="ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.0.0/src/org.junit_3.8.1/junitsrc.zip" kind="var" path="JUNIT_HOME/junit.jar">
+		<attributes>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/wsmo4jLogExp-20050809.jar">
+		<attributes>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/wsmo4j-20050805.jar">
+		<attributes>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/wsmlparser-20050601.jar">
 		<attributes>
 		</attributes>
 	</classpathentry>
