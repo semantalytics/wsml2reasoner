@@ -403,8 +403,8 @@ public class ConceptualSyntax2LogicalExpressionNormalizer implements
              // we have a max cardinality ...
        
              Set xAttVals = new HashSet();
-             Variable[] auxVars = new Variable[a.getMinCardinality() + 1];
-             for (int i = 0; i <= a.getMinCardinality(); i++ ) {
+             Variable[] auxVars = new Variable[a.getMaxCardinality() + 1];
+             for (int i = 0; i <= a.getMaxCardinality(); i++ ) {
                  Variable nextVar = leFactory.createVariable("y" + (i+1) );
                  auxVars[i] = nextVar;
                  xAttVals.add(nextVar);
@@ -415,8 +415,8 @@ public class ConceptualSyntax2LogicalExpressionNormalizer implements
              org.omwg.logexpression.LogicalExpression body = leFactory.createBinary(CompoundExpression.AND, m1, xValsMolecule);
              
              // add all inequality statements on pairs of auxilliary predicates.
-             for (int i = 0; i <= a.getMinCardinality(); i++ ) {
-                 for (int j = i + 1; j <= a.getMinCardinality(); j++ ) {
+             for (int i = 0; i <= a.getMaxCardinality(); i++ ) {
+                 for (int j = i + 1; j <= a.getMaxCardinality(); j++ ) {
                      List iesArgs = new LinkedList();
                      iesArgs.add(auxVars[i]);
                      iesArgs.add(auxVars[j]);
