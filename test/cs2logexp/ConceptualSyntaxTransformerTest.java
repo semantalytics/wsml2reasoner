@@ -121,15 +121,6 @@ public class ConceptualSyntaxTransformerTest extends TestCase
 	    Matcher matcher = pattern.matcher(leString);
 	    assertTrue(matcher.find());
 	}
-/*	
-	and ?x[_"toppingMax" hasValue {?y3, ?y2, ?y4, ?y1}]
-	       and ?y1 != ?y2
-	       and ?y1 != ?y3
-	       and ?y1 != ?y4
-	       and ?y2 != ?y3
-	       and ?y2 != ?y4
-	       and ?y3 != ?y4. 
-*/
 	
 	private Ontology parseOntology(String fileName) throws Exception
 	{
