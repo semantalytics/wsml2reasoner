@@ -86,7 +86,7 @@ public class ConceptualSyntax2LogicalExpressionNormalizer implements
         properties.put(Factory.PROVIDER_CLASS,
                 "com.ontotext.wsmo4j.factory.WsmoFactoryImpl");
         properties.put(Parser.PARSER_LE_FACTORY, leFactory);
-        factory = Factory.createWsmoFactory(properties);
+        factory = Factory.createWsmoFactory(/*properties*/null);
     }
     
     /**
@@ -248,7 +248,7 @@ public class ConceptualSyntax2LogicalExpressionNormalizer implements
             }
         }
         
-        rangeMoExpr = leFactory.createMolecule(v, null, moList, null);
+        rangeMoExpr = leFactory.createMolecule(v2, null, moList, null);
         
         // Build the complete logical expression and add it 
         org.omwg.logexpression.LogicalExpression le;
