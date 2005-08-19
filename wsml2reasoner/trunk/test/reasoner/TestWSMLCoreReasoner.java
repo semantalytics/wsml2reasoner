@@ -32,7 +32,9 @@ import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 import org.wsmo.wsml.Serializer;
 
-public class TestWSMLCoreReasoner extends TestCase {
+import test.BaseTest;
+
+public class TestWSMLCoreReasoner extends BaseTest {
 
     private static final String NS = "http://www.example.org/example/#";
 
@@ -68,45 +70,6 @@ public class TestWSMLCoreReasoner extends TestCase {
     public void testReasoner() {
 
         String ONTOLOGY_FILE = "examples/simple-graph.wsml";
-        String PARSER_CLASS = "com.ontotext.wsmo4j.parser.WSMLParserImpl";
-
-        // Set up factories for creating WSML elements
-
-        Map<String, String> leProperties = new HashMap<String, String>();
-        leProperties.put(Factory.PROVIDER_CLASS,
-                "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
-
-        org.omwg.logexpression.LogicalExpressionFactory leFactory = (org.omwg.logexpression.LogicalExpressionFactory) Factory
-                .createLogicalExpressionFactory(leProperties);
-
-        Map<String, Object> properties = new HashMap<String, Object>();
-        properties.put(Factory.PROVIDER_CLASS,
-                "com.ontotext.wsmo4j.factory.WsmoFactoryImpl");
-        properties.put(Parser.PARSER_LE_FACTORY, leFactory);
-        WsmoFactory factory = Factory.createWsmoFactory(properties);
-
-        // Set up WSML parser
-
-        Map<String, Object> parserProperties = new HashMap<String, Object>();
-        parserProperties.put(Parser.PARSER_WSMO_FACTORY, factory);
-        parserProperties.put(Parser.PARSER_LE_FACTORY, leFactory);
-
-        parserProperties.put(org.wsmo.factory.Factory.PROVIDER_CLASS,
-                "com.ontotext.wsmo4j.parser.WSMLParserImpl");
-
-        Parser wsmlparserimpl = org.wsmo.factory.Factory
-                .createParser(parserProperties);
-
-        // Set up serializer
-
-        Map<String, String> serializerProperties = new HashMap<String, String>();
-        serializerProperties.put(org.wsmo.factory.Factory.PROVIDER_CLASS,
-                "com.ontotext.wsmo4j.parser.WSMLSerializerImpl");
-
-        Serializer ontologySerializer = org.wsmo.factory.Factory
-                .createSerializer(serializerProperties);
-
-        // Read simple ontology from file
 
         Ontology o = null;
 
@@ -114,7 +77,7 @@ public class TestWSMLCoreReasoner extends TestCase {
 
             final Reader ontoReader = new FileReader(ONTOLOGY_FILE);
 
-            final TopEntity[] identifiable = wsmlparserimpl.parse(ontoReader);
+            final TopEntity[] identifiable = wsmlParser.parse(ontoReader);
             if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {
                 o = (Ontology) identifiable[0];
             } else {
@@ -131,7 +94,7 @@ public class TestWSMLCoreReasoner extends TestCase {
         try {
             System.out.println("WSML Ontology:\n");
             StringWriter sw = new StringWriter();
-            ontologySerializer.serialize(new TopEntity[] { o }, sw);
+            wsmlSerializer.serialize(new TopEntity[] { o }, sw);
             System.out.println(sw.toString());
             System.out.println("--------------\n\n");
         } catch (IOException e6) {
