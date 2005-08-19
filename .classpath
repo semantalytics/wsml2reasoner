@@ -1,44 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
-		<attributes>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" path="src">
-		<attributes>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/ext/interprolog.jar">
-		<attributes>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/ext/DLV/DLVWrapper-3_0_beta4.jar">
-		<attributes>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/ext/Mandrax/mandarax-3.4.jar">
-		<attributes>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" path="test">
-		<attributes>
-		</attributes>
-	</classpathentry>
-	<classpathentry sourcepath="ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.0.0/src/org.junit_3.8.1/junitsrc.zip" kind="var" path="JUNIT_HOME/junit.jar">
-		<attributes>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/wsmo4jLogExp-20050809.jar">
-		<attributes>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/wsmo4j-20050805.jar">
-		<attributes>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/wsmlparser-20050601.jar">
-		<attributes>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="lib/ext/interprolog.jar"/>
+	<classpathentry kind="lib" path="lib/ext/DLV/DLVWrapper-3_0_beta4.jar"/>
+	<classpathentry kind="lib" path="lib/ext/Mandrax/mandarax-3.4.jar"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry sourcepath="ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.0.0/src/org.junit_3.8.1/junitsrc.zip" kind="var" path="JUNIT_HOME/junit.jar"/>
+	<classpathentry kind="lib" path="lib/wsmo4jLogExp-20050809.jar"/>
+	<classpathentry kind="lib" path="lib/wsmo4j-20050805.jar"/>
+	<classpathentry kind="lib" path="lib/wsmlparser-20050601.jar"/>
+	<classpathentry kind="lib" path="lib/ext/kaon2/kaon2-2005-08-15.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
