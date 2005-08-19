@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!-- ====================================================================== 
+     Aug 17, 2005 3:45:39 PM                                                        
+
+     WSML Reasoner Wrapper
+                   
+     hollau                                                                
+     ====================================================================== -->
+<project name="project" default="default">
+    <description>
+            builds the wrapper with the freely available licenses...
+    </description>
+
+    <!-- ================================= 
+          target: default              
+         ================================= -->
+    <target name="default" depends="depends" description="--> description">
+        
+    </target>
+
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: depends                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="depends">
+    </target>
+
+</project>
+

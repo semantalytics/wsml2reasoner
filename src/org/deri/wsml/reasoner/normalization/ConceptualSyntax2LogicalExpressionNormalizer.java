@@ -86,7 +86,7 @@ public class ConceptualSyntax2LogicalExpressionNormalizer implements
         properties.put(Factory.PROVIDER_CLASS,
                 "com.ontotext.wsmo4j.factory.WsmoFactoryImpl");
         properties.put(Parser.PARSER_LE_FACTORY, leFactory);
-        factory = Factory.createWsmoFactory(/*properties*/null);
+        factory = Factory.createWsmoFactory(properties);
     }
     
     /**
