@@ -19,8 +19,6 @@
 
 package org.deri.wsml.reasoner.api;
 
-import java.util.*;
-import org.omwg.ontology.*;
 
 /**
  * A request to a WSML Reasoner which referes to a specific knowledge base.
@@ -30,10 +28,5 @@ import org.omwg.ontology.*;
  * @author Uwe Keller, DERI Innsbruck
  */
 public interface OntologyBasedRequest extends Request  {
-
-   /**
-    * @return a set of ontologies to which the request refers.
-    */
-   public Set<Ontology> getOntologies();
    
 }

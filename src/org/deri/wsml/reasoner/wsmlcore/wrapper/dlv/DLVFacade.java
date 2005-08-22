@@ -20,7 +20,8 @@
 package org.deri.wsml.reasoner.wsmlcore.wrapper.dlv;
 
 import org.deri.wsml.reasoner.wsmlcore.datalog.*;
-import org.deri.wsml.reasoner.wsmlcore.wrapper.DatalogQueryAnsweringFacade;
+import org.deri.wsml.reasoner.wsmlcore.datalog.Program;
+import org.deri.wsml.reasoner.wsmlcore.wrapper.DatalogReasonerFacade;
 import org.deri.wsml.reasoner.wsmlcore.wrapper.ExternalToolException;
 import org.deri.wsml.reasoner.wsmlcore.wrapper.SymbolFactory;
 import org.deri.wsml.reasoner.wsmlcore.wrapper.SymbolMap;
@@ -46,7 +47,7 @@ import DLV.*;
  * 
  * @author Uwe Keller, DERI Innsbruck
  */
-public class DLVFacade implements DatalogQueryAnsweringFacade {
+public class DLVFacade implements DatalogReasonerFacade {
 
     private Logger logger = Logger.getLogger("org.deri.wsml.reasoner.wsmlcore.wrapper.dlv");
     {
@@ -87,7 +88,7 @@ public class DLVFacade implements DatalogQueryAnsweringFacade {
             
             
             // First translate the logic program the query refers to.
-           translateKnowledgebase(q.getKnowledgebase());
+//           translateKnowledgebase(q.getKnowledgebase());
            // Translate the query itself
            translateQuery(q); 
            
@@ -194,7 +195,7 @@ public class DLVFacade implements DatalogQueryAnsweringFacade {
         logger.info("Translate query :" + q);
         
         // Derive and store the sequence of variables that defines the output tuples from the query 
-        List<Variable> bodyVars = q.getBodyVariables();
+        List<Variable> bodyVars = q.getVariables();
         queryVarNamesSequence = new String[bodyVars.size()]; 
         Term[] predArgs = new Term[bodyVars.size()];
         int i = 0;
@@ -216,7 +217,7 @@ public class DLVFacade implements DatalogQueryAnsweringFacade {
             
             Literal head = new Literal(new org.deri.wsml.reasoner.wsmlcore.datalog.Predicate(RESULT_PREDICATE_NAME,queryVarNamesSequence.length), predArgs);
             
-            Rule resultDef = new Rule(head, q.getBody());
+            Rule resultDef = new Rule(head, q.getLiterals());
             logger.info("Converted query to rule:" + resultDef);
             translateRule(resultDef);
             
@@ -304,11 +305,21 @@ public class DLVFacade implements DatalogQueryAnsweringFacade {
     }
 
     /* (non-Javadoc)
-     * @see org.deri.wsml.reasoner.wsmlcore.wrapper.DatalogQueryAnsweringFacade#useSymbolFactory(org.deri.wsml.reasoner.wsmlcore.wrapper.SymbolFactory)
+     * @see org.deri.wsml.reasoner.wsmlcore.wrapper.DatalogReasonerFacade#useSymbolFactory(org.deri.wsml.reasoner.wsmlcore.wrapper.SymbolFactory)
      */
     public void useSymbolFactory(SymbolFactory sf) {
         symbTransfomer = new SymbolMap(sf);
         
+    }
+
+    public void register(String ontologyURI, Program kb) throws ExternalToolException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public QueryResult evaluate(ConjunctiveQuery q, String ontologyURI) throws ExternalToolException {
+        // TODO Auto-generated method stub
+        return null;
     }
     
     

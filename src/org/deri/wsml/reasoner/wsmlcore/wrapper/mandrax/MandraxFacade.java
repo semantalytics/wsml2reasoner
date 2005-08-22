@@ -37,7 +37,7 @@ import org.mandarax.util.*;
 import org.deri.wsml.reasoner.api.queryanswering.*;
 import org.deri.wsml.reasoner.impl.*;
 
-public class MandraxFacade implements DatalogQueryAnsweringFacade {
+public class MandraxFacade implements DatalogReasonerFacade {
 
     private Logger logger = Logger.getLogger("org.deri.wsml.reasoner.wsmlcore.wrapper.mandrax");
     
@@ -102,7 +102,7 @@ public class MandraxFacade implements DatalogQueryAnsweringFacade {
             // kb = new org.mandarax.reference.AdvancedKnowledgeBase();
             
             // First translate the logic program the query refers to.
-            translateKnowledgebase(q.getKnowledgebase());
+//            translateKnowledgebase(q.getKnowledgebase());
             
             // Translate the query itself
             org.mandarax.kernel.Query query = translateQuery(q); 
@@ -187,7 +187,7 @@ public class MandraxFacade implements DatalogQueryAnsweringFacade {
         logger.info("Translate query :" + q);
         
         // Derive and store the sequence of variables that defines the output tuples from the query 
-        List<Variable> bodyVars = q.getBodyVariables();
+        List<Variable> bodyVars = q.getVariables();
         queryVarNamesSequence = new String[bodyVars.size()]; 
         org.deri.wsml.reasoner.wsmlcore.datalog.Term[] predArgs = new org.deri.wsml.reasoner.wsmlcore.datalog.Term[bodyVars.size()];
         int i = 0;
@@ -199,7 +199,7 @@ public class MandraxFacade implements DatalogQueryAnsweringFacade {
         
         logger.log(Level.FINE, "Sequence of variables in query is: ", queryVarNamesSequence);
         
-        List<Literal> b = q.getBody();
+        List<Literal> b = q.getLiterals();
         Fact[] body = new Fact[b.size()];
         i = 0;
         for (Literal l : b){
@@ -309,11 +309,21 @@ public class MandraxFacade implements DatalogQueryAnsweringFacade {
     }
 
     /* (non-Javadoc)
-     * @see org.deri.wsml.reasoner.wsmlcore.wrapper.DatalogQueryAnsweringFacade#useSymbolFactory(org.deri.wsml.reasoner.wsmlcore.wrapper.SymbolFactory)
+     * @see org.deri.wsml.reasoner.wsmlcore.wrapper.DatalogReasonerFacade#useSymbolFactory(org.deri.wsml.reasoner.wsmlcore.wrapper.SymbolFactory)
      */
     public void useSymbolFactory(SymbolFactory sf) {
         symbTransfomer = new SymbolMap(sf);
         
+    }
+
+    public void register(String ontologyURI, Program kb) throws ExternalToolException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public QueryResult evaluate(ConjunctiveQuery q, String ontologyURI) throws ExternalToolException {
+        // TODO Auto-generated method stub
+        return null;
     }
     
 

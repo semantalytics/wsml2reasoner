@@ -19,6 +19,8 @@
 
 package org.deri.wsml.reasoner.impl;
 
+import java.util.Map;
+
 import org.deri.wsml.reasoner.api.WSMLReasoner;
 import org.deri.wsml.reasoner.api.WSMLReasonerFactory;
 
@@ -50,10 +52,12 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
      * 
      * @return a WSMLReasoner object for the chosen variant of WSML.
      */
-    public WSMLReasoner getWSMLReasoner(WSMLVariant variant) throws UnsupportedOperationException {
+    public WSMLReasoner getWSMLReasoner(Map<String, Object> parameters) throws UnsupportedOperationException {
         WSMLReasoner reasoner;
-        if (variant == WSMLReasonerFactory.WSMLVariant.WSML_CORE){
-            reasoner = new org.deri.wsml.reasoner.impl.WSMLCoreReasonerImpl();
+        WSMLVariant variant = (WSMLVariant) parameters.get(PARAM_WSML_VARIANT);
+        BuiltInReasoner reasonerType = (BuiltInReasoner) parameters.get(PARAM_BUILT_IN_REASONER);
+        if (WSMLReasonerFactory.WSMLVariant.WSML_CORE.equals(variant)){
+            reasoner = new org.deri.wsml.reasoner.impl.WSMLCoreReasonerImpl(reasonerType);
             return reasoner;
         } else {
             throw new UnsupportedOperationException("The requested variant of WSML ("+variant+") currently not supported by this factory!");
