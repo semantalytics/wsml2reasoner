@@ -4,16 +4,12 @@
  */
 package org.deri.wsml.reasoner.wsmlcore.datalog;
 
+import java.util.List;
+
 public interface Query {
-
-    /**
-     * @return Returns the knowledgebase.
-     */
-    public abstract Program getKnowledgebase();
-
-    /**
-     * @param knowledgebase The knowledgebase to set.
-     */
-    public abstract void setKnowledgebase(Program knowledgebase);
+    
+    public List<Literal> getLiterals();
+    
+    public List<Variable> getVariables();
 
 }

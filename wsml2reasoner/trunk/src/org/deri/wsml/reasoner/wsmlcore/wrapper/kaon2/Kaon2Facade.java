@@ -25,13 +25,11 @@ import java.util.logging.Logger;
 
 import org.deri.wsml.reasoner.api.queryanswering.VariableBinding;
 import org.deri.wsml.reasoner.impl.VariableBindingImpl;
-import org.deri.wsml.reasoner.wsmlcore.datalog.ConjunctiveQuery;
+import org.deri.wsml.reasoner.wsmlcore.datalog.*;
 import org.deri.wsml.reasoner.wsmlcore.datalog.Constant;
-import org.deri.wsml.reasoner.wsmlcore.datalog.DataTypeValue;
 import org.deri.wsml.reasoner.wsmlcore.datalog.Predicate;
-import org.deri.wsml.reasoner.wsmlcore.datalog.QueryResult;
 import org.deri.wsml.reasoner.wsmlcore.datalog.DataTypeValue.DataType;
-import org.deri.wsml.reasoner.wsmlcore.wrapper.DatalogQueryAnsweringFacade;
+import org.deri.wsml.reasoner.wsmlcore.wrapper.DatalogReasonerFacade;
 import org.deri.wsml.reasoner.wsmlcore.wrapper.ExternalToolException;
 import org.deri.wsml.reasoner.wsmlcore.wrapper.SymbolFactory;
 import org.deri.wsml.reasoner.wsmlcore.wrapper.UnsupportedFeatureException;
@@ -40,6 +38,10 @@ import org.semanticweb.kaon2.api.owl.elements.Individual;
 import org.semanticweb.kaon2.api.reasoner.Query;
 import org.semanticweb.kaon2.api.reasoner.Reasoner;
 import org.semanticweb.kaon2.api.rules.*;
+import org.semanticweb.kaon2.api.rules.Literal;
+import org.semanticweb.kaon2.api.rules.Rule;
+import org.semanticweb.kaon2.api.rules.Term;
+import org.semanticweb.kaon2.api.rules.Variable;
 
 /**
  * Integrates the Kaon2 system into the WSML Core/Flight Reasoner framework for
@@ -50,7 +52,7 @@ import org.semanticweb.kaon2.api.rules.*;
  * 
  * @author Gabor Nagypal, FZI, Germany
  */
-public class Kaon2Facade implements DatalogQueryAnsweringFacade {
+public class Kaon2Facade implements DatalogReasonerFacade {
 
     private Logger logger = Logger
             .getLogger("org.deri.wsml.reasoner.wsmlcore.wrapper.kaon2");
@@ -62,10 +64,12 @@ public class Kaon2Facade implements DatalogQueryAnsweringFacade {
 
     private KAON2Factory f = KAON2Manager.factory();
 
+    private KAON2Connection conn = null;
+
     /**
      * Evaluates a Query on a Datalog knowledgebase
      */
-    public QueryResult evaluate(ConjunctiveQuery q)
+    public QueryResult evaluate(ConjunctiveQuery q, String ontologyUri)
             throws ExternalToolException {
 
         try {
@@ -77,7 +81,7 @@ public class Kaon2Facade implements DatalogQueryAnsweringFacade {
             // output
             // tuples from the query
             List<org.deri.wsml.reasoner.wsmlcore.datalog.Variable> bodyVars = q
-                    .getBodyVariables();
+                    .getVariables();
             List<String> varNames = new ArrayList<String>(bodyVars.size());
             for (org.deri.wsml.reasoner.wsmlcore.datalog.Variable v : bodyVars) {
                 varNames.add(v.getSymbol());
@@ -87,12 +91,13 @@ public class Kaon2Facade implements DatalogQueryAnsweringFacade {
                     varNames);
 
             try {
-
-                Ontology ontology = createNewOntology("urn:kaon2:internal:ontology");
-                Set<Rule> rules = translateKnowledgebase(q.getKnowledgebase());
-                appendRules(ontology, rules);
+                Ontology ontology = this.conn.openOntology(ontologyUri,
+                        new HashMap<String, Object>());
                 Reasoner reasoner = ontology.createReasoner();
                 Query query = translateQuery(q, reasoner, varNames);
+                // for (Literal l : query.getQueryLiterals()) {
+                // System.out.println("Query literal: " + l);
+                // }
                 query.open();
                 while (!query.afterLast()) {
                     String[] tuple = convertQueryTuple(query.tupleBuffer());
@@ -106,8 +111,8 @@ public class Kaon2Facade implements DatalogQueryAnsweringFacade {
                     query.next();
                 }
                 query.close();
+                query.dispose();
                 reasoner.dispose();
-                ontology.getConnection().close();
             } catch (KAON2Exception e) {
                 throw new ExternalToolException(
                         "Can not convert query to tool", e, query);
@@ -174,16 +179,16 @@ public class Kaon2Facade implements DatalogQueryAnsweringFacade {
         // occurrences of the
         // same variable have been removed.
         List<org.deri.wsml.reasoner.wsmlcore.datalog.Literal> body = q
-                .getBody();
-        List<Literal> bodyLiterals = new ArrayList<Literal>();
+                .getLiterals();
+        List<Literal> queryLiterals = new ArrayList<Literal>();
 
         for (org.deri.wsml.reasoner.wsmlcore.datalog.Literal l : body) {
-            bodyLiterals.add(translateLiteral(l));
+            queryLiterals.add(translateLiteral(l));
         }
 
         Query result = null;
         try {
-            result = reasoner.createQuery(bodyLiterals, distinguishedVars);
+            result = reasoner.createQuery(queryLiterals, distinguishedVars);
         } catch (KAON2Exception e) {
             throw new ExternalToolException("Can not convert query to tool", e,
                     query);
@@ -240,10 +245,7 @@ public class Kaon2Facade implements DatalogQueryAnsweringFacade {
                 }
                 if (arg.getClass().equals(
                         org.deri.wsml.reasoner.wsmlcore.datalog.Constant.class)) {
-                    terms
-                            .add(f
-                                    .constant(((Constant) arg)
-                                            .getSymbol()));
+                    terms.add(f.constant(((Constant) arg).getSymbol()));
                 }
                 if (arg
                         .getClass()
@@ -291,25 +293,11 @@ public class Kaon2Facade implements DatalogQueryAnsweringFacade {
     /*
      * (non-Javadoc)
      * 
-     * @see org.deri.wsml.reasoner.wsmlcore.wrapper.DatalogQueryAnsweringFacade#useSymbolFactory(org.deri.wsml.reasoner.wsmlcore.wrapper.SymbolFactory)
+     * @see org.deri.wsml.reasoner.wsmlcore.wrapper.DatalogReasonerFacade#useSymbolFactory(org.deri.wsml.reasoner.wsmlcore.wrapper.SymbolFactory)
      */
     public void useSymbolFactory(SymbolFactory sf) {
         // do nothing
 
-    }
-
-    private Ontology createNewOntology(String logicalUri, String physicalUri)
-            throws KAON2Exception {
-        KAON2Connection connection = KAON2Manager.newConnection();
-        DefaultOntologyResolver resolver = new DefaultOntologyResolver();
-        resolver.registerReplacement(logicalUri, physicalUri);
-        connection.setOntologyResolver(resolver);
-        return connection.createOntology(logicalUri,
-                new HashMap<String, Object>());
-    }
-
-    private Ontology createNewOntology(String logicalUri) throws KAON2Exception {
-        return createNewOntology(logicalUri, "file://C:/Temp/blah.xml");
     }
 
     private void appendRules(Ontology ontology, Set<Rule> rules)
@@ -340,6 +328,35 @@ public class Kaon2Facade implements DatalogQueryAnsweringFacade {
                 result[i] = obj.toString();
         }
         return result;
+    }
+
+    public void register(String ontologyURI, Program kb)
+            throws ExternalToolException {
+        if (conn == null) {
+            conn = KAON2Manager.newConnection();
+            DefaultOntologyResolver resolver = new DefaultOntologyResolver();
+            conn.setOntologyResolver(resolver);
+        }
+        // TODO Handle ontology imports
+        DefaultOntologyResolver resolver = (DefaultOntologyResolver) conn
+                .getOntologyResovler();
+        resolver.registerReplacement(ontologyURI, "file:/C:/tmp");
+        try {
+            Ontology o = conn.createOntology(ontologyURI,
+                    new HashMap<String, Object>());
+            Set<Rule> rules = translateKnowledgebase(kb);
+            appendRules(o, rules);
+        } catch (KAON2Exception e) {
+            throw new ExternalToolException(
+                    "Cannot register ontology in KAON2", e, null);
+        }
+
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        this.conn.close();
     }
 
 }

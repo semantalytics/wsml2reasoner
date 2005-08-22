@@ -17,28 +17,25 @@
  * 
  */
 
-package org.deri.wsml.reasoner.api.queryanswering;
+package org.deri.wsml.reasoner.api;
 
-import org.deri.wsml.reasoner.api.OntologyBasedRequest;
-import org.omwg.logexpression.LogicalExpression;
+import java.util.Set;
+
 import org.omwg.ontology.Ontology;
 
-/** 
- *  An interface for reasoning request that refer to 
- *  a specific reasoning task, namely QueryAnswering.
- *  
- *  Given such a request, reasoners should return objects that are
- *  instances that implement the interface QueryAnsweringResult.
- *  
- * @author Uwe Keller, DERI Innsbruck
+/**
+ * Represents a request to register a set of ontologies at the reasoner The
+ * possibility is given to register a set of ontologies to allow register a
+ * group of ontologies that have circular import references.
+ * 
+ * @author Gabor Nagypal, FZI
  */
-public interface QueryAnsweringRequest extends OntologyBasedRequest {
-
-    public enum QueryAnsweringMode {FIND_ALL_RESULTS, FIND_NO_MORE_THAN};
+public interface OntologyRegistrationRequest extends OntologyBasedRequest {
     
-    public LogicalExpression getQuery();
-    public QueryAnsweringMode getMode();
-    public long getMaxNumberOfResults();
-    public String getOntologyUri();
-   
+
+    /**
+     * @return a set of ontologies to which the request refers.
+     */
+    public Set<Ontology> getOntologies();
+
 }

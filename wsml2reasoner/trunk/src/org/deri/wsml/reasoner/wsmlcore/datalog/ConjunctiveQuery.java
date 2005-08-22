@@ -19,56 +19,55 @@
 
 package org.deri.wsml.reasoner.wsmlcore.datalog;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Represents a conjunctive query against a knowledgebase which is a datalog program.
+ * Represents a conjunctive query against a knowledgebase which is a datalog
+ * program.
  * 
  * @author Uwe Keller, DERI Innsbruck
  */
-public class ConjunctiveQuery extends Rule implements Query {
+public class ConjunctiveQuery implements Query {
 
-    /**
-     * The knowledgebase to which the query refers to.
-     */
-    private Program knowledgebase; 
-    
-    public ConjunctiveQuery(List<Literal> body) throws DatalogException {
-        super(null, body);
-        knowledgebase = null;
+    private List<Literal> literals = null;
+
+    public ConjunctiveQuery(List<Literal> literals)
+            throws DatalogException {
+        this.literals = literals;
     }
 
-    /**
-     * @return Returns the knowledgebase.
-     */
-    public Program getKnowledgebase() {
-        return knowledgebase;
-    }
-
-    /**
-     * @param knowledgebase The knowledgebase to set.
-     */
-    public void setKnowledgebase(Program knowledgebase) {
-        this.knowledgebase = knowledgebase;
-    }
-    
-    public String toString(){
+    public String toString() {
         String result = " ?- ";
-            
+
         int i = 1;
-        List<Literal> body = this.getBody();
-        for (Literal l : body ){
+        for (Literal l : this.literals) {
             result += l.toString();
-            if (i < body.size()){
+            if (i < this.literals.size()) {
                 result += ", ";
             }
             i++;
         }
-        
-        
+
         result += ".";
         return result;
     }
-    
+
+    public List<Literal> getLiterals() {
+        return literals;
+    }
+
+    public List<Variable> getVariables() {
+        List<Variable> result = new LinkedList<Variable>();
+        for (Literal l : literals) {
+            List<Variable> lvars = l.getVariables();
+            for (Variable v : lvars) {
+                if (!result.contains(v)) {
+                    result.add(v);
+                }
+            }
+        }
+        return result;
+    }
 
 }

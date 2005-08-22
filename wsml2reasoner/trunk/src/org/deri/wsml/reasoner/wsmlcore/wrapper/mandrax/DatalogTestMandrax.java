@@ -117,7 +117,7 @@ public class DatalogTestMandrax {
             body.add(new Literal(new org.deri.wsml.reasoner.wsmlcore.datalog.Predicate("path",2), new Variable[]{new Variable("H"),new Variable("J")}));
             
             cq1 = new ConjunctiveQuery(body);
-            cq1.setKnowledgebase(kb);
+//            cq1.setKnowledgebase(kb);
             
             ConjunctiveQuery cq2; // computes all nodes in the strong component of node 'f'
             
@@ -127,7 +127,7 @@ public class DatalogTestMandrax {
             body.add(new Literal(new org.deri.wsml.reasoner.wsmlcore.datalog.Predicate("scElement",1), new Variable[]{new Variable("H")}));
             
             cq2 = new ConjunctiveQuery(body);
-            cq2.setKnowledgebase(kb);
+//            cq2.setKnowledgebase(kb);
            
             ConjunctiveQuery cq3; // computes all nodes in the strong component of node 'f'
             
@@ -137,7 +137,7 @@ public class DatalogTestMandrax {
             
             
             cq3 = new ConjunctiveQuery(body);
-            cq3.setKnowledgebase(kb);
+//            cq3.setKnowledgebase(kb);
             
             ConjunctiveQuery theQuery = cq3;
             log.info("Q = " + theQuery);
@@ -146,8 +146,8 @@ public class DatalogTestMandrax {
             
             log.info("(3) Evaluating query with MandraxFacade");
             
-            DatalogQueryAnsweringFacade qaFacade = new MandraxFacade(true); // This line is the only tool specific thing!
-            QueryResult qResult = qaFacade.evaluate(theQuery);
+            DatalogReasonerFacade qaFacade = new MandraxFacade(true); // This line is the only tool specific thing!
+            QueryResult qResult = qaFacade.evaluate(theQuery, "urn:ontology");
 
             // Output result
             log.info("(4) Output query answer:");

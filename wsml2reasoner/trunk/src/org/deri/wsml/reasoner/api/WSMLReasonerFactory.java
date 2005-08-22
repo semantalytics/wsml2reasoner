@@ -19,13 +19,21 @@
 
 package org.deri.wsml.reasoner.api;
 
+import java.util.Map;
+
 /** 
  * An interface for getting WSML Reasoners for the various variants of WSML.
  * @author Uwe Keller, DERI Innsbruck
  */
 public interface WSMLReasonerFactory {
     
+    public String PARAM_WSML_VARIANT = "WSML VARIANT";
+    
     public enum WSMLVariant {WSML_CORE, WSML_FLIGHT, WSML_RULE, WSML_DL, WSML_FULL};
+    
+    public String PARAM_BUILT_IN_REASONER = "BUILT IN REASONER";
+    
+    public enum BuiltInReasoner {DLV, MANDARAX, KAON2};
     
     /** 
      * Creates an object that allows to communicate and invoke with a reasoner for
@@ -38,6 +46,6 @@ public interface WSMLReasonerFactory {
      * 
      * 
      */
-    public WSMLReasoner getWSMLReasoner(WSMLVariant variant) throws UnsupportedOperationException;
+    public WSMLReasoner getWSMLReasoner(Map<String, Object> parameters) throws UnsupportedOperationException;
 
 }
