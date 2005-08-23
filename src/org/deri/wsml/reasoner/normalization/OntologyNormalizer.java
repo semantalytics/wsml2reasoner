@@ -19,12 +19,29 @@
 
 package org.deri.wsml.reasoner.normalization;
 
+import org.omwg.ontology.Ontology;
+
 /**
- * Marker interface for classes the can do some normalization of WSML descriptions
- * and document.
+ * An interface for the normalization of ontologies written in WSML.
  * 
  * @author Uwe Keller, DERI Innsbruck
  */
-public interface WSMLNormalizer {
+public interface OntologyNormalizer
+{
 
+    /**
+     * Applies a normalization step to an ontology.
+     * 
+     * Class that implement this interface represent some sort of
+     * transformation of ontologies that are relevant for applications.
+     *
+     * NOTE: Implementations are not required to give back work on a 
+     * copy of the original ontoloy. Thus, they could change the original
+     * ontology destructively during normalization. 
+     * 
+     * @param o - the ontology to be transformed (according to a normalization process)
+     * @return an ontology that represents the original ontology after application of
+     *         the normalization step.
+     */
+    public Ontology normalize(Ontology ontology);
 }
