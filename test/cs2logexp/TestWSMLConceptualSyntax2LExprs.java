@@ -1,11 +1,14 @@
 package cs2logexp;
 
 
-import java.io.*;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.deri.wsml.reasoner.normalization.ConceptualSyntax2LogicalExpressionNormalizer;
+import org.deri.wsml.reasoner.normalization.AxiomatizationNormalizer;
 import org.omwg.ontology.Ontology;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
@@ -100,7 +103,7 @@ public class TestWSMLConceptualSyntax2LExprs{
         
         System.out.println("Transforming ontology to axioms only ...");
         
-        ConceptualSyntax2LogicalExpressionNormalizer cs2le = new ConceptualSyntax2LogicalExpressionNormalizer();
+        AxiomatizationNormalizer cs2le = new AxiomatizationNormalizer();
         Ontology normalizedOntology = cs2le.normalize(o);
         
         System.out.println("... finished.");
