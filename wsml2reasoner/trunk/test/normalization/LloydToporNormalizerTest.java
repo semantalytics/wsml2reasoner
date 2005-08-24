@@ -1,10 +1,10 @@
 package normalization;
 
-import org.deri.wsml.reasoner.normalization.LELLoydToporNormalizer;
+import org.deri.wsml.reasoner.normalization.LloydToporNormalizer;
 import org.deri.wsml.reasoner.normalization.OntologyNormalizer;
 import org.omwg.ontology.Ontology;
 
-public class LELloydToporNormalizerTest extends WSMLNormalizationTest
+public class LloydToporNormalizerTest extends WSMLNormalizationTest
 {
     protected OntologyNormalizer normalizer;
 
@@ -12,7 +12,7 @@ public class LELloydToporNormalizerTest extends WSMLNormalizationTest
     protected void setUp() throws Exception
     {
         super.setUp();
-        normalizer = new LELLoydToporNormalizer();
+        normalizer = new LloydToporNormalizer();
     }
 
     @Override
