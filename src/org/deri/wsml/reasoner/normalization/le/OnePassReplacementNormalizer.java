@@ -11,12 +11,12 @@ import org.omwg.logexpression.LogicalExpressionFactory;
 import org.omwg.logexpression.Unary;
 import org.wsmo.factory.Factory;
 
-public class ConstructReductionNormalizer implements LogicalExpressionNormalizer
+public class OnePassReplacementNormalizer implements LogicalExpressionNormalizer
 {
     protected List<NormalizationRule> rules;
     protected static LogicalExpressionFactory leFactory;
     
-    public ConstructReductionNormalizer(List<NormalizationRule> rules)
+    public OnePassReplacementNormalizer(List<NormalizationRule> rules)
     {
         this.rules = rules;
         if(leFactory == null)

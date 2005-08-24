@@ -9,10 +9,12 @@ concept Pizza subConceptOf Dish
 concept Topping
 concept Margarita subConceptOf Pizza
 	
-axiom margaritaDefinition
+axiom implications
 definedBy
 (?x memberOf A and ?x memberOf B) equivalent ((?x memberOf C or ?x memberOf D) implies ?x memberOf E).
 
-
-
+axiom complexMolecules
+definedBy
+a[r1 hasValue v1, r2 hasValue v2] or b[r1 hasValue v2] or c[r1 hasValue v1, r2 hasValue v2, r3 hasValue v3].
+A[r1 ofType v1, r2 impliesType v2].
 
