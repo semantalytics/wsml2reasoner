@@ -1,6 +1,7 @@
 package cs2logexp;
 
 
+import java.io.*;
 import java.io.FileReader;
 import java.io.Reader;
 import java.io.StringWriter;
@@ -44,8 +45,8 @@ public class UnitTestWSMLConceptualSyntax2LExprs extends TestCase{
 		leFactory = (LogicalExpressionFactory) Factory.createLogicalExpressionFactory(leProperties);
         
         Map<String, Object> properties = new HashMap<String, Object>();
-        properties.put(Factory.PROVIDER_CLASS,WSMO_FACTORY);               
-        properties.put(Parser.PARSER_LE_FACTORY, leFactory);
+        //properties.put(Factory.PROVIDER_CLASS,WSMO_FACTORY);               
+        //properties.put(Parser.PARSER_LE_FACTORY, leFactory);
 		factory = Factory.createWsmoFactory(properties);
 
 		// Set up WSML parser
@@ -66,11 +67,22 @@ public class UnitTestWSMLConceptualSyntax2LExprs extends TestCase{
      * @throws Exception
      */
 	public void testConceptual2LogExp()throws Exception{        
-		// Read simple ontology from file
-        String ONTOLOGY_FILE = "examples/humanOntology.wsml";
-        Reader ontoReader = new FileReader(ONTOLOGY_FILE);
-        Ontology o = (Ontology)parser.parse(ontoReader)[0];
+        String ONTOLOGY_FILE = "example/humanOntology.wsml";
         
+        Ontology o = null;
+		// Read simple ontology from file
+        
+        //try from classpath
+        InputStream is = this.getClass().getClassLoader().getResourceAsStream(ONTOLOGY_FILE);
+        if (is != null){
+            o = (Ontology)parser.parse(new InputStreamReader(is))[0];
+        }else{//classpath has filed try from normal path...
+            Reader ontoReader = new FileReader(ONTOLOGY_FILE);
+            o = (Ontology)parser.parse(ontoReader)[0];
+        }
+        
+        assertNotNull(o);
+            
         // Print ontology in WSML
         System.out.println("WSML Ontology:\n");
         StringWriter sw = new StringWriter();
