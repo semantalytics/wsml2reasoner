@@ -1,0 +1,5 @@
+IMPORTANT: Do not distribute DLV binaries!
+
+cygwin.dll and windows port of dlv "dlv.cygwin.exe" are officially not available since cygwin requires DLV to be open source which it is not and therefore violates the license.
+
+The native linux version of DLV has a propriatery license. It is not yet clarified if we are allowed to distribute it.
