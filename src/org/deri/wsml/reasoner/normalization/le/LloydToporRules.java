@@ -10,17 +10,17 @@ import org.omwg.logexpression.LogicalExpression;
 
 public class LloydToporRules extends FixedNormalizationRules
 {
-    protected static LloydToporRules instance; 
-    
+    protected static LloydToporRules instance;
+
     private LloydToporRules()
-    {    
+    {
         super();
         rules.add(new SplitDisjunctiveBody());
         rules.add(new SplitConjunctiveHead());
         rules.add(new TransformNestedImplication());
+        rules.add(new SplitConjunction());
+    }
 
-        }
-    
     public static LloydToporRules instantiate()
     {
         if(instance == null)
@@ -29,7 +29,7 @@ public class LloydToporRules extends FixedNormalizationRules
         }
         return instance;
     }
-    
+
     public class SplitConjunctiveHead implements TransformationRule
     {
         public boolean isApplicable(LogicalExpression expression)
@@ -122,6 +122,35 @@ public class LloydToporRules extends FixedNormalizationRules
             Binary innerRule = (Binary)rule.getArgument(0);
             Binary conjunction = leFactory.createBinary(CompoundExpression.AND, innerRule.getArgument(1), rule.getArgument(1));
             resultingExpressions.add(leFactory.createBinary(CompoundExpression.IMPLIEDBY, innerRule.getArgument(0), conjunction));
+            return resultingExpressions;
+        }
+    }
+
+    public class SplitConjunction implements TransformationRule
+    {
+        public boolean isApplicable(LogicalExpression expression)
+        {
+            try
+            {
+                CompoundExpression compound = (CompoundExpression)expression;
+                if(compound.getOperator() == CompoundExpression.AND)
+                {
+                    return true;
+                }
+            } catch(ClassCastException e)
+            {
+            }
+            return false;
+        }
+
+        public Set<LogicalExpression> apply(LogicalExpression expression)
+        {
+            Set<LogicalExpression> resultingExpressions = new HashSet<LogicalExpression>();
+            Binary conjunction = (Binary)expression;
+            LogicalExpression leftArg = conjunction.getArgument(0);
+            LogicalExpression rightArg = conjunction.getArgument(1);
+            resultingExpressions.add(leftArg);
+            resultingExpressions.add(rightArg);
             return resultingExpressions;
         }
     }
