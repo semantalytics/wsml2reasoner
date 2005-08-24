@@ -1,6 +1,5 @@
 package org.deri.wsml.reasoner.normalization.le;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
