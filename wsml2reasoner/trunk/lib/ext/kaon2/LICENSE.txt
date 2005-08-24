@@ -1,0 +1,3 @@
+KAON2 is available as a precompiled binary distribution and is free of
+charge for research and academic purposes. To use KAON2 in a commercial
+setting, please contact Ontoprise GmbH (http://www.ontoprise.de/).
