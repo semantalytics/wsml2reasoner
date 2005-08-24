@@ -13,6 +13,7 @@ public class ImplicationReductionRules extends FixedNormalizationRules
         super();
         rules.add(new EquivalenceReplacementRule());
         rules.add(new RightImplicationReplacementRule());
+        rules.add(new LPImplicationReplacementRule());
     }
     
     public static ImplicationReductionRules instantiate()
@@ -63,6 +64,27 @@ public class ImplicationReductionRules extends FixedNormalizationRules
             if(expression instanceof CompoundExpression)
             {
                 return ((CompoundExpression)expression).getOperator() == CompoundExpression.IMPLIES; 
+            }
+            return false;
+        }
+    }
+    
+    protected class LPImplicationReplacementRule implements NormalizationRule
+    {
+        public LogicalExpression apply(LogicalExpression expression)
+        {
+            Binary equivalence = (Binary)expression;
+            LogicalExpression leftArg = equivalence.getArgument(0);
+            LogicalExpression rightArg = equivalence.getArgument(1);
+            LogicalExpression lpImpl = leFactory.createBinary(Binary.LP_IMPL, leftArg, rightArg);
+            return lpImpl;
+        }
+
+        public boolean isApplicable(LogicalExpression expression)
+        {
+            if(expression instanceof CompoundExpression)
+            {
+                return ((CompoundExpression)expression).getOperator() == CompoundExpression.LP_IMPL; 
             }
             return false;
         }
