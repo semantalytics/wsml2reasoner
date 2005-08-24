@@ -67,8 +67,8 @@ import org.wsmo.wsml.Parser;
  *  
  * @author Uwe Keller, DERI Innsbruck
  */
-public class ConceptualSyntax2LogicalExpressionNormalizer implements
-        WSMLOntologyNormalizer {
+public class ConceptualSyntax2LogicalExpressionNormalizer 
+/* implements WSMLOntologyNormalizer*/ {
 
     private WsmoFactory factory; 
     private org.omwg.logexpression.LogicalExpressionFactory leFactory;
