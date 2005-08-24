@@ -20,17 +20,25 @@ package example;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import org.deri.wsml.reasoner.api.*;
-import org.deri.wsml.reasoner.api.queryanswering.*;
-import org.deri.wsml.reasoner.impl.*;
-import org.deri.wsml.reasoner.normalization.ConceptualSyntax2LogicalExpressionNormalizer;
+import org.deri.wsml.reasoner.api.OntologyRegistrationRequest;
+import org.deri.wsml.reasoner.api.WSMLReasoner;
+import org.deri.wsml.reasoner.api.WSMLReasonerFactory;
+import org.deri.wsml.reasoner.api.queryanswering.QueryAnsweringRequest;
+import org.deri.wsml.reasoner.api.queryanswering.QueryAnsweringResult;
+import org.deri.wsml.reasoner.api.queryanswering.VariableBinding;
+import org.deri.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
+import org.deri.wsml.reasoner.impl.OntologyRegistrationRequestImpl;
+import org.deri.wsml.reasoner.impl.QueryAnsweringRequestImpl;
+import org.deri.wsml.reasoner.normalization.AxiomatizationNormalizer;
 import org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl;
-import org.deri.wsmo4j.logexpression.util.SetUtil;
 import org.omwg.logexpression.LogicalExpression;
 import org.omwg.logexpression.LogicalExpressionFactory;
-import org.omwg.ontology.*;
+import org.omwg.ontology.Ontology;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
@@ -43,12 +51,12 @@ import org.wsmo.wsml.Serializer;
  * 
  * <pre>
  *  Created on Aug 17, 2005
- *  Committed by $Author: hlausen $
+ *  Committed by $Author: gabor $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/example/ReasonerExample.java,v $,
  * </pre>
  * 
  * @author Holger Lausen
- * @version $Revision: 1.2 $ $Date: 2005-08-24 09:36:40 $
+ * @version $Revision: 1.3 $ $Date: 2005-08-24 11:10:41 $
  */
 public class ReasonerExample {
 
@@ -69,7 +77,7 @@ public class ReasonerExample {
             return;
 
         // normalization will not be necessary when implementation finished.
-        ConceptualSyntax2LogicalExpressionNormalizer cs2le = new ConceptualSyntax2LogicalExpressionNormalizer();
+        AxiomatizationNormalizer cs2le = new AxiomatizationNormalizer();
         exampleOntology = cs2le.normalize(exampleOntology);
 
         // The details of creating a Query will be hidden in future
