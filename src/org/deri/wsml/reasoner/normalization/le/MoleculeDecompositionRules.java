@@ -1,17 +1,9 @@
 package org.deri.wsml.reasoner.normalization.le;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
-import org.omwg.logexpression.AttrSpecification;
-import org.omwg.logexpression.Binary;
-import org.omwg.logexpression.LogicalExpression;
-import org.omwg.logexpression.Molecule;
+import org.omwg.logexpression.*;
 import org.omwg.logexpression.terms.Term;
-import org.semanticweb.kaon2.in;
-
-import com.sun.org.apache.xerces.internal.util.AttributesProxy;
 
 public class MoleculeDecompositionRules extends FixedNormalizationRules
 {
