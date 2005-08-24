@@ -22,12 +22,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
 
-import org.deri.wsml.reasoner.api.WSMLReasoner;
-import org.deri.wsml.reasoner.api.WSMLReasonerFactory;
+import org.deri.wsml.reasoner.api.*;
 import org.deri.wsml.reasoner.api.queryanswering.*;
 import org.deri.wsml.reasoner.impl.*;
 import org.deri.wsml.reasoner.normalization.ConceptualSyntax2LogicalExpressionNormalizer;
 import org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl;
+import org.deri.wsmo4j.logexpression.util.SetUtil;
 import org.omwg.logexpression.LogicalExpression;
 import org.omwg.logexpression.LogicalExpressionFactory;
 import org.omwg.ontology.*;
@@ -48,7 +48,7 @@ import org.wsmo.wsml.Serializer;
  * </pre>
  * 
  * @author Holger Lausen
- * @version $Revision: 1.1 $ $Date: 2005-08-19 13:43:10 $
+ * @version $Revision: 1.2 $ $Date: 2005-08-24 09:36:40 $
  */
 public class ReasonerExample {
 
@@ -76,12 +76,26 @@ public class ReasonerExample {
         LogicalExpression query = (LogicalExpression) new LogicalExpressionFactoryImpl(null)
                 .createLogicalExpression("?x memberOf Human", exampleOntology);
 
+        QueryAnsweringRequest qaRequest = 
+                new QueryAnsweringRequestImpl(exampleOntology.getIdentifier().toString(), query);
+        
+        //get A reasoner
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(WSMLReasonerFactory.PARAM_WSML_VARIANT,
+                WSMLReasonerFactory.WSMLVariant.WSML_CORE);
+        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
+                WSMLReasonerFactory.BuiltInReasoner.KAON2);
+        WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().getWSMLReasoner(
+                params);
+        
+        // Register ontology
+        System.out.println("Registering ontology");
         Set<Ontology> ontos = new HashSet<Ontology>();
         ontos.add(exampleOntology);
-        QueryAnsweringRequest qaRequest = 
-                new QueryAnsweringRequestImpl(ontos, query);
-        WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
-                .getWSMLReasoner(WSMLReasonerFactory.WSMLVariant.WSML_CORE);
+        OntologyRegistrationRequest regReq = new OntologyRegistrationRequestImpl(
+                ontos);
+        reasoner.execute(regReq);
+        
         QueryAnsweringResult result = (QueryAnsweringResult) reasoner
                 .execute(qaRequest);
 
@@ -97,7 +111,8 @@ public class ReasonerExample {
         // The details of creating a Query will be hidden in future
         query = (LogicalExpression) new LogicalExpressionFactoryImpl(null)
                 .createLogicalExpression("?x[hasRelative hasValue ?y]",exampleOntology);
-        qaRequest = new QueryAnsweringRequestImpl(ontos, query);
+        qaRequest = new QueryAnsweringRequestImpl(
+                exampleOntology.getIdentifier().toString(), query);
         result = (QueryAnsweringResult) reasoner.execute(qaRequest);
 
         // print out the results:
