@@ -78,15 +78,13 @@ public class AxiomatizationNormalizer implements
         Map<String, String> leProperties = new HashMap<String, String>();
         leProperties.put(Factory.PROVIDER_CLASS,
                 "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
-
         leFactory = (org.omwg.logexpression.LogicalExpressionFactory) Factory
                 .createLogicalExpressionFactory(leProperties);
 
         Map<String, Object> properties = new HashMap<String, Object>();
         properties.put(Factory.PROVIDER_CLASS,
                 "com.ontotext.wsmo4j.factory.WsmoFactoryImpl");
-        properties.put(Parser.PARSER_LE_FACTORY, leFactory);
-        factory = Factory.createWsmoFactory(/*properties*/null);
+        factory = Factory.createWsmoFactory(properties);
     }
     
     /**
