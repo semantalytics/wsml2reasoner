@@ -30,7 +30,7 @@ public class LloydToporNormalizerTest extends WSMLNormalizationTest
         // normalize ontology with the LELloydToporNormalizer:
         Ontology normOnt = normalizer.normalize(ontology);
         System.out.println(LloydToporRules.instantiate().getDescription());
-
+System.out.println(serializeOntology(normOnt));
         // test whether produced ontology contains exactly 4 axioms:
         assertTrue(normOnt.listAxioms().size() == 4);
     }
