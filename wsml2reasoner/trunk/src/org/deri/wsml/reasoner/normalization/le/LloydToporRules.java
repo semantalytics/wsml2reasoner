@@ -2,6 +2,7 @@ package org.deri.wsml.reasoner.normalization.le;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.omwg.logexpression.Binary;
 import org.omwg.logexpression.CompoundExpression;
@@ -30,6 +31,19 @@ public class LloydToporRules extends FixedNormalizationRules
             instance = new LloydToporRules();
         }
         return instance;
+    }
+
+    public String getDescription()
+    {
+        String resultString = new String();
+        for(Object object : rules)
+        {
+            StringTokenizer ruleNameTokenizer = new StringTokenizer(object.getClass().getName().toString(), "$");
+            ruleNameTokenizer.nextToken();
+            resultString += ruleNameTokenizer.nextToken() + "\n";
+            resultString += object.toString() + "\n";
+        }
+        return resultString;
     }
 
     public class SplitConjunctiveHead implements TransformationRule
@@ -61,6 +75,11 @@ public class LloydToporRules extends FixedNormalizationRules
             resultingExpressions.add(leFactory.createBinary(CompoundExpression.LP_IMPL, conjunction.getArgument(0), rule.getArgument(1)));
             resultingExpressions.add(leFactory.createBinary(CompoundExpression.LP_IMPL, conjunction.getArgument(1), rule.getArgument(1)));
             return resultingExpressions;
+        }
+
+        public String toString()
+        {
+            return "A1 and ... and An :- B\n\t=>\n A1 :- B\n\t...\n An :- B\n";
         }
     }
 
@@ -94,6 +113,11 @@ public class LloydToporRules extends FixedNormalizationRules
             resultingExpressions.add(leFactory.createBinary(CompoundExpression.LP_IMPL, rule.getArgument(0), disjunction.getArgument(1)));
             return resultingExpressions;
         }
+
+        public String toString()
+        {
+            return "A :- B1 or ... Bn\n\t=>\n A :- B1\n\t...\n A :- Bn\n";
+        }
     }
 
     public class TransformNestedImplication implements TransformationRule
@@ -126,6 +150,11 @@ public class LloydToporRules extends FixedNormalizationRules
             resultingExpressions.add(leFactory.createBinary(CompoundExpression.LP_IMPL, innerRule.getArgument(0), conjunction));
             return resultingExpressions;
         }
+
+        public String toString()
+        {
+            return "A1 impliedBy A2 :- B\n\t=>\n A1 :- A2 and B\n";
+        }
     }
 
     public class SplitConjunction implements TransformationRule
@@ -155,6 +184,11 @@ public class LloydToporRules extends FixedNormalizationRules
             resultingExpressions.add(rightArg);
             return resultingExpressions;
         }
+
+        public String toString()
+        {
+            return "A1 and ... and An \n\t=>\n A1\n\t...\n An\n";
+        }
     }
 
     public class TransformImplication implements TransformationRule
@@ -182,8 +216,13 @@ public class LloydToporRules extends FixedNormalizationRules
             resultingExpressions.add(rule);
             return resultingExpressions;
         }
+
+        public String toString()
+        {
+            return "A1 impliedBy A2\n\t=>\n A1 :- A2\n";
+        }
     }
-    
+
     public class SplitConstraint implements TransformationRule
     {
         public boolean isApplicable(LogicalExpression expression)
@@ -213,6 +252,11 @@ public class LloydToporRules extends FixedNormalizationRules
             resultingExpressions.add(leFactory.createUnary(CompoundExpression.CONSTRAINT, disjunction.getArgument(0)));
             resultingExpressions.add(leFactory.createUnary(CompoundExpression.CONSTRAINT, disjunction.getArgument(1)));
             return resultingExpressions;
+        }
+
+        public String toString()
+        {
+            return "!- B1 or ... or Bn\n\t=>\n !- B1\n\t...\n !- Bn\n";
         }
     }
 }

@@ -2,6 +2,7 @@ package normalization;
 
 import org.deri.wsml.reasoner.normalization.LloydToporNormalizer;
 import org.deri.wsml.reasoner.normalization.OntologyNormalizer;
+import org.deri.wsml.reasoner.normalization.le.LloydToporRules;
 import org.omwg.ontology.Ontology;
 
 public class LloydToporNormalizerTest extends WSMLNormalizationTest
@@ -28,6 +29,7 @@ public class LloydToporNormalizerTest extends WSMLNormalizationTest
 
         // normalize ontology with the LELloydToporNormalizer:
         Ontology normOnt = normalizer.normalize(ontology);
+        System.out.println(LloydToporRules.instantiate().getDescription());
 
         // test whether produced ontology contains exactly 4 axioms:
         assertTrue(normOnt.listAxioms().size() == 4);
