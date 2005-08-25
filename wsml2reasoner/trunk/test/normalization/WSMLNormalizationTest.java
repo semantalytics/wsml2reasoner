@@ -11,9 +11,11 @@ import junit.framework.TestCase;
 import org.deri.wsml.reasoner.normalization.OntologyNormalizer;
 import org.omwg.logexpression.LogicalExpressionFactory;
 import org.omwg.ontology.Ontology;
+import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
+import org.wsmo.wsml.Serializer;
 
 public abstract class WSMLNormalizationTest extends TestCase
 {
@@ -55,5 +57,13 @@ public abstract class WSMLNormalizationTest extends TestCase
         InputStream stream = new FileInputStream(fileName);
         assertNotNull("access test WSML file", stream);
         return (Ontology)parser.parse(new InputStreamReader(stream))[0];
+    }
+    
+    protected String serializeOntology(Ontology ontology)
+    {
+        StringBuffer buf = new StringBuffer();
+        Serializer serializer = Factory.createSerializer(null);
+        serializer.serialize(new TopEntity[] { ontology }, buf);
+        return buf.toString();
     }
 }

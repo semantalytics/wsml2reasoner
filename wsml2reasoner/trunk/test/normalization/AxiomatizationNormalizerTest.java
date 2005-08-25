@@ -45,10 +45,7 @@ public class AxiomatizationNormalizerTest extends WSMLNormalizationTest
         // test whether produced expression is correct
         // by means of regular expressions matched against serialized result
         // ontology:
-        StringBuffer buf = new StringBuffer();
-        Serializer serializer = Factory.createSerializer(null);
-        serializer.serialize(new TopEntity[] { leOntology }, buf);
-        String leString = buf.toString();
+        String leString = serializeOntology(leOntology);
         Pattern pattern = Pattern.compile("\\?x\\[.*topping.*hasValue.*\\?(\\w+)\\]\\s*and\\s*naf\\s*\\?\\1\\s*memberOf\\s*..Topping", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(leString);
         assertTrue(matcher.find());
@@ -72,10 +69,7 @@ public class AxiomatizationNormalizerTest extends WSMLNormalizationTest
         // test whether produced expression is correct
         // by means of regular expressions matched against serialized result
         // ontology:
-        StringBuffer buf = new StringBuffer();
-        Serializer serializer = Factory.createSerializer(null);
-        serializer.serialize(new TopEntity[] { leOntology }, buf);
-        String leString = buf.toString();
+        String leString = serializeOntology(leOntology);
         Pattern pattern = Pattern
                 .compile(
                         "toppingMin.?\\s*hasValue\\s*\\{\\s*\\?(\\w+)\\s*,\\s*\\?(\\w+)\\s*,\\s*\\?(\\w+)\\s*\\}.*and\\s*\\?\\3\\s*\\!=\\s*\\?\\2\\s*and\\s*\\?\\s*\\3\\s*\\!=\\s*\\?\\1\\s*and\\s*\\?\\2\\s*\\!=\\s*\\?\\1\\s*\\.",
@@ -102,10 +96,7 @@ public class AxiomatizationNormalizerTest extends WSMLNormalizationTest
         // test whether produced expression is correct
         // by means of regular expressions matched against serialized result
         // ontology:
-        StringBuffer buf = new StringBuffer();
-        Serializer serializer = Factory.createSerializer(null);
-        serializer.serialize(new TopEntity[] { leOntology }, buf);
-        String leString = buf.toString();
+        String leString = serializeOntology(leOntology);
         Pattern pattern = Pattern
                 .compile(
                         "toppingMax.?\\s*hasValue\\s*\\{\\s*\\?(\\w+)\\s*,\\s*\\?(\\w+)\\s*,\\s*\\?(\\w+)\\s*,\\s*\\?(\\w+)\\s*\\}.*and\\s*\\?(\\1|\\2|\\3|\\4)\\s*\\!=\\s*\\?(\\1|\\2|\\3|\\4)\\s*and\\s*\\?(\\1|\\2|\\3|\\4)\\s*\\!=\\s*\\?(\\1|\\2|\\3|\\4)\\s*and\\s*\\?(\\1|\\2|\\3|\\4)\\s*\\!=\\s*\\?(\\1|\\2|\\3|\\4)\\s*and\\s*\\?(\\1|\\2|\\3|\\4)\\s*\\!=\\s*\\?(\\1|\\2|\\3|\\4)\\s*and\\s*\\?(\\1|\\2|\\3|\\4)\\s*\\!=\\s*\\?(\\1|\\2|\\3|\\4)\\s*and\\s*\\?(\\1|\\2|\\3|\\4)\\s*\\!=\\s*\\?(\\1|\\2|\\3|\\4)\\s*.",

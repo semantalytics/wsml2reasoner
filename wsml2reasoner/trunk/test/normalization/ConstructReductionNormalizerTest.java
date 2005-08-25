@@ -38,10 +38,7 @@ public class ConstructReductionNormalizerTest extends WSMLNormalizationTest
         // test whether produced expression is correct
         // by means of regular expressions matched against serialized result
         // ontology:
-        StringBuffer buf = new StringBuffer();
-        Serializer serializer = Factory.createSerializer(null);
-        serializer.serialize(new TopEntity[] { normOnt }, buf);
-        String normString = buf.toString();
+        String normString = serializeOntology(normOnt);
         Pattern pattern = Pattern.compile(".*E.*impliedBy.*C.*or.*D.*impliedBy.*A.*and.*B.*and.*A.*and.*B.*impliedBy.*E.*impliedBy.*C.*or.*D.*", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(normString);
         assertTrue(matcher.find());
@@ -58,10 +55,7 @@ public class ConstructReductionNormalizerTest extends WSMLNormalizationTest
         // test whether produced expression is correct
         // by means of regular expressions matched against serialized result
         // ontology:
-        StringBuffer buf = new StringBuffer();
-        Serializer serializer = Factory.createSerializer(null);
-        serializer.serialize(new TopEntity[] { normOnt }, buf);
-        String normString = buf.toString();
+        String normString = serializeOntology(normOnt);
         Pattern pattern = Pattern.compile("c.*\\[.*r1.*hasValue.*v1.*\\].*and.*c.*\\[.*r3.*hasValue.*v3.*].*and.*c.*\\[.*r2.*hasValue.*v2.*\\].*", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(normString);
         assertTrue(matcher.find());
