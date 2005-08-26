@@ -33,6 +33,7 @@ import org.deri.wsml.reasoner.wsmlcore.wrapper.DatalogReasonerFacade;
 import org.deri.wsml.reasoner.wsmlcore.wrapper.ExternalToolException;
 import org.deri.wsml.reasoner.wsmlcore.wrapper.SymbolFactory;
 import org.deri.wsml.reasoner.wsmlcore.wrapper.UnsupportedFeatureException;
+import org.omwg.logexpression.Constants;
 import org.semanticweb.kaon2.api.*;
 import org.semanticweb.kaon2.api.owl.elements.Individual;
 import org.semanticweb.kaon2.api.reasoner.Query;
@@ -54,6 +55,8 @@ import org.semanticweb.kaon2.api.rules.Variable;
  */
 public class Kaon2Facade implements DatalogReasonerFacade {
 
+    private final Map<String, Object> EMPTY_MAP = new HashMap<String, Object>();
+
     private Logger logger = Logger
             .getLogger("org.deri.wsml.reasoner.wsmlcore.wrapper.kaon2");
     {
@@ -65,6 +68,13 @@ public class Kaon2Facade implements DatalogReasonerFacade {
     private KAON2Factory f = KAON2Manager.factory();
 
     private KAON2Connection conn = null;
+
+    /**
+     * Needed for testing purposes
+     */
+    public KAON2Connection getKaon2Connection() {
+        return conn;
+    }
 
     /**
      * Evaluates a Query on a Datalog knowledgebase
@@ -92,7 +102,10 @@ public class Kaon2Facade implements DatalogReasonerFacade {
 
             try {
                 Ontology ontology = this.conn.openOntology(ontologyUri,
-                        new HashMap<String, Object>());
+                        EMPTY_MAP);
+                if (ontology == null)
+                    throw new ExternalToolException("The ontology "
+                            + ontologyUri + " is not registered");
                 Reasoner reasoner = ontology.createReasoner();
                 Query query = translateQuery(q, reasoner, varNames);
                 // for (Literal l : query.getQueryLiterals()) {
@@ -118,8 +131,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                         "Can not convert query to tool", e, query);
             } catch (InterruptedException e) {
                 throw new ExternalToolException(
-                        "Kaon2 query was interrupted during execution", e,
-                        query);
+                        "Kaon2 query was interrupted during execution");
             }
 
             return result;
@@ -216,7 +228,14 @@ public class Kaon2Facade implements DatalogReasonerFacade {
             body.add(translateLiteral(bl));
         }
 
-        Rule rule = f.rule(head, body);
+        Rule rule;
+
+        // Handle constraints
+        if (head == null)
+            rule = f.rule(new Literal[] {}, body.toArray(new Literal[body
+                    .size()]));
+        else
+            rule = f.rule(head, body);
 
         logger.info("Transformed rule:\n" + r + "\n to \n" + rule);
 
@@ -227,10 +246,18 @@ public class Kaon2Facade implements DatalogReasonerFacade {
     private Literal translateLiteral(
             org.deri.wsml.reasoner.wsmlcore.datalog.Literal l)
             throws ExternalToolException {
+        if (l == null)
+            return null;
         try {
             Predicate p = l.getSymbol();
-            NonOWLPredicate pred = f.nonOWLPredicate(p.getSymbolName(), p
-                    .getArity());
+            NonOWLPredicate pred;
+            if (p.getSymbolName().equals(Constants.EQUAL)) {
+                pred = f.equal();
+            } else if (p.getSymbolName().equals(Constants.INEQUAL)) {
+                pred = f.notEqual();
+            } else {
+                pred = f.nonOWLPredicate(p.getSymbolName(), p.getArity());
+            }
             List<Term> terms = new ArrayList<Term>();
 
             org.deri.wsml.reasoner.wsmlcore.datalog.Term[] args = l
@@ -245,7 +272,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                 }
                 if (arg.getClass().equals(
                         org.deri.wsml.reasoner.wsmlcore.datalog.Constant.class)) {
-                    terms.add(f.constant(((Constant) arg).getSymbol()));
+                    terms.add(f.individual(((Constant) arg).getSymbol()));
                 }
                 if (arg
                         .getClass()
@@ -342,8 +369,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                 .getOntologyResovler();
         resolver.registerReplacement(ontologyURI, "file:/C:/tmp");
         try {
-            Ontology o = conn.createOntology(ontologyURI,
-                    new HashMap<String, Object>());
+            Ontology o = conn.createOntology(ontologyURI, EMPTY_MAP);
             Set<Rule> rules = translateKnowledgebase(kb);
             appendRules(o, rules);
         } catch (KAON2Exception e) {
