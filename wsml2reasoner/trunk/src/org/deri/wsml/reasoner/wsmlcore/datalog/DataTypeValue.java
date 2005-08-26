@@ -20,9 +20,11 @@
 package org.deri.wsml.reasoner.wsmlcore.datalog;
 
 public class DataTypeValue extends Constant {
-    
-    public enum DataType {UNDEF, INTEGER, STRING, DECIMAL};
-    
+
+    public enum DataType {
+        UNDEF, INTEGER, STRING, DECIMAL
+    };
+
     private DataType type = DataType.UNDEF;
 
     /**
@@ -32,25 +34,31 @@ public class DataTypeValue extends Constant {
         return type;
     }
 
-    public DataTypeValue(String value, DataType datatype){
+    public DataTypeValue(String value, DataType datatype) {
         super(value);
         type = datatype;
     }
-    
-    public boolean equals(Object o){
-        boolean result = false;
-        if (o != null && o instanceof DataTypeValue){
-            DataTypeValue d = (DataTypeValue) o;
-            result = ( this.getSymbol().equals(d.getSymbol()) 
-                       && this.getType()== d.getType());
-        }
-        return result;
-        
+
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if ((obj == null) || (obj.getClass() != this.getClass()))
+            return false;
+        DataTypeValue other = (DataTypeValue) obj;
+        return super.equals(obj)
+                && (type == other.type || (type != null && type
+                        .equals(other.type)));
     }
-    
-    public String toString(){
+
+    public int hashCode() {
+        int hash = super.hashCode();
+        hash = 31 * hash + (null == type ? 0 : type.hashCode());
+        return hash;
+    }
+
+    public String toString() {
         String result = this.getSymbol();
-        
+
         switch (getType()) {
         case INTEGER:
             result += "_(OF_DATATYPE_INTEGER)";
@@ -66,9 +74,8 @@ public class DataTypeValue extends Constant {
             result += "_(OF_UNDEFINED_DATATYPE)";
             break;
         }
-        
+
         return result;
     }
-    
-    
+
 }

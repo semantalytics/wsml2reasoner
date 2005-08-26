@@ -149,26 +149,20 @@ public class Rule {
         return result;
     }
     
-    /**
-     * TODO: Implement equals on rules to prevent duplicate rules in Set implementations.
-     * Hence we also need to implement equals for Literals, Predicates and Terms
-     */
-
-    public boolean equals(Object o){
-        boolean result = false;
-        
-        if (o == null) return false;
-        if (this == o) return true;
-        if (o instanceof Rule){
-            Rule r = (Rule) o;
-            
-            // TODO continue ...
-        }
-        return result;
-        
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if ((obj == null) || (obj.getClass() != this.getClass()))
+            return false;
+        Rule r = (Rule) obj;
+        return (head == r.head || (head != null && head.equals(r.head))) && (body == r.body || (body != null && body.equals(r.body)));
     }
-    
-    
-    
+
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + (null == head ? 0 : head.hashCode());
+        hash = 31 * hash + (null == body ? 0 : body.hashCode());
+        return hash;
+    }
     
 }

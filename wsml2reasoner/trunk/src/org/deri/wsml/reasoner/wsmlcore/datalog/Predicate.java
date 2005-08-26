@@ -25,75 +25,80 @@ import org.omwg.logexpression.Constants;
 
 /**
  * Represents a predicate symbol in rules.
+ * 
  * @author Uwe Keller, DERI Innsbruck
  */
 
 public class Predicate {
 
-   protected static Set<Predicate> BUILT_IN_PREDICATES;
-   
-   public final static Predicate EQUALS = new Predicate(Constants.EQUAL,2);  
-   
-   private int arity; 
-   private String symbolName;
+    protected static Set<Predicate> BUILT_IN_PREDICATES;
 
-   
-   static {
-       Predicate.BUILT_IN_PREDICATES = new HashSet<Predicate>();
-       BUILT_IN_PREDICATES.add(EQUALS);
-       
-       // more to be added finally.
-       
-   }
+    public final static Predicate EQUALS = new Predicate(Constants.EQUAL, 2);
 
-   /**
-    * Creates a predicate symbol with the given name and arity.
-    * @param arity
-    * @param name
-    */
-   public Predicate(String name, int arity) {
-       super();
-       this.arity = arity;
-       symbolName = name;
-   }
-   
-   /**
-    * @return Returns the arity.
-    */
-   public int getArity() {
-       return arity;
-   }
-   
-   /**
-    * @return Returns the symbolName.
-    */
-   public String getSymbolName() {
-       return symbolName;
-   }
-   
-   /**
-    * @return true if the predicate is recognized as a built-in WSML predicate.
-    */
-   public boolean isBuiltIn(){
-       return Predicate.BUILT_IN_PREDICATES.contains(this);
-   }
-   
-   /**
-    * Two predicates are equal in case they have the same name and arity.
-    */
-   public boolean equals(Object o){
-       boolean result = false;
-       if (o != null && (o instanceof Predicate)) {
-           Predicate p = (Predicate) o;
-           result = (this.getArity() == p.getArity()) && this.getSymbolName().equals(p.getSymbolName());
-       }
-       return result;
-           
-   }
-   
-   
-   
-   
-   
-   
+    private int arity;
+
+    private String symbolName;
+
+    static {
+        Predicate.BUILT_IN_PREDICATES = new HashSet<Predicate>();
+        BUILT_IN_PREDICATES.add(EQUALS);
+
+        // more to be added finally.
+
+    }
+
+    /**
+     * Creates a predicate symbol with the given name and arity.
+     * 
+     * @param arity
+     * @param name
+     */
+    public Predicate(String name, int arity) {
+        super();
+        this.arity = arity;
+        symbolName = name;
+    }
+
+    /**
+     * @return Returns the arity.
+     */
+    public int getArity() {
+        return arity;
+    }
+
+    /**
+     * @return Returns the symbolName.
+     */
+    public String getSymbolName() {
+        return symbolName;
+    }
+
+    /**
+     * @return true if the predicate is recognized as a built-in WSML predicate.
+     */
+    public boolean isBuiltIn() {
+        return Predicate.BUILT_IN_PREDICATES.contains(this);
+    }
+
+    /**
+     * Two predicates are equal in case they have the same name and arity.
+     */
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if ((obj == null) || (obj.getClass() != this.getClass()))
+            return false;
+        Predicate other = (Predicate) obj;
+        return (arity == other.arity)
+                && (symbolName == other.symbolName || (symbolName != null && symbolName
+                        .equals(other.symbolName)));
+    }
+
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + arity;
+        hash = 31 * hash + (null == symbolName ? 0 : symbolName.hashCode());
+        return hash;
+    }
+
 }

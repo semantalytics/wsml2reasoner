@@ -23,29 +23,35 @@ import java.util.*;
 
 public class Variable extends Term {
 
-    public Variable(String varName){
+    public Variable(String varName) {
         this.symb = varName;
     }
-    
+
     /**
      * @return the set of variables that are contained in this term
      */
-    List<Variable> getVariables(){
+    List<Variable> getVariables() {
         List<Variable> result = new ArrayList<Variable>();
         result.add(this);
         return result;
     }
-    
-    public boolean equals(Object o){
-        boolean result = false;
-        if (o != null && o instanceof Variable){
-            result = (this.getSymbol().equals(((Variable) o).getSymbol()));
-        }
-        return result;
-        
+
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if ((obj == null) || (obj.getClass() != this.getClass()))
+            return false;
+        Variable v = (Variable) obj;
+        return (symb == v.symb || (symb != null && symb.equals(v.symb)));
     }
-    
-    public String toString(){
+
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + (null == symb ? 0 : symb.hashCode());
+        return hash;
+    }
+
+    public String toString() {
         String result = this.getSymbol();
         return result;
     }
