@@ -10,7 +10,13 @@ import org.omwg.logexpression.LogicalExpression;
 import org.omwg.logexpression.Molecule;
 import org.omwg.logexpression.terms.Term;
 
-public class MoleculeDecompositionRules extends FixedNormalizationRules
+/**
+ * This singleton class represents a set of normalization rules for replacing
+ * complex molecules inside a logical expression by conjunctions of simple ones.
+ * 
+ * @author Stephan Grimm, FZI Karlsruhe
+ */
+public class MoleculeDecompositionRules extends FixedModificationRules
 {
     protected static MoleculeDecompositionRules instance;
 

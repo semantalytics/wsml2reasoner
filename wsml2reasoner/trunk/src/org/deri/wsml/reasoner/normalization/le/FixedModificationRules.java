@@ -12,13 +12,20 @@ import java.util.StringTokenizer;
 import org.omwg.logexpression.LogicalExpressionFactory;
 import org.wsmo.factory.Factory;
 
-public abstract class FixedNormalizationRules implements List
+/**
+ * The abstract class FixedModificationRules represents a fixed list of
+ * LEModificationRule objects, bundled together for a certain purpose. Subclasses
+ * hereof usually contain implementations of LEModificationRule as inner
+ * classes. Any write-operation on this list will be denied.
+ * 
+ * @author grimm
+ */
+public abstract class FixedModificationRules implements List
 {
     protected List rules;
-
     protected static LogicalExpressionFactory leFactory;
 
-    FixedNormalizationRules()
+    FixedModificationRules()
     {
         rules = new ArrayList();
         if(leFactory == null)
@@ -124,7 +131,6 @@ public abstract class FixedNormalizationRules implements List
         throw new UnsupportedOperationException();
     }
 
-
     public int size()
     {
         return rules.size();
@@ -144,7 +150,7 @@ public abstract class FixedNormalizationRules implements List
     {
         return rules.toArray(a);
     }
-    
+
     public String toString()
     {
         String resultString = new String();

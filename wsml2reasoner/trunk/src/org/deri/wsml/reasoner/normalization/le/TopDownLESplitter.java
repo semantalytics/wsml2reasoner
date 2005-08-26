@@ -7,6 +7,14 @@ import java.util.Set;
 
 import org.omwg.logexpression.LogicalExpression;
 
+/**
+ * This class repeatedly applies a set of transformation rules to a logical
+ * expression, splitting it into simpler expressions. These resulting
+ * expressions are collected in a set of logical expression until no rule is
+ * applicable to any expression in this set anymore.
+ * 
+ * @author Stephan Grimm, FZI Karlsruhe
+ */
 public class TopDownLESplitter implements LogicalExpressionTransformer
 {
     protected List<TransformationRule> rules;
@@ -16,6 +24,10 @@ public class TopDownLESplitter implements LogicalExpressionTransformer
         this.rules = rules;
     }
 
+    /**
+     * This method performs the transformation of a given logical expression
+     * according to a set of transformation rules.
+     */
     public Set<LogicalExpression> transform(LogicalExpression expression)
     {
         Set<LogicalExpression> outputExpressions = new HashSet<LogicalExpression>();

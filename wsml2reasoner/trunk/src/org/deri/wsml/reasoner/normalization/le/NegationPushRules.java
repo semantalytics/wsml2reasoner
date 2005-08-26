@@ -5,18 +5,26 @@ import org.omwg.logexpression.CompoundExpression;
 import org.omwg.logexpression.LogicalExpression;
 import org.omwg.logexpression.Unary;
 
-public class NegationPushRules extends FixedNormalizationRules
+/**
+ * This singleton class represents a set of normalization rules for pushing
+ * negation-as-failure operators inside a logical expression into its
+ * sub-expressions, such that the remaining occurrences of negation are all
+ * atomic.
+ * 
+ * @author Stephan Grimm, FZI Karlsruhe
+ */
+public class NegationPushRules extends FixedModificationRules
 {
-    protected static NegationPushRules instance; 
-    
+    protected static NegationPushRules instance;
+
     private NegationPushRules()
-    {       
+    {
         super();
         rules.add(new DoubleNegationRule());
         rules.add(new NegateConjunctionRule());
         rules.add(new NegateDisjunctionRule());
     }
-    
+
     public static NegationPushRules instantiate()
     {
         if(instance == null)
@@ -25,7 +33,7 @@ public class NegationPushRules extends FixedNormalizationRules
         }
         return instance;
     }
-    
+
     protected class DoubleNegationRule implements NormalizationRule
     {
         public LogicalExpression apply(LogicalExpression expression)
@@ -64,8 +72,8 @@ public class NegationPushRules extends FixedNormalizationRules
         {
             Unary naf = (Unary)expression;
             Binary conjunction = (Binary)(naf.getArgument(0));
-            LogicalExpression leftArg = leFactory.createUnary(Unary.NAF,conjunction.getArgument(0));
-            LogicalExpression rightArg = leFactory.createUnary(Unary.NAF,conjunction.getArgument(1));
+            LogicalExpression leftArg = leFactory.createUnary(Unary.NAF, conjunction.getArgument(0));
+            LogicalExpression rightArg = leFactory.createUnary(Unary.NAF, conjunction.getArgument(1));
             LogicalExpression disjunction = leFactory.createBinary(Binary.OR, leftArg, rightArg);
             return disjunction;
         }
@@ -92,15 +100,15 @@ public class NegationPushRules extends FixedNormalizationRules
             return "naf(A and B)\n\t=>\n naf A or naf B\n";
         }
     }
-    
+
     protected class NegateDisjunctionRule implements NormalizationRule
     {
         public LogicalExpression apply(LogicalExpression expression)
         {
             Unary naf = (Unary)expression;
             Binary disjunction = (Binary)(naf.getArgument(0));
-            LogicalExpression leftArg = leFactory.createUnary(Unary.NAF,disjunction.getArgument(0));
-            LogicalExpression rightArg = leFactory.createUnary(Unary.NAF,disjunction.getArgument(1));
+            LogicalExpression leftArg = leFactory.createUnary(Unary.NAF, disjunction.getArgument(0));
+            LogicalExpression rightArg = leFactory.createUnary(Unary.NAF, disjunction.getArgument(1));
             LogicalExpression conjunction = leFactory.createBinary(Binary.AND, leftArg, rightArg);
             return conjunction;
         }
