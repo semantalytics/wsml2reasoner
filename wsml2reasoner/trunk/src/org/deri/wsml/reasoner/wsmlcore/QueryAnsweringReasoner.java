@@ -28,6 +28,9 @@ import org.deri.wsml.reasoner.api.queryanswering.QueryAnsweringRequest;
 import org.deri.wsml.reasoner.api.queryanswering.QueryAnsweringResult;
 import org.deri.wsml.reasoner.impl.LogicalExpressionVariableVisitor;
 import org.deri.wsml.reasoner.impl.QueryAnsweringResultImpl;
+import org.deri.wsml.reasoner.normalization.le.LogicalExpressionNormalizer;
+import org.deri.wsml.reasoner.normalization.le.MoleculeDecompositionRules;
+import org.deri.wsml.reasoner.normalization.le.OnePassReplacementNormalizer;
 import org.deri.wsml.reasoner.wsmlcore.datalog.*;
 import org.deri.wsml.reasoner.wsmlcore.wrapper.DatalogReasonerFacade;
 import org.deri.wsml.reasoner.wsmlcore.wrapper.ExternalToolException;
@@ -76,10 +79,6 @@ public class QueryAnsweringReasoner {
             org.omwg.logexpression.LogicalExpression q) {
         WSML2Datalog wsml2datalog = new WSML2Datalog();
 
-        // Convert query Q(x1,...xn) to rule "wsml-result(x1,...xn) impliedBy
-        // Q(x1,...xn)";
-        // and use as query simply the atomic expression: wsml-result(x1,...xn)
-
         Map<String, String> leProperties = new HashMap<String, String>();
         leProperties.put(Factory.PROVIDER_CLASS,
                 "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
@@ -93,7 +92,12 @@ public class QueryAnsweringReasoner {
         params.addAll(varVisitor.getFreeVariables(q));
         Atom rHead = leFactory.createAtom(leFactory
                 .createIRI(WSML_RESULT_PREDICATE), params);
-        //                    
+        
+        
+        LogicalExpressionNormalizer moleculeNormalizer = new OnePassReplacementNormalizer(MoleculeDecompositionRules.instantiate());
+        System.out.println("Q before molecule normalization: " + q);
+        q = moleculeNormalizer.normalize(q);
+        System.out.println("Q after molecule normalization: " + q);
         org.omwg.logexpression.LogicalExpression resultDefRule = leFactory
                 .createBinary(CompoundExpression.IMPLIEDBY, rHead, q);
         //        
@@ -110,27 +114,6 @@ public class QueryAnsweringReasoner {
         for (Literal l : rule.getBody()) {
             body.add(l);
         }
-
-        //        
-        // // Add the tranlation of the result definition rule to the
-        // knowledgebase.
-        //        
-        // kb.addAll(p);
-
-        // Create datalog query ...
-        // Term[] qLitArgs = new Term[params.size()];
-        // int i = 0;
-        // for (org.omwg.logexpression.terms.Variable fv : params) {
-        // // Create a respective datalog variable
-        // org.deri.wsml.reasoner.wsmlcore.datalog.Variable dVar = new
-        // org.deri.wsml.reasoner.wsmlcore.datalog.Variable(
-        // fv.getName());
-        // qLitArgs[i] = dVar;
-        // i++;
-        //
-        // }
-        // Literal qLiteral = new Literal(new Predicate(WSML_RESULT_PREDICATE,
-        // params.size()), qLitArgs);
 
         return new ConjunctiveQuery(body);
     }
