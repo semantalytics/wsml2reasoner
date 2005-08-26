@@ -4,17 +4,24 @@ import org.omwg.logexpression.Binary;
 import org.omwg.logexpression.CompoundExpression;
 import org.omwg.logexpression.LogicalExpression;
 
-public class ImplicationReductionRules extends FixedNormalizationRules
+/**
+ * This singleton class represents a set of normalization rules for replacing
+ * equivalences and right-implications in logical expressions by
+ * left-implications.
+ * 
+ * @author Stephan Grimm, FZI Karlsruhe
+ */
+public class ImplicationReductionRules extends FixedModificationRules
 {
-    protected static ImplicationReductionRules instance; 
-    
+    protected static ImplicationReductionRules instance;
+
     private ImplicationReductionRules()
-    {       
+    {
         super();
         rules.add(new EquivalenceReplacementRule());
         rules.add(new RightImplicationReplacementRule());
     }
-    
+
     public static ImplicationReductionRules instantiate()
     {
         if(instance == null)
@@ -23,7 +30,7 @@ public class ImplicationReductionRules extends FixedNormalizationRules
         }
         return instance;
     }
-    
+
     protected class EquivalenceReplacementRule implements NormalizationRule
     {
         public LogicalExpression apply(LogicalExpression expression)
@@ -41,7 +48,7 @@ public class ImplicationReductionRules extends FixedNormalizationRules
         {
             if(expression instanceof CompoundExpression)
             {
-                return ((CompoundExpression)expression).getOperator() == CompoundExpression.EQUIVALENT; 
+                return ((CompoundExpression)expression).getOperator() == CompoundExpression.EQUIVALENT;
             }
             return false;
         }
@@ -67,7 +74,7 @@ public class ImplicationReductionRules extends FixedNormalizationRules
         {
             if(expression instanceof CompoundExpression)
             {
-                return ((CompoundExpression)expression).getOperator() == CompoundExpression.IMPLIES; 
+                return ((CompoundExpression)expression).getOperator() == CompoundExpression.IMPLIES;
             }
             return false;
         }

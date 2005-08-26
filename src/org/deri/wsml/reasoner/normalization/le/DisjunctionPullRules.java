@@ -4,17 +4,24 @@ import org.omwg.logexpression.Binary;
 import org.omwg.logexpression.CompoundExpression;
 import org.omwg.logexpression.LogicalExpression;
 
-public class DisjunctionPullRules extends FixedNormalizationRules
+/**
+ * This singleton class represents a set of normalization rules for pulling
+ * disjunctions in logical expressions out of conjunctions, realizing a
+ * conjunctive normal form. left-implications.
+ * 
+ * @author Stephan Grimm, FZI Karlsruhe
+ */
+public class DisjunctionPullRules extends FixedModificationRules
 {
-    protected static DisjunctionPullRules instance; 
-    
+    protected static DisjunctionPullRules instance;
+
     private DisjunctionPullRules()
-    {       
+    {
         super();
         rules.add(new LeftDisjunctionPullRule());
         rules.add(new RightDisjunctionPullRule());
     }
-    
+
     public static DisjunctionPullRules instantiate()
     {
         if(instance == null)
@@ -23,7 +30,7 @@ public class DisjunctionPullRules extends FixedNormalizationRules
         }
         return instance;
     }
-    
+
     protected class LeftDisjunctionPullRule implements NormalizationRule
     {
         public LogicalExpression apply(LogicalExpression expression)
@@ -57,7 +64,7 @@ public class DisjunctionPullRules extends FixedNormalizationRules
             return "(A or B) and C\n\t=>\n A and C or B and C\n";
         }
     }
-    
+
     protected class RightDisjunctionPullRule implements NormalizationRule
     {
         public LogicalExpression apply(LogicalExpression expression)

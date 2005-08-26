@@ -9,7 +9,14 @@ import org.omwg.logexpression.CompoundExpression;
 import org.omwg.logexpression.LogicalExpression;
 import org.omwg.logexpression.Unary;
 
-public class LloydToporRules extends FixedNormalizationRules
+/**
+ * This singleton class represents a set of transformation rules for splitting
+ * complex LP-rules, constraints and facts into simple datalog-style rule,
+ * according to the Lloyd-Topor transformation.
+ * 
+ * @author Stephan Grimm, FZI Karlsruhe
+ */
+public class LloydToporRules extends FixedModificationRules
 {
     protected static LloydToporRules instance;
 
