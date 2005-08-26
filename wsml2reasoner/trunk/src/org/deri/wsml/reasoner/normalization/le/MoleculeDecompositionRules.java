@@ -118,5 +118,10 @@ public class MoleculeDecompositionRules extends FixedNormalizationRules
             }
             return conjunction;
         }
+
+        public String toString()
+        {
+            return "X[A1,...,An]\n\t=>\n X[A1] and ... and X[An]\n";
+        }
     }
 }

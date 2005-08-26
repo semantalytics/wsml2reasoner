@@ -3,6 +3,7 @@ package org.deri.wsml.reasoner.normalization.le;
 import org.omwg.logexpression.Binary;
 import org.omwg.logexpression.CompoundExpression;
 import org.omwg.logexpression.LogicalExpression;
+import org.omwg.logexpression.Unary;
 
 public class NegationPushRules extends FixedNormalizationRules
 {
@@ -11,8 +12,9 @@ public class NegationPushRules extends FixedNormalizationRules
     private NegationPushRules()
     {       
         super();
-        rules.add(new LeftDisjunctionPullRule());
-        rules.add(new RightDisjunctionPullRule());
+        rules.add(new DoubleNegationRule());
+        rules.add(new NegateConjunctionRule());
+        rules.add(new NegateDisjunctionRule());
     }
     
     public static NegationPushRules instantiate()
@@ -24,15 +26,13 @@ public class NegationPushRules extends FixedNormalizationRules
         return instance;
     }
     
-    protected class LeftDisjunctionPullRule implements NormalizationRule
+    protected class DoubleNegationRule implements NormalizationRule
     {
         public LogicalExpression apply(LogicalExpression expression)
         {
-            Binary conjunction = (Binary)expression;
-            Binary disjunction = (Binary)conjunction.getArgument(0);
-            LogicalExpression leftConjunction = leFactory.createBinary(Binary.AND, disjunction.getArgument(0), conjunction.getArgument(1));
-            LogicalExpression rightConjunction = leFactory.createBinary(Binary.AND, disjunction.getArgument(1), conjunction.getArgument(1));
-            return leFactory.createBinary(Binary.OR, leftConjunction, rightConjunction);
+            Unary outerNaf = (Unary)expression;
+            Unary innerNaf = (Unary)(outerNaf.getArgument(0));
+            return innerNaf.getArgument(0);
         }
 
         public boolean isApplicable(LogicalExpression expression)
@@ -40,7 +40,77 @@ public class NegationPushRules extends FixedNormalizationRules
             if(expression instanceof CompoundExpression)
             {
                 CompoundExpression compound = (CompoundExpression)expression;
-                if(compound.getOperator() == CompoundExpression.AND)
+                if(compound.getOperator() == CompoundExpression.NAF)
+                {
+                    if(compound.getArgument(0) instanceof CompoundExpression)
+                    {
+                        compound = (CompoundExpression)compound.getArgument(0);
+                        return compound.getOperator() == CompoundExpression.NAF;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public String toString()
+        {
+            return "naf(naf A)\n\t=>\n A\n";
+        }
+    }
+
+    protected class NegateConjunctionRule implements NormalizationRule
+    {
+        public LogicalExpression apply(LogicalExpression expression)
+        {
+            Unary naf = (Unary)expression;
+            Binary conjunction = (Binary)(naf.getArgument(0));
+            LogicalExpression leftArg = leFactory.createUnary(Unary.NAF,conjunction.getArgument(0));
+            LogicalExpression rightArg = leFactory.createUnary(Unary.NAF,conjunction.getArgument(1));
+            LogicalExpression disjunction = leFactory.createBinary(Binary.OR, leftArg, rightArg);
+            return disjunction;
+        }
+
+        public boolean isApplicable(LogicalExpression expression)
+        {
+            if(expression instanceof CompoundExpression)
+            {
+                CompoundExpression compound = (CompoundExpression)expression;
+                if(compound.getOperator() == CompoundExpression.NAF)
+                {
+                    if(compound.getArgument(0) instanceof CompoundExpression)
+                    {
+                        compound = (CompoundExpression)compound.getArgument(0);
+                        return compound.getOperator() == CompoundExpression.AND;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public String toString()
+        {
+            return "naf(A and B)\n\t=>\n naf A or naf B\n";
+        }
+    }
+    
+    protected class NegateDisjunctionRule implements NormalizationRule
+    {
+        public LogicalExpression apply(LogicalExpression expression)
+        {
+            Unary naf = (Unary)expression;
+            Binary disjunction = (Binary)(naf.getArgument(0));
+            LogicalExpression leftArg = leFactory.createUnary(Unary.NAF,disjunction.getArgument(0));
+            LogicalExpression rightArg = leFactory.createUnary(Unary.NAF,disjunction.getArgument(1));
+            LogicalExpression conjunction = leFactory.createBinary(Binary.AND, leftArg, rightArg);
+            return conjunction;
+        }
+
+        public boolean isApplicable(LogicalExpression expression)
+        {
+            if(expression instanceof CompoundExpression)
+            {
+                CompoundExpression compound = (CompoundExpression)expression;
+                if(compound.getOperator() == CompoundExpression.NAF)
                 {
                     if(compound.getArgument(0) instanceof CompoundExpression)
                     {
@@ -51,34 +121,10 @@ public class NegationPushRules extends FixedNormalizationRules
             }
             return false;
         }
-    }
-    
-    protected class RightDisjunctionPullRule implements NormalizationRule
-    {
-        public LogicalExpression apply(LogicalExpression expression)
-        {
-            Binary conjunction = (Binary)expression;
-            Binary disjunction = (Binary)conjunction.getArgument(1);
-            LogicalExpression leftConjunction = leFactory.createBinary(Binary.AND, disjunction.getArgument(0), conjunction.getArgument(0));
-            LogicalExpression rightConjunction = leFactory.createBinary(Binary.AND, disjunction.getArgument(1), conjunction.getArgument(0));
-            return leFactory.createBinary(Binary.OR, leftConjunction, rightConjunction);
-        }
 
-        public boolean isApplicable(LogicalExpression expression)
+        public String toString()
         {
-            if(expression instanceof CompoundExpression)
-            {
-                CompoundExpression compound = (CompoundExpression)expression;
-                if(compound.getOperator() == CompoundExpression.AND)
-                {
-                    if(compound.getArgument(1) instanceof CompoundExpression)
-                    {
-                        compound = (CompoundExpression)compound.getArgument(1);
-                        return compound.getOperator() == CompoundExpression.OR;
-                    }
-                }
-            }
-            return false;
+            return "naf(A or B)\n\t=>\n naf A and naf B\n";
         }
     }
 }

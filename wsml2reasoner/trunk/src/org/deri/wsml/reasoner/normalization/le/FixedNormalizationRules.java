@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.omwg.logexpression.LogicalExpressionFactory;
 import org.wsmo.factory.Factory;
@@ -144,4 +145,16 @@ public abstract class FixedNormalizationRules implements List
         return rules.toArray(a);
     }
     
+    public String toString()
+    {
+        String resultString = new String();
+        for(Object object : rules)
+        {
+            StringTokenizer ruleNameTokenizer = new StringTokenizer(object.getClass().getName().toString(), "$");
+            ruleNameTokenizer.nextToken();
+            resultString += ruleNameTokenizer.nextToken() + "\n";
+            resultString += object.toString() + "\n";
+        }
+        return resultString;
+    }
 }
