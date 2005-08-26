@@ -30,6 +30,10 @@ import org.deri.wsml.reasoner.wsmlcore.datalog.*;
 public class ExternalToolException extends Exception {
 
     private Query failedQuery;
+    
+    public ExternalToolException(String message) {
+        super(message);
+    }
 
     /**
      * Creates an 
