@@ -22,28 +22,34 @@ package org.deri.wsml.reasoner.wsmlcore.datalog;
 import java.util.*;
 
 public class Constant extends Term {
-    
+
     /**
      * @return the set of variables that are contained in this term
      */
-    List<Variable> getVariables(){
+    List<Variable> getVariables() {
         return new ArrayList<Variable>();
     }
-    
-    public Constant(String name){
+
+    public Constant(String name) {
         this.symb = name;
     }
-    
-    public boolean equals(Object o){
-        boolean result = false;
-        if (o != null && o instanceof Constant){
-            result = (this.getSymbol().equals(((Constant) o).getSymbol()));
-        }
-        return result;
-        
+
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if ((obj == null) || (obj.getClass() != this.getClass()))
+            return false;
+        Constant c = (Constant) obj;
+        return (symb == c.symb || (symb != null && symb.equals(c.symb)));
     }
-    
-    public String toString(){
+
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + (null == symb ? 0 : symb.hashCode());
+        return hash;
+    }
+
+    public String toString() {
         return this.getSymbol();
     }
 }

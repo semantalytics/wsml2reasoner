@@ -69,5 +69,20 @@ public class ConjunctiveQuery implements Query {
         }
         return result;
     }
+    
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if ((obj == null) || (obj.getClass() != this.getClass()))
+            return false;
+        ConjunctiveQuery other = (ConjunctiveQuery) obj;
+        return (literals == other.literals || (literals != null && literals.equals(other.literals)));
+    }
+
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + (null == literals ? 0 : literals.hashCode());
+        return hash;
+    }
 
 }
