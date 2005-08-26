@@ -33,19 +33,6 @@ public class LloydToporRules extends FixedNormalizationRules
         return instance;
     }
 
-    public String toString()
-    {
-        String resultString = new String();
-        for(Object object : rules)
-        {
-            StringTokenizer ruleNameTokenizer = new StringTokenizer(object.getClass().getName().toString(), "$");
-            ruleNameTokenizer.nextToken();
-            resultString += ruleNameTokenizer.nextToken() + "\n";
-            resultString += object.toString() + "\n";
-        }
-        return resultString;
-    }
-
     public class SplitConjunctiveHead implements TransformationRule
     {
         public boolean isApplicable(LogicalExpression expression)

@@ -45,6 +45,11 @@ public class ImplicationReductionRules extends FixedNormalizationRules
             }
             return false;
         }
+
+        public String toString()
+        {
+            return "A equivalent B\n\t=>\n (A impliedBy B) and (B impliedBy A)\n";
+        }
     }
 
     protected class RightImplicationReplacementRule implements NormalizationRule
@@ -65,6 +70,11 @@ public class ImplicationReductionRules extends FixedNormalizationRules
                 return ((CompoundExpression)expression).getOperator() == CompoundExpression.IMPLIES; 
             }
             return false;
+        }
+
+        public String toString()
+        {
+            return "A implies B\n\t=>\n B impliedBy A\n";
         }
     }
 }

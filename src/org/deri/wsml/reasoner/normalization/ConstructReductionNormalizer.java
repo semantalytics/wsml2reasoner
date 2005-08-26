@@ -6,11 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.deri.wsml.reasoner.normalization.le.DisjunctionPullRules;
+import org.deri.wsml.reasoner.normalization.le.NegationPushRules;
 import org.deri.wsml.reasoner.normalization.le.ImplicationReductionRules;
 import org.deri.wsml.reasoner.normalization.le.LogicalExpressionNormalizer;
 import org.deri.wsml.reasoner.normalization.le.MoleculeDecompositionRules;
-import org.deri.wsml.reasoner.normalization.le.NegationPushRules;
+import org.deri.wsml.reasoner.normalization.le.DisjunctionPullRules;
 import org.deri.wsml.reasoner.normalization.le.NormalizationRule;
 import org.deri.wsml.reasoner.normalization.le.OnePassReplacementNormalizer;
 import org.omwg.logexpression.LogicalExpression;
@@ -31,8 +31,8 @@ public class ConstructReductionNormalizer implements OntologyNormalizer
         List<NormalizationRule> preOrderRules = new ArrayList<NormalizationRule>();
         List<NormalizationRule> postOrderRules = new ArrayList<NormalizationRule>();
         preOrderRules.addAll((List<NormalizationRule>)ImplicationReductionRules.instantiate());
-        preOrderRules.addAll((List<NormalizationRule>)NegationPushRules.instantiate());
         preOrderRules.addAll((List<NormalizationRule>)DisjunctionPullRules.instantiate());
+        preOrderRules.addAll((List<NormalizationRule>)NegationPushRules.instantiate());
         postOrderRules.addAll((List<NormalizationRule>)MoleculeDecompositionRules.instantiate());
         leNormalizer = new OnePassReplacementNormalizer(preOrderRules, postOrderRules); 
         wsmoFactory = Factory.createWsmoFactory(null);
