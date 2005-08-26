@@ -17,8 +17,21 @@ ontology _"http://www.example.org/example/test?blabla=blabla.blabla"
    
 nonFunctionalProperties
     dc#title hasValue "Simple Graph Ontology"
-    wsml#version hasValue "$Revision: 1.1 $"
+    wsml#version hasValue "$Revision: 1.2 $"
 endNonFunctionalProperties
+
+concept Human
+  hasRelative transitive symmetric impliesType Human
+
+concept Man subConceptOf Human
+
+concept Woman subConceptOf Human
+
+instance Homer memberOf Man
+  hasRelative hasValue Marge
+  
+instance Marge memberOf Woman
+  hasRelative hasValue Lisa
 
 axiom fact
   definedBy

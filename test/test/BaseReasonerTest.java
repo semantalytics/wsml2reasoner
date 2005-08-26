@@ -49,10 +49,10 @@ public class BaseReasonerTest extends TestCase {
         org.omwg.logexpression.LogicalExpressionFactory leFactory = (org.omwg.logexpression.LogicalExpressionFactory) Factory
                 .createLogicalExpressionFactory(leProperties);
 
-//        Map<String, Object> properties = new HashMap<String, Object>();
-//        properties.put(Factory.PROVIDER_CLASS,
-//                "com.ontotext.wsmo4j.factory.WsmoFactoryImpl");
-//        properties.put(Parser.PARSER_LE_FACTORY, leFactory);
+        Map<String, Object> properties = new HashMap<String, Object>();
+        properties.put(Factory.PROVIDER_CLASS,
+                "com.ontotext.wsmo4j.factory.WsmoFactoryImpl");
+        properties.put(Parser.PARSER_LE_FACTORY, leFactory);
         WsmoFactory factory = Factory.createWsmoFactory(null);
 
         // Set up WSML parser

@@ -84,7 +84,7 @@ public class AxiomatizationNormalizer implements
         Map<String, Object> properties = new HashMap<String, Object>();
         properties.put(Factory.PROVIDER_CLASS,
                 "com.ontotext.wsmo4j.factory.WsmoFactoryImpl");
-        factory = Factory.createWsmoFactory(properties);
+        factory = Factory.createWsmoFactory(null);//properties);
     }
     
     /**

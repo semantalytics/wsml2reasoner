@@ -22,8 +22,17 @@ package org.deri.wsml.reasoner.impl;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.deri.wsml.reasoner.api.*;
+import org.deri.wsml.reasoner.api.OntologyRegistrationRequest;
+import org.deri.wsml.reasoner.api.Request;
+import org.deri.wsml.reasoner.api.Result;
+import org.deri.wsml.reasoner.api.WSMLReasoner;
+import org.deri.wsml.reasoner.api.WSMLReasonerFactory;
 import org.deri.wsml.reasoner.api.queryanswering.QueryAnsweringRequest;
+import org.deri.wsml.reasoner.normalization.AxiomatizationNormalizer;
+import org.deri.wsml.reasoner.normalization.ConstructReductionNormalizer;
+import org.deri.wsml.reasoner.normalization.LloydToporNormalizer;
+import org.deri.wsml.reasoner.normalization.OntologyNormalizer;
+import org.deri.wsml.reasoner.normalization.WSML2DatalogTransformer;
 import org.deri.wsml.reasoner.wsmlcore.QueryAnsweringReasoner;
 import org.deri.wsml.reasoner.wsmlcore.WSML2Datalog;
 import org.deri.wsml.reasoner.wsmlcore.datalog.Program;
@@ -35,12 +44,14 @@ import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 
 /**
- * A prototypical implementation of a reasoner for WSML Core.
+ * A prototypical implementation of a reasoner for WSML Core and WSML Flight.
  * 
  * At present the implementation only supports the following reasoning tasks: -
  * Query answering
+ * Ontology registration
  * 
  * @author Uwe Keller, DERI Innsbruck
+ * @author Gabor Nagypal, FZI
  */
 public class WSMLCoreReasonerImpl implements WSMLReasoner {
 
@@ -112,22 +123,27 @@ public class WSMLCoreReasonerImpl implements WSMLReasoner {
     }
 
     private Program convertOntology(Ontology o) {
+        
+        Ontology normalizedOntology;
+        
+        //TODO Missing tranformation: convert anonymous IDs to IRIs 
+        
+        //Convert conceptual syntax to logical expressions
+        OntologyNormalizer normalizer = new AxiomatizationNormalizer();
+        normalizedOntology = normalizer.normalize(o);
+        
+        //Simplify axioms
+        normalizer = new ConstructReductionNormalizer();
+        normalizedOntology = normalizer.normalize(normalizedOntology);
+        
+        //Apply Lloyd-Topor rules to get Datalog-compatible LEs
+        normalizer = new LloydToporNormalizer();
+        normalizedOntology = normalizer.normalize(normalizedOntology);
+        
         Program p = new Program();
-
-        // TODO: Insert normalization steps first
-        // - Conceptual syntax to WSML Logical Expressions (Axioms)
-        // - Resolve Anonymous Identifiers
-        // - Llyod-Topor-Transformation
-        // - Remove syntactical shortcuts
-        // - ...
-
-        // At present we only support very simple ontologies
-        // - Consist only of logical expressions
-        // - Axioms are simple WSML (datalog) rules
-
-        WSML2Datalog wsml2datalog = new WSML2Datalog();
+        WSML2DatalogTransformer wsml2datalog = new WSML2DatalogTransformer();
         Set<org.omwg.logexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logexpression.LogicalExpression>();
-        for (Object a : o.listAxioms()) {
+        for (Object a : normalizedOntology.listAxioms()) {
             lExprs.addAll(((Axiom) a).listDefinitions());
         }
         p = wsml2datalog.transform(lExprs);

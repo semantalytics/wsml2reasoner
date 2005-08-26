@@ -56,7 +56,7 @@ import org.wsmo.wsml.Serializer;
  * </pre>
  * 
  * @author Holger Lausen
- * @version $Revision: 1.3 $ $Date: 2005-08-24 11:10:41 $
+ * @version $Revision: 1.4 $ $Date: 2005-08-26 15:43:46 $
  */
 public class ReasonerExample {
 
@@ -75,10 +75,6 @@ public class ReasonerExample {
         Ontology exampleOntology = loadOntology("example/humanOntology.wsml");
         if (exampleOntology == null)
             return;
-
-        // normalization will not be necessary when implementation finished.
-        AxiomatizationNormalizer cs2le = new AxiomatizationNormalizer();
-        exampleOntology = cs2le.normalize(exampleOntology);
 
         // The details of creating a Query will be hidden in future
         LogicalExpression query = (LogicalExpression) new LogicalExpressionFactoryImpl(null)
@@ -154,7 +150,7 @@ public class ReasonerExample {
         properties.put(Factory.PROVIDER_CLASS,
                 "com.ontotext.wsmo4j.factory.WsmoFactoryImpl");
         properties.put(Parser.PARSER_LE_FACTORY, leFactory);
-        WsmoFactory wsmoFactory = Factory.createWsmoFactory(properties);
+        WsmoFactory wsmoFactory = Factory.createWsmoFactory(null);
 
         // Set up WSML parser
         Map<String, Object> parserProperties = new HashMap<String, Object>();
