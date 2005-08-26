@@ -33,7 +33,7 @@ public class LloydToporRules extends FixedNormalizationRules
         return instance;
     }
 
-    public String getDescription()
+    public String toString()
     {
         String resultString = new String();
         for(Object object : rules)
