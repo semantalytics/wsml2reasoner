@@ -30,6 +30,11 @@ public class OnePassReplacementNormalizer implements LogicalExpressionNormalizer
             leFactory = (LogicalExpressionFactory)Factory.createLogicalExpressionFactory(createParams);
         }
     }
+    
+    public OnePassReplacementNormalizer(List<NormalizationRule> rules)
+    {
+        this(rules, new ArrayList<NormalizationRule>(0));
+    }
 
     public LogicalExpression normalize(LogicalExpression expression)
     {
