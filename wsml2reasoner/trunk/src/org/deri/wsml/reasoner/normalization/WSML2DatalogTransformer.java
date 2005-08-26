@@ -312,8 +312,10 @@ public class WSML2DatalogTransformer {
                 Term atomArg = atom.getParameter(i);
                 predArgs[i] = convertWSMLTerm2Datalog(atomArg);
             } // for
+            Literal.NegationType negationType = isNegated ? Literal.NegationType.NEGATIONASFAILURE
+                    : Literal.NegationType.NONNEGATED;
 
-            Literal l = new Literal(p, Literal.NegationType.NONNEGATED,
+            Literal l = new Literal(p, negationType,
                     predArgs); // currently we ignore negation since we deal
             // with WSMLCore
 
@@ -345,8 +347,13 @@ public class WSML2DatalogTransformer {
          */
         @Override
         public void enterConstraint(Unary arg0) {
-            throw new DatalogException(
-                    "Constraints are not allowed in WSMLCore.");
+            implicationCount++;
+            if (implicationCount > 1) {
+                throw new DatalogException(
+                        "More than one implication in the given WSML rule detected!");
+            }
+            inHeadOfRule = false;
+            inBodyOfRule = true;
         }
 
         /*

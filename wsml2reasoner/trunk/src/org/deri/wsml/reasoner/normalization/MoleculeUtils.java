@@ -98,7 +98,7 @@ public abstract class MoleculeUtils {
     }
     
     public static Term getAttrName(Molecule m) {
-        if (!isSimpleAttrValue(m) || isSimpleImpliesType(m) || isSimpleOfType(m))
+        if (!(isSimpleAttrValue(m) || isSimpleImpliesType(m) || isSimpleOfType(m)))
             throw new IllegalArgumentException("Wrong molecule type!");
         AttrSpecification spec = (AttrSpecification) m.listAttributeSpecifications().iterator().next();
         Term result = (Term) spec.getName();
