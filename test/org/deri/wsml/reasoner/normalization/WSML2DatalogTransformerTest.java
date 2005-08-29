@@ -26,7 +26,6 @@ import org.deri.wsml.reasoner.wsmlcore.datalog.*;
 import org.deri.wsmo4j.io.parser.wsml.LogExprParserImpl;
 import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
 import org.omwg.logexpression.*;
-import org.omwg.logexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Namespace;

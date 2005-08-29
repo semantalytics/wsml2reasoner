@@ -18,9 +18,7 @@
  */
 package normalization;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +32,8 @@ import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.Serializer;
+
+import test.BaseTest;
 
 public abstract class WSMLNormalizationTest extends TestCase
 {
@@ -72,9 +72,8 @@ public abstract class WSMLNormalizationTest extends TestCase
         createParams.put(Parser.PARSER_WSMO_FACTORY, wsmoFactory);
         createParams.put(Parser.PARSER_LE_FACTORY, leFactory);
         Parser parser = Factory.createParser(createParams);
-        InputStream stream = new FileInputStream(fileName);
-        assertNotNull("access test WSML file", stream);
-        return (Ontology)parser.parse(new InputStreamReader(stream))[0];
+        Reader input = BaseTest.getReaderForFile(fileName);
+        return (Ontology)parser.parse(input)[0];
     }
     
     protected String serializeOntology(Ontology ontology)

@@ -19,6 +19,7 @@
 package test;
 
 
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +41,7 @@ import org.wsmo.wsml.Serializer;
  * </pre>
  *
  * @author Holger Lausen
- * @version $Revision: 1.3 $ $Date: 2005-08-29 20:29:53 $
+ * @version $Revision: 1.4 $ $Date: 2005-08-29 20:57:12 $
  */
 public class BaseTest extends TestCase {
 	public LogicalExpressionFactory leFactory;
@@ -91,5 +92,24 @@ public class BaseTest extends TestCase {
         wsmlSerializer = org.wsmo.factory.Factory
                 .createSerializer(serializerProperties);
 	}
+    
+    /**
+     * Utiltiy to get a Reader, tries first fileReader and then to load
+     * from clath pass, helps avoiding FileNotFound exception during automated testing
+     * @param location of file
+     * @return Reader
+     */
+    public static Reader getReaderForFile(String location){
+        Reader ontoReader= null;
+        try{
+            ontoReader = new FileReader(location);
+        }catch (FileNotFoundException e){
+            InputStream is = BaseReasonerTest.class.getResourceAsStream(location);
+            assertNotNull("Could not Load file from class path: "+location, is);
+            ontoReader = new InputStreamReader(is);
+        }
+        assertNotNull("Could not Load file from file system: "+location, ontoReader);
+        return ontoReader;
+    }
     
 }
