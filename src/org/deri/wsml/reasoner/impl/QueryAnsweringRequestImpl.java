@@ -37,8 +37,8 @@ public class QueryAnsweringRequestImpl implements QueryAnsweringRequest {
      * ontologies as the respective knowledgebase and a logical expression that
      * describes the objects that are to be retrieved in the knowledgebase.
      * 
-     * @param ontologies -
-     *            the set of ontologies to which the query refers to
+     * @param ontologyUri -
+     *            uri of ontology to which the query refers to
      * @param expression -
      *            the logical expression that describes the properties of the
      *            desired answers

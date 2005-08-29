@@ -2,3 +2,8 @@ bin
 .settings
 .djunitplugin
 .fbprefs
+build
+dist
+java-doc
+jUnitReport
+jcoverage.ser
