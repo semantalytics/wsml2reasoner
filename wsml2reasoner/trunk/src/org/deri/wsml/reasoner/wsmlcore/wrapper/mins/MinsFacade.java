@@ -37,14 +37,10 @@ public class MinsFacade implements DatalogReasonerFacade {
 
     private Logger logger = Logger.getLogger("org.deri.wsml.reasoner.wsmlcore.wrapper.mins");
        
-    private Map<String,Program> registeredKbs = new HashMap<String,Program>();
-    private Program kb;
-    
-    /** Sequence of variable names as used in the query from left to right */
-    private String[] queryVarNamesSequence;
+    /** Here we store a MINS Engine which contains the compiled KB for each registered ontology */
+    private Map<String,Evaluator> registeredKbs = new HashMap<String,Evaluator>();
     
     private SymbolMap symbTransfomer = new SymbolMap(new DefaultSymbolFactory());
-    
     private org.deri.wsml.reasoner.wsmlcore.datalog.Query query;
       
     /**
@@ -59,31 +55,28 @@ public class MinsFacade implements DatalogReasonerFacade {
         
             QueryResult result = new QueryResult(q);
             
-            //retrieve KB ment for IRI:
-            this.kb = registeredKbs.get(ontologyIRI);
-        
+            // retrieve KB ment for IRI:
+            Evaluator minsEngine = registeredKbs.get(ontologyIRI);
+            
+            // remove already contained queries in the KB
+            minsEngine.deleteQueries();
+                   
             query = q;
-              
-            // Set up an instance of a MINS engine
-            Evaluator minsEngine = new Evaluator();
-            EvaluatorConfig conf = new EvaluatorConfig();
-            //conf.EVALUATIONMETHOD=40;
-            minsEngine.init();
-            
-            // Translate (resp. Transfer) the knowledge base to MINS 
-           
-            translateKnowledgebase(this.kb, minsEngine);
-            
-            
+     
             translateQuery(q, minsEngine); 
             
-            logger.info("Starting MINS");
+            logger.info("Starting MINS evaluation");
             minsEngine.evaluate();
             
+            logger.info("Computing substitutions");
             Vector v = minsEngine.computeSubstitutions();
             //for all queries in KB
             Iterator<Vector> queries = v.iterator();
             
+            if (v.size() > 1) {
+                // Should not happen, since we only have a KB which contains a single query.
+                throw new RuntimeException("We unexpectetly have a MINS engine which contains multiple queries at once!");
+            }
             
             //we only have one query
             Iterator<Vector> subst = queries.next().iterator();
@@ -98,6 +91,7 @@ public class MinsFacade implements DatalogReasonerFacade {
                     varBinding.put(varName, varValue);
                 }
                 result.getVariableBindings().add(varBinding);
+                logger.info("Added new variable binding to result set: " + varBinding);
             }
             
             
@@ -195,8 +189,6 @@ public class MinsFacade implements DatalogReasonerFacade {
         // At present we convert the rule into a string representation that can be
         // used as input for the MINS engine.
         // This is not optimal but works for a quick prototype.
-        
-        List body = new ArrayList();
         
         String sRepresentation = null;
         
@@ -301,7 +293,7 @@ public class MinsFacade implements DatalogReasonerFacade {
         if (!l.isPositive()){
             //TODO: NEGATION SYNTAX of mins
         }
-        return predName +"("+argString+")";
+        return predName +"("+argString+")"; // TODO: negation needs to be inserted here as well
     }
 
     /* (non-Javadoc)
@@ -313,15 +305,25 @@ public class MinsFacade implements DatalogReasonerFacade {
     }
 
     public void register(String ontologyURI, Program kb) throws ExternalToolException {
-
-        // Some initialization
-        //this.kb = new org.mandarax.reference.KnowledgeBase();
-        this.kb = new ();
         
-        // First translate the logic program the query refers to.
-        translateKnowledgebase(kb);
-
-        registeredKbs.put(ontologyURI, this.kb);
-        this.kb=null;
+        // We store a MINS engine which contains the a precompiled knowledgebase for each
+        // ontology against which queries can be posed.
+        
+        // Set up an instance of a MINS engine
+        Evaluator minsEngine = new Evaluator();
+        // EvaluatorConfig conf = new EvaluatorConfig();
+        //conf.EVALUATIONMETHOD=40;
+        minsEngine.init();
+        
+  
+        // Translate (resp. Transfer) the knowledge base to MINS 
+        try {
+            translateKnowledgebase(kb, minsEngine);
+        } catch (UnsupportedFeatureException e) {
+            e.printStackTrace();
+            throw new ExternalToolException("Unsupported feature for MINS in knowledgebase.");
+        }
+        
+        registeredKbs.put(ontologyURI, minsEngine);
     }
 }
