@@ -41,7 +41,7 @@ import org.wsmo.wsml.Serializer;
  * </pre>
  *
  * @author Holger Lausen
- * @version $Revision: 1.4 $ $Date: 2005-08-29 20:57:12 $
+ * @version $Revision: 1.5 $ $Date: 2005-08-29 21:08:35 $
  */
 public class BaseTest extends TestCase {
 	public LogicalExpressionFactory leFactory;
@@ -65,11 +65,11 @@ public class BaseTest extends TestCase {
         leFactory = (LogicalExpressionFactory) Factory
         		.createLogicalExpressionFactory(leProperties);
 
-        Map<String, Object> properties = new HashMap<String, Object>();
-        properties.put(Factory.PROVIDER_CLASS,
-                "com.ontotext.wsmo4j.factory.WsmoFactoryImpl");
-        properties.put(Parser.PARSER_LE_FACTORY, leFactory);
-        wsmoFactory = Factory.createWsmoFactory(properties);
+//        Map<String, Object> properties = new HashMap<String, Object>();
+//        properties.put(Factory.PROVIDER_CLASS,
+//                "com.ontotext.wsmo4j.factory.WsmoFactoryImpl");
+//        properties.put(Parser.PARSER_LE_FACTORY, leFactory);
+        wsmoFactory = Factory.createWsmoFactory(null);
 
         // Set up WSML parser
 
@@ -104,7 +104,9 @@ public class BaseTest extends TestCase {
         try{
             ontoReader = new FileReader(location);
         }catch (FileNotFoundException e){
-            InputStream is = BaseReasonerTest.class.getResourceAsStream(location);
+            //get current class loader and try to load from there...
+            InputStream is = new BaseReasonerTest().getClass().getClassLoader().getResourceAsStream(location);
+            //System.out.println();
             assertNotNull("Could not Load file from class path: "+location, is);
             ontoReader = new InputStreamReader(is);
         }
