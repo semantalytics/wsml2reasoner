@@ -96,12 +96,14 @@ public class BaseReasonerTest extends TestCase {
                 .createSerializer(serializerProperties);
 
         // Read simple ontology from file
-
-        Reader ontoReader = new FileReader(ontologyFile);
-        if (ontoReader==null){
+        Reader ontoReader= null;
+        try{
+            ontoReader = new FileReader(ontologyFile);
+        }catch (FileNotFoundException e){
             InputStream is = BaseReasonerTest.class.getResourceAsStream(ontologyFile);
             ontoReader = new InputStreamReader(is);
         }
+        assertNotNull("Could not Load file: "+ontologyFile, ontoReader);
 
         final TopEntity[] identifiable = wsmlparserimpl.parse(ontoReader);
         if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {

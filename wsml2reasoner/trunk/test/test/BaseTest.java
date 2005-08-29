@@ -22,13 +22,13 @@ package test;
 import java.util.HashMap;
 import java.util.Map;
 
+import junit.framework.TestCase;
+
 import org.omwg.logexpression.LogicalExpressionFactory;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.Serializer;
-
-import junit.framework.TestCase;
 
 /**
  * Base Test for Reasoner Framework
@@ -40,7 +40,7 @@ import junit.framework.TestCase;
  * </pre>
  *
  * @author Holger Lausen
- * @version $Revision: 1.2 $ $Date: 2005-08-29 07:31:45 $
+ * @version $Revision: 1.3 $ $Date: 2005-08-29 20:29:53 $
  */
 public class BaseTest extends TestCase {
 	public LogicalExpressionFactory leFactory;
@@ -91,4 +91,5 @@ public class BaseTest extends TestCase {
         wsmlSerializer = org.wsmo.factory.Factory
                 .createSerializer(serializerProperties);
 	}
+    
 }
