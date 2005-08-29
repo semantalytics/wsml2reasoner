@@ -219,7 +219,7 @@ public class AxiomatizationNormalizer implements
         org.omwg.logexpression.LogicalExpression moExpr, hvExpr, rangeMoExpr;
         
         Term v = leFactory.createVariable("x");
-        moExpr = leFactory.createMolecule(v,toSet(v), null, null);
+        moExpr = leFactory.createMolecule(v,null, toSet(cTerm), null);
         
         Term attID = convertIRI((org.wsmo.common.IRI) a.getIdentifier());
         Term v2 = leFactory.createVariable("y");
