@@ -1,7 +1,8 @@
 /**
  * WSML Reasoner Implementation.
  *
- * Copyright (c) 2005, FZI, Germany.
+ * Copyright (c) 2005, FZI, Germany
+ *                     University of Innsbruck, Austria.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -101,6 +102,7 @@ public class BaseReasonerTest extends TestCase {
             ontoReader = new FileReader(ontologyFile);
         }catch (FileNotFoundException e){
             InputStream is = BaseReasonerTest.class.getResourceAsStream(ontologyFile);
+            assertNotNull("Could not Load file: "+ontologyFile, is);
             ontoReader = new InputStreamReader(is);
         }
         assertNotNull("Could not Load file: "+ontologyFile, ontoReader);
