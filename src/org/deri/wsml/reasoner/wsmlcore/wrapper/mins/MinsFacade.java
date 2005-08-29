@@ -27,25 +27,18 @@ import org.deri.wsml.reasoner.api.queryanswering.VariableBinding;
 import org.deri.wsml.reasoner.impl.VariableBindingImpl;
 import org.deri.wsml.reasoner.wsmlcore.datalog.*;
 import org.deri.wsml.reasoner.wsmlcore.wrapper.*;
-import org.mandarax.kernel.*;
-import org.mandarax.reference.AbstractResolutionInferenceEngine;
-import org.mandarax.reference.ResolutionInferenceEngine2;
-import org.mandarax.util.LogicFactorySupport;
+
+import com.ontoprise.inference.Evaluator;
+import com.ontoprise.inference.EvaluatorConfig;
+import com.ontoprise.inference.ParseException;
+
 
 public class MinsFacade implements DatalogReasonerFacade {
 
-    private Logger logger = Logger.getLogger("org.deri.wsml.reasoner.wsmlcore.wrapper.mandrax");
-    
-    private Map<String,KnowledgeBase> registeredKbs = new HashMap<String,KnowledgeBase>();
-    
-    AbstractResolutionInferenceEngine mandrax = new ResolutionInferenceEngine2(); // multiple results, no NAF!
-    ResultSet rs = null;
-    
-    public final static int MAX_PROOF_STEPS = 300;
-    
-    /**
-     * to do: read from property file!
-     */
+    private Logger logger = Logger.getLogger("org.deri.wsml.reasoner.wsmlcore.wrapper.mins");
+       
+    private Map<String,Program> registeredKbs = new HashMap<String,Program>();
+    private Program kb;
     
     /** Sequence of variable names as used in the query from left to right */
     private String[] queryVarNamesSequence;
@@ -53,34 +46,11 @@ public class MinsFacade implements DatalogReasonerFacade {
     private SymbolMap symbTransfomer = new SymbolMap(new DefaultSymbolFactory());
     
     private org.deri.wsml.reasoner.wsmlcore.datalog.Query query;
-    
-    private KnowledgeBase kb;
-    private LogicFactory lf = LogicFactory.getDefaultFactory();
-    private LogicFactorySupport lfs = new LogicFactorySupport(lf);
-    
-    protected boolean incompleteMode = false;
-    
-
+      
     /**
-     * Creates a facade for invoking the Mandrax Rule System
-     * Since Mandrax implements top-down evaluation of a knowledgebase
-     * (based on resolution) it can run into loops when facing cyclic rule 
-     * bases. When running in incomplete mode, then the prover stops after
-     * predefined number of proof steps. Thus, termination is guarantueed
-     * for the sake of completeness of the result to the query.
-     * Not all answers to a query need to be found, only a subset is delivered
-     * in the general case. 
+     * Evaluates a Query on a Datalog knowledgebase.
+     * The actual evaluation is done by the MINS system.
      * 
-     * @param mode
-     */
-    public MinsFacade(boolean mode) {
-        super();
-        // TODO Auto-generated constructor stub
-        incompleteMode = mode;
-    }
-
-    /**
-     * Evaluates a Query on a Datalog knowledgebase
      * @throws ExternalToolException 
      */
     public QueryResult evaluate(ConjunctiveQuery q, String ontologyIRI) throws ExternalToolException {
@@ -93,8 +63,21 @@ public class MinsFacade implements DatalogReasonerFacade {
             this.kb = registeredKbs.get(ontologyIRI);
         
             query = q;
+              
+            // Set up an instance of a MINS engine
+            Evaluator minsEngine = new Evaluator();
+            EvaluatorConfig conf = new EvaluatorConfig();
+            //conf.EVALUATIONMETHOD=40;
+            minsEngine.init();
+            
+            // Translate (resp. Transfer) the knowledge base to MINS 
+           
+            translateKnowledgebase(org.deri.wsml.reasoner.wsmlcore.datalog.Program p, Evaluator minsEngine);
+            
             
             // Translate the query itself
+            logger.info("Transfering query into MINS engine ...");
+            
             org.mandarax.kernel.Query query = translateQuery(q); 
             
             // Invoke Mandrax and get the results (can take some time)
@@ -208,48 +191,86 @@ public class MinsFacade implements DatalogReasonerFacade {
     /**
      * Translate a datalog rule
      */
-    private void translateRule(org.deri.wsml.reasoner.wsmlcore.datalog.Rule r) throws ExternalToolException {
+    private void translateRule(org.deri.wsml.reasoner.wsmlcore.datalog.Rule r, Evaluator minsEngine) throws ExternalToolException {
         
-        Fact head; 
+        // At present we convert the rule into a string representation that can be
+        // used as input for the MINS engine.
+        // This is not optimal but works for a quick prototype.
+        
         List body = new ArrayList();
         
+        String sRepresentation = null;
+        
         if (r.isConstraint()) {
-            throw new ExternalToolException("Constraints are not supported explicitly by Mandrax!", this.query);
+            throw new ExternalToolException("Constraints are not supported explicitly by MINS!", this.query);
         } 
         
         // Translate head
-        head = translateLiteral(r.getHead());
+        String head = translateLiteral(r.getHead());
         
         // Care about body
         List<Literal> rBody = r.getBody();
 
-        //FACT
-        if (rBody.size()==0){
-            kb.add(head);
-            return;
+        
+        if (rBody.size() == 0){
+            // rule is actually a fact
+            sRepresentation = head;
+        } else {
+            sRepresentation = head + " <- ";
         }
-                          
+              
+        int i = 1;
         for( Literal bl : rBody){
-            Fact f = translateLiteral(bl); // convert fact to prerequisite.
-            Prerequisite newBodyLiteral = lf.createPrerequisite(f.getPredicate(), f.getTerms(), !bl.isPositive()); // ignore negation for now (positive datatlog)
-            body.add(newBodyLiteral);
+            String blString = translateLiteral(bl); 
+            sRepresentation += blString;
+            if (i < rBody.size()){
+                sRepresentation += " and ";
+            }
+            i++;
         }
         
+        sRepresentation += ".";
         
+        // Prepend all free variables with FORALL quantor
         
-        // Create the rule in Mandrax and add it to the knowledgebase
-        org.mandarax.kernel.Rule newRule;
-        newRule = lf.createRule(body, head);
+        List<Variable> varPrefix = new LinkedList<Variable>();
+        varPrefix.addAll(r.getHeadVariables());
+        for (Variable bVar : r.getBodyVariables()){
+            if( !varPrefix.contains(bVar)){
+                varPrefix.add(bVar);
+            }
+        }
         
-        kb.add(newRule);
+        String sVarPrefix = "FORALL ";
         
+        i = 1;
+        for( Variable v : varPrefix){
+            sVarPrefix += symbTransfomer.convertToTool(v);
+            if (i < varPrefix.size()){
+                sRepresentation += ",";
+            } else {
+                sRepresentation += " ";
+            }
+            i++;
+        }
         
-        logger.info("Transformed rule:\n" + r + "\n to \n" + newRule.toString());
+        sRepresentation = sVarPrefix + sRepresentation;
+        
+        logger.info("Transformed rule:\n" + r + "\n to \n" + sRepresentation);
+        
+        // Transfer the rule to the given MINS engine
+        
+        try {
+            minsEngine.compileString(sRepresentation);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            throw new ExternalToolException(e, query);
+        }
         
         
     }
     
-    Fact translateLiteral(Literal l) throws ExternalToolException {
+    String translateLiteral(Literal l) throws ExternalToolException {
         try {
             
            Class[] predStructure = new Class[l.getArity()];
