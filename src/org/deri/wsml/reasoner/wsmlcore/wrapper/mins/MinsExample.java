@@ -21,7 +21,7 @@ import com.ontoprise.inference.*;
  * @author ContributorFirstName ContributorLastName
  * @author ContributorFirstName ContributorLastName
  *
- * @version $Revision: 1.1 $ $Date: 2005-08-29 11:38:51 $
+ * @version $Revision: 1.2 $ $Date: 2005-08-29 15:01:29 $
  */
 public class MinsExample {
 
@@ -51,8 +51,9 @@ public class MinsExample {
 			//facts
 			eval.compileString("holger:animal and jos:human and human::animal. " +
 					"holger[name->\"Lausen\"].");
+            eval.compileString("FORALL X X:dummy <- not(X).");
 			//query
-			eval.compileString("FORALL X <- X:animal.");
+			eval.compileString("FORALL X <- X:dummy.");
 			eval.compileString("FORALL Y, X <- Y[name->X].");
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block

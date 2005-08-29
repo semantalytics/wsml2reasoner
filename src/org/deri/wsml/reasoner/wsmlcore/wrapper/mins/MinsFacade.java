@@ -23,14 +23,14 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.deri.wsml.reasoner.api.queryanswering.QueryAnsweringResult;
 import org.deri.wsml.reasoner.api.queryanswering.VariableBinding;
+import org.deri.wsml.reasoner.impl.QueryAnsweringResultImpl;
 import org.deri.wsml.reasoner.impl.VariableBindingImpl;
 import org.deri.wsml.reasoner.wsmlcore.datalog.*;
 import org.deri.wsml.reasoner.wsmlcore.wrapper.*;
 
-import com.ontoprise.inference.Evaluator;
-import com.ontoprise.inference.EvaluatorConfig;
-import com.ontoprise.inference.ParseException;
+import com.ontoprise.inference.*;
 
 
 public class MinsFacade implements DatalogReasonerFacade {
@@ -72,83 +72,57 @@ public class MinsFacade implements DatalogReasonerFacade {
             
             // Translate (resp. Transfer) the knowledge base to MINS 
            
-            translateKnowledgebase(org.deri.wsml.reasoner.wsmlcore.datalog.Program p, Evaluator minsEngine);
+            translateKnowledgebase(this.kb, minsEngine);
             
             
-            // Translate the query itself
-            logger.info("Transfering query into MINS engine ...");
+            translateQuery(q, minsEngine); 
             
-            org.mandarax.kernel.Query query = translateQuery(q); 
+            logger.info("Starting MINS");
+            minsEngine.evaluate();
             
-            // Invoke Mandrax and get the results (can take some time)
+            Vector v = minsEngine.computeSubstitutions();
+            //for all queries in KB
+            Iterator<Vector> queries = v.iterator();
             
             
-            //LoopCheckingAlgorithm lca = new DefaultLoopCheckingAlgorithm(20,10,10);
-            //mandrax.setLoopCheckingAlgorithm(lca); // use  Loop checking heuristics
-            if (incompleteMode) {
-                mandrax.setMaxNumberOfProofSteps(MAX_PROOF_STEPS); // makes the system incomplete in general!
-            }
-            
-            logger.info("Starting Mandrax ...");
-            rs = mandrax.query(query, kb, InferenceEngine.ALL, InferenceEngine.BUBBLE_EXCEPTIONS); // find all answers to the query, s           
-            logger.info(" Finished query call.");
-            
-            List queryVars = rs.getQueryVariables();
-            VariableBinding newVarBinding;
-            long k = 0;
-            logger.info("Traversing result set ...");
-            
-            while (rs.next()){
-                logger.info("... got next result.");
-                k++;
-                // Read the next result and create corresponding variable binding
-                newVarBinding = new VariableBindingImpl();
-                for (Iterator it = queryVars.iterator(); it.hasNext();){
-                    VariableTerm v = (VariableTerm) it.next();
-                    String varName = symbTransfomer.convertToWSML(v.getName());
-                    String varValue = symbTransfomer.convertToWSML(rs.getResult(v).toString());
-                    newVarBinding.put(varName, varValue);
+            //we only have one query
+            Iterator<Vector> subst = queries.next().iterator();
+            while(subst.hasNext()){
+                //for all vars in one substitution
+                Iterator<FLSubst> vars = subst.next().iterator();
+                VariableBinding varBinding = new VariableBindingImpl();
+                while(vars.hasNext()){
+                    FLSubst sub = vars.next();
+                    String varName = symbTransfomer.convertToWSML(sub.Var);
+                    String varValue = symbTransfomer.convertToWSML(sub.getSubstitutionString());
+                    varBinding.put(varName, varValue);
                 }
-                
-                result.getVariableBindings().add(newVarBinding);
-                logger.fine("Added result variable binding: " + newVarBinding.toString());
+                result.getVariableBindings().add(varBinding);
             }
             
-            
-            logger.fine("Found " + k + " results to the query");
             
             return result;
             
         } catch(Exception e) { 
             System.out.println("\n\n\n\n\n\n");
             e.printStackTrace();
-            throw new ExternalToolException("Mandrax can not handle given query", e, q); 
-        } finally
-        {
-            kb = null;
-            //mandrax = null;
-            try {
-                if(rs != null){
-                    rs.close(); // Close result set!
-                }
-            } catch (InferenceException e) {
-                e.printStackTrace();
-            }
-        }
+            throw new ExternalToolException("MINS can not handle given query", e, q); 
+        } 
         
     }
     
     /**
      * Translate a knowledgebase
      * @param p - the datalog program that constitutes the knowledgebase
+     * @throws UnsupportedFeatureException 
      */
-    private void translateKnowledgebase(org.deri.wsml.reasoner.wsmlcore.datalog.Program p) throws ExternalToolException {
+    private void translateKnowledgebase(Program p, Evaluator minsEval) throws ExternalToolException, UnsupportedFeatureException {
         logger.info("Translate knowledgebase :" + p);
 
         if (p == null) {logger.info("KB is not referenced. Assume empty KB."); return;} 
         
         for (org.deri.wsml.reasoner.wsmlcore.datalog.Rule r : p) {
-            translateRule(r);
+            translateRule(r, minsEval);
         }
     }
 
@@ -156,42 +130,67 @@ public class MinsFacade implements DatalogReasonerFacade {
      * Translate the query
      * @param p - the datalog program that constitutes the knowledgebase
      * @return an object that represents the same query in the Mandrax system
+     * @throws UnsupportedFeatureException 
      */
-    private org.mandarax.kernel.Query translateQuery(ConjunctiveQuery q) throws ExternalToolException {
-        logger.info("Translate query :" + q);
+    private void translateQuery(ConjunctiveQuery q, Evaluator minsEval) throws ExternalToolException, UnsupportedFeatureException {
+        // At present we convert the rule into a string representation that can be
+        // used as input for the MINS engine.
+        // This is not optimal but works for a quick prototype.
         
-        // Derive and store the sequence of variables that defines the output tuples from the query 
-        List<Variable> bodyVars = q.getVariables();
-        queryVarNamesSequence = new String[bodyVars.size()]; 
-        org.deri.wsml.reasoner.wsmlcore.datalog.Term[] predArgs = new org.deri.wsml.reasoner.wsmlcore.datalog.Term[bodyVars.size()];
-        int i = 0;
-        for ( Variable v : bodyVars){
-            queryVarNamesSequence[i] = v.getSymbol();
-            predArgs[i] = v;
+        List body = new ArrayList();
+        
+        String sRepresentation = " <- ";
+        
+        // Care about body
+        List<Literal> qBody = q.getLiterals();
+
+        int i = 1;
+        for( Literal bl : qBody){
+            sRepresentation += translateLiteral(bl);
+            if (i < qBody.size()){
+                sRepresentation += " and ";
+            }
             i++;
         }
         
-        logger.log(Level.FINE, "Sequence of variables in query is: ", queryVarNamesSequence);
+        sRepresentation += ".";
         
-        List<Literal> b = q.getLiterals();
-        Fact[] body = new Fact[b.size()];
-        i = 0;
-        for (Literal l : b){
-            body[i] = translateLiteral(l); 
+        // Prepend all free variables with FORALL quantor
+        
+        List<org.deri.wsml.reasoner.wsmlcore.datalog.Variable> varPrefix = q.getVariables();
+        
+        String sVarPrefix = "FORALL ";
+        
+        i = 1;
+        for( org.deri.wsml.reasoner.wsmlcore.datalog.Variable v : varPrefix){
+            sVarPrefix += symbTransfomer.convertToTool(v);
+            if (i < varPrefix.size()){
+                sRepresentation += ",";
+            } else {
+                sRepresentation += " ";
+            }
             i++;
         }
         
-        org.mandarax.kernel.Query newQuery = lf.createQuery(body, "result-query");
+        sRepresentation = sVarPrefix + sRepresentation;
         
-        logger.fine("Translated query to :" + newQuery.toString());
-       
-        return newQuery;
+        logger.info("Transformed rule:\n" + q + "\n to \n" + sRepresentation);
+        
+        // Transfer the rule to the given MINS engine
+        
+        try {
+            minsEval.compileString(sRepresentation);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            throw new ExternalToolException(e, query);
+        }
     }
     
     /**
      * Translate a datalog rule
+     * @throws UnsupportedFeatureException 
      */
-    private void translateRule(org.deri.wsml.reasoner.wsmlcore.datalog.Rule r, Evaluator minsEngine) throws ExternalToolException {
+    private void translateRule(org.deri.wsml.reasoner.wsmlcore.datalog.Rule r, Evaluator minsEngine) throws ExternalToolException, UnsupportedFeatureException {
         
         // At present we convert the rule into a string representation that can be
         // used as input for the MINS engine.
@@ -233,9 +232,9 @@ public class MinsFacade implements DatalogReasonerFacade {
         
         // Prepend all free variables with FORALL quantor
         
-        List<Variable> varPrefix = new LinkedList<Variable>();
+        List<org.deri.wsml.reasoner.wsmlcore.datalog.Variable> varPrefix = new LinkedList<org.deri.wsml.reasoner.wsmlcore.datalog.Variable>();
         varPrefix.addAll(r.getHeadVariables());
-        for (Variable bVar : r.getBodyVariables()){
+        for (org.deri.wsml.reasoner.wsmlcore.datalog.Variable bVar : r.getBodyVariables()){
             if( !varPrefix.contains(bVar)){
                 varPrefix.add(bVar);
             }
@@ -244,7 +243,7 @@ public class MinsFacade implements DatalogReasonerFacade {
         String sVarPrefix = "FORALL ";
         
         i = 1;
-        for( Variable v : varPrefix){
+        for( org.deri.wsml.reasoner.wsmlcore.datalog.Variable v : varPrefix){
             sVarPrefix += symbTransfomer.convertToTool(v);
             if (i < varPrefix.size()){
                 sRepresentation += ",";
@@ -270,63 +269,39 @@ public class MinsFacade implements DatalogReasonerFacade {
         
     }
     
-    String translateLiteral(Literal l) throws ExternalToolException {
-        try {
-            
-           Class[] predStructure = new Class[l.getArity()];
-           String predName = symbTransfomer.convertToTool(l.getSymbol());
-           
-           for(int i=0; i < l.getArity(); i++){
-               predStructure[i] = Object.class; // allow all possible types for the args.
-           }
-           org.mandarax.kernel.Predicate p = new SimplePredicate(predName, predStructure);
-                      
-           org.mandarax.kernel.Term[] predArgs = new org.mandarax.kernel.Term[l.getArity()];
-            
-            int i = 0;
-            org.deri.wsml.reasoner.wsmlcore.datalog.Term[] args = l.getArguments();
-            
-            String symbName;
-            org.mandarax.kernel.Term t = null;
-            
-            for (org.deri.wsml.reasoner.wsmlcore.datalog.Term arg : args){
-                if ( arg.getClass().equals(org.deri.wsml.reasoner.wsmlcore.datalog.Variable.class)) {
-                    symbName = symbTransfomer.convertToTool((org.deri.wsml.reasoner.wsmlcore.datalog.Variable) arg);
-                    t = lf.createVariableTerm(symbName, Object.class);
-                }
-                if ( arg.getClass().equals(org.deri.wsml.reasoner.wsmlcore.datalog.Constant.class)) {
-                    symbName = symbTransfomer.convertToTool((org.deri.wsml.reasoner.wsmlcore.datalog.Constant) arg);
-                    t = lf.createConstantTerm(symbName, Object.class);
-                }
-                if ( arg.getClass().equals(org.deri.wsml.reasoner.wsmlcore.datalog.DataTypeValue.class)) {
-                    symbName = symbTransfomer.convertToTool((DataTypeValue) arg);
-                    Class cClass;
-                    
-                    if (((DataTypeValue) arg).getType() == DataTypeValue.DataType.INTEGER){
-                        cClass = Integer.class;
-                    } else if (((DataTypeValue) arg).getType() == DataTypeValue.DataType.STRING){
-                        cClass = String.class;
-                    } else if (((DataTypeValue) arg).getType() == DataTypeValue.DataType.DECIMAL){
-                        cClass = Float.class;
-                    } else {
-                        cClass = Object.class;
-                    }
-                    
-                    t = lf.createConstantTerm(symbName, cClass);
-                }
-                
-                predArgs[i] = t;
-               
-                i++;
+    private String translateLiteral(Literal l) throws ExternalToolException, UnsupportedFeatureException {
+        
+        String predName = symbTransfomer.convertToTool(l.getSymbol());
+
+        org.deri.wsml.reasoner.wsmlcore.datalog.Term[] args = l.getArguments();
+        String symbName="";
+        String argString ="";
+        for (org.deri.wsml.reasoner.wsmlcore.datalog.Term arg : args){
+            if (arg instanceof org.deri.wsml.reasoner.wsmlcore.datalog.Variable) {
+                symbName = symbTransfomer.convertToTool((org.deri.wsml.reasoner.wsmlcore.datalog.Variable) arg);
             }
-              
-            // We ignore the negation type of the literal since we only care about positive datalog here.
-            return lf.createFact(p, predArgs);
+            else if (arg instanceof Constant) {
+                symbName = symbTransfomer.convertToTool((Constant) arg);
+            }
+            else if (arg instanceof DataTypeValue) {
+                symbName = symbTransfomer.convertToTool((DataTypeValue) arg);
+                //TODO: DataTypes unclear!
+            }else {
+                throw new RuntimeException("Uwe says we will not arrive here.");
+            }
             
-            
-        } catch(UnsupportedFeatureException ufe){
-            throw new ExternalToolException("Can not convert literal to tool: " + l.toString(), ufe, query);
+            if (argString.length()==0) {
+                argString += symbName;
+            }
+            else {
+                argString += ","+symbName;
+            }
         }
+            
+        if (!l.isPositive()){
+            //TODO: NEGATION SYNTAX of mins
+        }
+        return predName +"("+argString+")";
     }
 
     /* (non-Javadoc)
@@ -341,7 +316,7 @@ public class MinsFacade implements DatalogReasonerFacade {
 
         // Some initialization
         //this.kb = new org.mandarax.reference.KnowledgeBase();
-        this.kb = new org.mandarax.reference.AdvancedKnowledgeBase();
+        this.kb = new ();
         
         // First translate the logic program the query refers to.
         translateKnowledgebase(kb);
