@@ -18,9 +18,9 @@
  */
 package org.deri.wsml.reasoner.normalization;
 
+import junit.framework.TestCase;
+
 import org.deri.wsmo4j.io.parser.wsml.LogExprParserImpl;
-import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
-import org.omwg.logexpression.LogicalExpression;
 import org.omwg.logexpression.Molecule;
 import org.omwg.logexpression.terms.Term;
 import org.omwg.ontology.Ontology;
@@ -28,8 +28,6 @@ import org.wsmo.common.IRI;
 import org.wsmo.common.Namespace;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
-
-import junit.framework.TestCase;
 
 public class MoleculeUtilsTest extends TestCase {
 

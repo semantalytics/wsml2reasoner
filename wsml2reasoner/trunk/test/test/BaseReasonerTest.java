@@ -19,26 +19,15 @@
  */
 package test;
 
-import java.io.*;
-import java.io.FileReader;
 import java.io.Reader;
 import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import junit.framework.TestCase;
 
-import org.deri.wsml.reasoner.api.OntologyRegistrationRequest;
-import org.deri.wsml.reasoner.api.WSMLReasoner;
-import org.deri.wsml.reasoner.api.WSMLReasonerFactory;
-import org.deri.wsml.reasoner.api.queryanswering.QueryAnsweringRequest;
-import org.deri.wsml.reasoner.api.queryanswering.QueryAnsweringResult;
-import org.deri.wsml.reasoner.api.queryanswering.VariableBinding;
-import org.deri.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.deri.wsml.reasoner.impl.OntologyRegistrationRequestImpl;
-import org.deri.wsml.reasoner.impl.QueryAnsweringRequestImpl;
+import org.deri.wsml.reasoner.api.*;
+import org.deri.wsml.reasoner.api.queryanswering.*;
+import org.deri.wsml.reasoner.impl.*;
 import org.deri.wsmo4j.io.parser.wsml.LogExprParserImpl;
 import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
 import org.omwg.logexpression.LogicalExpression;
@@ -97,16 +86,7 @@ public class BaseReasonerTest extends TestCase {
                 .createSerializer(serializerProperties);
 
         // Read simple ontology from file
-        Reader ontoReader= null;
-        try{
-            ontoReader = new FileReader(ontologyFile);
-        }catch (FileNotFoundException e){
-            InputStream is = BaseReasonerTest.class.getResourceAsStream(ontologyFile);
-            assertNotNull("Could not Load file: "+ontologyFile, is);
-            ontoReader = new InputStreamReader(is);
-        }
-        assertNotNull("Could not Load file: "+ontologyFile, ontoReader);
-
+        final Reader ontoReader = BaseTest.getReaderForFile(ontologyFile);
         final TopEntity[] identifiable = wsmlparserimpl.parse(ontoReader);
         if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {
             o = (Ontology) identifiable[0];
