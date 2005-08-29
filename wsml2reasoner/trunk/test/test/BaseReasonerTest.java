@@ -18,6 +18,7 @@
  */
 package test;
 
+import java.io.*;
 import java.io.FileReader;
 import java.io.Reader;
 import java.io.StringWriter;
@@ -96,7 +97,11 @@ public class BaseReasonerTest extends TestCase {
 
         // Read simple ontology from file
 
-        final Reader ontoReader = new FileReader(ontologyFile);
+        Reader ontoReader = new FileReader(ontologyFile);
+        if (ontoReader==null){
+            InputStream is = BaseReasonerTest.class.getResourceAsStream(ontologyFile);
+            ontoReader = new InputStreamReader(is);
+        }
 
         final TopEntity[] identifiable = wsmlparserimpl.parse(ontoReader);
         if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {
