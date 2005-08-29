@@ -36,13 +36,24 @@ import com.ontoprise.inference.*;
 public class MinsFacade implements DatalogReasonerFacade {
 
     private Logger logger = Logger.getLogger("org.deri.wsml.reasoner.wsmlcore.wrapper.mins");
-       
+    
+  
     /** Here we store a MINS Engine which contains the compiled KB for each registered ontology */
     private Map<String,Evaluator> registeredKbs = new HashMap<String,Evaluator>();
     
     private SymbolMap symbTransfomer = new SymbolMap(new DefaultSymbolFactory());
     private org.deri.wsml.reasoner.wsmlcore.datalog.Query query;
       
+    
+    /** 
+     * Creates a facade object that allows to invoke the MINS rule system
+     * for performing query evaluation tasks.
+     */
+    public MinsFacade(){
+       super();
+       logger.setLevel(Level.OFF);        
+    }
+    
     /**
      * Evaluates a Query on a Datalog knowledgebase.
      * The actual evaluation is done by the MINS system.
@@ -153,20 +164,22 @@ public class MinsFacade implements DatalogReasonerFacade {
         
         List<org.deri.wsml.reasoner.wsmlcore.datalog.Variable> varPrefix = q.getVariables();
         
-        String sVarPrefix = "FORALL ";
-        
-        i = 1;
-        for( org.deri.wsml.reasoner.wsmlcore.datalog.Variable v : varPrefix){
-            sVarPrefix += symbTransfomer.convertToTool(v);
-            if (i < varPrefix.size()){
-                sRepresentation += ",";
-            } else {
-                sRepresentation += " ";
+        if (varPrefix.size() > 0) {
+            String sVarPrefix = "FORALL ";
+
+            i = 1;
+            for (org.deri.wsml.reasoner.wsmlcore.datalog.Variable v : varPrefix) {
+                sVarPrefix += symbTransfomer.convertToTool(v);
+                if (i < varPrefix.size()) {
+                    sVarPrefix += ",";
+                } else {
+                    sVarPrefix += " ";
+                }
+                i++;
             }
-            i++;
+
+            sRepresentation = sVarPrefix + sRepresentation;
         }
-        
-        sRepresentation = sVarPrefix + sRepresentation;
         
         logger.info("Transformed rule:\n" + q + "\n to \n" + sRepresentation);
         
@@ -232,20 +245,22 @@ public class MinsFacade implements DatalogReasonerFacade {
             }
         }
         
-        String sVarPrefix = "FORALL ";
-        
-        i = 1;
-        for( org.deri.wsml.reasoner.wsmlcore.datalog.Variable v : varPrefix){
-            sVarPrefix += symbTransfomer.convertToTool(v);
-            if (i < varPrefix.size()){
-                sRepresentation += ",";
-            } else {
-                sRepresentation += " ";
+        if (varPrefix.size() > 0) {
+            String sVarPrefix = "FORALL ";
+
+            i = 1;
+            for (org.deri.wsml.reasoner.wsmlcore.datalog.Variable v : varPrefix) {
+                sVarPrefix += symbTransfomer.convertToTool(v);
+                if (i < varPrefix.size()) {
+                    sVarPrefix += ",";
+                } else {
+                    sVarPrefix += " ";
+                }
+                i++;
             }
-            i++;
+
+            sRepresentation = sVarPrefix + sRepresentation;
         }
-        
-        sRepresentation = sVarPrefix + sRepresentation;
         
         logger.info("Transformed rule:\n" + r + "\n to \n" + sRepresentation);
         
@@ -282,7 +297,7 @@ public class MinsFacade implements DatalogReasonerFacade {
                 throw new RuntimeException("Uwe says we will not arrive here.");
             }
             
-            if (argString.length()==0) {
+            if (argString.length() == 0) {
                 argString += symbName;
             }
             else {

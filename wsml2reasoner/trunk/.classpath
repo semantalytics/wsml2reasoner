@@ -11,5 +11,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry sourcepath="ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.0.0/src/org.junit_3.8.1/junitsrc.zip" kind="var" path="JUNIT_HOME/junit.jar"/>
 	<classpathentry kind="lib" path="lib/ext/kaon2/kaon2-2005-08-24.jar"/>
+	<classpathentry kind="lib" path="lib/ext/mins/mins.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

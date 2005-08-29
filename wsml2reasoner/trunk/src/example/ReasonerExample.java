@@ -51,12 +51,12 @@ import org.wsmo.wsml.Serializer;
  * 
  * <pre>
  *  Created on Aug 17, 2005
- *  Committed by $Author: gabor $
+ *  Committed by $Author: uwe $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/example/ReasonerExample.java,v $,
  * </pre>
  * 
  * @author Holger Lausen
- * @version $Revision: 1.4 $ $Date: 2005-08-26 15:43:46 $
+ * @version $Revision: 1.5 $ $Date: 2005-08-29 16:25:44 $
  */
 public class ReasonerExample {
 
@@ -88,7 +88,7 @@ public class ReasonerExample {
         params.put(WSMLReasonerFactory.PARAM_WSML_VARIANT,
                 WSMLReasonerFactory.WSMLVariant.WSML_CORE);
         params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
-                WSMLReasonerFactory.BuiltInReasoner.KAON2);
+                WSMLReasonerFactory.BuiltInReasoner.MINS);
         WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().getWSMLReasoner(
                 params);
         
