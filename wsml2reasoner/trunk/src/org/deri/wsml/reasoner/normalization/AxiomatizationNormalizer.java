@@ -35,6 +35,8 @@ import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
+import com.ontotext.wsmo4j.factory.WsmoFactoryImpl;
+
 
 /**
  * A normalization step of an ontology that transforms the conceptual
@@ -81,10 +83,7 @@ public class AxiomatizationNormalizer implements
         leFactory = (org.omwg.logexpression.LogicalExpressionFactory) Factory
                 .createLogicalExpressionFactory(leProperties);
 
-        Map<String, Object> properties = new HashMap<String, Object>();
-        properties.put(Factory.PROVIDER_CLASS,
-                "com.ontotext.wsmo4j.factory.WsmoFactoryImpl");
-        factory = Factory.createWsmoFactory(null);//properties);
+        factory = Factory.createWsmoFactory(null);
     }
     
     /**

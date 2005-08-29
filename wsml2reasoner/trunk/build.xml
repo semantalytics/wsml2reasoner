@@ -1,28 +1,240 @@
-<?xml version="1.0"?>
-<!-- ====================================================================== 
-     Aug 17, 2005 3:45:39 PM                                                        
+<!--
 
-     WSML Reasoner Wrapper
-                   
-     hollau                                                                
-     ====================================================================== -->
-<project name="project" default="default">
-    <description>
-            builds the wrapper with the freely available licenses...
-    </description>
+In order successfuly to use the sshexec/scp tasks you have to download from 
+http://www.jcraft.com/jsch/index.html jsch-0.x.xx.jar and put it in 
+%ANT_HOME%/lib folder as jsse.jar
 
-    <!-- ================================= 
-          target: default              
-         ================================= -->
-    <target name="default" depends="depends" description="--> description">
-        
-    </target>
+Note for Eclipse User: When using ant from eclipse you can get jsse.jar by using 
+	  "get.antscplib" additionally go to Windows>Preferences>Ant>Runtime>Classpath
+	  and add the lib to the runtime classpath
+-->
+<project name="WSML Reasoning Wrapper" basedir="." default="create_jar">
+  <!-- set global properties for this build -->
+  <tstamp />
+  <!-- avoids pop ups if you create this file and set ssh.password and ssh.user
+       on server also enables to reset src dir etc.-->
+  <property file="pwd" />
+  <property name="cvs.user" value="hlausen"/>
+  <property name="cvs.path"
+            value=":ext:${cvs.user}@cvs.deri.at:/usr/local/cvsroot" />
+  <property name="dir.java-doc" location="${basedir}/java-doc" />
+  <property name="dir.jUnit" location="${basedir}/jUnitReport" />
+  <property name="dir.jCoverage" location="${basedir}/jCoverage" />
+  <property name="dir.src" location="${basedir}" />
+  <property name="dir.lib" location="${basedir}/lib" />
+  <property name="dir.build" location="${basedir}/build" />
+  <property name="dir.distribution" location="${basedir}/dist" />
+  <property name="shell.host" value="dev1.deri.at" />
+  <property name="lib.wrapper"
+            location="${dir.distribution}/wsmo4jWrapper-${DSTAMP}.jar" />
+  <property name="lib.wrapper-src"
+            location="${dir.distribution}/wsmo4jWrapper-${DSTAMP}.zip" />
 
-    <!-- - - - - - - - - - - - - - - - - - 
-          target: depends                      
-         - - - - - - - - - - - - - - - - - -->
-    <target name="depends">
-    </target>
+  <!--necessary: wsml-grammar, wsmo4j-api, xercesimpl, xmlApis-->
+  <path id="classpath">
+    <fileset dir="${dir.lib}" includes="**/*.jar" />
+  </path>
+
+  <target name="compile">
+    <mkdir dir="${dir.build}" />
+    <javac debug="yes"
+           srcdir="${dir.src}"
+           excludes="**/test/**/*.java"
+           classpathref="classpath"
+           destdir="${dir.build}"
+           source="1.5"
+           target="1.5" />
+  </target>
+
+  <target name="test.djunit"
+          description="Executes the unit test with files available in lib directory">
+
+    <delete dir="${dir.build}" />
+    <mkdir dir="${dir.build}" />
+    <javac debug="yes"
+           srcdir="${dir.src}/test"
+           classpathref="classpath"
+           destdir="${dir.build}"
+           source="1.5"
+           target="1.5"
+           classpath="${lib.wrapper}" />
+
+    <copy todir="${dir.build}">
+      <fileset dir="${dir.src}/test" includes="**/*.wsml;**/*.xml" />
+    </copy>
+
+    <djunit printsummary="yes"
+            targetSrcDir="${dir.src}/logexp-impl/src;${dir.src}/logexp-impl/src"
+            coverage="yes"
+            virtualmock="yes">
+
+      <classpath refid="classpath" />
+      <classpath location="${lib.logexp}" />
+      <classpath path="${dir.build}" />
+      <formatter type="xml" />
+      <batchtest todir="${dir.build}">
+        <fileset dir="${dir.build}">
+          <include name="**/*.class" />
+          <exclude name="**/LogicalExpressionTestCase.*" />
+          <exclude name="**/LogExpIntegrationTest.*" />
+        </fileset>
+      </batchtest>
+    </djunit>
+
+    <delete dir="${dir.jUnit}" />
+    <mkdir dir="${dir.jUnit}" />
+    <junitreport todir="${dir.build}">
+      <fileset dir="${dir.build}">
+        <include name="TEST-*.xml" />
+      </fileset>
+      <report format="frames" todir="${dir.jUnit}" />
+    </junitreport>
+
+    <delete dir="${dir.jCoverage}" />
+    <mkdir dir="${dir.jCoverage}" />
+    <djunit-coverage-report serFile="./jcoverage.ser"
+                            srcdir="${dir.src}/logexp-impl/src/"
+                            destdir="${dir.jCoverage}">
+      <classpath refid="classpath" />
+    </djunit-coverage-report>
+    <delete dir="${dir.build}" />
+  </target>
+
+  <target name="test.junit"
+          description="Executes the unit test with files available in lib directory">
+
+    <delete dir="${dir.build}" />
+    <mkdir dir="${dir.build}" />
+    <javac debug="yes"
+           srcdir="${dir.src}/test"
+           classpathref="classpath"
+           destdir="${dir.build}"
+           source="1.5"
+           target="1.5"
+           classpath="${lib.wrapper}" />
+
+
+    <junit printsummary="yes">
+      <classpath refid="classpath" />
+      <classpath location="${lib.wrapper}" />
+      <classpath path="${dir.build}" />
+      <classpath path="./" />
+      <formatter type="xml" />
+      <batchtest todir="${dir.build}">
+        <fileset dir="${dir.build}">
+          <include name="**/*.class" />
+          <exclude name="**/TestWSMLConceptualSyntax2LExprs.*"/>
+          <exclude name="**/WSMLNormalizationTest.*"/>
+          <exclude name="**/BaseTest.*"/>
+          <exclude name="**/BaseReasonerTest.*"/>
+        </fileset>
+      </batchtest>
+    </junit>
+
+    <delete dir="${dir.jUnit}" />
+    <mkdir dir="${dir.jUnit}" />
+    <junitreport todir="${dir.build}">
+      <fileset dir="${dir.build}">
+        <include name="TEST-*.xml" />
+      </fileset>
+      <report format="frames" todir="${dir.jUnit}" />
+    </junitreport>
+<!--    <delete dir="${dir.build}" />
+-->
+  </target>  
+  
+  <target name="cvs.checkout" description="checkout exrt sources">
+    <delete dir="${dir.src}"/>
+    <mkdir dir="${dir.src}"/>
+    <cvs compression="true"
+        cvsroot="${cvs.path}"
+        package="ext"
+        dest="./"
+        failonerror="true"/>
+  </target>
+
+  <target name="CleanCheckout+Reports" depends="cvs.checkout,create_jar,test.junit,javadoc">
+  </target>
+
+  <target name="create_jar"
+          depends="compile"
+          description="creates a new version of the snapshot, make 
+			sure you have the last version of WSMO4J">
+    <delete dir="${dir.distribution}" />
+    <mkdir dir="${dir.distribution}" />
+    <jar jarfile="${lib.wrapper}"
+         basedir="${dir.build}"
+         index="true" />
+    <zip destfile="${lib.wrapper-src}"
+         basedir="${dir.src}"
+         includes="src/**,examples/**,test/**" />
+    <delete dir="${dir.build}" />
+  </target>
+
+  <target name="update_remote_snapshot"
+          depends="chose_user_password"
+          description="updates logical expression snapshot on sourceforge">
+    <!--delete old snapshot-->
+    <sshexec host="${shell.host}"
+             username="${ssh.user}"
+             password="${ssh.password}"
+             trust="yes"
+             command="rm -f /home/groups/w/ws/wsmo4j/htdocs/snapshot/wsmo4jLogExp*" />
+
+    <scp file="${dir.distribution}/wsmo4jLogExp-${DSTAMP}.jar"
+         trust="yes"
+         todir="${ssh.user}:${ssh.password}@${shell.host}:/home/groups/w/ws/wsmo4j/htdocs/snapshot" />
+
+    <scp file="${lib.wrapper-src}"
+         trust="yes"
+         todir="${ssh.user}:${ssh.password}@${shell.host}:/home/groups/w/ws/wsmo4j/htdocs/snapshot" />
+
+    <!--permission to wmo4j group member-->
+    <sshexec host="${shell.host}"
+             username="${ssh.user}"
+             password="${ssh.password}"
+             trust="yes"
+             command="chgrp wsmo4j /home/groups/w/ws/wsmo4j/htdocs/snapshot/wsmo4jLogExp* &amp;&amp; chmod g+w /home/groups/w/ws/wsmo4j/htdocs/snapshot/wsmo4jLogExp*" />
+  </target>
+
+  <target name="chose_user_password">
+    <input message="Username for ${shell.host}:" addproperty="ssh.user" />
+    <input message="Password for ${shell.host}:" addproperty="ssh.password" />
+  </target>
+
+  <target name="get.antscplib"
+          description="Download necessary libary directly to ant lib">
+    <get dest="${ant.library.dir}/jsse.jar"
+         src="http://mesh.dl.sourceforge.net/sourceforge/jsch/jsch-0.1.20.jar" />
+  </target>
+
+  <target name="javadoc" description="produces javadoc">
+    <delete dir="${dir.java-doc}" />
+    <mkdir dir="${dir.java-doc}" />
+    <javadoc destdir="${dir.java-doc}"
+             classpathref="classpath"
+             author="true"
+             version="true"
+             use="true"
+             windowtitle="WSMO4J Reasoning Wrapper">
+      <fileset dir="${dir.src}">
+        <include name="src/**/*.java" />
+      </fileset>
+      <link href="http://wsmo4j.sourceforge.net/multiproject/wsmo-api/apidocs/"
+            packagelistloc="http://wsmo4j.sourceforge.net/multiproject/wsmo-api/apidocs/package-list" />
+      <link href="http://wsmo4j.sourceforge.net/multiproject/logexp-api/apidocs/"
+            packagelistloc="http://wsmo4j.sourceforge.net/multiproject/logexp-api/apidocs/package-list" />
+      <link href="http://java.sun.com/j2se/1.4.2/docs/api/"
+            packagelistloc="http://java.sun.com/j2se/1.4.2/docs/api/package-list" />
+      <doctitle>
+        <![CDATA[<h1>WSMO4J Reasoning Wrapper</h1>]]></doctitle>
+    <bottom>
+      <![CDATA[<i>Copyright &#169; 2005 University of Innsbruck, Austria; FZI, Germnay. All Rights Reserved.</i>]]></bottom>
+  <tag name="TODO" scope="all" description="To do:" />
+</javadoc>
+</target>
+
+<taskdef classpath="lib/djunit.jar" resource="djunittasks.properties" />
 
 </project>
 

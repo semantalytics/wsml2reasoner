@@ -40,6 +40,7 @@ import org.deri.wsml.reasoner.wsmlcore.wrapper.DatalogReasonerFacade;
 import org.deri.wsml.reasoner.wsmlcore.wrapper.ExternalToolException;
 import org.deri.wsml.reasoner.wsmlcore.wrapper.dlv.DLVFacade;
 import org.deri.wsml.reasoner.wsmlcore.wrapper.kaon2.Kaon2Facade;
+import org.deri.wsml.reasoner.wsmlcore.wrapper.mandrax.MandraxFacade;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 
@@ -63,8 +64,10 @@ public class WSMLCoreReasonerImpl implements WSMLReasoner {
             builtInFacade = new DLVFacade();
             break;
         case MANDARAX:
-            throw new UnsupportedOperationException(
-                    "Reasoning with Mandarax is not supported yet!");
+            builtInFacade = new MandraxFacade(true);
+            break;
+//            throw new UnsupportedOperationException(
+//                    "Reasoning with Mandarax is not supported yet!");
         case KAON2:
             builtInFacade = new Kaon2Facade();
             break;

@@ -20,31 +20,28 @@
 package org.deri.wsml.reasoner.wsmlcore.wrapper.mandrax;
 
 import java.util.*;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.deri.wsml.reasoner.api.queryanswering.VariableBinding;
+import org.deri.wsml.reasoner.impl.VariableBindingImpl;
 import org.deri.wsml.reasoner.wsmlcore.datalog.*;
 import org.deri.wsml.reasoner.wsmlcore.wrapper.*;
-
 import org.mandarax.kernel.*;
 import org.mandarax.reference.AbstractResolutionInferenceEngine;
-import org.mandarax.reference.ResolutionInferenceEngine3;
-import org.mandarax.reference.ResolutionInferenceEngine4;
 import org.mandarax.reference.ResolutionInferenceEngine2;
-import org.mandarax.reference.ResolutionInferenceEngine;
-import org.mandarax.reference.DefaultLoopCheckingAlgorithm;
-import org.mandarax.util.*;
-
-import org.deri.wsml.reasoner.api.queryanswering.*;
-import org.deri.wsml.reasoner.impl.*;
+import org.mandarax.util.LogicFactorySupport;
 
 public class MandraxFacade implements DatalogReasonerFacade {
 
     private Logger logger = Logger.getLogger("org.deri.wsml.reasoner.wsmlcore.wrapper.mandrax");
     
+    private Map<String,KnowledgeBase> registeredKbs = new HashMap<String,KnowledgeBase>();
+    
     AbstractResolutionInferenceEngine mandrax = new ResolutionInferenceEngine2(); // multiple results, no NAF!
     ResultSet rs = null;
     
-    public final static int MAX_PROOF_STEPS = 3000;
+    public final static int MAX_PROOF_STEPS = 300;
     
     /**
      * to do: read from property file!
@@ -86,23 +83,16 @@ public class MandraxFacade implements DatalogReasonerFacade {
      * Evaluates a Query on a Datalog knowledgebase
      * @throws ExternalToolException 
      */
-    public QueryResult evaluate(ConjunctiveQuery q) throws ExternalToolException {
+    public QueryResult evaluate(ConjunctiveQuery q, String ontologyIRI) throws ExternalToolException {
         
         try {
         
-        QueryResult result = new QueryResult(q);
+            QueryResult result = new QueryResult(q);
+            
+            //retrieve KB ment for IRI:
+            this.kb = registeredKbs.get(ontologyIRI);
         
-      
-            
             query = q;
-            
-            // Some initialization
-            
-            kb = new org.mandarax.reference.KnowledgeBase();
-            // kb = new org.mandarax.reference.AdvancedKnowledgeBase();
-            
-            // First translate the logic program the query refers to.
-//            translateKnowledgebase(q.getKnowledgebase());
             
             // Translate the query itself
             org.mandarax.kernel.Query query = translateQuery(q); 
@@ -147,11 +137,13 @@ public class MandraxFacade implements DatalogReasonerFacade {
             return result;
             
         } catch(Exception e) { 
+            System.out.println("\n\n\n\n\n\n");
+            e.printStackTrace();
             throw new ExternalToolException("Mandrax can not handle given query", e, q); 
         } finally
         {
             kb = null;
-            mandrax = null;
+            //mandrax = null;
             try {
                 if(rs != null){
                     rs.close(); // Close result set!
@@ -169,8 +161,7 @@ public class MandraxFacade implements DatalogReasonerFacade {
      */
     private void translateKnowledgebase(org.deri.wsml.reasoner.wsmlcore.datalog.Program p) throws ExternalToolException {
         logger.info("Translate knowledgebase :" + p);
-        
-        
+
         if (p == null) {logger.info("KB is not referenced. Assume empty KB."); return;} 
         
         for (org.deri.wsml.reasoner.wsmlcore.datalog.Rule r : p) {
@@ -228,14 +219,23 @@ public class MandraxFacade implements DatalogReasonerFacade {
         
         // Translate head
         head = translateLiteral(r.getHead());
-                          
+        
         // Care about body
         List<Literal> rBody = r.getBody();
+
+        //FACT
+        if (rBody.size()==0){
+            kb.add(head);
+            return;
+        }
+                          
         for( Literal bl : rBody){
             Fact f = translateLiteral(bl); // convert fact to prerequisite.
             Prerequisite newBodyLiteral = lf.createPrerequisite(f.getPredicate(), f.getTerms(), !bl.isPositive()); // ignore negation for now (positive datatlog)
             body.add(newBodyLiteral);
         }
+        
+        
         
         // Create the rule in Mandrax and add it to the knowledgebase
         org.mandarax.kernel.Rule newRule;
@@ -317,14 +317,15 @@ public class MandraxFacade implements DatalogReasonerFacade {
     }
 
     public void register(String ontologyURI, Program kb) throws ExternalToolException {
-        // TODO Auto-generated method stub
+
+        // Some initialization
+        //this.kb = new org.mandarax.reference.KnowledgeBase();
+        this.kb = new org.mandarax.reference.AdvancedKnowledgeBase();
         
-    }
+        // First translate the logic program the query refers to.
+        translateKnowledgebase(kb);
 
-    public QueryResult evaluate(ConjunctiveQuery q, String ontologyURI) throws ExternalToolException {
-        // TODO Auto-generated method stub
-        return null;
+        registeredKbs.put(ontologyURI, this.kb);
+        this.kb=null;
     }
-    
-
 }

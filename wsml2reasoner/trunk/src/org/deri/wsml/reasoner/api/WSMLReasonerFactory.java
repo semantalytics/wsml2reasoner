@@ -39,7 +39,7 @@ public interface WSMLReasonerFactory {
      * Creates an object that allows to communicate and invoke with a reasoner for
      * WSML for the specified variant of WSML.
      * 
-     * @param variant
+     * @param parameters
      * @return an object for invoking and communicating with a WSML reasoner of the specfic kind.
      * @throws UnsupportedOperationException in case that the factory does not support the 
      *         requested variant. Providers are not urged to implement all variants.

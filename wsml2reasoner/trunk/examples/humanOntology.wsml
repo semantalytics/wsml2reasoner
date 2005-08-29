@@ -1,0 +1,28 @@
+wsmlVariant _"http://www.wsmo.org/2004/wsml/wsml-core"
+
+namespace {_"http://www.example.org#",
+    dc _"http://purl.org/dc/elements/1.1#"}
+ 
+ontology TheSimpsons
+
+axiom test
+  definedBy
+    human :- human.
+    
+concept Human
+  hasRelative transitive symmetric impliesType Human
+
+concept Man subConceptOf Human
+
+concept Woman subConceptOf Human
+
+instance Homer memberOf Man
+  hasRelative hasValue Marge
+  
+instance Marge memberOf Woman
+  hasRelative hasValue Lisa
+
+
+
+
+

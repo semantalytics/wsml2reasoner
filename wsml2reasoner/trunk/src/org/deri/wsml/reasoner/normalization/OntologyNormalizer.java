@@ -39,7 +39,7 @@ public interface OntologyNormalizer
      * copy of the original ontoloy. Thus, they could change the original
      * ontology destructively during normalization. 
      * 
-     * @param o - the ontology to be transformed (according to a normalization process)
+     * @param ontology - the ontology to be transformed (according to a normalization process)
      * @return an ontology that represents the original ontology after application of
      *         the normalization step.
      */
