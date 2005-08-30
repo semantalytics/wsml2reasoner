@@ -18,8 +18,10 @@
  */
 package org.deri.wsml.reasoner.normalization.le;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.omwg.logexpression.Binary;
-import org.omwg.logexpression.CompoundExpression;
 import org.omwg.logexpression.LogicalExpression;
 
 /**
@@ -36,8 +38,7 @@ public class DisjunctionPullRules extends FixedModificationRules
     private DisjunctionPullRules()
     {
         super();
-        rules.add(new LeftDisjunctionPullRule());
-        rules.add(new RightDisjunctionPullRule());
+        rules.add(new ConjunctionPushRule());
     }
 
     public static DisjunctionPullRules instantiate()
@@ -49,71 +50,82 @@ public class DisjunctionPullRules extends FixedModificationRules
         return instance;
     }
 
-    protected class LeftDisjunctionPullRule implements NormalizationRule
+    protected class ConjunctionPushRule implements NormalizationRule
     {
         public LogicalExpression apply(LogicalExpression expression)
         {
             Binary conjunction = (Binary)expression;
-            Binary disjunction = (Binary)conjunction.getArgument(0);
-            LogicalExpression leftConjunction = leFactory.createBinary(Binary.AND, disjunction.getArgument(0), conjunction.getArgument(1));
-            LogicalExpression rightConjunction = leFactory.createBinary(Binary.AND, disjunction.getArgument(1), conjunction.getArgument(1));
-            return leFactory.createBinary(Binary.OR, leftConjunction, rightConjunction);
+            LogicalExpression conjunct;
+            Binary disjunction;
+            if(hasLeftDisjunction(conjunction))
+            {
+                conjunct = conjunction.getArgument(1);
+                disjunction = (Binary)conjunction.getArgument(0);
+            }
+            else
+            {
+                conjunct = conjunction.getArgument(0);
+                disjunction = (Binary)conjunction.getArgument(1);
+            }
+            Set<LogicalExpression> disjuncts = new HashSet<LogicalExpression>();
+            collectDirectDisjuncts(disjunction, disjuncts);
+            Set<LogicalExpression> newDisjuncts = new HashSet<LogicalExpression>();
+            for(LogicalExpression disjunct : disjuncts)
+            {
+                newDisjuncts.add(leFactory.createBinary(Binary.AND, conjunct, disjunct));
+            }
+            return buildNary(Binary.OR, newDisjuncts);
         }
 
         public boolean isApplicable(LogicalExpression expression)
         {
-            if(expression instanceof CompoundExpression)
+            if(expression instanceof Binary)
             {
-                CompoundExpression compound = (CompoundExpression)expression;
-                if(compound.getOperator() == CompoundExpression.AND)
+                Binary conjunction = (Binary)expression;
+                if(conjunction.getOperator() == Binary.AND)
                 {
-                    if(compound.getArgument(0) instanceof CompoundExpression)
-                    {
-                        compound = (CompoundExpression)compound.getArgument(0);
-                        return compound.getOperator() == CompoundExpression.OR;
-                    }
+                    return hasLeftDisjunction(conjunction) || hasRightDisjunction(conjunction);
                 }
             }
             return false;
         }
-
-        public String toString()
+        
+        protected boolean hasLeftDisjunction(Binary binary)
         {
-            return "(A or B) and C\n\t=>\n A and C or B and C\n";
-        }
-    }
-
-    protected class RightDisjunctionPullRule implements NormalizationRule
-    {
-        public LogicalExpression apply(LogicalExpression expression)
-        {
-            Binary conjunction = (Binary)expression;
-            Binary disjunction = (Binary)conjunction.getArgument(1);
-            LogicalExpression leftConjunction = leFactory.createBinary(Binary.AND, disjunction.getArgument(0), conjunction.getArgument(0));
-            LogicalExpression rightConjunction = leFactory.createBinary(Binary.AND, disjunction.getArgument(1), conjunction.getArgument(0));
-            return leFactory.createBinary(Binary.OR, leftConjunction, rightConjunction);
+            LogicalExpression argument = binary.getArgument(0);
+            if(argument instanceof Binary)
+                return ((Binary)argument).getOperator() == Binary.OR;
+            else
+                return false;
         }
 
-        public boolean isApplicable(LogicalExpression expression)
+        protected boolean hasRightDisjunction(Binary binary)
         {
-            if(expression instanceof CompoundExpression)
+            LogicalExpression argument = binary.getArgument(1);
+            if(argument instanceof Binary)
+                return ((Binary)argument).getOperator() == Binary.OR;
+            else
+                return false;
+        }
+
+        protected void collectDirectDisjuncts(LogicalExpression expression, Set<LogicalExpression> disjuncts)
+        {
+            if(expression instanceof Binary)
             {
-                CompoundExpression compound = (CompoundExpression)expression;
-                if(compound.getOperator() == CompoundExpression.AND)
+                Binary disjunction = (Binary)expression;
+                if(disjunction.getOperator() == Binary.OR)
                 {
-                    if(compound.getArgument(1) instanceof CompoundExpression)
-                    {
-                        compound = (CompoundExpression)compound.getArgument(1);
-                        return compound.getOperator() == CompoundExpression.OR;
-                    }
+                    collectDirectDisjuncts(disjunction.getArgument(0), disjuncts);
+                    collectDirectDisjuncts(disjunction.getArgument(1), disjuncts);
+                    return;
                 }
             }
-            return false;
+            disjuncts.add(expression);
         }
-
+        
         public String toString()
         {
-            return "C and (A or B)\n\t=>\n C and A or C and B\n";
+            return "A or B and (C or D)\n\t=>\n A or B and C or B and D\n";
         }
     }
 }

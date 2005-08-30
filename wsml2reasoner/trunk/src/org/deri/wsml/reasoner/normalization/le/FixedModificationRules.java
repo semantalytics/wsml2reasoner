@@ -25,8 +25,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.omwg.logexpression.LogicalExpression;
 import org.omwg.logexpression.LogicalExpressionFactory;
 import org.wsmo.factory.Factory;
 
@@ -52,6 +54,21 @@ public abstract class FixedModificationRules implements List
             createParams.put(Factory.PROVIDER_CLASS, "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
             leFactory = (LogicalExpressionFactory)Factory.createLogicalExpressionFactory(createParams);
         }
+    }
+    
+    protected static LogicalExpression buildNary(int operationCode, Set<LogicalExpression> expressions)
+    {
+        LogicalExpression nary = null;
+        Iterator<LogicalExpression> leIterator = expressions.iterator();
+        if(leIterator.hasNext())
+        {
+            nary = leIterator.next();
+        }
+        while(leIterator.hasNext())
+        {
+            nary = leFactory.createBinary(operationCode, nary, leIterator.next());
+        }
+        return nary;
     }
 
     public void add(int index, Object element)
