@@ -28,9 +28,11 @@ import org.deri.wsml.reasoner.api.queryanswering.VariableBinding;
 import org.deri.wsml.reasoner.impl.QueryAnsweringResultImpl;
 import org.deri.wsml.reasoner.impl.VariableBindingImpl;
 import org.deri.wsml.reasoner.wsmlcore.datalog.*;
+import org.deri.wsml.reasoner.wsmlcore.datalog.Literal;
 import org.deri.wsml.reasoner.wsmlcore.wrapper.*;
 
 import com.ontoprise.inference.*;
+import com.ontoprise.parser.ParseException;
 
 
 public class MinsFacade implements DatalogReasonerFacade {

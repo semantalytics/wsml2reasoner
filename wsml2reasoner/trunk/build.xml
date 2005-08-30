@@ -113,6 +113,9 @@ Note for Eclipse User: When using ant from eclipse you can get jsse.jar by using
            target="1.5"
            classpath="${lib.wrapper}" />
 
+    <copy todir="${dir.build}">
+      <fileset dir="${dir.src}" includes="examples/**/*.wsml"></fileset>
+    </copy>
 
     <junit printsummary="yes">
       <classpath refid="classpath" />
@@ -139,8 +142,7 @@ Note for Eclipse User: When using ant from eclipse you can get jsse.jar by using
       </fileset>
       <report format="frames" todir="${dir.jUnit}" />
     </junitreport>
-<!--    <delete dir="${dir.build}" />
--->
+    <delete dir="${dir.build}" />
   </target>  
   
   <target name="cvs.checkout" description="checkout exrt sources">

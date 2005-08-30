@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import com.ontoprise.inference.*;
+import com.ontoprise.parser.ParseException;
 
 /**
  * Interface or class description
@@ -21,7 +22,7 @@ import com.ontoprise.inference.*;
  * @author ContributorFirstName ContributorLastName
  * @author ContributorFirstName ContributorLastName
  *
- * @version $Revision: 1.2 $ $Date: 2005-08-29 15:01:29 $
+ * @version $Revision: 1.3 $ $Date: 2005-08-30 11:41:31 $
  */
 public class MinsExample {
 

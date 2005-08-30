@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.deri.wsml.reasoner.api.OntologyRegistrationRequest;
 import org.deri.wsml.reasoner.api.WSMLReasoner;
@@ -51,12 +53,12 @@ import org.wsmo.wsml.Serializer;
  * 
  * <pre>
  *  Created on Aug 17, 2005
- *  Committed by $Author: uwe $
+ *  Committed by $Author: hlausen $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/example/ReasonerExample.java,v $,
  * </pre>
  * 
  * @author Holger Lausen
- * @version $Revision: 1.5 $ $Date: 2005-08-29 16:25:44 $
+ * @version $Revision: 1.6 $ $Date: 2005-08-30 11:41:31 $
  */
 public class ReasonerExample {
 
@@ -72,6 +74,10 @@ public class ReasonerExample {
      * loads an Ontology and performs 2 sample queries
      */
     public void doTestRun() {
+        
+        Logger log = Logger.getLogger("org.deri");
+        log.setLevel(Level.FINE);
+        
         Ontology exampleOntology = loadOntology("example/humanOntology.wsml");
         if (exampleOntology == null)
             return;
