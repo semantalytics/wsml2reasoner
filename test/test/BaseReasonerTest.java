@@ -93,6 +93,8 @@ public class BaseReasonerTest extends TestCase {
         } else {
             return;
         }
+        
+        System.out.println("Parsed ontology");
 
         // Print ontology in WSML
 
