@@ -12,6 +12,8 @@ concept Man subConceptOf Human
 
 concept Woman subConceptOf Human
 
+//instance Lisa memberOf Human
+
 instance Homer memberOf Man
   hasRelative hasValue Marge
   
