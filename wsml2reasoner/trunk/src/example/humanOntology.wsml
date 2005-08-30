@@ -19,6 +19,3 @@ instance Marge memberOf Woman
   hasRelative hasValue Lisa
 
 
-
-
-

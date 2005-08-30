@@ -189,10 +189,10 @@ public class AxiomatizationNormalizer implements
             lExprs.addAll(handleConceptAttribute(a, cTerm));
         }
         
-        if (subConceptOfs.size()==0) subConceptOfs.add(cTerm);
-		expr = leFactory.createMolecule(cTerm, subConceptOfs, null, null);
-        
-        lExprs.add(expr);
+        if (subConceptOfs.size() > 0) {
+            expr = leFactory.createMolecule(cTerm, subConceptOfs, null, null);
+            lExprs.add(expr);
+        }
         
         int i = 1;
         String axPrefix =  "Axiom-" + c.getIdentifier().asString(); 
@@ -253,11 +253,15 @@ public class AxiomatizationNormalizer implements
         if (!a.isConstraining()){
             // impliesType
             le = leFactory.createBinary(CompoundExpression.IMPLIES, e1, rangeMoExpr);
+            // TODO: because of the auxilliary predicates this can be done simpler by generating
+            //  wsml-implies-type(cTerm, att, moList)
         } else {
             // ofType
             org.omwg.logexpression.LogicalExpression nafExpr = leFactory.createUnary(CompoundExpression.NAF, rangeMoExpr);
             org.omwg.logexpression.LogicalExpression e2 = leFactory.createBinary(CompoundExpression.AND, e1, nafExpr);
             le = leFactory.createUnary(CompoundExpression.CONSTRAINT, e2);
+            // TODO: because of the auxilliary predicates this can be done simpler by generating
+            // wsml-of-type(cTerm, att, moList)
         }
         
         result.add(le);

@@ -206,7 +206,10 @@ public class MinsFacade implements DatalogReasonerFacade {
         String sRepresentation = null;
         
         if (r.isConstraint()) {
-            throw new ExternalToolException("Constraints are not supported explicitly by MINS!", this.query);
+            // Simply ignore constraints 
+            return;
+            
+            // TODO handle constraints properly
         } 
         
         // Translate head
