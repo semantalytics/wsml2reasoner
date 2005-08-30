@@ -29,6 +29,8 @@ import org.deri.wsml.reasoner.wsmlcore.wrapper.UnsupportedFeatureException;
 import org.deri.wsml.reasoner.api.queryanswering.*;
 import org.deri.wsml.reasoner.impl.VariableBindingImpl;
 
+import com.ontoprise.inference.Evaluator;
+
 import java.util.logging.*;
 import java.util.*;
 
@@ -313,8 +315,19 @@ public class DLVFacade implements DatalogReasonerFacade {
     }
 
     public void register(String ontologyURI, Program kb) throws ExternalToolException {
-        // TODO Auto-generated method stub
-        
+        // TODO
+       
+//        // Translate (resp. Transfer) the knowledge base to DLV 
+//        try {
+//            String dlvKBText = translateKnowledgebase(kb);
+//            registeredKbs.put(ontologyURI, dlvKBText);
+//        } catch (UnsupportedFeatureException e) {
+//            e.printStackTrace();            
+//            throw new ExternalToolException("Unsupported feature for MINS in knowledgebase.");
+//        }
+//        
+      
+  
     }
 
     public QueryResult evaluate(ConjunctiveQuery q, String ontologyURI) throws ExternalToolException {

@@ -95,12 +95,12 @@ public class QueryAnsweringReasoner {
         
         
         LogicalExpressionNormalizer moleculeNormalizer = new OnePassReplacementNormalizer(MoleculeDecompositionRules.instantiate());
-        System.out.println("Q before molecule normalization: " + q);
+        // System.out.println("Q before molecule normalization: " + q);
         q = moleculeNormalizer.normalize(q);
-        System.out.println("Q after molecule normalization: " + q);
+        // System.out.println("Q after molecule normalization: " + q);
         org.omwg.logexpression.LogicalExpression resultDefRule = leFactory
                 .createBinary(CompoundExpression.IMPLIEDBY, rHead, q);
-        //        
+        
         Program p = wsml2datalog.transform(resultDefRule);
         if (p.size() != 1)
             throw new IllegalArgumentException("Could not transform query " + q);

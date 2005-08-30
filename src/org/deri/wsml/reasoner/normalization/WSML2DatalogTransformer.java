@@ -121,6 +121,10 @@ public class WSML2DatalogTransformer {
             // reused.
             datalogVisitor.reset();
         }
+        
+        // finally add the auxilliary predicates that define the semantics
+        // of some WSML specific modelling primitives
+        result.addAll(generateAuxilliaryRules());
         return result;
     }
 
@@ -212,7 +216,7 @@ public class WSML2DatalogTransformer {
                 .add(new Literal(PRED_HAS_VALUE,
                         new org.deri.wsml.reasoner.wsmlcore.datalog.Term[] {
                                 v4, v2, v5 }));
-        body.add(new Literal(PRED_MEMBER_OF,
+        body.add(new Literal(PRED_MEMBER_OF, Literal.NegationType.NEGATIONASFAILURE,
                 new org.deri.wsml.reasoner.wsmlcore.datalog.Term[] { v5, v3 }));
         result.add(new Rule(null, body));
 
