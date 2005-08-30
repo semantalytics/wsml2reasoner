@@ -78,4 +78,23 @@ public class ConstructReductionNormalizerTest extends WSMLNormalizationTest
         Matcher matcher = pattern.matcher(normString);
         assertTrue(matcher.find());
     }
+
+    public void testNegationNormalization() throws Exception
+    {
+        // read test ontology:
+        Ontology ontology = parseOntology("examples/constructs.wsml");
+
+        // normalize ontology with the LEConstructReductionNormalizer:
+        Ontology normOnt = normalizer.normalize(ontology);
+
+        // test whether produced expression is correct
+        // by means of regular expressions matched against serialized result
+        // ontology:
+        String normString = serializeOntology(normOnt);
+System.out.println(normString);
+
+        Pattern pattern = Pattern.compile("c.*\\[.*r1.*hasValue.*v1.*\\].*and.*c.*\\[.*r3.*hasValue.*v3.*].*and.*c.*\\[.*r2.*hasValue.*v2.*\\].*", Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(normString);
+        assertTrue(matcher.find());
+    }
 }
