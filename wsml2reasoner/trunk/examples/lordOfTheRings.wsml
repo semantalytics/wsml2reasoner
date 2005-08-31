@@ -1,0 +1,121 @@
+wsmlVariant _"http://www.wsmo.org/2004/wsml/wsml-flight"
+
+namespace {_"urn:fzi:lordoftherings#",
+    dc _"http://purl.org/dc/elements/1.1#"}
+ 
+ontology _"urn:fzi:lordoftherings"
+
+concept Being
+	namedAs ofType (0 *) _string
+
+concept Living subConceptOf Being
+	heightInFeet ofType (0 1) _decimal
+	livesAt ofType (1 *) Location
+	wasBorn ofType (0 1) _integer
+	died ofType (0 1) _integer
+	
+concept God subConceptOf Being
+
+concept Maya subConceptOf God
+	serves inverseOf(servedBy) impliesType Vala
+
+concept Vala subConceptOf God
+	servedBy inverseOf(serves) impliesType Maya
+	
+concept Mortal subConceptOf Living
+
+concept Immortal subConceptOf Living
+
+concept Humanoid subConceptOf Living
+	loves symmetric impliesType (0 1) Humanoid
+	hasParent impliesType (2) Being
+	hasAncestor transitive ofType (2 *) Humanoid
+
+axiom ParentIsAncestor definedBy
+	?x[hasAncestor hasValue ?y] :- ?x[hasParent hasValue ?y].
+	
+relation killing(ofType Being, ofType Living, ofType _integer)
+
+relation slaying/3 subRelationOf killing
+
+concept Monster subConceptOf Living
+
+concept Human subConceptOf {Mortal, Humanoid}
+
+concept Hobbit subConceptOf {Mortal, Humanoid}
+
+concept Dwarf subConceptOf {Mortal, Humanoid}
+
+concept Orc subConceptOf {Mortal, Monster}
+
+concept Dragon subConceptOf {Immortal, Monster}
+
+concept Elf subConceptOf {Immortal, Humanoid}
+
+concept Male subConceptOf Being
+
+concept Female subConceptOf Being
+
+concept Man subConceptOf {Male, Humanoid}
+
+concept Woman subConceptOf {Male, Humanoid}
+
+axiom ManDefinition definedBy
+?x memberOf Man equivalent ?x memberOf Male and ?x memberOf Human.
+
+axiom WomanDefinition definedBy
+?x memberOf Woman equivalent ?x memberOf Female and ?x memberOf Human.
+
+axiom MaleFemaleDisjointness
+definedBy
+!- ?x memberOf Male and ?x memberOf Female.
+
+axiom AnybodyLovesOtherSex 
+definedBy
+!- ?x[loves hasValue ?y] and ((?x memberOf Male and ?y memberOf Male) or (?x memberOf Female and ?y memberOf Female)).
+
+instance Arathorn memberOf Man
+	hasName hasValue "Arathorn"
+	hasParent hasValue _#
+	hasParent hasValue _#
+	hasAncestor hasValue Elendil
+	
+axiom ArathornLivesAt
+definedBy
+Arathorn[livesAt hasValue _#1] and _#1 memberOf Location.
+
+instance Elendil memberOf Man
+	hasName hasValue "Elendil the Great"
+
+axiom ArathornLivesAt
+definedBy
+Elendil[livesAt hasValue _#1] and _#1 memberOf Location.
+
+instance Aragorn memberOf Man
+	hasName hasValue "Aragorn"
+	heightInFeet hasValue 7.5
+	hasParent hasValue Arathorn
+	loves hasValue Arwen
+	livesAt hasValue Rivendale
+	livesAt hasValue MinasTirith
+
+instance Arwen memberOf Elf
+	hasName hasValue "Arwen"
+	hasParent hasValue Elrond
+	hasParent hasValue _#
+	lives hasValue Rivendale
+	
+instance Rivendale memberOf Location
+
+instance MinasTirith memberOf Location
+
+instance Gandalf memberOf Maya
+
+instance Gimli memberOf Dwarf
+	hasParent hasValue Gloin
+	hasParent hasValue _#
+	
+instance Gloin
+	hasParent hasValue _#
+	hasParent hasValue _#
+	

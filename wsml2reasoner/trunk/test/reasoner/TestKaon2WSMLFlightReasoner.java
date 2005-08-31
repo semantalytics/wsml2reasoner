@@ -33,7 +33,7 @@ public class TestKaon2WSMLFlightReasoner extends BaseReasonerTest {
 
     private static final String NS = "urn:fzi:lordoftherings#";
 
-    private static final String ONTOLOGY_FILE = "examples/fullHumanOntology.wsml";
+    private static final String ONTOLOGY_FILE = "examples/lordOfTheRings.wsml";
 
     public static void main(String[] args) {
         junit.textui.TestRunner.run(TestKaon2WSMLFlightReasoner.suite());
