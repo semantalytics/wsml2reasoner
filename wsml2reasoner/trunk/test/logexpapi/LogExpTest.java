@@ -174,8 +174,10 @@ public class LogExpTest extends TestCase {
         Set<Term> superConcepts = new HashSet<Term>();
         superConcepts.add(super1);
         superConcepts.add(super2);
-        AttrSpecification spec1 = leFactory.createAttrSpecification(AttrSpecification.ATTR_VALUE,a1,Collections.singleton(v1));
-        AttrSpecification spec2 = leFactory.createAttrSpecification(AttrSpecification.ATTR_VALUE,a2,Collections.singleton(v2));
+        AttrSpecification spec1 = leFactory.createAttrSpecification(
+                AttrSpecification.ATTR_VALUE, a1, Collections.singleton(v1));
+        AttrSpecification spec2 = leFactory.createAttrSpecification(
+                AttrSpecification.ATTR_VALUE, a2, Collections.singleton(v2));
         Set<AttrSpecification> attrSpecs = new HashSet<AttrSpecification>();
         attrSpecs.add(spec1);
         attrSpecs.add(spec2);
@@ -185,7 +187,7 @@ public class LogExpTest extends TestCase {
         System.out.println(logExprSerializer.serialize(qExpression));
         System.out.println("-------");
     }
-    
+
     public void testMixedfMolecule2() throws Exception {
         Term sub = leFactory.createIRI("sub1");
         Term meta1 = leFactory.createIRI("meta1");
@@ -197,8 +199,10 @@ public class LogExpTest extends TestCase {
         Set<Term> metaConcepts = new HashSet<Term>();
         metaConcepts.add(meta1);
         metaConcepts.add(meta2);
-        AttrSpecification spec1 = leFactory.createAttrSpecification(AttrSpecification.ATTR_VALUE,a1,Collections.singleton(v1));
-        AttrSpecification spec2 = leFactory.createAttrSpecification(AttrSpecification.ATTR_VALUE,a2,Collections.singleton(v2));
+        AttrSpecification spec1 = leFactory.createAttrSpecification(
+                AttrSpecification.ATTR_VALUE, a1, Collections.singleton(v1));
+        AttrSpecification spec2 = leFactory.createAttrSpecification(
+                AttrSpecification.ATTR_VALUE, a2, Collections.singleton(v2));
         Set<AttrSpecification> attrSpecs = new HashSet<AttrSpecification>();
         attrSpecs.add(spec1);
         attrSpecs.add(spec2);
@@ -208,7 +212,7 @@ public class LogExpTest extends TestCase {
         System.out.println(logExprSerializer.serialize(qExpression));
         System.out.println("-------");
     }
-    
+
     public void testMixedfMolecule3() throws Exception {
         Term sub = leFactory.createIRI("sub1");
         Term super1 = leFactory.createIRI("super1");
@@ -222,10 +226,16 @@ public class LogExpTest extends TestCase {
         Set<Term> superConcepts = new HashSet<Term>();
         superConcepts.add(super1);
         superConcepts.add(super2);
-        AttrSpecification spec1 = leFactory.createAttrSpecification(AttrSpecification.ATTR_VALUE,a1,Collections.singleton(v1));
-        AttrSpecification spec2 = leFactory.createAttrSpecification(AttrSpecification.ATTR_VALUE,a2,Collections.singleton(v2));
-        AttrSpecification spec3 = leFactory.createAttrSpecification(AttrSpecification.ATTR_INFERENCE,a2,Collections.singleton(implType));
-        AttrSpecification spec4 = leFactory.createAttrSpecification(AttrSpecification.ATTR_CONSTRAINT,a2,Collections.singleton(typeConstr));
+        AttrSpecification spec1 = leFactory.createAttrSpecification(
+                AttrSpecification.ATTR_VALUE, a1, Collections.singleton(v1));
+        AttrSpecification spec2 = leFactory.createAttrSpecification(
+                AttrSpecification.ATTR_VALUE, a2, Collections.singleton(v2));
+        AttrSpecification spec3 = leFactory.createAttrSpecification(
+                AttrSpecification.ATTR_INFERENCE, a2, Collections
+                        .singleton(implType));
+        AttrSpecification spec4 = leFactory.createAttrSpecification(
+                AttrSpecification.ATTR_CONSTRAINT, a2, Collections
+                        .singleton(typeConstr));
         Set<AttrSpecification> attrSpecs = new HashSet<AttrSpecification>();
         attrSpecs.add(spec1);
         attrSpecs.add(spec2);
@@ -234,6 +244,13 @@ public class LogExpTest extends TestCase {
         Molecule qExpression = leFactory.createMolecule(sub, superConcepts,
                 null, attrSpecs);
         System.out.println("Created fact:");
+        System.out.println(logExprSerializer.serialize(qExpression));
+        System.out.println("-------");
+    }
+
+    public void testAnonymousIds() throws Exception{
+        LogicalExpression qExpression = leParser.parse("_# memberOf _#1 and _#1 subConceptOf _#");
+        System.out.println("Parsed fact:");
         System.out.println(logExprSerializer.serialize(qExpression));
         System.out.println("-------");
     }
