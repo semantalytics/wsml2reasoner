@@ -10,7 +10,7 @@ concept Being
 
 concept Living subConceptOf Being
 	heightInFeet ofType (0 1) _decimal
-	livesAt ofType (1 *) Location
+	//livesAt ofType (1 *) Location
 	wasBorn ofType (0 1) _integer
 	died ofType (0 1) _integer
 	
@@ -28,15 +28,15 @@ concept Immortal subConceptOf Living
 
 concept Humanoid subConceptOf Living
 	loves symmetric impliesType (0 1) Humanoid
-	hasParent impliesType (2) Being
+	hasParent impliesType (0 2) Being
 	hasAncestor transitive ofType (2 *) Humanoid
 
 axiom ParentIsAncestor definedBy
 	?x[hasAncestor hasValue ?y] :- ?x[hasParent hasValue ?y].
 	
-relation killing(ofType Being, ofType Living, ofType _integer)
+// relation killing(ofType Being, ofType Living, ofType _integer)
 
-relation slaying/3 subRelationOf killing
+// relation slaying/3 subRelationOf killing
 
 concept Monster subConceptOf Living
 
@@ -76,46 +76,46 @@ definedBy
 
 instance Arathorn memberOf Man
 	hasName hasValue "Arathorn"
-	hasParent hasValue _#
-	hasParent hasValue _#
+	//hasParent hasValue _#
+	//hasParent hasValue _#
 	hasAncestor hasValue Elendil
 	
-axiom ArathornLivesAt
-definedBy
-Arathorn[livesAt hasValue _#1] and _#1 memberOf Location.
+//axiom ArathornLivesAt
+//definedBy
+//Arathorn[livesAt hasValue _#1] and _#1 memberOf Location.
 
 instance Elendil memberOf Man
 	hasName hasValue "Elendil the Great"
 
-axiom ArathornLivesAt
-definedBy
-Elendil[livesAt hasValue _#1] and _#1 memberOf Location.
+//axiom ElendilLivesAt
+//definedBy
+//Elendil[livesAt hasValue _#1] and _#1 memberOf Location.
 
 instance Aragorn memberOf Man
 	hasName hasValue "Aragorn"
 	heightInFeet hasValue 7.5
 	hasParent hasValue Arathorn
 	loves hasValue Arwen
-	livesAt hasValue Rivendale
-	livesAt hasValue MinasTirith
+	//livesAt hasValue Rivendale
+	//livesAt hasValue MinasTirith
 
 instance Arwen memberOf Elf
 	hasName hasValue "Arwen"
 	hasParent hasValue Elrond
-	hasParent hasValue _#
-	lives hasValue Rivendale
+	//hasParent hasValue _#
+	//lives hasValue Rivendale
 	
-instance Rivendale memberOf Location
+//instance Rivendale memberOf Location
 
-instance MinasTirith memberOf Location
+//instance MinasTirith memberOf Location
 
 instance Gandalf memberOf Maya
 
 instance Gimli memberOf Dwarf
 	hasParent hasValue Gloin
-	hasParent hasValue _#
+	//hasParent hasValue _#
 	
-instance Gloin
-	hasParent hasValue _#
-	hasParent hasValue _#
+instance Gloin memberOf Dwarf
+	//hasParent hasValue _#
+	//hasParent hasValue _#
 	
