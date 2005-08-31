@@ -17,10 +17,12 @@ concept Living subConceptOf Being
 concept God subConceptOf Being
 
 concept Maya subConceptOf God
-	serves inverseOf(servedBy) impliesType Vala
+	//serves inverseOf(servedBy) impliesType Vala
+	serves impliesType Vala
 
 concept Vala subConceptOf God
-	servedBy inverseOf(serves) impliesType Maya
+	//servedBy inverseOf(serves) impliesType Maya
+	servedBy impliesType Maya
 	
 concept Mortal subConceptOf Living
 
