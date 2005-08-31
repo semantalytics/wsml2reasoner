@@ -88,8 +88,7 @@ public class ConstructReductionNormalizerTest extends WSMLNormalizationTest
         Ontology normOnt = normalizer.normalize(ontology);
 
         // test whether produced expression is correct
-        // by means of regular expressions matched against serialized result
-        // ontology:
+        
         String normString = serializeOntology(normOnt);
 System.out.println(normString);
 
