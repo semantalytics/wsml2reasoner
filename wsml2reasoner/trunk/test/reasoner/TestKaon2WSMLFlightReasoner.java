@@ -21,12 +21,11 @@ package reasoner;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.deri.wsml.reasoner.api.queryanswering.VariableBinding;
 import org.deri.wsml.reasoner.impl.VariableBindingImpl;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
 import test.BaseReasonerTest;
 
 public class TestKaon2WSMLFlightReasoner extends BaseReasonerTest {
@@ -53,7 +52,35 @@ public class TestKaon2WSMLFlightReasoner extends BaseReasonerTest {
         return test;
     }
     
-    public void testDummy() {
+    public void testArwenIsWoman() throws Exception {
+        String query = "?x memberOf Elf";
+        Set<VariableBinding> expected = new HashSet<VariableBinding>();
+        VariableBinding binding = new VariableBindingImpl();
+        binding.put("x", NS + "Arwen");
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+        
+    }
+
+    public void testAragornLovesElf() throws Exception {
+        String query = "?x[loves hasValue ?y] and ?y memberOf Elf";
+        Set<VariableBinding> expected = new HashSet<VariableBinding>();
+        VariableBinding binding = new VariableBindingImpl();
+        binding.put("x", NS + "Aragorn");
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+        
+    }
+    
+    public void testAragornIsElendilsHeir() throws Exception {
+        String query = "Aragorn[hasAncestor hasValue Elendil]";
+        Set<VariableBinding> expected = new HashSet<VariableBinding>();
+        VariableBinding binding = new VariableBindingImpl();
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
         
     }
 

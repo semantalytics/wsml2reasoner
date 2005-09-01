@@ -6,22 +6,22 @@ namespace {_"urn:fzi:lordoftherings#",
 ontology _"urn:fzi:lordoftherings"
 
 concept Being
-	namedAs ofType (0 *) _string
+//	namedAs ofType (0 *) _string
 
 concept Living subConceptOf Being
-	heightInFeet ofType (0 1) _decimal
-	//livesAt ofType (1 *) Location
-	wasBorn ofType (0 1) _integer
-	died ofType (0 1) _integer
+//	heightInFeet ofType (0 1) _decimal
+	livesAt ofType Location
+//	wasBorn ofType (0 1) _integer
+//	died ofType (0 1) _integer
 	
 concept God subConceptOf Being
 
 concept Maya subConceptOf God
-	//serves inverseOf(servedBy) impliesType Vala
+//	serves inverseOf(servedBy) impliesType Vala
 	serves impliesType Vala
 
 concept Vala subConceptOf God
-	//servedBy inverseOf(serves) impliesType Maya
+//	servedBy inverseOf(serves) impliesType Maya
 	servedBy impliesType Maya
 	
 concept Mortal subConceptOf Living
@@ -29,9 +29,9 @@ concept Mortal subConceptOf Living
 concept Immortal subConceptOf Living
 
 concept Humanoid subConceptOf Living
-	loves symmetric impliesType (0 1) Humanoid
-	hasParent impliesType (0 2) Being
-	hasAncestor transitive ofType (2 *) Humanoid
+	loves impliesType (0 1) Humanoid
+	hasParent impliesType Being
+	hasAncestor transitive impliesType Humanoid
 
 axiom ParentIsAncestor definedBy
 	?x[hasAncestor hasValue ?y] :- ?x[hasParent hasValue ?y].
@@ -55,12 +55,14 @@ concept Dragon subConceptOf {Immortal, Monster}
 concept Elf subConceptOf {Immortal, Humanoid}
 
 concept Male subConceptOf Being
+	loves impliesType Female
 
 concept Female subConceptOf Being
+//	loves impliesType Male
 
 concept Man subConceptOf {Male, Humanoid}
 
-concept Woman subConceptOf {Male, Humanoid}
+concept Woman subConceptOf {Female, Humanoid}
 
 axiom ManDefinition definedBy
 ?x memberOf Man equivalent ?x memberOf Male and ?x memberOf Human.
@@ -77,9 +79,9 @@ definedBy
 !- ?x[loves hasValue ?y] and ((?x memberOf Male and ?y memberOf Male) or (?x memberOf Female and ?y memberOf Female)).
 
 instance Arathorn memberOf Man
-	hasName hasValue "Arathorn"
-	//hasParent hasValue _#
-	//hasParent hasValue _#
+//	hasName hasValue "Arathorn"
+//	hasParent hasValue _#
+//	hasParent hasValue _#
 	hasAncestor hasValue Elendil
 	
 //axiom ArathornLivesAt
@@ -87,22 +89,22 @@ instance Arathorn memberOf Man
 //Arathorn[livesAt hasValue _#1] and _#1 memberOf Location.
 
 instance Elendil memberOf Man
-	hasName hasValue "Elendil the Great"
+//	hasName hasValue "Elendil"
 
 //axiom ElendilLivesAt
 //definedBy
 //Elendil[livesAt hasValue _#1] and _#1 memberOf Location.
 
 instance Aragorn memberOf Man
-	hasName hasValue "Aragorn"
-	heightInFeet hasValue 7.5
+//	hasName hasValue "Aragorn"
+//	heightInFeet hasValue 7.5
 	hasParent hasValue Arathorn
 	loves hasValue Arwen
 	//livesAt hasValue Rivendale
 	//livesAt hasValue MinasTirith
 
 instance Arwen memberOf Elf
-	hasName hasValue "Arwen"
+//	hasName hasValue "Arwen"
 	hasParent hasValue Elrond
 	//hasParent hasValue _#
 	//lives hasValue Rivendale

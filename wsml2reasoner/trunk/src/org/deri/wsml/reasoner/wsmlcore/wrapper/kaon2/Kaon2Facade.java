@@ -128,7 +128,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                 reasoner.dispose();
             } catch (KAON2Exception e) {
                 throw new ExternalToolException(
-                        "Can not convert query to tool", e, query);
+                        "Can not convert query to tool:" + '\"' + e.getMessage() + '\"', e, query);
             } catch (InterruptedException e) {
                 throw new ExternalToolException(
                         "Kaon2 query was interrupted during execution");

@@ -22,6 +22,8 @@ package org.deri.wsml.reasoner.impl;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import normalization.WSMLNormalizationTest;
+
 import org.deri.wsml.reasoner.api.OntologyRegistrationRequest;
 import org.deri.wsml.reasoner.api.Request;
 import org.deri.wsml.reasoner.api.Result;
@@ -141,11 +143,13 @@ public class WSMLCoreReasonerImpl implements WSMLReasoner {
         //Simplify axioms
         normalizer = new ConstructReductionNormalizer();
         normalizedOntology = normalizer.normalize(normalizedOntology);
+//System.out.println("\n-------\n Ontology after simplification:" + WSMLNormalizationTest.serializeOntology(normalizedOntology));
         
         //Apply Lloyd-Topor rules to get Datalog-compatible LEs
         normalizer = new LloydToporNormalizer();
         normalizedOntology = normalizer.normalize(normalizedOntology);
-        
+
+//System.out.println("\n-------\n Ontology after Lloyd-Topor:" + WSMLNormalizationTest.serializeOntology(normalizedOntology));
         Program p = new Program();
         WSML2DatalogTransformer wsml2datalog = new WSML2DatalogTransformer();
         Set<org.omwg.logexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logexpression.LogicalExpression>();
@@ -153,7 +157,9 @@ public class WSMLCoreReasonerImpl implements WSMLReasoner {
             lExprs.addAll(((Axiom) a).listDefinitions());
         }
         p = wsml2datalog.transform(lExprs);
-
+//System.out.println("datalog program:");
+//System.out.println(p);
+//System.out.println("-*");
         return p;
     }
 
