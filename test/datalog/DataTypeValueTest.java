@@ -20,7 +20,7 @@ package datalog;
 
 import junit.framework.TestCase;
 
-import org.deri.wsml.reasoner.wsmlcore.datalog.DataTypeValue;
+import org.wsml.reasoner.datalog.DataTypeValue;
 
 public class DataTypeValueTest extends TestCase {
 

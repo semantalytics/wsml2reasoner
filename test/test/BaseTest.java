@@ -19,7 +19,11 @@
 package test;
 
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,12 +40,12 @@ import org.wsmo.wsml.Serializer;
  *
  * <pre>
  * Created on Aug 17, 2005
- * Committed by $Author: hlausen $
+ * Committed by $Author: gabor $
  * $Source: /home/richi/temp/w2r/wsml2reasoner/test/test/BaseTest.java,v $,
  * </pre>
  *
  * @author Holger Lausen
- * @version $Revision: 1.5 $ $Date: 2005-08-29 21:08:35 $
+ * @version $Revision: 1.6 $ $Date: 2005-09-01 08:23:51 $
  */
 public class BaseTest extends TestCase {
 	public LogicalExpressionFactory leFactory;

@@ -26,18 +26,18 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.deri.wsml.reasoner.wsmlcore.datalog.Constant;
-import org.deri.wsml.reasoner.wsmlcore.datalog.Literal;
-import org.deri.wsml.reasoner.wsmlcore.datalog.Predicate;
-import org.deri.wsml.reasoner.wsmlcore.datalog.Program;
-import org.deri.wsml.reasoner.wsmlcore.datalog.Rule;
-import org.deri.wsml.reasoner.wsmlcore.wrapper.kaon2.Kaon2Facade;
 import org.omwg.logexpression.Constants;
 import org.semanticweb.kaon2.api.KAON2Connection;
 import org.semanticweb.kaon2.api.KAON2Factory;
 import org.semanticweb.kaon2.api.KAON2Manager;
 import org.semanticweb.kaon2.api.Ontology;
 import org.semanticweb.kaon2.api.Request;
+import org.wsml.reasoner.datalog.Constant;
+import org.wsml.reasoner.datalog.Literal;
+import org.wsml.reasoner.datalog.Predicate;
+import org.wsml.reasoner.datalog.Program;
+import org.wsml.reasoner.datalog.Rule;
+import org.wsml.reasoner.datalog.wrapper.kaon2.Kaon2Facade;
 
 public class Kaon2FacadeTest extends TestCase {
 
@@ -66,7 +66,7 @@ public class Kaon2FacadeTest extends TestCase {
         Rule r = new Rule(
                 new Literal(new Predicate("urn:test#arc", 2),
                         Literal.NegationType.NONNEGATED,
-                        new org.deri.wsml.reasoner.wsmlcore.datalog.Term[] {
+                        new org.wsml.reasoner.datalog.Term[] {
                                 new Constant("urn:test#a"),
                                 new Constant("urn:test#b") }));
         p.add(r);
@@ -91,20 +91,20 @@ public class Kaon2FacadeTest extends TestCase {
         Literal head = new Literal(
                 new Predicate("urn:test#arc", 2),
                 Literal.NegationType.NONNEGATED,
-                new org.deri.wsml.reasoner.wsmlcore.datalog.Term[] {
+                new org.wsml.reasoner.datalog.Term[] {
                         new Constant("urn:test#a"), new Constant("urn:test#b") });
 
         List<Literal> body = new ArrayList<Literal>();
         body
                 .add(new Literal(new Predicate("urn:test#path", 2),
                         Literal.NegationType.NONNEGATED,
-                        new org.deri.wsml.reasoner.wsmlcore.datalog.Term[] {
+                        new org.wsml.reasoner.datalog.Term[] {
                                 new Constant("urn:test#a"),
                                 new Constant("urn:test#b") }));
         body
                 .add(new Literal(new Predicate("urn:test#arc", 2),
                         Literal.NegationType.NONNEGATED,
-                        new org.deri.wsml.reasoner.wsmlcore.datalog.Term[] {
+                        new org.wsml.reasoner.datalog.Term[] {
                                 new Constant("urn:test#b"),
                                 new Constant("urn:test#c") }));
         Rule r = new Rule(head, body);
@@ -138,13 +138,13 @@ public class Kaon2FacadeTest extends TestCase {
         body
                 .add(new Literal(new Predicate("urn:test#path", 2),
                         Literal.NegationType.NONNEGATED,
-                        new org.deri.wsml.reasoner.wsmlcore.datalog.Term[] {
+                        new org.wsml.reasoner.datalog.Term[] {
                                 new Constant("urn:test#a"),
                                 new Constant("urn:test#b") }));
         body
                 .add(new Literal(new Predicate("urn:test#arc", 2),
                         Literal.NegationType.NONNEGATED,
-                        new org.deri.wsml.reasoner.wsmlcore.datalog.Term[] {
+                        new org.wsml.reasoner.datalog.Term[] {
                                 new Constant("urn:test#b"),
                                 new Constant("urn:test#c") }));
         Rule r = new Rule(head, body);
@@ -172,20 +172,20 @@ public class Kaon2FacadeTest extends TestCase {
         Literal head = new Literal(
                 new Predicate("urn:test#arc", 2),
                 Literal.NegationType.NONNEGATED,
-                new org.deri.wsml.reasoner.wsmlcore.datalog.Term[] {
+                new org.wsml.reasoner.datalog.Term[] {
                         new Constant("urn:test#a"), new Constant("urn:test#b") });
 
         List<Literal> body = new ArrayList<Literal>();
         body
                 .add(new Literal(new Predicate("urn:test#path", 2),
                         Literal.NegationType.NEGATIONASFAILURE,
-                        new org.deri.wsml.reasoner.wsmlcore.datalog.Term[] {
+                        new org.wsml.reasoner.datalog.Term[] {
                                 new Constant("urn:test#a"),
                                 new Constant("urn:test#b") }));
         body
                 .add(new Literal(new Predicate("urn:test#arc", 2),
                         Literal.NegationType.NONNEGATED,
-                        new org.deri.wsml.reasoner.wsmlcore.datalog.Term[] {
+                        new org.wsml.reasoner.datalog.Term[] {
                                 new Constant("urn:test#b"),
                                 new Constant("urn:test#c") }));
         Rule r = new Rule(head, body);
@@ -215,20 +215,20 @@ public class Kaon2FacadeTest extends TestCase {
         Literal head = new Literal(
                 new Predicate("urn:test#arc", 2),
                 Literal.NegationType.NONNEGATED,
-                new org.deri.wsml.reasoner.wsmlcore.datalog.Term[] {
+                new org.wsml.reasoner.datalog.Term[] {
                         new Constant("urn:test#a"), new Constant("urn:test#b") });
 
         List<Literal> body = new ArrayList<Literal>();
         body
                 .add(new Literal(new Predicate("urn:test#path", 2),
                         Literal.NegationType.NONNEGATED,
-                        new org.deri.wsml.reasoner.wsmlcore.datalog.Term[] {
+                        new org.wsml.reasoner.datalog.Term[] {
                                 new Constant("urn:test#a"),
                                 new Constant("urn:test#b") }));
         body
                 .add(new Literal(new Predicate(Constants.EQUAL, 2),
                         Literal.NegationType.NONNEGATED,
-                        new org.deri.wsml.reasoner.wsmlcore.datalog.Term[] {
+                        new org.wsml.reasoner.datalog.Term[] {
                                 new Constant("urn:test#a"),
                                 new Constant("urn:test#b") }));
         Rule r = new Rule(head, body);
@@ -258,20 +258,20 @@ public class Kaon2FacadeTest extends TestCase {
         Literal head = new Literal(
                 new Predicate("urn:test#arc", 2),
                 Literal.NegationType.NONNEGATED,
-                new org.deri.wsml.reasoner.wsmlcore.datalog.Term[] {
+                new org.wsml.reasoner.datalog.Term[] {
                         new Constant("urn:test#a"), new Constant("urn:test#b") });
 
         List<Literal> body = new ArrayList<Literal>();
         body
                 .add(new Literal(new Predicate("urn:test#path", 2),
                         Literal.NegationType.NONNEGATED,
-                        new org.deri.wsml.reasoner.wsmlcore.datalog.Term[] {
+                        new org.wsml.reasoner.datalog.Term[] {
                                 new Constant("urn:test#a"),
                                 new Constant("urn:test#b") }));
         body
                 .add(new Literal(new Predicate(Constants.INEQUAL, 2),
                         Literal.NegationType.NONNEGATED,
-                        new org.deri.wsml.reasoner.wsmlcore.datalog.Term[] {
+                        new org.wsml.reasoner.datalog.Term[] {
                                 new Constant("urn:test#a"),
                                 new Constant("urn:test#b") }));
         Rule r = new Rule(head, body);

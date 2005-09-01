@@ -21,17 +21,26 @@ package test;
 
 import java.io.Reader;
 import java.io.StringWriter;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.deri.wsml.reasoner.api.*;
-import org.deri.wsml.reasoner.api.queryanswering.*;
-import org.deri.wsml.reasoner.impl.*;
 import org.deri.wsmo4j.io.parser.wsml.LogExprParserImpl;
 import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
 import org.omwg.logexpression.LogicalExpression;
 import org.omwg.ontology.Ontology;
+import org.wsml.reasoner.api.OntologyRegistrationRequest;
+import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.queryanswering.QueryAnsweringRequest;
+import org.wsml.reasoner.api.queryanswering.QueryAnsweringResult;
+import org.wsml.reasoner.api.queryanswering.VariableBinding;
+import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
+import org.wsml.reasoner.impl.OntologyRegistrationRequestImpl;
+import org.wsml.reasoner.impl.QueryAnsweringRequestImpl;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;

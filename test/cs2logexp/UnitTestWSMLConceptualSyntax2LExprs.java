@@ -25,9 +25,9 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.deri.wsml.reasoner.normalization.AxiomatizationNormalizer;
 import org.omwg.logexpression.LogicalExpressionFactory;
 import org.omwg.ontology.Ontology;
+import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;

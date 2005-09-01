@@ -18,9 +18,9 @@
  */
 package datalog;
 
-import org.deri.wsml.reasoner.wsmlcore.datalog.Constant;
-
 import junit.framework.TestCase;
+
+import org.wsml.reasoner.datalog.Constant;
 
 public class ConstantTest extends TestCase {
 

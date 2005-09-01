@@ -18,10 +18,10 @@
  */
 package normalization;
 
-import org.deri.wsml.reasoner.normalization.LloydToporNormalizer;
-import org.deri.wsml.reasoner.normalization.OntologyNormalizer;
-import org.deri.wsml.reasoner.normalization.le.LloydToporRules;
 import org.omwg.ontology.Ontology;
+import org.wsml.reasoner.transformation.LloydToporNormalizer;
+import org.wsml.reasoner.transformation.OntologyNormalizer;
+import org.wsml.reasoner.transformation.le.LloydToporRules;
 
 public class LloydToporNormalizerTest extends WSMLNormalizationTest
 {

@@ -18,10 +18,9 @@
  */
 package datalog;
 
-import org.deri.wsml.reasoner.wsmlcore.datalog.Constant;
-import org.deri.wsml.reasoner.wsmlcore.datalog.Predicate;
-
 import junit.framework.TestCase;
+
+import org.wsml.reasoner.datalog.Predicate;
 
 public class PredicateTest extends TestCase {
 

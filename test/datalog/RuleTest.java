@@ -23,7 +23,11 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.deri.wsml.reasoner.wsmlcore.datalog.*;
+import org.wsml.reasoner.datalog.Constant;
+import org.wsml.reasoner.datalog.Literal;
+import org.wsml.reasoner.datalog.Predicate;
+import org.wsml.reasoner.datalog.Rule;
+import org.wsml.reasoner.datalog.Term;
 
 public class RuleTest extends TestCase {
 

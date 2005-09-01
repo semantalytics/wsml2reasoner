@@ -27,20 +27,20 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.deri.wsml.reasoner.api.OntologyRegistrationRequest;
-import org.deri.wsml.reasoner.api.WSMLReasoner;
-import org.deri.wsml.reasoner.api.WSMLReasonerFactory;
-import org.deri.wsml.reasoner.api.queryanswering.QueryAnsweringRequest;
-import org.deri.wsml.reasoner.api.queryanswering.QueryAnsweringResult;
-import org.deri.wsml.reasoner.api.queryanswering.VariableBinding;
-import org.deri.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.deri.wsml.reasoner.impl.OntologyRegistrationRequestImpl;
-import org.deri.wsml.reasoner.impl.QueryAnsweringRequestImpl;
-import org.deri.wsml.reasoner.normalization.AxiomatizationNormalizer;
 import org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl;
 import org.omwg.logexpression.LogicalExpression;
 import org.omwg.logexpression.LogicalExpressionFactory;
 import org.omwg.ontology.Ontology;
+import org.wsml.reasoner.api.OntologyRegistrationRequest;
+import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.queryanswering.QueryAnsweringRequest;
+import org.wsml.reasoner.api.queryanswering.QueryAnsweringResult;
+import org.wsml.reasoner.api.queryanswering.VariableBinding;
+import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
+import org.wsml.reasoner.impl.OntologyRegistrationRequestImpl;
+import org.wsml.reasoner.impl.QueryAnsweringRequestImpl;
+import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
@@ -53,12 +53,12 @@ import org.wsmo.wsml.Serializer;
  * 
  * <pre>
  *  Created on Aug 17, 2005
- *  Committed by $Author: hlausen $
+ *  Committed by $Author: gabor $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/example/ReasonerExample.java,v $,
  * </pre>
  * 
  * @author Holger Lausen
- * @version $Revision: 1.6 $ $Date: 2005-08-30 11:41:31 $
+ * @version $Revision: 1.7 $ $Date: 2005-09-01 08:23:52 $
  */
 public class ReasonerExample {
 
