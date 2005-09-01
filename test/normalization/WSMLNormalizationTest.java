@@ -76,7 +76,7 @@ public abstract class WSMLNormalizationTest extends TestCase
         return (Ontology)parser.parse(input)[0];
     }
     
-    protected String serializeOntology(Ontology ontology)
+    public static String serializeOntology(Ontology ontology)
     {
         StringBuffer buf = new StringBuffer();
         Serializer serializer = Factory.createSerializer(null);
