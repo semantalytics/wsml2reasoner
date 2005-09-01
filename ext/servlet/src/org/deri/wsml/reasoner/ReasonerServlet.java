@@ -21,27 +21,23 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
-import org.deri.wsml.reasoner.api.*;
-import org.deri.wsml.reasoner.api.queryanswering.*;
-import org.deri.wsml.reasoner.impl.*;
 import org.deri.wsmo4j.io.parser.wsml.LogExprParserImpl;
 import org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl;
 import org.omwg.logexpression.LogicalExpression;
 import org.omwg.logexpression.LogicalExpressionFactory;
 import org.omwg.ontology.Ontology;
+import org.wsml.reasoner.api.*;
+import org.wsml.reasoner.api.queryanswering.*;
+import org.wsml.reasoner.impl.*;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
-
-import sun.security.krb5.internal.crypto.e;
 
 /**
  * Web front-end for the WSML Ontobroker reasoner. Loads the given ontology into
@@ -52,7 +48,7 @@ import sun.security.krb5.internal.crypto.e;
  * @see org.deri.wsml.reasoner.ontobroker.Reasoner
  * @author Jos de Bruijn
  * $Author: hlausen $
- * $Date: 2005-08-30 12:45:22 $
+ * $Date: 2005-09-01 09:31:37 $
  */
 public class ReasonerServlet extends HttpServlet {
     private boolean debug=false;

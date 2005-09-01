@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="src" path="ext/servlet/src"/>
 	<classpathentry kind="lib" path="lib/ext/interprolog.jar"/>
 	<classpathentry kind="lib" path="lib/ext/DLV/DLVWrapper-3_0_beta4.jar"/>
 	<classpathentry kind="lib" path="lib/ext/Mandrax/mandarax-3.4.jar"/>
@@ -12,5 +13,6 @@
 	<classpathentry kind="lib" path="lib/wsmo4j-20050817.jar"/>
 	<classpathentry kind="lib" path="lib/wsmo4jLogExp-20050809.jar"/>
 	<classpathentry kind="lib" path="lib/ext/mins/mins.jar"/>
+	<classpathentry kind="lib" path="lib/ext/servlet/servlet-api.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
