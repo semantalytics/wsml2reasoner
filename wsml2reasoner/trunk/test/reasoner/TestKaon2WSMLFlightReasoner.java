@@ -21,8 +21,8 @@ package reasoner;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.deri.wsml.reasoner.api.queryanswering.VariableBinding;
-import org.deri.wsml.reasoner.impl.VariableBindingImpl;
+import org.wsml.reasoner.api.queryanswering.VariableBinding;
+import org.wsml.reasoner.impl.VariableBindingImpl;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;

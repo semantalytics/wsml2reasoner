@@ -21,9 +21,9 @@ package normalization;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.deri.wsml.reasoner.normalization.ConstructReductionNormalizer;
-import org.deri.wsml.reasoner.normalization.OntologyNormalizer;
 import org.omwg.ontology.Ontology;
+import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
+import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
 import org.wsmo.wsml.Serializer;

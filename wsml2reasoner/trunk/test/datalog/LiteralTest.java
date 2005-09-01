@@ -20,10 +20,10 @@ package datalog;
 
 import junit.framework.TestCase;
 
-import org.deri.wsml.reasoner.wsmlcore.datalog.Constant;
-import org.deri.wsml.reasoner.wsmlcore.datalog.Literal;
-import org.deri.wsml.reasoner.wsmlcore.datalog.Predicate;
-import org.deri.wsml.reasoner.wsmlcore.datalog.Term;
+import org.wsml.reasoner.datalog.Constant;
+import org.wsml.reasoner.datalog.Literal;
+import org.wsml.reasoner.datalog.Predicate;
+import org.wsml.reasoner.datalog.Term;
 
 public class LiteralTest extends TestCase {
 

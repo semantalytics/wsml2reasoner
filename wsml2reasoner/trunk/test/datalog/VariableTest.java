@@ -20,7 +20,7 @@ package datalog;
 
 import junit.framework.TestCase;
 
-import org.deri.wsml.reasoner.wsmlcore.datalog.Variable;
+import org.wsml.reasoner.datalog.Variable;
 
 public class VariableTest extends TestCase {
 
