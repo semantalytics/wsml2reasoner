@@ -1,55 +1,57 @@
-/**
- * WSML Reasoner Implementation.
- *
- * Copyright (c) 2005, FZI, Germany.
- *
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
- * any later version.
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- * You should have received a copy of the GNU Lesser General Public License along
- * with this library; if not, write to the Free Software Foundation, Inc.,
- * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
- */
 package wsmo4j;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.wsml.reasoner.api.queryanswering.VariableBinding;
-import org.wsml.reasoner.impl.VariableBindingImpl;
+import junit.framework.TestCase;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import test.BaseReasonerTest;
+import org.omwg.ontology.Ontology;
+import org.wsmo.common.TopEntity;
+import org.wsmo.factory.Factory;
+import org.wsmo.factory.WsmoFactory;
+import org.wsmo.wsml.Parser;
 
-public class LocationBugTest extends BaseReasonerTest {
+import test.BaseTest;
 
-    private static final String NS = "urn:fzi:lordoftherings#";
+public class LocationBugTest extends TestCase {
 
     private static final String ONTOLOGY_FILE = "examples/locationBug.wsml";
 
     public static void main(String[] args) {
-        junit.textui.TestRunner.run(LocationBugTest.suite());
+        junit.textui.TestRunner.run(LocationBugTest.class);
     }
+    
+    public void testLoadOntology() throws Exception{
+        Map<String, String> leProperties = new HashMap<String, String>();
+        leProperties.put(Factory.PROVIDER_CLASS,
+                "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
 
-    public static Test suite() {
-        Test test = new junit.extensions.TestSetup(new TestSuite(
-                LocationBugTest.class)) {
-            protected void setUp() throws Exception {
-                setupScenario(ONTOLOGY_FILE);
-             }
+        org.omwg.logexpression.LogicalExpressionFactory leFactory = (org.omwg.logexpression.LogicalExpressionFactory) Factory
+                .createLogicalExpressionFactory(leProperties);
 
-            protected void tearDown() throws Exception {
-                System.out.println("Finished!");
-            }
-        };
-        return test;
+        WsmoFactory factory = Factory.createWsmoFactory(null);
+
+        // Set up WSML parser
+
+        Map<String, Object> parserProperties = new HashMap<String, Object>();
+        parserProperties.put(Parser.PARSER_WSMO_FACTORY, factory);
+        parserProperties.put(Parser.PARSER_LE_FACTORY, leFactory);
+
+        parserProperties.put(org.wsmo.factory.Factory.PROVIDER_CLASS,
+                "com.ontotext.wsmo4j.parser.WSMLParserImpl");
+
+        Parser wsmlparserimpl = org.wsmo.factory.Factory
+                .createParser(parserProperties);
+//      Read simple ontology from file
+        final Reader ontoReader = BaseTest.getReaderForFile(ONTOLOGY_FILE);
+        final TopEntity[] identifiable = wsmlparserimpl.parse(ontoReader);
+        if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {
+            System.out.println("Succesfully parsed ontology");
+        } else {
+            fail("Parsed failed");
+        }
+        
     }
-
+    
 }
