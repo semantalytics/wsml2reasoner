@@ -1,0 +1,19 @@
+wsmlVariant _"http://www.wsmo.org/2004/wsml/wsml-flight"
+
+namespace {_"urn:fzi:lordoftherings#",
+    dc _"http://purl.org/dc/elements/1.1#"}
+ 
+ontology _"urn:fzi:anonids"
+
+concept Y
+
+concept X subConceptOf _#
+	a impliesType Y
+
+instance x memberOf X
+	a hasValue _#
+	
+axiom definedBy
+	?x memberOf X :- ?x memberOf X.
+
+
