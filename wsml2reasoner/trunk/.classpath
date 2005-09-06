@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="lib/wsmo4jLogExp-20050809.jar"/>
 	<classpathentry kind="lib" path="lib/ext/mins/mins.jar"/>
 	<classpathentry kind="lib" path="lib/ext/servlet/servlet-api.jar"/>
+	<classpathentry kind="lib" path="lib/ext/wsmx/wsmx-integration-0.2.1b.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
