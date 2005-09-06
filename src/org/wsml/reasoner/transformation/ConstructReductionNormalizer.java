@@ -27,6 +27,7 @@ import java.util.Set;
 import org.omwg.logexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
+import org.wsml.reasoner.transformation.AnonymousIdUtils.AnonymousIdTranslator;
 import org.wsml.reasoner.transformation.le.DisjunctionPullRules;
 import org.wsml.reasoner.transformation.le.ImplicationReductionRules;
 import org.wsml.reasoner.transformation.le.LogicalExpressionNormalizer;
@@ -43,6 +44,7 @@ public class ConstructReductionNormalizer implements OntologyNormalizer
 {
     protected LogicalExpressionNormalizer leNormalizer;
     protected WsmoFactory wsmoFactory;
+    protected AnonymousIdTranslator anonymousIdTranslator;
 
     public ConstructReductionNormalizer()
     {
@@ -55,6 +57,7 @@ public class ConstructReductionNormalizer implements OntologyNormalizer
         postOrderRules.addAll((List<NormalizationRule>)DisjunctionPullRules.instantiate());
         leNormalizer = new OnePassReplacementNormalizer(preOrderRules, postOrderRules); 
         wsmoFactory = Factory.createWsmoFactory(null);
+        anonymousIdTranslator = AnonymousIdUtils.getAnonymousIdTranslator();
     }
 
     public Ontology normalize(Ontology ontology)
@@ -71,6 +74,7 @@ public class ConstructReductionNormalizer implements OntologyNormalizer
         Set<LogicalExpression> resultExp = new HashSet<LogicalExpression>();
         for(LogicalExpression expression : expressions)
         {
+            anonymousIdTranslator.setScope(expression);
             resultExp.add(leNormalizer.normalize(expression));
         }
 

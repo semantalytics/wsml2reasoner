@@ -18,15 +18,23 @@
  */
 package org.wsml.reasoner.transformation.le;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
+import org.omwg.logexpression.Atom;
 import org.omwg.logexpression.AttrSpecification;
 import org.omwg.logexpression.Binary;
 import org.omwg.logexpression.LogicalExpression;
 import org.omwg.logexpression.Molecule;
+import org.omwg.logexpression.terms.Identifier;
+import org.omwg.logexpression.terms.NbAnonymousID;
 import org.omwg.logexpression.terms.Term;
+import org.omwg.logexpression.terms.UnNbAnonymousID;
+import org.wsml.reasoner.transformation.AnonymousIdUtils;
+import org.wsml.reasoner.transformation.AnonymousIdUtils.AnonymousIdTranslator;
 
 /**
  * This singleton class represents a set of normalization rules for replacing
@@ -41,6 +49,7 @@ public class MoleculeDecompositionRules extends FixedModificationRules
     private MoleculeDecompositionRules()
     {
         rules.add(new MoleculeDecompositionRule());
+        rules.add(new AtomAnonymousIDRule());
     }
 
     public static MoleculeDecompositionRules instantiate()
@@ -54,6 +63,13 @@ public class MoleculeDecompositionRules extends FixedModificationRules
 
     protected class MoleculeDecompositionRule implements NormalizationRule
     {
+        protected AnonymousIdTranslator anonymousIDTranslator;
+
+        public MoleculeDecompositionRule()
+        {
+            anonymousIDTranslator = AnonymousIdUtils.getAnonymousIdTranslator();
+        }
+
         public LogicalExpression apply(LogicalExpression expression)
         {
             Set<LogicalExpression> simpleMolecules = decomposeMolecule((Molecule)expression);
@@ -68,13 +84,14 @@ public class MoleculeDecompositionRules extends FixedModificationRules
         protected Set<LogicalExpression> decomposeMolecule(Molecule molecule)
         {
             Set<LogicalExpression> simpleMolecules = new HashSet<LogicalExpression>();
-            Term term = molecule.getTerm();
+            Term term = replaceAnonymous(molecule.getTerm());
 
             // extract subClassOf-statements:
             if(molecule.listSubConceptOf() != null)
             {
                 for(Term superclassTerm : (Set<Term>)molecule.listSubConceptOf())
                 {
+                    superclassTerm = replaceAnonymous(superclassTerm);
                     simpleMolecules.add(createSubClassOfMolecule(term, superclassTerm));
                 }
             }
@@ -84,6 +101,7 @@ public class MoleculeDecompositionRules extends FixedModificationRules
             {
                 for(Term classTerm : (Set<Term>)molecule.listMemberOf())
                 {
+                    classTerm = replaceAnonymous(classTerm);
                     simpleMolecules.add(createInstanceOfMolecule(term, classTerm));
                 }
             }
@@ -96,6 +114,7 @@ public class MoleculeDecompositionRules extends FixedModificationRules
                     Set<Term> arguments = attrSpec.listArguments();
                     for(Term argTerm : arguments)
                     {
+                        argTerm = replaceAnonymous(argTerm);
                         Set<Term> singletonTerm = new HashSet<Term>();
                         singletonTerm.add(argTerm);
                         AttrSpecification singleAttrSpec = leFactory.createAttrSpecification(attrSpec.getOperator(), attrSpec.getName(), singletonTerm);
@@ -143,9 +162,46 @@ public class MoleculeDecompositionRules extends FixedModificationRules
             return conjunction;
         }
 
+        protected Term replaceAnonymous(Term term)
+        {
+            if(term instanceof UnNbAnonymousID || term instanceof NbAnonymousID)
+            {
+                return anonymousIDTranslator.translate((Identifier)term);
+            }
+            else
+                return term;
+        }
+
         public String toString()
         {
             return "X[A1,...,An]\n\t=>\n X[A1] and ... and X[An]\n";
+        }
+    }
+
+    protected class AtomAnonymousIDRule implements NormalizationRule
+    {
+        protected AnonymousIdTranslator anonymousIDTranslator;
+
+        public LogicalExpression apply(LogicalExpression expression)
+        {
+            Atom atom = (Atom)expression;
+            Identifier id = anonymousIDTranslator.translate(atom, atom.getIdentifier());
+            List<Term> args = new ArrayList<Term>();
+            for(int i = 0; i < atom.getArity(); i++)
+            {
+                Term term = atom.getParameter(i);
+                if(term instanceof Identifier)
+                {
+                    term = anonymousIDTranslator.translate(atom, (Identifier)term);
+                }
+                args.add(term);
+            }
+            return leFactory.createAtom(id, args);
+        }
+
+        public boolean isApplicable(LogicalExpression expression)
+        {
+            return expression instanceof Atom;
         }
     }
 }
