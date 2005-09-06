@@ -74,6 +74,10 @@ public abstract class MoleculeUtils {
             return false;
         return true;
     }
+    
+    public static boolean isSimple(Molecule m) {
+        return isSimpleAttrValue(m) || isSimpleImpliesType(m) || isSimpleMemberOf(m) || isSimpleOfType(m) || isSimpleSubconceptOf(m);
+    }
 
     public static Term getSuperConcept(Molecule m) {
         if (!isSimpleSubconceptOf(m))
