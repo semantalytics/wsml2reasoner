@@ -26,9 +26,6 @@ import org.omwg.ontology.Concept;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
-import org.wsmo.common.TopEntity;
-import org.wsmo.factory.Factory;
-import org.wsmo.wsml.Serializer;
 
 public class AxiomatizationNormalizerTest extends WSMLNormalizationTest
 {
