@@ -19,6 +19,7 @@
 
 package org.wsml.reasoner.datalog.wrapper.kaon2;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,13 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.omwg.logexpression.Constants;
-import org.semanticweb.kaon2.api.DefaultOntologyResolver;
-import org.semanticweb.kaon2.api.KAON2Connection;
-import org.semanticweb.kaon2.api.KAON2Exception;
-import org.semanticweb.kaon2.api.KAON2Factory;
-import org.semanticweb.kaon2.api.KAON2Manager;
-import org.semanticweb.kaon2.api.Ontology;
-import org.semanticweb.kaon2.api.OntologyChangeEvent;
+import org.semanticweb.kaon2.api.*;
 import org.semanticweb.kaon2.api.owl.elements.Individual;
 import org.semanticweb.kaon2.api.reasoner.Query;
 import org.semanticweb.kaon2.api.reasoner.Reasoner;
@@ -122,9 +117,9 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                             + ontologyUri + " is not registered");
                 Reasoner reasoner = ontology.createReasoner();
                 Query query = translateQuery(q, reasoner, varNames);
-                // for (Literal l : query.getQueryLiterals()) {
-                // System.out.println("Query literal: " + l);
-                // }
+                 for (Literal l : query.getQueryLiterals()) {
+                 System.out.println("Query literal: " + l);
+                 }
                 query.open();
                 while (!query.afterLast()) {
                     String[] tuple = convertQueryTuple(query.tupleBuffer());
@@ -381,15 +376,22 @@ public class Kaon2Facade implements DatalogReasonerFacade {
         // TODO Handle ontology imports
         DefaultOntologyResolver resolver = (DefaultOntologyResolver) conn
                 .getOntologyResovler();
-        resolver.registerReplacement(ontologyURI, "file:/C:/tmp");
-        try {
-            Ontology o = conn.createOntology(ontologyURI, EMPTY_MAP);
-            Set<Rule> rules = translateKnowledgebase(kb);
-            appendRules(o, rules);
-        } catch (KAON2Exception e) {
-            throw new ExternalToolException(
-                    "Cannot register ontology in KAON2", e, null);
-        }
+        resolver.registerReplacement(ontologyURI, "file:/C:/tmp/wsml.xml");
+//        try {
+//            Ontology o = conn.createOntology(ontologyURI, EMPTY_MAP);
+//            Set<Rule> rules = translateKnowledgebase(kb);
+//            appendRules(o, rules);
+//            try {
+//                o.saveOntology(OntologyFileFormat.OWL_XML, o.getPhysicalURI(), "ISO-8859-15");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        } catch (KAON2Exception e) {
+//            throw new ExternalToolException(
+//                    "Cannot register ontology in KAON2", e, null);
+//        }
 
     }
 
