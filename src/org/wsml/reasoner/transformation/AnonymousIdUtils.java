@@ -15,9 +15,8 @@ import org.wsmo.factory.Factory;
 /**
  * @author Gabor Nagypal (FZI)
  */
-public class AnonymousIdUtils
+public abstract class AnonymousIdUtils
 {
-    protected static final AnonymousIdUtils enclInstance = new AnonymousIdUtils();
     protected static AnonymousIdTranslator anonymousIdTranslator;
     /** The random number generator. */
     protected static final Random RND = new Random();
@@ -51,12 +50,12 @@ public class AnonymousIdUtils
     {
         if(anonymousIdTranslator == null)
         {
-            anonymousIdTranslator = enclInstance.new AnonymousIdTranslator();
+            anonymousIdTranslator = new AnonymousIdUtils.AnonymousIdTranslator();
         }
         return anonymousIdTranslator;
     }
     
-    public final class AnonymousIdTranslator
+    public final static class AnonymousIdTranslator
     {
         private Map<Byte, String> nbIdMap;
         private LogicalExpression scope;
