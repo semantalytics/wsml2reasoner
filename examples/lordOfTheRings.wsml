@@ -10,19 +10,19 @@ concept Being
 
 concept Living subConceptOf Being
 //	heightInFeet ofType (0 1) _decimal
-	livesAt ofType Location
+//	livesAt ofType Location
 //	wasBorn ofType (0 1) _integer
 //	died ofType (0 1) _integer
 	
-concept God subConceptOf Being
+//concept God subConceptOf Being
 
-concept Maya subConceptOf God
+//concept Maya subConceptOf God
 //	serves inverseOf(servedBy) impliesType Vala
-	serves impliesType Vala
+//	serves impliesType Vala
 
-concept Vala subConceptOf God
+//concept Vala subConceptOf God
 //	servedBy inverseOf(serves) impliesType Maya
-	servedBy impliesType Maya
+//	servedBy impliesType Maya
 	
 concept Mortal subConceptOf Living
 
@@ -30,7 +30,7 @@ concept Immortal subConceptOf Living
 
 concept Humanoid subConceptOf Living
 	loves impliesType (0 1) Humanoid
-	hasParent impliesType Being
+	hasParent impliesType Humanoid
 	hasAncestor transitive impliesType Humanoid
 
 axiom ParentIsAncestor definedBy
@@ -40,29 +40,35 @@ axiom ParentIsAncestor definedBy
 
 // relation slaying/3 subRelationOf killing
 
-concept Monster subConceptOf Living
+//concept Monster subConceptOf Living
 
 concept Human subConceptOf {Mortal, Humanoid}
 
-concept Hobbit subConceptOf {Mortal, Humanoid}
+//concept Hobbit subConceptOf {Mortal, Humanoid}
 
-concept Dwarf subConceptOf {Mortal, Humanoid}
+//concept Dwarf subConceptOf {Mortal, Humanoid}
 
-concept Orc subConceptOf {Mortal, Monster}
+//concept Orc subConceptOf {Mortal, Monster}
 
-concept Dragon subConceptOf {Immortal, Monster}
+//concept Dragon subConceptOf {Immortal, Monster}
 
 concept Elf subConceptOf {Immortal, Humanoid}
 
 concept Male subConceptOf Being
-	loves impliesType Female
+	//loves impliesType Female
 
 concept Female subConceptOf Being
-//	loves impliesType Male
+	//loves impliesType Male
 
 concept Man subConceptOf {Male, Humanoid}
 
 concept Woman subConceptOf {Female, Humanoid}
+
+axiom MaleLovesFemale definedBy
+?y memberOf Female :- ?x memberOf Male and ?x[loves hasValue ?y].
+
+axiom FemaleLovesMale definedBy
+?y memberOf Male :- ?x memberOf Female and ?x[loves hasValue ?y].
 
 axiom ManDefinition definedBy
 ?x memberOf Man equivalent ?x memberOf Male and ?x memberOf Human.
@@ -82,7 +88,7 @@ instance Arathorn memberOf Man
 //	hasName hasValue "Arathorn"
 //	hasParent hasValue _#
 //	hasParent hasValue _#
-	hasAncestor hasValue Elendil
+hasAncestor hasValue Elendil
 	
 //axiom ArathornLivesAt
 //definedBy
@@ -105,7 +111,7 @@ instance Aragorn memberOf Man
 
 instance Arwen memberOf Elf
 //	hasName hasValue "Arwen"
-	hasParent hasValue Elrond
+//	hasParent hasValue Elrond
 	//hasParent hasValue _#
 	//lives hasValue Rivendale
 	
@@ -113,13 +119,13 @@ instance Arwen memberOf Elf
 
 //instance MinasTirith memberOf Location
 
-instance Gandalf memberOf Maya
+//instance Gandalf memberOf Maya
 
-instance Gimli memberOf Dwarf
-	hasParent hasValue Gloin
+//instance Gimli memberOf Dwarf
+//	hasParent hasValue Gloin
 	//hasParent hasValue _#
 	
-instance Gloin memberOf Dwarf
+//instance Gloin memberOf Dwarf
 	//hasParent hasValue _#
 	//hasParent hasValue _#
 	

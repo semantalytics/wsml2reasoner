@@ -52,8 +52,8 @@ public class TestKaon2WSMLFlightReasoner extends BaseReasonerTest {
         return test;
     }
     
-    public void testArwenIsWoman() throws Exception {
-        String query = "?x memberOf Elf";
+    public void testArwenIsFemale() throws Exception {
+        String query = "?x memberOf Female";
         Set<VariableBinding> expected = new HashSet<VariableBinding>();
         VariableBinding binding = new VariableBindingImpl();
         binding.put("x", NS + "Arwen");
@@ -74,10 +74,49 @@ public class TestKaon2WSMLFlightReasoner extends BaseReasonerTest {
         
     }
     
+    public void testAragornLovesFemale() throws Exception {
+        String query = "?x[loves hasValue ?y] and ?y memberOf Female";
+        Set<VariableBinding> expected = new HashSet<VariableBinding>();
+        VariableBinding binding = new VariableBindingImpl();
+        binding.put("x", NS + "Aragorn");
+        binding.put("y", NS + "Arwen");
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+        
+    }
+    
     public void testAragornIsElendilsHeir() throws Exception {
         String query = "Aragorn[hasAncestor hasValue Elendil]";
         Set<VariableBinding> expected = new HashSet<VariableBinding>();
         VariableBinding binding = new VariableBindingImpl();
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+        
+    }
+    
+    public void testNoMaleFemaleTogether() throws Exception {
+        String query = "?x memberOf Male and ?x memberOf Female";
+        Set<VariableBinding> expected = new HashSet<VariableBinding>();
+        VariableBinding binding = new VariableBindingImpl();
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+        
+    }
+    
+    public void testMales() throws Exception {
+        String query = "?x memberOf Male";
+        Set<VariableBinding> expected = new HashSet<VariableBinding>();
+        VariableBinding binding = new VariableBindingImpl();
+        binding.put("x", NS + "Aragorn");
+        expected.add(binding);
+        binding = new VariableBindingImpl();
+        binding.put("x", NS + "Elendil");
+        expected.add(binding);
+        binding = new VariableBindingImpl();
+        binding.put("x", NS + "Arathorn");
         expected.add(binding);
         performQuery(query, expected);
         System.out.println("Finished query.");
