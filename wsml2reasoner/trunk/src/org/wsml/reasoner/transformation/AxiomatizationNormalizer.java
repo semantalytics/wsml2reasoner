@@ -227,22 +227,8 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
     private Set handleConceptAttribute(Attribute a, Term cTerm)
             throws InvalidModelException {
         Set<org.omwg.logexpression.LogicalExpression> result = new HashSet<org.omwg.logexpression.LogicalExpression>();
-
-        // This is like it has been described from Table 8.1 in D.16.1 v0.3
-
-        org.omwg.logexpression.LogicalExpression moExpr, hvExpr, rangeMoExpr;
-
-        Term v = leFactory.createVariable("x");
-        moExpr = leFactory.createMolecule(v, null, toSet(cTerm), null);
-
         Term attID = convertIRI(a.getIdentifier());
-        Term v2 = leFactory.createVariable("y");
-        org.omwg.logexpression.AttrSpecification attSpec = leFactory
-                .createAttrSpecification(AttrSpecification.ATTR_VALUE, attID,
-                        toSet(v2));
-
-        hvExpr = leFactory.createMolecule(v, null, null, toSet(attSpec));
-
+        
         Set<Type> rangeTypes = a.listTypes();
         Set<Term> moList = new HashSet<Term>();
         for (Type type : rangeTypes) {
@@ -260,33 +246,21 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 // TODO include complex data types as well.
             }
         }
-
-        rangeMoExpr = leFactory.createMolecule(v2, null, moList, null);
-
-        // Build the complete logical expression and add it
-        org.omwg.logexpression.LogicalExpression le;
-        org.omwg.logexpression.LogicalExpression e1 = leFactory.createBinary(
-                CompoundExpression.AND, moExpr, hvExpr);
-        if (!a.isConstraining()) {
-            // impliesType
-            le = leFactory.createBinary(CompoundExpression.IMPLIES, e1,
-                    rangeMoExpr);
-            // TODO: because of the auxilliary predicates this can be done
-            // simpler by generating
-            // wsml-implies-type(cTerm, att, moList)
-        } else {
-            // ofType
-            org.omwg.logexpression.LogicalExpression nafExpr = leFactory
-                    .createUnary(CompoundExpression.NAF, rangeMoExpr);
-            org.omwg.logexpression.LogicalExpression e2 = leFactory
-                    .createBinary(CompoundExpression.AND, e1, nafExpr);
-            le = leFactory.createUnary(CompoundExpression.CONSTRAINT, e2);
-            // TODO: because of the auxilliary predicates this can be done
-            // simpler by generating
-            // wsml-of-type(cTerm, att, moList)
+       
+        //Handle attribute type
+        org.omwg.logexpression.AttrSpecification attSpec = null;
+        if (a.isConstraining()) { //ofType
+            attSpec = leFactory
+            .createAttrSpecification(AttrSpecification.ATTR_CONSTRAINT, attID,
+                    moList);
+        } else { //impliesType
+            attSpec = leFactory
+            .createAttrSpecification(AttrSpecification.ATTR_INFERENCE, attID,
+                    moList);
         }
-
-        result.add(le);
+        
+        org.omwg.logexpression.LogicalExpression typeExpr = leFactory.createMolecule(cTerm, null, null, toSet(attSpec));
+        result.add(typeExpr);
 
         // Handle Attribute Feature
         Term x = leFactory.createVariable("x");
