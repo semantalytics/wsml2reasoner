@@ -24,11 +24,13 @@ import java.util.Set;
 
 import org.omwg.logexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
+import org.omwg.ontology.Concept;
+import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.OntologyRegistrationRequest;
 import org.wsml.reasoner.api.Request;
 import org.wsml.reasoner.api.Result;
-import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.WSMLFlightReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.queryanswering.QueryAnsweringRequest;
 import org.wsml.reasoner.api.queryanswering.VariableBinding;
@@ -55,7 +57,7 @@ import org.wsmo.common.IRI;
  * @author Uwe Keller, DERI Innsbruck
  * @author Gabor Nagypal, FZI
  */
-public class DatalogBasedWSMLReasoner implements WSMLReasoner {
+public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner {
 
     private DatalogReasonerFacade builtInFacade = null;
 
@@ -165,39 +167,94 @@ public class DatalogBasedWSMLReasoner implements WSMLReasoner {
         return p;
     }
 
-    public void registerOntology(Set<Ontology> ontologies) {
+    public boolean isSatisfiable(IRI ontologyID)
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    public void deRegisterOntology(IRI ontologyID)
+    {
         // TODO Auto-generated method stub
         
     }
 
-    public void registerOntology(Ontology ontology) {
+    public void deRegisterOntology(Set<IRI> ontologyIDs)
+    {
         // TODO Auto-generated method stub
         
     }
 
-    public void deRegisterOntology(IRI ontologyId) {
+    public boolean entails(IRI ontologyID, LogicalExpression expression)
+    {
         // TODO Auto-generated method stub
-        
+        return false;
     }
 
-    public void deRegisterOntology(Set<IRI> ontologyIds) {
+    public boolean entails(IRI ontologyID, Set<LogicalExpression> expressions)
+    {
         // TODO Auto-generated method stub
-        
+        return false;
     }
 
-    public Set<VariableBinding> executeConjuctiveQuery(LogicalExpression expression) {
+    public boolean executeGroundQuery(IRI ontologyID, LogicalExpression query)
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    public Set<VariableBinding> executeQuery(IRI ontologyID, LogicalExpression query)
+    {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public boolean entails(LogicalExpression expression) {
+    public Set<Concept> getConcepts(IRI ontologyID, Instance instance)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public Set<Instance> getInstances(IRI ontologyID, Concept concept)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public Set<Concept> getSubConcepts(IRI ontologyID, Concept concept)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public Set<Concept> getSuperConcepts(IRI ontologyID, Concept concept)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public boolean isMemberOf(IRI ontologyID, Instance instance, Concept concept)
+    {
         // TODO Auto-generated method stub
         return false;
     }
 
-    public boolean entails(Set<LogicalExpression> expressions) {
+    public boolean isSubConceptOf(IRI ontologyID, Concept subConcept, Concept superConcept)
+    {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    public void registerOntology(Ontology ontology)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void registerOntology(Set<Ontology> ontologies)
+    {
+        // TODO Auto-generated method stub
+        
     }
 
 }

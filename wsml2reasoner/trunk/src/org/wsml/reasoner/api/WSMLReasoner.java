@@ -22,6 +22,8 @@ package org.wsml.reasoner.api;
 import java.util.Set;
 
 import org.omwg.logexpression.LogicalExpression;
+import org.omwg.ontology.Concept;
+import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.queryanswering.VariableBinding;
 import org.wsmo.common.IRI;
@@ -47,21 +49,34 @@ public interface WSMLReasoner {
      *             that is not supported by the respective reasoner.
      * @deprecated
      */
-    Result execute(Request req) throws UnsupportedOperationException;
+    public Result execute(Request req) throws UnsupportedOperationException;
     
-    void registerOntology(Set<Ontology> ontologies);
+    public void registerOntology(Set<Ontology> ontologies);
     
-    void registerOntology(Ontology ontology);
+    public void registerOntology(Ontology ontology);
     
-    void deRegisterOntology(IRI ontologyId);
+    public void deRegisterOntology(IRI ontologyID);
     
-    void deRegisterOntology(Set<IRI> ontologyIds);
+    public void deRegisterOntology(Set<IRI> ontologyIDs);
     
-    Set<VariableBinding> executeConjuctiveQuery(LogicalExpression expression);
+    public Set<VariableBinding> executeQuery(IRI ontologyID, LogicalExpression query);
     
-    boolean entails(LogicalExpression expression);
+    public boolean executeGroundQuery(IRI ontologyID, LogicalExpression query);
     
-    boolean entails(Set<LogicalExpression> expressions);
+    public boolean entails(IRI ontologyID, LogicalExpression expression);
     
+    public boolean entails(IRI ontologyID, Set<LogicalExpression> expressions);
     
+    public boolean isSubConceptOf(IRI ontologyID, Concept subConcept, Concept superConcept);
+    
+    public boolean isMemberOf(IRI ontologyID, Instance instance, Concept concept);
+    
+    public Set<Concept> getSubConcepts(IRI ontologyID, Concept concept);
+    
+    public Set<Concept> getSuperConcepts(IRI ontologyID, Concept concept);
+
+    public Set<Instance> getInstances(IRI ontologyID, Concept concept);
+    
+    public Set<Concept> getConcepts(IRI ontologyID, Instance instance);
+
 }
