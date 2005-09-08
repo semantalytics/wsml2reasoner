@@ -19,24 +19,49 @@
 
 package org.wsml.reasoner.api;
 
+import java.util.Set;
+
+import org.omwg.logexpression.LogicalExpression;
+import org.omwg.ontology.Ontology;
+import org.wsml.reasoner.api.queryanswering.VariableBinding;
+import org.wsmo.common.IRI;
+
 /**
- * An interface for invoking a WSML reasoner with a particular 
- * reasoning task.
+ * An interface for invoking a WSML reasoner with a particular reasoning task.
  * 
  * @author Uwe Keller, DERI Innsbruck
  */
 public interface WSMLReasoner {
 
     /**
-     * Sends a request about some reasoning task to a reasoner.
-     * A reasoner might support different reasoning tasks such as
-     * for instance query answering or checking logical entailment of 
-     * a statement wrt. to some ontology or knowledgebase.
+     * Sends a request about some reasoning task to a reasoner. A reasoner might
+     * support different reasoning tasks such as for instance query answering or
+     * checking logical entailment of a statement wrt. to some ontology or
+     * knowledgebase.
      * 
-     * @param req - a description of the reasoning task to be performed.
+     * @param req -
+     *            a description of the reasoning task to be performed.
      * @return the result to the given request.
-     * @throws UnsupportedOperationException - in case that the given request referes to a reasoning
-     *         task that is not supported by the respective reasoner.
+     * @throws UnsupportedOperationException -
+     *             in case that the given request referes to a reasoning task
+     *             that is not supported by the respective reasoner.
+     * @deprecated
      */
     Result execute(Request req) throws UnsupportedOperationException;
+    
+    void registerOntology(Set<Ontology> ontologies);
+    
+    void registerOntology(Ontology ontology);
+    
+    void deRegisterOntology(IRI ontologyId);
+    
+    void deRegisterOntology(Set<IRI> ontologyIds);
+    
+    Set<VariableBinding> executeConjuctiveQuery(LogicalExpression expression);
+    
+    boolean entails(LogicalExpression expression);
+    
+    boolean entails(Set<LogicalExpression> expressions);
+    
+    
 }

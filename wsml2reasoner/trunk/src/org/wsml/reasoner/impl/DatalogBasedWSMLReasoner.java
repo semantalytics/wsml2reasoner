@@ -22,6 +22,7 @@ package org.wsml.reasoner.impl;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.omwg.logexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.OntologyRegistrationRequest;
@@ -30,6 +31,7 @@ import org.wsml.reasoner.api.Result;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.queryanswering.QueryAnsweringRequest;
+import org.wsml.reasoner.api.queryanswering.VariableBinding;
 import org.wsml.reasoner.datalog.Program;
 import org.wsml.reasoner.datalog.wrapper.DatalogReasonerFacade;
 import org.wsml.reasoner.datalog.wrapper.ExternalToolException;
@@ -42,6 +44,7 @@ import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
 import org.wsml.reasoner.transformation.LloydToporNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsml.reasoner.transformation.WSML2DatalogTransformer;
+import org.wsmo.common.IRI;
 
 /**
  * A prototypical implementation of a reasoner for WSML Core and WSML Flight.
@@ -160,6 +163,41 @@ public class DatalogBasedWSMLReasoner implements WSMLReasoner {
         // System.out.println(p);
         // System.out.println("-*");
         return p;
+    }
+
+    public void registerOntology(Set<Ontology> ontologies) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void registerOntology(Ontology ontology) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void deRegisterOntology(IRI ontologyId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void deRegisterOntology(Set<IRI> ontologyIds) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public Set<VariableBinding> executeConjuctiveQuery(LogicalExpression expression) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public boolean entails(LogicalExpression expression) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    public boolean entails(Set<LogicalExpression> expressions) {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }
