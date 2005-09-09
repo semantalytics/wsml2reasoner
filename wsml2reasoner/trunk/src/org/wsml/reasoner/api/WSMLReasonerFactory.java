@@ -21,31 +21,86 @@ package org.wsml.reasoner.api;
 
 import java.util.Map;
 
-/** 
+/**
  * An interface for getting WSML Reasoners for the various variants of WSML.
+ * 
  * @author Uwe Keller, DERI Innsbruck
  */
 public interface WSMLReasonerFactory {
-    
+
     public String PARAM_WSML_VARIANT = "WSML VARIANT";
-    
-    public enum WSMLVariant {WSML_CORE, WSML_FLIGHT, WSML_RULE, WSML_DL, WSML_FULL};
-    
+
+    public enum WSMLVariant {
+        WSML_CORE, WSML_FLIGHT, WSML_RULE, WSML_DL, WSML_FULL
+    };
+
     public String PARAM_BUILT_IN_REASONER = "BUILT IN REASONER";
-    
-    public enum BuiltInReasoner {DLV, MANDARAX, KAON2, MINS};
-    
-    /** 
-     * Creates an object that allows to communicate and invoke with a reasoner for
-     * WSML for the specified variant of WSML.
+
+    public enum BuiltInReasoner {
+        DLV, MANDARAX, KAON2, MINS
+    };
+
+    /**
+     * Creates an object that allows to communicate and invoke with a reasoner
+     * for WSML for the specified variant of WSML.
      * 
      * @param parameters
-     * @return an object for invoking and communicating with a WSML reasoner of the specfic kind.
-     * @throws UnsupportedOperationException in case that the factory does not support the 
-     *         requested variant. Providers are not urged to implement all variants.
+     * @return an object for invoking and communicating with a WSML reasoner of
+     *         the specfic kind.
+     * @throws UnsupportedOperationException
+     *             in case that the factory does not support the requested
+     *             variant. Providers are not urged to implement all variants.
      * 
-     * 
+     * @deprecated
      */
-    public WSMLReasoner getWSMLReasoner(Map<String, Object> parameters) throws UnsupportedOperationException;
+    public WSMLReasoner getWSMLReasoner(Map<String, Object> parameters)
+            throws UnsupportedOperationException;
+
+    /**
+     * Creates a WSML Core reasoner backed up by the chosen Datalog
+     * implementation
+     * 
+     * @param builtInReasoner
+     *            the built-in reasoner to be used by the WSML reasoner
+     * @return the resoner
+     * @throws UnsupportedOperationException
+     */
+    public WSMLCoreReasoner getWSMLCoreReasoner(BuiltInReasoner builtInReasoner)
+            throws UnsupportedOperationException;
+
+    /**
+     * Creates a WSML Core reasoner backed up by the default Datalog engine
+     * 
+     * @param builtInReasoner
+     *            the built-in reasoner to be used by the WSML reasoner
+     * @return the resoner
+     * @throws UnsupportedOperationException
+     */
+    public WSMLCoreReasoner getWSMLCoreReasoner()
+            throws UnsupportedOperationException;
+
+    /**
+     * Creates a WSML Flight reasoner backed up by the chosen Datalog
+     * implementation
+     * 
+     * @param builtInReasoner
+     *            the built-in reasoner to be used by the WSML reasoner
+     * @return the resoner
+     * @throws UnsupportedOperationException
+     */
+    public WSMLFlightReasoner getWSMLFlightReasoner(
+            BuiltInReasoner builtInReasoner)
+            throws UnsupportedOperationException;
+
+    /**
+     * Creates a WSML Flight reasoner backed up by the default Datalog engine
+     * 
+     * @param builtInReasoner
+     *            the built-in reasoner to be used by the WSML reasoner
+     * @return the resoner
+     * @throws UnsupportedOperationException
+     */
+    public WSMLFlightReasoner getWSMLFlightReasoner()
+            throws UnsupportedOperationException;
 
 }
