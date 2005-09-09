@@ -182,6 +182,11 @@ public class MoleculeDecompositionRules extends FixedModificationRules
     {
         protected AnonymousIdTranslator anonymousIDTranslator;
 
+        public AtomAnonymousIDRule()
+        {
+            anonymousIDTranslator = AnonymousIdUtils.getAnonymousIdTranslator();
+        }
+
         public LogicalExpression apply(LogicalExpression expression)
         {
             Atom atom = (Atom)expression;
