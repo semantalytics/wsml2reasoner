@@ -19,9 +19,11 @@
 
 package org.wsml.reasoner.api;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.omwg.logexpression.LogicalExpression;
+import org.omwg.logexpression.terms.Variable;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
@@ -59,7 +61,7 @@ public interface WSMLReasoner {
     
     public void deRegisterOntology(Set<IRI> ontologyIDs);
     
-    public Set<VariableBinding> executeQuery(IRI ontologyID, LogicalExpression query);
+    public Set<Map<Variable, Object>> executeQuery(IRI ontologyID, LogicalExpression query);
     
     public boolean executeGroundQuery(IRI ontologyID, LogicalExpression query);
     
