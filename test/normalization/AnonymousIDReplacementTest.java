@@ -23,13 +23,17 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.mandarax.reference.RightMostSelectionPolicy;
 import org.omwg.logexpression.AttrSpecification;
 import org.omwg.logexpression.Binary;
+import org.omwg.logexpression.LogicalExpression;
+import org.omwg.logexpression.terms.Term;
 import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
+import org.semanticweb.kaon2.ri;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
@@ -105,5 +109,18 @@ System.out.println(normString);
         Pattern pattern = Pattern.compile("Arathorn.*livesAt.*(anonymous.*).*and.*\\1.*memberOf.*Location", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(normString);
         assertTrue(matcher.find());
+    }
+    
+    public void testLEEquality()
+    {
+        Set<Term> iri1Set = new HashSet<Term>();
+        iri1Set.add(leFactory.createIRI("Left"));
+        Set<Term> iri2Set = new HashSet<Term>();
+        iri2Set.add(leFactory.createIRI("Right"));
+        LogicalExpression leftArg = leFactory.createMolecule(leFactory.createVariable("x"), null, iri1Set, null);
+        LogicalExpression rightArg = leFactory.createMolecule(leFactory.createVariable("x"), null, iri2Set, null);
+        LogicalExpression correctExp = leFactory.createBinary(Binary.OR, leftArg, rightArg);
+        LogicalExpression wrongExp = leFactory.createBinary(Binary.OR, rightArg, leftArg);
+        assertTrue(correctExp.equals(wrongExp));
     }
 }
