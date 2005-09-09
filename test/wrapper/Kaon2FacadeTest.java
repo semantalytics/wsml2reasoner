@@ -289,7 +289,7 @@ public class Kaon2FacadeTest extends TestCase {
                         .individual("urn:test#a"), f.individual("urn:test#b")),
                 L(f.literal(true, f.nonOWLPredicate("urn:test#path", 2), f
                         .individual("urn:test#a"), f.individual("urn:test#b")),
-                        f.literal(true, f.notEqual(), f
+                        f.literal(false, f.equal(), f
                                 .individual("urn:test#a"), f
                                 .individual("urn:test#b"))));
         assertEquals(expected, result);

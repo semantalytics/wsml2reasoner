@@ -19,7 +19,6 @@
 
 package org.wsml.reasoner.datalog.wrapper.kaon2;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,7 +29,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.omwg.logexpression.Constants;
-import org.semanticweb.kaon2.api.*;
+import org.semanticweb.kaon2.api.DefaultOntologyResolver;
+import org.semanticweb.kaon2.api.KAON2Connection;
+import org.semanticweb.kaon2.api.KAON2Exception;
+import org.semanticweb.kaon2.api.KAON2Factory;
+import org.semanticweb.kaon2.api.KAON2Manager;
+import org.semanticweb.kaon2.api.Ontology;
+import org.semanticweb.kaon2.api.OntologyChangeEvent;
 import org.semanticweb.kaon2.api.owl.elements.Individual;
 import org.semanticweb.kaon2.api.reasoner.Query;
 import org.semanticweb.kaon2.api.reasoner.Reasoner;
@@ -117,9 +122,9 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                             + ontologyUri + " is not registered");
                 Reasoner reasoner = ontology.createReasoner();
                 Query query = translateQuery(q, reasoner, varNames);
-                 for (Literal l : query.getQueryLiterals()) {
-                 System.out.println("Query literal: " + l);
-                 }
+                for (Literal l : query.getQueryLiterals()) {
+                    System.out.println("Query literal: " + l);
+                }
                 query.open();
                 while (!query.afterLast()) {
                     String[] tuple = convertQueryTuple(query.tupleBuffer());
@@ -137,7 +142,8 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                 reasoner.dispose();
             } catch (KAON2Exception e) {
                 throw new ExternalToolException(
-                        "Can not convert query to tool:" + '\"' + e.getMessage() + '\"', e, query);
+                        "Can not convert query to tool:" + '\"'
+                                + e.getMessage() + '\"', e, query);
             } catch (InterruptedException e) {
                 throw new ExternalToolException(
                         "Kaon2 query was interrupted during execution");
@@ -159,8 +165,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
      * @param p -
      *            the datalog program that constitutes the knowledgebase
      */
-    private Set<Rule> translateKnowledgebase(
-            org.wsml.reasoner.datalog.Program p)
+    private Set<Rule> translateKnowledgebase(org.wsml.reasoner.datalog.Program p)
             throws ExternalToolException {
         logger.info("Translate knowledgebase :" + p);
 
@@ -199,8 +204,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
         // where x1,...,xk is the subsequence of x1,...,xn where multiple
         // occurrences of the
         // same variable have been removed.
-        List<org.wsml.reasoner.datalog.Literal> body = q
-                .getLiterals();
+        List<org.wsml.reasoner.datalog.Literal> body = q.getLiterals();
         List<Literal> queryLiterals = new ArrayList<Literal>();
 
         for (org.wsml.reasoner.datalog.Literal l : body) {
@@ -252,25 +256,26 @@ public class Kaon2Facade implements DatalogReasonerFacade {
 
     }
 
-    private Literal translateLiteral(
-            org.wsml.reasoner.datalog.Literal l)
+    private Literal translateLiteral(org.wsml.reasoner.datalog.Literal l)
             throws ExternalToolException {
         if (l == null)
             return null;
+        boolean isPositive = l.isPositive();
         try {
             Predicate p = l.getSymbol();
             NonOWLPredicate pred;
             if (p.getSymbolName().equals(Constants.EQUAL)) {
                 pred = f.equal();
             } else if (p.getSymbolName().equals(Constants.INEQUAL)) {
-                pred = f.notEqual();
+                pred = f.equal();
+                isPositive = false;
             } else {
+
                 pred = f.nonOWLPredicate(p.getSymbolName(), p.getArity());
             }
             List<Term> terms = new ArrayList<Term>();
 
-            org.wsml.reasoner.datalog.Term[] args = l
-                    .getArguments();
+            org.wsml.reasoner.datalog.Term[] args = l.getArguments();
             for (org.wsml.reasoner.datalog.Term arg : args) {
                 if (arg.getClass().equals(
                         org.wsml.reasoner.datalog.Variable.class)) {
@@ -283,10 +288,8 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                         org.wsml.reasoner.datalog.Constant.class)) {
                     terms.add(f.individual(((Constant) arg).getSymbol()));
                 }
-                if (arg
-                        .getClass()
-                        .equals(
-                                org.wsml.reasoner.datalog.DataTypeValue.class)) {
+                if (arg.getClass().equals(
+                        org.wsml.reasoner.datalog.DataTypeValue.class)) {
                     DataTypeValue dv = (DataTypeValue) arg;
                     DataType dType = dv.getType();
                     if (dType == DataType.INTEGER) {
@@ -318,7 +321,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                 }
 
             }
-            return f.literal(l.isPositive(), pred, terms);
+            return f.literal(isPositive, pred, terms);
 
         } catch (UnsupportedFeatureException ufe) {
             throw new ExternalToolException("Can not convert query to tool: "
@@ -377,21 +380,22 @@ public class Kaon2Facade implements DatalogReasonerFacade {
         DefaultOntologyResolver resolver = (DefaultOntologyResolver) conn
                 .getOntologyResovler();
         resolver.registerReplacement(ontologyURI, "file:/C:/tmp/wsml.xml");
-//        try {
-//            Ontology o = conn.createOntology(ontologyURI, EMPTY_MAP);
-//            Set<Rule> rules = translateKnowledgebase(kb);
-//            appendRules(o, rules);
-//            try {
-//                o.saveOntology(OntologyFileFormat.OWL_XML, o.getPhysicalURI(), "ISO-8859-15");
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        } catch (KAON2Exception e) {
-//            throw new ExternalToolException(
-//                    "Cannot register ontology in KAON2", e, null);
-//        }
+        try {
+            Ontology o = conn.createOntology(ontologyURI, EMPTY_MAP);
+            Set<Rule> rules = translateKnowledgebase(kb);
+            appendRules(o, rules);
+            // try {
+            // o.saveOntology(OntologyFileFormat.OWL_XML, o.getPhysicalURI(),
+            // "ISO-8859-15");
+            // } catch (IOException e) {
+            // e.printStackTrace();
+            // } catch (InterruptedException e) {
+            // e.printStackTrace();
+            // }
+        } catch (KAON2Exception e) {
+            throw new ExternalToolException(
+                    "Cannot register ontology in KAON2", e, null);
+        }
 
     }
 
