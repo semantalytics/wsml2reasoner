@@ -30,6 +30,7 @@ import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.OntologyRegistrationRequest;
 import org.wsml.reasoner.api.Request;
 import org.wsml.reasoner.api.Result;
+import org.wsml.reasoner.api.WSMLCoreReasoner;
 import org.wsml.reasoner.api.WSMLFlightReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.queryanswering.QueryAnsweringRequest;
@@ -57,7 +58,7 @@ import org.wsmo.common.IRI;
  * @author Uwe Keller, DERI Innsbruck
  * @author Gabor Nagypal, FZI
  */
-public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner {
+public class DatalogBasedWSMLReasoner implements WSMLCoreReasoner, WSMLFlightReasoner {
 
     private DatalogReasonerFacade builtInFacade = null;
 
@@ -255,6 +256,11 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner {
     {
         // TODO Auto-generated method stub
         
+    }
+
+    public boolean entails(IRI baseOntologyID, IRI consequenceOntologyID) {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }
