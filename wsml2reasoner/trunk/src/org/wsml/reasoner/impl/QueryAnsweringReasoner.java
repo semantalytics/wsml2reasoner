@@ -71,7 +71,8 @@ public class QueryAnsweringReasoner {
 
         ConjunctiveQuery query = convertQuery(req.getQuery());
 
-        QueryResult qres = qaf.evaluate(query, req.getOntologyUri());
+        System.out.println("execute QueryAnsweringRequest, methos:2");
+        QueryResult qres = qaf.evaluate(query, req.getOntologyUri(), 2);
 
         // TODO: No incremental fetching of results is supported here at present
         result.addAll(qres.getVariableBindings());
