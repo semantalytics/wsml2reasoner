@@ -35,26 +35,26 @@ public interface SymbolFactory {
          * Return a valid name that can be used for a variable in the external tool.
          * @param wsmlName - the original name in WSML
          * @return a valid name for variables in the external tool.
-         *//*
+         */
        String getValidVariableName(String wsmlName);
        
-       *//**
+       /**
         * Return a valid name that can be used for a constant symbol in the external tool.
         * @param wsmlName - the original name in WSML
         * @return a valid name for a function symbol in the external tool.
-        *//*
+        */
        String getValidConstantName(String wsmlName);
        
-       *//**
+       /**
         * Return a valid name that can be used for a function symbol in the external tool.
         * @param wsmlName - the original name in WSML
         * @param arity - the arity of the predicate
         * @return a valid name for a function symbol in the external tool.
         * @throws UnsupportedFeatureException - if a specific predicate (in particular built-in
         *         predicate is not supported by the tool.
-        *//*
+        */
        String getValidPredicateName(String wsmlName, int arity) throws UnsupportedFeatureException;
-       */
+       
        
        /**
         * Return a valid name that can be used for a datavalue in the external tool.
@@ -65,10 +65,5 @@ public interface SymbolFactory {
         *         types is not supported by the tool.
         */
        String getValidDataValue(String wsmlName, org.wsml.reasoner.datalog.DataTypeValue.DataType dType) throws UnsupportedFeatureException;
-       
-       int getValidVariable();
-       	
-       int getValidConstant();
-
-       int getValidPredicate() throws UnsupportedFeatureException;
+              
 }
