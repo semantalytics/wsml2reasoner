@@ -1,21 +1,3 @@
-/*
- * WSML Reasoner Implementation.
- *
- * Copyright (c) 2005, University of Innsbruck, Austria.
- *
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
- * any later version.
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- * You should have received a copy of the GNU Lesser General Public License along
- * with this library; if not, write to the Free Software Foundation, Inc.,
- * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
- */
 package example;
 
 import java.io.InputStream;
@@ -48,17 +30,13 @@ import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.Serializer;
 
 /**
- * Example File Illustrating usage of Reasoner Please Note that this is a
- * Preview, Interfaces and their usage is expected to be changed!
+ * This interface represents a facade to various datalog engines that allows to
+ * perform a query answering request, e.g. DLV, KAON2.
  * 
- * <pre>
- *  Created on Aug 17, 2005
- *  Committed by $Author: gabor $
- *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/example/ReasonerExample.java,v $,
- * </pre>
+ * For each such system a specific facade must be implemented to integrate the
+ * component into the system.
  * 
- * @author Holger Lausen
- * @version $Revision: 1.7 $ $Date: 2005-09-01 08:23:52 $
+ * @author Uwe Keller, DERI Innsbruck
  */
 public class ReasonerExample {
 
@@ -74,7 +52,6 @@ public class ReasonerExample {
      * loads an Ontology and performs 2 sample queries
      */
     public void doTestRun() {
-        
         Logger log = Logger.getLogger("org.deri");
         log.setLevel(Level.FINE);
         
@@ -84,8 +61,11 @@ public class ReasonerExample {
 
         // The details of creating a Query will be hidden in future
         LogicalExpression query = (LogicalExpression) new LogicalExpressionFactoryImpl(null)
-                .createLogicalExpression("?x memberOf Human", exampleOntology);
-
+                //.createLogicalExpression("?x memberOf Human", exampleOntology);
+        		//.createLogicalExpression("?x memberOf Man", exampleOntology);
+        		.createLogicalExpression("?x memberOf ?y", exampleOntology);
+        		//.createLogicalExpression("?person [hasRelative hasValue ?relative] memberOf Human", exampleOntology);
+        
         QueryAnsweringRequest qaRequest = 
                 new QueryAnsweringRequestImpl(exampleOntology.getIdentifier().toString(), query);
         
@@ -99,16 +79,16 @@ public class ReasonerExample {
                 params);
         
         // Register ontology
-        System.out.println("Registering ontology");
         Set<Ontology> ontos = new HashSet<Ontology>();
         ontos.add(exampleOntology);
-        OntologyRegistrationRequest regReq = new OntologyRegistrationRequestImpl(
-                ontos);
+        OntologyRegistrationRequest regReq = 
+        	new OntologyRegistrationRequestImpl(ontos);
         reasoner.execute(regReq);
         
-        QueryAnsweringResult result = (QueryAnsweringResult) reasoner
-                .execute(qaRequest);
-
+        // Execute query request
+        QueryAnsweringResult result = (QueryAnsweringResult) 
+        	reasoner.execute(qaRequest);
+        
         // print out the results:
         System.out.println("The query '" + query + "' has the following results:");
         for (VariableBinding vBinding : result) {
@@ -117,23 +97,6 @@ public class ReasonerExample {
             }
             System.out.println();
         }
-
-        // The details of creating a Query will be hidden in future
-        query = (LogicalExpression) new LogicalExpressionFactoryImpl(null)
-                .createLogicalExpression("?x[hasRelative hasValue ?y]",exampleOntology);
-        qaRequest = new QueryAnsweringRequestImpl(
-                exampleOntology.getIdentifier().toString(), query);
-        result = (QueryAnsweringResult) reasoner.execute(qaRequest);
-
-        // print out the results:
-        System.out.println("The query '" + query + "' has the following results:");
-        for (VariableBinding vBinding : result) {
-            for (String var : vBinding.keySet()) {
-                System.out.print("  ?" + var + ": " + vBinding.get(var));
-            }
-            System.out.println();
-        }
-
     }
 
     /**
