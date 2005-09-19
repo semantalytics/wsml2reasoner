@@ -31,46 +31,31 @@ import org.wsml.reasoner.datalog.DataTypeValue.DataType;
  * @author Uwe Keller, DERI Innsbruck
  */
 public class DefaultSymbolFactory implements SymbolFactory {
-  /*private long varCnt = 0;
+
+    private long varCnt = 0;
     private long constCnt = 0;
-    private long predCnt = 0;*/
-	
-	// int is used by MINS (Head etc.), can be changed to long later
-	private int varCnt = 0;
-    private int constCnt = 0;
-    private int predCnt = 0;
+    private long predCnt = 0;
+    
     private final String VAR_PREFIX = "Var";
     private final String CONST_PREFIX = "c";
     private final String PRED_PREFIX = "p";
     
-    /*
-	public String getValidVariableName(String wsmlName) {
-		return (VAR_PREFIX + ++varCnt);
-	}
+    public String getValidVariableName(String wsmlName) {
+        return (VAR_PREFIX + (++varCnt));
+    }
 
-	public String getValidConstantName(String wsmlName) {
-		return (CONST_PREFIX + ++constCnt);
-	}
+    public String getValidConstantName(String wsmlName) {
+        return (CONST_PREFIX + (++constCnt));
+    }
 
-	public String getValidPredicateName(String wsmlName, int arity) throws UnsupportedFeatureException {
-		return (PRED_PREFIX + ++predCnt);
-	}*/
-    
+    public String getValidPredicateName(String wsmlName, int arity) throws UnsupportedFeatureException {
+            return (PRED_PREFIX + (++predCnt));
+    }
+
     public String getValidDataValue(String wsmlName, DataType dType) throws UnsupportedFeatureException {
         String result = null;
         result = wsmlName;
         return result;
     }
-    
-    public int getValidVariable() {
-    	return ++varCnt;
-    }
 
-    public int getValidConstant() {
-    	return ++constCnt;
-    }
-
-    public int getValidPredicate() throws UnsupportedFeatureException {
-    	return ++predCnt;
-    }
 }
