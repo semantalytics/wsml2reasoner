@@ -65,7 +65,7 @@ public class ReasonerExample {
                 //.createLogicalExpression("?hq memberOf Human", exampleOntology);
         		//.createLogicalExpression("?x memberOf Man", exampleOntology);
         		//.createLogicalExpression("?x memberOf ?y", exampleOntology);
-        		.createLogicalExpression("?person [hasRelative hasValue ?relative]. // memberOf Human", exampleOntology);
+        		.createLogicalExpression("Lisa [hasRelative hasValue ?relative]", exampleOntology);
         
         QueryAnsweringRequest qaRequest = 
                 new QueryAnsweringRequestImpl(exampleOntology.getIdentifier().toString(), query);

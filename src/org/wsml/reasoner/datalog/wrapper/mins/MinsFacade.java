@@ -18,54 +18,22 @@
  */
 package org.wsml.reasoner.datalog.wrapper.mins;
 
-import java.util.ArrayList;
+import java.util.*;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.deri.mins.builtins.*;
+import org.deri.mins.inference.*;
+import org.deri.mins.inference.Rule;
+import org.deri.mins.inference.terms.*;
+import org.deri.mins.inference.terms.Term;
+import org.deri.mins.inference.terms.Variable;
 import org.wsml.reasoner.api.queryanswering.VariableBinding;
-import org.wsml.reasoner.datalog.ConjunctiveQuery;
-import org.wsml.reasoner.datalog.Constant;
-import org.wsml.reasoner.datalog.DataTypeValue;
-import org.wsml.reasoner.datalog.Literal;
-import org.wsml.reasoner.datalog.Predicate;
-import org.wsml.reasoner.datalog.Program;
-import org.wsml.reasoner.datalog.QueryResult;
-import org.wsml.reasoner.datalog.wrapper.mins.MinsSymbolFactory;
-import org.wsml.reasoner.datalog.wrapper.DatalogReasonerFacade;
-import org.wsml.reasoner.datalog.wrapper.ExternalToolException;
-import org.wsml.reasoner.datalog.wrapper.mins.SymbolMap;
-import org.wsml.reasoner.datalog.wrapper.UnsupportedFeatureException;
+import org.wsml.reasoner.datalog.*;
+import org.wsml.reasoner.datalog.wrapper.*;
 import org.wsml.reasoner.impl.VariableBindingImpl;
 
-import com.ontoprise.builtins.Add;
-import com.ontoprise.builtins.Builtin;
-import com.ontoprise.builtins.BuiltinConfig;
-import com.ontoprise.builtins.Equal;
-import com.ontoprise.builtins.Evaluable;
-import com.ontoprise.builtins.Greater;
-import com.ontoprise.builtins.Greaterorequal;
-import com.ontoprise.builtins.IsConst;
-import com.ontoprise.builtins.IsNum;
-import com.ontoprise.builtins.IsString;
-import com.ontoprise.builtins.Less;
-import com.ontoprise.builtins.Lessorequal;
-import com.ontoprise.inference.DB;
-import com.ontoprise.inference.DBInterface;
-import com.ontoprise.inference.prolog.Atom;
-import com.ontoprise.inference.prolog.Body;
-import com.ontoprise.inference.prolog.GroundAtom;
-import com.ontoprise.inference.prolog.Head;
-import com.ontoprise.inference.prolog.Rule;
-import com.ontoprise.inference.prolog.RuleSet;
-import com.ontoprise.inference.prolog.Substitution;
-import com.ontoprise.inference.prolog.terms.ConstTerm;
-import com.ontoprise.inference.prolog.terms.Term;
-import com.ontoprise.inference.prolog.terms.Variable;
 
 /**
  * Package: package org.wsml.reasoner.datalog.wrapper.mins;
@@ -305,10 +273,10 @@ public class MinsFacade implements DatalogReasonerFacade {
 				new Builtin("lessorequal", 2, new Lessorequal()),
 				new Builtin("greater", 2, new Greater()),
 				new Builtin("greaterorequal", 2, new Greaterorequal()),
-				new Builtin("between", 3, new com.ontoprise.builtins.Between()),
-				new Builtin("starts", 2, new com.ontoprise.builtins.Starts()),
-				new Builtin("ends", 2, new com.ontoprise.builtins.Ends()),
-				new Builtin("lives", 2, new com.ontoprise.builtins.Lives()) };
+				new Builtin("between", 3, new Between()),
+				new Builtin("starts", 2, new Starts()),
+				new Builtin("ends", 2, new Ends()),
+				new Builtin("lives", 2, new Lives()) };
 
 		BuiltinConfig builtInConfig = new BuiltinConfig(buildInList);
 		DBInterface db = new DB(); // facts stored in RAM
