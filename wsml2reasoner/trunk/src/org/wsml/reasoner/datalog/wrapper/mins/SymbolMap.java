@@ -7,7 +7,7 @@ import org.wsml.reasoner.datalog.*;
 import org.wsml.reasoner.datalog.wrapper.mins.MinsSymbolFactory;
 import org.wsml.reasoner.datalog.wrapper.UnsupportedFeatureException;
 
-import com.ontoprise.inference.prolog.terms.Term;
+import org.deri.mins.inference.terms.Term;
 
 /**
  * Package: package org.wsml.reasoner.datalog.wrapper.mins;
@@ -139,7 +139,6 @@ public class SymbolMap {
 	            result = term.toString(); // for unknown symbols just leave them unmodified for the moment.
 	        }
     	}
-    	
         return result;
     }
 }
