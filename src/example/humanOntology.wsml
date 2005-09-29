@@ -5,6 +5,10 @@ namespace {_"http://www.example.org#",
  
 ontology TheSimpsons
 
+axiom myAx
+  definedBy
+   man impliedBy ?f memberOf Human and ?t memberOf Dummy and ?l memberOf noClue.
+   
 concept Human
   hasRelative transitive symmetric impliesType Human
 
@@ -12,11 +16,9 @@ concept Man subConceptOf Human
 
 concept Woman subConceptOf Human
 
-//instance Lisa memberOf Human
-
 instance Homer memberOf Man
   hasRelative hasValue Marge
-  
+ 
 instance Marge memberOf Woman
   hasRelative hasValue Lisa
 

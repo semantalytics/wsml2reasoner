@@ -258,6 +258,8 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner, WSMLCoreRea
             Map<Variable, Object> newBinding = new HashMap<Variable, Object>(); 
             for(String varString : binding.keySet())
             {
+                if (varString.charAt(0)=='?')
+                    varString = varString.substring(1);
                 Variable variable = leFactory.createVariable(varString);
                 Object value = binding.get(varString);
                 newBinding.put(variable, value);

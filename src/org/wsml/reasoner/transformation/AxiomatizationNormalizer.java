@@ -487,9 +487,10 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
             lExprs.add(handleInstanceAttribute(a, aVals, iTerm));
         }
 
-        expr = leFactory.createMolecule(iTerm, null, memberOfs, null);
-
-        lExprs.add(expr);
+        if (memberOfs.size()>0){
+            expr = leFactory.createMolecule(iTerm, null, memberOfs, null);
+            lExprs.add(expr);
+        }
 
         int j = 1;
         String axPrefix = "Axiom-" + convertIRI(i.getIdentifier()).asString();
