@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.wsml.reasoner.datalog.*;
-import org.wsml.reasoner.datalog.wrapper.mins.DefaultSymbolFactory;
+import org.wsml.reasoner.datalog.wrapper.mins.MinsSymbolFactory;
 import org.wsml.reasoner.datalog.wrapper.UnsupportedFeatureException;
 
 import com.ontoprise.inference.prolog.terms.Term;
@@ -17,7 +17,7 @@ import com.ontoprise.inference.prolog.terms.Term;
  */
 
 public class SymbolMap {
-    private DefaultSymbolFactory sFactory;
+    private MinsSymbolFactory sFactory;
    
 	private Map<String,Integer> wsml2toolPredicates = new HashMap<String,Integer>();
     private Map<String,Integer> wsml2toolConstants = new HashMap<String,Integer>();
@@ -33,7 +33,7 @@ public class SymbolMap {
     private Map<ConjunctiveQuery, Map<String, Integer>> wsml2toolVariablesPerQuery = new HashMap<ConjunctiveQuery, Map<String, Integer>>();
     private Map<ConjunctiveQuery, Map<Integer, String>> tool2wsmlVariablesPerQuery = new HashMap<ConjunctiveQuery, Map<Integer, String>>();
     
-    public SymbolMap(DefaultSymbolFactory sf){
+    public SymbolMap(MinsSymbolFactory sf){
         sFactory = sf;
     }
     
