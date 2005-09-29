@@ -3,9 +3,7 @@ package org.wsml.reasoner.datalog.wrapper.mins;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.wsml.reasoner.datalog.Constant;
-import org.wsml.reasoner.datalog.Predicate;
-import org.wsml.reasoner.datalog.Variable;
+import org.wsml.reasoner.datalog.*;
 import org.wsml.reasoner.datalog.wrapper.mins.DefaultSymbolFactory;
 import org.wsml.reasoner.datalog.wrapper.UnsupportedFeatureException;
 
@@ -31,8 +29,41 @@ public class SymbolMap {
     private Map<Integer, String> tool2wsmlVariables = new HashMap<Integer, String>();
     private Map<String, String>  tool2wsmlDataValues = new HashMap<String, String>();
     
+    private ConjunctiveQuery currentQuery=null;
+    private Map<ConjunctiveQuery, Map<String, Integer>> wsml2toolVariablesPerQuery = new HashMap<ConjunctiveQuery, Map<String, Integer>>();
+    private Map<ConjunctiveQuery, Map<Integer, String>> tool2wsmlVariablesPerQuery = new HashMap<ConjunctiveQuery, Map<Integer, String>>();
+    
     public SymbolMap(DefaultSymbolFactory sf){
         sFactory = sf;
+    }
+    
+    /**
+     * reseting the variable count (they are local to each rule, so should be called before each rule) 
+     */
+    public void resetVariables(){
+        sFactory.resetVarCount();
+        wsml2toolVariables = new HashMap<String,Integer>();
+        tool2wsmlVariables = new HashMap<Integer, String>();
+        currentQuery=null;
+    }
+    
+    /**
+     * FIXME not threadsafe
+     * @param q
+     */
+    public void setQueryForVariableMapping(ConjunctiveQuery q){
+        sFactory.resetVarCount();
+        currentQuery=q;
+        if (tool2wsmlVariablesPerQuery.get(q)== null){
+            wsml2toolVariables = new HashMap<String,Integer>();
+            tool2wsmlVariables = new HashMap<Integer, String>();
+            wsml2toolVariablesPerQuery.put(q,wsml2toolVariables);
+            tool2wsmlVariablesPerQuery.put(q,tool2wsmlVariables);
+        }else{
+            wsml2toolVariables = wsml2toolVariablesPerQuery.get(q);
+            tool2wsmlVariables = tool2wsmlVariablesPerQuery.get(q);
+        }
+            
     }
    
     public int convertToTool(Predicate p) throws UnsupportedFeatureException {
@@ -78,6 +109,14 @@ public class SymbolMap {
         return result;
     }
     
+    public String convertToWSML(int variableNo){
+        String ret = tool2wsmlVariables.get(variableNo);
+        if (tool2wsmlVariables!= null){
+            return ret;
+        } 
+        throw new RuntimeException("Could not map MINS variable to WSML Term :(");
+    }
+    
     public String convertToWSML(Term term) throws UnsupportedFeatureException {
     	String result = null;
     	String pos = term.toString().substring(1, term.toString().length());
@@ -92,14 +131,6 @@ public class SymbolMap {
 	        }
 	    	
 		    return result;
-    	}
-    	if(term.isVariable()){
-    		if (tool2wsmlVariables.containsKey(position+1)){
-	            // symbol is known to be mapped originally, so just map back.
-	            result = tool2wsmlVariables.get(position+1);
-	        } else {
-	            result = term.toString(); // for unknown symbols just leave them unmodified for the moment.
-	        }
     	}else{
     		if (tool2wsmlPredicates.containsKey(position)){
 	            // symbol is known to be mapped originally, so just map back.

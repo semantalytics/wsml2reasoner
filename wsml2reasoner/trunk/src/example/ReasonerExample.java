@@ -62,10 +62,10 @@ public class ReasonerExample {
 
         // The details of creating a Query will be hidden in future
         LogicalExpression query = (LogicalExpression) new LogicalExpressionFactoryImpl(null)
-                //.createLogicalExpression("?x memberOf Human", exampleOntology);
+                //.createLogicalExpression("?hq memberOf Human", exampleOntology);
         		//.createLogicalExpression("?x memberOf Man", exampleOntology);
-        		.createLogicalExpression("?x memberOf ?y", exampleOntology);
-        		//.createLogicalExpression("?person [hasRelative hasValue ?relative] memberOf Human", exampleOntology);
+        		//.createLogicalExpression("?x memberOf ?y", exampleOntology);
+        		.createLogicalExpression("?person [hasRelative hasValue ?relative]. // memberOf Human", exampleOntology);
         
         QueryAnsweringRequest qaRequest = 
                 new QueryAnsweringRequestImpl(exampleOntology.getIdentifier().toString(), query);
@@ -90,7 +90,7 @@ public class ReasonerExample {
         System.out.println("The query '" + query + "' has the following results:");
         for (Map<Variable,Object> vBinding : result) {
             for (Variable var : vBinding.keySet()) {
-                System.out.print(var + ": " + vBinding.get(var));
+                System.out.print(var + ": " + vBinding.get(var)+"; ");
             }
             System.out.println();
         }

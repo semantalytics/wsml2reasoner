@@ -33,8 +33,12 @@ public class DefaultSymbolFactory implements SymbolFactory{
     private int constCnt = 0;
     private int predCnt = 0;
     
+    public void resetVarCount(){
+        varCnt = 0;
+    }
+    
 	public int getValidVariableName() {
-		return ++varCnt;
+		return varCnt++;
 	}
 
 	public int getValidConstantName() {

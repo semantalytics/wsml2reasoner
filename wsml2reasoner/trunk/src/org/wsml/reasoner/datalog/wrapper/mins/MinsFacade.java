@@ -83,9 +83,7 @@ public class MinsFacade implements DatalogReasonerFacade {
 	 * @throws ExternalToolException
 	 */
 	public QueryResult evaluate(ConjunctiveQuery q, String ontologyIRI) throws ExternalToolException {
-    	LinkedList varPairList = new LinkedList();
     	VariableBinding varBinding;
-    	String wsmlTerm;
     	
     	// to be changed    	
     	int evaluationMethod = 2;
@@ -94,6 +92,7 @@ public class MinsFacade implements DatalogReasonerFacade {
             QueryResult result = new QueryResult(q);
             // retrieve KB ment for IRI:
             RuleSet minsEngine = registeredKbs.get(ontologyIRI);
+            minsEngine.debuglevel=0;
             translateQuery(q, minsEngine); 
             logger.info("Starting MINS evaluation");
             
@@ -110,16 +109,18 @@ public class MinsFacade implements DatalogReasonerFacade {
             for (Rule query = minsEngine.NextQuery(null); query != null; query = minsEngine.NextQuery(query)) {
             	Substitution s = minsEngine.Substitution(query);
                 Enumeration enm = s.elements();
+                symbTransfomer.setQueryForVariableMapping(q);
                 
                 while (enm.hasMoreElements()) {
                     GroundAtom a = (GroundAtom) enm.nextElement();
                     varBinding = new VariableBindingImpl();
                     for (int i = 0; i < a.terms.length; i++) {
-                    	wsmlTerm = symbTransfomer.convertToWSML(a.terms[i]);
-                    	varPairList.add(wsmlTerm);
-                        if(varPairList.size()==2){
-                        	varBinding.put((String) varPairList.get(0), (String)varPairList.get(1));
-                        	varPairList.clear();
+                        //terms has length of numbers of variables!
+                        //not each index has necessarily a subsitution one that does not have is a variable
+                        if (!(a.terms[i] instanceof Variable)){
+                            String wsmlVariable = symbTransfomer.convertToWSML(i);
+                            String wsmlTerm = symbTransfomer.convertToWSML(a.terms[i]);
+                        	varBinding.put(wsmlVariable, wsmlTerm);
                         }
                     }
                     result.getVariableBindings().add(varBinding);
@@ -170,6 +171,7 @@ public class MinsFacade implements DatalogReasonerFacade {
         Literal l;
         int no;
         
+        symbTransfomer.setQueryForVariableMapping(q);
         // Care about body
         List<Literal> qBody = q.getLiterals();
         bodies = new Body[qBody.size()];
@@ -209,6 +211,8 @@ public class MinsFacade implements DatalogReasonerFacade {
         
         // Translate head
         l = r.getHead();
+        //avoid high number of variables!
+        symbTransfomer.resetVariables();
         no = symbTransfomer.convertToTool(l.getSymbol());
         atom = translateLiteral2Atom(l);
         head = new Head(no, atom.terms);
