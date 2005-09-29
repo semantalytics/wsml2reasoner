@@ -1,3 +1,21 @@
+/**
+ * WSML Reasoner Implementation.
+ *
+ * Copyright (c) 2005, University of Innsbruck, Austria.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with this library; if not, write to the Free Software Foundation, Inc.,
+ * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * 
+ */
 package org.wsml.reasoner.datalog.wrapper.mins;
 
 import java.util.ArrayList;
@@ -17,7 +35,7 @@ import org.wsml.reasoner.datalog.Literal;
 import org.wsml.reasoner.datalog.Predicate;
 import org.wsml.reasoner.datalog.Program;
 import org.wsml.reasoner.datalog.QueryResult;
-import org.wsml.reasoner.datalog.wrapper.mins.DefaultSymbolFactory;
+import org.wsml.reasoner.datalog.wrapper.mins.MinsSymbolFactory;
 import org.wsml.reasoner.datalog.wrapper.DatalogReasonerFacade;
 import org.wsml.reasoner.datalog.wrapper.ExternalToolException;
 import org.wsml.reasoner.datalog.wrapper.mins.SymbolMap;
@@ -52,7 +70,8 @@ import com.ontoprise.inference.prolog.terms.Variable;
 /**
  * Package: package org.wsml.reasoner.datalog.wrapper.mins;
 
- * Author: Darko Anicic, DERI Innsbruck
+ * Author: Darko Anicic, DERI Innsbruck, 
+ *         Holger Lausen, DERI Innsbruck
  * Date: 15.09.2005  17:24:24
  */
 public class MinsFacade implements DatalogReasonerFacade {
@@ -65,7 +84,7 @@ public class MinsFacade implements DatalogReasonerFacade {
 	 */
 	private Map<String, RuleSet> registeredKbs = new HashMap<String, RuleSet>();
 
-	private SymbolMap symbTransfomer = new SymbolMap(new DefaultSymbolFactory());
+	private SymbolMap symbTransfomer = new SymbolMap(new MinsSymbolFactory());
 
 	/**
 	 * Creates a facade object that allows to invoke the MINS rule system for

@@ -26,9 +26,10 @@ import org.wsml.reasoner.datalog.wrapper.UnsupportedFeatureException;
  * Package: package org.wsml.reasoner.datalog.wrapper.mins;
 
  * Author: Darko Anicic, DERI Innsbruck
+ *         Holger Lausen, DERI Innsbruck
  * Date: 15.09.2005  17:24:24
  */
-public class DefaultSymbolFactory implements SymbolFactory{
+public class MinsSymbolFactory{
 	private int varCnt = 0;
     private int constCnt = 0;
     private int predCnt = 0;
