@@ -1,28 +1,36 @@
+/**
+ * WSML Reasoner Implementation.
+ *
+ * Copyright (c) 2005, University of Innsbruck, Austria.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with this library; if not, write to the Free Software Foundation, Inc.,
+ * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * 
+ */
 package example;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.*;
 
 import org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl;
 import org.omwg.logexpression.LogicalExpression;
 import org.omwg.logexpression.LogicalExpressionFactory;
+import org.omwg.logexpression.terms.Variable;
 import org.omwg.ontology.Ontology;
-import org.wsml.reasoner.api.OntologyRegistrationRequest;
-import org.wsml.reasoner.api.WSMLReasoner;
-import org.wsml.reasoner.api.WSMLReasonerFactory;
-import org.wsml.reasoner.api.queryanswering.QueryAnsweringRequest;
-import org.wsml.reasoner.api.queryanswering.QueryAnsweringResult;
-import org.wsml.reasoner.api.queryanswering.VariableBinding;
-import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.OntologyRegistrationRequestImpl;
-import org.wsml.reasoner.impl.QueryAnsweringRequestImpl;
-import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
+import org.wsml.reasoner.api.*;
+import org.wsml.reasoner.api.queryanswering.*;
+import org.wsml.reasoner.impl.*;
+import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
@@ -30,13 +38,9 @@ import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.Serializer;
 
 /**
- * This interface represents a facade to various datalog engines that allows to
- * perform a query answering request, e.g. DLV, KAON2.
+ * Usage Example for the wsml2Reasoner Framework
  * 
- * For each such system a specific facade must be implemented to integrate the
- * component into the system.
- * 
- * @author Uwe Keller, DERI Innsbruck
+ * @author Holger Lausen, DERI Innsbruck
  */
 public class ReasonerExample {
 
@@ -49,12 +53,9 @@ public class ReasonerExample {
     }
 
     /**
-     * loads an Ontology and performs 2 sample queries
+     * loads an Ontology and performs sample query
      */
     public void doTestRun() {
-        Logger log = Logger.getLogger("org.deri");
-        log.setLevel(Level.FINE);
-        
         Ontology exampleOntology = loadOntology("example/humanOntology.wsml");
         if (exampleOntology == null)
             return;
@@ -71,29 +72,25 @@ public class ReasonerExample {
         
         //get A reasoner
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put(WSMLReasonerFactory.PARAM_WSML_VARIANT,
-                WSMLReasonerFactory.WSMLVariant.WSML_CORE);
         params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
                 WSMLReasonerFactory.BuiltInReasoner.MINS);
+        params.put(WSMLReasonerFactory.PARAM_WSML_VARIANT,
+                WSMLReasonerFactory.WSMLVariant.WSML_CORE);
         WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().getWSMLReasoner(
                 params);
         
         // Register ontology
-        Set<Ontology> ontos = new HashSet<Ontology>();
-        ontos.add(exampleOntology);
-        OntologyRegistrationRequest regReq = 
-        	new OntologyRegistrationRequestImpl(ontos);
-        reasoner.execute(regReq);
+        reasoner.registerOntology(exampleOntology);
         
         // Execute query request
-        QueryAnsweringResult result = (QueryAnsweringResult) 
-        	reasoner.execute(qaRequest);
+        Set<Map<Variable,Object>> result = reasoner.executeQuery(
+                (IRI)exampleOntology.getIdentifier(), query);
         
         // print out the results:
         System.out.println("The query '" + query + "' has the following results:");
-        for (VariableBinding vBinding : result) {
-            for (String var : vBinding.keySet()) {
-                System.out.print("  ?" + var + ": " + vBinding.get(var));
+        for (Map<Variable,Object> vBinding : result) {
+            for (Variable var : vBinding.keySet()) {
+                System.out.print(var + ": " + vBinding.get(var));
             }
             System.out.println();
         }
