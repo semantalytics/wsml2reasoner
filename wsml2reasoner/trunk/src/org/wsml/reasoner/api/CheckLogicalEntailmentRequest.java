@@ -20,7 +20,6 @@
 package org.wsml.reasoner.api;
 
 import org.omwg.logexpression.LogicalExpression;
-import org.wsml.reasoner.api.queryanswering.QueryAnsweringRequest.QueryAnsweringMode;
 
 /**
  *  An interface for reasoning request that refer to 
