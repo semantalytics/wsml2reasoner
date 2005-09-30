@@ -21,5 +21,3 @@ instance Homer memberOf Man
  
 instance Marge memberOf Woman
   hasRelative hasValue Lisa
-
-

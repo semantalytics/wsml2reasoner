@@ -35,7 +35,7 @@
     <jar jarfile="${dir.dist}/${warfile}">
       <fileset dir="${dir.build}" includes="**" />
     </jar>
-    <delete dir="${dir.build}" />
+<!--    <delete dir="${dir.build}" />-->
   </target>
 
   <target name="tomcat.prepare" description="Creates the build directory">
@@ -47,7 +47,7 @@
     </copy>
     <copy todir="${dir.build}/WEB-INF/lib" flatten="true">
       <fileset dir="${dir.lib}" 
-        includes="**/wsm*.jar,**/mins/*.*" />
+        includes="**/wsmo4j/*.jar,**/mins/*.*" />
     </copy>
     <javac classpathref="classpath"
            srcdir="../../"

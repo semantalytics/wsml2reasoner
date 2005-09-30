@@ -59,7 +59,7 @@ Note for Eclipse User: When using ant from eclipse you can get jsse.jar by using
            target="1.5"
            classpath="${lib.wrapper}" />
 
-    <copy todir="${dir.build}">
+    <copy todir="${dir.build}" >
       <fileset dir="${dir.src}/test" includes="**/*.wsml;**/*.xml" />
     </copy>
 
@@ -170,7 +170,7 @@ Note for Eclipse User: When using ant from eclipse you can get jsse.jar by using
     <zip destfile="${lib.wrapper-src}"
          basedir="${dir.src}"
          includes="src/**,examples/**,test/**" />
-    <delete dir="${dir.build}" />
+<!--    <delete dir="${dir.build}" />-->
   </target>
 
   <target name="update_remote_snapshot"
