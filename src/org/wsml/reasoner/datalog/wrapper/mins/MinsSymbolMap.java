@@ -1,72 +1,58 @@
+/**
+ * WSML Reasoner Implementation.
+ *
+ * Copyright (c) 2005, University of Innsbruck, Austria.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with this library; if not, write to the Free Software Foundation, Inc.,
+ * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * 
+ */
 package org.wsml.reasoner.datalog.wrapper.mins;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.wsml.reasoner.datalog.*;
 import org.wsml.reasoner.datalog.wrapper.mins.MinsSymbolFactory;
 import org.wsml.reasoner.datalog.wrapper.UnsupportedFeatureException;
 
-import org.deri.mins.inference.terms.Term;
+import org.deri.mins.terms.Term;
 
 /**
  * Package: package org.wsml.reasoner.datalog.wrapper.mins;
 
  * Author: Darko Anicic, DERI Innsbruck
+ *         Holger Lausen, DERI Innsbruck
  * Date: 15.09.2005  17:25:43
  */
 
-public class SymbolMap {
+public class MinsSymbolMap {
     private MinsSymbolFactory sFactory;
    
 	private Map<String,Integer> wsml2toolPredicates = new HashMap<String,Integer>();
     private Map<String,Integer> wsml2toolConstants = new HashMap<String,Integer>();
-    private Map<String,Integer> wsml2toolVariables = new HashMap<String,Integer>();
     private Map<String,String>  wsml2toolDataValues = new HashMap<String,String>();
     
     private Map<Integer, String> tool2wsmlPredicates = new HashMap<Integer, String>();
     private Map<Integer, String> tool2wsmlConstants = new HashMap<Integer, String>();
-    private Map<Integer, String> tool2wsmlVariables = new HashMap<Integer, String>();
     private Map<String, String>  tool2wsmlDataValues = new HashMap<String, String>();
     
-    private ConjunctiveQuery currentQuery=null;
-    private Map<ConjunctiveQuery, Map<String, Integer>> wsml2toolVariablesPerQuery = new HashMap<ConjunctiveQuery, Map<String, Integer>>();
-    private Map<ConjunctiveQuery, Map<Integer, String>> tool2wsmlVariablesPerQuery = new HashMap<ConjunctiveQuery, Map<Integer, String>>();
+    private Map<Object, Map<String, Integer>> wsml2minsVariablesPerRule = new HashMap<Object, Map<String, Integer>>();
+    private Map<Object, List<String>> mins2wsmlVariablesPerRule = new HashMap<Object, List<String>>();
     
-    public SymbolMap(MinsSymbolFactory sf){
+    public MinsSymbolMap(MinsSymbolFactory sf){
         sFactory = sf;
     }
     
-    /**
-     * reseting the variable count (they are local to each rule, so should be called before each rule) 
-     */
-    public void resetVariables(){
-        sFactory.resetVarCount();
-        wsml2toolVariables = new HashMap<String,Integer>();
-        tool2wsmlVariables = new HashMap<Integer, String>();
-        currentQuery=null;
-    }
-    
-    /**
-     * FIXME not threadsafe
-     * @param q
-     */
-    public void setQueryForVariableMapping(ConjunctiveQuery q){
-        sFactory.resetVarCount();
-        currentQuery=q;
-        if (tool2wsmlVariablesPerQuery.get(q)== null){
-            wsml2toolVariables = new HashMap<String,Integer>();
-            tool2wsmlVariables = new HashMap<Integer, String>();
-            wsml2toolVariablesPerQuery.put(q,wsml2toolVariables);
-            tool2wsmlVariablesPerQuery.put(q,tool2wsmlVariables);
-        }else{
-            wsml2toolVariables = wsml2toolVariablesPerQuery.get(q);
-            tool2wsmlVariables = tool2wsmlVariablesPerQuery.get(q);
-        }
-            
-    }
-   
-    public int convertToTool(Predicate p) throws UnsupportedFeatureException {
+    public int convertToTool(Predicate p){
     	int result;
         String wsmlName = p.getSymbolName();
         String modName = wsmlName + "_" + p.getArity(); // to make the string rep. unique in WSML
@@ -81,7 +67,7 @@ public class SymbolMap {
         return result;
     }
     
-    public int convertToTool(Constant c) throws UnsupportedFeatureException {
+    public int convertToTool(Constant c){
     	int result;
         String wsmlName = c.getSymbol();
         if (wsml2toolConstants.containsKey(wsmlName)){
@@ -95,26 +81,32 @@ public class SymbolMap {
         return result;
     }
     
-    public int convertToTool(Variable v) throws UnsupportedFeatureException {
-    	int result;
-        String wsmlName = v.getSymbol();
-        if (wsml2toolVariables.containsKey(wsmlName)){
-            result = wsml2toolVariables.get(wsmlName);
-        } else {
-        	result = sFactory.getValidVariableName();
-        	wsml2toolVariables.put(wsmlName, result);
-        	tool2wsmlVariables.put(result,wsmlName);
+    public int convertToTool(Variable v, Object datalogRuleOrQuery){
+        Map<String,Integer> wsml2mins = wsml2minsVariablesPerRule.get(datalogRuleOrQuery);
+        List<String> mins2wsml = mins2wsmlVariablesPerRule.get(datalogRuleOrQuery);
+        if (wsml2mins == null){
+            wsml2mins = new HashMap<String,Integer>();
+            mins2wsml = new LinkedList<String>();
+            wsml2minsVariablesPerRule.put(datalogRuleOrQuery,wsml2mins);
+            mins2wsmlVariablesPerRule.put(datalogRuleOrQuery,mins2wsml);
         }
-        
+        String wsmlName = v.getSymbol();
+        int result;
+        if (wsml2mins.containsKey(wsmlName)){
+            result = wsml2mins.get(wsmlName);
+        } else {
+        	result = wsml2mins.size();
+        	wsml2mins.put(wsmlName, result);
+        	mins2wsml.add(wsmlName);
+        }
         return result;
     }
     
-    public String convertToWSML(int variableNo){
-        String ret = tool2wsmlVariables.get(variableNo);
-        if (tool2wsmlVariables!= null){
-            return ret;
-        } 
-        throw new RuntimeException("Could not map MINS variable to WSML Term :(");
+    public String convertToWSML(int variableNo, Object datalogRuleOrQuery){
+        List<String> mins2wsml = mins2wsmlVariablesPerRule.get(datalogRuleOrQuery);
+        if (mins2wsml == null || mins2wsml.get(variableNo) == null)
+                throw new RuntimeException("Could not map MINS variable to WSML Term :(");
+        return mins2wsml.get(variableNo);
     }
     
     public String convertToWSML(Term term) throws UnsupportedFeatureException {
