@@ -21,8 +21,8 @@ package org.wsml.reasoner.transformation;
 import junit.framework.TestCase;
 
 import org.deri.wsmo4j.io.parser.wsml.LogExprParserImpl;
-import org.omwg.logexpression.Molecule;
-import org.omwg.logexpression.terms.Term;
+import org.omwg.logicalexpression.Molecule;
+import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.transformation.MoleculeUtils;
 import org.wsmo.common.IRI;

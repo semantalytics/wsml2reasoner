@@ -18,7 +18,7 @@
  */
 package org.wsml.reasoner.transformation.le;
 
-import org.omwg.logexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpression;
 
 /**
  * A normalization rule specifies the behaviour of how to normalize a logical expression.

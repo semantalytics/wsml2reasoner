@@ -26,13 +26,13 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.omwg.logexpression.AttrSpecification;
-import org.omwg.logexpression.Binary;
-import org.omwg.logexpression.LogicalExpression;
-import org.omwg.logexpression.LogicalExpressionFactory;
-import org.omwg.logexpression.Molecule;
-import org.omwg.logexpression.terms.Term;
-import org.omwg.logexpression.terms.Variable;
+import org.omwg.logicalexpression.AttrSpecification;
+import org.omwg.logicalexpression.Binary;
+import org.omwg.logicalexpression.LogicalExpression;
+import org.wsmo.factory.LogicalExpressionFactory;
+import org.omwg.logicalexpression.Molecule;
+import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.Variable;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;

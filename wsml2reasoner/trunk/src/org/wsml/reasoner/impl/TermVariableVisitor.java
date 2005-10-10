@@ -22,7 +22,7 @@ package org.wsml.reasoner.impl;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.omwg.logexpression.terms.Variable;
+import org.omwg.ontology.Variable;
 import org.wsml.reasoner.transformation.PostfixOrderTermVisitor;
 
 /**
@@ -67,7 +67,7 @@ public class TermVariableVisitor extends PostfixOrderTermVisitor {
     }
 
     /* (non-Javadoc)
-     * @see org.wsml.reasoner.normalization.PostfixOrderTermVisitor#handleVariable(org.omwg.logexpression.terms.Variable)
+     * @see org.wsml.reasoner.normalization.PostfixOrderTermVisitor#handleVariable(org.omwg.ontology.Variable)
      */
     @Override
     public void handleVariable(Variable arg0) {

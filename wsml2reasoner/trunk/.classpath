@@ -11,9 +11,9 @@
 	<classpathentry kind="lib" path="lib/ext/servlet/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/ext/wsmx/wsmx-integration-0.2.1b.jar"/>
 	<classpathentry kind="lib" path="lib/ext/kaon2/kaon2-2005-09-08.jar"/>
-	<classpathentry kind="lib" path="lib/ext/wsmo4j/wsmlparser-20050601.jar"/>
-	<classpathentry kind="lib" path="lib/ext/wsmo4j/wsmo4j-20050817.jar"/>
-	<classpathentry kind="lib" path="lib/ext/wsmo4j/wsmo4jLogExp-20050809.jar"/>
 	<classpathentry kind="lib" path="lib/ext/mins/mins-20050930.jar"/>
+	<classpathentry kind="lib" path="lib/ext/wsmo4j 0.5.0/wsmlparser-20050915.jar"/>
+	<classpathentry kind="lib" path="lib/ext/wsmo4j 0.5.0/wsmo4j-0.5.0.jar"/>
+	<classpathentry kind="lib" path="lib/ext/wsmo4j 0.5.0/wsmo-api-0.5.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -20,19 +20,22 @@ package example;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-import org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl;
-import org.omwg.logexpression.LogicalExpression;
-import org.omwg.logexpression.LogicalExpressionFactory;
-import org.omwg.logexpression.terms.Variable;
+import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Ontology;
-import org.wsml.reasoner.api.*;
-import org.wsml.reasoner.api.queryanswering.*;
-import org.wsml.reasoner.impl.*;
+import org.omwg.ontology.Variable;
+import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.queryanswering.QueryAnsweringRequest;
+import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
+import org.wsml.reasoner.impl.QueryAnsweringRequestImpl;
 import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
+import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.Serializer;
@@ -45,9 +48,10 @@ import org.wsmo.wsml.Serializer;
 public class ReasonerExample {
 
     /**
-     * @param args none expected
+     * @param args
+     *            none expected
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         ReasonerExample ex = new ReasonerExample();
         ex.doTestRun();
     }
@@ -55,42 +59,51 @@ public class ReasonerExample {
     /**
      * loads an Ontology and performs sample query
      */
-    public void doTestRun() {
+    public void doTestRun() throws Exception {
         Ontology exampleOntology = loadOntology("example/humanOntology.wsml");
         if (exampleOntology == null)
             return;
 
+        Map<String, Object> leParams = new HashMap<String, Object>();
+        leParams.put(Factory.PROVIDER_CLASS,
+                "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
+        LogicalExpressionFactory leFactory = (LogicalExpressionFactory) Factory
+                .createLogicalExpressionFactory(leParams);
+
         // The details of creating a Query will be hidden in future
-        LogicalExpression query = (LogicalExpression) new LogicalExpressionFactoryImpl(null)
-                //.createLogicalExpression("?hq memberOf Human", exampleOntology);
-        		//.createLogicalExpression("?x memberOf Man", exampleOntology);
-        		//.createLogicalExpression("?x memberOf ?y", exampleOntology);
-        		.createLogicalExpression("Lisa [hasRelative hasValue ?relative]", exampleOntology);
-        
-        QueryAnsweringRequest qaRequest = 
-                new QueryAnsweringRequestImpl(exampleOntology.getIdentifier().toString(), query);
-        
-        //get A reasoner
+        LogicalExpression query = leFactory
+        // .createLogicalExpression("?hq memberOf Human", exampleOntology);
+                // .createLogicalExpression("?x memberOf Man", exampleOntology);
+                // .createLogicalExpression("?x memberOf ?y", exampleOntology);
+                .createLogicalExpression(
+                        "Lisa [hasRelative hasValue ?relative]",
+                        exampleOntology);
+
+        QueryAnsweringRequest qaRequest = new QueryAnsweringRequestImpl(
+                exampleOntology.getIdentifier().toString(), query);
+
+        // get A reasoner
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
                 WSMLReasonerFactory.BuiltInReasoner.MINS);
         params.put(WSMLReasonerFactory.PARAM_WSML_VARIANT,
                 WSMLReasonerFactory.WSMLVariant.WSML_CORE);
-        WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().getWSMLReasoner(
-                params);
-        
+        WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
+                .getWSMLReasoner(params);
+
         // Register ontology
         reasoner.registerOntology(exampleOntology);
-        
+
         // Execute query request
-        Set<Map<Variable,Object>> result = reasoner.executeQuery(
-                (IRI)exampleOntology.getIdentifier(), query);
-        
+        Set<Map<Variable, Object>> result = reasoner.executeQuery(
+                (IRI) exampleOntology.getIdentifier(), query);
+
         // print out the results:
-        System.out.println("The query '" + query + "' has the following results:");
-        for (Map<Variable,Object> vBinding : result) {
+        System.out.println("The query '" + query
+                + "' has the following results:");
+        for (Map<Variable, Object> vBinding : result) {
             for (Variable var : vBinding.keySet()) {
-                System.out.print(var + ": " + vBinding.get(var)+"; ");
+                System.out.print(var + ": " + vBinding.get(var) + "; ");
             }
             System.out.println();
         }
@@ -99,7 +112,8 @@ public class ReasonerExample {
     /**
      * Utility Method to get the object model of a wsml ontology
      * 
-     * @param file location of source file (It will be attemted to be loaded from
+     * @param file
+     *            location of source file (It will be attemted to be loaded from
      *            current class path)
      * @return object model of ontology at file location
      */
@@ -136,8 +150,7 @@ public class ReasonerExample {
                     .parse(new InputStreamReader(is));
             if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {
                 return (Ontology) identifiable[0];
-            }
-            else {
+            } else {
                 System.out.println("First Element of file no ontology ");
                 return null;
             }
@@ -152,7 +165,8 @@ public class ReasonerExample {
     /**
      * small utility method for debugging
      * 
-     * @param ont ontology to be serialized to string
+     * @param ont
+     *            ontology to be serialized to string
      * @return string representation of ontology
      */
     private String toString(Ontology ont) {

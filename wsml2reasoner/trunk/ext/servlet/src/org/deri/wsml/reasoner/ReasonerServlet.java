@@ -26,9 +26,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
 import org.deri.wsmo4j.io.parser.wsml.LogExprParserImpl;
-import org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl;
-import org.omwg.logexpression.LogicalExpression;
-import org.omwg.logexpression.LogicalExpressionFactory;
+import org.omwg.logicalexpression.LogicalExpression;
+import org.wsmo.factory.LogicalExpressionFactory;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.*;
 import org.wsml.reasoner.api.queryanswering.*;
@@ -47,8 +46,8 @@ import org.wsmo.wsml.ParserException;
  *  
  * @see org.deri.wsml.reasoner.ontobroker.Reasoner
  * @author Jos de Bruijn
- * $Author: hlausen $
- * $Date: 2005-09-01 09:31:37 $
+ * $Author: gabor $
+ * $Date: 2005-10-10 07:20:05 $
  */
 public class ReasonerServlet extends HttpServlet {
     private boolean debug=false;
@@ -139,7 +138,12 @@ public class ReasonerServlet extends HttpServlet {
         if (debug) out.println("doReasoning");
 
         WsmoFactory _factory = Factory.createWsmoFactory(null);
-        LogicalExpressionFactory _leFactory = new LogicalExpressionFactoryImpl(null);
+        Map<String, String> leProperties = new HashMap<String, String>();
+        leProperties.put(Factory.PROVIDER_CLASS,
+                "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
+
+        LogicalExpressionFactory _leFactory = (LogicalExpressionFactory) Factory
+                .createLogicalExpressionFactory(leProperties);
         Map properties = new HashMap();
         properties.put(Parser.PARSER_LE_FACTORY, _leFactory);
         properties.put(Parser.PARSER_WSMO_FACTORY, _factory);
@@ -159,7 +163,7 @@ public class ReasonerServlet extends HttpServlet {
         out.println("<h2>Your Query</h2>");
         out.println("<p>"+wsmlQuery+"</p>");
 
-        org.omwg.logexpression.io.Parser _leParser = LogExprParserImpl.getInstance(ontology); 
+        org.omwg.logicalexpression.io.Parser _leParser = LogExprParserImpl.getInstance(ontology); 
         try {
             query = _leParser.parse(wsmlQuery);
         } catch (IOException e) {

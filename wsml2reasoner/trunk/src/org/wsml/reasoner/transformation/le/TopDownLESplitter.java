@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.omwg.logexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpression;
 
 /**
  * This class repeatedly applies a set of transformation rules to a logical

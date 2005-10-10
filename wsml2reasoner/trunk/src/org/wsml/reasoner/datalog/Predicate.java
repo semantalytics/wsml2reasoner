@@ -22,7 +22,7 @@ package org.wsml.reasoner.datalog;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.omwg.logexpression.Constants;
+import org.omwg.logicalexpression.Constants;
 
 /**
  * Represents a predicate symbol in rules.

@@ -24,15 +24,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.omwg.logexpression.Atom;
-import org.omwg.logexpression.AttrSpecification;
-import org.omwg.logexpression.Binary;
-import org.omwg.logexpression.LogicalExpression;
-import org.omwg.logexpression.Molecule;
-import org.omwg.logexpression.terms.Identifier;
-import org.omwg.logexpression.terms.NbAnonymousID;
-import org.omwg.logexpression.terms.Term;
-import org.omwg.logexpression.terms.UnNbAnonymousID;
+import org.omwg.logicalexpression.Atom;
+import org.omwg.logicalexpression.AttrSpecification;
+import org.omwg.logicalexpression.Binary;
+import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.Molecule;
+import org.omwg.logicalexpression.terms.Identifier;
+import org.omwg.logicalexpression.terms.NbAnonymousID;
+import org.omwg.logicalexpression.terms.Term;
+import org.omwg.logicalexpression.terms.UnNbAnonymousID;
 import org.wsml.reasoner.transformation.AnonymousIdUtils;
 import org.wsml.reasoner.transformation.AnonymousIdUtils.AnonymousIdTranslator;
 

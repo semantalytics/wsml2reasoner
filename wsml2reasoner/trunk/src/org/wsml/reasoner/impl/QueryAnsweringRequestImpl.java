@@ -19,7 +19,7 @@
 
 package org.wsml.reasoner.impl;
 
-import org.omwg.logexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpression;
 import org.wsml.reasoner.api.queryanswering.QueryAnsweringRequest;
 
 public class QueryAnsweringRequestImpl implements QueryAnsweringRequest {

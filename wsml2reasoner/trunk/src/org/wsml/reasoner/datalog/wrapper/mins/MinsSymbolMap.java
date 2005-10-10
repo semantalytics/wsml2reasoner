@@ -18,13 +18,16 @@
  */
 package org.wsml.reasoner.datalog.wrapper.mins;
 
-import java.util.*;
-
-import org.wsml.reasoner.datalog.*;
-import org.wsml.reasoner.datalog.wrapper.mins.MinsSymbolFactory;
-import org.wsml.reasoner.datalog.wrapper.UnsupportedFeatureException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.deri.mins.terms.Term;
+import org.wsml.reasoner.datalog.Constant;
+import org.wsml.reasoner.datalog.Predicate;
+import org.wsml.reasoner.datalog.Variable;
+import org.wsml.reasoner.datalog.wrapper.UnsupportedFeatureException;
 
 /**
  * Package: package org.wsml.reasoner.datalog.wrapper.mins;

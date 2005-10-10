@@ -18,9 +18,9 @@
  */
 package org.wsml.reasoner.transformation;
 
-import org.omwg.logexpression.AttrSpecification;
-import org.omwg.logexpression.Molecule;
-import org.omwg.logexpression.terms.Term;
+import org.omwg.logicalexpression.AttrSpecification;
+import org.omwg.logicalexpression.Molecule;
+import org.omwg.logicalexpression.terms.Term;
 
 /**
  * A utility class to handle atomic molecules until we do not have proper

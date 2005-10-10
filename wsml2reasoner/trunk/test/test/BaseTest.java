@@ -29,7 +29,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.omwg.logexpression.LogicalExpressionFactory;
+import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
@@ -45,7 +45,7 @@ import org.wsmo.wsml.Serializer;
  * </pre>
  *
  * @author Holger Lausen
- * @version $Revision: 1.6 $ $Date: 2005-09-01 08:23:51 $
+ * @version $Revision: 1.7 $ $Date: 2005-10-10 07:20:05 $
  */
 public class BaseTest extends TestCase {
 	public LogicalExpressionFactory leFactory;

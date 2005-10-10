@@ -27,9 +27,9 @@ import junit.framework.TestCase;
 
 import org.deri.wsmo4j.io.parser.wsml.LogExprParserImpl;
 import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
-import org.omwg.logexpression.Constants;
-import org.omwg.logexpression.LogicalExpression;
-import org.omwg.logexpression.LogicalExpressionFactory;
+import org.omwg.logicalexpression.Constants;
+import org.omwg.logicalexpression.LogicalExpression;
+import org.wsmo.factory.LogicalExpressionFactory;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.datalog.Constant;
 import org.wsml.reasoner.datalog.DatalogException;
@@ -46,9 +46,9 @@ import org.wsmo.factory.WsmoFactory;
 
 public class WSML2DatalogTransformerTest extends TestCase {
 
-    private org.omwg.logexpression.io.Parser leParser = null;
+    private org.omwg.logicalexpression.io.Parser leParser = null;
 
-    private org.omwg.logexpression.io.Serializer logExprSerializer = null;
+    private org.omwg.logicalexpression.io.Serializer logExprSerializer = null;
 
     private LogicalExpressionFactory leFactory = null;
 

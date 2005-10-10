@@ -4,13 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import org.omwg.logexpression.LogicalExpression;
-import org.omwg.logexpression.LogicalExpressionFactory;
-import org.omwg.logexpression.terms.IRI;
-import org.omwg.logexpression.terms.Identifier;
-import org.omwg.logexpression.terms.NbAnonymousID;
-import org.omwg.logexpression.terms.UnNbAnonymousID;
+import org.omwg.logicalexpression.LogicalExpression;
+import org.wsmo.common.IRI;
+import org.wsmo.common.Identifier;
+import org.wsmo.common.UnnumberedAnonymousID;
 import org.wsmo.factory.Factory;
+import org.wsmo.factory.LogicalExpressionFactory;
 
 /**
  * @author Gabor Nagypal (FZI)
@@ -76,9 +75,9 @@ public abstract class AnonymousIdUtils
 
         public IRI translate(LogicalExpression scope, Identifier id)
         {
-            if(id instanceof UnNbAnonymousID)
+            if(id instanceof UnnumberedAnonymousID)
             {
-                return leFactory.createIRI(getNewIri());
+                return wsmo.createIRI(getNewIri());
             }
             else if(id instanceof NbAnonymousID)
             {

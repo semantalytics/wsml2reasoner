@@ -18,19 +18,11 @@
  */
 package org.wsml.reasoner.transformation.le;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 
-import org.omwg.logexpression.LogicalExpression;
-import org.omwg.logexpression.LogicalExpressionFactory;
+import org.omwg.logicalexpression.LogicalExpression;
 import org.wsmo.factory.Factory;
+import org.wsmo.factory.LogicalExpressionFactory;
 
 /**
  * The abstract class FixedModificationRules represents a fixed list of

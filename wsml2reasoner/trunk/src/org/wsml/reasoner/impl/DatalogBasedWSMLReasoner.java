@@ -27,12 +27,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.omwg.logexpression.Atom;
-import org.omwg.logexpression.CompoundExpression;
-import org.omwg.logexpression.LogicalExpression;
-import org.omwg.logexpression.LogicalExpressionFactory;
-import org.omwg.logexpression.terms.Term;
-import org.omwg.logexpression.terms.Variable;
+import org.omwg.logicalexpression.Atom;
+import org.omwg.logicalexpression.CompoundExpression;
+import org.omwg.logicalexpression.LogicalExpression;
+import org.wsmo.factory.LogicalExpressionFactory;
+import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.Variable;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
@@ -78,18 +78,19 @@ import org.wsmo.factory.WsmoFactory;
  * @author Uwe Keller, DERI Innsbruck
  * @author Gabor Nagypal, FZI
  */
-public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner, WSMLCoreReasoner
-{
+public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
+        WSMLCoreReasoner {
     protected final static String WSML_RESULT_PREDICATE = "wsml:query_result";
-    
+
     protected DatalogReasonerFacade builtInFacade = null;
+
     protected WsmoFactory wsmoFactory;
+
     protected LogicalExpressionFactory leFactory;
 
-    public DatalogBasedWSMLReasoner(WSMLReasonerFactory.BuiltInReasoner builtInType)
-    {
-        switch(builtInType)
-        {
+    public DatalogBasedWSMLReasoner(
+            WSMLReasonerFactory.BuiltInReasoner builtInType) {
+        switch (builtInType) {
         case DLV:
             builtInFacade = new DLVFacade();
             break;
@@ -103,66 +104,66 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner, WSMLCoreRea
             builtInFacade = new MinsFacade();
             break;
         default:
-            throw new UnsupportedOperationException("Reasoning with " + builtInType.toString() + " is not supported yet!");
+            throw new UnsupportedOperationException("Reasoning with "
+                    + builtInType.toString() + " is not supported yet!");
         }
         wsmoFactory = Factory.createWsmoFactory(null);
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put(Factory.PROVIDER_CLASS, "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
-        leFactory = (LogicalExpressionFactory)Factory.createLogicalExpressionFactory(params);
+        params.put(Factory.PROVIDER_CLASS,
+                "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
+        leFactory = (LogicalExpressionFactory) Factory
+                .createLogicalExpressionFactory(params);
     }
 
-    public Result execute(Request req) throws UnsupportedOperationException, IllegalArgumentException
-    {
+    public Result execute(Request req) throws UnsupportedOperationException,
+            IllegalArgumentException {
 
-        if(req instanceof QueryAnsweringRequest)
-        {
+        if (req instanceof QueryAnsweringRequest) {
 
-            QueryAnsweringReasoner qaReasoner = new QueryAnsweringReasoner(builtInFacade);
-            try
-            {
-                return qaReasoner.execute((QueryAnsweringRequest)req);
-            } catch(ExternalToolException e)
-            {
+            QueryAnsweringReasoner qaReasoner = new QueryAnsweringReasoner(
+                    builtInFacade);
+            try {
+                return qaReasoner.execute((QueryAnsweringRequest) req);
+            } catch (ExternalToolException e) {
                 e.printStackTrace();
-                throw new IllegalArgumentException("Given query could not be deal with by the external tool!", e);
+                throw new IllegalArgumentException(
+                        "Given query could not be deal with by the external tool!",
+                        e);
             }
 
-        }
-        else if(req instanceof OntologyRegistrationRequest)
-        {
-            OntologyRegistrationRequest registrationReq = (OntologyRegistrationRequest)req;
+        } else if (req instanceof OntologyRegistrationRequest) {
+            OntologyRegistrationRequest registrationReq = (OntologyRegistrationRequest) req;
 
             // TODO Do some extra checking to make sure that ontologies which
             // are imported are converted before ontologies which import them
-            for(Ontology o : registrationReq.getOntologies())
-            {
+            for (Ontology o : registrationReq.getOntologies()) {
                 // convert the ontology to Datalog Program
                 String ontologyUri = o.getIdentifier().toString();
                 Program kb = new Program();
                 kb.addAll(convertOntology(o));
                 // Then register the program at the built-in reasoner
-                try
-                {
+                try {
                     builtInFacade.register(ontologyUri, kb);
-                } catch(ExternalToolException e)
-                {
+                } catch (ExternalToolException e) {
                     e.printStackTrace();
-                    throw new IllegalArgumentException("This set of ontologies could not have been registered at the built-in reasoner", e);
+                    throw new IllegalArgumentException(
+                            "This set of ontologies could not have been registered at the built-in reasoner",
+                            e);
                 }
             }
             return new VoidResult(registrationReq);
 
-        }
-        else
-        {
+        } else {
             // Everything else is currently not supported!
-            throw new UnsupportedOperationException("Requested reasoning [" + req.getClass().toString() + "] task is currently not supported by class " + getClass().toString());
+            throw new UnsupportedOperationException("Requested reasoning ["
+                    + req.getClass().toString()
+                    + "] task is currently not supported by class "
+                    + getClass().toString());
         }
 
     }
 
-    protected Program convertOntology(Ontology o)
-    {
+    protected Program convertOntology(Ontology o) {
 
         Ontology normalizedOntology;
 
@@ -187,10 +188,9 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner, WSMLCoreRea
         // WSMLNormalizationTest.serializeOntology(normalizedOntology));
         Program p = new Program();
         WSML2DatalogTransformer wsml2datalog = new WSML2DatalogTransformer();
-        Set<org.omwg.logexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logexpression.LogicalExpression>();
-        for(Object a : normalizedOntology.listAxioms())
-        {
-            lExprs.addAll(((Axiom)a).listDefinitions());
+        Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
+        for (Object a : normalizedOntology.listAxioms()) {
+            lExprs.addAll(((Axiom) a).listDefinitions());
         }
         p = wsml2datalog.transform(lExprs);
         p.addAll(wsml2datalog.generateAuxilliaryRules());
@@ -200,67 +200,56 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner, WSMLCoreRea
         return p;
     }
 
-    public boolean isSatisfiable(IRI ontologyID)
-    {
+    public boolean isSatisfiable(IRI ontologyID) {
         // TODO Auto-generated method stub
         return false;
     }
 
-    public void deRegisterOntology(IRI ontologyID)
-    {
+    public void deRegisterOntology(IRI ontologyID) {
         Set<IRI> ontologySingletonSet = new HashSet<IRI>();
         ontologySingletonSet.add(ontologyID);
         deRegisterOntology(ontologySingletonSet);
     }
 
-    public void deRegisterOntology(Set<IRI> ontologyIDs)
-    {
+    public void deRegisterOntology(Set<IRI> ontologyIDs) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException();
     }
 
-    public boolean entails(IRI ontologyID, LogicalExpression expression)
-    {
+    public boolean entails(IRI ontologyID, LogicalExpression expression) {
         // TODO Auto-generated method stub
         return false;
     }
 
-    public boolean entails(IRI ontologyID, Set<LogicalExpression> expressions)
-    {
+    public boolean entails(IRI ontologyID, Set<LogicalExpression> expressions) {
         // TODO Auto-generated method stub
         return false;
     }
 
-    public boolean executeGroundQuery(IRI ontologyID, LogicalExpression query)
-    {
+    public boolean executeGroundQuery(IRI ontologyID, LogicalExpression query) {
         return executeQuery(ontologyID, query).size() != 0;
     }
 
-    public Set<Map<Variable, Object>> executeQuery(IRI ontologyID, LogicalExpression query)
-    {
-        //execute query:
+    public Set<Map<Variable, Term>> executeQuery(IRI ontologyID,
+            LogicalExpression query) {
+        // execute query:
         Set<VariableBinding> bindings;
-        try
-        {
+        try {
             bindings = executeQueryI(ontologyID, query);
-        } catch(DatalogException e)
-        {
+        } catch (DatalogException e) {
             throw new WSMLReasonerException();
-        } catch(ExternalToolException e)
-        {
+        } catch (ExternalToolException e) {
             throw new WSMLReasonerException();
         }
-        
-        //wrap result:
+
+        // wrap result:
         Set<Map<Variable, Object>> result = new HashSet<Map<Variable, Object>>();
-        for(VariableBinding binding : bindings)
-        {
-            Map<Variable, Object> newBinding = new HashMap<Variable, Object>(); 
-            for(String varString : binding.keySet())
-            {
-                if (varString.charAt(0)=='?')
+        for (VariableBinding binding : bindings) {
+            Map<Variable, Object> newBinding = new HashMap<Variable, Object>();
+            for (String varString : binding.keySet()) {
+                if (varString.charAt(0) == '?')
                     varString = varString.substring(1);
-                Variable variable = leFactory.createVariable(varString);
+                Variable variable = wsmoFactory.createVariable(varString);
                 Object value = binding.get(varString);
                 newBinding.put(variable, value);
             }
@@ -270,157 +259,139 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner, WSMLCoreRea
         return result;
     }
 
-    public Set<Concept> getConcepts(IRI ontologyID, Instance instance)
-    {
+    public Set<Concept> getConcepts(IRI ontologyID, Instance instance) {
         // build query:
-        Term instanceID = leFactory.createIRI(instance.getIdentifier().toString());
-        Term conceptVariable = leFactory.createVariable("x");
-        Set<Term> conceptSet = new HashSet<Term>();
-        conceptSet.add(conceptVariable);
-        LogicalExpression query = leFactory.createMolecule(instanceID, null, conceptSet, null);
+        Term instanceID = wsmoFactory.createIRI(instance.getIdentifier()
+                .toString());
+        Term conceptVariable = wsmoFactory.createVariable("x");
+        LogicalExpression query = leFactory.createMemberShipMolecule(
+                instanceID, conceptVariable);
 
         // submit query to reasoner:
         Set<VariableBinding> bindings;
-        try
-        {
+        try {
             bindings = executeQueryI(ontologyID, query);
-        } catch(DatalogException e)
-        {
+        } catch (DatalogException e) {
             throw new WSMLReasonerException();
-        } catch(ExternalToolException e)
-        {
+        } catch (ExternalToolException e) {
             throw new WSMLReasonerException();
         }
 
         // extract concepts from result:
         Set<Concept> concepts = new HashSet<Concept>();
-        for(VariableBinding binding : bindings)
-        {
+        for (VariableBinding binding : bindings) {
             String conceptIDString = binding.get("x");
-            concepts.add(wsmoFactory.getConcept(wsmoFactory.createIRI(conceptIDString)));
+            concepts.add(wsmoFactory.getConcept(wsmoFactory
+                    .createIRI(conceptIDString)));
         }
-        
-        return concepts;        
+
+        return concepts;
     }
 
-    public Set<Instance> getInstances(IRI ontologyID, Concept concept)
-    {
+    public Set<Instance> getInstances(IRI ontologyID, Concept concept) {
         // build query:
-        Term conceptID = leFactory.createIRI(concept.getIdentifier().toString());
-        Term instanceVariable = leFactory.createVariable("x");
-        Set<Term> conceptSet = new HashSet<Term>();
-        conceptSet.add(conceptID);
-        LogicalExpression query = leFactory.createMolecule(instanceVariable, null, conceptSet, null);
+        Term conceptID = wsmoFactory.createIRI(concept.getIdentifier()
+                .toString());
+        Term instanceVariable = wsmoFactory.createVariable("x");
+        LogicalExpression query = leFactory.createMemberShipMolecule(
+                instanceVariable, conceptID);
 
         // submit query to reasoner:
         Set<VariableBinding> bindings;
-        try
-        {
+        try {
             bindings = executeQueryI(ontologyID, query);
-        } catch(DatalogException e)
-        {
+        } catch (DatalogException e) {
             throw new WSMLReasonerException();
-        } catch(ExternalToolException e)
-        {
+        } catch (ExternalToolException e) {
             throw new WSMLReasonerException();
         }
 
         // extract concepts from result:
         Set<Instance> instances = new HashSet<Instance>();
-        for(VariableBinding binding : bindings)
-        {
+        for (VariableBinding binding : bindings) {
             String instanceIDString = binding.get("x");
-            instances.add(wsmoFactory.getInstance(wsmoFactory.createIRI(instanceIDString)));
+            instances.add(wsmoFactory.getInstance(wsmoFactory
+                    .createIRI(instanceIDString)));
         }
-        
-        return instances;        
+
+        return instances;
     }
 
-    public Set<Concept> getSubConcepts(IRI ontologyID, Concept concept)
-    {
+    public Set<Concept> getSubConcepts(IRI ontologyID, Concept concept) {
         // build query:
-        Term conceptID = leFactory.createIRI(concept.getIdentifier().toString());
-        Term conceptVariable = leFactory.createVariable("x");
-        Set<Term> conceptSet = new HashSet<Term>();
-        conceptSet.add(conceptID);
-        LogicalExpression query = leFactory.createMolecule(conceptVariable, conceptSet, null, null);
+        Term conceptID = wsmoFactory.createIRI(concept.getIdentifier()
+                .toString());
+        Term conceptVariable = wsmoFactory.createVariable("x");
+        LogicalExpression query = leFactory.createSubConceptMolecule(
+                conceptVariable, conceptID);
 
         // submit query to reasoner:
         Set<VariableBinding> bindings;
-        try
-        {
+        try {
             bindings = executeQueryI(ontologyID, query);
-        } catch(DatalogException e)
-        {
+        } catch (DatalogException e) {
             throw new WSMLReasonerException();
-        } catch(ExternalToolException e)
-        {
+        } catch (ExternalToolException e) {
             throw new WSMLReasonerException();
         }
 
         // extract concepts from result:
         Set<Concept> concepts = new HashSet<Concept>();
-        for(VariableBinding binding : bindings)
-        {
+        for (VariableBinding binding : bindings) {
             String conceptIDString = binding.get("x");
-            concepts.add(wsmoFactory.getConcept(wsmoFactory.createIRI(conceptIDString)));
+            concepts.add(wsmoFactory.getConcept(wsmoFactory
+                    .createIRI(conceptIDString)));
         }
-        
-        return concepts;        
+
+        return concepts;
     }
 
-    public Set<Concept> getSuperConcepts(IRI ontologyID, Concept concept)
-    {
+    public Set<Concept> getSuperConcepts(IRI ontologyID, Concept concept) {
         // build query:
-        Term conceptID = leFactory.createIRI(concept.getIdentifier().toString());
-        Term conceptVariable = leFactory.createVariable("x");
-        Set<Term> conceptSet = new HashSet<Term>();
-        conceptSet.add(conceptVariable);
-        LogicalExpression query = leFactory.createMolecule(conceptID, conceptSet, null, null);
+        Term conceptID = wsmoFactory.createIRI(concept.getIdentifier()
+                .toString());
+        Term conceptVariable = wsmoFactory.createVariable("x");
+
+        LogicalExpression query = leFactory.createSubConceptMolecule(conceptID,
+                conceptVariable);
 
         // submit query to reasoner:
         Set<VariableBinding> bindings;
-        try
-        {
+        try {
             bindings = executeQueryI(ontologyID, query);
-        } catch(DatalogException e)
-        {
+        } catch (DatalogException e) {
             throw new WSMLReasonerException();
-        } catch(ExternalToolException e)
-        {
+        } catch (ExternalToolException e) {
             throw new WSMLReasonerException();
         }
 
         // extract concepts from result:
         Set<Concept> concepts = new HashSet<Concept>();
-        for(VariableBinding binding : bindings)
-        {
+        for (VariableBinding binding : bindings) {
             String conceptIDString = binding.get("x");
-            concepts.add(wsmoFactory.getConcept(wsmoFactory.createIRI(conceptIDString)));
+            concepts.add(wsmoFactory.getConcept(wsmoFactory
+                    .createIRI(conceptIDString)));
         }
-        
-        return concepts;        
+
+        return concepts;
     }
 
-    public boolean isMemberOf(IRI ontologyID, Instance instance, Concept concept)
-    {
+    public boolean isMemberOf(IRI ontologyID, Instance instance, Concept concept) {
         // build query:
-        Term conceptID = leFactory.createIRI(concept.getIdentifier().toString());
-        Term instanceID = leFactory.createIRI(instance.getIdentifier().toString());
-        Set<Term> conceptSet = new HashSet<Term>();
-        conceptSet.add(conceptID);
-        LogicalExpression query = leFactory.createMolecule(instanceID, null, conceptSet, null);
+        Term conceptID = wsmoFactory.createIRI(concept.getIdentifier()
+                .toString());
+        Term instanceID = wsmoFactory.createIRI(instance.getIdentifier()
+                .toString());
+        LogicalExpression query = leFactory.createMemberShipMolecule(
+                instanceID, conceptID);
 
         // submit query to reasoner:
         Set<VariableBinding> bindings;
-        try
-        {
+        try {
             bindings = executeQueryI(ontologyID, query);
-        } catch(DatalogException e)
-        {
+        } catch (DatalogException e) {
             throw new WSMLReasonerException();
-        } catch(ExternalToolException e)
-        {
+        } catch (ExternalToolException e) {
             throw new WSMLReasonerException();
         }
 
@@ -428,25 +399,23 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner, WSMLCoreRea
         return bindings.size() != 0;
     }
 
-    public boolean isSubConceptOf(IRI ontologyID, Concept subConcept, Concept superConcept)
-    {
+    public boolean isSubConceptOf(IRI ontologyID, Concept subConcept,
+            Concept superConcept) {
         // build query:
-        Term superconceptID = leFactory.createIRI(superConcept.getIdentifier().toString());
-        Term subconceptID = leFactory.createIRI(subConcept.getIdentifier().toString());
-        Set<Term> superConceptSet = new HashSet<Term>();
-        superConceptSet.add(superconceptID);
-        LogicalExpression query = leFactory.createMolecule(subconceptID, superConceptSet, null, null);
+        Term superconceptID = wsmoFactory.createIRI(superConcept
+                .getIdentifier().toString());
+        Term subconceptID = wsmoFactory.createIRI(subConcept.getIdentifier()
+                .toString());
+        LogicalExpression query = leFactory.createSubConceptMolecule(
+                subconceptID, superconceptID);
 
         // submit query to reasoner:
         Set<VariableBinding> bindings;
-        try
-        {
+        try {
             bindings = executeQueryI(ontologyID, query);
-        } catch(DatalogException e)
-        {
+        } catch (DatalogException e) {
             throw new WSMLReasonerException();
-        } catch(ExternalToolException e)
-        {
+        } catch (ExternalToolException e) {
             throw new WSMLReasonerException();
         }
 
@@ -454,84 +423,80 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner, WSMLCoreRea
         return bindings.size() != 0;
     }
 
-    public void registerOntology(Ontology ontology)
-    {
+    public void registerOntology(Ontology ontology) {
         Set<Ontology> ontologySingletonSet = new HashSet<Ontology>();
         ontologySingletonSet.add(ontology);
         registerOntology(ontologySingletonSet);
     }
 
-    public void registerOntology(Set<Ontology> ontologies)
-    {
+    public void registerOntology(Set<Ontology> ontologies) {
         // TODO Do some extra checking to make sure that ontologies which
         // are imported are converted before ontologies which import them
-        for(Ontology o : ontologies)
-        {
+        for (Ontology o : ontologies) {
             // convert the ontology to Datalog Program:
             String ontologyUri = o.getIdentifier().toString();
             Program kb = new Program();
             kb.addAll(convertOntology(o));
-            
+
             // Register the program at the built-in reasoner:
-            try
-            {
+            try {
                 builtInFacade.register(ontologyUri, kb);
-            } catch(ExternalToolException e)
-            {
+            } catch (ExternalToolException e) {
                 e.printStackTrace();
-                throw new IllegalArgumentException("This set of ontologies could not have been registered at the built-in reasoner", e);
+                throw new IllegalArgumentException(
+                        "This set of ontologies could not have been registered at the built-in reasoner",
+                        e);
             }
         }
     }
-    
-    public boolean entails(IRI baseOntologyID, IRI consequenceOntologyID)
-    {
+
+    public boolean entails(IRI baseOntologyID, IRI consequenceOntologyID) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException();
     }
 
-    protected Set<VariableBinding> executeQueryI(IRI ontologyID, LogicalExpression query) throws DatalogException, ExternalToolException
-    {
+    protected Set<VariableBinding> executeQueryI(IRI ontologyID,
+            LogicalExpression query) throws DatalogException,
+            ExternalToolException {
         ConjunctiveQuery datalogQuery = convertQuery(query);
-        QueryResult datalogResult = builtInFacade.evaluate(datalogQuery, ontologyID.toString());
+        QueryResult datalogResult = builtInFacade.evaluate(datalogQuery,
+                ontologyID.toString());
 
         // TODO: No incremental fetching of results is supported here at present
         return datalogResult.getVariableBindings();
     }
 
-    protected ConjunctiveQuery convertQuery(org.omwg.logexpression.LogicalExpression q)
-    {
+    protected ConjunctiveQuery convertQuery(
+            org.omwg.logicalexpression.LogicalExpression q) {
         WSML2DatalogTransformer wsml2datalog = new WSML2DatalogTransformer();
 
-        Map<String, String> leProperties = new HashMap<String, String>();
-        leProperties.put(Factory.PROVIDER_CLASS, "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
-
-        org.omwg.logexpression.LogicalExpressionFactory leFactory = (org.omwg.logexpression.LogicalExpressionFactory)Factory.createLogicalExpressionFactory(leProperties);
-
-        List<org.omwg.logexpression.terms.Variable> params = new LinkedList<org.omwg.logexpression.terms.Variable>();
+        List<Variable> params = new LinkedList<Variable>();
         LogicalExpressionVariableVisitor varVisitor = new LogicalExpressionVariableVisitor();
         q.accept(varVisitor);
         params.addAll(varVisitor.getFreeVariables(q));
-        Atom rHead = leFactory.createAtom(leFactory.createIRI(WSML_RESULT_PREDICATE), params);
+        Atom rHead = leFactory.createAtom(wsmoFactory
+                .createIRI(WSML_RESULT_PREDICATE), params);
 
-        LogicalExpressionNormalizer moleculeNormalizer = new OnePassReplacementNormalizer(MoleculeDecompositionRules.instantiate());
+        LogicalExpressionNormalizer moleculeNormalizer = new OnePassReplacementNormalizer(
+                MoleculeDecompositionRules.instantiate());
         // System.out.println("Q before molecule normalization: " + q);
         q = moleculeNormalizer.normalize(q);
         // System.out.println("Q after molecule normalization: " + q);
-        org.omwg.logexpression.LogicalExpression resultDefRule = leFactory.createBinary(CompoundExpression.IMPLIEDBY, rHead, q);
+        org.omwg.logicalexpression.LogicalExpression resultDefRule = leFactory
+                .createInverseImplication(rHead, q);
 
         Program p = wsml2datalog.transform(resultDefRule);
         // System.out.println("Query as program:" + p);
-        if(p.size() != 1)
+        if (p.size() != 1)
             throw new IllegalArgumentException("Could not transform query " + q);
         Rule rule = p.get(0);
-        if(!rule.getHead().getSymbol().getSymbolName().equals(WSML_RESULT_PREDICATE))
+        if (!rule.getHead().getSymbol().getSymbolName().equals(
+                WSML_RESULT_PREDICATE))
             throw new IllegalArgumentException("Could not transform query " + q);
 
         List<Literal> body = new LinkedList<Literal>();
 
-        for(Literal l : rule.getBody())
-        {
+        for (Literal l : rule.getBody()) {
             body.add(l);
         }
 

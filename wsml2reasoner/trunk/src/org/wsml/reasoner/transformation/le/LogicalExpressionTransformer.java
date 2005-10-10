@@ -19,7 +19,8 @@
 package org.wsml.reasoner.transformation.le;
 
 import java.util.Set;
-import org.omwg.logexpression.LogicalExpression;
+
+import org.omwg.logicalexpression.LogicalExpression;
 
 /**
  * A logical expression transformer transforms a single logical expression into a set of resulting logical expressions. The

@@ -24,10 +24,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.mandarax.reference.RightMostSelectionPolicy;
-import org.omwg.logexpression.AttrSpecification;
-import org.omwg.logexpression.Binary;
-import org.omwg.logexpression.LogicalExpression;
-import org.omwg.logexpression.terms.Term;
+import org.omwg.logicalexpression.AttrSpecification;
+import org.omwg.logicalexpression.Binary;
+import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
