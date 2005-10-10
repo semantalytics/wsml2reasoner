@@ -20,7 +20,6 @@
 package org.wsml.reasoner.datalog.wrapper.mins;
 
 import org.wsml.reasoner.datalog.DataTypeValue.DataType;
-import org.wsml.reasoner.datalog.wrapper.UnsupportedFeatureException;
 
 /**
  * Package: package org.wsml.reasoner.datalog.wrapper.mins;

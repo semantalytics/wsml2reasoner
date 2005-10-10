@@ -67,7 +67,7 @@ public class DLVSymbolFactory implements SymbolFactory {
 
     public String getValidPredicateName(String wsmlName, int arity) throws UnsupportedFeatureException {
         
-        if (!wsmlName.startsWith(org.omwg.logexpression.Constants.WSML_NAMESPACE)){
+        if (!wsmlName.startsWith(org.omwg.logicalexpression.Constants.WSML_NAMESPACE)){
             // Predicate is not built-in but application specific
             
             String result;

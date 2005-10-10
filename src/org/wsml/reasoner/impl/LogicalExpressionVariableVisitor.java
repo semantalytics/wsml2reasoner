@@ -24,15 +24,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.omwg.logexpression.Atom;
-import org.omwg.logexpression.AttrSpecification;
-import org.omwg.logexpression.Binary;
-import org.omwg.logexpression.LogicalExpression;
-import org.omwg.logexpression.Molecule;
-import org.omwg.logexpression.Quantified;
-import org.omwg.logexpression.Unary;
-import org.omwg.logexpression.terms.Term;
-import org.omwg.logexpression.terms.Variable;
+import org.omwg.logicalexpression.Atom;
+import org.omwg.logicalexpression.Binary;
+import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.Molecule;
+import org.omwg.logicalexpression.Quantified;
+import org.omwg.logicalexpression.Unary;
+import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.Variable;
 import org.wsml.reasoner.transformation.PostfixOrderLogicalExpressionVisitor;
 
 
@@ -102,7 +101,7 @@ public class LogicalExpressionVariableVisitor extends
 
    
     /* (non-Javadoc)
-     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleAtom(org.omwg.logexpression.Atom)
+     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleAtom(org.omwg.logicalexpression.Atom)
      */
     @Override
     public void handleAtom(Atom arg0) {
@@ -119,7 +118,7 @@ public class LogicalExpressionVariableVisitor extends
     }
 
     /* (non-Javadoc)
-     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleConstraint(org.omwg.logexpression.Unary)
+     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleConstraint(org.omwg.logicalexpression.Unary)
      */
     @Override
     public void handleConstraint(Unary arg0) {
@@ -127,7 +126,7 @@ public class LogicalExpressionVariableVisitor extends
     }
 
     /* (non-Javadoc)
-     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleEquivalent(org.omwg.logexpression.Binary)
+     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleEquivalent(org.omwg.logicalexpression.Binary)
      */
     @Override
     public void handleEquivalent(Binary arg0) {
@@ -135,7 +134,7 @@ public class LogicalExpressionVariableVisitor extends
     }
 
     /* (non-Javadoc)
-     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleExists(org.omwg.logexpression.Quantified)
+     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleExists(org.omwg.logicalexpression.Quantified)
      */
     @Override
     public void handleExists(Quantified arg0) {
@@ -143,7 +142,7 @@ public class LogicalExpressionVariableVisitor extends
     }
 
     /* (non-Javadoc)
-     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleForall(org.omwg.logexpression.Quantified)
+     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleForall(org.omwg.logicalexpression.Quantified)
      */
     @Override
     public void handleForall(Quantified arg0) {
@@ -151,7 +150,7 @@ public class LogicalExpressionVariableVisitor extends
     }
 
     /* (non-Javadoc)
-     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleImpliedBy(org.omwg.logexpression.Binary)
+     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleImpliedBy(org.omwg.logicalexpression.Binary)
      */
     @Override
     public void handleImpliedBy(Binary arg0) {
@@ -159,7 +158,7 @@ public class LogicalExpressionVariableVisitor extends
     }
 
     /* (non-Javadoc)
-     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleImplies(org.omwg.logexpression.Binary)
+     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleImplies(org.omwg.logicalexpression.Binary)
      */
     @Override
     public void handleImplies(Binary arg0) {
@@ -167,7 +166,7 @@ public class LogicalExpressionVariableVisitor extends
     }
 
     /* (non-Javadoc)
-     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleImpliesLP(org.omwg.logexpression.Binary)
+     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleImpliesLP(org.omwg.logicalexpression.Binary)
      */
     @Override
     public void handleImpliesLP(Binary arg0) {
@@ -175,7 +174,7 @@ public class LogicalExpressionVariableVisitor extends
     }
 
     /* (non-Javadoc)
-     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleMolecule(org.omwg.logexpression.Molecule)
+     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleMolecule(org.omwg.logicalexpression.Molecule)
      */
     @Override
     public void handleMolecule(Molecule arg0) {
@@ -222,7 +221,7 @@ public class LogicalExpressionVariableVisitor extends
     }
 
     /* (non-Javadoc)
-     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleNaf(org.omwg.logexpression.Unary)
+     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleNaf(org.omwg.logicalexpression.Unary)
      */
     @Override
     public void handleNaf(Unary arg0) {
@@ -230,7 +229,7 @@ public class LogicalExpressionVariableVisitor extends
     }
 
     /* (non-Javadoc)
-     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleNeg(org.omwg.logexpression.Unary)
+     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleNeg(org.omwg.logicalexpression.Unary)
      */
     @Override
     public void handleNeg(Unary arg0) {
@@ -238,7 +237,7 @@ public class LogicalExpressionVariableVisitor extends
     }
 
     /* (non-Javadoc)
-     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleOr(org.omwg.logexpression.Binary)
+     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleOr(org.omwg.logicalexpression.Binary)
      */
     @Override
     public void handleOr(Binary arg0) {
@@ -248,7 +247,7 @@ public class LogicalExpressionVariableVisitor extends
    // Some helper methods
     
     /* (non-Javadoc)
-     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleAnd(org.omwg.logexpression.Binary)
+     * @see org.wsml.reasoner.normalization.PostfixOrderLogicalExpressionVisitor#handleAnd(org.omwg.logicalexpression.Binary)
      */
     @Override
     public void handleAnd(Binary arg0) {

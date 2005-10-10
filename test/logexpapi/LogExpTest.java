@@ -24,11 +24,11 @@ import junit.framework.TestCase;
 
 import org.deri.wsmo4j.io.parser.wsml.LogExprParserImpl;
 import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
-import org.omwg.logexpression.AttrSpecification;
-import org.omwg.logexpression.LogicalExpression;
-import org.omwg.logexpression.LogicalExpressionFactory;
-import org.omwg.logexpression.Molecule;
-import org.omwg.logexpression.terms.Term;
+import org.omwg.logicalexpression.AttrSpecification;
+import org.omwg.logicalexpression.LogicalExpression;
+import org.wsmo.factory.LogicalExpressionFactory;
+import org.omwg.logicalexpression.Molecule;
+import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Namespace;
@@ -37,9 +37,9 @@ import org.wsmo.factory.WsmoFactory;
 
 public class LogExpTest extends TestCase {
 
-    private org.omwg.logexpression.io.Parser leParser = null;
+    private org.omwg.logicalexpression.io.Parser leParser = null;
 
-    private org.omwg.logexpression.io.Serializer logExprSerializer = null;
+    private org.omwg.logicalexpression.io.Serializer logExprSerializer = null;
 
     private LogicalExpressionFactory leFactory = null;
 
@@ -262,7 +262,7 @@ public class LogExpTest extends TestCase {
         Namespace ns = wf.createNamespace("ns", ontoIri);
         Ontology o = wf.createOntology(ontoIri);
         o.setDefaultNamespace(ns);
-        leParser = LogExprParserImpl.getInstance(o);
+        leParser = new LogExprParserImpl();
         logExprSerializer = new LogExprSerializerWSML(o);
         Map createParams = new HashMap();
         createParams.put(Factory.PROVIDER_CLASS,

@@ -26,7 +26,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.omwg.logexpression.Constants;
+import org.omwg.logicalexpression.Constants;
 import org.semanticweb.kaon2.api.KAON2Connection;
 import org.semanticweb.kaon2.api.KAON2Factory;
 import org.semanticweb.kaon2.api.KAON2Manager;

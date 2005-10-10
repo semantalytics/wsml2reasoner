@@ -19,12 +19,7 @@
 
 package org.wsml.reasoner.transformation;
 
-import org.omwg.logexpression.Atom;
-import org.omwg.logexpression.Binary;
-import org.omwg.logexpression.Molecule;
-import org.omwg.logexpression.Quantified;
-import org.omwg.logexpression.Unary;
-import org.omwg.logexpression.Visitor;
+import org.omwg.logicalexpression.*;
 
 /**
  * Implements a left-first, depth-first traversal over logical expressions.
@@ -189,4 +184,89 @@ public abstract class PostfixOrderLogicalExpressionVisitor implements Visitor {
     public void leaveImpliesLP(Binary arg0) {}
     public void leaveForall(Quantified arg0) {}
     public void leaveExists(Quantified arg0) {}
+
+    public void visitCompoundMolecule(CompoundMolecule arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void visitSubConceptMolecule(SubConceptMolecule arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void visitMemberShipMolecule(MembershipMolecule arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void visitAttributeValueMolecule(AttributeValueMolecule arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void visitAttributeContraintMolecule(AttributeConstraintMolecule arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void visitAttributeInferenceMolecule(AttributeInferenceMolecule arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void visitNegation(Negation arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void visitNegationAsFailure(NegationAsFailure arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void visitConstraint(Constraint arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void visitConjunction(Conjunction arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void visitDisjunction(Disjunction arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void visitInverseImplication(InverseImplication arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void visitImplication(Implication arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void visitEquivalence(Equivalence arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void visitLogicProgrammingRule(LogicProgrammingRule arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void visitUniversalQuantification(UniversalQuantification arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void visitExistentialQuantification(ExistentialQuantification arg0) {
+        // TODO Auto-generated method stub
+        
+    }
 }

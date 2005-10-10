@@ -21,8 +21,8 @@ package org.wsml.reasoner.transformation.le;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.omwg.logexpression.Binary;
-import org.omwg.logexpression.LogicalExpression;
+import org.omwg.logicalexpression.Binary;
+import org.omwg.logicalexpression.LogicalExpression;
 
 /**
  * This singleton class represents a set of normalization rules for pulling

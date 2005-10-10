@@ -24,8 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.omwg.logexpression.Atom;
-import org.omwg.logexpression.CompoundExpression;
+import org.omwg.logicalexpression.Atom;
 import org.wsml.reasoner.api.queryanswering.QueryAnsweringRequest;
 import org.wsml.reasoner.api.queryanswering.QueryAnsweringResult;
 import org.wsml.reasoner.datalog.ConjunctiveQuery;
@@ -41,6 +40,8 @@ import org.wsml.reasoner.transformation.le.LogicalExpressionNormalizer;
 import org.wsml.reasoner.transformation.le.MoleculeDecompositionRules;
 import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
 import org.wsmo.factory.Factory;
+import org.wsmo.factory.LogicalExpressionFactory;
+import org.wsmo.factory.WsmoFactory;
 
 /**
  * A prototypical implementation of a query answering engine for WSML Core.
@@ -57,8 +58,18 @@ public class QueryAnsweringReasoner {
 
     private DatalogReasonerFacade qaf = null;
 
+    protected WsmoFactory wsmoFactory;
+
+    protected LogicalExpressionFactory leFactory;
+
     public QueryAnsweringReasoner(DatalogReasonerFacade builtInFacade) {
         this.qaf = builtInFacade;
+        wsmoFactory = Factory.createWsmoFactory(null);
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(Factory.PROVIDER_CLASS,
+                "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
+        leFactory = (LogicalExpressionFactory) Factory
+                .createLogicalExpressionFactory(params);
     }
 
     private final static String WSML_RESULT_PREDICATE = "wsml:query_result";
@@ -81,21 +92,14 @@ public class QueryAnsweringReasoner {
     }
 
     private ConjunctiveQuery convertQuery(
-            org.omwg.logexpression.LogicalExpression q) {
+            org.omwg.logicalexpression.LogicalExpression q) {
         WSML2DatalogTransformer wsml2datalog = new WSML2DatalogTransformer();
 
-        Map<String, String> leProperties = new HashMap<String, String>();
-        leProperties.put(Factory.PROVIDER_CLASS,
-                "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
-
-        org.omwg.logexpression.LogicalExpressionFactory leFactory = (org.omwg.logexpression.LogicalExpressionFactory) Factory
-                .createLogicalExpressionFactory(leProperties);
-
-        List<org.omwg.logexpression.terms.Variable> params = new LinkedList<org.omwg.logexpression.terms.Variable>();
+        List<org.omwg.ontology.Variable> params = new LinkedList<org.omwg.ontology.Variable>();
         LogicalExpressionVariableVisitor varVisitor = new LogicalExpressionVariableVisitor();
         q.accept(varVisitor);
         params.addAll(varVisitor.getFreeVariables(q));
-        Atom rHead = leFactory.createAtom(leFactory
+        Atom rHead = leFactory.createAtom(wsmoFactory
                 .createIRI(WSML_RESULT_PREDICATE), params);
 
         LogicalExpressionNormalizer moleculeNormalizer = new OnePassReplacementNormalizer(
@@ -103,8 +107,8 @@ public class QueryAnsweringReasoner {
         // System.out.println("Q before molecule normalization: " + q);
         q = moleculeNormalizer.normalize(q);
         // System.out.println("Q after molecule normalization: " + q);
-        org.omwg.logexpression.LogicalExpression resultDefRule = leFactory
-                .createBinary(CompoundExpression.IMPLIEDBY, rHead, q);
+        org.omwg.logicalexpression.LogicalExpression resultDefRule = leFactory
+                .createLogicProgrammingRule(rHead, q);
 
         Program p = wsml2datalog.transform(resultDefRule);
         // System.out.println("Query as program:" + p);

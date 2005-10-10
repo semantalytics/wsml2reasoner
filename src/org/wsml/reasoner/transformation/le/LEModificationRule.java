@@ -18,7 +18,7 @@
  */
 package org.wsml.reasoner.transformation.le;
 
-import org.omwg.logexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpression;
 
 /**
  * A modification rule for a logical expression specifies the behaviour of how

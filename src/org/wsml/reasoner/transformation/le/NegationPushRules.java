@@ -18,10 +18,10 @@
  */
 package org.wsml.reasoner.transformation.le;
 
-import org.omwg.logexpression.Binary;
-import org.omwg.logexpression.CompoundExpression;
-import org.omwg.logexpression.LogicalExpression;
-import org.omwg.logexpression.Unary;
+import org.omwg.logicalexpression.Binary;
+import org.omwg.logicalexpression.CompoundExpression;
+import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.Unary;
 
 /**
  * This singleton class represents a set of normalization rules for pushing

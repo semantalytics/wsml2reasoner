@@ -18,21 +18,30 @@
  */
 package org.wsml.reasoner.datalog.wrapper.mins;
 
-import java.util.*;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.deri.mins.*;
-import org.deri.mins.Rule;
 import org.deri.mins.api.DBInterface;
 import org.deri.mins.builtins.*;
-import org.deri.mins.terms.*;
+import org.deri.mins.terms.ConstTerm;
 import org.deri.mins.terms.Term;
 import org.deri.mins.terms.Variable;
 import org.wsml.reasoner.api.queryanswering.VariableBinding;
-import org.wsml.reasoner.datalog.*;
-import org.wsml.reasoner.datalog.wrapper.*;
+import org.wsml.reasoner.datalog.ConjunctiveQuery;
+import org.wsml.reasoner.datalog.Constant;
+import org.wsml.reasoner.datalog.DataTypeValue;
+import org.wsml.reasoner.datalog.Literal;
+import org.wsml.reasoner.datalog.Predicate;
+import org.wsml.reasoner.datalog.Program;
+import org.wsml.reasoner.datalog.QueryResult;
+import org.wsml.reasoner.datalog.wrapper.DatalogReasonerFacade;
+import org.wsml.reasoner.datalog.wrapper.ExternalToolException;
+import org.wsml.reasoner.datalog.wrapper.UnsupportedFeatureException;
 import org.wsml.reasoner.impl.VariableBindingImpl;
 
 

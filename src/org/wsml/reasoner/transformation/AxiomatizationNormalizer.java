@@ -26,13 +26,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.omwg.logexpression.AttrSpecification;
-import org.omwg.logexpression.CompoundExpression;
-import org.omwg.logexpression.Constants;
-import org.omwg.logexpression.terms.IRI;
-import org.omwg.logexpression.terms.Term;
-import org.omwg.logexpression.terms.Value;
-import org.omwg.logexpression.terms.Variable;
+import org.omwg.logicalexpression.AttrSpecification;
+import org.omwg.logicalexpression.CompoundExpression;
+import org.omwg.logicalexpression.Constants;
+import org.omwg.logicalexpression.terms.IRI;
+import org.omwg.logicalexpression.terms.Term;
+import org.omwg.logicalexpression.terms.Value;
+import org.omwg.ontology.Variable;
 import org.omwg.ontology.*;
 import org.wsmo.common.AnonymousID;
 import org.wsmo.common.Identifier;
@@ -75,13 +75,13 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
     private WsmoFactory factory;
 
-    private org.omwg.logexpression.LogicalExpressionFactory leFactory;
+    private org.wsmo.factory.LogicalExpressionFactory leFactory;
 
     public AxiomatizationNormalizer() {
         Map<String, String> leProperties = new HashMap<String, String>();
         leProperties.put(Factory.PROVIDER_CLASS,
                 "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
-        leFactory = (org.omwg.logexpression.LogicalExpressionFactory) Factory
+        leFactory = (org.wsmo.factory.LogicalExpressionFactory) Factory
                 .createLogicalExpressionFactory(leProperties);
 
         factory = Factory.createWsmoFactory(null);
@@ -226,18 +226,18 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
      */
     private Set handleConceptAttribute(Attribute a, Term cTerm)
             throws InvalidModelException {
-        Set<org.omwg.logexpression.LogicalExpression> result = new HashSet<org.omwg.logexpression.LogicalExpression>();
+        Set<org.omwg.logicalexpression.LogicalExpression> result = new HashSet<org.omwg.logicalexpression.LogicalExpression>();
         Term attID = convertIRI(a.getIdentifier());
         
         Set<Type> rangeTypes = a.listTypes();
         Set<Term> moList = new HashSet<Term>();
         for (Type type : rangeTypes) {
             if (type instanceof Concept) {
-                org.omwg.logexpression.terms.IRI tIRI = convertIRI(((Concept) type)
+                org.omwg.logicalexpression.terms.IRI tIRI = convertIRI(((Concept) type)
                         .getIdentifier());
                 moList.add(tIRI);
             } else if (type instanceof SimpleDataType) {
-                org.omwg.logexpression.terms.IRI tIRI = convertIRI(((SimpleDataType) type)
+                org.omwg.logicalexpression.terms.IRI tIRI = convertIRI(((SimpleDataType) type)
                         .getIRI());
                 moList.add(tIRI);
             } else if (type instanceof ComplexDataType) {
@@ -248,7 +248,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         }
        
         //Handle attribute type
-        org.omwg.logexpression.AttrSpecification attSpec = null;
+        org.omwg.logicalexpression.AttrSpecification attSpec = null;
         if (a.isConstraining()) { //ofType
             attSpec = leFactory
             .createAttrSpecification(AttrSpecification.ATTR_CONSTRAINT, attID,
@@ -259,7 +259,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                     moList);
         }
         
-        org.omwg.logexpression.LogicalExpression typeExpr = leFactory.createMolecule(cTerm, null, null, toSet(attSpec));
+        org.omwg.logicalexpression.LogicalExpression typeExpr = leFactory.createMolecule(cTerm, null, null, toSet(attSpec));
         result.add(typeExpr);
 
         // Handle Attribute Feature
@@ -267,7 +267,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         Term y = leFactory.createVariable("y");
         Term z = leFactory.createVariable("z");
 
-        org.omwg.logexpression.LogicalExpression m1, m2, m3, m4, m5, m6, m7;
+        org.omwg.logicalexpression.LogicalExpression m1, m2, m3, m4, m5, m6, m7;
 
         m1 = leFactory.createMolecule(x, null, toSet(cTerm), null);
         m2 = leFactory.createMolecule(y, null, toSet(cTerm), null);
@@ -289,11 +289,11 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
         if (a.isTransitive()) {
 
-            org.omwg.logexpression.LogicalExpression h1, h2, h3;
+            org.omwg.logicalexpression.LogicalExpression h1, h2, h3;
             h1 = leFactory.createBinary(CompoundExpression.AND, m1, m2);
             h2 = leFactory.createBinary(CompoundExpression.AND, h1, m3);
             h3 = leFactory.createBinary(CompoundExpression.AND, h2, m4);
-            org.omwg.logexpression.LogicalExpression transExpr = leFactory
+            org.omwg.logicalexpression.LogicalExpression transExpr = leFactory
                     .createBinary(CompoundExpression.IMPLIES, h3, m5);
 
             result.add(transExpr);
@@ -302,11 +302,11 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
         if (a.isSymmetric()) {
 
-            org.omwg.logexpression.LogicalExpression h1, h2;
+            org.omwg.logicalexpression.LogicalExpression h1, h2;
             h1 = leFactory.createBinary(CompoundExpression.AND, m1, m2);
             h2 = leFactory.createBinary(CompoundExpression.AND, h1, m3);
 
-            org.omwg.logexpression.LogicalExpression symmExpr = leFactory
+            org.omwg.logicalexpression.LogicalExpression symmExpr = leFactory
                     .createBinary(CompoundExpression.IMPLIES, h2, m6);
 
             result.add(symmExpr);
@@ -315,7 +315,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
         if (a.isReflexive()) {
 
-            org.omwg.logexpression.LogicalExpression reflExpr = leFactory
+            org.omwg.logicalexpression.LogicalExpression reflExpr = leFactory
                     .createBinary(CompoundExpression.IMPLIES, m1, m7);
 
             result.add(reflExpr);
@@ -324,22 +324,22 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
         if (a.getInverseOf() != null) {
 
-            org.omwg.logexpression.LogicalExpression h1, h2;
+            org.omwg.logicalexpression.LogicalExpression h1, h2;
             Attribute inverseAtt = a.getInverseOf();
             IRI inversetAttIRI = convertIRI(a.getIdentifier());
 
             AttrSpecification attrSpec4 = leFactory.createAttrSpecification(
                     AttrSpecification.ATTR_VALUE, inversetAttIRI, toSet(x));
-            org.omwg.logexpression.LogicalExpression m8 = leFactory
+            org.omwg.logicalexpression.LogicalExpression m8 = leFactory
                     .createMolecule(y, null, null, toSet(attrSpec4));
 
             h1 = leFactory.createBinary(CompoundExpression.AND, m1, m3);
 
-            org.omwg.logexpression.LogicalExpression invExpr1 = leFactory
+            org.omwg.logicalexpression.LogicalExpression invExpr1 = leFactory
                     .createBinary(CompoundExpression.IMPLIES, h1, m8);
 
             h2 = leFactory.createBinary(CompoundExpression.AND, m1, m8);
-            org.omwg.logexpression.LogicalExpression invExpr2 = leFactory
+            org.omwg.logicalexpression.LogicalExpression invExpr2 = leFactory
                     .createBinary(CompoundExpression.IMPLIES, h2, m3);
 
             result.add(invExpr1);
@@ -353,7 +353,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
             List headArgs = new LinkedList();
             headArgs.add(x);
-            org.omwg.logexpression.LogicalExpression head = leFactory
+            org.omwg.logicalexpression.LogicalExpression head = leFactory
                     .createAtom(leFactory.createIRI("mincard_"
                             + cTerm.toString() + "_" + attID), headArgs); // is
             // new
@@ -372,10 +372,10 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
             }
             AttrSpecification as = leFactory.createAttrSpecification(
                     AttrSpecification.ATTR_VALUE, attID, xAttVals);
-            org.omwg.logexpression.LogicalExpression xValsMolecule = leFactory
+            org.omwg.logicalexpression.LogicalExpression xValsMolecule = leFactory
                     .createMolecule(x, null, null, toSet(as));
 
-            org.omwg.logexpression.LogicalExpression body = leFactory
+            org.omwg.logicalexpression.LogicalExpression body = leFactory
                     .createBinary(CompoundExpression.AND, m1, xValsMolecule);
 
             // add all inequality statements on pairs of auxilliary predicates.
@@ -384,7 +384,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                     List iesArgs = new LinkedList();
                     iesArgs.add(auxVars[i]);
                     iesArgs.add(auxVars[j]);
-                    org.omwg.logexpression.LogicalExpression nextInEqStatement = leFactory
+                    org.omwg.logicalexpression.LogicalExpression nextInEqStatement = leFactory
                             .createAtom(leFactory.createIRI(Constants.INEQUAL),
                                     iesArgs);
 
@@ -393,16 +393,16 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 }
             }
 
-            org.omwg.logexpression.LogicalExpression minCardExpr1 = leFactory
+            org.omwg.logicalexpression.LogicalExpression minCardExpr1 = leFactory
                     .createBinary(CompoundExpression.LP_IMPL, head, body);
 
-            org.omwg.logexpression.LogicalExpression nafExp = leFactory
+            org.omwg.logicalexpression.LogicalExpression nafExp = leFactory
                     .createUnary(CompoundExpression.NAF, head);
 
-            org.omwg.logexpression.LogicalExpression constraintbody = leFactory
+            org.omwg.logicalexpression.LogicalExpression constraintbody = leFactory
                     .createBinary(CompoundExpression.AND, m1, nafExp);
 
-            org.omwg.logexpression.LogicalExpression minCardExpr2 = leFactory
+            org.omwg.logicalexpression.LogicalExpression minCardExpr2 = leFactory
                     .createUnary(CompoundExpression.CONSTRAINT, constraintbody);
 
             result.add(minCardExpr1);
@@ -422,10 +422,10 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
             }
             AttrSpecification as = leFactory.createAttrSpecification(
                     AttrSpecification.ATTR_VALUE, attID, xAttVals);
-            org.omwg.logexpression.LogicalExpression xValsMolecule = leFactory
+            org.omwg.logicalexpression.LogicalExpression xValsMolecule = leFactory
                     .createMolecule(x, null, null, toSet(as));
 
-            org.omwg.logexpression.LogicalExpression body = leFactory
+            org.omwg.logicalexpression.LogicalExpression body = leFactory
                     .createBinary(CompoundExpression.AND, m1, xValsMolecule);
 
             // add all inequality statements on pairs of auxilliary predicates.
@@ -434,7 +434,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                     List iesArgs = new LinkedList();
                     iesArgs.add(auxVars[i]);
                     iesArgs.add(auxVars[j]);
-                    org.omwg.logexpression.LogicalExpression nextInEqStatement = leFactory
+                    org.omwg.logicalexpression.LogicalExpression nextInEqStatement = leFactory
                             .createAtom(leFactory.createIRI(Constants.INEQUAL),
                                     iesArgs);
 
@@ -443,7 +443,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 }
             }
 
-            org.omwg.logexpression.LogicalExpression maxCardExpr = leFactory
+            org.omwg.logicalexpression.LogicalExpression maxCardExpr = leFactory
                     .createUnary(CompoundExpression.CONSTRAINT, body);
 
             result.add(maxCardExpr);
@@ -518,10 +518,10 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
      *         definition.
      * @throws InvalidModelException
      */
-    private org.omwg.logexpression.LogicalExpression handleInstanceAttribute(
+    private org.omwg.logicalexpression.LogicalExpression handleInstanceAttribute(
             Attribute a, Set aVals, Term iTerm) throws InvalidModelException {
 
-        org.omwg.logexpression.LogicalExpression result;
+        org.omwg.logicalexpression.LogicalExpression result;
 
         // This is like it has been described from Table 8.1 in D.16.1 v0.3
 
@@ -541,7 +541,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
         }
 
-        org.omwg.logexpression.AttrSpecification attSpec = leFactory
+        org.omwg.logicalexpression.AttrSpecification attSpec = leFactory
                 .createAttrSpecification(AttrSpecification.ATTR_VALUE, attID,
                         valList);
 
@@ -564,7 +564,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
     private void handleRelation(Relation r, Ontology o)
             throws SynchronisationException, InvalidModelException {
 
-        Set<org.omwg.logexpression.LogicalExpression> lExprs = new HashSet<org.omwg.logexpression.LogicalExpression>();
+        Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new HashSet<org.omwg.logicalexpression.LogicalExpression>();
 
         IRI rID = convertIRI(r.getIdentifier());
         int rArity = r.listParameters().size();
@@ -572,19 +572,19 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
         List<Term> predArgs = new LinkedList();
         for (int i = 0; i < rArity; i++) {
-            org.omwg.logexpression.terms.Variable v = leFactory
+            org.omwg.ontology.Variable v = leFactory
                     .createVariable("x" + (i + 1));
             predArgs.add(v);
         }
 
-        org.omwg.logexpression.LogicalExpression a1 = leFactory.createAtom(rID,
+        org.omwg.logicalexpression.LogicalExpression a1 = leFactory.createAtom(rID,
                 predArgs);
 
         for (Relation nextSuperRelation : suprels) {
             IRI srID = convertIRI(nextSuperRelation.getIdentifier());
-            org.omwg.logexpression.LogicalExpression a2 = leFactory.createAtom(
+            org.omwg.logicalexpression.LogicalExpression a2 = leFactory.createAtom(
                     srID, predArgs);
-            org.omwg.logexpression.LogicalExpression newExpr = leFactory
+            org.omwg.logicalexpression.LogicalExpression newExpr = leFactory
                     .createBinary(CompoundExpression.IMPLIES, a1, a2);
             lExprs.add(newExpr);
         }
@@ -637,10 +637,10 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
      *            axioms
      * @throws InvalidModelException
      */
-    private org.omwg.logexpression.LogicalExpression handleRelationParameter(
+    private org.omwg.logicalexpression.LogicalExpression handleRelationParameter(
             Parameter rp, IRI rID, int pos, int arity)
             throws InvalidModelException {
-        org.omwg.logexpression.LogicalExpression result;
+        org.omwg.logicalexpression.LogicalExpression result;
 
         Term paramVar = null;
         List<Variable> paramVars = new LinkedList();
@@ -653,18 +653,18 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
             }
         }
 
-        org.omwg.logexpression.LogicalExpression body = leFactory.createAtom(
+        org.omwg.logicalexpression.LogicalExpression body = leFactory.createAtom(
                 rID, paramVars);
 
         Set<Type> rangeTypes = rp.listTypes();
         Set<Term> rangeTermList = new HashSet<Term>();
         for (Object type : rangeTypes) {
             if (type instanceof Concept) {
-                org.omwg.logexpression.terms.IRI tIRI = convertIRI(((Concept) type)
+                org.omwg.logicalexpression.terms.IRI tIRI = convertIRI(((Concept) type)
                         .getIdentifier());
                 rangeTermList.add(tIRI);
             } else if (type instanceof SimpleDataType) {
-                org.omwg.logexpression.terms.IRI tIRI = convertIRI(((SimpleDataType) type)
+                org.omwg.logicalexpression.terms.IRI tIRI = convertIRI(((SimpleDataType) type)
                         .getIRI());
                 rangeTermList.add(tIRI);
             } else if (type instanceof ComplexDataType) {
@@ -674,7 +674,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
             }
         }
 
-        org.omwg.logexpression.LogicalExpression head = leFactory
+        org.omwg.logicalexpression.LogicalExpression head = leFactory
                 .createMolecule(paramVar, null, rangeTermList, null);
 
         if (!rp.isConstraining()) {
@@ -683,9 +683,9 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                     head);
         } else {
             // ofType
-            org.omwg.logexpression.LogicalExpression naf = leFactory
+            org.omwg.logicalexpression.LogicalExpression naf = leFactory
                     .createUnary(CompoundExpression.NAF, head);
-            org.omwg.logexpression.LogicalExpression cBody = leFactory
+            org.omwg.logicalexpression.LogicalExpression cBody = leFactory
                     .createBinary(CompoundExpression.AND, body, naf);
             result = leFactory
                     .createUnary(CompoundExpression.CONSTRAINT, cBody);
@@ -704,7 +704,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
      * @param rID -
      *            the IRI of the relation to which this instance belongs to
      */
-    private org.omwg.logexpression.LogicalExpression handleRelationInstance(
+    private org.omwg.logicalexpression.LogicalExpression handleRelationInstance(
             RelationInstance ri, IRI rID) {
 
         List<Value> parVals = ri.listParameterValues();
@@ -754,7 +754,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
      * @param d -
      *            the data value in the conceptual syntax part that needs to be
      *            converted.
-     * @return a org.omwg.logexpression.terms.Term object that represents the
+     * @return a org.omwg.logicalexpression.terms.Term object that represents the
      *         same datavalue.
      */
     private Term convertDataValue(DataValue d) {

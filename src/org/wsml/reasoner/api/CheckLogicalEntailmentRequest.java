@@ -19,7 +19,7 @@
 
 package org.wsml.reasoner.api;
 
-import org.omwg.logexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpression;
 
 /**
  *  An interface for reasoning request that refer to 

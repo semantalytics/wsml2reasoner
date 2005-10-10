@@ -23,11 +23,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.omwg.logexpression.CompoundExpression;
-import org.omwg.logexpression.LogicalExpression;
-import org.omwg.logexpression.LogicalExpressionFactory;
-import org.omwg.logexpression.Unary;
+import org.omwg.logicalexpression.CompoundExpression;
+import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.Unary;
 import org.wsmo.factory.Factory;
+import org.wsmo.factory.LogicalExpressionFactory;
 
 /**
  * This class applies a set of normalization rules to the sub-expressions of a

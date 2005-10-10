@@ -25,16 +25,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import org.omwg.logexpression.Atom;
-import org.omwg.logexpression.AtomicExpression;
-import org.omwg.logexpression.Binary;
-import org.omwg.logexpression.LogicalExpression;
-import org.omwg.logexpression.Molecule;
-import org.omwg.logexpression.Quantified;
-import org.omwg.logexpression.Unary;
-import org.omwg.logexpression.terms.IRI;
-import org.omwg.logexpression.terms.Term;
-import org.omwg.logexpression.terms.Variable;
+import org.omwg.logicalexpression.Atom;
+import org.omwg.logicalexpression.AtomicExpression;
+import org.omwg.logicalexpression.Binary;
+import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.Molecule;
+import org.omwg.logicalexpression.Quantified;
+import org.omwg.logicalexpression.Unary;
+import org.omwg.logicalexpression.terms.IRI;
+import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.Variable;
 import org.omwg.ontology.ComplexDataType;
 import org.omwg.ontology.SimpleDataType;
 import org.omwg.ontology.WsmlDecimal;
@@ -115,13 +115,13 @@ public class WSML2DatalogTransformer {
      * @return a datalog program that represents the given set of WSML rules.
      */
     public Program transform(
-            Set<? extends org.omwg.logexpression.LogicalExpression> rules)
+            Set<? extends org.omwg.logicalexpression.LogicalExpression> rules)
             throws IllegalArgumentException {
         Program result = new Program();
 
         DatalogVisitor datalogVisitor = new DatalogVisitor();
 
-        for (org.omwg.logexpression.LogicalExpression r : rules) {
+        for (org.omwg.logicalexpression.LogicalExpression r : rules) {
             r.accept(datalogVisitor);
             Program translation = (Program) datalogVisitor.getSerializedObject();
             if (translation != null) {
@@ -148,9 +148,9 @@ public class WSML2DatalogTransformer {
      * @throws IllegalArgumentException -
      *             if the given rule can not be translated to datalog.
      */
-    public Program transform(org.omwg.logexpression.LogicalExpression rule)
+    public Program transform(org.omwg.logicalexpression.LogicalExpression rule)
             throws IllegalArgumentException {
-        Set<org.omwg.logexpression.LogicalExpression> rules = new HashSet<org.omwg.logexpression.LogicalExpression>();
+        Set<org.omwg.logicalexpression.LogicalExpression> rules = new HashSet<org.omwg.logicalexpression.LogicalExpression>();
         rules.add(rule);
         return transform(rules);
     }
@@ -313,7 +313,7 @@ public class WSML2DatalogTransformer {
         /*
          * (non-Javadoc)
          * 
-         * @see org.wsml.reasoner.normalization.DepthFirstLogicalExpressionVisitor#handleAtom(org.omwg.logexpression.Atom)
+         * @see org.wsml.reasoner.normalization.DepthFirstLogicalExpressionVisitor#handleAtom(org.omwg.logicalexpression.Atom)
          */
         @Override
         public void handleAtom(Atom atom) {
@@ -357,7 +357,7 @@ public class WSML2DatalogTransformer {
         /*
          * (non-Javadoc)
          * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleConstraint(org.omwg.logexpression.Unary)
+         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleConstraint(org.omwg.logicalexpression.Unary)
          */
         @Override
         public void enterConstraint(Unary arg0) {
@@ -373,7 +373,7 @@ public class WSML2DatalogTransformer {
         /*
          * (non-Javadoc)
          * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleEquivalent(org.omwg.logexpression.Binary)
+         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleEquivalent(org.omwg.logicalexpression.Binary)
          */
         @Override
         public void enterEquivalent(Binary arg0) {
@@ -384,7 +384,7 @@ public class WSML2DatalogTransformer {
         /*
          * (non-Javadoc)
          * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleExists(org.omwg.logexpression.Quantified)
+         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleExists(org.omwg.logicalexpression.Quantified)
          */
         @Override
         public void enterExists(Quantified arg0) {
@@ -395,7 +395,7 @@ public class WSML2DatalogTransformer {
         /*
          * (non-Javadoc)
          * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleForall(org.omwg.logexpression.Quantified)
+         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleForall(org.omwg.logicalexpression.Quantified)
          */
         @Override
         public void enterForall(Quantified arg0) {
@@ -460,7 +460,7 @@ public class WSML2DatalogTransformer {
         /*
          * (non-Javadoc)
          * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleNeg(org.omwg.logexpression.Unary)
+         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleNeg(org.omwg.logicalexpression.Unary)
          */
         @Override
         public void enterNeg(Unary arg0) {
@@ -471,7 +471,7 @@ public class WSML2DatalogTransformer {
         /*
          * (non-Javadoc)
          * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#enterNaf(org.omwg.logexpression.Unary)
+         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#enterNaf(org.omwg.logicalexpression.Unary)
          */
         @Override
         public void enterNaf(Unary naf) {
@@ -486,7 +486,7 @@ public class WSML2DatalogTransformer {
         /*
          * (non-Javadoc)
          * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleOr(org.omwg.logexpression.Binary)
+         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleOr(org.omwg.logicalexpression.Binary)
          */
         @Override
         public void enterOr(Binary arg0) {
@@ -497,7 +497,7 @@ public class WSML2DatalogTransformer {
         /*
          * (non-Javadoc)
          * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#enterImpliedBy(org.omwg.logexpression.Binary)
+         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#enterImpliedBy(org.omwg.logicalexpression.Binary)
          */
         @Override
         public void enterImpliedBy(Binary arg0) {
@@ -513,7 +513,7 @@ public class WSML2DatalogTransformer {
         /*
          * (non-Javadoc)
          * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#enterImplies(org.omwg.logexpression.Binary)
+         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#enterImplies(org.omwg.logicalexpression.Binary)
          */
         @Override
         public void enterImplies(Binary arg0) {
@@ -529,7 +529,7 @@ public class WSML2DatalogTransformer {
         /*
          * (non-Javadoc)
          * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#enterImpliesLP(org.omwg.logexpression.Binary)
+         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#enterImpliesLP(org.omwg.logicalexpression.Binary)
          */
         @Override
         public void enterImpliesLP(Binary arg0) {
@@ -545,7 +545,7 @@ public class WSML2DatalogTransformer {
         /*
          * (non-Javadoc)
          * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleImpliedBy(org.omwg.logexpression.Binary)
+         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleImpliedBy(org.omwg.logicalexpression.Binary)
          */
         @Override
         public void handleImpliedBy(Binary arg0) {
@@ -556,7 +556,7 @@ public class WSML2DatalogTransformer {
         /*
          * (non-Javadoc)
          * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleImplies(org.omwg.logexpression.Binary)
+         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleImplies(org.omwg.logicalexpression.Binary)
          */
         @Override
         public void handleImplies(Binary arg0) {
@@ -567,7 +567,7 @@ public class WSML2DatalogTransformer {
         /*
          * (non-Javadoc)
          * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleImpliesLP(org.omwg.logexpression.Binary)
+         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleImpliesLP(org.omwg.logicalexpression.Binary)
          */
         @Override
         public void handleImpliesLP(Binary arg0) {

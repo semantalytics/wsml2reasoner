@@ -19,7 +19,7 @@
 
 package org.wsml.reasoner.api.queryanswering;
 
-import org.omwg.logexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpression;
 import org.wsml.reasoner.api.OntologyBasedRequest;
 
 /** 

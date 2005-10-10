@@ -30,7 +30,7 @@ import junit.framework.TestCase;
 
 import org.deri.wsmo4j.io.parser.wsml.LogExprParserImpl;
 import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
-import org.omwg.logexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.OntologyRegistrationRequest;
 import org.wsml.reasoner.api.WSMLReasoner;
@@ -53,9 +53,9 @@ public class BaseReasonerTest extends TestCase {
 
     protected static Ontology o = null;
 
-    protected org.omwg.logexpression.io.Parser leParser = null;
+    protected org.omwg.logicalexpression.io.Parser leParser = null;
 
-    protected org.omwg.logexpression.io.Serializer logExprSerializer = null;
+    protected org.omwg.logicalexpression.io.Serializer logExprSerializer = null;
 
     protected static void setupScenario(String ontologyFile) throws Exception {
         // Set up factories for creating WSML elements
@@ -64,7 +64,7 @@ public class BaseReasonerTest extends TestCase {
         leProperties.put(Factory.PROVIDER_CLASS,
                 "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
 
-        org.omwg.logexpression.LogicalExpressionFactory leFactory = (org.omwg.logexpression.LogicalExpressionFactory) Factory
+        org.wsmo.factory.LogicalExpressionFactory leFactory = (org.wsmo.factory.LogicalExpressionFactory) Factory
                 .createLogicalExpressionFactory(leProperties);
 
         WsmoFactory factory = Factory.createWsmoFactory(null);

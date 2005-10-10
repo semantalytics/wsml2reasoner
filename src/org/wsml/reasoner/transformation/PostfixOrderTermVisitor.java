@@ -19,7 +19,7 @@
 
 package org.wsml.reasoner.transformation;
 
-import org.omwg.logexpression.terms.*;
+import org.omwg.logicalexpression.terms.*;
 
 
 
@@ -49,7 +49,7 @@ import org.omwg.logexpression.terms.*;
 public class PostfixOrderTermVisitor implements VisitorTerms {
 
     /* (non-Javadoc)
-	 * @see org.omwg.logexpression.terms.VisitorTerms#getSerializedObject()
+	 * @see org.omwg.logicalexpression.terms.VisitorTerms#getSerializedObject()
 	 * should be obsolate (next snapshot)
 	 * TODO remove!
 	 */

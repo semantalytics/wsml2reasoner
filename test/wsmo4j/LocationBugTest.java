@@ -27,7 +27,7 @@ public class LocationBugTest extends TestCase {
         leProperties.put(Factory.PROVIDER_CLASS,
                 "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
 
-        org.omwg.logexpression.LogicalExpressionFactory leFactory = (org.omwg.logexpression.LogicalExpressionFactory) Factory
+        org.wsmo.factory.LogicalExpressionFactory leFactory = (org.wsmo.factory.LogicalExpressionFactory) Factory
                 .createLogicalExpressionFactory(leProperties);
 
         WsmoFactory factory = Factory.createWsmoFactory(null);

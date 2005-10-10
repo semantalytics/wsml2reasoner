@@ -19,12 +19,12 @@
 
 package org.wsml.reasoner.transformation;
 
-import org.omwg.logexpression.Atom;
-import org.omwg.logexpression.Binary;
-import org.omwg.logexpression.Molecule;
-import org.omwg.logexpression.Quantified;
-import org.omwg.logexpression.Unary;
-import org.omwg.logexpression.Visitor;
+import org.omwg.logicalexpression.Atom;
+import org.omwg.logicalexpression.Binary;
+import org.omwg.logicalexpression.Molecule;
+import org.omwg.logicalexpression.Quantified;
+import org.omwg.logicalexpression.Unary;
+import org.omwg.logicalexpression.Visitor;
 
 /**
  * Implements a left-first, depth-first traversal over logical expressions.
