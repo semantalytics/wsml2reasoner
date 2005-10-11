@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
@@ -95,13 +96,13 @@ public class ReasonerExample {
         reasoner.registerOntology(exampleOntology);
 
         // Execute query request
-        Set<Map<Variable, Object>> result = reasoner.executeQuery(
+        Set<Map<Variable, Term>> result = reasoner.executeQuery(
                 (IRI) exampleOntology.getIdentifier(), query);
 
         // print out the results:
         System.out.println("The query '" + query
                 + "' has the following results:");
-        for (Map<Variable, Object> vBinding : result) {
+        for (Map<Variable, Term> vBinding : result) {
             for (Variable var : vBinding.keySet()) {
                 System.out.print(var + ": " + vBinding.get(var) + "; ");
             }

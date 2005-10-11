@@ -235,7 +235,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // execute query:
         Set<VariableBinding> bindings;
         try {
-            bindings = executeQueryI(ontologyID, query);
+            bindings = internalExecuteQuery(ontologyID, query);
         } catch (DatalogException e) {
             throw new WSMLReasonerException();
         } catch (ExternalToolException e) {
@@ -243,14 +243,17 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         }
 
         // wrap result:
-        Set<Map<Variable, Object>> result = new HashSet<Map<Variable, Object>>();
+        Set<Map<Variable, Term>> result = new HashSet<Map<Variable, Term>>();
         for (VariableBinding binding : bindings) {
-            Map<Variable, Object> newBinding = new HashMap<Variable, Object>();
+            Map<Variable, Term> newBinding = new HashMap<Variable, Term>();
             for (String varString : binding.keySet()) {
                 if (varString.charAt(0) == '?')
                     varString = varString.substring(1);
                 Variable variable = wsmoFactory.createVariable(varString);
-                Object value = binding.get(varString);
+                // TODO At the moment we assume that the value is an IRI, later
+                // it can be a SimpleValue, as well
+                String valueString = binding.get(varString);
+                IRI value = wsmoFactory.createIRI(valueString);
                 newBinding.put(variable, value);
             }
             result.add(newBinding);
@@ -270,7 +273,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // submit query to reasoner:
         Set<VariableBinding> bindings;
         try {
-            bindings = executeQueryI(ontologyID, query);
+            bindings = internalExecuteQuery(ontologyID, query);
         } catch (DatalogException e) {
             throw new WSMLReasonerException();
         } catch (ExternalToolException e) {
@@ -299,7 +302,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // submit query to reasoner:
         Set<VariableBinding> bindings;
         try {
-            bindings = executeQueryI(ontologyID, query);
+            bindings = internalExecuteQuery(ontologyID, query);
         } catch (DatalogException e) {
             throw new WSMLReasonerException();
         } catch (ExternalToolException e) {
@@ -328,7 +331,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // submit query to reasoner:
         Set<VariableBinding> bindings;
         try {
-            bindings = executeQueryI(ontologyID, query);
+            bindings = internalExecuteQuery(ontologyID, query);
         } catch (DatalogException e) {
             throw new WSMLReasonerException();
         } catch (ExternalToolException e) {
@@ -358,7 +361,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // submit query to reasoner:
         Set<VariableBinding> bindings;
         try {
-            bindings = executeQueryI(ontologyID, query);
+            bindings = internalExecuteQuery(ontologyID, query);
         } catch (DatalogException e) {
             throw new WSMLReasonerException();
         } catch (ExternalToolException e) {
@@ -388,7 +391,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // submit query to reasoner:
         Set<VariableBinding> bindings;
         try {
-            bindings = executeQueryI(ontologyID, query);
+            bindings = internalExecuteQuery(ontologyID, query);
         } catch (DatalogException e) {
             throw new WSMLReasonerException();
         } catch (ExternalToolException e) {
@@ -412,7 +415,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // submit query to reasoner:
         Set<VariableBinding> bindings;
         try {
-            bindings = executeQueryI(ontologyID, query);
+            bindings = internalExecuteQuery(ontologyID, query);
         } catch (DatalogException e) {
             throw new WSMLReasonerException();
         } catch (ExternalToolException e) {
@@ -455,7 +458,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         throw new UnsupportedOperationException();
     }
 
-    protected Set<VariableBinding> executeQueryI(IRI ontologyID,
+    protected Set<VariableBinding> internalExecuteQuery(IRI ontologyID,
             LogicalExpression query) throws DatalogException,
             ExternalToolException {
         ConjunctiveQuery datalogQuery = convertQuery(query);
