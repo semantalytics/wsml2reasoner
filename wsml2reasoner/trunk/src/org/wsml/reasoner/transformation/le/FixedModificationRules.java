@@ -34,6 +34,9 @@ import org.wsmo.factory.LogicalExpressionFactory;
  */
 public abstract class FixedModificationRules implements List
 {
+    protected static final byte CONJUNCTION = 0;
+    protected static final byte DISJUNCTION = 1;
+    
     protected List rules;
     protected static LogicalExpressionFactory leFactory;
 
@@ -48,7 +51,17 @@ public abstract class FixedModificationRules implements List
         }
     }
     
-    protected static LogicalExpression buildNary(int operationCode, Set<LogicalExpression> expressions)
+    protected static LogicalExpression buildNaryConjunction(Set<LogicalExpression> expressions)
+    {
+        return buildNary(CONJUNCTION, expressions);
+    }
+
+    protected static LogicalExpression buildNaryDisjunction(Set<LogicalExpression> expressions)
+    {
+        return buildNary(DISJUNCTION, expressions);
+    }
+    
+    protected static LogicalExpression buildNary(byte operationCode, Set<LogicalExpression> expressions)
     {
         LogicalExpression nary = null;
         Iterator<LogicalExpression> leIterator = expressions.iterator();
@@ -58,7 +71,16 @@ public abstract class FixedModificationRules implements List
         }
         while(leIterator.hasNext())
         {
-            nary = leFactory.createBinary(operationCode, nary, leIterator.next());
+            switch(operationCode)
+            {
+            case CONJUNCTION:
+                nary = leFactory.createConjunction(nary, leIterator.next());
+                break;
+
+            case DISJUNCTION:
+                nary = leFactory.createDisjunction(nary, leIterator.next());
+                break;
+            }
         }
         return nary;
     }

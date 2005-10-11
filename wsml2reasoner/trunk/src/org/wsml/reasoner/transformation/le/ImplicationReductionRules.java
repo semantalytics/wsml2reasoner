@@ -20,6 +20,8 @@ package org.wsml.reasoner.transformation.le;
 
 import org.omwg.logicalexpression.Binary;
 import org.omwg.logicalexpression.CompoundExpression;
+import org.omwg.logicalexpression.Equivalence;
+import org.omwg.logicalexpression.Implication;
 import org.omwg.logicalexpression.LogicalExpression;
 
 /**
@@ -53,22 +55,18 @@ public class ImplicationReductionRules extends FixedModificationRules
     {
         public LogicalExpression apply(LogicalExpression expression)
         {
-            Binary equivalence = (Binary)expression;
-            LogicalExpression leftArg = equivalence.getArgument(0);
-            LogicalExpression rightArg = equivalence.getArgument(1);
-            LogicalExpression impliedBy1 = leFactory.createBinary(Binary.IMPLIEDBY, rightArg, leftArg);
-            LogicalExpression impliedBy2 = leFactory.createBinary(Binary.IMPLIEDBY, leftArg, rightArg);
-            LogicalExpression and = leFactory.createBinary(Binary.AND, impliedBy1, impliedBy2);
+            Equivalence equivalence = (Equivalence)expression;
+            LogicalExpression leftArg = equivalence.getLeftOperand();
+            LogicalExpression rightArg = equivalence.getRightOperand();
+            LogicalExpression impliedBy1 = leFactory.createInverseImplication(rightArg, leftArg);
+            LogicalExpression impliedBy2 = leFactory.createInverseImplication(leftArg, rightArg);
+            LogicalExpression and = leFactory.createConjunction(impliedBy1, impliedBy2);
             return and;
         }
 
         public boolean isApplicable(LogicalExpression expression)
         {
-            if(expression instanceof CompoundExpression)
-            {
-                return ((CompoundExpression)expression).getOperator() == CompoundExpression.EQUIVALENT;
-            }
-            return false;
+            return expression instanceof Equivalence;
         }
 
         public String toString()
@@ -81,20 +79,16 @@ public class ImplicationReductionRules extends FixedModificationRules
     {
         public LogicalExpression apply(LogicalExpression expression)
         {
-            Binary equivalence = (Binary)expression;
-            LogicalExpression leftArg = equivalence.getArgument(0);
-            LogicalExpression rightArg = equivalence.getArgument(1);
-            LogicalExpression impliedBy = leFactory.createBinary(Binary.IMPLIEDBY, rightArg, leftArg);
+            Implication implication = (Implication)expression;
+            LogicalExpression leftArg = implication.getLeftOperand();
+            LogicalExpression rightArg = implication.getRightOperand();
+            LogicalExpression impliedBy = leFactory.createInverseImplication(rightArg, leftArg);
             return impliedBy;
         }
 
         public boolean isApplicable(LogicalExpression expression)
         {
-            if(expression instanceof CompoundExpression)
-            {
-                return ((CompoundExpression)expression).getOperator() == CompoundExpression.IMPLIES;
-            }
-            return false;
+            return expression instanceof Implication;
         }
 
         public String toString()

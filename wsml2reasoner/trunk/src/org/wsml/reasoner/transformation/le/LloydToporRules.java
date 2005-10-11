@@ -23,6 +23,11 @@ import java.util.Set;
 
 import org.omwg.logicalexpression.Binary;
 import org.omwg.logicalexpression.CompoundExpression;
+import org.omwg.logicalexpression.Conjunction;
+import org.omwg.logicalexpression.Constraint;
+import org.omwg.logicalexpression.Disjunction;
+import org.omwg.logicalexpression.InverseImplication;
+import org.omwg.logicalexpression.LogicProgrammingRule;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.Unary;
 
@@ -61,19 +66,10 @@ public class LloydToporRules extends FixedModificationRules
     {
         public boolean isApplicable(LogicalExpression expression)
         {
-            try
+            if(expression instanceof LogicProgrammingRule)
             {
-                CompoundExpression compound = (CompoundExpression)expression;
-                if(compound.getOperator() == CompoundExpression.LP_IMPL)
-                {
-                    CompoundExpression conjunction = (CompoundExpression)compound.getArgument(0);
-                    if(conjunction.getOperator() == CompoundExpression.AND)
-                    {
-                        return true;
-                    }
-                }
-            } catch(ClassCastException e)
-            {
+                LogicProgrammingRule lpRule = (LogicProgrammingRule)expression;
+                return lpRule.getLeftOperand() instanceof Conjunction;
             }
             return false;
         }
@@ -81,10 +77,10 @@ public class LloydToporRules extends FixedModificationRules
         public Set<LogicalExpression> apply(LogicalExpression expression)
         {
             Set<LogicalExpression> resultingExpressions = new HashSet<LogicalExpression>();
-            Binary rule = (Binary)expression;
-            Binary conjunction = (Binary)rule.getArgument(0);
-            resultingExpressions.add(leFactory.createBinary(CompoundExpression.LP_IMPL, conjunction.getArgument(0), rule.getArgument(1)));
-            resultingExpressions.add(leFactory.createBinary(CompoundExpression.LP_IMPL, conjunction.getArgument(1), rule.getArgument(1)));
+            LogicProgrammingRule lpRule = (LogicProgrammingRule)expression;
+            Conjunction conjunction = (Conjunction)lpRule.getLeftOperand();
+            resultingExpressions.add(leFactory.createLogicProgrammingRule(conjunction.getLeftOperand(), lpRule.getRightOperand()));
+            resultingExpressions.add(leFactory.createLogicProgrammingRule(conjunction.getRightOperand(), lpRule.getRightOperand()));
             return resultingExpressions;
         }
 
@@ -98,19 +94,10 @@ public class LloydToporRules extends FixedModificationRules
     {
         public boolean isApplicable(LogicalExpression expression)
         {
-            try
+            if(expression instanceof LogicProgrammingRule)
             {
-                CompoundExpression compound = (CompoundExpression)expression;
-                if(compound.getOperator() == CompoundExpression.LP_IMPL)
-                {
-                    CompoundExpression disjunction = (CompoundExpression)compound.getArgument(1);
-                    if(disjunction.getOperator() == CompoundExpression.OR)
-                    {
-                        return true;
-                    }
-                }
-            } catch(ClassCastException e)
-            {
+                LogicProgrammingRule lpRule = (LogicProgrammingRule)expression;
+                return lpRule.getRightOperand() instanceof Disjunction;
             }
             return false;
         }
@@ -118,10 +105,10 @@ public class LloydToporRules extends FixedModificationRules
         public Set<LogicalExpression> apply(LogicalExpression expression)
         {
             Set<LogicalExpression> resultingExpressions = new HashSet<LogicalExpression>();
-            Binary rule = (Binary)expression;
-            Binary disjunction = (Binary)rule.getArgument(1);
-            resultingExpressions.add(leFactory.createBinary(CompoundExpression.LP_IMPL, rule.getArgument(0), disjunction.getArgument(0)));
-            resultingExpressions.add(leFactory.createBinary(CompoundExpression.LP_IMPL, rule.getArgument(0), disjunction.getArgument(1)));
+            LogicProgrammingRule lpRule = (LogicProgrammingRule)expression;
+            Disjunction disjunction = (Disjunction)lpRule.getRightOperand();
+            resultingExpressions.add(leFactory.createLogicProgrammingRule(lpRule.getLeftOperand(), disjunction.getLeftOperand()));
+            resultingExpressions.add(leFactory.createLogicProgrammingRule(lpRule.getLeftOperand(), disjunction.getRightOperand()));
             return resultingExpressions;
         }
 
@@ -135,19 +122,10 @@ public class LloydToporRules extends FixedModificationRules
     {
         public boolean isApplicable(LogicalExpression expression)
         {
-            try
+            if(expression instanceof LogicProgrammingRule)
             {
-                CompoundExpression compound = (CompoundExpression)expression;
-                if(compound.getOperator() == CompoundExpression.LP_IMPL)
-                {
-                    CompoundExpression rule = (CompoundExpression)compound.getArgument(0);
-                    if(rule.getOperator() == CompoundExpression.IMPLIEDBY)
-                    {
-                        return true;
-                    }
-                }
-            } catch(ClassCastException e)
-            {
+                LogicProgrammingRule lpRule = (LogicProgrammingRule)expression;
+                return lpRule.getLeftOperand() instanceof InverseImplication;
             }
             return false;
         }
@@ -155,10 +133,11 @@ public class LloydToporRules extends FixedModificationRules
         public Set<LogicalExpression> apply(LogicalExpression expression)
         {
             Set<LogicalExpression> resultingExpressions = new HashSet<LogicalExpression>();
-            Binary rule = (Binary)expression;
-            Binary innerRule = (Binary)rule.getArgument(0);
-            Binary conjunction = leFactory.createBinary(CompoundExpression.AND, innerRule.getArgument(1), rule.getArgument(1));
-            resultingExpressions.add(leFactory.createBinary(CompoundExpression.LP_IMPL, innerRule.getArgument(0), conjunction));
+            LogicProgrammingRule lpRule = (LogicProgrammingRule)expression;
+            
+            LogicProgrammingRule innerRule = (LogicProgrammingRule)lpRule.getLeftOperand();
+            Conjunction conjunction = leFactory.createConjunction(innerRule.getRightOperand(), lpRule.getRightOperand());
+            resultingExpressions.add(leFactory.createLogicProgrammingRule(innerRule.getLeftOperand(), conjunction));
             return resultingExpressions;
         }
 
@@ -172,25 +151,15 @@ public class LloydToporRules extends FixedModificationRules
     {
         public boolean isApplicable(LogicalExpression expression)
         {
-            try
-            {
-                CompoundExpression compound = (CompoundExpression)expression;
-                if(compound.getOperator() == CompoundExpression.AND)
-                {
-                    return true;
-                }
-            } catch(ClassCastException e)
-            {
-            }
-            return false;
+            return expression instanceof Conjunction;
         }
 
         public Set<LogicalExpression> apply(LogicalExpression expression)
         {
             Set<LogicalExpression> resultingExpressions = new HashSet<LogicalExpression>();
-            Binary conjunction = (Binary)expression;
-            LogicalExpression leftArg = conjunction.getArgument(0);
-            LogicalExpression rightArg = conjunction.getArgument(1);
+            Conjunction conjunction = (Conjunction)expression;
+            LogicalExpression leftArg = conjunction.getLeftOperand();
+            LogicalExpression rightArg = conjunction.getRightOperand();
             resultingExpressions.add(leftArg);
             resultingExpressions.add(rightArg);
             return resultingExpressions;
@@ -206,25 +175,15 @@ public class LloydToporRules extends FixedModificationRules
     {
         public boolean isApplicable(LogicalExpression expression)
         {
-            try
-            {
-                CompoundExpression compound = (CompoundExpression)expression;
-                if(compound.getOperator() == CompoundExpression.IMPLIEDBY)
-                {
-                    return true;
-                }
-            } catch(ClassCastException e)
-            {
-            }
-            return false;
+            return expression instanceof InverseImplication;
         }
 
         public Set<LogicalExpression> apply(LogicalExpression expression)
         {
             Set<LogicalExpression> resultingExpressions = new HashSet<LogicalExpression>();
-            Binary implication = (Binary)expression;
-            Binary rule = leFactory.createBinary(CompoundExpression.LP_IMPL, implication.getArgument(0), implication.getArgument(1));
-            resultingExpressions.add(rule);
+            InverseImplication inverseImplication = (InverseImplication)expression;
+            LogicProgrammingRule lpRule = leFactory.createLogicProgrammingRule(inverseImplication.getLeftOperand(), inverseImplication.getRightOperand());
+            resultingExpressions.add(lpRule);
             return resultingExpressions;
         }
 
@@ -238,19 +197,10 @@ public class LloydToporRules extends FixedModificationRules
     {
         public boolean isApplicable(LogicalExpression expression)
         {
-            try
+            if(expression instanceof Constraint)
             {
-                CompoundExpression compound = (CompoundExpression)expression;
-                if(compound.getOperator() == CompoundExpression.CONSTRAINT)
-                {
-                    CompoundExpression disjunction = (CompoundExpression)compound.getArgument(0);
-                    if(disjunction.getOperator() == CompoundExpression.OR)
-                    {
-                        return true;
-                    }
-                }
-            } catch(ClassCastException e)
-            {
+                Constraint constraint = (Constraint)expression;
+                return constraint.getOperand() instanceof Disjunction;
             }
             return false;
         }
@@ -258,10 +208,10 @@ public class LloydToporRules extends FixedModificationRules
         public Set<LogicalExpression> apply(LogicalExpression expression)
         {
             Set<LogicalExpression> resultingExpressions = new HashSet<LogicalExpression>();
-            Unary constraint = (Unary)expression;
-            Binary disjunction = (Binary)constraint.getArgument(0);
-            resultingExpressions.add(leFactory.createUnary(CompoundExpression.CONSTRAINT, disjunction.getArgument(0)));
-            resultingExpressions.add(leFactory.createUnary(CompoundExpression.CONSTRAINT, disjunction.getArgument(1)));
+            Constraint constraint = (Constraint)expression;
+            Disjunction disjunction = (Disjunction)constraint.getOperand();
+            resultingExpressions.add(leFactory.createConstraint(disjunction.getLeftOperand()));
+            resultingExpressions.add(leFactory.createConstraint(disjunction.getRightOperand()));
             return resultingExpressions;
         }
 
