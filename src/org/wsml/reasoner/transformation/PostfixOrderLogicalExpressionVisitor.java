@@ -45,6 +45,7 @@ import org.omwg.logicalexpression.*;
  * (according to the traversal order)
  * 
  * @author Uwe Keller, DERI Innsbruck
+ * @author Gabor Nagypal, FZI
  */
 public abstract class PostfixOrderLogicalExpressionVisitor implements Visitor {
 

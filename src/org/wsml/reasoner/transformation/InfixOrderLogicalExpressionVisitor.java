@@ -51,6 +51,7 @@ import org.omwg.logicalexpression.Visitor;
  *  traversal order)
  * 
  * @author Uwe Keller, DERI Innsbruck
+ * @author Gabor Nagypal, FZI
  */
 public abstract class InfixOrderLogicalExpressionVisitor implements Visitor {
 

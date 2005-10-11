@@ -48,6 +48,7 @@ import org.wsmo.common.UnnumberedAnonymousID;
  * (according to the traversal order)
  * 
  * @author Uwe Keller, DERI Innsbruck
+ * @author Gabor Nagypal, FZI
  */
 public class PostfixOrderTermVisitor implements Visitor {
 
