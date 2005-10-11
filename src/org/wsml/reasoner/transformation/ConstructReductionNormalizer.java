@@ -79,7 +79,7 @@ public class ConstructReductionNormalizer implements OntologyNormalizer
         }
 
         // create new ontology containing the resulting logical expressions:
-        String resultIRI = (ontology.getIdentifier() != null ? ontology.getIdentifier().asString() + "-as-axioms" : "iri:normalized-ontology-" + ontology.hashCode());
+        String resultIRI = (ontology.getIdentifier() != null ? ontology.getIdentifier().toString() + "-as-axioms" : "iri:normalized-ontology-" + ontology.hashCode());
         Ontology resultOnt = wsmoFactory.createOntology(wsmoFactory.createIRI(resultIRI));
         for(Object n : ontology.listNamespaces())
         {

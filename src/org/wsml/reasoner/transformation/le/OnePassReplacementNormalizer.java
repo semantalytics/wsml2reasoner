@@ -96,10 +96,9 @@ public class OnePassReplacementNormalizer implements LogicalExpressionNormalizer
         if(expression instanceof CompoundExpression)
         {
             CompoundExpression compound = (CompoundExpression)expression;
-            int argCount = getArgumentCount(compound);
-            for(int i = 0; i < argCount; i++)
+            for(LogicalExpression argument : (List<LogicalExpression>)compound.listOperands())
             {
-                arguments.add(normalize(compound.getArgument(i)));
+                arguments.add(normalize(argument));
             }
             expression = replaceArguments(compound, arguments);
         }
@@ -139,20 +138,6 @@ public class OnePassReplacementNormalizer implements LogicalExpressionNormalizer
             }
         }
         return expression;
-    }
-
-    /**
-     * This method detrmines the arity of a compound expression.
-     * 
-     * @param compound
-     * @return
-     */
-    protected int getArgumentCount(CompoundExpression compound)
-    {
-        int count = 0;
-        while(compound.getArgument(count++) != null)
-            ;
-        return count - 1;
     }
 
     /**
