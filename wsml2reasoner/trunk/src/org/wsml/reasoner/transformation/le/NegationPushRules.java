@@ -18,10 +18,10 @@
  */
 package org.wsml.reasoner.transformation.le;
 
-import org.omwg.logicalexpression.Binary;
-import org.omwg.logicalexpression.CompoundExpression;
+import org.omwg.logicalexpression.Conjunction;
+import org.omwg.logicalexpression.Disjunction;
 import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.logicalexpression.Unary;
+import org.omwg.logicalexpression.NegationAsFailure;
 
 /**
  * This singleton class represents a set of normalization rules for pushing
@@ -56,24 +56,17 @@ public class NegationPushRules extends FixedModificationRules
     {
         public LogicalExpression apply(LogicalExpression expression)
         {
-            Unary outerNaf = (Unary)expression;
-            Unary innerNaf = (Unary)(outerNaf.getArgument(0));
-            return innerNaf.getArgument(0);
+            NegationAsFailure outerNaf = (NegationAsFailure)expression;
+            NegationAsFailure innerNaf = (NegationAsFailure)(outerNaf.getOperand());
+            return innerNaf.getOperand();
         }
 
         public boolean isApplicable(LogicalExpression expression)
         {
-            if(expression instanceof CompoundExpression)
+            if(expression instanceof NegationAsFailure)
             {
-                CompoundExpression compound = (CompoundExpression)expression;
-                if(compound.getOperator() == CompoundExpression.NAF)
-                {
-                    if(compound.getArgument(0) instanceof CompoundExpression)
-                    {
-                        compound = (CompoundExpression)compound.getArgument(0);
-                        return compound.getOperator() == CompoundExpression.NAF;
-                    }
-                }
+                NegationAsFailure outerNaf = (NegationAsFailure)expression;
+                return outerNaf.getOperand() instanceof NegationAsFailure;
             }
             return false;
         }
@@ -88,27 +81,20 @@ public class NegationPushRules extends FixedModificationRules
     {
         public LogicalExpression apply(LogicalExpression expression)
         {
-            Unary naf = (Unary)expression;
-            Binary conjunction = (Binary)(naf.getArgument(0));
-            LogicalExpression leftArg = leFactory.createUnary(Unary.NAF, conjunction.getArgument(0));
-            LogicalExpression rightArg = leFactory.createUnary(Unary.NAF, conjunction.getArgument(1));
-            LogicalExpression disjunction = leFactory.createBinary(Binary.OR, leftArg, rightArg);
+            NegationAsFailure naf = (NegationAsFailure)expression;
+            Conjunction conjunction = (Conjunction)(naf.getOperand());
+            LogicalExpression leftArg = leFactory.createNegationAsFailure(conjunction.getLeftOperand());
+            LogicalExpression rightArg = leFactory.createNegationAsFailure(conjunction.getRightOperand());
+            LogicalExpression disjunction = leFactory.createDisjunction(leftArg, rightArg);
             return disjunction;
         }
 
         public boolean isApplicable(LogicalExpression expression)
         {
-            if(expression instanceof CompoundExpression)
+            if(expression instanceof NegationAsFailure)
             {
-                CompoundExpression compound = (CompoundExpression)expression;
-                if(compound.getOperator() == CompoundExpression.NAF)
-                {
-                    if(compound.getArgument(0) instanceof CompoundExpression)
-                    {
-                        compound = (CompoundExpression)compound.getArgument(0);
-                        return compound.getOperator() == CompoundExpression.AND;
-                    }
-                }
+                NegationAsFailure naf = (NegationAsFailure)expression;
+                return naf.getOperand() instanceof Conjunction;
             }
             return false;
         }
@@ -123,27 +109,20 @@ public class NegationPushRules extends FixedModificationRules
     {
         public LogicalExpression apply(LogicalExpression expression)
         {
-            Unary naf = (Unary)expression;
-            Binary disjunction = (Binary)(naf.getArgument(0));
-            LogicalExpression leftArg = leFactory.createUnary(Unary.NAF, disjunction.getArgument(0));
-            LogicalExpression rightArg = leFactory.createUnary(Unary.NAF, disjunction.getArgument(1));
-            LogicalExpression conjunction = leFactory.createBinary(Binary.AND, leftArg, rightArg);
+            NegationAsFailure naf = (NegationAsFailure)expression;
+            Disjunction disjunction = (Disjunction)(naf.getOperand());
+            LogicalExpression leftArg = leFactory.createNegationAsFailure(disjunction.getLeftOperand());
+            LogicalExpression rightArg = leFactory.createNegationAsFailure(disjunction.getRightOperand());
+            LogicalExpression conjunction = leFactory.createConjunction(leftArg, rightArg);
             return conjunction;
         }
 
         public boolean isApplicable(LogicalExpression expression)
         {
-            if(expression instanceof CompoundExpression)
+            if(expression instanceof NegationAsFailure)
             {
-                CompoundExpression compound = (CompoundExpression)expression;
-                if(compound.getOperator() == CompoundExpression.NAF)
-                {
-                    if(compound.getArgument(0) instanceof CompoundExpression)
-                    {
-                        compound = (CompoundExpression)compound.getArgument(0);
-                        return compound.getOperator() == CompoundExpression.OR;
-                    }
-                }
+                NegationAsFailure naf = (NegationAsFailure)expression;
+                return naf.getOperand() instanceof Disjunction;
             }
             return false;
         }
