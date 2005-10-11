@@ -46,9 +46,9 @@ import org.wsmo.factory.WsmoFactory;
 
 public class WSML2DatalogTransformerTest extends TestCase {
 
-    private org.omwg.logicalexpression.io.Parser leParser = null;
-
-    private org.omwg.logicalexpression.io.Serializer logExprSerializer = null;
+    private LogExprSerializerWSML logExprSerializer = null;
+    
+    private Ontology o = null;
 
     private LogicalExpressionFactory leFactory = null;
 
@@ -59,7 +59,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
     }
 
     public void testFact() throws Exception {
-        LogicalExpression qExpression = leParser.parse("arc(a,b)");
+        LogicalExpression qExpression = leFactory.createLogicalExpression("arc(a,b)", o);
         System.out.println("Parsed fact:");
         System.out.println(logExprSerializer.serialize(qExpression));
         Program p = cut.transform(qExpression);
@@ -77,8 +77,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
     }
 
     public void testRule() throws Exception {
-        LogicalExpression qExpression = leParser
-                .parse("path(?x,?y) :- arc(?x,?z) and path(?z,?y).");
+        LogicalExpression qExpression = leFactory.createLogicalExpression("path(?x,?y) :- arc(?x,?z) and path(?z,?y).", o);
         System.out.println("Parsed fact:");
         System.out.println(logExprSerializer.serialize(qExpression));
         Program p = cut.transform(qExpression);
@@ -104,8 +103,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
     }
 
     public void testImpliedBy() throws Exception {
-        LogicalExpression qExpression = leParser
-                .parse("path(?x,?y) impliedBy arc(?x,?z) and path(?z,?y).");
+        LogicalExpression qExpression = leFactory.createLogicalExpression("path(?x,?y) impliedBy arc(?x,?z) and path(?z,?y).", o);
         System.out.println("Parsed fact:");
         System.out.println(logExprSerializer.serialize(qExpression));
         Program p = cut.transform(qExpression);
@@ -131,8 +129,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
     }
 
     public void testMoleculeRule() throws Exception {
-        LogicalExpression qExpression = leParser
-                .parse("?x[arc hasValue ?y] :- ?x[arc hasValue ?z] and ?z[path hasValue ?y].");
+        LogicalExpression qExpression = leFactory.createLogicalExpression("?x[arc hasValue ?y] :- ?x[arc hasValue ?z] and ?z[path hasValue ?y].", o);
         System.out.println("Parsed fact:");
         System.out.println(logExprSerializer.serialize(qExpression));
         Program p = cut.transform(qExpression);
@@ -161,8 +158,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
     }
 
     public void testConstraint() throws Exception {
-        LogicalExpression qExpression = leParser
-                .parse("!- ?x[arc hasValue ?z] and ?z[path hasValue ?y].");
+        LogicalExpression qExpression = leFactory.createLogicalExpression("!- ?x[arc hasValue ?z] and ?z[path hasValue ?y].", o);
         System.out.println("Parsed fact:");
         System.out.println(logExprSerializer.serialize(qExpression));
         Program p = cut.transform(qExpression);
@@ -187,8 +183,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
     }
 
     public void testMultipleImpliedBy() throws Exception {
-        LogicalExpression qExpression = leParser
-                .parse("p(?x,?y) impliedBy q(?x,?y) impliedBy r(?x,?y)");
+        LogicalExpression qExpression = leFactory.createLogicalExpression("p(?x,?y) impliedBy q(?x,?y) impliedBy r(?x,?y)", o);
         System.out.println("Parsed fact:");
         System.out.println(logExprSerializer.serialize(qExpression));
         try {
@@ -200,7 +195,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
     }
 
     public void testSubconceptOfMolecule() throws Exception {
-        LogicalExpression qExpression = leParser.parse("?x subConceptOf ?y");
+        LogicalExpression qExpression = leFactory.createLogicalExpression("?x subConceptOf ?y", o);
         System.out.println("Parsed fact:");
         System.out.println(logExprSerializer.serialize(qExpression));
         Program p = cut.transform(qExpression);
@@ -216,7 +211,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
     }
 
     public void testMemberOfMolecule() throws Exception {
-        LogicalExpression qExpression = leParser.parse("?x memberOf ?y");
+        LogicalExpression qExpression = leFactory.createLogicalExpression("?x memberOf ?y", o);
         System.out.println("Parsed fact:");
         System.out.println(logExprSerializer.serialize(qExpression));
         Program p = cut.transform(qExpression);
@@ -233,7 +228,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
     }
 
     public void testUnificationFact() throws Exception {
-        LogicalExpression qExpression = leParser.parse("x=y"); // Atom with
+        LogicalExpression qExpression = leFactory.createLogicalExpression("x=y", o); // Atom with
         // Constants.EQUAL
         System.out.println("Parsed fact:");
         System.out.println(logExprSerializer.serialize(qExpression));
@@ -252,7 +247,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
     }
 
     public void testInequalityFact() throws Exception {
-        LogicalExpression qExpression = leParser.parse("x!=y"); // Atom with
+        LogicalExpression qExpression = leFactory.createLogicalExpression("x!=y", o); // Atom with
         // Constants.INEQUAL
         System.out.println("Parsed fact:");
         System.out.println(logExprSerializer.serialize(qExpression));
@@ -271,8 +266,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
     }
 
     public void testNafRule() throws Exception {
-        LogicalExpression qExpression = leParser
-                .parse("path(?x,?y) :- naf arc(?x,?z) and arc(?x,?z) and naf ?z[path hasValue ?y] and ?z[path hasValue ?y].");
+        LogicalExpression qExpression = leFactory.createLogicalExpression("path(?x,?y) :- naf arc(?x,?z) and arc(?x,?z) and naf ?z[path hasValue ?y] and ?z[path hasValue ?y].", o);
         System.out.println("Parsed fact:");
         System.out.println(logExprSerializer.serialize(qExpression));
         Program p = cut.transform(qExpression);
@@ -308,7 +302,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
     }
 
     public void testImpliesTypeMolecule() throws Exception {
-        LogicalExpression qExpression = leParser.parse("?x[a impliesType ?y]");
+        LogicalExpression qExpression = leFactory.createLogicalExpression("?x[a impliesType ?y]", o);
         System.out.println("Parsed fact:");
         System.out.println(logExprSerializer.serialize(qExpression));
         Program p = cut.transform(qExpression);
@@ -325,7 +319,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
     }
 
     public void testOfTypeMolecule() throws Exception {
-        LogicalExpression qExpression = leParser.parse("?x[a ofType ?y]");
+        LogicalExpression qExpression = leFactory.createLogicalExpression("?x[a ofType ?y]", o);
         System.out.println("Parsed fact:");
         System.out.println(logExprSerializer.serialize(qExpression));
         Program p = cut.transform(qExpression);
@@ -342,7 +336,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
     }
 
     public void testAttrValueMolecule() throws Exception {
-        LogicalExpression qExpression = leParser.parse("?x[a hasValue ?y]");
+        LogicalExpression qExpression = leFactory.createLogicalExpression("?x[a hasValue ?y]", o);
         System.out.println("Parsed fact:");
         System.out.println(logExprSerializer.serialize(qExpression));
         Program p = cut.transform(qExpression);
@@ -371,15 +365,11 @@ public class WSML2DatalogTransformerTest extends TestCase {
         WsmoFactory wf = Factory.createWsmoFactory(null);
         IRI ontoIri = wf.createIRI("urn:test");
         Namespace ns = wf.createNamespace("ns", ontoIri);
-        Ontology o = wf.createOntology(ontoIri);
+        o = wf.createOntology(ontoIri);
         o.setDefaultNamespace(ns);
-        leParser = LogExprParserImpl.getInstance(o);
         logExprSerializer = new LogExprSerializerWSML(o);
-        Map createParams = new HashMap();
-        createParams.put(Factory.PROVIDER_CLASS,
-                "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
         leFactory = (LogicalExpressionFactory) Factory
-                .createLogicalExpressionFactory(createParams);
+                .createLogicalExpressionFactory(null);
         cut = new WSML2DatalogTransformer();
     }
 
