@@ -23,29 +23,23 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
-import org.omwg.logicalexpression.Atom;
-import org.omwg.logicalexpression.AtomicExpression;
-import org.omwg.logicalexpression.Binary;
-import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.logicalexpression.Molecule;
-import org.omwg.logicalexpression.Quantified;
-import org.omwg.logicalexpression.Unary;
-import org.omwg.logicalexpression.terms.IRI;
+import org.omwg.logicalexpression.*;
+import org.omwg.logicalexpression.terms.ConstructedTerm;
+import org.omwg.logicalexpression.terms.NumberedAnonymousID;
 import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.ComplexDataValue;
+import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.Variable;
-import org.omwg.ontology.ComplexDataType;
-import org.omwg.ontology.SimpleDataType;
-import org.omwg.ontology.WsmlDecimal;
-import org.omwg.ontology.WsmlInteger;
-import org.omwg.ontology.WsmlString;
+import org.omwg.ontology.WsmlDataType;
 import org.wsml.reasoner.datalog.DataTypeValue;
 import org.wsml.reasoner.datalog.DatalogException;
 import org.wsml.reasoner.datalog.Literal;
 import org.wsml.reasoner.datalog.Predicate;
 import org.wsml.reasoner.datalog.Program;
 import org.wsml.reasoner.datalog.Rule;
+import org.wsmo.common.IRI;
+import org.wsmo.common.UnnumberedAnonymousID;
 
 /**
  * <p>
@@ -73,28 +67,28 @@ public class WSML2DatalogTransformer {
 
     // Some predicates that are used to represent the oo-based molecules
     // of WSML in datalog.
-    private final Predicate PRED_SUB_CONCEPT_OF;
+    private final static Predicate PRED_SUB_CONCEPT_OF = new Predicate(
+            "wsml-subconcept-of", 2);;
 
-    private final Predicate PRED_OF_TYPE;
+    private final static Predicate PRED_OF_TYPE = new Predicate("wsml-of-type",
+            3);;
 
-    private final Predicate PRED_IMPLIES_TYPE;
+    private final static Predicate PRED_IMPLIES_TYPE = new Predicate(
+            "wsml-implies-type", 3);;
 
-    private final Predicate PRED_MEMBER_OF;
+    private final static Predicate PRED_MEMBER_OF = new Predicate(
+            "wsml-member-of", 2);;
 
-    private final Predicate PRED_HAS_VALUE;
+    private final static Predicate PRED_HAS_VALUE = new Predicate(
+            "wsml-has-value", 3);;
 
-    private Logger logger = Logger
-            .getLogger("org.wsml.reasoner.wsmlcore.WSML2Datalog");
+    // private Logger logger = Logger
+    // .getLogger("org.wsml.reasoner.wsmlcore.WSML2Datalog");
 
     /**
      * Generates a WSML2Datalog converter.
      */
     public WSML2DatalogTransformer() {
-        PRED_SUB_CONCEPT_OF = new Predicate("wsml-subconcept-of", 2);
-        PRED_OF_TYPE = new Predicate("wsml-of-type", 3);
-        PRED_IMPLIES_TYPE = new Predicate("wsml-implies-type", 3);
-        PRED_MEMBER_OF = new Predicate("wsml-member-of", 2);
-        PRED_HAS_VALUE = new Predicate("wsml-has-value", 3);
     }
 
     /**
@@ -123,13 +117,14 @@ public class WSML2DatalogTransformer {
 
         for (org.omwg.logicalexpression.LogicalExpression r : rules) {
             r.accept(datalogVisitor);
-            Program translation = (Program) datalogVisitor.getSerializedObject();
+            Program translation = (Program) datalogVisitor
+                    .getSerializedObject();
             if (translation != null) {
                 result.addAll(translation);
             } else {
                 throw new IllegalArgumentException(
                         "WSML rule can not be translated to datalog: "
-                                + r.asString());
+                                + r.toString());
             }
             // Reset the internal state of the visitor such that it can be
             // reused.
@@ -198,16 +193,12 @@ public class WSML2DatalogTransformer {
         body = new LinkedList<Literal>();
         head = new Literal(PRED_MEMBER_OF,
                 new org.wsml.reasoner.datalog.Term[] { v1, v2 });
-        body
-                .add(new Literal(PRED_IMPLIES_TYPE,
-                        new org.wsml.reasoner.datalog.Term[] {
-                                v3, v4, v2 }));
+        body.add(new Literal(PRED_IMPLIES_TYPE,
+                new org.wsml.reasoner.datalog.Term[] { v3, v4, v2 }));
         body.add(new Literal(PRED_MEMBER_OF,
                 new org.wsml.reasoner.datalog.Term[] { v5, v3 }));
-        body
-                .add(new Literal(PRED_HAS_VALUE,
-                        new org.wsml.reasoner.datalog.Term[] {
-                                v5, v4, v1 }));
+        body.add(new Literal(PRED_HAS_VALUE,
+                new org.wsml.reasoner.datalog.Term[] { v5, v4, v1 }));
         result.add(new Rule(head, body));
 
         // Semantics of X1[X2 => X3] (oftype constraint)
@@ -216,17 +207,14 @@ public class WSML2DatalogTransformer {
         // mo(v5,v3)
 
         body = new LinkedList<Literal>();
-        body
-                .add(new Literal(PRED_OF_TYPE,
-                        new org.wsml.reasoner.datalog.Term[] {
-                                v1, v2, v3 }));
+        body.add(new Literal(PRED_OF_TYPE,
+                new org.wsml.reasoner.datalog.Term[] { v1, v2, v3 }));
         body.add(new Literal(PRED_MEMBER_OF,
                 new org.wsml.reasoner.datalog.Term[] { v4, v1 }));
-        body
-                .add(new Literal(PRED_HAS_VALUE,
-                        new org.wsml.reasoner.datalog.Term[] {
-                                v4, v2, v5 }));
-        body.add(new Literal(PRED_MEMBER_OF, Literal.NegationType.NEGATIONASFAILURE,
+        body.add(new Literal(PRED_HAS_VALUE,
+                new org.wsml.reasoner.datalog.Term[] { v4, v2, v5 }));
+        body.add(new Literal(PRED_MEMBER_OF,
+                Literal.NegationType.NEGATIONASFAILURE,
                 new org.wsml.reasoner.datalog.Term[] { v5, v3 }));
         result.add(new Rule(null, body));
 
@@ -242,7 +230,8 @@ public class WSML2DatalogTransformer {
      * 
      * Implements a left-first, depth-first, infix traversal.
      */
-    private class DatalogVisitor extends InfixOrderLogicalExpressionVisitor {
+    private static class DatalogVisitor extends
+            InfixOrderLogicalExpressionVisitor {
 
         private List<Literal> datalogBody;
 
@@ -255,6 +244,8 @@ public class WSML2DatalogTransformer {
         private int implicationCount;
 
         private boolean isNegated;
+
+        private DatalogTermVisitor datalogTermVisitor = new DatalogTermVisitor();
 
         public DatalogVisitor() {
             super();
@@ -317,7 +308,7 @@ public class WSML2DatalogTransformer {
          */
         @Override
         public void handleAtom(Atom atom) {
-            Predicate p = new Predicate(atom.getIdentifier().asString(), atom
+            Predicate p = new Predicate(atom.getIdentifier().toString(), atom
                     .getArity());
             org.wsml.reasoner.datalog.Term[] predArgs = new org.wsml.reasoner.datalog.Term[atom
                     .getArity()];
@@ -329,8 +320,10 @@ public class WSML2DatalogTransformer {
             Literal.NegationType negationType = isNegated ? Literal.NegationType.NEGATIONASFAILURE
                     : Literal.NegationType.NONNEGATED;
 
-            Literal l = new Literal(p, negationType,
-                    predArgs); // currently we ignore negation since we deal
+            Literal l = new Literal(p, negationType, predArgs); // currently we
+            // ignore
+            // negation
+            // since we deal
             // with WSMLCore
 
             storeLiteral(l);
@@ -354,13 +347,8 @@ public class WSML2DatalogTransformer {
             isNegated = false;
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleConstraint(org.omwg.logicalexpression.Unary)
-         */
         @Override
-        public void enterConstraint(Unary arg0) {
+        public void enterConstraint(Constraint arg0) {
             implicationCount++;
             if (implicationCount > 1) {
                 throw new DatalogException(
@@ -370,90 +358,103 @@ public class WSML2DatalogTransformer {
             inBodyOfRule = true;
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleEquivalent(org.omwg.logicalexpression.Binary)
-         */
         @Override
-        public void enterEquivalent(Binary arg0) {
+        public void enterEquivalence(Equivalence arg0) {
             throw new DatalogException(
                     "Equivalent is not allowed in simple WSML datalog rules.");
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleExists(org.omwg.logicalexpression.Quantified)
-         */
         @Override
-        public void enterExists(Quantified arg0) {
-            throw new DatalogException(
-                    "Quantifier is not allowed in simple WSML datalog rules.");
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleForall(org.omwg.logicalexpression.Quantified)
-         */
-        @Override
-        public void enterForall(Quantified arg0) {
+        public void enterExistentialQuantification(
+                ExistentialQuantification arg0) {
             throw new DatalogException(
                     "Quantifier is not allowed in simple WSML datalog rules.");
         }
 
         @Override
-        public void handleMolecule(Molecule m) {
+        public void enterUniversalQuantification(UniversalQuantification arg0) {
+            throw new DatalogException(
+                    "Quantifier is not allowed in simple WSML datalog rules.");
+        }
 
-            org.wsml.reasoner.datalog.Term subject = convertWSMLTerm2Datalog(m
-                    .getTerm());
+        @Override
+        public void handleSubConceptMolecule(SubConceptMolecule arg0) {
+            org.wsml.reasoner.datalog.Term subject = convertWSMLTerm2Datalog(arg0
+                    .getLeftParameter());
             Literal l;
             Literal.NegationType negationType = isNegated ? Literal.NegationType.NEGATIONASFAILURE
                     : Literal.NegationType.NONNEGATED;
+            org.wsml.reasoner.datalog.Term object = convertWSMLTerm2Datalog(arg0
+                    .getRightParameter());
+            l = new Literal(PRED_SUB_CONCEPT_OF, negationType,
+                    new org.wsml.reasoner.datalog.Term[] { subject, object });
+            storeLiteral(l);
+        }
 
-            // Handle specific cases
+        @Override
+        public void handleMemberShipMolecule(MembershipMolecule arg0) {
+            org.wsml.reasoner.datalog.Term subject = convertWSMLTerm2Datalog(arg0
+                    .getLeftParameter());
+            Literal l;
+            Literal.NegationType negationType = isNegated ? Literal.NegationType.NEGATIONASFAILURE
+                    : Literal.NegationType.NONNEGATED;
+            org.wsml.reasoner.datalog.Term object = convertWSMLTerm2Datalog(arg0
+                    .getRightParameter());
+            l = new Literal(PRED_MEMBER_OF, negationType,
+                    new org.wsml.reasoner.datalog.Term[] { subject, object });
+            storeLiteral(l);
+        }
 
-            if (MoleculeUtils.isSimpleSubconceptOf(m)) {
-                org.wsml.reasoner.datalog.Term object = convertWSMLTerm2Datalog(MoleculeUtils
-                        .getSuperConcept(m));
-                l = new Literal(PRED_SUB_CONCEPT_OF, negationType,
-                        new org.wsml.reasoner.datalog.Term[] {
-                                subject, object });
-            } else if (MoleculeUtils.isSimpleMemberOf(m)) {
-                org.wsml.reasoner.datalog.Term object = convertWSMLTerm2Datalog(MoleculeUtils
-                        .getParentConcept(m));
-                l = new Literal(PRED_MEMBER_OF, negationType,
-                        new org.wsml.reasoner.datalog.Term[] {
-                                subject, object });
-            } else if (MoleculeUtils.isSimpleImpliesType(m)) {
-                org.wsml.reasoner.datalog.Term object = convertWSMLTerm2Datalog(MoleculeUtils
-                        .getImpliedType(m));
-                org.wsml.reasoner.datalog.Term attr = convertWSMLTerm2Datalog(MoleculeUtils
-                        .getAttrName(m));
-                l = new Literal(PRED_IMPLIES_TYPE, negationType,
-                        new org.wsml.reasoner.datalog.Term[] {
-                                subject, attr, object });
-            } else if (MoleculeUtils.isSimpleOfType(m)) {
-                org.wsml.reasoner.datalog.Term object = convertWSMLTerm2Datalog(MoleculeUtils
-                        .getTypeConstraint(m));
-                org.wsml.reasoner.datalog.Term attr = convertWSMLTerm2Datalog(MoleculeUtils
-                        .getAttrName(m));
-                l = new Literal(PRED_OF_TYPE, negationType,
-                        new org.wsml.reasoner.datalog.Term[] {
-                                subject, attr, object });
-            } else if (MoleculeUtils.isSimpleAttrValue(m)) {
-                org.wsml.reasoner.datalog.Term object = convertWSMLTerm2Datalog(MoleculeUtils
-                        .getAttrValue(m));
-                org.wsml.reasoner.datalog.Term attr = convertWSMLTerm2Datalog(MoleculeUtils
-                        .getAttrName(m));
-                l = new Literal(PRED_HAS_VALUE, negationType,
-                        new org.wsml.reasoner.datalog.Term[] {
-                                subject, attr, object });
-            } else
-                throw new DatalogException(
-                        "Complex molecules are not allowed in simple WSML rules.");
+        @Override
+        public void handleAttributeInferenceMolecule(
+                AttributeInferenceMolecule arg0) {
+            org.wsml.reasoner.datalog.Term subject = convertWSMLTerm2Datalog(arg0
+                    .getLeftParameter());
+            Literal l;
+            Literal.NegationType negationType = isNegated ? Literal.NegationType.NEGATIONASFAILURE
+                    : Literal.NegationType.NONNEGATED;
+            org.wsml.reasoner.datalog.Term object = convertWSMLTerm2Datalog(arg0
+                    .getRightParameter());
+            org.wsml.reasoner.datalog.Term attr = convertWSMLTerm2Datalog(arg0
+                    .getAttribute());
+            l = new Literal(PRED_IMPLIES_TYPE, negationType,
+                    new org.wsml.reasoner.datalog.Term[] { subject, attr,
+                            object });
+            storeLiteral(l);
+        }
 
+        @Override
+        public void handleAttributeConstraintMolecule(
+                AttributeConstraintMolecule arg0) {
+            org.wsml.reasoner.datalog.Term subject = convertWSMLTerm2Datalog(arg0
+                    .getLeftParameter());
+            Literal l;
+            Literal.NegationType negationType = isNegated ? Literal.NegationType.NEGATIONASFAILURE
+                    : Literal.NegationType.NONNEGATED;
+            org.wsml.reasoner.datalog.Term object = convertWSMLTerm2Datalog(arg0
+                    .getRightParameter());
+            org.wsml.reasoner.datalog.Term attr = convertWSMLTerm2Datalog(arg0
+                    .getAttribute());
+            l = new Literal(PRED_OF_TYPE, negationType,
+                    new org.wsml.reasoner.datalog.Term[] { subject, attr,
+                            object });
+            storeLiteral(l);
+        }
+
+        @Override
+        public void handleAttributeValueMolecule(AttributeValueMolecule arg0) {
+            org.wsml.reasoner.datalog.Term subject = convertWSMLTerm2Datalog(arg0
+                    .getLeftParameter());
+            Literal l;
+            Literal.NegationType negationType = isNegated ? Literal.NegationType.NEGATIONASFAILURE
+                    : Literal.NegationType.NONNEGATED;
+            org.wsml.reasoner.datalog.Term object = convertWSMLTerm2Datalog(arg0
+                    .getRightParameter());
+            org.wsml.reasoner.datalog.Term attr = convertWSMLTerm2Datalog(arg0
+                    .getAttribute());
+            l = new Literal(PRED_HAS_VALUE, negationType,
+                    new org.wsml.reasoner.datalog.Term[] { subject, attr,
+                            object });
             storeLiteral(l);
         }
 
@@ -463,7 +464,7 @@ public class WSML2DatalogTransformer {
          * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleNeg(org.omwg.logicalexpression.Unary)
          */
         @Override
-        public void enterNeg(Unary arg0) {
+        public void enterNegation(Negation arg0) {
             throw new DatalogException(
                     "Classical negation is not allowed in simple WSML datalog rules.");
         }
@@ -474,8 +475,8 @@ public class WSML2DatalogTransformer {
          * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#enterNaf(org.omwg.logicalexpression.Unary)
          */
         @Override
-        public void enterNaf(Unary naf) {
-            LogicalExpression arg = naf.getArgument(0);
+        public void enterNegationAsFailure(NegationAsFailure naf) {
+            LogicalExpression arg = naf.getOperand();
             if (!(arg instanceof AtomicExpression))
                 throw new DatalogException(
                         "Negation as failure is allowed only on atoms or molecules in simple WSML datalog rules.");
@@ -489,7 +490,7 @@ public class WSML2DatalogTransformer {
          * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleOr(org.omwg.logicalexpression.Binary)
          */
         @Override
-        public void enterOr(Binary arg0) {
+        public void enterDisjunction(Disjunction arg0) {
             throw new DatalogException(
                     "Disjunction is not allowed in simple WSML datalog rules.");
         }
@@ -500,7 +501,7 @@ public class WSML2DatalogTransformer {
          * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#enterImpliedBy(org.omwg.logicalexpression.Binary)
          */
         @Override
-        public void enterImpliedBy(Binary arg0) {
+        public void enterInverseImplication(InverseImplication arg0) {
             implicationCount++;
             if (implicationCount > 1) {
                 throw new DatalogException(
@@ -516,7 +517,7 @@ public class WSML2DatalogTransformer {
          * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#enterImplies(org.omwg.logicalexpression.Binary)
          */
         @Override
-        public void enterImplies(Binary arg0) {
+        public void enterImplication(Implication arg0) {
             implicationCount++;
             if (implicationCount > 1) {
                 throw new DatalogException(
@@ -532,7 +533,7 @@ public class WSML2DatalogTransformer {
          * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#enterImpliesLP(org.omwg.logicalexpression.Binary)
          */
         @Override
-        public void enterImpliesLP(Binary arg0) {
+        public void enterLogicProgrammingRule(LogicProgrammingRule arg0) {
             implicationCount++;
             if (implicationCount > 1) {
                 throw new DatalogException(
@@ -548,7 +549,7 @@ public class WSML2DatalogTransformer {
          * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleImpliedBy(org.omwg.logicalexpression.Binary)
          */
         @Override
-        public void handleImpliedBy(Binary arg0) {
+        public void handleInverseImplication(InverseImplication arg0) {
             inHeadOfRule = false;
             inBodyOfRule = true;
         }
@@ -559,7 +560,7 @@ public class WSML2DatalogTransformer {
          * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleImplies(org.omwg.logicalexpression.Binary)
          */
         @Override
-        public void handleImplies(Binary arg0) {
+        public void handleImplication(Implication arg0) {
             inHeadOfRule = true;
             inBodyOfRule = false;
         }
@@ -570,55 +571,84 @@ public class WSML2DatalogTransformer {
          * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleImpliesLP(org.omwg.logicalexpression.Binary)
          */
         @Override
-        public void handleImpliesLP(Binary arg0) {
+        public void handleLogicProgrammingRule(LogicProgrammingRule arg0) {
             inHeadOfRule = false;
             inBodyOfRule = true;
         }
 
-        private org.wsml.reasoner.datalog.Term convertWSMLTerm2Datalog(
-                Term t) {
-            org.wsml.reasoner.datalog.Term result = null;
+        private org.wsml.reasoner.datalog.Term convertWSMLTerm2Datalog(Term t) {
+            t.accept(this.datalogTermVisitor);
+            return this.datalogTermVisitor.getDatalogTerm();
+        }
 
-            if (t instanceof Variable) {
-                // Case: Variable
-                Variable v = (Variable) t;
-                result = new org.wsml.reasoner.datalog.Variable(v
-                        .getName());
-            } else if (t instanceof IRI) {
-                // Case: Constant
-                IRI c = (IRI) t;
-                result = new org.wsml.reasoner.datalog.Constant(c
-                        .asString());
-            } else if (t instanceof SimpleDataType) {
-                // Case: Simple datatype values
+    }
 
-                if (t instanceof WsmlInteger) {
-                    WsmlInteger iValue = (WsmlInteger) t;
-                    result = new DataTypeValue(iValue.toString(),
-                            DataTypeValue.DataType.INTEGER);
-                } else if (t instanceof WsmlDecimal) {
-                    WsmlDecimal dValue = (WsmlDecimal) t;
-                    result = new DataTypeValue(dValue.toString(),
-                            DataTypeValue.DataType.DECIMAL);
-                } else if (t instanceof WsmlString) {
-                    WsmlString sValue = (WsmlString) t;
-                    result = new DataTypeValue(sValue.toString(),
-                            DataTypeValue.DataType.STRING);
-                }
+    /**
+     * Converts a WSML term to its Datalog representation
+     * 
+     * @author Gabor Nagypal (FZI)
+     * 
+     */
+    private static class DatalogTermVisitor extends TermVisitor {
 
-            } else if (t instanceof ComplexDataType) {
-                throw new DatalogException(
-                        "Complex datatype values are not supported at present in simple WSML rules");
-            } else if (t instanceof org.wsmo.common.AnonymousID) {
-                throw new DatalogException(
-                        "Anonymous identifiers are not allowed in simple WSML rules");
+        private org.wsml.reasoner.datalog.Term datalogTerm = null;
+
+        public org.wsml.reasoner.datalog.Term getDatalogTerm() {
+            return datalogTerm;
+        }
+
+        @Override
+        public void enterConstructedTerm(ConstructedTerm arg0) {
+            throw new DatalogException(
+                    "Constructed terms are not allowed in simple WSML rules!");
+        }
+
+        @Override
+        public void visitComplexDataValue(ComplexDataValue arg0) {
+            throw new DatalogException(
+                    "Complex datatype values are not supported at present in simple WSML rules");
+        }
+
+        @Override
+        public void visitIRI(IRI arg0) {
+            datalogTerm = new org.wsml.reasoner.datalog.Constant(arg0
+                    .toString());
+        }
+
+        @Override
+        public void visitVariable(Variable arg0) {
+            datalogTerm = new org.wsml.reasoner.datalog.Variable(arg0.getName());
+        }
+
+        @Override
+        public void visitSimpleDataValue(SimpleDataValue arg0) {
+            String typeIRI = arg0.getType().getIRI().toString();
+            if (typeIRI.equals(WsmlDataType.WSML_INTEGER)) {
+                datalogTerm = new DataTypeValue(arg0.getValue().toString(),
+                        DataTypeValue.DataType.INTEGER);
+            } else if (typeIRI.equals(WsmlDataType.WSML_DECIMAL)) {
+                datalogTerm = new DataTypeValue(arg0.getValue().toString(),
+                        DataTypeValue.DataType.DECIMAL);
+
+            } else if (typeIRI.equals(WsmlDataType.WSML_STRING)) {
+                datalogTerm = new DataTypeValue(arg0.getValue().toString(),
+                        DataTypeValue.DataType.STRING);
             } else {
-                throw new DatalogException(
-                        "Atomic formulae must have arguments which are either variables or constants only!");
+                throw new DatalogException("Unsupported simple datatype:"
+                        + typeIRI);
             }
+        }
 
-            return result;
+        @Override
+        public void visitNumberedID(NumberedAnonymousID arg0) {
+            throw new DatalogException(
+                    "Anonymous identifiers are not allowed in simple WSML rules");
+        }
 
+        @Override
+        public void visitUnnumberedID(UnnumberedAnonymousID arg0) {
+            throw new DatalogException(
+                    "Anonymous identifiers are not allowed in simple WSML rules");
         }
 
     }
