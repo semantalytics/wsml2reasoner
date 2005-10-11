@@ -19,6 +19,9 @@
 
 package org.wsml.reasoner.transformation;
 
+import java.util.Iterator;
+
+import org.omwg.logicalexpression.*;
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.Binary;
 import org.omwg.logicalexpression.Molecule;
@@ -57,136 +60,312 @@ public abstract class InfixOrderLogicalExpressionVisitor implements Visitor {
         leaveAtom(arg0);
     }
 
-    public void visitMolecule(Molecule arg0) {
-        enterMolecule(arg0);
-        handleMolecule(arg0);
-        leaveMolecule(arg0);
+    public void visitCompoundMolecule(CompoundMolecule arg0) {
+        enterCompoundMolecule(arg0);
+        visitOperands(arg0);
+        handleCompoundMolecule(arg0);
+        leaveCompoundMolecule(arg0);
     }
 
-    public void visitNeg(Unary arg0) {
-        enterNeg(arg0);
-        arg0.getArgument(0).accept(this);
-        handleNeg(arg0);
-        leaveNeg(arg0);
+    public void visitSubConceptMolecule(SubConceptMolecule arg0) {
+        enterSubConceptMolecule(arg0);
+        handleSubConceptMolecule(arg0);
+        leaveSubConceptMolecule(arg0);
+
     }
 
-    public void visitNaf(Unary arg0) {
-        enterNaf(arg0);
-        arg0.getArgument(0).accept(this);
-        handleNaf(arg0);
-        leaveNaf(arg0);
+    public void visitMemberShipMolecule(MembershipMolecule arg0) {
+        enterMemberShipMolecule(arg0);
+        handleMemberShipMolecule(arg0);
+        leaveMemberShipMolecule(arg0);
+
     }
 
-    public void visitConstraint(Unary arg0) {
+    public void visitAttributeValueMolecule(AttributeValueMolecule arg0) {
+        enterAttributeValueMolecule(arg0);
+        handleAttributeValueMolecule(arg0);
+        leaveAttributeValueMolecule(arg0);
+
+    }
+
+    public void visitAttributeContraintMolecule(AttributeConstraintMolecule arg0) {
+        enterAttributeConstraintMolecule(arg0);
+        handleAttributeConstraintMolecule(arg0);
+        leaveAttributeConstraintMolecule(arg0);
+
+    }
+
+    public void visitAttributeInferenceMolecule(AttributeInferenceMolecule arg0) {
+        enterAttributeInferenceMolecule(arg0);
+        handleAttributeInferenceMolecule(arg0);
+        leaveAttributeInferenceMolecule(arg0);
+
+    }
+
+    public void visitNegation(Negation arg0) {
+        enterNegation(arg0);
+        arg0.getOperand().accept(this);
+        handleNegation(arg0);
+        leaveNegation(arg0);
+
+    }
+
+    public void visitNegationAsFailure(NegationAsFailure arg0) {
+        enterNegationAsFailure(arg0);
+        arg0.getOperand().accept(this);
+        handleNegationAsFailure(arg0);
+        leaveNegationAsFailure(arg0);
+
+    }
+
+    public void visitConstraint(Constraint arg0) {
         enterConstraint(arg0);
-        arg0.getArgument(0).accept(this);
+        arg0.getOperand().accept(this);
         handleConstraint(arg0);
         leaveConstraint(arg0);
+
     }
 
-    public void visitAnd(Binary arg0) {
-        enterAnd(arg0);
-        arg0.getArgument(0).accept(this);
-        handleAnd(arg0);
-        arg0.getArgument(1).accept(this);
-        leaveAnd(arg0);
+    public void visitConjunction(Conjunction arg0) {
+        enterConjunction(arg0);
+        arg0.getLeftOperand().accept(this);
+        handleConjunction(arg0);
+        arg0.getRightOperand().accept(this);
+        leaveConjunction(arg0);
     }
 
-    public void visitOr(Binary arg0) {
-        enterOr(arg0);
-        arg0.getArgument(0).accept(this);
-        handleOr(arg0);
-        arg0.getArgument(1).accept(this);
-        leaveOr(arg0);
+    public void visitDisjunction(Disjunction arg0) {
+        enterDisjunction(arg0);
+        arg0.getLeftOperand().accept(this);
+        handleDisjunction(arg0);
+        arg0.getRightOperand().accept(this);
+        leaveDisjunction(arg0);
+
     }
 
-    public void visitImpliedBy(Binary arg0) {
-        enterImpliedBy(arg0);
-        arg0.getArgument(0).accept(this);
-        handleImpliedBy(arg0);
-        arg0.getArgument(1).accept(this);
-        leaveImpliedBy(arg0);
+    public void visitInverseImplication(InverseImplication arg0) {
+        enterInverseImplication(arg0);
+        arg0.getLeftOperand().accept(this);
+        handleInverseImplication(arg0);
+        arg0.getRightOperand().accept(this);
+        leaveInverseImplication(arg0);
+
     }
 
-    public void visitImplies(Binary arg0) {
-        enterImplies(arg0);
-        arg0.getArgument(0).accept(this);
-        handleImplies(arg0);
-        arg0.getArgument(1).accept(this);
-        leaveImplies(arg0);
+    public void visitImplication(Implication arg0) {
+        enterImplication(arg0);
+        arg0.getLeftOperand().accept(this);
+        handleImplication(arg0);
+        arg0.getRightOperand().accept(this);
+        leaveImplication(arg0);
+
     }
 
-    public void visitEquivalent(Binary arg0) {
-        enterEquivalent(arg0);
-        arg0.getArgument(0).accept(this);
-        handleEquivalent(arg0);
-        arg0.getArgument(1).accept(this);
-        leaveEquivalent(arg0);
+    public void visitEquivalence(Equivalence arg0) {
+        enterEquivalence(arg0);
+        arg0.getLeftOperand().accept(this);
+        handleEquivalence(arg0);
+        arg0.getRightOperand().accept(this);
+        leaveEquivalence(arg0);
+
     }
 
-    public void visitImpliesLP(Binary arg0) {
-        enterImpliesLP(arg0);
-        arg0.getArgument(0).accept(this);
-        handleImpliesLP(arg0);
-        arg0.getArgument(1).accept(this);
-        leaveImpliesLP(arg0);
+    public void visitLogicProgrammingRule(LogicProgrammingRule arg0) {
+        enterLogicProgrammingRule(arg0);
+        arg0.getLeftOperand().accept(this);
+        handleLogicProgrammingRule(arg0);
+        arg0.getRightOperand().accept(this);
+        leaveLogicProgrammingRule(arg0);
+
     }
 
-    public void visitForall(Quantified arg0) {
-        enterForall(arg0);
-        arg0.getArgument(0).accept(this);
-        handleForall(arg0);
-        leaveForall(arg0);
+    public void visitUniversalQuantification(UniversalQuantification arg0) {
+        enterUniversalQuantification(arg0);
+        arg0.getOperand().accept(this);
+        handleUniversalQuantification(arg0);
+        leaveUniversalQuantification(arg0);
+
     }
 
-    public void visitExists(Quantified arg0) {
-        enterExists(arg0);
-        arg0.getArgument(0).accept(this);
-        handleExists(arg0);
-        leaveExists(arg0);
+    public void visitExistentialQuantification(ExistentialQuantification arg0) {
+        enterExistentialQuantification(arg0);
+        arg0.getOperand().accept(this);
+        handleExistentialQuantification(arg0);
+        leaveExistentialQuantification(arg0);
+
+    }
+
+    private void visitOperands(CompoundExpression arg0) {
+        for (Iterator i = arg0.listOperands().iterator(); i.hasNext();) {
+            LogicalExpression operand = (LogicalExpression) i.next();
+            operand.accept(this);
+        }
     }
 
     abstract public Object getSerializedObject();
-    
-    public void handleAtom(Atom arg0){}
-    public void handleMolecule(Molecule arg0){}
-    public void handleNeg(Unary arg0) {}
-    public void handleNaf(Unary arg0) {}
-    public void handleConstraint(Unary arg0) {}
-    public void handleAnd(Binary arg0) {}
-    public void handleOr(Binary arg0) {}
-    public void handleImpliedBy(Binary arg0) {}
-    public void handleImplies(Binary arg0) {}
-    public void handleEquivalent(Binary arg0) {}
-    public void handleImpliesLP(Binary arg0) {}
-    public void handleForall(Quantified arg0) {}
-    public void handleExists(Quantified arg0) {}
-    
-    public void enterAtom(Atom arg0){}
-    public void enterMolecule(Molecule arg0){}
-    public void enterNeg(Unary arg0) {}
-    public void enterNaf(Unary arg0) {}
-    public void enterConstraint(Unary arg0) {}
-    public void enterAnd(Binary arg0) {}
-    public void enterOr(Binary arg0) {}
-    public void enterImpliedBy(Binary arg0) {}
-    public void enterImplies(Binary arg0) {}
-    public void enterEquivalent(Binary arg0) {}
-    public void enterImpliesLP(Binary arg0) {}
-    public void enterForall(Quantified arg0) {}
-    public void enterExists(Quantified arg0) {}
 
-    public void leaveAtom(Atom arg0){}
-    public void leaveMolecule(Molecule arg0){}
-    public void leaveNeg(Unary arg0) {}
-    public void leaveNaf(Unary arg0) {}
-    public void leaveConstraint(Unary arg0) {}
-    public void leaveAnd(Binary arg0) {}
-    public void leaveOr(Binary arg0) {}
-    public void leaveImpliedBy(Binary arg0) {}
-    public void leaveImplies(Binary arg0) {}
-    public void leaveEquivalent(Binary arg0) {}
-    public void leaveImpliesLP(Binary arg0) {}
-    public void leaveForall(Quantified arg0) {}
-    public void leaveExists(Quantified arg0) {}
+    public void enterAtom(Atom arg0) {
+    }
+
+    public void handleAtom(Atom arg0) {
+    }
+
+    public void leaveAtom(Atom arg0) {
+    }
+
+    public void enterSubConceptMolecule(SubConceptMolecule arg0) {
+    }
+
+    public void handleSubConceptMolecule(SubConceptMolecule arg0) {
+    }
+
+    public void leaveSubConceptMolecule(SubConceptMolecule arg0) {
+    }
+
+    public void enterMemberShipMolecule(MembershipMolecule arg0) {
+    }
+
+    public void handleMemberShipMolecule(MembershipMolecule arg0) {
+    }
+
+    public void leaveMemberShipMolecule(MembershipMolecule arg0) {
+    }
+
+    public void enterAttributeValueMolecule(AttributeValueMolecule arg0) {
+    }
+
+    public void handleAttributeValueMolecule(AttributeValueMolecule arg0) {
+    }
+
+    public void leaveAttributeValueMolecule(AttributeValueMolecule arg0) {
+    }
+
+    public void enterAttributeConstraintMolecule(
+            AttributeConstraintMolecule arg0) {
+    }
+
+    public void handleAttributeConstraintMolecule(
+            AttributeConstraintMolecule arg0) {
+    }
+
+    public void leaveAttributeConstraintMolecule(
+            AttributeConstraintMolecule arg0) {
+    }
+
+    public void enterAttributeInferenceMolecule(AttributeInferenceMolecule arg0) {
+    }
+
+    public void handleAttributeInferenceMolecule(AttributeInferenceMolecule arg0) {
+    }
+
+    public void leaveAttributeInferenceMolecule(AttributeInferenceMolecule arg0) {
+    }
+
+    public void enterConjunction(Conjunction arg0) {
+    }
+
+    public void handleConjunction(Conjunction arg0) {
+    }
+
+    public void leaveConjunction(Conjunction arg0) {
+    }
+
+    public void enterDisjunction(Disjunction arg0) {
+    }
+
+    public void handleDisjunction(Disjunction arg0) {
+    }
+
+    public void leaveDisjunction(Disjunction arg0) {
+    }
+
+    public void enterCompoundMolecule(CompoundMolecule arg0) {
+    }
+
+    public void handleCompoundMolecule(CompoundMolecule arg0) {
+    }
+
+    public void leaveCompoundMolecule(CompoundMolecule arg0) {
+    }
+    
+    public void enterNegation(Negation arg0) {
+    }
+
+    public void handleNegation(Negation arg0) {
+    }
+
+    public void leaveNegation(Negation arg0) {
+    }
+    
+    public void enterNegationAsFailure(NegationAsFailure arg0) {
+    }
+
+    public void handleNegationAsFailure(NegationAsFailure arg0) {
+    }
+
+    public void leaveNegationAsFailure(NegationAsFailure arg0) {
+    }
+    
+    public void enterConstraint(Constraint arg0) {
+    }
+
+    public void handleConstraint(Constraint arg0) {
+    }
+
+    public void leaveConstraint(Constraint arg0) {
+    }
+    
+    public void enterInverseImplication(InverseImplication arg0) {
+    }
+
+    public void handleInverseImplication(InverseImplication arg0) {
+    }
+
+    public void leaveInverseImplication(InverseImplication arg0) {
+    }
+    
+    public void enterImplication(Implication arg0) {
+    }
+
+    public void handleImplication(Implication arg0) {
+    }
+
+    public void leaveImplication(Implication arg0) {
+    }
+    
+    public void enterEquivalence(Equivalence arg0) {
+    }
+
+    public void handleEquivalence(Equivalence arg0) {
+    }
+
+    public void leaveEquivalence(Equivalence arg0) {
+    }
+    
+    public void enterLogicProgrammingRule(LogicProgrammingRule arg0) {
+    }
+
+    public void handleLogicProgrammingRule(LogicProgrammingRule arg0) {
+    }
+
+    public void leaveLogicProgrammingRule(LogicProgrammingRule arg0) {
+    }
+    
+    public void enterUniversalQuantification(UniversalQuantification arg0) {
+    }
+
+    public void handleUniversalQuantification(UniversalQuantification arg0) {
+    }
+
+    public void leaveUniversalQuantification(UniversalQuantification arg0) {
+    }
+    
+    public void enterExistentialQuantification(ExistentialQuantification arg0) {
+    }
+
+    public void handleExistentialQuantification(ExistentialQuantification arg0) {
+    }
+
+    public void leaveExistentialQuantification(ExistentialQuantification arg0) {
+    }
 }
