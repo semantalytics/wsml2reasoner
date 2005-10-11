@@ -43,6 +43,7 @@ import org.wsml.reasoner.impl.OntologyRegistrationRequestImpl;
 import org.wsml.reasoner.impl.QueryAnsweringRequestImpl;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
+import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.Serializer;
@@ -53,26 +54,24 @@ public class BaseReasonerTest extends TestCase {
 
     protected static Ontology o = null;
 
-    protected org.omwg.logicalexpression.io.Parser leParser = null;
+    protected LogExprSerializerWSML logExprSerializer = null;
 
-    protected org.omwg.logicalexpression.io.Serializer logExprSerializer = null;
+    protected static WsmoFactory wsmoFactory = null;
+
+    protected static LogicalExpressionFactory leFactory = null;
 
     protected static void setupScenario(String ontologyFile) throws Exception {
         // Set up factories for creating WSML elements
 
-        Map<String, String> leProperties = new HashMap<String, String>();
-        leProperties.put(Factory.PROVIDER_CLASS,
-                "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
+        leFactory = (org.wsmo.factory.LogicalExpressionFactory) Factory
+                .createLogicalExpressionFactory(null);
 
-        org.wsmo.factory.LogicalExpressionFactory leFactory = (org.wsmo.factory.LogicalExpressionFactory) Factory
-                .createLogicalExpressionFactory(leProperties);
-
-        WsmoFactory factory = Factory.createWsmoFactory(null);
+        wsmoFactory = Factory.createWsmoFactory(null);
 
         // Set up WSML parser
 
         Map<String, Object> parserProperties = new HashMap<String, Object>();
-        parserProperties.put(Parser.PARSER_WSMO_FACTORY, factory);
+        parserProperties.put(Parser.PARSER_WSMO_FACTORY, wsmoFactory);
         parserProperties.put(Parser.PARSER_LE_FACTORY, leFactory);
 
         parserProperties.put(org.wsmo.factory.Factory.PROVIDER_CLASS,
@@ -98,7 +97,7 @@ public class BaseReasonerTest extends TestCase {
         } else {
             return;
         }
-        
+
         System.out.println("Parsed ontology");
 
         // Print ontology in WSML
@@ -131,7 +130,8 @@ public class BaseReasonerTest extends TestCase {
     protected void performQuery(String query, Set<VariableBinding> expected)
             throws Exception {
         System.out.println("\n\nStarting reasoner with query " + query);
-        LogicalExpression qExpression = leParser.parse(query);
+        LogicalExpression qExpression = leFactory.createLogicalExpression(
+                query, o);
         System.out.println("WSML Query:");
         System.out.println(logExprSerializer.serialize(qExpression));
         System.out.println("--------------\n\n");
@@ -156,9 +156,6 @@ public class BaseReasonerTest extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
-        leParser = LogExprParserImpl.getInstance(o); // construct queries
-        // over the same
-        // ontology
         logExprSerializer = new LogExprSerializerWSML(o);
     }
 
