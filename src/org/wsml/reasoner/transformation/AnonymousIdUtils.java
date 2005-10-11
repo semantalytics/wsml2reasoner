@@ -5,11 +5,14 @@ import java.util.Map;
 import java.util.Random;
 
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.terms.NumberedAnonymousID;
+import org.omwg.logicalexpression.terms.Term;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.UnnumberedAnonymousID;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
+import org.wsmo.factory.WsmoFactory;
 
 /**
  * @author Gabor Nagypal (FZI)
@@ -17,7 +20,6 @@ import org.wsmo.factory.LogicalExpressionFactory;
 public abstract class AnonymousIdUtils
 {
     protected static AnonymousIdTranslator anonymousIdTranslator;
-    /** The random number generator. */
     protected static final Random RND = new Random();
     protected static final String PREFIX = "anonymous:";
 
@@ -56,35 +58,37 @@ public abstract class AnonymousIdUtils
     
     public final static class AnonymousIdTranslator
     {
+        private WsmoFactory wsmoFactory;
         private Map<Byte, String> nbIdMap;
         private LogicalExpression scope;
         private LogicalExpressionFactory leFactory;
 
         public AnonymousIdTranslator()
         {
+            wsmoFactory = Factory.createWsmoFactory(null);
             Map createParams = new HashMap();
             createParams.put(Factory.PROVIDER_CLASS, "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
             leFactory = (LogicalExpressionFactory)Factory.createLogicalExpressionFactory(createParams);
             nbIdMap = new HashMap<Byte, String>();
         }
 
-        public IRI translate(Identifier id)
+        public Term translate(Term term)
         {
-            return translate(scope,id);
+            return translate(scope, term);
         }
 
-        public IRI translate(LogicalExpression scope, Identifier id)
+        public Term translate(LogicalExpression scope, Term term)
         {
-            if(id instanceof UnnumberedAnonymousID)
+            if(term instanceof UnnumberedAnonymousID)
             {
-                return wsmo.createIRI(getNewIri());
+                return wsmoFactory.createIRI(getNewIri());
             }
-            else if(id instanceof NbAnonymousID)
+            else if(term instanceof NumberedAnonymousID)
             {
-                return translate(scope, (NbAnonymousID)id);
+                return translate(scope, (NumberedAnonymousID)term);
             }
             else
-                return (IRI)id;
+                return term;
         }
         
         public void setScope(LogicalExpression scope)
@@ -96,7 +100,7 @@ public abstract class AnonymousIdUtils
             }
         }
         
-        private IRI translate(LogicalExpression scope, NbAnonymousID nbId)
+        private IRI translate(LogicalExpression scope, NumberedAnonymousID nbId)
         {
             setScope(scope);
             Byte number = new Byte(nbId.getNumber());
@@ -106,7 +110,7 @@ public abstract class AnonymousIdUtils
                 idString = AnonymousIdUtils.getNewIri();
                 nbIdMap.put(number, idString);
             }
-            return leFactory.createIRI(idString);
+            return wsmoFactory.createIRI(idString);
         }
     }
 }

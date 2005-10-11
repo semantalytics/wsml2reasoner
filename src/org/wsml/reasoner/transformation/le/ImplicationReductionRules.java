@@ -18,8 +18,6 @@
  */
 package org.wsml.reasoner.transformation.le;
 
-import org.omwg.logicalexpression.Binary;
-import org.omwg.logicalexpression.CompoundExpression;
 import org.omwg.logicalexpression.Equivalence;
 import org.omwg.logicalexpression.Implication;
 import org.omwg.logicalexpression.LogicalExpression;

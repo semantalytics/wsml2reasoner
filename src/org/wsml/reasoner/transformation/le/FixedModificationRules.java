@@ -18,7 +18,15 @@
  */
 package org.wsml.reasoner.transformation.le;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.omwg.logicalexpression.LogicalExpression;
 import org.wsmo.factory.Factory;

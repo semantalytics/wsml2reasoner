@@ -21,15 +21,12 @@ package org.wsml.reasoner.transformation.le;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.omwg.logicalexpression.Binary;
-import org.omwg.logicalexpression.CompoundExpression;
 import org.omwg.logicalexpression.Conjunction;
 import org.omwg.logicalexpression.Constraint;
 import org.omwg.logicalexpression.Disjunction;
 import org.omwg.logicalexpression.InverseImplication;
 import org.omwg.logicalexpression.LogicProgrammingRule;
 import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.logicalexpression.Unary;
 
 /**
  * This singleton class represents a set of transformation rules for splitting

@@ -25,16 +25,19 @@ import java.util.List;
 import java.util.Set;
 
 import org.omwg.logicalexpression.Atom;
-import org.omwg.logicalexpression.AttrSpecification;
-import org.omwg.logicalexpression.Binary;
+import org.omwg.logicalexpression.AttributeConstraintMolecule;
+import org.omwg.logicalexpression.AttributeInferenceMolecule;
+import org.omwg.logicalexpression.AttributeMolecule;
+import org.omwg.logicalexpression.AttributeValueMolecule;
+import org.omwg.logicalexpression.CompoundMolecule;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.MembershipMolecule;
 import org.omwg.logicalexpression.Molecule;
-import org.omwg.logicalexpression.terms.Identifier;
-import org.omwg.logicalexpression.terms.NbAnonymousID;
+import org.omwg.logicalexpression.SubConceptMolecule;
 import org.omwg.logicalexpression.terms.Term;
-import org.omwg.logicalexpression.terms.UnNbAnonymousID;
 import org.wsml.reasoner.transformation.AnonymousIdUtils;
 import org.wsml.reasoner.transformation.AnonymousIdUtils.AnonymousIdTranslator;
+import org.wsmo.common.Identifier;
 
 /**
  * This singleton class represents a set of normalization rules for replacing
@@ -45,9 +48,11 @@ import org.wsml.reasoner.transformation.AnonymousIdUtils.AnonymousIdTranslator;
 public class MoleculeDecompositionRules extends FixedModificationRules
 {
     protected static MoleculeDecompositionRules instance;
+    protected AnonymousIdTranslator anonymousIDTranslator;
 
     private MoleculeDecompositionRules()
     {
+        anonymousIDTranslator = AnonymousIdUtils.getAnonymousIdTranslator();
         rules.add(new MoleculeDecompositionRule());
         rules.add(new AtomAnonymousIDRule());
     }
@@ -60,31 +65,31 @@ public class MoleculeDecompositionRules extends FixedModificationRules
         }
         return instance;
     }
-
+    
     protected class MoleculeDecompositionRule implements NormalizationRule
     {
-        protected AnonymousIdTranslator anonymousIDTranslator;
-
-        public MoleculeDecompositionRule()
-        {
-            anonymousIDTranslator = AnonymousIdUtils.getAnonymousIdTranslator();
-        }
-
         public LogicalExpression apply(LogicalExpression expression)
         {
-            Set<LogicalExpression> simpleMolecules = decomposeMolecule((Molecule)expression);
-            return buildConjunction(simpleMolecules);
+            Set<LogicalExpression> simpleMolecules = decomposeMolecule((CompoundMolecule)expression);
+            return buildNaryConjunction(simpleMolecules);
         }
 
         public boolean isApplicable(LogicalExpression expression)
         {
-            return expression instanceof Molecule;
+            return expression instanceof CompoundMolecule;
         }
 
-        protected Set<LogicalExpression> decomposeMolecule(Molecule molecule)
+        protected Set<LogicalExpression> decomposeMolecule(CompoundMolecule compoundMolecule)
         {
             Set<LogicalExpression> simpleMolecules = new HashSet<LogicalExpression>();
-            Term term = replaceAnonymous(molecule.getTerm());
+            Iterator moleculeIterator = compoundMolecule.listOperands().iterator();
+            while(moleculeIterator.hasNext())
+            {
+                Molecule molecule = (Molecule)moleculeIterator.next();
+                simpleMolecules.add(molecule);
+            }
+/*            
+            Term term = replaceAnonymous(compoundMolecule.getTerm());
 
             // extract subClassOf-statements:
             if(molecule.listSubConceptOf() != null)
@@ -122,10 +127,11 @@ public class MoleculeDecompositionRules extends FixedModificationRules
                     }
                 }
             }
-
+*/
             return simpleMolecules;
         }
 
+/*
         protected Molecule createSubClassOfMolecule(Term subclassTerm, Term superclassTerm)
         {
             Set<Term> termSingleton = new HashSet<Term>();
@@ -146,7 +152,8 @@ public class MoleculeDecompositionRules extends FixedModificationRules
             attrSpecSingleton.add(attrSpec);
             return leFactory.createMolecule(term, null, null, attrSpecSingleton);
         }
-
+*/
+/*        
         protected LogicalExpression buildConjunction(Set<LogicalExpression> expressions)
         {
             LogicalExpression conjunction = null;
@@ -161,17 +168,18 @@ public class MoleculeDecompositionRules extends FixedModificationRules
             }
             return conjunction;
         }
-
+*/
+/*
         protected Term replaceAnonymous(Term term)
         {
-            if(term instanceof UnNbAnonymousID || term instanceof NbAnonymousID)
+            if(term instanceof UnnumberedAnonymousID || term instanceof NumberedAnonymousID)
             {
                 return anonymousIDTranslator.translate((Identifier)term);
             }
             else
                 return term;
         }
-
+*/
         public String toString()
         {
             return "X[A1,...,An]\n\t=>\n X[A1] and ... and X[An]\n";
@@ -190,14 +198,14 @@ public class MoleculeDecompositionRules extends FixedModificationRules
         public LogicalExpression apply(LogicalExpression expression)
         {
             Atom atom = (Atom)expression;
-            Identifier id = anonymousIDTranslator.translate(atom, atom.getIdentifier());
+            Identifier id = (Identifier)anonymousIDTranslator.translate(atom.getIdentifier());
             List<Term> args = new ArrayList<Term>();
             for(int i = 0; i < atom.getArity(); i++)
             {
                 Term term = atom.getParameter(i);
                 if(term instanceof Identifier)
                 {
-                    term = anonymousIDTranslator.translate(atom, (Identifier)term);
+                    term = anonymousIDTranslator.translate((Identifier)term);
                 }
                 args.add(term);
             }
@@ -207,6 +215,57 @@ public class MoleculeDecompositionRules extends FixedModificationRules
         public boolean isApplicable(LogicalExpression expression)
         {
             return expression instanceof Atom;
+        }
+    }
+    
+    protected class MoleculeAnonymousIDRule implements NormalizationRule
+    {
+        protected AnonymousIdTranslator anonymousIDTranslator;
+
+        public MoleculeAnonymousIDRule()
+        {
+            anonymousIDTranslator = AnonymousIdUtils.getAnonymousIdTranslator();
+        }
+
+        public LogicalExpression apply(LogicalExpression expression)
+        {
+            Molecule molecule = (Molecule)expression;
+            Term leftOperand = anonymousIDTranslator.translate(molecule.getLeftParameter());
+            Term rightOperand = anonymousIDTranslator.translate(molecule.getRightParameter());
+            Term attribute = null;
+            if(molecule instanceof AttributeMolecule)
+            {
+                attribute = anonymousIDTranslator.translate(((AttributeMolecule)molecule).getAttribute());
+            }
+           
+            //instantiate the appropriate molecule type:
+            if(molecule instanceof MembershipMolecule)
+            {
+                return leFactory.createMemberShipMolecule(leftOperand, rightOperand);
+            }
+            else if(molecule instanceof SubConceptMolecule)
+            {
+                return leFactory.createSubConceptMolecule(leftOperand, rightOperand);
+            }
+            else if(molecule instanceof AttributeConstraintMolecule)
+            {
+                return leFactory.createAttributeConstraint(leftOperand, attribute, rightOperand);
+            }
+            else if(molecule instanceof AttributeInferenceMolecule)
+            {
+                return leFactory.createAttributeInference(leftOperand, attribute, rightOperand);
+            }
+            else if(molecule instanceof AttributeValueMolecule)
+            {
+                return leFactory.createAttributeValue(leftOperand, attribute, rightOperand);
+            }
+            else
+                throw new RuntimeException("in MoleculeAnonymousIDRule::apply() : reached presumably unreachable code!");
+        }
+
+        public boolean isApplicable(LogicalExpression expression)
+        {
+            return expression instanceof Molecule;
         }
     }
 }
