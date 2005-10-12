@@ -24,8 +24,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.omwg.logicalexpression.CompoundExpression;
+import org.omwg.logicalexpression.Conjunction;
+import org.omwg.logicalexpression.Constraint;
+import org.omwg.logicalexpression.Disjunction;
+import org.omwg.logicalexpression.Equivalence;
+import org.omwg.logicalexpression.ExistentialQuantification;
+import org.omwg.logicalexpression.Implication;
+import org.omwg.logicalexpression.InverseImplication;
+import org.omwg.logicalexpression.LogicProgrammingRule;
 import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.logicalexpression.Unary;
+import org.omwg.logicalexpression.Negation;
+import org.omwg.logicalexpression.NegationAsFailure;
+import org.omwg.logicalexpression.UniversalQuantification;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 
@@ -151,14 +161,55 @@ public class OnePassReplacementNormalizer implements LogicalExpressionNormalizer
     protected CompoundExpression replaceArguments(CompoundExpression compound, List<LogicalExpression> arguments)
     {
         CompoundExpression result = null;
-        if(compound instanceof Unary)
+        if(compound instanceof Constraint)
         {
-            result = leFactory.createUnary(compound.getOperator(), arguments.get(0));
+            result = leFactory.createConstraint(arguments.get(0));
+        }
+        else if(compound instanceof Negation)
+        {
+            result = leFactory.createNegation(arguments.get(0));
+        }
+        else if(compound instanceof NegationAsFailure)
+        {
+            result = leFactory.createNegationAsFailure(arguments.get(0));
+        }
+        else if(compound instanceof ExistentialQuantification)
+        {
+            ExistentialQuantification exists = (ExistentialQuantification)compound;
+            result = leFactory.createExistentialQuantification(exists.listVariables(), arguments.get(0));
+        }
+        else if(compound instanceof UniversalQuantification)
+        {
+            UniversalQuantification exists = (UniversalQuantification)compound;
+            result = leFactory.createExistentialQuantification(exists.listVariables(), arguments.get(0));
+        }
+        else if(compound instanceof Conjunction)
+        {
+            result = leFactory.createConjunction(arguments.get(0), arguments.get(1));
+        }
+        else if(compound instanceof Disjunction)
+        {
+            result = leFactory.createDisjunction(arguments.get(0), arguments.get(1));
+        }
+        else if(compound instanceof Equivalence)
+        {
+            result = leFactory.createEquivalence(arguments.get(0), arguments.get(1));
+        }
+        else if(compound instanceof Implication)
+        {
+            result = leFactory.createImplication(arguments.get(0), arguments.get(1));
+        }
+        else if(compound instanceof InverseImplication)
+        {
+            result = leFactory.createInverseImplication(arguments.get(0), arguments.get(1));
+        }
+        else if(compound instanceof LogicProgrammingRule)
+        {
+            result = leFactory.createLogicProgrammingRule(arguments.get(0), arguments.get(1));
         }
         else
-        // instanceof Binary
         {
-            result = leFactory.createBinary(compound.getOperator(), arguments.get(0), arguments.get(1));
+            throw new RuntimeException("in OnePassReplacementNormalizer::replaceArguments() : reached presumably unreachable code!");
         }
         return result;
     }
