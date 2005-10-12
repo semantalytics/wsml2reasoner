@@ -59,12 +59,12 @@ public abstract class FixedModificationRules implements List
         }
     }
     
-    protected static LogicalExpression buildNaryConjunction(Set<LogicalExpression> expressions)
+    public static LogicalExpression buildNaryConjunction(Set<LogicalExpression> expressions)
     {
         return buildNary(CONJUNCTION, expressions);
     }
 
-    protected static LogicalExpression buildNaryDisjunction(Set<LogicalExpression> expressions)
+    public static LogicalExpression buildNaryDisjunction(Set<LogicalExpression> expressions)
     {
         return buildNary(DISJUNCTION, expressions);
     }
