@@ -30,15 +30,15 @@ import java.util.Map;
 import java.util.Set;
 
 import org.omwg.logicalexpression.Atom;
-import org.omwg.logicalexpression.CompoundExpression;
+import org.omwg.logicalexpression.AttributeValueMolecule;
 import org.omwg.logicalexpression.Conjunction;
 import org.omwg.logicalexpression.Constants;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.MembershipMolecule;
 import org.omwg.logicalexpression.NegationAsFailure;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Axiom;
-import org.omwg.ontology.ComplexDataType;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.DataValue;
 import org.omwg.ontology.Instance;
@@ -54,9 +54,7 @@ import org.wsml.reasoner.transformation.le.FixedModificationRules;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.Namespace;
-import org.wsmo.common.UnnumberedAnonymousID;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.common.exception.SynchronisationException;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -114,421 +112,125 @@ public class AxiomatizationNormalizer implements OntologyNormalizer
      * 
      * @return an ontology represent o semantically but only consists of axioms
      */
-    public Ontology normalize(Ontology o)
+    public Ontology normalize(Ontology ontology)
     {
+        String ontologyID = (ontology.getIdentifier() != null ? ontology.getIdentifier().toString() + "-as-axioms" : "iri:normalized-ontology-" + ontology.hashCode());
+        Ontology resultOntology = wsmoFactory.createOntology(wsmoFactory.createIRI(ontologyID));
+        Collection<LogicalExpression> axiomExpressions = new LinkedList<LogicalExpression>();
 
-        // NOTE: the implementation at present assumes that every onotlogy
-        // element
-        // is identified by an IRI.
-        // This should be ensured before proceeding by an additional
-        // normalization step.
-
-        // Set up factories for creating WSMO/WSML elements
-
-        String resultIRI = (o.getIdentifier() != null ? o.getIdentifier().toString() + "-as-axioms" : "iri:normalized-ontology-" + o.hashCode());
-        Ontology result = wsmoFactory.createOntology(wsmoFactory.createIRI(resultIRI));
-        try
+        // process namespace definitions:
+        for(Namespace namespace : (Collection<Namespace>)ontology.listNamespaces())
         {
+            resultOntology.addNamespace(namespace);
+        }
+        resultOntology.setDefaultNamespace(ontology.getDefaultNamespace());
 
-            // Namespace defs.
-
-            // Copy namespace defs.
-            for(Object n : o.listNamespaces())
-            {
-                result.addNamespace((Namespace)n);
-            }
-
-            result.setDefaultNamespace(o.getDefaultNamespace());
-
-            // Axioms
-            for(Object a : o.listAxioms())
-            {
-                result.addAxiom((Axiom)a);
-            }
-
-            // Concepts
-            for(Object c : o.listConcepts())
-            {
-                handleConcept((Concept)c, result);
-            }
-
-            // Relations
-            for(Object r : o.listRelations())
-            {
-                handleRelation((Relation)r, result);
-            }
-
-            // Concept instances
-            for(Object ci : o.listInstances())
-            {
-                handleConceptInstance((Instance)ci, result);
-            }
-
-            // Relation instances are handled inside relations already.
-
-            // Nonfunctional properties
-
-            Map nfps = o.listNFPValues();
-            for(Object nextNFP : nfps.entrySet())
-            {
-                Map.Entry entry = (Map.Entry)nextNFP;
-                result.addNFPValue((IRI)entry.getKey(), entry.getValue());
-            }
-
-        } catch(SynchronisationException e)
+        //process non-functional properties:
+        for(Object nfp : ontology.listNFPValues().entrySet())
         {
-            e.printStackTrace();
-            result = null;
-
-        } catch(InvalidModelException e)
+            try
+            {
+                if(nfp instanceof Identifier)
+                {
+                    Map.Entry entry = (Map.Entry)nfp;
+                    resultOntology.addNFPValue((IRI)entry.getKey(), (Identifier)entry.getValue());
+                }
+                else if(nfp instanceof Value)
+                {
+                    Map.Entry entry = (Map.Entry)nfp;
+                    resultOntology.addNFPValue((IRI)entry.getKey(), (Value)entry.getValue());
+                }
+            } catch(InvalidModelException e)
+            {
+                // TODO: handle exception
+            }
+        }
+        
+        // process axioms:
+        for(Axiom axiom : (Collection<Axiom>)ontology.listAxioms())
         {
-            e.printStackTrace();
-            result = null;
+            try
+            {
+                resultOntology.addAxiom(axiom);
+            } catch(InvalidModelException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
 
-        return result;
-    }
-
-    /**
-     * Inserts axioms that represent the concept in logical terms.
-     * 
-     * @param c -
-     *            the concept to be translated to logical expressions.
-     * @param o -
-     *            the ontoloy to which to add the respective representation
-     *            axioms
-     * @throws InvalidModelException
-     * @throws SynchronisationException
-     */
-    private void handleConcept(Concept c, Ontology o) throws SynchronisationException, InvalidModelException
-    {
-        Set<LogicalExpression> lExprs = new HashSet<LogicalExpression>();
-
-        LogicalExpression expr;
-        Set subConceptOfs = new HashSet();
-        Set attrSpecs = new HashSet();
-
-        Term cTerm = convertIRI(c.getIdentifier());
-
-        Term t;
-        for(Object sc : c.listSuperConcepts())
+        // process concepts:
+        for(Concept concept : (Collection<Concept>)ontology.listConcepts())
         {
-            t = convertIRI(((Concept)sc).getIdentifier());
-            subConceptOfs.add(t);
+            addAsAxioms(resultOntology, normalizeConcept(concept));
         }
 
-        for(Object next : c.listAttributes())
+        //process relations:
+        for(Relation relation : (Collection<Relation>)ontology.listRelations())
         {
-            Attribute a = (Attribute)next;
-            lExprs.addAll(handleConceptAttribute(a, cTerm));
+            addAsAxioms(resultOntology, normalizeRelation(relation));
         }
 
-        if(subConceptOfs.size() > 0)
+        // Concept instances
+        for(Instance instance : (Collection<Instance>)ontology.listInstances())
         {
-            expr = leFactory.createMolecule(cTerm, subConceptOfs, null, null);
-            lExprs.add(expr);
+            addAsAxioms(resultOntology, normalizeInstance(instance));
         }
 
-        int i = 1;
-        String axPrefix = "Axiom-" + convertIRI(c.getIdentifier()).asString();
-        for(LogicalExpression l : lExprs)
-        {
-            Axiom ax = wsmoFactory.createAxiom(wsmoFactory.createIRI(axPrefix + "-" + (i++)));
-            ax.addDefinition(l);
-            o.addAxiom(ax);
-        }
+        return resultOntology;
     }
     
+    protected void addAsAxioms(Ontology ontology, Collection<LogicalExpression> expressions)
+    {
+        int i = 1;
+        for(LogicalExpression expression : expressions)
+        {
+            String axiomIDString = "axiom_" + Integer.toString(i++) + "_" + ontology.getIdentifier();
+            Identifier axiomID = wsmoFactory.createIRI(axiomIDString);
+            Axiom axiom = wsmoFactory.createAxiom(axiomID);
+            axiom.addDefinition(expression);
+            try
+            {
+                ontology.addAxiom(axiom);
+            } catch(InvalidModelException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+
     protected Set<LogicalExpression> normalizeConcept(Concept concept)
     {
         Identifier conceptID = concept.getIdentifier();
         Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
 
-        //process superconcepts:
+        // process superconcepts:
         for(Concept superconcept : (Set<Concept>)concept.listSuperConcepts())
         {
             Identifier superconceptID = superconcept.getIdentifier();
             resultExpressions.add(leFactory.createSubConceptMolecule(conceptID, superconceptID));
         }
 
-        //process attributes:
+        // process attributes:
         for(Attribute attribute : (Set<Attribute>)concept.listAttributes())
         {
             resultExpressions.addAll(normalizeConceptAttribute(conceptID, attribute));
         }
-/*        
-        LogicalExpression expr;
-        Set subConceptOfs = new HashSet();
-        Set attrSpecs = new HashSet();
 
-        Term cTerm = convertIRI(c.getIdentifier());
-
-        Term t;
-        for(Object sc : c.listSuperConcepts())
-        {
-            t = convertIRI(((Concept)sc).getIdentifier());
-            subConceptOfs.add(t);
-        }
-
-        for(Object next : c.listAttributes())
-        {
-            Attribute a = (Attribute)next;
-            lExprs.addAll(handleConceptAttribute(a, cTerm));
-        }
-
-        if(subConceptOfs.size() > 0)
-        {
-            expr = leFactory.createMolecule(cTerm, subConceptOfs, null, null);
-            lExprs.add(expr);
-        }
-
-        int i = 1;
-        String axPrefix = "Axiom-" + convertIRI(c.getIdentifier()).asString();
-        for(LogicalExpression l : lExprs)
-        {
-            Axiom ax = wsmoFactory.createAxiom(wsmoFactory.createIRI(axPrefix + "-" + (i++)));
-            ax.addDefinition(l);
-            o.addAxiom(ax);
-        }
-*/        
-    }    
-
-    /**
-     * Inserts axioms that represent the attribute of a concept in logical
-     * terms.
-     * 
-     * @param a -
-     *            the attribute to be translated to logical expressions.
-     * @param cTerm -
-     *            the term that represents the respective class
-     * @return the set of logical expressions to which to add the respective
-     *         translation.
-     * @throws InvalidModelException
-     */
-    private Set handleConceptAttribute(Attribute a, Term cTerm) throws InvalidModelException
-    {
-        Set<org.omwg.logicalexpression.LogicalExpression> result = new HashSet<org.omwg.logicalexpression.LogicalExpression>();
-        Term attID = convertIRI(a.getIdentifier());
-
-        Set<Type> rangeTypes = a.listTypes();
-        Set<Term> moList = new HashSet<Term>();
-        for(Type type : rangeTypes)
-        {
-            if(type instanceof Concept)
-            {
-                org.omwg.logicalexpression.terms.IRI tIRI = convertIRI(((Concept)type).getIdentifier());
-                moList.add(tIRI);
-            }
-            else if(type instanceof SimpleDataType)
-            {
-                org.omwg.logicalexpression.terms.IRI tIRI = convertIRI(((SimpleDataType)type).getIRI());
-                moList.add(tIRI);
-            }
-            else if(type instanceof ComplexDataType)
-            {
-                throw new IllegalArgumentException("Complex datatype are currently not supported in Normalization to LogicalExpressions");
-                // TODO include complex data types as well.
-            }
-        }
-
-        // Handle attribute type
-        org.omwg.logicalexpression.AttrSpecification attSpec = null;
-        if(a.isConstraining())
-        { // ofType
-            attSpec = leFactory.createAttrSpecification(AttrSpecification.ATTR_CONSTRAINT, attID, moList);
-        }
-        else
-        { // impliesType
-            attSpec = leFactory.createAttrSpecification(AttrSpecification.ATTR_INFERENCE, attID, moList);
-        }
-
-        org.omwg.logicalexpression.LogicalExpression typeExpr = leFactory.createMolecule(cTerm, null, null, toSet(attSpec));
-        result.add(typeExpr);
-
-        // Handle Attribute Feature
-        Term x = leFactory.createVariable("x");
-        Term y = leFactory.createVariable("y");
-        Term z = leFactory.createVariable("z");
-
-        org.omwg.logicalexpression.LogicalExpression m1, m2, m3, m4, m5, m6, m7;
-
-        m1 = leFactory.createMolecule(x, null, toSet(cTerm), null);
-        m2 = leFactory.createMolecule(y, null, toSet(cTerm), null);
-
-        AttrSpecification attrSpec1 = leFactory.createAttrSpecification(AttrSpecification.ATTR_VALUE, attID, toSet(y));
-        m3 = leFactory.createMolecule(x, null, null, toSet(attrSpec1));
-
-        AttrSpecification attrSpec2 = leFactory.createAttrSpecification(AttrSpecification.ATTR_VALUE, attID, toSet(z));
-        m4 = leFactory.createMolecule(y, null, null, toSet(attrSpec2));
-
-        m5 = leFactory.createMolecule(x, null, null, toSet(attrSpec2));
-
-        AttrSpecification attrSpec3 = leFactory.createAttrSpecification(AttrSpecification.ATTR_VALUE, attID, toSet(x));
-        m6 = leFactory.createMolecule(y, null, null, toSet(attrSpec3));
-        m7 = leFactory.createMolecule(x, null, null, toSet(attrSpec3));
-
-        if(a.isTransitive())
-        {
-
-            org.omwg.logicalexpression.LogicalExpression h1, h2, h3;
-            h1 = leFactory.createBinary(CompoundExpression.AND, m1, m2);
-            h2 = leFactory.createBinary(CompoundExpression.AND, h1, m3);
-            h3 = leFactory.createBinary(CompoundExpression.AND, h2, m4);
-            org.omwg.logicalexpression.LogicalExpression transExpr = leFactory.createBinary(CompoundExpression.IMPLIES, h3, m5);
-
-            result.add(transExpr);
-
-        }
-
-        if(a.isSymmetric())
-        {
-
-            org.omwg.logicalexpression.LogicalExpression h1, h2;
-            h1 = leFactory.createBinary(CompoundExpression.AND, m1, m2);
-            h2 = leFactory.createBinary(CompoundExpression.AND, h1, m3);
-
-            org.omwg.logicalexpression.LogicalExpression symmExpr = leFactory.createBinary(CompoundExpression.IMPLIES, h2, m6);
-
-            result.add(symmExpr);
-
-        }
-
-        if(a.isReflexive())
-        {
-
-            org.omwg.logicalexpression.LogicalExpression reflExpr = leFactory.createBinary(CompoundExpression.IMPLIES, m1, m7);
-
-            result.add(reflExpr);
-
-        }
-
-        if(a.getInverseOf() != null)
-        {
-
-            org.omwg.logicalexpression.LogicalExpression h1, h2;
-            Attribute inverseAtt = a.getInverseOf();
-            IRI inversetAttIRI = convertIRI(a.getIdentifier());
-
-            AttrSpecification attrSpec4 = leFactory.createAttrSpecification(AttrSpecification.ATTR_VALUE, inversetAttIRI, toSet(x));
-            org.omwg.logicalexpression.LogicalExpression m8 = leFactory.createMolecule(y, null, null, toSet(attrSpec4));
-
-            h1 = leFactory.createBinary(CompoundExpression.AND, m1, m3);
-
-            org.omwg.logicalexpression.LogicalExpression invExpr1 = leFactory.createBinary(CompoundExpression.IMPLIES, h1, m8);
-
-            h2 = leFactory.createBinary(CompoundExpression.AND, m1, m8);
-            org.omwg.logicalexpression.LogicalExpression invExpr2 = leFactory.createBinary(CompoundExpression.IMPLIES, h2, m3);
-
-            result.add(invExpr1);
-            result.add(invExpr2);
-
-        }
-
-        // Handle Cardinality constraints
-
-        if(a.getMinCardinality() > 0)
-        {
-
-            List headArgs = new LinkedList();
-            headArgs.add(x);
-            org.omwg.logicalexpression.LogicalExpression head = leFactory.createAtom(leFactory.createIRI("mincard_" + cTerm.toString() + "_" + attID), headArgs); // is
-            // new
-            // and
-            // unique
-            // within
-            // the
-            // onotlogy!
-
-            Set xAttVals = new HashSet();
-            Variable[] auxVars = new Variable[a.getMinCardinality()];
-            for(int i = 0; i < a.getMinCardinality(); i++)
-            {
-                Variable nextVar = leFactory.createVariable("y" + (i + 1));
-                auxVars[i] = nextVar;
-                xAttVals.add(nextVar);
-            }
-            AttrSpecification as = leFactory.createAttrSpecification(AttrSpecification.ATTR_VALUE, attID, xAttVals);
-            org.omwg.logicalexpression.LogicalExpression xValsMolecule = leFactory.createMolecule(x, null, null, toSet(as));
-
-            org.omwg.logicalexpression.LogicalExpression body = leFactory.createBinary(CompoundExpression.AND, m1, xValsMolecule);
-
-            // add all inequality statements on pairs of auxilliary predicates.
-            for(int i = 0; i < a.getMinCardinality(); i++)
-            {
-                for(int j = i + 1; j < a.getMinCardinality(); j++)
-                {
-                    List iesArgs = new LinkedList();
-                    iesArgs.add(auxVars[i]);
-                    iesArgs.add(auxVars[j]);
-                    org.omwg.logicalexpression.LogicalExpression nextInEqStatement = leFactory.createAtom(leFactory.createIRI(Constants.INEQUAL), iesArgs);
-
-                    body = leFactory.createBinary(CompoundExpression.AND, body, nextInEqStatement);
-                }
-            }
-
-            org.omwg.logicalexpression.LogicalExpression minCardExpr1 = leFactory.createBinary(CompoundExpression.LP_IMPL, head, body);
-
-            org.omwg.logicalexpression.LogicalExpression nafExp = leFactory.createUnary(CompoundExpression.NAF, head);
-
-            org.omwg.logicalexpression.LogicalExpression constraintbody = leFactory.createBinary(CompoundExpression.AND, m1, nafExp);
-
-            org.omwg.logicalexpression.LogicalExpression minCardExpr2 = leFactory.createUnary(CompoundExpression.CONSTRAINT, constraintbody);
-
-            result.add(minCardExpr1);
-            result.add(minCardExpr2);
-
-        }
-
-        if(a.getMaxCardinality() < Integer.MAX_VALUE)
-        {
-            // we have a max cardinality ...
-
-            Set xAttVals = new HashSet();
-            Variable[] auxVars = new Variable[a.getMaxCardinality() + 1];
-            for(int i = 0; i <= a.getMaxCardinality(); i++)
-            {
-                Variable nextVar = leFactory.createVariable("y" + (i + 1));
-                auxVars[i] = nextVar;
-                xAttVals.add(nextVar);
-            }
-            AttrSpecification as = leFactory.createAttrSpecification(AttrSpecification.ATTR_VALUE, attID, xAttVals);
-            org.omwg.logicalexpression.LogicalExpression xValsMolecule = leFactory.createMolecule(x, null, null, toSet(as));
-
-            org.omwg.logicalexpression.LogicalExpression body = leFactory.createBinary(CompoundExpression.AND, m1, xValsMolecule);
-
-            // add all inequality statements on pairs of auxilliary predicates.
-            for(int i = 0; i <= a.getMaxCardinality(); i++)
-            {
-                for(int j = i + 1; j <= a.getMaxCardinality(); j++)
-                {
-                    List iesArgs = new LinkedList();
-                    iesArgs.add(auxVars[i]);
-                    iesArgs.add(auxVars[j]);
-                    org.omwg.logicalexpression.LogicalExpression nextInEqStatement = leFactory.createAtom(leFactory.createIRI(Constants.INEQUAL), iesArgs);
-
-                    body = leFactory.createBinary(CompoundExpression.AND, body, nextInEqStatement);
-                }
-            }
-
-            org.omwg.logicalexpression.LogicalExpression maxCardExpr = leFactory.createUnary(CompoundExpression.CONSTRAINT, body);
-
-            result.add(maxCardExpr);
-
-        }
-
-        return result;
+        return resultExpressions;
     }
-    
+
     protected Set<LogicalExpression> normalizeConceptAttribute(Identifier conceptID, Attribute attribute)
     {
         Identifier attributeID = attribute.getIdentifier();
         Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
 
-        //process range types:
+        // process range types:
         Set<Identifier> rangeTypes = new HashSet<Identifier>();
         for(Type type : (Set<Type>)attribute.listTypes())
         {
-            //determine Id of range type:
+            // determine Id of range type:
             Identifier typeID;
             if(type instanceof Concept)
             {
@@ -544,7 +246,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer
                 continue;
             }
 
-            //create an appropriate molecule per range type:
+            // create an appropriate molecule per range type:
             if(attribute.isConstraining())
             {
                 resultExpressions.add(leFactory.createAttributeConstraint(conceptID, attributeID, typeID));
@@ -554,8 +256,8 @@ public class AxiomatizationNormalizer implements OntologyNormalizer
                 resultExpressions.add(leFactory.createAttributeInference(conceptID, attributeID, typeID));
             }
         }
-        
-        //process attribute properties:
+
+        // process attribute properties:
         if(attribute.isReflexive())
         {
             resultExpressions.add(createReflexivityConstraint(conceptID, attributeID));
@@ -573,21 +275,20 @@ public class AxiomatizationNormalizer implements OntologyNormalizer
         {
             resultExpressions.addAll(createInverseConstraints(conceptID, attributeID, inverseAttribute.getIdentifier()));
         }
-            
-        //process cardinality constraints:
+
+        // process cardinality constraints:
         if(attribute.getMinCardinality() > 0)
         {
-            resultExpressions.add(createMinCardinalityConstraint(conceptID, attributeID));
+            resultExpressions.addAll(createMinCardinalityConstraints(conceptID, attributeID, attribute.getMinCardinality()));
         }
         if(attribute.getMaxCardinality() > 0)
         {
-            resultExpressions.add(createMaxCardinalityConstraint(conceptID, attributeID));
+            resultExpressions.add(createMaxCardinalityConstraint(conceptID, attributeID, attribute.getMaxCardinality()));
         }
 
-
-        return result;
+        return resultExpressions;
     }
-    
+
     protected LogicalExpression createTransitivityConstraint(Identifier conceptID, Identifier attributeID)
     {
         Variable xVariable = wsmoFactory.createVariable("x");
@@ -607,7 +308,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer
         LogicalExpression conjunction = FixedModificationRules.buildNaryConjunction(conjuncts);
         return leFactory.createImplication(conjunction, valXZ);
     }
-        
+
     protected LogicalExpression createSymmetryConstraint(Identifier conceptID, Identifier attributeID)
     {
         Variable xVariable = wsmoFactory.createVariable("x");
@@ -624,7 +325,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer
         LogicalExpression conjunction = FixedModificationRules.buildNaryConjunction(conjuncts);
         return leFactory.createImplication(conjunction, valYX);
     }
-        
+
     protected LogicalExpression createReflexivityConstraint(Identifier conceptID, Identifier attributeID)
     {
         Variable xVariable = wsmoFactory.createVariable("x");
@@ -637,8 +338,8 @@ public class AxiomatizationNormalizer implements OntologyNormalizer
     protected Collection<LogicalExpression> createInverseConstraints(Identifier conceptID, Identifier attributeID, Identifier inverseAttributeID)
     {
         Collection<LogicalExpression> inverseConstraints = new ArrayList<LogicalExpression>(2);
-        
-        //build required LE elements:
+
+        // build required LE elements:
         Variable xVariable = wsmoFactory.createVariable("x");
         Variable yVariable = wsmoFactory.createVariable("y");
         LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable, conceptID);
@@ -648,22 +349,22 @@ public class AxiomatizationNormalizer implements OntologyNormalizer
         LogicalExpression valYX = leFactory.createAttributeValue(yVariable, attributeID, xVariable);
         LogicalExpression valInvYX = leFactory.createAttributeValue(yVariable, inverseAttributeID, xVariable);
 
-        //build implication : "..."
+        // build implication : "..."
         LogicalExpression conjunction = leFactory.createConjunction(moX, valXY);
         inverseConstraints.add(leFactory.createImplication(conjunction, valInvYX));
 
-        //build implication : "..."
+        // build implication : "..."
         conjunction = leFactory.createConjunction(moY, valInvXY);
         inverseConstraints.add(leFactory.createImplication(conjunction, valYX));
-        
+
         return inverseConstraints;
     }
-    
-    protected Collection<LogicalExpression> createMinCardinalityConatraint(Identifier conceptID, Identifier attributeID, int cardinality)
+
+    protected Collection<LogicalExpression> createMinCardinalityConstraints(Identifier conceptID, Identifier attributeID, int cardinality)
     {
         Collection<LogicalExpression> minCardConstraints = new ArrayList<LogicalExpression>(2);
-        
-        //build required LE elements:
+
+        // build required LE elements:
         Variable xVariable = wsmoFactory.createVariable("x");
         Variable[] yVariable = new Variable[cardinality];
         for(int i = 0; i < yVariable.length; i++)
@@ -687,324 +388,183 @@ public class AxiomatizationNormalizer implements OntologyNormalizer
                 inEqualities.add(leFactory.createAtom(wsmoFactory.createIRI(Constants.INEQUAL), args));
             }
         }
-        
-        //build LP-rule: "Pnew(?x) :- ?x memberOf <concept> and ?x[<attribute> hasValue ?y1, ... <attribute> hasValue yn] and ?y1!=?y2 and ... and yn-1!=yn."
+
+        // build LP-rule: "Pnew(?x) :- ?x memberOf <concept> and ?x[<attribute>
+        // hasValue ?y1, ... <attribute> hasValue yn] and ?y1!=?y2 and ... and
+        // yn-1!=yn."
         Set<LogicalExpression> conjuncts = new HashSet<LogicalExpression>();
         conjuncts.add(moX);
         conjuncts.addAll(Arrays.asList(valXY));
         conjuncts.addAll(inEqualities);
         LogicalExpression conjunction = FixedModificationRules.buildNaryConjunction(conjuncts);
         IRI newPIRI = wsmoFactory.createIRI("mincard_" + conceptID.toString() + "_" + attributeID);
-        Atom newPX = leFactory.createAtom(newPIRI, Arrays.asList(new Variable[]{xVariable}));
+        Atom newPX = leFactory.createAtom(newPIRI, Arrays.asList(new Variable[] { xVariable }));
         minCardConstraints.add(leFactory.createLogicProgrammingRule(newPX, conjunction));
 
-        //build constraint: "!- ?x memberOf <concept> and naf Pnew(?x)."
+        // build constraint: "!- ?x memberOf <concept> and naf Pnew(?x)."
         NegationAsFailure naf = leFactory.createNegationAsFailure(newPX);
         conjunction = leFactory.createConjunction(moX, naf);
         minCardConstraints.add(leFactory.createConstraint(conjunction));
-        
+
         return minCardConstraints;
     }
     
-
-
-    /**
-     * Inserts axioms that represent the instance in logical terms.
-     * 
-     * @param i -
-     *            the instance to be translated to logical expressions.
-     * @param o -
-     *            the ontoloy to which to add the respective representation
-     *            axioms
-     * @throws InvalidModelException
-     * @throws SynchronisationException
-     */
-    private void handleConceptInstance(Instance i, Ontology o) throws SynchronisationException, InvalidModelException
+    protected LogicalExpression createMaxCardinalityConstraint(Identifier conceptID, Identifier attributeID, int cardinality)
     {
-        Set<LogicalExpression> lExprs = new HashSet<LogicalExpression>();
-
-        LogicalExpression expr;
-        Set memberOfs = new HashSet();
-        Set attrSpecs = new HashSet();
-
-        Term iTerm = convertIRI(i.getIdentifier());
-
-        Term t;
-        for(Object mo : i.listConcepts())
+        cardinality++;
+        
+        // build required LE elements:
+        Variable xVariable = wsmoFactory.createVariable("x");
+        Variable[] yVariable = new Variable[cardinality];
+        for(int i = 0; i < yVariable.length; i++)
         {
-            t = convertIRI(((Concept)mo).getIdentifier());
-            memberOfs.add(t);
+            yVariable[i] = wsmoFactory.createVariable("y" + Integer.toString(i));
         }
-        Map attsAndValues = i.listAttributeValues();
-
-        for(Object next : attsAndValues.keySet())
+        LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable, conceptID);
+        LogicalExpression[] valXY = new LogicalExpression[cardinality];
+        for(int i = 0; i < valXY.length; i++)
         {
-            Attribute a = (Attribute)next;
-            Set<Value> aVals = (Set<Value>)attsAndValues.get(next);
-            lExprs.add(handleInstanceAttribute(a, aVals, iTerm));
+            valXY[i] = leFactory.createAttributeValue(xVariable, attributeID, yVariable[i]);
         }
-
-        if(memberOfs.size() > 0)
+        Collection<LogicalExpression> inEqualities = new ArrayList<LogicalExpression>((cardinality * cardinality + cardinality) / 2 + 1);
+        for(int i = 0; i < cardinality; i++)
         {
-            expr = leFactory.createMolecule(iTerm, null, memberOfs, null);
-            lExprs.add(expr);
+            for(int j = i + 1; j < cardinality; j++)
+            {
+                List args = new ArrayList(2);
+                args.add(yVariable[i]);
+                args.add(yVariable[j]);
+                inEqualities.add(leFactory.createAtom(wsmoFactory.createIRI(Constants.INEQUAL), args));
+            }
         }
 
-        int j = 1;
-        String axPrefix = "Axiom-" + convertIRI(i.getIdentifier()).asString();
-        for(LogicalExpression l : lExprs)
+        // build constraint: "!- ?x memberOf <concept> and ?x[<attribute>
+        // hasValue ?y1, ... <attribute> hasValue yn+1] and ?y1!=?y2 and ... and
+        // yn!=yn+1."
+        Set<LogicalExpression> conjuncts = new HashSet<LogicalExpression>();
+        conjuncts.add(moX);
+        conjuncts.addAll(Arrays.asList(valXY));
+        conjuncts.addAll(inEqualities);
+        LogicalExpression conjunction = FixedModificationRules.buildNaryConjunction(conjuncts);
+        return(leFactory.createConstraint(conjunction));
+    }    
+
+    protected Set<LogicalExpression> normalizeRelation(Relation relation)
+    {
+        Identifier relationID = relation.getIdentifier();
+        Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
+
+        // process super relations:
+        int arity = relation.listParameters().size();
+        List<Variable> variables = new ArrayList<Variable>(arity);
+        for(int i = 0; i < arity; i++)
         {
-            Axiom ax = wsmoFactory.createAxiom(wsmoFactory.createIRI(axPrefix + "-" + (j++)));
-            ax.addDefinition(l);
-            o.addAxiom(ax);
+            variables.add(wsmoFactory.createVariable("x" + Integer.toString(i)));
+        }
+        Atom relP = leFactory.createAtom(relationID, variables);
+        for(Relation superRelation : (Collection<Relation>)relation.listSuperRelations())
+        {
+            Atom superRelP = leFactory.createAtom(superRelation.getIdentifier(), variables);
+            resultExpressions.add(leFactory.createImplication(relP, superRelP));
         }
 
+        // process relation parameters:
+        List<Parameter> parameters = (List<Parameter>)relation.listParameters();
+        Collection<LogicalExpression> parameterAxioms = new LinkedList<LogicalExpression>();
+        int i = 0;
+        for(Parameter parameter : parameters)
+        {
+            Collection<MembershipMolecule> typeMemberships = new ArrayList<MembershipMolecule>(parameter.listTypes().size());
+            for(Type type : (Collection<Type>)parameter.listTypes())
+            {
+                Identifier typeID;
+                if(type instanceof Concept)
+                {
+                    typeID = ((Concept)type).getIdentifier();
+                }
+                else if(type instanceof SimpleDataType)
+                {
+                    typeID = ((SimpleDataType)type).getIRI();
+                }
+                else
+                {
+                    continue;
+                }
+                typeMemberships.add(leFactory.createMemberShipMolecule(variables.get(i), typeID));
+            }
+            if(parameter.isConstraining())
+            {
+                Conjunction conjunction = FixedModificationRules.buildNaryConjunction(typeMemberships);
+                NegationAsFailure naf = leFactory.createNegationAsFailure(conjunction);
+                conjunction = leFactory.createConjunction(relP, naf);
+                parameterAxioms.add(leFactory.createConstraint(conjunction));
+            }
+            else
+            {
+                Conjunction conjunction = FixedModificationRules.buildNaryConjunction(typeMemberships);
+                parameterAxioms.add(leFactory.createImplication(relP, conjunction));
+            }
+        }
+        resultExpressions.addAll(parameterAxioms);
+
+        // process relation instances:
+        for(RelationInstance relInstance : (Collection<RelationInstance>)relation.listRelationInstances())
+        {
+            List<Term> args = new LinkedList<Term>();
+            for(Value value : (List<Value>)relInstance.listParameterValues())
+            {
+                if(value instanceof Instance)
+                {
+                    Identifier val = ((Instance)value).getIdentifier();
+                    args.add(val);
+                }
+                else if(value instanceof DataValue)
+                {
+                    DataValue dataValue = (DataValue)value;
+                    args.add(convertDataValue(dataValue));
+                }
+            }
+            resultExpressions.add(leFactory.createAtom(relationID, args));
+        }
+
+        return resultExpressions;
     }
 
-    /**
-     * Inserts axioms that represent the attribute of a instance of a concept in
-     * logical terms.
-     * 
-     * @param a -
-     *            the attribute to be translated to logical expressions.
-     * @param aVals -
-     *            the values that are assigned to the attribute for the given
-     *            instance
-     * @param iTerm -
-     *            the term that represents the respective instance
-     * @return a logical expression that represents the instance attribute value
-     *         definition.
-     * @throws InvalidModelException
-     */
-    private org.omwg.logicalexpression.LogicalExpression handleInstanceAttribute(Attribute a, Set aVals, Term iTerm) throws InvalidModelException
+    protected Set<LogicalExpression> normalizeInstance(Instance instance)
     {
+        Identifier instanceID = instance.getIdentifier();
+        Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
 
-        org.omwg.logicalexpression.LogicalExpression result;
-
-        // This is like it has been described from Table 8.1 in D.16.1 v0.3
-
-        Term attID = convertIRI(a.getIdentifier());
-
-        Set<Term> valList = new HashSet<Term>();
-        for(Object obj : aVals)
+        // process concepts:
+        for(Concept concept : (Collection<Concept>)instance.listConcepts())
         {
-            if(obj instanceof Instance)
-            { // THIS SEEMS NOT TO BE USED RIGHT
-                // NOW:
-                Identifier val = ((Instance)obj).getIdentifier();
-                valList.add(convertIRI(val));
-            }
-            else if(obj instanceof DataValue)
+            resultExpressions.add(leFactory.createMemberShipMolecule(instanceID, concept.getIdentifier()));
+        }
+
+        // process attribute values:
+        Map<Attribute, Set<Value>> attributeValues = (Map<Attribute, Set<Value>>)instance.listAttributeValues();
+        for(Attribute attribute : attributeValues.keySet())
+        {
+            Identifier attributeID = attribute.getIdentifier();
+            Set<Value> values = attributeValues.get(attribute);
+            List<AttributeValueMolecule> molecules = new ArrayList<AttributeValueMolecule>(values.size());
+            for(Value value : values)
             {
-                DataValue d = (DataValue)obj;
-                Term dVal = convertDataValue(d);
-                valList.add(dVal);
+                Term valueTerm = null;
+                if(value instanceof Instance)
+                {
+                    valueTerm = ((Instance)value).getIdentifier();
+                }
+                else if(value instanceof DataValue)
+                {
+                    valueTerm = convertDataValue((DataValue)value);
+                }
+                molecules.add(leFactory.createAttributeValue(instanceID, attributeID, valueTerm));
             }
-
+            resultExpressions.add(leFactory.createCompoundMolecule(molecules));
         }
 
-        org.omwg.logicalexpression.AttrSpecification attSpec = leFactory.createAttrSpecification(AttrSpecification.ATTR_VALUE, attID, valList);
-
-        result = leFactory.createMolecule(iTerm, null, null, toSet(attSpec));
-
-        return result;
-    }
-
-    /**
-     * Inserts axioms that represent the relation in logical terms.
-     * 
-     * @param r -
-     *            the relation to be translated to logical expressions.
-     * @param o -
-     *            the ontoloy to which to add the respective representation
-     *            axioms
-     * @throws InvalidModelException
-     * @throws SynchronisationException
-     */
-    private void handleRelation(Relation r, Ontology o) throws SynchronisationException, InvalidModelException
-    {
-
-        Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new HashSet<org.omwg.logicalexpression.LogicalExpression>();
-
-        IRI rID = convertIRI(r.getIdentifier());
-        int rArity = r.listParameters().size();
-        Set<Relation> suprels = r.listSuperRelations();
-
-        List<Term> predArgs = new LinkedList();
-        for(int i = 0; i < rArity; i++)
-        {
-            org.omwg.ontology.Variable v = leFactory.createVariable("x" + (i + 1));
-            predArgs.add(v);
-        }
-
-        org.omwg.logicalexpression.LogicalExpression a1 = leFactory.createAtom(rID, predArgs);
-
-        for(Relation nextSuperRelation : suprels)
-        {
-            IRI srID = convertIRI(nextSuperRelation.getIdentifier());
-            org.omwg.logicalexpression.LogicalExpression a2 = leFactory.createAtom(srID, predArgs);
-            org.omwg.logicalexpression.LogicalExpression newExpr = leFactory.createBinary(CompoundExpression.IMPLIES, a1, a2);
-            lExprs.add(newExpr);
-        }
-
-        // Handle parameter definitions of relation (currently missing in
-        // Table 8.1 in D16.1
-
-        List<Parameter> rParams = r.listParameters();
-        int i = 1;
-        for(Parameter p : rParams)
-        {
-            lExprs.add(handleRelationParameter(p, rID, i, rArity));
-            i++;
-        }
-
-        // Handle relation instances
-
-        Set<RelationInstance> rInstances = r.listRelationInstances();
-        for(RelationInstance ri : rInstances)
-        {
-            lExprs.add(handleRelationInstance(ri, rID));
-        }
-
-        // Generate axioms in the ontology
-        i = 1;
-        String axPrefix = "Axiom-" + rID.asString();
-        for(LogicalExpression l : lExprs)
-        {
-            Axiom ax = wsmoFactory.createAxiom(wsmoFactory.createIRI(axPrefix + "-" + (i++)));
-            ax.addDefinition(l);
-            o.addAxiom(ax);
-        }
-
-    }
-
-    /**
-     * Inserts axioms that represent a parameter of a relation in logical terms.
-     * 
-     * @param rp -
-     *            the parameter of a relation in the ontology to be translated
-     *            to logical expressions.
-     * @param rID-
-     *            the IRI of the respective relation to which the parameter
-     *            belongs to.
-     * @param pos -
-     *            the index of the parameter in the parameter list of the
-     *            respective relation (1-based)
-     * @param arity -
-     *            the arity of the respective relation
-     * @param o -
-     *            the ontoloy to which to add the respective representation
-     *            axioms
-     * @throws InvalidModelException
-     */
-    private org.omwg.logicalexpression.LogicalExpression handleRelationParameter(Parameter rp, IRI rID, int pos, int arity) throws InvalidModelException
-    {
-        org.omwg.logicalexpression.LogicalExpression result;
-
-        Term paramVar = null;
-        List<Variable> paramVars = new LinkedList();
-
-        for(int j = 1; j <= arity; j++)
-        {
-            Variable nextVar = leFactory.createVariable("x" + j);
-            paramVars.add(nextVar);
-            if(j == pos)
-            {
-                paramVar = nextVar;
-            }
-        }
-
-        org.omwg.logicalexpression.LogicalExpression body = leFactory.createAtom(rID, paramVars);
-
-        Set<Type> rangeTypes = rp.listTypes();
-        Set<Term> rangeTermList = new HashSet<Term>();
-        for(Object type : rangeTypes)
-        {
-            if(type instanceof Concept)
-            {
-                org.omwg.logicalexpression.terms.IRI tIRI = convertIRI(((Concept)type).getIdentifier());
-                rangeTermList.add(tIRI);
-            }
-            else if(type instanceof SimpleDataType)
-            {
-                org.omwg.logicalexpression.terms.IRI tIRI = convertIRI(((SimpleDataType)type).getIRI());
-                rangeTermList.add(tIRI);
-            }
-            else if(type instanceof ComplexDataType)
-            {
-                throw new IllegalArgumentException("Complex datatype are currently not supported in Normalization to LogicalExpressions");
-                // TODO include complex data types as well.
-            }
-        }
-
-        org.omwg.logicalexpression.LogicalExpression head = leFactory.createMolecule(paramVar, null, rangeTermList, null);
-
-        if(!rp.isConstraining())
-        {
-            // impliesType
-            result = leFactory.createBinary(CompoundExpression.IMPLIES, body, head);
-        }
-        else
-        {
-            // ofType
-            org.omwg.logicalexpression.LogicalExpression naf = leFactory.createUnary(CompoundExpression.NAF, head);
-            org.omwg.logicalexpression.LogicalExpression cBody = leFactory.createBinary(CompoundExpression.AND, body, naf);
-            result = leFactory.createUnary(CompoundExpression.CONSTRAINT, cBody);
-        }
-
-        return result;
-    }
-
-    /**
-     * Inserts axioms that represent the instance of a relation in logical
-     * terms.
-     * 
-     * @param ri -
-     *            the instance of a relation in the ontology to be translated to
-     *            logical expressions.
-     * @param rID -
-     *            the IRI of the relation to which this instance belongs to
-     */
-    private org.omwg.logicalexpression.LogicalExpression handleRelationInstance(RelationInstance ri, IRI rID)
-    {
-
-        List<Value> parVals = ri.listParameterValues();
-        List<Term> args = new LinkedList();
-
-        for(Value v : parVals)
-        {
-            if(v instanceof Instance)
-            {
-                Identifier val = ((Instance)v).getIdentifier();
-                args.add(convertIRI(val));
-            }
-            else if(v instanceof DataValue)
-            {
-                DataValue d = (DataValue)v;
-                Term dVal = convertDataValue(d);
-                args.add(dVal);
-            }
-        }
-
-        return leFactory.createAtom(rID, args);
-
-    }
-
-    // Some helper methods for convenience
-
-    /**
-     * Converts a given IRI from WSMO4j to a IRI that can be used in logical
-     * expressions.
-     * 
-     * @param id
-     * @return
-     */
-    private IRI convertIRI(Identifier id)
-    {
-        if(id instanceof UnnumberedAnonymousID)
-            return leFactory.createIRI(AnonymousIdUtils.getNewIri());
-        else
-            return leFactory.createIRI(id.toString());
+        return resultExpressions;
     }
 
     private Set toSet(Object o)
