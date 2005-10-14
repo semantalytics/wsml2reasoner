@@ -25,9 +25,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.omwg.logicalexpression.Conjunction;
+import org.omwg.logicalexpression.Disjunction;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -59,20 +60,20 @@ public abstract class FixedModificationRules implements List
         }
     }
     
-    public static LogicalExpression buildNaryConjunction(Set<LogicalExpression> expressions)
+    public static Conjunction buildNaryConjunction(Collection<? extends LogicalExpression> expressions)
     {
-        return buildNary(CONJUNCTION, expressions);
+        return (Conjunction)buildNary(CONJUNCTION, expressions);
     }
 
-    public static LogicalExpression buildNaryDisjunction(Set<LogicalExpression> expressions)
+    public static Disjunction buildNaryDisjunction(Collection<? extends LogicalExpression> expressions)
     {
-        return buildNary(DISJUNCTION, expressions);
+        return (Disjunction)buildNary(DISJUNCTION, expressions);
     }
     
-    protected static LogicalExpression buildNary(byte operationCode, Set<LogicalExpression> expressions)
+    protected static LogicalExpression buildNary(byte operationCode, Collection<? extends LogicalExpression> expressions)
     {
         LogicalExpression nary = null;
-        Iterator<LogicalExpression> leIterator = expressions.iterator();
+        Iterator<? extends LogicalExpression> leIterator = expressions.iterator();
         if(leIterator.hasNext())
         {
             nary = leIterator.next();
