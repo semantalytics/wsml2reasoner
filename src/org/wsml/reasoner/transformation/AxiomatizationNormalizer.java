@@ -19,6 +19,7 @@
 
 package org.wsml.reasoner.transformation;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -37,19 +38,7 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.MembershipMolecule;
 import org.omwg.logicalexpression.NegationAsFailure;
 import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Attribute;
-import org.omwg.ontology.Axiom;
-import org.omwg.ontology.Concept;
-import org.omwg.ontology.DataValue;
-import org.omwg.ontology.Instance;
-import org.omwg.ontology.Ontology;
-import org.omwg.ontology.Parameter;
-import org.omwg.ontology.Relation;
-import org.omwg.ontology.RelationInstance;
-import org.omwg.ontology.SimpleDataType;
-import org.omwg.ontology.Type;
-import org.omwg.ontology.Value;
-import org.omwg.ontology.Variable;
+import org.omwg.ontology.*;
 import org.wsml.reasoner.transformation.le.FixedModificationRules;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
@@ -521,7 +510,8 @@ public class AxiomatizationNormalizer implements OntologyNormalizer
                 else if(value instanceof DataValue)
                 {
                     DataValue dataValue = (DataValue)value;
-                    args.add(convertDataValue(dataValue));
+//                    args.add(convertDataValue(dataValue));
+                    args.add(dataValue);
                 }
             }
             resultExpressions.add(leFactory.createAtom(relationID, args));
@@ -557,7 +547,8 @@ public class AxiomatizationNormalizer implements OntologyNormalizer
                 }
                 else if(value instanceof DataValue)
                 {
-                    valueTerm = convertDataValue((DataValue)value);
+//                    valueTerm = convertDataValue((DataValue)value);
+                    valueTerm = ((DataValue)value);
                 }
                 molecules.add(leFactory.createAttributeValue(instanceID, attributeID, valueTerm));
             }
@@ -584,33 +575,33 @@ public class AxiomatizationNormalizer implements OntologyNormalizer
      * @return a org.omwg.logicalexpression.terms.Term object that represents
      *         the same datavalue.
      */
-    private Term convertDataValue(DataValue d)
-    {
-        Term result = null;
-        if(d.getType() instanceof SimpleDataType)
-        {
-            if(d.getType() instanceof WsmlInteger)
-            {
-                java.math.BigInteger bigint = new java.math.BigInteger(d.asString());
-                result = leFactory.createWSMLInteger(bigint);
-            }
-            else if(d.getType() instanceof WsmlString)
-            {
-                result = leFactory.createWSMLString(d.asString());
-            }
-            else if(d.getType() instanceof WsmlDecimal)
-            {
-                java.math.BigDecimal bigdec = new java.math.BigDecimal(d.asString());
-                result = leFactory.createWSMLDecimal(bigdec);
-            }
-        }
-        else
-        {
-            // d instanceof ComplexDataType
-            throw new IllegalArgumentException("Complex datatype values are at present not supported by the WSMO4j API!");
-        }
-
-        return result;
-    }
+//    private Term convertDataValue(DataValue d)
+//    {
+//        Term result = null;
+//        if(d.getType() instanceof SimpleDataType)
+//        {
+//            if(d.getType().getIRI().equals(WsmlDataType.WSML_INTEGER))
+//            {
+//                java.math.BigInteger bigint = (BigInteger) d.getValue();
+//                result = leFactory.createWSMLInteger(bigint);
+//            }
+//            else if(d.getType() instanceof WsmlString)
+//            {
+//                result = leFactory.createWSMLString(d.asString());
+//            }
+//            else if(d.getType() instanceof WsmlDecimal)
+//            {
+//                java.math.BigDecimal bigdec = new java.math.BigDecimal(d.asString());
+//                result = leFactory.createWSMLDecimal(bigdec);
+//            }
+//        }
+//        else
+//        {
+//            // d instanceof ComplexDataType
+//            throw new IllegalArgumentException("Complex datatype values are at present not supported by the WSMO4j API!");
+//        }
+//
+//        return result;
+//    }
 
 }
