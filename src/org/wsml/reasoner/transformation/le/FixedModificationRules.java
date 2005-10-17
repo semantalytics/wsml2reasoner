@@ -48,15 +48,11 @@ public abstract class FixedModificationRules implements List
     protected static final byte DISJUNCTION = 1;
     
     protected List rules;
-    protected static LogicalExpressionFactory leFactory;
+    protected static LogicalExpressionFactory leFactory = WSMO4JManager.getLogicalExpressionFactory();
 
     FixedModificationRules()
     {
-        rules = new ArrayList();
-        if(leFactory == null)
-        {
-            leFactory = WSMO4JManager.getLogicalExpressionFactory();
-        }
+        rules = new ArrayList();        
     }
     
     public static Conjunction buildNaryConjunction(Collection<? extends LogicalExpression> expressions)

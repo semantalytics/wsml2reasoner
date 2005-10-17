@@ -148,7 +148,7 @@ public class BaseReasonerTest extends TestCase {
         for (VariableBinding vBinding : result) {
             System.out.println("(" + (++i) + ") -- " + vBinding.toString());
         }
-        assertEquals(result.size(), expected.size());
+        assertEquals(expected.size(), result.size());
         for (VariableBinding binding : expected) {
             assertTrue(result.contains(binding));
         }
