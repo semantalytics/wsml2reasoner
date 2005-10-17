@@ -23,19 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.omwg.logicalexpression.CompoundExpression;
-import org.omwg.logicalexpression.Conjunction;
-import org.omwg.logicalexpression.Constraint;
-import org.omwg.logicalexpression.Disjunction;
-import org.omwg.logicalexpression.Equivalence;
-import org.omwg.logicalexpression.ExistentialQuantification;
-import org.omwg.logicalexpression.Implication;
-import org.omwg.logicalexpression.InverseImplication;
-import org.omwg.logicalexpression.LogicProgrammingRule;
-import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.logicalexpression.Negation;
-import org.omwg.logicalexpression.NegationAsFailure;
-import org.omwg.logicalexpression.UniversalQuantification;
+import org.omwg.logicalexpression.*;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -51,8 +39,8 @@ import org.wsmo.factory.LogicalExpressionFactory;
  * 
  * @author Stephan Grimm, FZI Karlsruhe
  */
-public class OnePassReplacementNormalizer implements LogicalExpressionNormalizer
-{
+public class OnePassReplacementNormalizer implements
+        LogicalExpressionNormalizer {
     protected List<NormalizationRule> preOrderRules;
 
     protected List<NormalizationRule> postOrderRules;
@@ -66,12 +54,11 @@ public class OnePassReplacementNormalizer implements LogicalExpressionNormalizer
      * @param preorderRules
      * @param postorderRules
      */
-    public OnePassReplacementNormalizer(List<NormalizationRule> preorderRules, List<NormalizationRule> postorderRules)
-    {
+    public OnePassReplacementNormalizer(List<NormalizationRule> preorderRules,
+            List<NormalizationRule> postorderRules) {
         this.preOrderRules = preorderRules;
         this.postOrderRules = postorderRules;
-        if(leFactory == null)
-        {
+        if (leFactory == null) {
             leFactory = WSMO4JManager.getLogicalExpressionFactory();
         }
     }
@@ -82,8 +69,7 @@ public class OnePassReplacementNormalizer implements LogicalExpressionNormalizer
      * 
      * @param rules
      */
-    public OnePassReplacementNormalizer(List<NormalizationRule> rules)
-    {
+    public OnePassReplacementNormalizer(List<NormalizationRule> rules) {
         this(rules, new ArrayList<NormalizationRule>(0));
     }
 
@@ -95,18 +81,16 @@ public class OnePassReplacementNormalizer implements LogicalExpressionNormalizer
      * stage, copies of a sub-expression are passed back, such that the original
      * expression remains unchanged.
      */
-    public LogicalExpression normalize(LogicalExpression expression)
-    {
+    public LogicalExpression normalize(LogicalExpression expression) {
         // apply pre-order normalization rules:
         expression = applyRules(expression, preOrderRules);
 
         // recursively normalize arguments of compound expressions:
         List<LogicalExpression> arguments = new ArrayList<LogicalExpression>();
-        if(expression instanceof CompoundExpression)
-        {
-            CompoundExpression compound = (CompoundExpression)expression;
-            for(LogicalExpression argument : (List<LogicalExpression>)compound.listOperands())
-            {
+        if (expression instanceof CompoundExpression) {
+            CompoundExpression compound = (CompoundExpression) expression;
+            for (LogicalExpression argument : (List<LogicalExpression>) compound
+                    .listOperands()) {
                 arguments.add(normalize(argument));
             }
             expression = replaceArguments(compound, arguments);
@@ -128,19 +112,16 @@ public class OnePassReplacementNormalizer implements LogicalExpressionNormalizer
      * @return the resulting expression after iterative application of all
      *         applicable rules
      */
-    protected LogicalExpression applyRules(LogicalExpression expression, List<NormalizationRule> rules)
-    {
+    protected LogicalExpression applyRules(LogicalExpression expression,
+            List<NormalizationRule> rules) {
         boolean expressionHasChanged = true;
-        while(expressionHasChanged)
-        {
+        while (expressionHasChanged) {
             expressionHasChanged = false;
-            for(NormalizationRule rule : rules)
-            {
-                if(rule.isApplicable(expression))
-                {
+            for (NormalizationRule rule : rules) {
+                if (rule.isApplicable(expression)) {
                     LogicalExpression oldExpression = expression;
                     expression = rule.apply(expression);
-                    if(!expression.equals(oldExpression))
+                    if (!expression.equals(oldExpression))
                         expressionHasChanged = true;
                     break;
                 }
@@ -157,58 +138,47 @@ public class OnePassReplacementNormalizer implements LogicalExpressionNormalizer
      * @param arguments
      * @return a compound expression with replaced arguments
      */
-    protected CompoundExpression replaceArguments(CompoundExpression compound, List<LogicalExpression> arguments)
-    {
+    protected CompoundExpression replaceArguments(CompoundExpression compound,
+            List<LogicalExpression> arguments) {
         CompoundExpression result = null;
-        if(compound instanceof Constraint)
-        {
+        if (compound instanceof Constraint) {
             result = leFactory.createConstraint(arguments.get(0));
-        }
-        else if(compound instanceof Negation)
-        {
+        } else if (compound instanceof Negation) {
             result = leFactory.createNegation(arguments.get(0));
-        }
-        else if(compound instanceof NegationAsFailure)
-        {
+        } else if (compound instanceof NegationAsFailure) {
             result = leFactory.createNegationAsFailure(arguments.get(0));
-        }
-        else if(compound instanceof ExistentialQuantification)
-        {
-            ExistentialQuantification exists = (ExistentialQuantification)compound;
-            result = leFactory.createExistentialQuantification(exists.listVariables(), arguments.get(0));
-        }
-        else if(compound instanceof UniversalQuantification)
-        {
-            UniversalQuantification exists = (UniversalQuantification)compound;
-            result = leFactory.createExistentialQuantification(exists.listVariables(), arguments.get(0));
-        }
-        else if(compound instanceof Conjunction)
-        {
-            result = leFactory.createConjunction(arguments.get(0), arguments.get(1));
-        }
-        else if(compound instanceof Disjunction)
-        {
-            result = leFactory.createDisjunction(arguments.get(0), arguments.get(1));
-        }
-        else if(compound instanceof Equivalence)
-        {
-            result = leFactory.createEquivalence(arguments.get(0), arguments.get(1));
-        }
-        else if(compound instanceof Implication)
-        {
-            result = leFactory.createImplication(arguments.get(0), arguments.get(1));
-        }
-        else if(compound instanceof InverseImplication)
-        {
-            result = leFactory.createInverseImplication(arguments.get(0), arguments.get(1));
-        }
-        else if(compound instanceof LogicProgrammingRule)
-        {
-            result = leFactory.createLogicProgrammingRule(arguments.get(0), arguments.get(1));
-        }
-        else
-        {
-            throw new RuntimeException("in OnePassReplacementNormalizer::replaceArguments() : reached presumably unreachable code!");
+        } else if (compound instanceof ExistentialQuantification) {
+            ExistentialQuantification exists = (ExistentialQuantification) compound;
+            result = leFactory.createExistentialQuantification(exists
+                    .listVariables(), arguments.get(0));
+        } else if (compound instanceof UniversalQuantification) {
+            UniversalQuantification exists = (UniversalQuantification) compound;
+            result = leFactory.createExistentialQuantification(exists
+                    .listVariables(), arguments.get(0));
+        } else if (compound instanceof Conjunction) {
+            result = leFactory.createConjunction(arguments.get(0), arguments
+                    .get(1));
+        } else if (compound instanceof Disjunction) {
+            result = leFactory.createDisjunction(arguments.get(0), arguments
+                    .get(1));
+        } else if (compound instanceof Equivalence) {
+            result = leFactory.createEquivalence(arguments.get(0), arguments
+                    .get(1));
+        } else if (compound instanceof Implication) {
+            result = leFactory.createImplication(arguments.get(0), arguments
+                    .get(1));
+        } else if (compound instanceof InverseImplication) {
+            result = leFactory.createInverseImplication(arguments.get(0),
+                    arguments.get(1));
+        } else if (compound instanceof LogicProgrammingRule) {
+            result = leFactory.createLogicProgrammingRule(arguments.get(0),
+                    arguments.get(1));
+        } else if (compound instanceof CompoundMolecule) {
+            result = leFactory.createCompoundMolecule(arguments);
+        } else {
+            throw new RuntimeException(
+                    "in OnePassReplacementNormalizer::replaceArguments() : reached presumably unreachable code! when handling object of type: "
+                            + compound.getClass().getName());
         }
         return result;
     }
