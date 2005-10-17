@@ -23,8 +23,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.mandarax.reference.RightMostSelectionPolicy;
-import org.omwg.logicalexpression.AttrSpecification;
 import org.omwg.logicalexpression.Binary;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
@@ -33,7 +31,6 @@ import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
-import org.semanticweb.kaon2.ri;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
@@ -62,9 +59,9 @@ public class AnonymousIDReplacementTest extends WSMLNormalizationTest
         Ontology ontology = createOntology();
         Concept manConcept = wsmoFactory.createConcept(wsmoFactory.createIRI("Man"));
         Concept locationConcept = wsmoFactory.createConcept(wsmoFactory.createIRI("Location"));
-        Attribute hasParentAttr = wsmoFactory.createAttribute(manConcept, wsmoFactory.createIRI("hasParent"));
+        Attribute hasParentAttr = manConcept.createAttribute(wsmoFactory.createIRI("hasParent"));
         hasParentAttr.addType(manConcept);
-        Attribute livesAtAttr = wsmoFactory.createAttribute(manConcept, wsmoFactory.createIRI("livesAt"));
+        Attribute livesAtAttr = manConcept.createAttribute(wsmoFactory.createIRI("livesAt"));
         livesAtAttr.addType(locationConcept);
         Instance aragorn = wsmoFactory.createInstance(wsmoFactory.createIRI("Aragorn"), manConcept);
         Instance arathorn = wsmoFactory.createInstance(wsmoFactory.createIRI("Arathorn"), manConcept);
@@ -72,23 +69,9 @@ public class AnonymousIDReplacementTest extends WSMLNormalizationTest
         aragorn.addAttributeValue(hasParentAttr, arathorn);
         aragorn.addAttributeValue(hasParentAttr, wsmoFactory.createInstance(wsmoFactory.createAnonymousID()));
         Axiom aragornLivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI("aragornLivesSomewhere"));
-        Set anoIDSet = new HashSet();
-        anoIDSet.add(leFactory.createAnonymousID());
-        Set anoID1Set = new HashSet();
-        anoID1Set.add(leFactory.createAnonymousID((byte)1));
-        Set anoID2Set = new HashSet();
-        anoID2Set.add(leFactory.createAnonymousID((byte)2));
-        Set locationIDSet = new HashSet();
-        locationIDSet.add(leFactory.createIRI(locationConcept.getIdentifier().toString()));
-        Set attrSpecSet = new HashSet();
-        attrSpecSet.add(leFactory.createAttrSpecification(AttrSpecification.ATTR_VALUE,leFactory.createIRI(hasParentAttr.getIdentifier().toString()),anoIDSet));
-        Set attrSpecSet1 = new HashSet();
-        attrSpecSet1.add(leFactory.createAttrSpecification(AttrSpecification.ATTR_VALUE,leFactory.createIRI(livesAtAttr.getIdentifier().toString()),anoID1Set));
-        Set attrSpecSet2 = new HashSet();
-        attrSpecSet2.add(leFactory.createAttrSpecification(AttrSpecification.ATTR_VALUE,leFactory.createIRI(livesAtAttr.getIdentifier().toString()),anoID2Set));
-        aragornLivesAx.addDefinition(leFactory.createBinary(Binary.AND,leFactory.createMolecule(leFactory.createIRI(aragorn.getIdentifier().toString()),null,null,attrSpecSet1) , leFactory.createMolecule(leFactory.createAnonymousID((byte)1),null,locationIDSet,null)));
+        aragornLivesAx.addDefinition(leFactory.createConjunction(leFactory.createMemberShipMolecule(aragorn.getIdentifier(), leFactory.createAnonymousID((byte)1)) , leFactory.createMemberShipMolecule(leFactory.createAnonymousID((byte)1),locationConcept.getIdentifier())));
         Axiom arathornLivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI("arathornLivesSomewhere"));
-        arathornLivesAx.addDefinition(leFactory.createBinary(Binary.AND,leFactory.createBinary(Binary.AND,leFactory.createBinary(Binary.AND, leFactory.createBinary(Binary.AND, leFactory.createMolecule(leFactory.createIRI(arathorn.getIdentifier().toString()),null,null,attrSpecSet1), leFactory.createMolecule(leFactory.createAnonymousID((byte)1),null,locationIDSet,null)), leFactory.createMolecule(leFactory.createIRI(elendil.getIdentifier().toString()),null,null,attrSpecSet2)), leFactory.createMolecule(leFactory.createAnonymousID((byte)2),null,locationIDSet,null)), leFactory.createMolecule(leFactory.createIRI(elendil.getIdentifier().toString()),null,null,attrSpecSet)));
+        arathornLivesAx.addDefinition(leFactory.createConjunction(leFactory.createConjunction(leFactory.createConjunction(leFactory.createConjunction(leFactory.createAttributeValue(arathorn.getIdentifier(), livesAtAttr.getIdentifier(), leFactory.createAnonymousID((byte)1)), leFactory.createMemberShipMolecule(leFactory.createAnonymousID((byte)1), locationConcept.getIdentifier())), leFactory.createAttributeValue(elendil.getIdentifier(),livesAtAttr.getIdentifier(), leFactory.createAnonymousID((byte)2))), leFactory.createMemberShipMolecule(leFactory.createAnonymousID((byte)2), locationConcept.getIdentifier())), leFactory.createAttributeValue(elendil.getIdentifier(), livesAtAttr.getIdentifier(), wsmoFactory.createAnonymousID())));
         ontology.addConcept(manConcept);
         ontology.addConcept(locationConcept);
         ontology.addInstance(aragorn);
@@ -113,14 +96,10 @@ System.out.println(normString);
     
     public void testLEEquality()
     {
-        Set<Term> iri1Set = new HashSet<Term>();
-        iri1Set.add(leFactory.createIRI("Left"));
-        Set<Term> iri2Set = new HashSet<Term>();
-        iri2Set.add(leFactory.createIRI("Right"));
-        LogicalExpression leftArg = leFactory.createMolecule(leFactory.createVariable("x"), null, iri1Set, null);
-        LogicalExpression rightArg = leFactory.createMolecule(leFactory.createVariable("x"), null, iri2Set, null);
-        LogicalExpression correctExp = leFactory.createBinary(Binary.OR, leftArg, rightArg);
-        LogicalExpression wrongExp = leFactory.createBinary(Binary.OR, rightArg, leftArg);
+        LogicalExpression leftArg = leFactory.createMemberShipMolecule(wsmoFactory.createVariable("x"), wsmoFactory.createIRI("Left"));
+        LogicalExpression rightArg = leFactory.createMemberShipMolecule(wsmoFactory.createVariable("x"), wsmoFactory.createIRI("Right"));
+        LogicalExpression correctExp = leFactory.createDisjunction(leftArg, rightArg);
+        LogicalExpression wrongExp = leFactory.createDisjunction(rightArg, leftArg);
         assertTrue(correctExp.equals(wrongExp));
     }
 }
