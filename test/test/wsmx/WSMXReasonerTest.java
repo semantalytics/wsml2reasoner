@@ -26,7 +26,6 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.omwg.logicalexpression.AttrSpecification;
 import org.omwg.logicalexpression.Binary;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -166,18 +165,12 @@ public class WSMXReasonerTest extends TestCase
 
     public void testRetrieval() throws Exception
     {
-        Variable xVar = leFactory.createVariable("x");
-        Variable yVar = leFactory.createVariable("y");
-        Set<Term> args = new HashSet<Term>(1);
-        args.add(yVar);
-        Set<AttrSpecification> attrSpecSet = new HashSet<AttrSpecification>();
-        attrSpecSet.add(leFactory.createAttrSpecification(AttrSpecification.ATTR_VALUE, leFactory.createIRI(wsmoFactory.createIRI(ontologyNS, "loves").toString()), args));
-        Molecule lovesMolecule = leFactory.createMolecule(xVar, null, null, attrSpecSet);
+        Variable xVar = wsmoFactory.createVariable("x");
+        Variable yVar = wsmoFactory.createVariable("y");
+        Molecule lovesMolecule = leFactory.createAttributeValue(xVar, wsmoFactory.createIRI(ontologyNS, "loves"), yVar);
 
-        Set<Term> mofSet = new HashSet<Term>();
-        mofSet.add(leFactory.createIRI(wsmoFactory.createIRI(ontologyNS, "Elf").toString()));
-        Molecule isElfMolecule = leFactory.createMolecule(yVar, null, mofSet, null);
-        LogicalExpression query = leFactory.createBinary(Binary.AND, lovesMolecule, isElfMolecule);
+        Molecule isElfMolecule = leFactory.createMemberShipMolecule(yVar, wsmoFactory.createIRI(ontologyNS, "Elf"));
+        LogicalExpression query = leFactory.createConjunction(lovesMolecule, isElfMolecule);
         QueryAnsweringResult result = ((WSMXReasoner)wsmxReasoner).retrieve(query, ontologyID);
 
         VariableBinding binding = new VariableBindingImpl();
