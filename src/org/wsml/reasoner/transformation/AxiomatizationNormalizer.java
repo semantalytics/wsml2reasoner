@@ -50,6 +50,7 @@ import org.omwg.ontology.SimpleDataType;
 import org.omwg.ontology.Type;
 import org.omwg.ontology.Value;
 import org.omwg.ontology.Variable;
+import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.FixedModificationRules;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
@@ -96,11 +97,8 @@ public class AxiomatizationNormalizer implements OntologyNormalizer
 
     public AxiomatizationNormalizer()
     {
-        Map<String, String> leProperties = new HashMap<String, String>();
-        leProperties.put(Factory.PROVIDER_CLASS, "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
-        leFactory = (org.wsmo.factory.LogicalExpressionFactory)Factory.createLogicalExpressionFactory(leProperties);
-
-        wsmoFactory = Factory.createWsmoFactory(null);
+        leFactory = WSMO4JManager.getLogicalExpressionFactory();
+        wsmoFactory = WSMO4JManager.getWSMOFactory();
     }
 
     /**

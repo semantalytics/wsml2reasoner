@@ -36,6 +36,7 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.Negation;
 import org.omwg.logicalexpression.NegationAsFailure;
 import org.omwg.logicalexpression.UniversalQuantification;
+import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 
@@ -71,9 +72,7 @@ public class OnePassReplacementNormalizer implements LogicalExpressionNormalizer
         this.postOrderRules = postorderRules;
         if(leFactory == null)
         {
-            Map createParams = new HashMap();
-            createParams.put(Factory.PROVIDER_CLASS, "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
-            leFactory = (LogicalExpressionFactory)Factory.createLogicalExpressionFactory(createParams);
+            leFactory = WSMO4JManager.getLogicalExpressionFactory();
         }
     }
 

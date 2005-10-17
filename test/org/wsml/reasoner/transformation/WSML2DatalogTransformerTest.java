@@ -38,6 +38,7 @@ import org.wsml.reasoner.datalog.Predicate;
 import org.wsml.reasoner.datalog.Program;
 import org.wsml.reasoner.datalog.Rule;
 import org.wsml.reasoner.datalog.Variable;
+import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.WSML2DatalogTransformer;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Namespace;
@@ -362,14 +363,13 @@ public class WSML2DatalogTransformerTest extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
-        WsmoFactory wf = Factory.createWsmoFactory(null);
+        WsmoFactory wf = WSMO4JManager.getWSMOFactory();
         IRI ontoIri = wf.createIRI("urn:test");
         Namespace ns = wf.createNamespace("ns", ontoIri);
         o = wf.createOntology(ontoIri);
         o.setDefaultNamespace(ns);
         logExprSerializer = new LogExprSerializerWSML(o);
-        leFactory = (LogicalExpressionFactory) Factory
-                .createLogicalExpressionFactory(null);
+        leFactory = WSMO4JManager.getLogicalExpressionFactory();
         cut = new WSML2DatalogTransformer();
     }
 

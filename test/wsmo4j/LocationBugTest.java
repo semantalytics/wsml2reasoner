@@ -7,6 +7,7 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.omwg.ontology.Ontology;
+import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
@@ -23,14 +24,9 @@ public class LocationBugTest extends TestCase {
     }
     
     public void testLoadOntology() throws Exception{
-        Map<String, String> leProperties = new HashMap<String, String>();
-        leProperties.put(Factory.PROVIDER_CLASS,
-                "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
+        org.wsmo.factory.LogicalExpressionFactory leFactory = WSMO4JManager.getLogicalExpressionFactory();
 
-        org.wsmo.factory.LogicalExpressionFactory leFactory = (org.wsmo.factory.LogicalExpressionFactory) Factory
-                .createLogicalExpressionFactory(leProperties);
-
-        WsmoFactory factory = Factory.createWsmoFactory(null);
+        WsmoFactory factory = WSMO4JManager.getWSMOFactory();
 
         // Set up WSML parser
 

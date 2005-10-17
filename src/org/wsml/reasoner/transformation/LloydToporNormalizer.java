@@ -26,6 +26,7 @@ import java.util.Set;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
+import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.LloydToporRules;
 import org.wsml.reasoner.transformation.le.LogicalExpressionTransformer;
 import org.wsml.reasoner.transformation.le.TopDownLESplitter;
@@ -45,7 +46,7 @@ public class LloydToporNormalizer implements OntologyNormalizer
     {
         List<TransformationRule> lloydToporRules = (List<TransformationRule>)LloydToporRules.instantiate();
         leTransformer = new TopDownLESplitter(lloydToporRules);
-        wsmoFactory = Factory.createWsmoFactory(null);
+        wsmoFactory = WSMO4JManager.getWSMOFactory();
     }
 
     public Ontology normalize(Ontology ontology)

@@ -38,6 +38,7 @@ import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.queryanswering.QueryAnsweringResult;
 import org.wsml.reasoner.api.queryanswering.VariableBinding;
 import org.wsml.reasoner.impl.VariableBindingImpl;
+import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.wsmx.WSMXReasoner;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.Namespace;
@@ -62,10 +63,8 @@ public class WSMXReasonerTest extends TestCase
 
     public WSMXReasonerTest()
     {
-        wsmoFactory = Factory.createWsmoFactory(null);
-        HashMap createParams = new HashMap();
-        createParams.put(Factory.PROVIDER_CLASS, "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
-        leFactory = (LogicalExpressionFactory)Factory.createLogicalExpressionFactory(createParams);
+        wsmoFactory = WSMO4JManager.getWSMOFactory();
+        leFactory = WSMO4JManager.getLogicalExpressionFactory();
         wsmxReasoner = new WSMXReasoner();
 
         // initialize reasoner with ontology:

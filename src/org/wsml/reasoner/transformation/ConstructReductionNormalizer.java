@@ -27,6 +27,7 @@ import java.util.Set;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
+import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.AnonymousIdUtils.AnonymousIdTranslator;
 import org.wsml.reasoner.transformation.le.DisjunctionPullRules;
 import org.wsml.reasoner.transformation.le.ImplicationReductionRules;
@@ -56,7 +57,7 @@ public class ConstructReductionNormalizer implements OntologyNormalizer
         postOrderRules.addAll((List<NormalizationRule>)MoleculeDecompositionRules.instantiate());
         postOrderRules.addAll((List<NormalizationRule>)DisjunctionPullRules.instantiate());
         leNormalizer = new OnePassReplacementNormalizer(preOrderRules, postOrderRules); 
-        wsmoFactory = Factory.createWsmoFactory(null);
+        wsmoFactory = WSMO4JManager.getWSMOFactory();
         anonymousIdTranslator = AnonymousIdUtils.getAnonymousIdTranslator();
     }
 

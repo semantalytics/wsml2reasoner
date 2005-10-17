@@ -64,12 +64,8 @@ public class QueryAnsweringReasoner {
 
     public QueryAnsweringReasoner(DatalogReasonerFacade builtInFacade) {
         this.qaf = builtInFacade;
-        wsmoFactory = Factory.createWsmoFactory(null);
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put(Factory.PROVIDER_CLASS,
-                "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
-        leFactory = (LogicalExpressionFactory) Factory
-                .createLogicalExpressionFactory(params);
+        wsmoFactory = WSMO4JManager.getWSMOFactory();
+        leFactory = WSMO4JManager.getLogicalExpressionFactory();
     }
 
     private final static String WSML_RESULT_PREDICATE = "wsml:query_result";

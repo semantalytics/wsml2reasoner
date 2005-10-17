@@ -33,6 +33,7 @@ import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.queryanswering.QueryAnsweringRequest;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.QueryAnsweringRequestImpl;
+import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
@@ -64,12 +65,7 @@ public class ReasonerExample {
         Ontology exampleOntology = loadOntology("example/humanOntology.wsml");
         if (exampleOntology == null)
             return;
-
-        Map<String, Object> leParams = new HashMap<String, Object>();
-        leParams.put(Factory.PROVIDER_CLASS,
-                "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
-        LogicalExpressionFactory leFactory = (LogicalExpressionFactory) Factory
-                .createLogicalExpressionFactory(leParams);
+        LogicalExpressionFactory leFactory = WSMO4JManager.getLogicalExpressionFactory();
 
         // The details of creating a Query will be hidden in future
         LogicalExpression query = leFactory
@@ -131,7 +127,7 @@ public class ReasonerExample {
         properties.put(Factory.PROVIDER_CLASS,
                 "com.ontotext.wsmo4j.factory.WsmoFactoryImpl");
         properties.put(Parser.PARSER_LE_FACTORY, leFactory);
-        WsmoFactory wsmoFactory = Factory.createWsmoFactory(null);
+        WsmoFactory wsmoFactory = WSMO4JManager.getWSMOFactory();
 
         // Set up WSML parser
         Map<String, Object> parserProperties = new HashMap<String, Object>();
