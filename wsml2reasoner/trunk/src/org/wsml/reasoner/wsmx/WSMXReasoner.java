@@ -21,6 +21,7 @@ import org.wsml.reasoner.api.queryanswering.VariableBinding;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.OntologyRegistrationRequestImpl;
 import org.wsml.reasoner.impl.QueryAnsweringRequestImpl;
+import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.Identifier;
 import org.wsmo.execution.common.exception.ComponentException;
 import org.wsmo.factory.Factory;
@@ -58,12 +59,8 @@ public class WSMXReasoner implements
                 params);
 
         // create factories for wsmo objects and logical expressions:
-        wsmoFactory = Factory.createWsmoFactory(null);
-        params.clear();
-        params.put(Factory.PROVIDER_CLASS,
-                "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
-        leFactory = (LogicalExpressionFactory) Factory
-                .createLogicalExpressionFactory(params);
+        wsmoFactory = WSMO4JManager.getWSMOFactory();
+        leFactory = WSMO4JManager.getLogicalExpressionFactory();
     }
 
     /**

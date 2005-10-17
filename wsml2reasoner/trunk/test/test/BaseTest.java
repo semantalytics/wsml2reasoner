@@ -29,6 +29,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
@@ -45,7 +46,7 @@ import org.wsmo.wsml.Serializer;
  * </pre>
  *
  * @author Holger Lausen
- * @version $Revision: 1.7 $ $Date: 2005-10-10 07:20:05 $
+ * @version $Revision: 1.8 $ $Date: 2005-10-17 13:30:30 $
  */
 public class BaseTest extends TestCase {
 	public LogicalExpressionFactory leFactory;
@@ -62,18 +63,14 @@ public class BaseTest extends TestCase {
 	protected void setUp()throws Exception{
 		super.setUp();
         // Set up factories for creating WSML elements
-        Map<String, String> leProperties = new HashMap<String, String>();
-        leProperties.put(Factory.PROVIDER_CLASS,
-                "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
 
-        leFactory = (LogicalExpressionFactory) Factory
-        		.createLogicalExpressionFactory(leProperties);
+        leFactory = WSMO4JManager.getLogicalExpressionFactory();
 
 //        Map<String, Object> properties = new HashMap<String, Object>();
 //        properties.put(Factory.PROVIDER_CLASS,
 //                "com.ontotext.wsmo4j.factory.WsmoFactoryImpl");
 //        properties.put(Parser.PARSER_LE_FACTORY, leFactory);
-        wsmoFactory = Factory.createWsmoFactory(null);
+        wsmoFactory = WSMO4JManager.getWSMOFactory();
 
         // Set up WSML parser
 

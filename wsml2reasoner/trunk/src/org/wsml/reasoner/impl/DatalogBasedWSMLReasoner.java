@@ -107,12 +107,8 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             throw new UnsupportedOperationException("Reasoning with "
                     + builtInType.toString() + " is not supported yet!");
         }
-        wsmoFactory = Factory.createWsmoFactory(null);
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put(Factory.PROVIDER_CLASS,
-                "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
-        leFactory = (LogicalExpressionFactory) Factory
-                .createLogicalExpressionFactory(params);
+        wsmoFactory = WSMO4JManager.getWSMOFactory();
+        leFactory = WSMO4JManager.getLogicalExpressionFactory();
     }
 
     public Result execute(Request req) throws UnsupportedOperationException,

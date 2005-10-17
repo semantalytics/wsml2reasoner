@@ -30,6 +30,7 @@ import java.util.StringTokenizer;
 import org.omwg.logicalexpression.Conjunction;
 import org.omwg.logicalexpression.Disjunction;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 
@@ -54,9 +55,7 @@ public abstract class FixedModificationRules implements List
         rules = new ArrayList();
         if(leFactory == null)
         {
-            Map createParams = new HashMap();
-            createParams.put(Factory.PROVIDER_CLASS, "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
-            leFactory = (LogicalExpressionFactory)Factory.createLogicalExpressionFactory(createParams);
+            leFactory = WSMO4JManager.getLogicalExpressionFactory();
         }
     }
     

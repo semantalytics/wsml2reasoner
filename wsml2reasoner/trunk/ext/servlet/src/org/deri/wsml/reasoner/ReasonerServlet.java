@@ -44,6 +44,7 @@ import org.wsml.reasoner.api.queryanswering.VariableBinding;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.OntologyRegistrationRequestImpl;
 import org.wsml.reasoner.impl.QueryAnsweringRequestImpl;
+import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -58,7 +59,7 @@ import org.wsmo.wsml.ParserException;
  * 
  * 
  * @see org.deri.wsml.reasoner.ontobroker.Reasoner
- * @author Jos de Bruijn $Author: gabor $ $Date: 2005-10-11 15:41:08 $
+ * @author Jos de Bruijn $Author: gabor $ $Date: 2005-10-17 13:30:31 $
  */
 public class ReasonerServlet extends HttpServlet {
     private boolean debug = false;
@@ -151,13 +152,12 @@ public class ReasonerServlet extends HttpServlet {
         if (debug)
             out.println("doReasoning");
 
-        WsmoFactory _factory = Factory.createWsmoFactory(null);
+        WsmoFactory _factory = WSMO4JManager.getWSMOFactory();
         Map<String, String> leProperties = new HashMap<String, String>();
         leProperties.put(Factory.PROVIDER_CLASS,
                 "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
 
-        LogicalExpressionFactory _leFactory = (LogicalExpressionFactory) Factory
-                .createLogicalExpressionFactory(leProperties);
+        LogicalExpressionFactory _leFactory = WSMO4JManager.getLogicalExpressionFactory();
         Map properties = new HashMap();
         properties.put(Parser.PARSER_LE_FACTORY, _leFactory);
         properties.put(Parser.PARSER_WSMO_FACTORY, _factory);

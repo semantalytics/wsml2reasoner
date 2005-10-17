@@ -32,6 +32,7 @@ import org.omwg.logicalexpression.Molecule;
 import org.omwg.logicalexpression.SubConceptMolecule;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
+import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Namespace;
 import org.wsmo.factory.Factory;
@@ -256,18 +257,14 @@ public class LogExpTest extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
-        WsmoFactory wf = Factory.createWsmoFactory(null);
+        WsmoFactory wf = WSMO4JManager.getWSMOFactory();
         IRI ontoIri = wf.createIRI("urn:test");
         Namespace ns = wf.createNamespace("ns", ontoIri);
         o = wf.createOntology(ontoIri);
         o.setDefaultNamespace(ns);
         logExprSerializer = new LogExprSerializerWSML(o);
-        Map createParams = new HashMap();
-        createParams.put(Factory.PROVIDER_CLASS,
-                "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
-        leFactory = (LogicalExpressionFactory) Factory
-                .createLogicalExpressionFactory(null);
-        wsmoFactory = Factory.createWsmoFactory(null);
+        leFactory = WSMO4JManager.getLogicalExpressionFactory();
+        wsmoFactory = WSMO4JManager.getWSMOFactory();
     }
 
 }

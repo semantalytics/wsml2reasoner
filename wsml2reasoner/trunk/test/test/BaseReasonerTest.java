@@ -41,6 +41,7 @@ import org.wsml.reasoner.api.queryanswering.VariableBinding;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.OntologyRegistrationRequestImpl;
 import org.wsml.reasoner.impl.QueryAnsweringRequestImpl;
+import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -63,10 +64,9 @@ public class BaseReasonerTest extends TestCase {
     protected static void setupScenario(String ontologyFile) throws Exception {
         // Set up factories for creating WSML elements
 
-        leFactory = (org.wsmo.factory.LogicalExpressionFactory) Factory
-                .createLogicalExpressionFactory(null);
+        leFactory = WSMO4JManager.getLogicalExpressionFactory();
 
-        wsmoFactory = Factory.createWsmoFactory(null);
+        wsmoFactory = WSMO4JManager.getWSMOFactory();
 
         // Set up WSML parser
 

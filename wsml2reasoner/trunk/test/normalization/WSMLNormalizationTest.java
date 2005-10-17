@@ -26,6 +26,7 @@ import junit.framework.TestCase;
 
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.omwg.ontology.Ontology;
+import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
@@ -46,10 +47,8 @@ public abstract class WSMLNormalizationTest extends TestCase
     protected void setUp() throws Exception
     {
         super.setUp();
-        wsmoFactory = Factory.createWsmoFactory(null);
-        HashMap createParams = new HashMap();
-        createParams.put(Factory.PROVIDER_CLASS, "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
-        leFactory = (LogicalExpressionFactory)Factory.createLogicalExpressionFactory(createParams);
+        wsmoFactory = WSMO4JManager.getWSMOFactory();
+        leFactory = WSMO4JManager.getLogicalExpressionFactory();
     }
 
     @Override
