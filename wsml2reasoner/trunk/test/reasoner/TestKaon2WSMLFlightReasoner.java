@@ -99,8 +99,6 @@ public class TestKaon2WSMLFlightReasoner extends BaseReasonerTest {
     public void testNoMaleFemaleTogether() throws Exception {
         String query = "?x memberOf Male and ?x memberOf Female";
         Set<VariableBinding> expected = new HashSet<VariableBinding>();
-        VariableBinding binding = new VariableBindingImpl();
-        expected.add(binding);
         performQuery(query, expected);
         System.out.println("Finished query.");
         

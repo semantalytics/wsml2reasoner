@@ -83,6 +83,7 @@ public class LogicalExpressionVariableVisitor extends
      *         expression.
      */
     public Set<Variable> getFreeVariables(LogicalExpression le) {
+        System.out.println("freevars=" + freeVars);
         Set<Variable> result = freeVars.get(le);
         return result;
     }
@@ -189,6 +190,45 @@ public class LogicalExpressionVariableVisitor extends
         freeVars.put(arg0, fvs);
         boundVars.put(arg0, bvs);
     }
+    
+    @Override
+    public void handleSubConceptMolecule(SubConceptMolecule arg0) {
+        internalHandleMolecule(arg0);
+    }
+    
+    @Override
+    public void handleMemberShipMolecule(MembershipMolecule arg0) {
+        internalHandleMolecule(arg0);
+    }
+    
+    @Override
+    public void handleAttributeConstraintMolecule(AttributeConstraintMolecule arg0) {
+        internalHandleMolecule(arg0);
+    }
+    
+    @Override
+    public void handleAttributeInferenceMolecule(AttributeInferenceMolecule arg0) {
+        internalHandleMolecule(arg0);
+    }
+    
+    @Override
+    public void handleAttributeValueMolecule(AttributeValueMolecule arg0) {
+        internalHandleMolecule(arg0);
+    }
+    
+    private void internalHandleMolecule(Molecule m) {
+        Set<Variable> fvs = new HashSet<Variable>();
+        Set<Variable> bvs = new HashSet<Variable>();
+        internalDoTerm(m.getLeftParameter(), fvs, bvs);
+        internalDoTerm(m.getRightParameter(), fvs, bvs);
+        if (m instanceof AttributeMolecule) {
+            AttributeMolecule am = (AttributeMolecule) m;
+            internalDoTerm(am.getAttribute(), fvs, bvs);
+        }
+        freeVars.put(m, fvs);
+        boundVars.put(m, bvs);
+    }
+    
 
     /*
      * (non-Javadoc)
