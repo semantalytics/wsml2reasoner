@@ -1,0 +1,26 @@
+namespace { _"urn:datatypes:test#"}
+
+ontology _"http://wsmo4jtests/datatypes.wsml"
+
+concept myConcept
+	intAttr1 ofType _integer
+	intAttr2 ofType _integer
+	intAttr3 ofType _integer
+	sumAttr ofType _integer
+	strAttr ofType _string
+	decAttr ofType _decimal
+	dateAttr ofType _date
+	
+
+axiom intSum
+    definedBy
+      ?x[intAttr1 hasValue ?a1, intAttr2 hasValue ?a2, intAttr3 hasValue ?a3] implies ?x[sumAttr hasValue (?a1 + ?a2 + ?a3)].
+
+      
+instance dummy memberOf myConcept
+	intAttr1 hasValue 1
+	intAttr2 hasValue 2
+	intAttr3 hasValue 3
+	strAttr  hasValue "blah"
+	decAttr  hasValue 5.0
+	dateAttr hasValue _date(2005,10,19)
