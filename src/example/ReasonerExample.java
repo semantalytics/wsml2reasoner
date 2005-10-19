@@ -115,30 +115,9 @@ public class ReasonerExample {
      * @return object model of ontology at file location
      */
     private Ontology loadOntology(String file) {
-        // set up Factories
-        Map<String, String> leProperties = new HashMap<String, String>();
-        leProperties.put(Factory.PROVIDER_CLASS,
-                "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
-
-        LogicalExpressionFactory leFactory = (LogicalExpressionFactory) Factory
-                .createLogicalExpressionFactory(leProperties);
-
-        Map<String, Object> properties = new HashMap<String, Object>();
-        properties.put(Factory.PROVIDER_CLASS,
-                "com.ontotext.wsmo4j.factory.WsmoFactoryImpl");
-        properties.put(Parser.PARSER_LE_FACTORY, leFactory);
+        LogicalExpressionFactory leFactory = WSMO4JManager.getLogicalExpressionFactory();
         WsmoFactory wsmoFactory = WSMO4JManager.getWSMOFactory();
-
-        // Set up WSML parser
-        Map<String, Object> parserProperties = new HashMap<String, Object>();
-        parserProperties.put(Parser.PARSER_WSMO_FACTORY, wsmoFactory);
-        parserProperties.put(Parser.PARSER_LE_FACTORY, leFactory);
-
-        parserProperties.put(org.wsmo.factory.Factory.PROVIDER_CLASS,
-                "com.ontotext.wsmo4j.parser.WSMLParserImpl");
-
-        Parser wsmlParser = org.wsmo.factory.Factory
-                .createParser(parserProperties);
+        Parser wsmlParser = Factory.createParser(null);
 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(
                 file);
@@ -167,12 +146,7 @@ public class ReasonerExample {
      * @return string representation of ontology
      */
     private String toString(Ontology ont) {
-        Map<String, String> serializerProperties = new HashMap<String, String>();
-        serializerProperties.put(org.wsmo.factory.Factory.PROVIDER_CLASS,
-                "com.ontotext.wsmo4j.parser.WSMLSerializerImpl");
-
-        Serializer wsmlSerializer = org.wsmo.factory.Factory
-                .createSerializer(serializerProperties);
+        Serializer wsmlSerializer = Factory.createSerializer(null);
 
         StringBuffer str = new StringBuffer();
         wsmlSerializer.serialize(new TopEntity[] { ont }, str);
