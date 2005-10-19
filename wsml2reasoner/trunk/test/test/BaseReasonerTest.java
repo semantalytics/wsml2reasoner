@@ -150,7 +150,8 @@ public class BaseReasonerTest extends TestCase {
         }
         assertEquals(expected.size(), result.size());
         for (VariableBinding binding : expected) {
-            assertTrue(result.contains(binding));
+            assertTrue("Result does not contain binding " + binding, result
+                    .contains(binding));
         }
     }
 
