@@ -51,18 +51,17 @@ concept confirmedCreditCard
     confirmedOwner ofType person
     confirmedExpirationDate ofType date	 
 
-instance true memberOf boolean
-instance false memberOf boolean
-instance true memberOf boolean
+instance t memberOf boolean
+instance f memberOf boolean
 instance departureDay memberOf date
 
 instance galway_station memberOf station
-    sourceLocBool hasValue true
-    destLocBool hasValue false
+    sourceLocBool hasValue t
+    destLocBool hasValue f
 
 instance dublin_station memberOf station
-    sourceLocBool hasValue false
-    destLocBool hasValue true
+    sourceLocBool hasValue f
+    destLocBool hasValue t
     
 instance galway_dublin memberOf myRoute
     sourceLocation hasValue galway_station
