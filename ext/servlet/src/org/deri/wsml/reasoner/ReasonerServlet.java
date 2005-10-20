@@ -16,39 +16,24 @@
  */
 package org.deri.wsml.reasoner;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
+import org.deri.wsmo4j.validator.ValidationError;
+import org.deri.wsmo4j.validator.WsmlValidatorImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Ontology;
-import org.wsml.reasoner.api.OntologyRegistrationRequest;
-import org.wsml.reasoner.api.WSMLReasoner;
-import org.wsml.reasoner.api.WSMLReasonerFactory;
-import org.wsml.reasoner.api.queryanswering.QueryAnsweringRequest;
-import org.wsml.reasoner.api.queryanswering.QueryAnsweringResult;
-import org.wsml.reasoner.api.queryanswering.VariableBinding;
-import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.OntologyRegistrationRequestImpl;
-import org.wsml.reasoner.impl.QueryAnsweringRequestImpl;
-import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.Factory;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
+import org.wsml.reasoner.api.*;
+import org.wsml.reasoner.api.queryanswering.*;
+import org.wsml.reasoner.impl.*;
+import org.wsmo.common.*;
+import org.wsmo.factory.*;
+import org.wsmo.validator.WsmlValidator;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
@@ -59,7 +44,7 @@ import org.wsmo.wsml.ParserException;
  * 
  * 
  * @see org.deri.wsml.reasoner.ontobroker.Reasoner
- * @author Jos de Bruijn $Author: gabor $ $Date: 2005-10-17 13:30:31 $
+ * @author Jos de Bruijn $Author: hlausen $ $Date: 2005-10-20 08:52:19 $
  */
 public class ReasonerServlet extends HttpServlet {
     private boolean debug = false;
@@ -88,6 +73,9 @@ public class ReasonerServlet extends HttpServlet {
 
         String wsmlOntology = "";
         String wsmlQuery = "";
+        
+        //needed to get rid of old object in weak hashmap
+        System.gc();
 
         try {
 
@@ -113,22 +101,25 @@ public class ReasonerServlet extends HttpServlet {
             if (request.getParameter("wsmlQuery") != null)
                 wsmlQuery = request.getParameter("wsmlQuery");
 
-            out
-                    .println("<!DOCTYPE html PUBLIC '-W3CDTD HTML 4.01 TransitionalEN'>");
+            out.println("<!DOCTYPE html PUBLIC '-W3CDTD HTML 4.01 TransitionalEN'>");
             out.println("<html>");
             out.println("<head>");
             out.println("<title>DERI WSML Reasoning result</title>");
-            out
-                    .println("  <link rel='stylesheet' type='text/css' href='validator.css'>");
+            out.println("  <link rel='shortcut icon' href='favicon.ico'/>");
+            out.println("  <link rel='stylesheet' type='text/css' href='reasoner.css'/>");
             out.println("</head>");
-            out.println("<body>");
+            out.println("<body><div class=\"box\">");
 
             if (wsmlOntology.length() == 0) {
                 error("No Ontology found, enter ontology ");
             } else if (wsmlQuery.length() == 0) {
                 error("No Query found, enter Query ");
             } else {
-                doReasoning(wsmlQuery, wsmlOntology);
+                try{
+                    doReasoning(wsmlQuery, wsmlOntology);
+                }catch (Exception e){
+                    error("Error:",e);
+                }
             }
         } catch (MalformedURLException e) {
             error("Input URL malformed: " + request.getParameter("url"));
@@ -136,15 +127,31 @@ public class ReasonerServlet extends HttpServlet {
             e.printStackTrace();
             error(e.getMessage());
         }
-        out.println("</body>");
+        out.println("</div></body>");
         out.println("</html>");
     }
 
     private void error(String text) {
-        out.println("<font color='#FF0000'>" + text
-                + " and try <a href=\"Javascript:History.back()\">again</a>."
-                + "</font>");
+        out.println("<div class=\"error\">" + text + "</div><br/><br/><br/>");
+    }
 
+    private void error(String text, Throwable e) {
+        error(text+ " "+e.getMessage());
+        if (e instanceof ParserException){
+            return;
+        }
+        out.println("<div class=\"trace\">");
+        String indent="";
+        while(e !=null){
+            StackTraceElement[] t = e.getStackTrace();
+            out.println(e);
+            for (int i=0; i<t.length; i++){
+                out.println(indent+" &nbsp; "+t[i]+"<br/>");
+            }
+            e = e.getCause();
+            indent += " &nbsp; &nbsp; ";
+        }
+        out.println("</div>");
     }
 
     private void doReasoning(String wsmlQuery, String wsmlOntology) {
@@ -153,38 +160,58 @@ public class ReasonerServlet extends HttpServlet {
             out.println("doReasoning");
 
         WsmoFactory _factory = WSMO4JManager.getWSMOFactory();
-        Map<String, String> leProperties = new HashMap<String, String>();
-        leProperties.put(Factory.PROVIDER_CLASS,
-                "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
-
         LogicalExpressionFactory _leFactory = WSMO4JManager.getLogicalExpressionFactory();
-        Map properties = new HashMap();
-        properties.put(Parser.PARSER_LE_FACTORY, _leFactory);
-        properties.put(Parser.PARSER_WSMO_FACTORY, _factory);
-        Parser _parser = Factory.createParser(properties);
+        Parser _parser = Factory.createParser(null);
 
         Ontology ontology = null;
         LogicalExpression query = null;
         try {
-            ontology = (Ontology) _parser.parse(new StringBuffer(wsmlOntology))[0];
-        } catch (ParserException e) {
-            error("Could not parse Ontology:<br>" + e.getMessage());
-        } catch (InvalidModelException e) {
-            error("Could not parse Ontology:<br>" + e.getMessage());
-        } catch (ClassCastException e) {
-            error("First Element of input was no Ontology :<br>"
-                    + e.getMessage());
+            TopEntity te = _parser.parse(new StringBuffer(wsmlOntology))[0];
+            if (!(te instanceof Ontology)){
+                error("This reasoner can only process ontologies at present (the first TopEntity in the input file was not an ontology)");
+                return;
+            }
+            ontology = (Ontology)te;
+        } catch (Exception e) {
+            String errorline = "";
+            if (e instanceof ParserException){
+                String[] lines = wsmlOntology.split("\\n");
+                int line = ((ParserException)e).getErrorLine()-1;
+                if (line > 0 && line <lines.length){
+                    errorline="<br/> Line "+(line+1) + ": "+ 
+                            markErrorPos(lines[line],((ParserException)e).getErrorPos())+"<br/>";
+                }
+            }
+            error("Could not parse Ontology:"+errorline,e);
+            return;
         }
-        out.println("<h2>Your Query</h2>");
+        WsmlValidator wv = new WsmlValidatorImpl();
+        List errors = new LinkedList();
+        if (!wv.isValid(ontology,WSML.WSML_FLIGHT,errors)){
+            error("Given input ontology is not within WSML flight.");
+            out.print("<ul>");
+            for (Object error :errors){
+                ValidationError er = (ValidationError)error;
+                out.println("<li>"+er.toString()+"</li>");
+                
+            }
+            out.print("</ul>");
+            return;
+        }
+        
+        out.println("<h1>Query Result</h1>");
+        out.println("<h3>Your Query</h3>");
         out.println("<p>" + wsmlQuery + "</p>");
         try {
             query = _leFactory.createLogicalExpression(wsmlQuery, ontology);
         } catch (ParserException e) {
-            error("Error parsing Query:" + e.getStackTrace().toString());
+            String errorline="<br/> "+wsmlQuery+"<br/>";
+            error("Error parsing Query:"+markErrorPos(errorline,e.getErrorPos()),e);
+            return;
         }
 
         if (query != null && ontology != null) {
-            out.println("<h2>Query answer:</h2>");
+            out.println("<h3>Query answer:</h3>");
 
             QueryAnsweringRequest qaRequest = new QueryAnsweringRequestImpl(
                     ontology.getIdentifier().toString(), query);
@@ -208,16 +235,56 @@ public class ReasonerServlet extends HttpServlet {
             QueryAnsweringResult result = (QueryAnsweringResult) reasoner
                     .execute(qaRequest);
 
-            // print out the results:
-            out.println("<pre>");
-            for (VariableBinding vBinding : result) {
-                for (String var : vBinding.keySet()) {
-                    out.print("  ?" + var + ": " + vBinding.get(var));
-                }
-                out.println("<br/>");
+            if (result.size()==0){
+                out.println("<pre>the query returned no variable bindings.</pre>");
             }
-            out.println("</pre>");
+            else {
+                // print out the results:
+                out.print("<table class=\"result\"><thead><tr>");
+                for (String var : result.iterator().next().keySet()) {
+                    out.println("<th>?" + var + "</th>");
+                }
+                out.println("</tr></thead><tbody>");
+                WsmoFactory f = Factory.createWsmoFactory(null);
+                
+                for (VariableBinding vBinding : result) {
+                    out.println("<tr>");
+                    for (String var : vBinding.keySet()) {
+                        out.println("<td>" + resolve(vBinding.get(var), ontology) +"</td>");
+                    }
+                    out.println("</tr>");
+                }
+                out.println("</tbody></table>");
+            }
         }
+    }
+    
+    private String resolve(String iri, Ontology o){
+        if (iri.startsWith(o.getDefaultNamespace().getIRI().toString())){
+            return iri.substring(o.getDefaultNamespace().getIRI().toString().length());
+        }
+        for (Object nso : o.listNamespaces()){
+            Namespace ns = (Namespace)nso;
+            if (iri.startsWith(ns.getIRI().toString())){
+                return ns.getPrefix()+iri.substring(ns.getIRI().toString().length());
+            }
+        }
+        return iri;
+    }
+    
+    private String markErrorPos(String error, int pos){
+        if (pos<0)
+            return error;
+        StringBuffer ret = new StringBuffer("<span style='color:black'>"+
+                error.substring(0,pos-1));
+        ret.append("<b><i>");
+        int i=pos-1;
+        for (; i<error.length() && error.charAt(i)!=' '; i++){
+            ret.append(error.charAt(i));
+        }
+        ret.append("</i></b>");
+        ret.append(error.substring(i)+"</span>");
+        return ret.toString();
     }
 
 }

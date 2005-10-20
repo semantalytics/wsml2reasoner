@@ -139,7 +139,7 @@ public class WSMXReasonerTest extends TestCase
     public void testSubconceptRetrieval() throws Exception
     {
         Set<Concept> concepts = wsmxReasoner.getAllSubconcepts(wsmoFactory.createConcept(wsmoFactory.createIRI(ontologyNS, "Humanoid")), ontologyID);
-        assertTrue(concepts.size() == 6);
+        assertEquals(6,concepts.size());
     }
 
     public void testSuperconceptRetrieval() throws Exception
