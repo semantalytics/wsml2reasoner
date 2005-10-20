@@ -132,7 +132,7 @@ public class LloydToporRules extends FixedModificationRules
             Set<LogicalExpression> resultingExpressions = new HashSet<LogicalExpression>();
             LogicProgrammingRule lpRule = (LogicProgrammingRule)expression;
             
-            LogicProgrammingRule innerRule = (LogicProgrammingRule)lpRule.getLeftOperand();
+            InverseImplication innerRule = (InverseImplication)lpRule.getLeftOperand();
             Conjunction conjunction = leFactory.createConjunction(innerRule.getRightOperand(), lpRule.getRightOperand());
             resultingExpressions.add(leFactory.createLogicProgrammingRule(innerRule.getLeftOperand(), conjunction));
             return resultingExpressions;
