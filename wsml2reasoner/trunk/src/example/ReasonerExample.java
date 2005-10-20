@@ -55,7 +55,11 @@ public class ReasonerExample {
      */
     public static void main(String[] args) throws Exception {
         ReasonerExample ex = new ReasonerExample();
+        try{
         ex.doTestRun();
+        }catch (Throwable e){
+
+        }
     }
 
     /**
@@ -73,7 +77,7 @@ public class ReasonerExample {
                 // .createLogicalExpression("?x memberOf Man", exampleOntology);
                 // .createLogicalExpression("?x memberOf ?y", exampleOntology);
                 .createLogicalExpression(
-                        "Lisa [hasRelative hasValue ?relative]",
+                        "Lisa [hasRelative dhasValue ?relative]",
                         exampleOntology);
 
         QueryAnsweringRequest qaRequest = new QueryAnsweringRequestImpl(

@@ -1,6 +1,7 @@
 <project name="WSML Reasoner" basedir="." default="tomcat.package">
 
   <tstamp/>
+  <property file="pwd"/>
   <property name="tomcat.host" value="dev1.deri.at" />
   <property name="tomcat.url" value="http://${tomcat.host}:8080/manager" />
   <property name="tomcat.path" value="wsml-mins-reasoner-${DSTAMP}" />
@@ -47,7 +48,7 @@
     </copy>
     <copy todir="${dir.build}/WEB-INF/lib" flatten="true">
       <fileset dir="${dir.lib}" 
-        includes="**/wsmo4j/*.jar,**/mins/*.*" />
+        includes="**/wsmo4j*/*.jar,**/mins/*.*" />
     </copy>
     <javac classpathref="classpath"
            srcdir="../../"
@@ -66,7 +67,7 @@
               path="/${tomcat.path}" />
   </target>
 
-  <target name="tomcat.deploy" depends="chose_user_password"
+  <target name="tomcat.deploy" depends="chose_user_password,tomcat.package"
           description="Deploys Application on Tomcat server">
     <deploy url="${tomcat.url}"
             username="${tomcat.username}"

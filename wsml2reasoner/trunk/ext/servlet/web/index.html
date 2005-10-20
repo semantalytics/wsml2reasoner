@@ -1,70 +1,26 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <title>DERI WSML Reasoner</title>
-  <style type="text/css">
-body {
-font-family: arial;
-background-color: #EEEEEE;
-margin: 40 40 40 40;
-}
-.yes {
-font-weight: bold;
-color: green;
-}
-.no {
-font-weight: bold;
-color: red;
-}
-.faint {
-background-color: #FFFFFF;
-color: #AAAAAA;
-}
-.box {
-padding: 0px 20px 10px 20px;
-border:1px solid #888;
-background-color: #FFFFFF;
-}
-  </style>
+  <title>WSML Reasoner</title>
+  <link rel="shortcut icon" href="favicon.ico"/>
+  <link rel='stylesheet' type='text/css' href='reasoner.css'/>
 </head>
 <body>
-<h1>DERI WSML Reasoner<br>
-</h1>
-<p>Paste WSML ontology and the conjunctive query into the text area below and hit return or
-press the Reason button. The servlet will then attempt to derive the query answer.<br>
-</p>
-<hr>
-<form action="reasoner" target="_self" method="post">
-  <table>
-    <tbody>
-      <tr>
-        <td>
-        <table>
-          <tbody>
-            <tr>
-            	<td>Conjunctive Query:</td>
-            	<td><input type="text" size="80" name="wsmlQuery" value="?person [hasRelative hasValue ?relative] memberOf Human"/></td>
-            	
-            </tr>
-            <tr>
-              <td>Location of WSML Ontology:</td>
-              <td><input type="text" size="80" name="url" value="[url]"></td>
-              <td><input type="submit" value="Reason"></td>
-            </tr>
-            <tr>
-              <td style="vertical-align: top;"><span
- style="font-weight: bold;">WSML Ontology:</span><br>
-              </td>
-              <td style="vertical-align: top;">
-              
-              
-              
-              
-              <textarea 
-              style="font:normal 10pt Arial;" name="wsmlOntology" cols="100" 
-              rows="20">
+<div class="box">
+<h1>WSML Reasoner</h1>
 
-namespace {_"http://www.example.org#"}
+<p>Enter a WSML ontology either by pasting it into the text area below
+or enter its URL. Pressing the &lt;go&gt; button will then display the variable
+bindings for the query you entered.
+</p>
+<form action="reasoner" target="_self" method="post">
+  <table border="0">
+    <tr>
+      <td style="vertical-align: top;">WSML Ontology:</td>
+      <td style="vertical-align: top;">
+      <textarea  class="c#:nogutter:nocontrols"
+      style="font:normal 10pt Arial;" name="wsmlOntology" cols="100" 
+      rows="20">namespace {_"http://www.example.org#"}
 
 ontology TheSimpsons
 
@@ -81,29 +37,43 @@ instance Homer memberOf Man
 instance Marge memberOf Woman
   hasRelative hasValue Lisa
   
-        </textarea><br>
-
-
-
-              </td>
-            </tr>
-            <tr>
-              <td style="vertical-align: top;"><input type="submit"
- value="Reason"> </td>
-            </tr>
-          </tbody>
-        </table>
-        <br>
-        <br>
+        </textarea>
         </td>
       </tr>
-    </tbody>
+       <tr>
+              <td>Ontology URL:</td>
+              <td><input type="text" size="80" name="url" value="[url]"></td>
+       </tr>
+       <tr><td colspan="2"></td></tr>
+      <tr>
+         <td>Conjunctive Query:</td>
+         <td><input type="text" size="80" name="wsmlQuery" value="?person [hasRelative hasValue ?relative] memberOf Human"/>
+         <input class="button" type="submit" value="go">
+         </td>
+      </tr>
   </table>
+
 </form>
+
+  <p>&nbsp;</p>
+  <div style="font-size:smaller">
+  <p>This reasoner is at present able to process WSML-Flight Ontologies, with the following limitations:</p>
+  <ul>
+  <li> constraints are not processed.</li>
+  <li> datatype predicates are not processed.</li>
+  </ul>
+  <p> The reasoner is based on the following components:</P>
+  <ul>
+    <li><a href="http://wsmo4j.sourceforge.net">WSMO4J</a>, the WSMO API and reference implementation.</li>
+    <li><a href="http://dev1.deri.at/wsml2reasoner/">WSML 2 Reasoner</a> framework, for handling the translation to the underlying reasoner.</li>
+    <li><a href="http://cvs.deri.at/cgi-bin/viewcvs.cgi/mins/">MINS</a> as underlying prolog engine.</li>
+  </ul>
+  </div>
+  
+  </div>
  
-<p><small><font size="-2">$Date: 2005-08-30 12:45:22 $<br></font>
-<br>
-</small>
-</p>
+<p><small>$Date: 2005-10-20 08:52:19 $</small>
+
+</script> 
 </body>
 </html>
