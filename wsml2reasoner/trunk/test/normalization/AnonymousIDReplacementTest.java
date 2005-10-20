@@ -18,14 +18,10 @@
  */
 package normalization;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.omwg.logicalexpression.Binary;
 import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
@@ -69,7 +65,7 @@ public class AnonymousIDReplacementTest extends WSMLNormalizationTest
         aragorn.addAttributeValue(hasParentAttr, arathorn);
         aragorn.addAttributeValue(hasParentAttr, wsmoFactory.createInstance(wsmoFactory.createAnonymousID()));
         Axiom aragornLivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI("aragornLivesSomewhere"));
-        aragornLivesAx.addDefinition(leFactory.createConjunction(leFactory.createMemberShipMolecule(aragorn.getIdentifier(), leFactory.createAnonymousID((byte)1)) , leFactory.createMemberShipMolecule(leFactory.createAnonymousID((byte)1),locationConcept.getIdentifier())));
+        aragornLivesAx.addDefinition(leFactory.createConjunction(leFactory.createAttributeValue(aragorn.getIdentifier(), livesAtAttr.getIdentifier(), leFactory.createAnonymousID((byte)1)) , leFactory.createMemberShipMolecule(leFactory.createAnonymousID((byte)1),locationConcept.getIdentifier())));
         Axiom arathornLivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI("arathornLivesSomewhere"));
         arathornLivesAx.addDefinition(leFactory.createConjunction(leFactory.createConjunction(leFactory.createConjunction(leFactory.createConjunction(leFactory.createAttributeValue(arathorn.getIdentifier(), livesAtAttr.getIdentifier(), leFactory.createAnonymousID((byte)1)), leFactory.createMemberShipMolecule(leFactory.createAnonymousID((byte)1), locationConcept.getIdentifier())), leFactory.createAttributeValue(elendil.getIdentifier(),livesAtAttr.getIdentifier(), leFactory.createAnonymousID((byte)2))), leFactory.createMemberShipMolecule(leFactory.createAnonymousID((byte)2), locationConcept.getIdentifier())), leFactory.createAttributeValue(elendil.getIdentifier(), livesAtAttr.getIdentifier(), wsmoFactory.createAnonymousID())));
         ontology.addConcept(manConcept);
