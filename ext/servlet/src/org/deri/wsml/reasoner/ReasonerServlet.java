@@ -44,7 +44,7 @@ import org.wsmo.wsml.ParserException;
  * 
  * 
  * @see org.deri.wsml.reasoner.ontobroker.Reasoner
- * @author Jos de Bruijn $Author: hlausen $ $Date: 2005-10-20 08:52:19 $
+ * @author Jos de Bruijn $Author: hlausen $ $Date: 2005-10-20 12:45:59 $
  */
 public class ReasonerServlet extends HttpServlet {
     private boolean debug = false;
@@ -106,7 +106,7 @@ public class ReasonerServlet extends HttpServlet {
             out.println("<head>");
             out.println("<title>DERI WSML Reasoning result</title>");
             out.println("  <link rel='shortcut icon' href='favicon.ico'/>");
-            out.println("  <link rel='stylesheet' type='text/css' href='reasoner.css'/>");
+            out.println("  <link rel='stylesheet' type='text/css' href='wsml.css'/>");
             out.println("</head>");
             out.println("<body><div class=\"box\">");
 
