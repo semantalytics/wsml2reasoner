@@ -72,6 +72,7 @@ public class TestKaon2WSMLFlightReasoner extends BaseReasonerTest {
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
         binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Aragorn"));
+        binding.put(wsmoFactory.createVariable("y"), wsmoFactory.createIRI(NS + "Arwen"));
         expected.add(binding);
         performQuery(query, expected);
         System.out.println("Finished query.");
