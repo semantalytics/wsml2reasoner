@@ -10,11 +10,13 @@ concept myConcept
 	strAttr ofType _string
 	decAttr ofType _decimal
 	dateAttr ofType _date
+	boolAttr ofType _boolean
+	iriAttr ofType _iri
 	
 
 axiom intSum
     definedBy
-      ?x[intAttr1 hasValue ?a1, intAttr2 hasValue ?a2, intAttr3 hasValue ?a3] implies ?x[sumAttr hasValue (?a1 + ?a2 + ?a3)].
+      ?x[intAttr1 hasValue ?a1, intAttr2 hasValue ?a2, intAttr3 hasValue ?a3] implies ?x[sumAttr hasValue (?a1 + ?a2 + ?a3 + 10)].
 
       
 instance dummy memberOf myConcept
@@ -24,3 +26,5 @@ instance dummy memberOf myConcept
 	strAttr  hasValue "blah"
 	decAttr  hasValue 5.0
 	dateAttr hasValue _date(2005,10,19)
+	boolAttr hasValue _boolean("true")
+	iriAttr hasValue _"urn:test"
