@@ -17,20 +17,23 @@
  * 
  */
 
-package org.wsml.reasoner.impl;
+package org.wsml.reasoner.builtin;
 
-public class WSMLReasonerException extends RuntimeException {
+/**
+ * An exception that should be thrown by a facade implementation for a specific tool
+ * in case that some feature present in the query or in the knowledgebase is not supported
+ * by the tool.
+ * 
+ * @author Uwe Keller, DERI Innsbruck
+ */
+public class UnsupportedFeatureException extends Exception {
 
     /**
-     * Needed for Java 5
+     * Default version number for serialization purposes.
      */
-    private static final long serialVersionUID = -1814208889596998279L;
-    
-    public WSMLReasonerException() {
-        super();
-    }
-    
-    public WSMLReasonerException(Throwable e) {
-        super(e);
+    private static final long serialVersionUID = 1L;
+
+    public UnsupportedFeatureException(String s){
+        super(s);
     }
 }

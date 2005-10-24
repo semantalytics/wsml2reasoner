@@ -17,20 +17,28 @@
  * 
  */
 
-package org.wsml.reasoner.impl;
+package org.wsml.reasoner.builtin;
 
-public class WSMLReasonerException extends RuntimeException {
+/**
+ * Represents an exception that occurs when constructing a datalog
+ * element, e.g. Literal, Rule, Program
+ * 
+ * @author Uwe Keller, DERI Innsbruck
+ */
+public class DatalogException extends RuntimeException {
 
     /**
-     * Needed for Java 5
+     * Default id for serialization.
      */
-    private static final long serialVersionUID = -1814208889596998279L;
-    
-    public WSMLReasonerException() {
-        super();
+    private static final long serialVersionUID = 16645645647L;
+
+    /**
+     * @param arg0 - explanation for the expection
+     */
+    public DatalogException(String arg0) {
+        super(arg0);
     }
     
-    public WSMLReasonerException(Throwable e) {
-        super(e);
-    }
+    
+
 }
