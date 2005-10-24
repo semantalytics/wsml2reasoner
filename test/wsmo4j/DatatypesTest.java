@@ -138,6 +138,15 @@ public class DatatypesTest extends TestCase {
         WsmlDataType decARange = (WsmlDataType) types.iterator().next();
         assertTrue(decARange instanceof SimpleDataType);
         assertEquals(decARange.getIRI().toString(), WsmlDataType.WSML_DECIMAL);
+        // boolAttr
+        Attribute boolA = c.findAttribute(f.createIRI(NS + "boolAttr"));
+        assertNotNull(boolA);
+        assertTrue(boolA.isConstraining());
+        types = boolA.listTypes();
+        assertEquals(types.size(), 1);
+        WsmlDataType boolARange = (WsmlDataType) types.iterator().next();
+        assertTrue(boolARange instanceof ComplexDataType);
+        assertEquals(boolARange.getIRI().toString(), WsmlDataType.WSML_BOOLEAN);
         // dateAttr
         Attribute dateA = c.findAttribute(f.createIRI(NS + "dateAttr"));
         assertNotNull(dateA);
@@ -147,6 +156,15 @@ public class DatatypesTest extends TestCase {
         WsmlDataType dateARange = (WsmlDataType) types.iterator().next();
         assertTrue(dateARange instanceof ComplexDataType);
         assertEquals(dateARange.getIRI().toString(), WsmlDataType.WSML_DATE);
+        // iriAttr
+        Attribute iriA = c.findAttribute(f.createIRI(NS + "iriAttr"));
+        assertNotNull(iriA);
+        assertTrue(iriA.isConstraining());
+        types = iriA.listTypes();
+        assertEquals(types.size(), 1);
+        WsmlDataType iriARange = (WsmlDataType) types.iterator().next();
+        assertTrue(iriARange instanceof ComplexDataType);
+        assertEquals(iriARange.getIRI().toString(), WsmlDataType.WSML_IRI);
         // axiom
         Axiom axiom = o.findAxiom(f.createIRI(NS + "intSum"));
         assertNotNull(axiom);
@@ -161,15 +179,24 @@ public class DatatypesTest extends TestCase {
                 .getRightParameter();
         assertEquals(add1.getFunctionSymbol().toString(), Constants.NUMERIC_ADD);
         assertEquals(add1.getArity(), 2);
-        Variable a3 = (Variable) add1.getParameter(1);
-        assertEquals(a3.getName(), "a3");
+        SimpleDataValue ten = (SimpleDataValue) add1.getParameter(1);
+        assertEquals(ten.getType().getIRI().toString(),
+                WsmlDataType.WSML_INTEGER);
+        assertTrue(ten.getValue() instanceof BigInteger);
+        assertEquals(ten.getValue(), new BigInteger("10"));
         BuiltInConstructedTerm add2 = (BuiltInConstructedTerm) add1
                 .getParameter(0);
         assertEquals(add2.getFunctionSymbol().toString(), Constants.NUMERIC_ADD);
         assertEquals(add2.getArity(), 2);
-        Variable a1 = (Variable) add2.getParameter(0);
+        Variable a3 = (Variable) add2.getParameter(1);
+        assertEquals(a3.getName(), "a3");
+        BuiltInConstructedTerm add3 = (BuiltInConstructedTerm) add2
+                .getParameter(0);
+        assertEquals(add3.getFunctionSymbol().toString(), Constants.NUMERIC_ADD);
+        assertEquals(add3.getArity(), 2);
+        Variable a1 = (Variable) add3.getParameter(0);
         assertEquals(a1.getName(), "a1");
-        Variable a2 = (Variable) add2.getParameter(1);
+        Variable a2 = (Variable) add3.getParameter(1);
         assertEquals(a2.getName(), "a2");
         // instance
         Instance dummy = o.findInstance(f.createIRI(NS + "dummy"));
@@ -213,15 +240,33 @@ public class DatatypesTest extends TestCase {
         assertTrue(complexVal.getValue() instanceof Calendar);
         assertEquals(complexVal.getArity(), 3);
         Calendar date = (Calendar) complexVal.getValue();
-        assertEquals(date.get(Calendar.YEAR),2005);
-        assertEquals(date.get(Calendar.MONTH),Calendar.OCTOBER);
-        assertEquals(date.get(Calendar.DAY_OF_MONTH),19);
-        simpleVal =  complexVal.getArgumentValue((byte) 0);
+        assertEquals(date.get(Calendar.YEAR), 2005);
+        assertEquals(date.get(Calendar.MONTH), Calendar.OCTOBER);
+        assertEquals(date.get(Calendar.DAY_OF_MONTH), 19);
+        simpleVal = complexVal.getArgumentValue((byte) 0);
         assertEquals(simpleVal.getType().getIRI().toString(),
                 WsmlDataType.WSML_INTEGER);
         assertTrue(simpleVal.getValue() instanceof BigInteger);
         assertEquals(simpleVal.getValue(), new BigInteger("2005"));
-
+        // boolAttr value
+        attrVals = dummy.listAttributeValues(boolA);
+        assertEquals(attrVals.size(), 1);
+        complexVal = (ComplexDataValue) attrVals.iterator().next();
+        assertEquals(complexVal.getType().getIRI().toString(),
+                WsmlDataType.WSML_BOOLEAN);
+        assertTrue(complexVal.getValue() instanceof Boolean);
+        assertEquals(complexVal.getArity(), 1);
+        assertEquals(complexVal.getValue(), Boolean.TRUE);
+        simpleVal = complexVal.getArgumentValue((byte) 0);
+        assertEquals(simpleVal.getType().getIRI().toString(),
+                WsmlDataType.WSML_STRING);
+        assertTrue(simpleVal.getValue() instanceof String);
+        assertEquals(simpleVal.getValue(), "true");
+        // iriAttr value
+        attrVals = dummy.listAttributeValues(iriA);
+        assertEquals(attrVals.size(), 1);
+        Instance inst = (Instance) attrVals.iterator().next();
+        assertEquals(inst.getIdentifier().toString(), "urn:test");
     }
 
 }
