@@ -31,7 +31,9 @@ import junit.framework.TestCase;
 import org.deri.wsmo4j.io.parser.wsml.LogExprParserImpl;
 import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
+import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.OntologyRegistrationRequest;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
@@ -42,6 +44,7 @@ import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.OntologyRegistrationRequestImpl;
 import org.wsml.reasoner.impl.QueryAnsweringRequestImpl;
 import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -109,25 +112,27 @@ public class BaseReasonerTest extends TestCase {
         System.out.println("--------------\n\n");
 
         // Create reasoner
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put(WSMLReasonerFactory.PARAM_WSML_VARIANT,
-                WSMLReasonerFactory.WSMLVariant.WSML_CORE);
-        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
-                WSMLReasonerFactory.BuiltInReasoner.KAON2);
-        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().getWSMLReasoner(
-                params);
+        // Map<String, Object> params = new HashMap<String, Object>();
+        // params.put(WSMLReasonerFactory.PARAM_WSML_VARIANT,
+        // WSMLReasonerFactory.WSMLVariant.WSML_CORE);
+        // params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
+        // WSMLReasonerFactory.BuiltInReasoner.KAON2);
+        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
+                .getWSMLFlightReasoner();
 
         // Register ontology
         System.out.println("Registering ontology");
-        Set<Ontology> ontos = new HashSet<Ontology>();
-        ontos.add(o);
-        OntologyRegistrationRequest regReq = new OntologyRegistrationRequestImpl(
-                ontos);
-        wsmlReasoner.execute(regReq);
+        // Set<Ontology> ontos = new HashSet<Ontology>();
+        // ontos.add(o);
+        wsmlReasoner.registerOntology(o);
+        // OntologyRegistrationRequest regReq = new
+        // OntologyRegistrationRequestImpl(
+        // ontos);
+        // wsmlReasoner.execute(regReq);
 
     }
 
-    protected void performQuery(String query, Set<VariableBinding> expected)
+    protected void performQuery(String query, Set<Map<Variable, Term>> expected)
             throws Exception {
         System.out.println("\n\nStarting reasoner with query " + query);
         LogicalExpression qExpression = leFactory.createLogicalExpression(
@@ -136,20 +141,22 @@ public class BaseReasonerTest extends TestCase {
         System.out.println(logExprSerializer.serialize(qExpression));
         System.out.println("--------------\n\n");
         String ontologyUri = o.getIdentifier().toString();
+        
+        Set<Map<Variable, Term>> result = wsmlReasoner.executeQuery((IRI) o.getIdentifier(), qExpression);
 
-        QueryAnsweringRequest qaRequest = new QueryAnsweringRequestImpl(
-                ontologyUri, qExpression);
-        QueryAnsweringResult result = (QueryAnsweringResult) wsmlReasoner
-                .execute(qaRequest);
+//        QueryAnsweringRequest qaRequest = new QueryAnsweringRequestImpl(
+//                ontologyUri, qExpression);
+//        QueryAnsweringResult result = (QueryAnsweringResult) wsmlReasoner
+//                .execute(qaRequest);
 
         System.out.println("Found < " + result.size()
                 + " > results to the query:");
         int i = 0;
-        for (VariableBinding vBinding : result) {
+        for (Map<Variable, Term> vBinding : result) {
             System.out.println("(" + (++i) + ") -- " + vBinding.toString());
         }
         assertEquals(expected.size(), result.size());
-        for (VariableBinding binding : expected) {
+        for (Map<Variable, Term> binding : expected) {
             assertTrue("Result does not contain binding " + binding, result
                     .contains(binding));
         }

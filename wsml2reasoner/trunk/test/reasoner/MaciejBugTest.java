@@ -18,9 +18,13 @@
  */
 package reasoner;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.queryanswering.VariableBinding;
 import org.wsml.reasoner.impl.VariableBindingImpl;
 
@@ -43,7 +47,7 @@ public class MaciejBugTest extends BaseReasonerTest {
                 MaciejBugTest.class)) {
             protected void setUp() throws Exception {
                 setupScenario(ONTOLOGY_FILE);
-             }
+            }
 
             protected void tearDown() throws Exception {
                 System.out.println("Finished!");
@@ -51,25 +55,28 @@ public class MaciejBugTest extends BaseReasonerTest {
         };
         return test;
     }
-    
+
     public void testGalwayIsSource() throws Exception {
         String query = "?x[sourceLocBool hasValue t]";
-        Set<VariableBinding> expected = new HashSet<VariableBinding>();
-        VariableBinding binding = new VariableBindingImpl();
-        binding.put("x", NS + "galway_station");
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS
+                + "galway_station"));
         expected.add(binding);
         performQuery(query, expected);
         System.out.println("Finished query.");
     }
-    
+
     public void testStations() throws Exception {
         String query = "?x memberOf station";
-        Set<VariableBinding> expected = new HashSet<VariableBinding>();
-        VariableBinding binding = new VariableBindingImpl();
-        binding.put("x", NS + "galway_station");
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS
+                + "galway_station"));
         expected.add(binding);
-        binding = new VariableBindingImpl();
-        binding.put("x", NS + "dublin_station");
+        binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS
+                + "dublin_station"));
         expected.add(binding);
         performQuery(query, expected);
         System.out.println("Finished query.");

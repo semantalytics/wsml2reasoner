@@ -97,7 +97,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
     public WSMLFlightReasoner getWSMLFlightReasoner()
             throws UnsupportedOperationException {
         // Default reasoner is KAON2
-        return new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
+        return new org.wsml.reasoner.impl.NewDatalogBasedWSMLReasoner(
                 WSMLReasonerFactory.BuiltInReasoner.KAON2);
     }
 

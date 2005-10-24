@@ -191,7 +191,7 @@ public abstract class PostfixOrderLogicalExpressionVisitor implements Visitor {
         }
     }
 
-    abstract public Object getSerializedObject();
+//    abstract public Object getSerializedObject();
 
     public void enterAtom(Atom arg0) {
     }

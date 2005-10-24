@@ -18,9 +18,13 @@
  */
 package reasoner;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.queryanswering.VariableBinding;
 import org.wsml.reasoner.impl.VariableBindingImpl;
 
@@ -54,9 +58,9 @@ public class TestKaon2WSMLFlightReasoner extends BaseReasonerTest {
     
     public void testArwenIsFemale() throws Exception {
         String query = "?x memberOf Female";
-        Set<VariableBinding> expected = new HashSet<VariableBinding>();
-        VariableBinding binding = new VariableBindingImpl();
-        binding.put("x", NS + "Arwen");
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Arwen"));
         expected.add(binding);
         performQuery(query, expected);
         System.out.println("Finished query.");
@@ -65,9 +69,9 @@ public class TestKaon2WSMLFlightReasoner extends BaseReasonerTest {
 
     public void testAragornLovesElf() throws Exception {
         String query = "?x[loves hasValue ?y] and ?y memberOf Elf";
-        Set<VariableBinding> expected = new HashSet<VariableBinding>();
-        VariableBinding binding = new VariableBindingImpl();
-        binding.put("x", NS + "Aragorn");
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Aragorn"));
         expected.add(binding);
         performQuery(query, expected);
         System.out.println("Finished query.");
@@ -76,10 +80,10 @@ public class TestKaon2WSMLFlightReasoner extends BaseReasonerTest {
     
     public void testAragornLovesFemale() throws Exception {
         String query = "?x[loves hasValue ?y] and ?y memberOf Female";
-        Set<VariableBinding> expected = new HashSet<VariableBinding>();
-        VariableBinding binding = new VariableBindingImpl();
-        binding.put("x", NS + "Aragorn");
-        binding.put("y", NS + "Arwen");
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Aragorn"));
+        binding.put(wsmoFactory.createVariable("y"), wsmoFactory.createIRI(NS + "Arwen"));
         expected.add(binding);
         performQuery(query, expected);
         System.out.println("Finished query.");
@@ -88,8 +92,8 @@ public class TestKaon2WSMLFlightReasoner extends BaseReasonerTest {
     
     public void testAragornIsElendilsHeir() throws Exception {
         String query = "Aragorn[hasAncestor hasValue Elendil]";
-        Set<VariableBinding> expected = new HashSet<VariableBinding>();
-        VariableBinding binding = new VariableBindingImpl();
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
         expected.add(binding);
         performQuery(query, expected);
         System.out.println("Finished query.");
@@ -98,7 +102,7 @@ public class TestKaon2WSMLFlightReasoner extends BaseReasonerTest {
     
     public void testNoMaleFemaleTogether() throws Exception {
         String query = "?x memberOf Male and ?x memberOf Female";
-        Set<VariableBinding> expected = new HashSet<VariableBinding>();
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         performQuery(query, expected);
         System.out.println("Finished query.");
         
@@ -106,19 +110,18 @@ public class TestKaon2WSMLFlightReasoner extends BaseReasonerTest {
     
     public void testMales() throws Exception {
         String query = "?x memberOf Male";
-        Set<VariableBinding> expected = new HashSet<VariableBinding>();
-        VariableBinding binding = new VariableBindingImpl();
-        binding.put("x", NS + "Aragorn");
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Aragorn"));
         expected.add(binding);
-        binding = new VariableBindingImpl();
-        binding.put("x", NS + "Elendil");
+        binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Elendil"));
         expected.add(binding);
-        binding = new VariableBindingImpl();
-        binding.put("x", NS + "Arathorn");
+        binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Arathorn"));
         expected.add(binding);
         performQuery(query, expected);
         System.out.println("Finished query.");
-        
     }
 
 }
