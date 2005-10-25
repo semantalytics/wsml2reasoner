@@ -109,9 +109,9 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                         + " is not registered");
             Reasoner reasoner = ontology.createReasoner();
             Query query = translateQuery(q, reasoner, varNames);
-            for (Literal l : query.getQueryLiterals()) {
-                System.out.println("Query literal: " + l);
-            }
+            // for (Literal l : query.getQueryLiterals()) {
+            // System.out.println("Query literal: " + l);
+            //            }
             query.open();
             while (!query.afterLast()) {
                 org.omwg.logicalexpression.terms.Term[] tuple = convertQueryTuple(query
