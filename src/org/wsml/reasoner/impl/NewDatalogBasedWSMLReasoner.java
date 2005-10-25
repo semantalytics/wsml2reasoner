@@ -295,7 +295,7 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         LogicalExpression query = leFactory.createMemberShipMolecule(
                 instanceID, conceptID);
 
-//      submit query to reasoner:
+        // submit query to reasoner:
         Set<Map<Variable, Term>> bindings;
         try {
             bindings = internalExecuteQuery(ontologyID, query);
@@ -319,7 +319,7 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         LogicalExpression query = leFactory.createSubConceptMolecule(
                 subconceptID, superconceptID);
 
-        /// submit query to reasoner:
+        // / submit query to reasoner:
         Set<Map<Variable, Term>> bindings;
         try {
             bindings = internalExecuteQuery(ontologyID, query);
@@ -382,6 +382,7 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         params.addAll(varVisitor.getFreeVariables(q));
         Atom rHead = leFactory.createAtom(wsmoFactory
                 .createIRI(WSML_RESULT_PREDICATE), params);
+        // System.out.println("Query head:" + rHead);
 
         LogicalExpressionNormalizer moleculeNormalizer = new OnePassReplacementNormalizer(
                 MoleculeDecompositionRules.instantiate());
@@ -396,8 +397,7 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         if (p.size() != 1)
             throw new IllegalArgumentException("Could not transform query " + q);
         Rule rule = p.iterator().next();
-        if (!rule.getHead().getPredicateUri().equals(
-                WSML_RESULT_PREDICATE))
+        if (!rule.getHead().getPredicateUri().equals(WSML_RESULT_PREDICATE))
             throw new IllegalArgumentException("Could not transform query " + q);
 
         List<Literal> body = new LinkedList<Literal>();

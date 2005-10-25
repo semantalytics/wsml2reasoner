@@ -134,20 +134,21 @@ public class BaseReasonerTest extends TestCase {
 
     protected void performQuery(String query, Set<Map<Variable, Term>> expected)
             throws Exception {
-        System.out.println("\n\nStarting reasoner with query " + query);
+        System.out.println("\n\nStarting reasoner with query '" + query + "'");
         LogicalExpression qExpression = leFactory.createLogicalExpression(
                 query, o);
-        System.out.println("WSML Query:");
+        System.out.println("WSML Query LE:");
         System.out.println(logExprSerializer.serialize(qExpression));
         System.out.println("--------------\n\n");
         String ontologyUri = o.getIdentifier().toString();
-        
-        Set<Map<Variable, Term>> result = wsmlReasoner.executeQuery((IRI) o.getIdentifier(), qExpression);
 
-//        QueryAnsweringRequest qaRequest = new QueryAnsweringRequestImpl(
-//                ontologyUri, qExpression);
-//        QueryAnsweringResult result = (QueryAnsweringResult) wsmlReasoner
-//                .execute(qaRequest);
+        Set<Map<Variable, Term>> result = wsmlReasoner.executeQuery((IRI) o
+                .getIdentifier(), qExpression);
+
+        // QueryAnsweringRequest qaRequest = new QueryAnsweringRequestImpl(
+        // ontologyUri, qExpression);
+        // QueryAnsweringResult result = (QueryAnsweringResult) wsmlReasoner
+        // .execute(qaRequest);
 
         System.out.println("Found < " + result.size()
                 + " > results to the query:");

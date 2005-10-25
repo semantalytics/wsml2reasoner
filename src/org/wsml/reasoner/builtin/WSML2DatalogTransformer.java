@@ -19,12 +19,14 @@
 
 package org.wsml.reasoner.builtin;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.omwg.logicalexpression.*;
+import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.InfixOrderLogicalExpressionVisitor;
@@ -260,9 +262,15 @@ public class WSML2DatalogTransformer {
         @Override
         public void handleAtom(Atom atom) {
             String predUri = atom.getIdentifier().toString();
-            Literal l = new Literal(positive, predUri, atom.listParamters());
+            // System.out.println("Atom URI:" + predUri);
+            // System.out.println("Atom arity:" + atom.getArity());
+            // System.out.println("Atom parameters:" + atom.listParamters());
+            // conditional expression is needed because WSMO4J throws a
+            // nullpointerexception for atom.listParameters()
+            Literal l = (atom.getArity() > 0) ? new Literal(positive, predUri,
+                    atom.listParamters()) : new Literal(positive, predUri,
+                    new ArrayList<Term>());
             storeLiteral(l);
-
         }
 
         private void storeLiteral(Literal l) {

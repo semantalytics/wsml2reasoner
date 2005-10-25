@@ -12,7 +12,6 @@ concept myConcept
 	dateAttr ofType _date
 	boolAttr ofType _boolean
 	iriAttr ofType _iri
-	
 
 axiom intSum
     definedBy
