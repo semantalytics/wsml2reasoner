@@ -38,12 +38,18 @@ import org.omwg.ontology.Variable;
 public interface DatalogReasonerFacade {
 
     /**
-     * Registers the Datalog knowledge base representing the ontology at the external reasoner 
-     * @param ontologyURI the orginal logical ontology URI
-     * @param kb the knowledge base describing the ontology
-     * @throws ExternalToolException if some exception happens during ontology registration
+     * Registers the Datalog knowledge base representing the ontology at the
+     * external reasoner
+     * 
+     * @param ontologyURI
+     *            the orginal logical ontology URI
+     * @param kb
+     *            the knowledge base describing the ontology
+     * @throws ExternalToolException
+     *             if some exception happens during ontology registration
      */
-    public void register(String ontologyURI, Set<Rule> kb) throws ExternalToolException;
+    public void register(String ontologyURI, Set<Rule> kb)
+            throws ExternalToolException;
 
     /**
      * Evaluates a given query on a particular external tool.
@@ -51,13 +57,13 @@ public interface DatalogReasonerFacade {
      * @param q
      *            the query to be evaluated. The query contains a reference to
      *            the knowledgebase against which the query is posed.
-     * @return an object that represents the query result, i.e. a list of
-     *         variable bindings for the query.
+     * @return a set of variable bindings (map with variables as keys, and the
+     *         bindings: IRIs or DataValues as values)
      * @throws ExternalToolException
      *             in case that some error occurs during the execution of the
      *             query
      */
-    public Set<Map<Variable, Term>> evaluate(ConjunctiveQuery q, String ontologyURI)
-            throws ExternalToolException;
+    public Set<Map<Variable, Term>> evaluate(ConjunctiveQuery q,
+            String ontologyURI) throws ExternalToolException;
 
 }
