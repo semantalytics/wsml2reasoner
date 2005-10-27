@@ -30,7 +30,6 @@ import java.util.Set;
 
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.AttributeValueMolecule;
-import org.omwg.logicalexpression.CompoundMolecule;
 import org.omwg.logicalexpression.Conjunction;
 import org.omwg.logicalexpression.Constants;
 import org.omwg.logicalexpression.LogicalExpression;
@@ -57,6 +56,7 @@ import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.Namespace;
 import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
 /**
@@ -90,10 +90,8 @@ import org.wsmo.factory.WsmoFactory;
  */
 public class AxiomatizationNormalizer implements OntologyNormalizer
 {
-
     private WsmoFactory wsmoFactory;
-
-    private org.wsmo.factory.LogicalExpressionFactory leFactory;
+    private LogicalExpressionFactory leFactory;
 
     public AxiomatizationNormalizer()
     {
