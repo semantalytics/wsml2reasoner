@@ -54,6 +54,7 @@ public class MoleculeDecompositionRules extends FixedModificationRules
     {
         anonymousIDTranslator = AnonymousIdUtils.getAnonymousIdTranslator();
         rules.add(new MoleculeDecompositionRule());
+        rules.add(new MoleculeAnonymousIDRule());
         rules.add(new AtomAnonymousIDRule());
     }
 
