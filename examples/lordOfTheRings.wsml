@@ -86,20 +86,20 @@ definedBy
 
 instance Arathorn memberOf Man
 	hasName hasValue "Arathorn"
-	hasParent hasValue "_#"
-	hasParent hasValue "_#"
+	hasParent hasValue _#
+	hasParent hasValue _#
 	hasAncestor hasValue Elendil
 	
 axiom ArathornLivesAt
 definedBy
-Arathorn[livesAt hasValue "_#1"] and "_#1" memberOf Location.
+Arathorn[livesAt hasValue _#1] and _#1 memberOf Location.
 
 instance Elendil memberOf Man
 	hasName hasValue "Elendil"
 
 axiom ElendilLivesAt
 definedBy
-Elendil[livesAt hasValue "_#1"] and "_#1" memberOf Location.
+Elendil[livesAt hasValue _#1] and _#1 memberOf Location.
 
 instance Aragorn memberOf Man
 	hasName hasValue "Aragorn"
@@ -112,7 +112,7 @@ instance Aragorn memberOf Man
 instance Arwen memberOf Elf
 	hasName hasValue "Arwen"
 	hasParent hasValue Elrond
-	hasParent hasValue "_#"
+	hasParent hasValue _#
 	lives hasValue Rivendale
 	
 instance Rivendale memberOf Location
@@ -123,9 +123,9 @@ instance Gandalf memberOf Maya
 
 instance Gimli memberOf Dwarf
 	hasParent hasValue Gloin
-	hasParent hasValue "_#"
+	hasParent hasValue _#
 	
 instance Gloin memberOf Dwarf
-	hasParent hasValue "_#"
-	hasParent hasValue "_#"
+	hasParent hasValue _#
+	hasParent hasValue _#
 	
