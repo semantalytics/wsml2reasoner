@@ -6,14 +6,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.omwg.logicalexpression.LogicalExpression;
-import org.wsmo.factory.LogicalExpressionFactory;
 import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Variable;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
+import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.OntologyRegistrationRequest;
-import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.WSMLFlightReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.queryanswering.QueryAnsweringRequest;
 import org.wsml.reasoner.api.queryanswering.QueryAnsweringResult;
@@ -21,10 +20,12 @@ import org.wsml.reasoner.api.queryanswering.VariableBinding;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.OntologyRegistrationRequestImpl;
 import org.wsml.reasoner.impl.QueryAnsweringRequestImpl;
+import org.wsml.reasoner.impl.QueryAnsweringResultImpl;
 import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.execution.common.exception.ComponentException;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
 /**
@@ -40,23 +41,19 @@ import org.wsmo.factory.WsmoFactory;
  * 
  * @author Stephan Grimm, FZI Karlsruhe
  */
-public class WSMXReasoner implements
-        org.wsmo.execution.common.component.WSMLReasoner {
-    protected WSMLReasoner reasoner;
-
+public class WSMXReasoner implements org.wsmo.execution.common.component.WSMLReasoner
+{
+    protected WSMLFlightReasoner reasoner;
     protected WsmoFactory wsmoFactory;
-
     protected LogicalExpressionFactory leFactory;
 
-    public WSMXReasoner() {
+    public WSMXReasoner()
+    {
         // create reasoner:
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put(WSMLReasonerFactory.PARAM_WSML_VARIANT,
-                WSMLReasonerFactory.WSMLVariant.WSML_CORE);
-        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
-                WSMLReasonerFactory.BuiltInReasoner.KAON2);
-        reasoner = DefaultWSMLReasonerFactory.getFactory().getWSMLReasoner(
-                params);
+        params.put(WSMLReasonerFactory.PARAM_WSML_VARIANT, WSMLReasonerFactory.WSMLVariant.WSML_CORE);
+        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER, WSMLReasonerFactory.BuiltInReasoner.KAON2);
+        reasoner = DefaultWSMLReasonerFactory.getFactory().getWSMLFlightReasoner();
 
         // create factories for wsmo objects and logical expressions:
         wsmoFactory = WSMO4JManager.getWSMOFactory();
@@ -71,37 +68,35 @@ public class WSMXReasoner implements
      * concepts are created having the appropriate instance's identifiers
      * augmented by "_as_concept".)
      */
-    public Set<Concept> getAllInstances(Concept concept, Identifier ontology)
-            throws ComponentException, UnsupportedOperationException {
-        System.err
-                .println("note that there is currently a misconceptualization in the method org.wsmo.execution.common.component.WSMLReasoner::getAllInstances() (wrong generic return type)!");
+    public Set<Concept> getAllInstances(Concept concept, Identifier ontology) throws ComponentException, UnsupportedOperationException
+    {
+        System.err.println("note that there is currently a misconceptualization in the method org.wsmo.execution.common.component.WSMLReasoner::getAllInstances() (wrong generic return type)!");
 
+/*        
         // build query:
         Variable xVariable = wsmoFactory.createVariable("x");
-        LogicalExpression query = leFactory.createMemberShipMolecule(xVariable,
-                wsmoFactory.createIRI(concept.getIdentifier().toString()));
+        LogicalExpression query = leFactory.createMemberShipMolecule(xVariable, wsmoFactory.createIRI(concept.getIdentifier().toString()));
 
         // submit query to reasoner:
-        QueryAnsweringRequest qaRequest = new QueryAnsweringRequestImpl(
-                ontology.toString(), query);
-        QueryAnsweringResult result = (QueryAnsweringResult) reasoner
-                .execute(qaRequest);
-
+        QueryAnsweringRequest qaRequest = new QueryAnsweringRequestImpl(ontology.toString(), query);
+        QueryAnsweringResult result = (QueryAnsweringResult)reasoner.execute(qaRequest);
+        
         // extract instances out of result:
         Set<Instance> instances = new HashSet<Instance>();
-        for (VariableBinding vBinding : result) {
+        for(VariableBinding vBinding : result)
+        {
             String instanceID = vBinding.get("x");
-            Instance instance = wsmoFactory.getInstance(wsmoFactory
-                    .createIRI(instanceID));
+            Instance instance = wsmoFactory.getInstance(wsmoFactory.createIRI(instanceID));
             instances.add(instance);
         }
-
+*/
+        Set<Instance> instances = reasoner.getInstances((IRI)ontology, concept);
+       
         // copy set of instances to set of concepts (API-bug)
         Set<Concept> dummyConcepts = new HashSet<Concept>();
-        for (Instance instance : instances) {
-            Identifier dummyID = wsmoFactory.createIRI(instance.getIdentifier()
-                    .toString()
-                    + "_as_concept");
+        for(Instance instance : instances)
+        {
+            Identifier dummyID = wsmoFactory.createIRI(instance.getIdentifier().toString() + "_as_concept");
             dummyConcepts.add(wsmoFactory.createConcept(dummyID));
         }
 
@@ -113,29 +108,29 @@ public class WSMXReasoner implements
      * given ontology, such that "Csub subConceptOf Csup" holds in WSML terms.
      * The ontology must have been registered with the reasoner beforehand.
      */
-    public Set<Concept> getAllSubconcepts(Concept concept, Identifier ontology)
-            throws ComponentException, UnsupportedOperationException {
+    public Set<Concept> getAllSubconcepts(Concept concept, Identifier ontology) throws ComponentException, UnsupportedOperationException
+    {
+        return reasoner.getSubConcepts((IRI)ontology, concept);
+/*        
         // build query:
         Variable xVariable = wsmoFactory.createVariable("x");
-        LogicalExpression query = leFactory.createSubConceptMolecule(xVariable,
-                wsmoFactory.createIRI(concept.getIdentifier().toString()));
+        LogicalExpression query = leFactory.createSubConceptMolecule(xVariable, wsmoFactory.createIRI(concept.getIdentifier().toString()));
 
         // submit query to reasoner:
-        QueryAnsweringRequest qaRequest = new QueryAnsweringRequestImpl(
-                ontology.toString(), query);
-        QueryAnsweringResult result = (QueryAnsweringResult) reasoner
-                .execute(qaRequest);
+        QueryAnsweringRequest qaRequest = new QueryAnsweringRequestImpl(ontology.toString(), query);
+        QueryAnsweringResult result = (QueryAnsweringResult)reasoner.execute(qaRequest);
 
         // extract concepts out of result:
         Set<Concept> subconcepts = new HashSet<Concept>();
-        for (VariableBinding vBinding : result) {
+        for(VariableBinding vBinding : result)
+        {
             String subconceptID = vBinding.get("x");
-            Concept subconcept = wsmoFactory.getConcept(wsmoFactory
-                    .createIRI(subconceptID));
+            Concept subconcept = wsmoFactory.getConcept(wsmoFactory.createIRI(subconceptID));
             subconcepts.add(subconcept);
         }
 
         return subconcepts;
+*/        
     }
 
     /**
@@ -143,34 +138,33 @@ public class WSMXReasoner implements
      * a given ontology, such that "Csub subConceptOf Csup" holds in WSML terms.
      * The ontology must have been registered with the reasoner beforehand.
      */
-    public Set<Concept> getAllSuperconcepts(Concept concept, Identifier ontology)
-            throws ComponentException, UnsupportedOperationException {
+    public Set<Concept> getAllSuperconcepts(Concept concept, Identifier ontology) throws ComponentException, UnsupportedOperationException
+    {
+        return reasoner.getSuperConcepts((IRI)ontology, concept);
+/*
         // build query:
         Variable xVariable = wsmoFactory.createVariable("x");
         Set<Term> varSet = new HashSet<Term>();
         varSet.add(xVariable);
-        Term conceptID = wsmoFactory.createIRI(concept.getIdentifier()
-                .toString());
+        Term conceptID = wsmoFactory.createIRI(concept.getIdentifier().toString());
 
-        LogicalExpression query = leFactory.createSubConceptMolecule(conceptID,
-                xVariable);
+        LogicalExpression query = leFactory.createSubConceptMolecule(conceptID, xVariable);
 
         // submit query to reasoner:
-        QueryAnsweringRequest qaRequest = new QueryAnsweringRequestImpl(
-                ontology.toString(), query);
-        QueryAnsweringResult result = (QueryAnsweringResult) reasoner
-                .execute(qaRequest);
+        QueryAnsweringRequest qaRequest = new QueryAnsweringRequestImpl(ontology.toString(), query);
+        QueryAnsweringResult result = (QueryAnsweringResult)reasoner.execute(qaRequest);
 
         // extract concepts out of result:
         Set<Concept> superconcepts = new HashSet<Concept>();
-        for (VariableBinding vBinding : result) {
+        for(VariableBinding vBinding : result)
+        {
             String superconceptID = vBinding.get("x");
-            Concept superconcept = wsmoFactory.getConcept(wsmoFactory
-                    .createIRI(superconceptID));
+            Concept superconcept = wsmoFactory.getConcept(wsmoFactory.createIRI(superconceptID));
             superconcepts.add(superconcept);
         }
 
         return superconcepts;
+*/        
     }
 
     /**
@@ -178,25 +172,22 @@ public class WSMXReasoner implements
      * concept C in a given ontology, i.e. "i memberOf C" holds in WSMl terms.
      * The ontology must have been registered with the reasoner beforehand.
      */
-    public boolean isInstanceOf(Instance instance, Concept concept,
-            Identifier ontology) throws ComponentException,
-            UnsupportedOperationException {
+    public boolean isInstanceOf(Instance instance, Concept concept, Identifier ontology) throws ComponentException, UnsupportedOperationException
+    {
+        return reasoner.isMemberOf((IRI)ontology, instance, concept);
+/*        
         // build query:
-        Term conceptID = wsmoFactory.createIRI(concept.getIdentifier()
-                .toString());
-        Term instanceID = wsmoFactory.createIRI(instance.getIdentifier()
-                .toString());
-        LogicalExpression query = leFactory.createMemberShipMolecule(
-                instanceID, conceptID);
+        Term conceptID = wsmoFactory.createIRI(concept.getIdentifier().toString());
+        Term instanceID = wsmoFactory.createIRI(instance.getIdentifier().toString());
+        LogicalExpression query = leFactory.createMemberShipMolecule(instanceID, conceptID);
 
         // submit query to reasoner:
-        QueryAnsweringRequest qaRequest = new QueryAnsweringRequestImpl(
-                ontology.toString(), query);
-        QueryAnsweringResult result = (QueryAnsweringResult) reasoner
-                .execute(qaRequest);
+        QueryAnsweringRequest qaRequest = new QueryAnsweringRequestImpl(ontology.toString(), query);
+        QueryAnsweringResult result = (QueryAnsweringResult)reasoner.execute(qaRequest);
 
         // check for non-empty result:
         return result.size() != 0;
+*/        
     }
 
     /**
@@ -204,13 +195,15 @@ public class WSMXReasoner implements
      * reasoning on an ontology it has to be registered first. After
      * registration, an ontology is referred to by its identifier.
      */
-    public void register(Ontology ontology) throws ComponentException,
-            UnsupportedOperationException {
+    public void register(Ontology ontology) throws ComponentException, UnsupportedOperationException
+    {
+        reasoner.registerOntology(ontology);
+/*        
         Set<Ontology> ontos = new HashSet<Ontology>();
         ontos.add(ontology);
-        OntologyRegistrationRequest regReq = new OntologyRegistrationRequestImpl(
-                ontos);
+        OntologyRegistrationRequest regReq = new OntologyRegistrationRequestImpl(ontos);
         reasoner.execute(regReq);
+*/        
     }
 
     /**
@@ -219,25 +212,22 @@ public class WSMXReasoner implements
      * holds in WSML terms. The ontology must have been registered with the
      * reasoner beforehand.
      */
-    public boolean subsumes(Concept superConcept, Concept subConcept,
-            Identifier ontology) throws ComponentException,
-            UnsupportedOperationException {
+    public boolean subsumes(Concept superConcept, Concept subConcept, Identifier ontology) throws ComponentException, UnsupportedOperationException
+    {
+        return reasoner.isSubConceptOf((IRI)ontology, subConcept, superConcept);
+/*        
         // build query:
-        Term superconceptID = wsmoFactory.createIRI(superConcept
-                .getIdentifier().toString());
-        Term subconceptID = wsmoFactory.createIRI(subConcept.getIdentifier()
-                .toString());
-        LogicalExpression query = leFactory.createSubConceptMolecule(
-                subconceptID, superconceptID);
+        Term superconceptID = wsmoFactory.createIRI(superConcept.getIdentifier().toString());
+        Term subconceptID = wsmoFactory.createIRI(subConcept.getIdentifier().toString());
+        LogicalExpression query = leFactory.createSubConceptMolecule(subconceptID, superconceptID);
 
         // submit query to reasoner:
-        QueryAnsweringRequest qaRequest = new QueryAnsweringRequestImpl(
-                ontology.toString(), query);
-        QueryAnsweringResult result = (QueryAnsweringResult) reasoner
-                .execute(qaRequest);
+        QueryAnsweringRequest qaRequest = new QueryAnsweringRequestImpl(ontology.toString(), query);
+        QueryAnsweringResult result = (QueryAnsweringResult)reasoner.execute(qaRequest);
 
         // check for non-empty result:
         return result.size() != 0;
+*/        
     }
 
     /**
@@ -245,11 +235,10 @@ public class WSMXReasoner implements
      * with the reasoner. As a result it returns a set of bindings for the free
      * variables occurring in the query.
      */
-    public QueryAnsweringResult retrieve(LogicalExpression query,
-            Identifier ontology) {
-        QueryAnsweringRequest request = new QueryAnsweringRequestImpl(ontology
-                .toString(), query);
-        return (QueryAnsweringResult) reasoner.execute(request);
+    public QueryAnsweringResult retrieve(LogicalExpression query, Identifier ontology)
+    {
+        QueryAnsweringRequest request = new QueryAnsweringRequestImpl(ontology.toString(), query);
+        return (QueryAnsweringResult)reasoner.execute(request);
     }
 
 }
