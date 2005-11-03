@@ -54,6 +54,7 @@ import org.wsml.reasoner.datalog.Rule;
 import org.wsml.reasoner.datalog.wrapper.DatalogReasonerFacade;
 import org.wsml.reasoner.datalog.wrapper.ExternalToolException;
 import org.wsml.reasoner.datalog.wrapper.dlv.DLVFacade;
+import org.wsml.reasoner.datalog.wrapper.flora2.Flora2Facade;
 import org.wsml.reasoner.datalog.wrapper.kaon2.Kaon2Facade;
 import org.wsml.reasoner.datalog.wrapper.mandrax.MandraxFacade;
 import org.wsml.reasoner.datalog.wrapper.mins.MinsFacade;
@@ -103,6 +104,10 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         case MINS:
             builtInFacade = new MinsFacade();
             break;
+        case FLORA2:
+            builtInFacade = new Flora2Facade();
+            break;
+            
         default:
             throw new UnsupportedOperationException("Reasoning with "
                     + builtInType.toString() + " is not supported yet!");
