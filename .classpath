@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="ext/servlet/src"/>
-	<classpathentry kind="lib" path="lib/ext/interprolog.jar"/>
 	<classpathentry kind="lib" path="lib/ext/DLV/DLVWrapper-3_0_beta4.jar"/>
 	<classpathentry kind="lib" path="lib/ext/Mandrax/mandarax-3.4.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
@@ -15,5 +14,7 @@
 	<classpathentry kind="lib" path="lib/ext/kaon2/kaon2-2005-10-17.jar"/>
 	<classpathentry kind="lib" path="lib/ext/wsmo4j 0.5.0/wsmo-api-0.5.1-fixed.jar"/>
 	<classpathentry kind="lib" path="lib/ext/wsmo4j 0.5.0/wsmo4j-0.5.1-fixed.jar"/>
+	<classpathentry kind="lib" path="lib/ext/flora2/XSBFlora.jar"/>
+	<classpathentry kind="lib" path="lib/ext/interprolog.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

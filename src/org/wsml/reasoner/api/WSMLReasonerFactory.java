@@ -37,7 +37,7 @@ public interface WSMLReasonerFactory {
     public String PARAM_BUILT_IN_REASONER = "BUILT IN REASONER";
 
     public enum BuiltInReasoner {
-        DLV, MANDARAX, KAON2, MINS
+        DLV, MANDARAX, KAON2, MINS, FLORA2
     };
 
     /**
