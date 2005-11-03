@@ -53,8 +53,21 @@ import com.ontotext.flora2.XSBFlora;
  * Integrates the Flora2 system into the WSML Core/Flight Reasoner framework for
  * query answering.
  * 
+ * -------------------------------------------------------- 
+ * Before you run a test program for Flora2 reasoner please make sure that: 
+ * I. You have the right paths in ../conf/flora.properties file. 
+ * The following paths have to be adjusted to your system XSB_HOME and FLORA_HOME. 
+ * The test program should be run with the following java environment variables set:
+ * -Djava.library.path=path_to_xsb.exe -DXSB_BIN_DIRECTORY=path_to_xsb.exe
+ * 
+ * An examplec could be: 
+ * -Djava.library.path=c:\\XSB\\config\\x86-pc-windows\\bin
+ * -DXSB_BIN_DIRECTORY=c:\\XSB\\config\\x86-pc-windows\\bin
+ * --------------------------------------------------------
+ *
  * @author Ioan Toma, DERI Innsbruck, Austria
  */
+
 public class Flora2Facade implements DatalogReasonerFacade {
 
 	private Map<String, StringBuffer> registeredKbs = new HashMap<String, StringBuffer>();
