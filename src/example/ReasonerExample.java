@@ -88,7 +88,7 @@ public class ReasonerExample {
 		// get A reasoner
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
-				WSMLReasonerFactory.BuiltInReasoner.FLORA2);
+				WSMLReasonerFactory.BuiltInReasoner.MINS);
 		params.put(WSMLReasonerFactory.PARAM_WSML_VARIANT,
 				WSMLReasonerFactory.WSMLVariant.WSML_CORE);
 		WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
