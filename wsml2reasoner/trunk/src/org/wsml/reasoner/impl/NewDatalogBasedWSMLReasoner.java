@@ -141,18 +141,27 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     }
 
     public void deRegisterOntology(Set<IRI> ontologyIDs) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException();
+        // TODO Later we need a method which accepts a set of ontology IDs on
+        // the DatalogFacade
+        for (IRI id : ontologyIDs) {
+            try {
+                builtInFacade.deregister(id.toString());
+            } catch (org.wsml.reasoner.builtin.ExternalToolException e) {
+                e.printStackTrace();
+                throw new IllegalArgumentException(
+                        "This set of ontologies could not have been deregistered at the built-in reasoner",
+                        e);
+            }
+
+        }
     }
 
     public boolean entails(IRI ontologyID, LogicalExpression expression) {
-        // TODO Auto-generated method stub
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     public boolean entails(IRI ontologyID, Set<LogicalExpression> expressions) {
-        // TODO Auto-generated method stub
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     public boolean executeGroundQuery(IRI ontologyID, LogicalExpression query) {

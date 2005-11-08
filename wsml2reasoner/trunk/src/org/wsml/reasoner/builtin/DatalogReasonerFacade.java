@@ -52,6 +52,16 @@ public interface DatalogReasonerFacade {
             throws ExternalToolException;
 
     /**
+     * Removes the ontology from the external reasoner
+     * 
+     * @param ontologyURI
+     *            the original logical ontology URI
+     * @throws ExternalToolException
+     *             if exception happens during ontology removal
+     */
+    public void deregister(String ontologyURI) throws ExternalToolException;
+
+    /**
      * Evaluates a given query on a particular external tool.
      * 
      * @param q
