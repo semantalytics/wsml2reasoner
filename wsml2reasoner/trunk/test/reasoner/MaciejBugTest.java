@@ -23,13 +23,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.queryanswering.VariableBinding;
-import org.wsml.reasoner.impl.VariableBindingImpl;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
+import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.Variable;
+
 import test.BaseReasonerTest;
 
 public class MaciejBugTest extends BaseReasonerTest {
