@@ -5,12 +5,15 @@ namespace {_"http://www.example.org#",
  
 ontology TheSimpsons
 
-axiom myAx
-  definedBy
-   man impliedBy ?f memberOf Human and ?t memberOf Dummy and ?l memberOf noClue.
+//axiom myAx
+//  definedBy
+//   man impliedBy ?f memberOf Human and ?t memberOf Dummy and ?l memberOf noClue.
    
 concept Human
   hasRelative transitive symmetric impliesType Human
+  
+//axiom some
+//  definedBy !- ?x memberOf Man.
 
 concept Man subConceptOf Human
 
