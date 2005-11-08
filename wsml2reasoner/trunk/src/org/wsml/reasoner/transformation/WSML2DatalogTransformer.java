@@ -114,8 +114,10 @@ public class WSML2DatalogTransformer {
         Program result = new Program();
 
         DatalogVisitor datalogVisitor = new DatalogVisitor();
-
+//        int i = 0;
         for (org.omwg.logicalexpression.LogicalExpression r : rules) {
+//            i++;
+//            System.out.println(i+""+r);
             r.accept(datalogVisitor);
             Program translation = (Program) datalogVisitor
                     .getSerializedObject();

@@ -18,10 +18,8 @@
  */
 package org.wsml.reasoner.datalog.wrapper.mins;
 
+import java.util.*;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -55,6 +53,9 @@ import org.wsml.reasoner.impl.VariableBindingImpl;
 public class MinsFacade implements DatalogReasonerFacade {
 	private Logger logger = Logger
 			.getLogger("org.wsml.reasoner.wsmlcore.wrapper.mins");
+    
+    private final static Predicate PRED_CONSTRAINT = new Predicate(
+            "mins-constraint", 1);;
 
 	/**
 	 * Here we store a MINS Engine which contains the compiled KB for each
@@ -90,7 +91,15 @@ public class MinsFacade implements DatalogReasonerFacade {
             // retrieve KB ment for IRI:
             RuleSet minsEngine = registeredKbs.get(ontologyIRI);
             minsEngine.debuglevel=0;
-            Rule query = translateQuery(q, minsEngine); 
+            Rule query = translateQuery(q, minsEngine);
+            
+            //check contraint query
+            List<Literal> cqlits = new LinkedList<Literal>();
+            org.wsml.reasoner.datalog.Variable v =new org.wsml.reasoner.datalog.Variable("query");
+            cqlits.add(new Literal(PRED_CONSTRAINT,
+                    new org.wsml.reasoner.datalog.Term[]{v}));
+            Rule cQuery = translateQuery(new ConjunctiveQuery(cqlits),
+                    minsEngine);
             logger.info("Starting MINS evaluation");
             
             /* 0: Naive Evaluation (only stratifight prorgams)<BR> 
@@ -103,6 +112,20 @@ public class MinsFacade implements DatalogReasonerFacade {
             }
             minsEngine.evalQueries();
             logger.info("Computing substitutions");
+            
+            //checking constraints:
+            Substitution s0 = minsEngine.getSubstitution(cQuery);
+            Enumeration enm0 = s0.elements();
+            if (enm0.hasMoreElements()){
+                String error ="";
+                GroundAtom a = (GroundAtom) enm0.nextElement();
+                for (int i = 0; i < a.terms.length; i++) {
+                    String wsmlTerm = symbTransfomer.convertToWSML(a.terms[i]);
+                    error += wsmlTerm;
+                }
+                throw new ConstraintViolationError("Constraint Violated:"+error);
+            }
+            
         	Substitution s = minsEngine.getSubstitution(query);
             Enumeration enm = s.elements();
             
@@ -196,9 +219,12 @@ public class MinsFacade implements DatalogReasonerFacade {
         Literal l;
         
         if (r.isConstraint()) {
-        	// Simply ignore constraints 
-            return;
-            // TODO handle constraints properly
+        	//use predicate for constraints. 
+            //return;
+            Constant cBody = new Constant(r.getBody().toString());
+            r = new org.wsml.reasoner.datalog.Rule(new Literal(PRED_CONSTRAINT, new org.wsml.reasoner.datalog.Term[]{cBody}),
+                    r.getBody());
+            
         } 
         
         // Translate head
