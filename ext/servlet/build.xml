@@ -1,11 +1,13 @@
 <project name="WSML Reasoner" basedir="." default="tomcat.package">
 
   <tstamp/>
-  <property file="pwd"/>
-  <property name="tomcat.host" value="dev1.deri.at" />
-  <property name="tomcat.url" value="http://${tomcat.host}:8080/manager" />
+  <!--<property file="pwd"/>-->
+  <property name="tomcat.host" value="192.168.65.141" />
+  <property name="tomcat.port" value="8000" />
+  <property name="tomcat.url" value="http://${tomcat.host}:${tomcat.port}/manager" />
   <property name="tomcat.path" value="wsml-mins-reasoner-${DSTAMP}" />
-  <property name="tomcat.username" value="student" />
+  <property name="tomcat.username" value="hollau" />
+  <property name="tomcat.password" value="Nordkette" />
   <property name="warfile" value="${tomcat.path}.war" />
 
   <property name="dir.web" location="web" />
