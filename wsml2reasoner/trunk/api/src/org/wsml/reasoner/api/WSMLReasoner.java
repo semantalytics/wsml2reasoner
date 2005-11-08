@@ -37,21 +37,21 @@ import org.wsmo.common.IRI;
  */
 public interface WSMLReasoner {
 
-    /**
-     * Sends a request about some reasoning task to a reasoner. A reasoner might
-     * support different reasoning tasks such as for instance query answering or
-     * checking logical entailment of a statement wrt. to some ontology or
-     * knowledgebase.
-     * 
-     * @param req -
-     *            a description of the reasoning task to be performed.
-     * @return the result to the given request.
-     * @throws UnsupportedOperationException -
-     *             in case that the given request referes to a reasoning task
-     *             that is not supported by the respective reasoner.
-     * @deprecated
-     */
-    public Result execute(Request req) throws UnsupportedOperationException;
+//    /**
+//     * Sends a request about some reasoning task to a reasoner. A reasoner might
+//     * support different reasoning tasks such as for instance query answering or
+//     * checking logical entailment of a statement wrt. to some ontology or
+//     * knowledgebase.
+//     * 
+//     * @param req -
+//     *            a description of the reasoning task to be performed.
+//     * @return the result to the given request.
+//     * @throws UnsupportedOperationException -
+//     *             in case that the given request referes to a reasoning task
+//     *             that is not supported by the respective reasoner.
+//     * @deprecated
+//     */
+//    public Result execute(Request req) throws UnsupportedOperationException;
 
     public void registerOntology(Set<Ontology> ontologies);
 
