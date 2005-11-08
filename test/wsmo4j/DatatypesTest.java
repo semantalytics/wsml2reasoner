@@ -166,38 +166,38 @@ public class DatatypesTest extends TestCase {
         assertTrue(iriARange instanceof ComplexDataType);
         assertEquals(iriARange.getIRI().toString(), WsmlDataType.WSML_IRI);
         // axiom
-        Axiom axiom = o.findAxiom(f.createIRI(NS + "intSum"));
-        assertNotNull(axiom);
-        Set les = axiom.listDefinitions();
-        assertEquals(les.size(), 1);
-        LogicalExpression le = (LogicalExpression) les.iterator().next();
-        assertTrue(le instanceof Implication);
-        Implication impl = (Implication) le;
-        AttributeValueMolecule attrVal = (AttributeValueMolecule) impl
-                .getRightOperand();
-        BuiltInConstructedTerm add1 = (BuiltInConstructedTerm) attrVal
-                .getRightParameter();
-        assertEquals(add1.getFunctionSymbol().toString(), Constants.NUMERIC_ADD);
-        assertEquals(add1.getArity(), 2);
-        SimpleDataValue ten = (SimpleDataValue) add1.getParameter(1);
-        assertEquals(ten.getType().getIRI().toString(),
-                WsmlDataType.WSML_INTEGER);
-        assertTrue(ten.getValue() instanceof BigInteger);
-        assertEquals(ten.getValue(), new BigInteger("10"));
-        BuiltInConstructedTerm add2 = (BuiltInConstructedTerm) add1
-                .getParameter(0);
-        assertEquals(add2.getFunctionSymbol().toString(), Constants.NUMERIC_ADD);
-        assertEquals(add2.getArity(), 2);
-        Variable a3 = (Variable) add2.getParameter(1);
-        assertEquals(a3.getName(), "a3");
-        BuiltInConstructedTerm add3 = (BuiltInConstructedTerm) add2
-                .getParameter(0);
-        assertEquals(add3.getFunctionSymbol().toString(), Constants.NUMERIC_ADD);
-        assertEquals(add3.getArity(), 2);
-        Variable a1 = (Variable) add3.getParameter(0);
-        assertEquals(a1.getName(), "a1");
-        Variable a2 = (Variable) add3.getParameter(1);
-        assertEquals(a2.getName(), "a2");
+//        Axiom axiom = o.findAxiom(f.createIRI(NS + "intSum"));
+//        assertNotNull(axiom);
+//        Set les = axiom.listDefinitions();
+//        assertEquals(les.size(), 1);
+//        LogicalExpression le = (LogicalExpression) les.iterator().next();
+//        assertTrue(le instanceof Implication);
+//        Implication impl = (Implication) le;
+//        AttributeValueMolecule attrVal = (AttributeValueMolecule) impl
+//                .getRightOperand();
+//        BuiltInConstructedTerm add1 = (BuiltInConstructedTerm) attrVal
+//                .getRightParameter();
+//        assertEquals(add1.getFunctionSymbol().toString(), Constants.NUMERIC_ADD);
+//        assertEquals(add1.getArity(), 2);
+//        SimpleDataValue ten = (SimpleDataValue) add1.getParameter(1);
+//        assertEquals(ten.getType().getIRI().toString(),
+//                WsmlDataType.WSML_INTEGER);
+//        assertTrue(ten.getValue() instanceof BigInteger);
+//        assertEquals(ten.getValue(), new BigInteger("10"));
+//        BuiltInConstructedTerm add2 = (BuiltInConstructedTerm) add1
+//                .getParameter(0);
+//        assertEquals(add2.getFunctionSymbol().toString(), Constants.NUMERIC_ADD);
+//        assertEquals(add2.getArity(), 2);
+//        Variable a3 = (Variable) add2.getParameter(1);
+//        assertEquals(a3.getName(), "a3");
+//        BuiltInConstructedTerm add3 = (BuiltInConstructedTerm) add2
+//                .getParameter(0);
+//        assertEquals(add3.getFunctionSymbol().toString(), Constants.NUMERIC_ADD);
+//        assertEquals(add3.getArity(), 2);
+//        Variable a1 = (Variable) add3.getParameter(0);
+//        assertEquals(a1.getName(), "a1");
+//        Variable a2 = (Variable) add3.getParameter(1);
+//        assertEquals(a2.getName(), "a2");
         // instance
         Instance dummy = o.findInstance(f.createIRI(NS + "dummy"));
         assertNotNull(dummy);
