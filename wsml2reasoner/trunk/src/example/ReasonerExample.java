@@ -20,7 +20,6 @@ package example;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,14 +30,10 @@ import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.queryanswering.QueryAnsweringRequest;
-import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.QueryAnsweringRequestImpl;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsml.reasoner.impl.*;
 import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
-import org.wsmo.factory.Factory;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
+import org.wsmo.factory.*;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.Serializer;
 
@@ -86,13 +81,8 @@ public class ReasonerExample {
 				exampleOntology.getIdentifier().toString(), query);
 
 		// get A reasoner
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
-				WSMLReasonerFactory.BuiltInReasoner.MINS);
-		params.put(WSMLReasonerFactory.PARAM_WSML_VARIANT,
-				WSMLReasonerFactory.WSMLVariant.WSML_CORE);
 		WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
-				.getWSMLReasoner(params);
+				.getWSMLFlightReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
 
 		// Register ontology
 		reasoner.registerOntology(exampleOntology);

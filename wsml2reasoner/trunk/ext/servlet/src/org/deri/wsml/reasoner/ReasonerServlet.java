@@ -24,12 +24,16 @@ import java.util.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
+import org.deri.wsmo4j.io.serializer.wsml.VisitorSerializeWSMLTerms;
 import org.deri.wsmo4j.validator.ValidationError;
 import org.deri.wsmo4j.validator.WsmlValidatorImpl;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
-import org.wsml.reasoner.api.*;
-import org.wsml.reasoner.api.queryanswering.*;
+import org.omwg.ontology.Variable;
+import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.queryanswering.QueryAnsweringRequest;
 import org.wsml.reasoner.impl.*;
 import org.wsmo.common.*;
 import org.wsmo.factory.*;
@@ -44,9 +48,14 @@ import org.wsmo.wsml.ParserException;
  * 
  * 
  * @see org.deri.wsml.reasoner.ontobroker.Reasoner
- * @author Jos de Bruijn $Author: hlausen $ $Date: 2005-11-08 08:59:05 $
+ * @author Jos de Bruijn $Author: hlausen $ $Date: 2005-11-08 15:22:30 $
  */
 public class ReasonerServlet extends HttpServlet {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     private boolean debug = false;
 
     private PrintWriter out;
@@ -68,7 +77,7 @@ public class ReasonerServlet extends HttpServlet {
      */
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        System.exit(0);
         out = response.getWriter();
 
         String wsmlOntology = "";
@@ -223,23 +232,14 @@ public class ReasonerServlet extends HttpServlet {
                     ontology.getIdentifier().toString(), query);
 
             // get A reasoner
-            Map<String, Object> params = new HashMap<String, Object>();
-            params.put(WSMLReasonerFactory.PARAM_WSML_VARIANT,
-                    WSMLReasonerFactory.WSMLVariant.WSML_CORE);
-            params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
-                    WSMLReasonerFactory.BuiltInReasoner.MINS);
-            WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
-                    .getWSMLReasoner(params);
+            WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().
+                    getWSMLFlightReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
 
             // Register ontology
-            Set<Ontology> ontos = new HashSet<Ontology>();
-            ontos.add(ontology);
-            OntologyRegistrationRequest regReq = new OntologyRegistrationRequestImpl(
-                    ontos);
-            reasoner.execute(regReq);
+            reasoner.registerOntology(ontology);
 
-            QueryAnsweringResult result = (QueryAnsweringResult) reasoner
-                    .execute(qaRequest);
+            Set<Map<Variable,Term>> result = reasoner.executeQuery(
+                    (IRI)ontology.getIdentifier(),query);
 
             if (result.size()==0){
                 out.println("<pre>the query returned no variable bindings.</pre>");
@@ -247,15 +247,15 @@ public class ReasonerServlet extends HttpServlet {
             else {
                 // print out the results:
                 out.print("<table class=\"result\"><thead><tr>");
-                for (String var : result.iterator().next().keySet()) {
+                for (Variable var : result.iterator().next().keySet()) {
                     out.println("<th>?" + var + "</th>");
                 }
                 out.println("</tr></thead><tbody>");
                 WsmoFactory f = Factory.createWsmoFactory(null);
                 
-                for (VariableBinding vBinding : result) {
+                for (Map<Variable,Term> vBinding : result) {
                     out.println("<tr>");
-                    for (String var : vBinding.keySet()) {
+                    for (Variable var : vBinding.keySet()) {
                         out.println("<td>" + resolve(vBinding.get(var), ontology) +"</td>");
                     }
                     out.println("</tr>");
@@ -265,17 +265,10 @@ public class ReasonerServlet extends HttpServlet {
         }
     }
     
-    private String resolve(String iri, Ontology o){
-        if (iri.startsWith(o.getDefaultNamespace().getIRI().toString())){
-            return iri.substring(o.getDefaultNamespace().getIRI().toString().length());
-        }
-        for (Object nso : o.listNamespaces()){
-            Namespace ns = (Namespace)nso;
-            if (iri.startsWith(ns.getIRI().toString())){
-                return ns.getPrefix()+iri.substring(ns.getIRI().toString().length());
-            }
-        }
-        return iri;
+    private String resolve(Term iri, Ontology o){
+        VisitorSerializeWSMLTerms v = new VisitorSerializeWSMLTerms(o);
+        iri.accept(v);
+        return v.getSerializedObject().toString();
     }
     
     private String markErrorPos(String error, int pos){
