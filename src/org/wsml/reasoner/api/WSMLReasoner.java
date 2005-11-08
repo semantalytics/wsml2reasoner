@@ -52,33 +52,47 @@ public interface WSMLReasoner {
      * @deprecated
      */
     public Result execute(Request req) throws UnsupportedOperationException;
-    
+
     public void registerOntology(Set<Ontology> ontologies);
-    
+
+    /**
+     * Registers the ontology. If the ontology is already registered, updates
+     * the ontology content.
+     * 
+     * @param ontology
+     */
     public void registerOntology(Ontology ontology);
-    
+
+    /**
+     * Deregisters the ontology. Any further request using this ontologyID will
+     * result in an exception.
+     * 
+     * @param ontologyID
+     */
     public void deRegisterOntology(IRI ontologyID);
-    
+
     public void deRegisterOntology(Set<IRI> ontologyIDs);
-    
-    public Set<Map<Variable, Term>> executeQuery(IRI ontologyID, LogicalExpression query);
-    
+
+    public Set<Map<Variable, Term>> executeQuery(IRI ontologyID,
+            LogicalExpression query);
+
     public boolean executeGroundQuery(IRI ontologyID, LogicalExpression query);
-    
+
     public boolean entails(IRI ontologyID, LogicalExpression expression);
-    
+
     public boolean entails(IRI ontologyID, Set<LogicalExpression> expressions);
-    
-    public boolean isSubConceptOf(IRI ontologyID, Concept subConcept, Concept superConcept);
-    
+
+    public boolean isSubConceptOf(IRI ontologyID, Concept subConcept,
+            Concept superConcept);
+
     public boolean isMemberOf(IRI ontologyID, Instance instance, Concept concept);
-    
+
     public Set<Concept> getSubConcepts(IRI ontologyID, Concept concept);
-    
+
     public Set<Concept> getSuperConcepts(IRI ontologyID, Concept concept);
 
     public Set<Instance> getInstances(IRI ontologyID, Concept concept);
-    
+
     public Set<Concept> getConcepts(IRI ontologyID, Instance instance);
 
 }

@@ -20,6 +20,7 @@
 package org.wsml.reasoner.builtin.kaon2;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -76,6 +77,8 @@ public class Kaon2Facade implements DatalogReasonerFacade {
 
     private WsmoFactory wf = WSMO4JManager.getWSMOFactory();
 
+    private Set<String> registeredOntologies = new HashSet<String>();
+
     /**
      * Needed for testing purposes
      */
@@ -103,15 +106,20 @@ public class Kaon2Facade implements DatalogReasonerFacade {
         }
 
         try {
-            Ontology ontology = this.conn.openOntology(ontologyUri, EMPTY_MAP);
-            if (ontology == null)
+            if (this.conn == null) {
                 throw new ExternalToolException("The ontology " + ontologyUri
                         + " is not registered");
+            }
+            if (!this.registeredOntologies.contains(ontologyUri)) {
+                throw new ExternalToolException("The ontology " + ontologyUri
+                        + " is not registered");
+            }
+            Ontology ontology = this.conn.openOntology(ontologyUri, EMPTY_MAP);
             Reasoner reasoner = ontology.createReasoner();
             Query query = translateQuery(q, reasoner, varNames);
             // for (Literal l : query.getQueryLiterals()) {
             // System.out.println("Query literal: " + l);
-            //            }
+            // }
             query.open();
             while (!query.afterLast()) {
                 org.omwg.logicalexpression.terms.Term[] tuple = convertQueryTuple(query
@@ -325,6 +333,10 @@ public class Kaon2Facade implements DatalogReasonerFacade {
             DefaultOntologyResolver resolver = new DefaultOntologyResolver();
             conn.setOntologyResolver(resolver);
         }
+        //Deregister, if already registered
+        if (this.registeredOntologies.contains(ontologyURI)) {
+            deregister(ontologyURI);
+        }
         // TODO Handle ontology imports
         DefaultOntologyResolver resolver = (DefaultOntologyResolver) conn
                 .getOntologyResovler();
@@ -345,6 +357,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
             throw new ExternalToolException(
                     "Cannot register ontology in KAON2", e);
         }
+        this.registeredOntologies.add(ontologyURI);
 
     }
 
@@ -354,6 +367,21 @@ public class Kaon2Facade implements DatalogReasonerFacade {
         this.conn.close();
     }
 
-    
+    public void deregister(String ontologyUri) throws ExternalToolException {
+        if (!this.registeredOntologies.contains(ontologyUri)) {
+            throw new ExternalToolException("The ontology " + ontologyUri
+                    + " is not registered");
+        }
+        try {
+            Ontology ontology = this.conn.openOntology(ontologyUri, EMPTY_MAP);
+            this.conn.closeOntologies(Collections.singleton(ontology));
+            this.registeredOntologies.remove(ontologyUri);
+        } catch (KAON2Exception e) {
+            throw new ExternalToolException("Internal Kaon2 exception", e);
+        } catch (InterruptedException e) {
+            throw new ExternalToolException(
+                    "Kaon2 query was interrupted during execution");
+        }
+    }
 
 }
