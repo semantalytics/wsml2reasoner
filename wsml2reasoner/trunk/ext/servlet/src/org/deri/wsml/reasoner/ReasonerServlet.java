@@ -44,7 +44,7 @@ import org.wsmo.wsml.ParserException;
  * 
  * 
  * @see org.deri.wsml.reasoner.ontobroker.Reasoner
- * @author Jos de Bruijn $Author: hlausen $ $Date: 2005-10-20 12:45:59 $
+ * @author Jos de Bruijn $Author: hlausen $ $Date: 2005-11-08 08:59:05 $
  */
 public class ReasonerServlet extends HttpServlet {
     private boolean debug = false;
@@ -76,6 +76,8 @@ public class ReasonerServlet extends HttpServlet {
         
         //needed to get rid of old object in weak hashmap
         System.gc();
+        
+        boolean inFrame = request.getParameter("inframe") != null;
 
         try {
 
@@ -116,7 +118,7 @@ public class ReasonerServlet extends HttpServlet {
                 error("No Query found, enter Query ");
             } else {
                 try{
-                    doReasoning(wsmlQuery, wsmlOntology);
+                    doReasoning(wsmlQuery, wsmlOntology, inFrame);
                 }catch (Exception e){
                     error("Error:",e);
                 }
@@ -154,7 +156,7 @@ public class ReasonerServlet extends HttpServlet {
         out.println("</div>");
     }
 
-    private void doReasoning(String wsmlQuery, String wsmlOntology) {
+    private void doReasoning(String wsmlQuery, String wsmlOntology, boolean inFrame) {
         // setup factories
         if (debug)
             out.println("doReasoning");
@@ -199,9 +201,11 @@ public class ReasonerServlet extends HttpServlet {
             return;
         }
         
-        out.println("<h1>Query Result</h1>");
-        out.println("<h3>Your Query</h3>");
-        out.println("<p>" + wsmlQuery + "</p>");
+        out.println("<h1>Query Result Page</h1>");
+        if (!inFrame){
+            out.println("<h3>Your Query</h3>");
+            out.println("<p>" + wsmlQuery + "</p>");
+        }
         try {
             query = _leFactory.createLogicalExpression(wsmlQuery, ontology);
         } catch (ParserException e) {
@@ -211,7 +215,9 @@ public class ReasonerServlet extends HttpServlet {
         }
 
         if (query != null && ontology != null) {
-            out.println("<h3>Query answer:</h3>");
+            if (!inFrame){
+                out.println("<h3>Query answer:</h3>");
+            }
 
             QueryAnsweringRequest qaRequest = new QueryAnsweringRequestImpl(
                     ontology.getIdentifier().toString(), query);
