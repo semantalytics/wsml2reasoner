@@ -268,7 +268,7 @@ public class WSML2DatalogTransformer {
             // conditional expression is needed because WSMO4J throws a
             // nullpointerexception for atom.listParameters()
             Literal l = (atom.getArity() > 0) ? new Literal(positive, predUri,
-                    atom.listParamters()) : new Literal(positive, predUri,
+                    atom.listParameters()) : new Literal(positive, predUri,
                     new ArrayList<Term>());
             storeLiteral(l);
         }

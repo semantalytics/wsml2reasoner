@@ -181,7 +181,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer
         int i = 1;
         for(LogicalExpression expression : expressions)
         {
-            String axiomIDString = "axiom_" + Integer.toString(i++) + "_" + ontology.getIdentifier();
+            String axiomIDString = "reasoner:axiom_" + Integer.toString(i++) + "_" + ontology.getIdentifier();
             Identifier axiomID = wsmoFactory.createIRI(axiomIDString);
             Axiom axiom = wsmoFactory.createAxiom(axiomID);
             axiom.addDefinition(expression);
