@@ -230,15 +230,15 @@ public class WSMXReasoner implements org.wsmo.execution.common.component.WSMLRea
 */        
     }
 
-    /**
-     * This method allows to pose a conjunctive query to an ontology registered
-     * with the reasoner. As a result it returns a set of bindings for the free
-     * variables occurring in the query.
-     */
-    public QueryAnsweringResult retrieve(LogicalExpression query, Identifier ontology)
-    {
-        QueryAnsweringRequest request = new QueryAnsweringRequestImpl(ontology.toString(), query);
-        return (QueryAnsweringResult)reasoner.execute(request);
-    }
+//    /**
+//     * This method allows to pose a conjunctive query to an ontology registered
+//     * with the reasoner. As a result it returns a set of bindings for the free
+//     * variables occurring in the query.
+//     */
+//    public QueryAnsweringResult retrieve(LogicalExpression query, Identifier ontology)
+//    {
+//        QueryAnsweringRequest request = new QueryAnsweringRequestImpl(ontology.toString(), query);
+//        return (QueryAnsweringResult)reasoner.execute(request);
+//    }
 
 }

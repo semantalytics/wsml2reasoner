@@ -90,8 +90,8 @@ public class WSMXReasonerTest extends TestCase
             System.out.println("test of instance checking successful!");
             test.testInstanceRetrieval();
             System.out.println("test of instance retrieval successful!");
-            test.testRetrieval();
-            System.out.println("test of general query answering successful!");
+//            test.testRetrieval();
+//            System.out.println("test of general query answering successful!");
             test.testSubconceptRetrieval();
             System.out.println("test of subconcept reatrieval successful!");
             test.testSubsumptionCheck();
@@ -162,18 +162,18 @@ public class WSMXReasonerTest extends TestCase
         assertTrue(wsmxReasoner.isInstanceOf(instance, concept, ontologyID));
     }
 
-    public void testRetrieval() throws Exception
-    {
-        Variable xVar = wsmoFactory.createVariable("x");
-        Variable yVar = wsmoFactory.createVariable("y");
-        Molecule lovesMolecule = leFactory.createAttributeValue(xVar, wsmoFactory.createIRI(ontologyNS, "loves"), yVar);
-
-        Molecule isElfMolecule = leFactory.createMemberShipMolecule(yVar, wsmoFactory.createIRI(ontologyNS, "Elf"));
-        LogicalExpression query = leFactory.createConjunction(lovesMolecule, isElfMolecule);
-        QueryAnsweringResult result = ((WSMXReasoner)wsmxReasoner).retrieve(query, ontologyID);
-
-        VariableBinding binding = new VariableBindingImpl();
-        binding.put("x", wsmoFactory.createIRI(ontologyNS, "Aragorn").toString());
-        assertTrue(result.contains(binding));
-    }
+//    public void testRetrieval() throws Exception
+//    {
+//        Variable xVar = wsmoFactory.createVariable("x");
+//        Variable yVar = wsmoFactory.createVariable("y");
+//        Molecule lovesMolecule = leFactory.createAttributeValue(xVar, wsmoFactory.createIRI(ontologyNS, "loves"), yVar);
+//
+//        Molecule isElfMolecule = leFactory.createMemberShipMolecule(yVar, wsmoFactory.createIRI(ontologyNS, "Elf"));
+//        LogicalExpression query = leFactory.createConjunction(lovesMolecule, isElfMolecule);
+//        QueryAnsweringResult result = ((WSMXReasoner)wsmxReasoner).retrieve(query, ontologyID);
+//
+//        VariableBinding binding = new VariableBindingImpl();
+//        binding.put("x", wsmoFactory.createIRI(ontologyNS, "Aragorn").toString());
+//        assertTrue(result.contains(binding));
+//    }
 }
