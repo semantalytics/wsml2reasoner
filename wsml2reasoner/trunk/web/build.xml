@@ -13,20 +13,22 @@ Note for Eclipse User: When using ant from eclipse you can get jsse.jar by using
        on server also enables to reset src dir etc.-->
   <property file="pwd" />
   <property name="cvs.user" value="hlausen"/>
-  <property name="cvs.path"
-            value=":pserver:${cvs.user}@cvs.deri.at:/usr/local/cvsroot" />
+  <property name="cvs.path" value=":pserver:${cvs.user}@cvs.deri.at:/usr/local/cvsroot" />
+  <property name="cvs.module" value="wsml2reasoner"/>
+  <property name="cvs.dir" location="${basedir}/src" />
+    
   <property name="dir.java-doc" location="${basedir}/java-doc" />
   <property name="dir.jUnit" location="${basedir}/jUnitReport" />
   <property name="dir.jCoverage" location="${basedir}/jCoverage" />
-  <property name="dir.src" location="${basedir}" />
+  <property name="dir.src" location="${basedir}/src" />
   <property name="dir.lib" location="${basedir}" />
   <property name="dir.build" location="${basedir}/build" />
-  <property name="dir.distribution" location="${basedir}/dist" />
+  <property name="dir.distribution" location="${basedir}/SnapShot" />
   <property name="shell.host" value="dev1.deri.at" />
   <property name="lib.wrapper"
-            location="${dir.distribution}/wsml2reasoner-${DSTAMP}.jar" />
+            location="${dir.distribution}/${cvs.module}-${DSTAMP}.jar" />
   <property name="lib.wrapper-src"
-            location="${dir.distribution}/wsml2reasoner--src${DSTAMP}.zip" />
+            location="${dir.distribution}/${cvs.module}-src${DSTAMP}.zip" />
   <!--necessary: wsml-grammar, wsmo4j-api, xercesimpl, xmlApis-->
   <path id="classpath">
     <fileset dir="${dir.lib}" includes="**/*.jar" />
@@ -46,7 +48,7 @@ Note for Eclipse User: When using ant from eclipse you can get jsse.jar by using
     <delete dir="${dir.build}" />
     <mkdir dir="${dir.build}" />
     <javac debug="yes"
-           srcdir="${dir.src}/test"
+           srcdir="${dir.src}/**/test"
            classpathref="classpath"
            destdir="${dir.build}"
            source="1.5"
@@ -93,7 +95,8 @@ Note for Eclipse User: When using ant from eclipse you can get jsse.jar by using
     <delete dir="${dir.build}" />
     <mkdir dir="${dir.build}" />
 <javac debug="yes"
-           srcdir="${dir.src}/test"
+           srcdir="${dir.src}"
+           includes="**/test/**/*.java"
            classpathref="classpath"
            destdir="${dir.build}"
            source="1.5"
@@ -131,18 +134,17 @@ Note for Eclipse User: When using ant from eclipse you can get jsse.jar by using
   </target>  
   
   <target name="cvs.checkout" description="checkout sources">
-    <delete dir="src"/>
-    <mkdir dir="src"/>
+    <delete dir="${cvs.dir}"/>
+    <mkdir dir="${cvs.dir}"/>
     <cvspass cvsroot="${cvs.path}" password="${cvs.pass}"/> 
     <cvs compression="true"
         cvsroot="${cvs.path}"
-        package="wsml2reasoner"
-        dest="src"
+        package="${cvs.module}"
+        dest="${cvs.dir}"
         failonerror="true"/>
   </target>
   <target name="web" depends="cvs.checkout,create_jar,test.junit,javadoc">
   </target>
-
   <target name="create_jar"
           depends="compile"
           description="creates a new version of the snapshot, make 
@@ -153,8 +155,8 @@ Note for Eclipse User: When using ant from eclipse you can get jsse.jar by using
          basedir="${dir.build}"
          index="true" />
     <zip destfile="${lib.wrapper-src}"
-         basedir="${dir.src}"
-         includes="src/**,examples/**,test/**" />
+         basedir="${dir.src}/${cvs.module}"
+         includes="src/**/*.java,api/**/*.java,test/**/*.java" />
     <delete dir="${dir.build}" />
 <!--    <copy todir="${dir.distribution}" flatten="false">
       <fileset dir="${dir.lib}/ext" 
@@ -162,19 +164,18 @@ Note for Eclipse User: When using ant from eclipse you can get jsse.jar by using
     </copy>
     <copy todir="${dir.distribution}" file="${dir.src}/license.txt"/>-->
   </target>
-
-
   <target name="javadoc" description="produces javadoc">
     <delete dir="${dir.java-doc}" />
     <mkdir dir="${dir.java-doc}" />
-    <javadoc destdir="${dir.java-doc}"
+    <javadoc source="${dir.src}"
+             destdir="${dir.java-doc}"
              classpathref="classpath"
              author="true"
              version="true"
              use="true"
              windowtitle="WSMO4J Reasoning Wrapper">
       <fileset dir="${dir.src}">
-        <include name="src/**/*.java" />
+        <include name="${dir.src}/**/*.java" />
       </fileset>
       <link href="http://wsmo4j.sourceforge.net/multiproject/wsmo-api/apidocs/"
             packagelistloc="http://wsmo4j.sourceforge.net/multiproject/wsmo-api/apidocs/package-list" />
