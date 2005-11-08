@@ -130,8 +130,7 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     }
 
     public boolean isSatisfiable(IRI ontologyID) {
-        // TODO Auto-generated method stub
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     public void deRegisterOntology(IRI ontologyID) {
