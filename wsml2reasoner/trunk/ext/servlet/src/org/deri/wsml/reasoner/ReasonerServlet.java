@@ -48,7 +48,7 @@ import org.wsmo.wsml.ParserException;
  * 
  * 
  * @see org.deri.wsml.reasoner.ontobroker.Reasoner
- * @author Jos de Bruijn $Author: hlausen $ $Date: 2005-11-08 15:22:30 $
+ * @author Jos de Bruijn $Author: hlausen $ $Date: 2005-11-09 18:21:11 $
  */
 public class ReasonerServlet extends HttpServlet {
     /**
@@ -77,7 +77,6 @@ public class ReasonerServlet extends HttpServlet {
      */
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        System.exit(0);
         out = response.getWriter();
 
         String wsmlOntology = "";
