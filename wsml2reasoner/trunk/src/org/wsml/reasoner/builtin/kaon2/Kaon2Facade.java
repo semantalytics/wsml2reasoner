@@ -19,6 +19,8 @@
 
 package org.wsml.reasoner.builtin.kaon2;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,6 +32,7 @@ import java.util.Set;
 import org.omwg.logicalexpression.Constants;
 import org.omwg.ontology.DataValue;
 import org.omwg.ontology.SimpleDataValue;
+import org.omwg.ontology.WsmlDataType;
 import org.semanticweb.kaon2.api.DefaultOntologyResolver;
 import org.semanticweb.kaon2.api.KAON2Connection;
 import org.semanticweb.kaon2.api.KAON2Exception;
@@ -45,6 +48,7 @@ import org.semanticweb.kaon2.api.rules.NonOWLPredicate;
 import org.semanticweb.kaon2.api.rules.Rule;
 import org.semanticweb.kaon2.api.rules.Term;
 import org.semanticweb.kaon2.api.rules.Variable;
+import org.semanticweb.kaon2.extensionapi.datatype.DatatypeManager;
 import org.wsml.reasoner.builtin.ConjunctiveQuery;
 import org.wsml.reasoner.builtin.DatalogReasonerFacade;
 import org.wsml.reasoner.builtin.ExternalToolException;
@@ -64,6 +68,11 @@ import org.wsmo.factory.WsmoFactory;
  * @author Gabor Nagypal, FZI, Germany
  */
 public class Kaon2Facade implements DatalogReasonerFacade {
+
+    public static void initialize() {
+        DatatypeManager
+                .registerDatatypeHandler(new WsmlBooleanlDatatypeHandler());
+    }
 
     private final Map<String, Object> EMPTY_MAP = new HashMap<String, Object>();
 
@@ -259,30 +268,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
 
             org.omwg.logicalexpression.terms.Term[] args = l.getTerms();
             for (org.omwg.logicalexpression.terms.Term arg : args) {
-                if (arg instanceof org.omwg.ontology.Variable) {
-                    terms.add(f.variable(((org.omwg.ontology.Variable) arg)
-                            .getName()));
-                } else if (arg instanceof IRI) {
-                    terms.add(f.individual(((IRI) arg).toString()));
-                } else if (arg instanceof DataValue) {
-                    DataValue dv = (DataValue) arg;
-
-                    if (dv instanceof SimpleDataValue) {
-                        // It is BigInteger, BigDecimal or String which is
-                        // supported by KAON2
-                        terms.add(f.constant(dv.getValue()));
-                    } else {
-                        // No other datatypes are supported at present.
-                        throw new UnsupportedFeatureException(
-                                "Unsupported Datatype: Datavalue '"
-                                        + dv.getValue() + "' of datatype "
-                                        + dv.getType());
-                    }
-                } else {
-                    throw new ExternalToolException(
-                            "Could not interpret WSML term, it is neither an IRI nor a data value: "
-                                    + arg);
-                }
+                translateTerm(arg, terms);
 
             }
 
@@ -290,6 +276,38 @@ public class Kaon2Facade implements DatalogReasonerFacade {
 
         } catch (UnsupportedFeatureException ufe) {
             throw new ExternalToolException(query, ufe);
+        }
+    }
+
+    private void translateTerm(org.omwg.logicalexpression.terms.Term term,
+            List<Term> terms) throws UnsupportedFeatureException,
+            ExternalToolException {
+        if (term instanceof org.omwg.ontology.Variable) {
+            terms
+                    .add(f.variable(((org.omwg.ontology.Variable) term)
+                            .getName()));
+        } else if (term instanceof IRI) {
+            terms.add(f.individual(((IRI) term).toString()));
+        } else if (term instanceof DataValue) {
+            DataValue dv = (DataValue) term;
+
+            if (dv instanceof SimpleDataValue) {
+                // It is BigInteger, BigDecimal or String which is
+                // supported by KAON2
+                terms.add(f.constant(dv.getValue()));
+            } else if (WsmlDataType.WSML_BOOLEAN.equals(dv.getType().getIRI()
+                    .toString())) {
+                terms.add(f.constant(new WsmlBoolean((Boolean) dv.getValue())));
+            } else {
+                // No other datatypes are supported at present.
+                throw new UnsupportedFeatureException(
+                        "Unsupported Datatype: Datavalue '" + dv.getValue()
+                                + "' of datatype " + dv.getType());
+            }
+        } else {
+            throw new ExternalToolException(
+                    "Could not interpret WSML term, it is neither an IRI nor a data value: "
+                            + term);
         }
     }
 
@@ -304,23 +322,35 @@ public class Kaon2Facade implements DatalogReasonerFacade {
     }
 
     /**
-     * Converts a query tuple to a string array. For Kaon2 individuals extract
-     * the URI, for other objects just call toString
+     * Converts a query tuple to a WSML Term array. For Kaon2 individuals
+     * extract the IRI, for other objects return the proper WSML Term
      * 
      * @param tupleBuffer
-     * @return
+     * @return an array of WSML Terms
      */
-    // TODO This has to be updated to support datatypes!!!
     private org.omwg.logicalexpression.terms.Term[] convertQueryTuple(
-            Object[] tupleBuffer) {
+            Object[] tupleBuffer) throws ExternalToolException {
         org.omwg.logicalexpression.terms.Term[] result = new org.omwg.logicalexpression.terms.Term[tupleBuffer.length];
         for (int i = 0; i < tupleBuffer.length; i++) {
             Object obj = tupleBuffer[i];
             if (obj instanceof Individual) {
                 Individual inst = (Individual) obj;
                 result[i] = wf.createIRI(inst.getURI());
-            } else
-                result[i] = df.createWsmlString(obj.toString());
+            } else if (obj instanceof String) {
+                result[i] = df.createWsmlString((String) obj);
+            } else if (obj instanceof BigInteger) {
+                result[i] = df.createWsmlInteger((BigInteger) obj);
+            } else if (obj instanceof BigDecimal) {
+                result[i] = df.createWsmlDecimal((BigDecimal) obj);
+            } else if (obj instanceof WsmlBoolean) {
+                result[i] = df
+                        .createWsmlBoolean(((WsmlBoolean) obj).getValue());
+            } else {
+                throw new ExternalToolException(
+                        "Unknown object in the KAON2 ontology: "
+                                + obj.toString());
+            }
+
         }
         return result;
     }
@@ -333,7 +363,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
             DefaultOntologyResolver resolver = new DefaultOntologyResolver();
             conn.setOntologyResolver(resolver);
         }
-        //Deregister, if already registered
+        // Deregister, if already registered
         if (this.registeredOntologies.contains(ontologyURI)) {
             deregister(ontologyURI);
         }
