@@ -69,13 +69,15 @@ public class ReasonerExample {
 				.getLogicalExpressionFactory();
 
 		// The details of creating a Query will be hidden in future
-		LogicalExpression query = leFactory
-		// .createLogicalExpression("?hq memberOf Human", exampleOntology);
-				//.createLogicalExpression("?x memberOf Man", exampleOntology);
-				// .createLogicalExpression("?x memberOf ?y", exampleOntology);
-				//.createLogicalExpression("Lisa [hasRelative hasValue ?relative]",exampleOntology);
-        .createLogicalExpression(
-                "?x memberOf Human and naf ?x memberOf Man",exampleOntology);
+        String queryString;
+        queryString="?hq memberOf Human";
+        queryString="?x memberOf Man";
+        queryString="Lisa [hasRelative hasValue ?relative]";
+        queryString="?x subConceptOf ?y";
+        //queryString="?x memberOf Man";
+
+        LogicalExpression query = leFactory
+            .createLogicalExpression(queryString, exampleOntology);
 		QueryAnsweringRequest qaRequest = new QueryAnsweringRequestImpl(
 				exampleOntology.getIdentifier().toString(), query);
 
