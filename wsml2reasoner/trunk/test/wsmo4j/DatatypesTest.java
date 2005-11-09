@@ -77,10 +77,10 @@ public class DatatypesTest extends TestCase {
         // Print ontology in WSML
 
         System.out.println("WSML Ontology:\n");
-//        StringWriter sw = new StringWriter();
-//        ontologySerializer.serialize(new TopEntity[] { o }, sw);
-//        System.out.println(sw.toString());
-//        System.out.println("--------------\n\n");
+        StringWriter sw = new StringWriter();
+        ontologySerializer.serialize(new TopEntity[] { o }, sw);
+        System.out.println(sw.toString());
+        System.out.println("--------------\n\n");
 
         Concept c = o.findConcept(f.createIRI(NS + "myConcept"));
         assertNotNull(c);
@@ -166,13 +166,13 @@ public class DatatypesTest extends TestCase {
         assertTrue(iriARange instanceof ComplexDataType);
         assertEquals(iriARange.getIRI().toString(), WsmlDataType.WSML_IRI);
         // axiom
-        Axiom axiom = o.findAxiom(f.createIRI(NS + "intSum"));
-        assertNotNull(axiom);
-        Set les = axiom.listDefinitions();
-        assertEquals(les.size(), 1);
-        LogicalExpression le = (LogicalExpression) les.iterator().next();
-        assertTrue(le instanceof Implication);
-        Implication impl = (Implication) le;
+        // Axiom axiom = o.findAxiom(f.createIRI(NS + "intSum"));
+        // assertNotNull(axiom);
+        // Set les = axiom.listDefinitions();
+        // assertEquals(les.size(), 1);
+        // LogicalExpression le = (LogicalExpression) les.iterator().next();
+        // assertTrue(le instanceof Implication);
+        // Implication impl = (Implication) le;
         // AttributeValueMolecule attrVal = (AttributeValueMolecule) impl
         // .getRightOperand();
         // BuiltInConstructedTerm add1 = (BuiltInConstructedTerm) attrVal
@@ -270,6 +270,54 @@ public class DatatypesTest extends TestCase {
         assertEquals(attrVals.size(), 1);
         Instance inst = (Instance) attrVals.iterator().next();
         assertEquals(inst.getIdentifier().toString(), "urn:test");
+        // axiom axEqual
+        Axiom axiom = o.findAxiom(f.createIRI(NS + "axEqual"));
+        assertNotNull(axiom);
+        Set les = axiom.listDefinitions();
+        assertEquals(les.size(), 1);
+        LogicalExpression le = (LogicalExpression) les.iterator().next();
+        // axiom axInEqual
+        axiom = o.findAxiom(f.createIRI(NS + "axInEqual"));
+        assertNotNull(axiom);
+        les = axiom.listDefinitions();
+        assertEquals(les.size(), 1);
+        le = (LogicalExpression) les.iterator().next();
+        // axiom lessThan
+        axiom = o.findAxiom(f.createIRI(NS + "axLessThan"));
+        assertNotNull(axiom);
+        les = axiom.listDefinitions();
+        assertEquals(les.size(), 1);
+        le = (LogicalExpression) les.iterator().next();
+        // axiom lessEqual
+        axiom = o.findAxiom(f.createIRI(NS + "axLessEqual"));
+        assertNotNull(axiom);
+        les = axiom.listDefinitions();
+        assertEquals(les.size(), 1);
+        le = (LogicalExpression) les.iterator().next();
+        // axiom greaterThan
+        axiom = o.findAxiom(f.createIRI(NS + "axGreaterThan"));
+        assertNotNull(axiom);
+        les = axiom.listDefinitions();
+        assertEquals(les.size(), 1);
+        le = (LogicalExpression) les.iterator().next();
+        // axiom greaterEqual
+        axiom = o.findAxiom(f.createIRI(NS + "axGreaterEqual"));
+        assertNotNull(axiom);
+        les = axiom.listDefinitions();
+        assertEquals(les.size(), 1);
+        le = (LogicalExpression) les.iterator().next();
+        // axiom stringEqual
+        axiom = o.findAxiom(f.createIRI(NS + "axStringEqual"));
+        assertNotNull(axiom);
+        les = axiom.listDefinitions();
+        assertEquals(les.size(), 1);
+        le = (LogicalExpression) les.iterator().next();
+        // axiom stringInEqual
+        axiom = o.findAxiom(f.createIRI(NS + "axStringInEqual"));
+        assertNotNull(axiom);
+        les = axiom.listDefinitions();
+        assertEquals(les.size(), 1);
+        le = (LogicalExpression) les.iterator().next();
     }
 
 }
