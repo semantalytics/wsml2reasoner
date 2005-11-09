@@ -123,5 +123,151 @@ public class TestKaon2WSMLFlightReasoner extends BaseReasonerTest {
         performQuery(query, expected);
         System.out.println("Finished query.");
     }
+    
+    public void testHigherThan7Feet() throws Exception {
+        String query = "?x[heightInFeet hasValue ?v] and ?v > 7.0";
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Aragorn"));
+        binding.put(wsmoFactory.createVariable("v"), dataFactory.createWsmlDecimal("7.5"));
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+    }
+    
+    public void testHigherEqualThan6Feet() throws Exception {
+        String query = "?x[heightInFeet hasValue ?v] and ?v >= 6.0";
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Aragorn"));
+        binding.put(wsmoFactory.createVariable("v"), dataFactory.createWsmlDecimal("7.5"));
+        expected.add(binding);
+        binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Arwen"));
+        binding.put(wsmoFactory.createVariable("v"), dataFactory.createWsmlDecimal("6.0"));
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+    }
+        
+    public void testBornBefore900() throws Exception {
+        String query = "?x[wasBorn hasValue ?v] and ?v < 900";
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Arwen"));
+        binding.put(wsmoFactory.createVariable("v"), dataFactory.createWsmlInteger("500"));
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+    }
+    
+    public void testBornBeforeEqual900() throws Exception {
+        String query = "?x[wasBorn hasValue ?v] and ?v =< 900";
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Arwen"));
+        binding.put(wsmoFactory.createVariable("v"), dataFactory.createWsmlInteger("500"));
+        expected.add(binding);
+        binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Aragorn"));
+        binding.put(wsmoFactory.createVariable("v"), dataFactory.createWsmlInteger("900"));
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+    }
+    
+    public void testLowerThan7Feet() throws Exception {
+        String query = "?x[heightInFeet hasValue ?v] and ?v < 7.0";
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Arwen"));
+        binding.put(wsmoFactory.createVariable("v"), dataFactory.createWsmlDecimal("6.0"));
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+    }
+    
+    public void testLowerEqualThan7AndHalfFeet() throws Exception {
+        String query = "?x[heightInFeet hasValue ?v] and ?v =< 7.5";
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Aragorn"));
+        binding.put(wsmoFactory.createVariable("v"), dataFactory.createWsmlDecimal("7.5"));
+        expected.add(binding);
+        binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Arwen"));
+        binding.put(wsmoFactory.createVariable("v"), dataFactory.createWsmlDecimal("6.0"));
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+    }
+    
+    public void testNamedAragorn() throws Exception {
+        String query = "?x[hasName hasValue ?v] and ?v = \"Aragorn\"";
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Aragorn"));
+        binding.put(wsmoFactory.createVariable("v"), dataFactory.createWsmlString("Aragorn"));
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+    }
+    
+    public void testNamedArwen() throws Exception {
+        String query = "?x[hasName hasValue \"Arwen\"]";
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Arwen"));
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+    }
+    
+    public void testBorn500() throws Exception {
+        String query = "?x[wasBorn hasValue 500]";
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Arwen"));
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+    }
+    
+    public void testHeight6Feet() throws Exception {
+        String query = "?x[heightInFeet hasValue 6.0]";
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Arwen"));
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+    }
+    
+    public void testHappy() throws Exception {
+        String query = "?x[isHappy hasValue _boolean(\"true\")]";
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Aragorn"));
+        expected.add(binding);
+        binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Arwen"));
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+    }
+    
+    public void testUnHappy() throws Exception {
+        String query = "?x[isHappy hasValue _boolean(\"false\")]";
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Gloin"));
+        expected.add(binding);
+        binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Gimli"));
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+    }
+
 
 }

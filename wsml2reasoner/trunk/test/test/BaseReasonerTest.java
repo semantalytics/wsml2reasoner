@@ -37,6 +37,7 @@ import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
+import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
@@ -53,6 +54,8 @@ public class BaseReasonerTest extends TestCase {
     protected static WsmoFactory wsmoFactory = null;
 
     protected static LogicalExpressionFactory leFactory = null;
+    
+    protected static DataFactory dataFactory = null;
 
     protected static void setupScenario(String ontologyFile) throws Exception {
         // Set up factories for creating WSML elements
@@ -60,6 +63,8 @@ public class BaseReasonerTest extends TestCase {
         leFactory = WSMO4JManager.getLogicalExpressionFactory();
 
         wsmoFactory = WSMO4JManager.getWSMOFactory();
+        
+        dataFactory = WSMO4JManager.getDataFactory();
 
         // Set up WSML parser
 

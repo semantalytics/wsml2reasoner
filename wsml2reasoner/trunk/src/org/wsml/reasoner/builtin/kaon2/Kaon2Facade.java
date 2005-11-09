@@ -19,6 +19,7 @@
 
 package org.wsml.reasoner.builtin.kaon2;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -33,13 +34,7 @@ import org.omwg.logicalexpression.Constants;
 import org.omwg.ontology.DataValue;
 import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.WsmlDataType;
-import org.semanticweb.kaon2.api.DefaultOntologyResolver;
-import org.semanticweb.kaon2.api.KAON2Connection;
-import org.semanticweb.kaon2.api.KAON2Exception;
-import org.semanticweb.kaon2.api.KAON2Factory;
-import org.semanticweb.kaon2.api.KAON2Manager;
-import org.semanticweb.kaon2.api.Ontology;
-import org.semanticweb.kaon2.api.OntologyChangeEvent;
+import org.semanticweb.kaon2.api.*;
 import org.semanticweb.kaon2.api.owl.elements.Individual;
 import org.semanticweb.kaon2.api.reasoner.Query;
 import org.semanticweb.kaon2.api.reasoner.Reasoner;
@@ -53,6 +48,7 @@ import org.wsml.reasoner.builtin.ConjunctiveQuery;
 import org.wsml.reasoner.builtin.DatalogReasonerFacade;
 import org.wsml.reasoner.builtin.ExternalToolException;
 import org.wsml.reasoner.builtin.UnsupportedFeatureException;
+import org.wsml.reasoner.builtin.WSML2DatalogTransformer;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.DataFactory;
@@ -68,11 +64,6 @@ import org.wsmo.factory.WsmoFactory;
  * @author Gabor Nagypal, FZI, Germany
  */
 public class Kaon2Facade implements DatalogReasonerFacade {
-
-    public static void initialize() {
-        DatatypeManager
-                .registerDatatypeHandler(new WsmlBooleanlDatatypeHandler());
-    }
 
     private final Map<String, Object> EMPTY_MAP = new HashMap<String, Object>();
 
@@ -174,6 +165,38 @@ public class Kaon2Facade implements DatalogReasonerFacade {
         for (org.wsml.reasoner.builtin.Rule r : p) {
             result.add(translateRule(r));
         }
+        // Add some static rules to infer membership statements for datatype
+        // predicates
+        NonOWLPredicate mO = f.nonOWLPredicate(
+                WSML2DatalogTransformer.PRED_MEMBER_OF, 2);
+        NonOWLPredicate hasValue = f.nonOWLPredicate(
+                WSML2DatalogTransformer.PRED_HAS_VALUE, 3);
+        Literal hV = f.literal(true, hasValue, f.variable("x"),
+                f.variable("a"), f.variable("v"));
+        // wsml-member-of(?x,wsml#string) :- isstring(?x)
+        Literal head = f.literal(true, mO, f.variable("v"), f
+                .individual(WsmlDataType.WSML_STRING));
+        Literal typeCheck = f.literal(true, f.ifTrue(2), f
+                .constant("isstring($1)"), f.variable("v"));
+        result.add(f.rule(head, new Literal[] { hV, typeCheck }));
+        // wsml-member-of(?x,wsml#integer) :- isbiginteger(?x)
+        head = f.literal(true, mO, f.variable("v"), f
+                .individual(WsmlDataType.WSML_INTEGER));
+        typeCheck = f.literal(true, f.ifTrue(2),
+                f.constant("isbiginteger($1)"), f.variable("v"));
+        result.add(f.rule(head, new Literal[] { hV, typeCheck }));
+        // wsml-member-of(?x,wsml#decimal) :- isbigdecimal(?x)
+        head = f.literal(true, mO, f.variable("v"), f
+                .individual(WsmlDataType.WSML_DECIMAL));
+        typeCheck = f.literal(true, f.ifTrue(2),
+                f.constant("isbigdecimal($1)"), f.variable("v"));
+        result.add(f.rule(head, new Literal[] { hV, typeCheck }));
+        // wsml-member-of(?x,wsml#boolean) :- isboolean(?x)
+        head = f.literal(true, mO, f.variable("v"), f
+                .individual(WsmlDataType.WSML_BOOLEAN));
+        typeCheck = f.literal(true, f.ifTrue(2), f.constant("isboolean($1)"), f
+                .variable("v"));
+        result.add(f.rule(head, new Literal[] { hV, typeCheck }));
         return result;
     }
 
@@ -254,17 +277,104 @@ public class Kaon2Facade implements DatalogReasonerFacade {
         boolean isPositive = l.isPositive();
         try {
             String p = l.getPredicateUri();
-            NonOWLPredicate pred;
+            NonOWLPredicate pred = null;
+            List<Term> terms = new ArrayList<Term>();
             if (p.equals(Constants.EQUAL)) {
                 pred = f.equal();
             } else if (p.equals(Constants.INEQUAL)) {
                 pred = f.equal();
                 isPositive = false;
+            } else if (p.equals(Constants.LESS_THAN)) {
+                if (l.getTerms().length == 2) {
+                    pred = f.ifTrue(3);
+                    terms.add(f.constant("$1 < $2"));
+                } else {
+                    throw new ExternalToolException(
+                            "wsml#lessThan should have exactly two arguments!");
+                }
+            } else if (p.equals(Constants.LESS_EQUAL)) {
+                if (l.getTerms().length == 2) {
+                    pred = f.ifTrue(3);
+                    terms.add(f.constant("$1 <= $2"));
+                } else {
+                    throw new ExternalToolException(
+                            "wsml#lessEqual should have exactly two arguments!");
+                }
+            } else if (p.equals(Constants.GREATER_THAN)) {
+                if (l.getTerms().length == 2) {
+                    pred = f.ifTrue(3);
+                    terms.add(f.constant("$1 > $2"));
+                } else {
+                    throw new ExternalToolException(
+                            "wsml#greaterThan should have exactly two arguments!");
+                }
+            } else if (p.equals(Constants.GREATER_EQUAL)) {
+                if (l.getTerms().length == 2) {
+                    pred = f.ifTrue(3);
+                    terms.add(f.constant("$1 >= $2"));
+                } else {
+                    throw new ExternalToolException(
+                            "wsml#greaterEqual should have exactly two arguments!");
+                }
+            } else if (p.equals(Constants.NUMERIC_EQUAL)) {
+                if (l.getTerms().length == 2) {
+                    pred = f.ifTrue(3);
+                    terms.add(f.constant("$1 == $2"));
+                } else {
+                    throw new ExternalToolException(
+                            "wsml#numericEqual should have exactly two arguments!");
+                }
+            } else if (p.equals(Constants.NUMERIC_INEQUAL)) {
+                if (l.getTerms().length == 2) {
+                    pred = f.ifTrue(3);
+                    terms.add(f.constant("$1 != $2"));
+                } else {
+                    throw new ExternalToolException(
+                            "wsml#numericInEqual should have exactly two arguments!");
+                }
+            } else if (p.equals(Constants.STRING_EQUAL)) {
+                if (l.getTerms().length == 2) {
+                    pred = f.ifTrue(3);
+                    terms.add(f.constant("$1 == $2"));
+                } else {
+                    throw new ExternalToolException(
+                            "wsml#stringEqual should have exactly two arguments!");
+                }
+            } else if (p.equals(Constants.STRING_INEQUAL)) {
+                if (l.getTerms().length == 2) {
+                    pred = f.ifTrue(3);
+                    terms.add(f.constant("$1 != $2"));
+                } else {
+                    throw new ExternalToolException(
+                            "wsml#lessThan should have exactly two arguments!");
+                }
+            } else if (p.equals(WSML2DatalogTransformer.PRED_IMPLIES_TYPE)) {
+                // check whether the last argument is a datatype
+                if (l.getTerms().length == 3) {
+                    org.omwg.logicalexpression.terms.Term t = l.getTerms()[2];
+                    if (t instanceof IRI) {
+                        IRI rangeIri = (IRI) t;
+                        if (WsmlDataType.WSML_STRING.equals(rangeIri)
+                                || WsmlDataType.WSML_INTEGER.equals(rangeIri.toString())
+                                || WsmlDataType.WSML_DECIMAL.equals(rangeIri.toString())
+                                || WsmlDataType.WSML_BOOLEAN.equals(rangeIri.toString())) {
+                            pred = f.nonOWLPredicate(
+                                    WSML2DatalogTransformer.PRED_OF_TYPE, l
+                                            .getTerms().length);
+                            System.out.println("Translated implies_type for oftype for " + rangeIri);
+                        } else {
+                            pred = f.nonOWLPredicate(p, l.getTerms().length);
+                        }
+                    } else {
+                        pred = f.nonOWLPredicate(p, l.getTerms().length);
+                    }
+                } else {
+                    throw new ExternalToolException(
+                            "wsml-implies-type should have exactly three arguments!");
+                }
             } else {
-
                 pred = f.nonOWLPredicate(p, l.getTerms().length);
             }
-            List<Term> terms = new ArrayList<Term>();
 
             org.omwg.logicalexpression.terms.Term[] args = l.getTerms();
             for (org.omwg.logicalexpression.terms.Term arg : args) {
@@ -294,10 +404,11 @@ public class Kaon2Facade implements DatalogReasonerFacade {
             if (dv instanceof SimpleDataValue) {
                 // It is BigInteger, BigDecimal or String which is
                 // supported by KAON2
-                terms.add(f.constant(dv.getValue()));
+                Object value = dv.getValue();
+                terms.add(f.constant(value));
             } else if (WsmlDataType.WSML_BOOLEAN.equals(dv.getType().getIRI()
                     .toString())) {
-                terms.add(f.constant(new WsmlBoolean((Boolean) dv.getValue())));
+                terms.add(f.constant(dv.getValue()));
             } else {
                 // No other datatypes are supported at present.
                 throw new UnsupportedFeatureException(
@@ -342,9 +453,8 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                 result[i] = df.createWsmlInteger((BigInteger) obj);
             } else if (obj instanceof BigDecimal) {
                 result[i] = df.createWsmlDecimal((BigDecimal) obj);
-            } else if (obj instanceof WsmlBoolean) {
-                result[i] = df
-                        .createWsmlBoolean(((WsmlBoolean) obj).getValue());
+            } else if (obj instanceof Boolean) {
+                result[i] = df.createWsmlBoolean((Boolean) obj);
             } else {
                 throw new ExternalToolException(
                         "Unknown object in the KAON2 ontology: "
@@ -375,14 +485,14 @@ public class Kaon2Facade implements DatalogReasonerFacade {
             Ontology o = conn.createOntology(ontologyURI, EMPTY_MAP);
             Set<Rule> rules = translateKnowledgebase(kb);
             appendRules(o, rules);
-            // try {
-            // o.saveOntology(OntologyFileFormat.OWL_XML, o.getPhysicalURI(),
-            // "ISO-8859-15");
-            // } catch (IOException e) {
-            // e.printStackTrace();
-            // } catch (InterruptedException e) {
-            // e.printStackTrace();
-            // }
+            try {
+                o.saveOntology(OntologyFileFormat.OWL_XML, o.getPhysicalURI(),
+                        "ISO-8859-15");
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         } catch (KAON2Exception e) {
             throw new ExternalToolException(
                     "Cannot register ontology in KAON2", e);
