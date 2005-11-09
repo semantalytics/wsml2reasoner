@@ -19,26 +19,14 @@
 
 package org.wsml.reasoner.datalog.wrapper.mins;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.wsml.reasoner.api.queryanswering.VariableBinding;
 import org.wsml.reasoner.datalog.*;
 import org.wsml.reasoner.datalog.Literal;
-import org.wsml.reasoner.datalog.Rule;
-import org.wsml.reasoner.datalog.wrapper.DatalogReasonerFacade;
-import org.wsml.reasoner.datalog.wrapper.DefaultSymbolFactory;
-import org.wsml.reasoner.datalog.wrapper.ExternalToolException;
-import org.wsml.reasoner.datalog.wrapper.SymbolFactory;
-import org.wsml.reasoner.datalog.wrapper.SymbolMap;
-import org.wsml.reasoner.datalog.wrapper.UnsupportedFeatureException;
+import org.wsml.reasoner.datalog.wrapper.*;
 import org.wsml.reasoner.impl.VariableBindingImpl;
 
 import com.ontoprise.inference.*;
@@ -145,9 +133,9 @@ public class MinsFacade implements DatalogReasonerFacade {
 
             return result;
 
-        } catch (Exception e) {
-            System.out.println("\n\n\n\n\n\n");
-            e.printStackTrace();
+        } catch (UnsupportedFeatureException e) {
+            //System.out.println("\n\n\n\n\n\n");
+            //e.printStackTrace();
             throw new ExternalToolException("MINS can not handle given query",
                     e, query);
         }
