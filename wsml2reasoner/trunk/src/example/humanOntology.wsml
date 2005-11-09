@@ -9,8 +9,9 @@ ontology TheSimpsons
 //  definedBy
 //   man impliedBy ?f memberOf Human and ?t memberOf Dummy and ?l memberOf noClue.
    
-concept Human
-  hasRelative transitive symmetric impliesType Human
+
+concept Human subConceptOf Animal
+  hasRelative transitive symmetric ofType Human
   
 //axiom some
 //  definedBy !- ?x memberOf Man.
@@ -24,3 +25,7 @@ instance Homer memberOf Man
  
 instance Marge memberOf Woman
   hasRelative hasValue Lisa
+  
+instance Lisa memberOf Human 
+
+concept a

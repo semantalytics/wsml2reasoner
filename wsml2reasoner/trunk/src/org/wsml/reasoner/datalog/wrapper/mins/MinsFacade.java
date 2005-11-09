@@ -16,37 +16,49 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  */
-
 package org.wsml.reasoner.datalog.wrapper.mins;
 
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.deri.mins.*;
+import org.deri.mins.Rule;
+import org.deri.mins.api.DBInterface;
+import org.deri.mins.builtins.BuiltinConfig;
+import org.deri.mins.terms.*;
+import org.deri.mins.terms.Term;
+import org.deri.mins.terms.Variable;
 import org.wsml.reasoner.api.queryanswering.VariableBinding;
 import org.wsml.reasoner.datalog.*;
-import org.wsml.reasoner.datalog.Literal;
 import org.wsml.reasoner.datalog.wrapper.*;
 import org.wsml.reasoner.impl.VariableBindingImpl;
 
-import com.ontoprise.inference.*;
 
+/**
+ * Package: package org.wsml.reasoner.datalog.wrapper.mins;
+
+ * Author: Darko Anicic, DERI Innsbruck, 
+ *         Holger Lausen, DERI Innsbruck
+ * Date: 15.09.2005  17:24:24
+ */
 public class MinsFacade implements DatalogReasonerFacade {
+    private Logger logger = Logger
+            .getLogger("org.wsml.reasoner.wsmlcore.wrapper.mins");
 
     private final static Predicate PRED_CONSTRAINT = new Predicate(
             "mins-constraint", 1);
-    private Logger logger = Logger
-            .getLogger("org.wsml.reasoner.wsmlcore.wrapper.mins");
+    
+    private Map<String, ConjunctiveQuery> constraints2Queries = new HashMap<String, ConjunctiveQuery>();
+
 
     /**
      * Here we store a MINS Engine which contains the compiled KB for each
      * registered ontology
      */
-    private Map<String, Evaluator> registeredKbs = new HashMap<String, Evaluator>();
+    private Map<String, RuleSet> registeredKbs = new HashMap<String, RuleSet>();
 
-    private SymbolMap symbTransfomer = new SymbolMap(new DefaultSymbolFactory());
-
-    private org.wsml.reasoner.datalog.Query query;
+    private MinsSymbolMap symbTransfomer = new MinsSymbolMap(new MinsSymbolFactory());
 
     /**
      * Creates a facade object that allows to invoke the MINS rule system for
@@ -63,85 +75,51 @@ public class MinsFacade implements DatalogReasonerFacade {
      * 
      * @throws ExternalToolException
      */
-    public QueryResult evaluate(ConjunctiveQuery query, String ontologyIRI)
-            throws ExternalToolException {
-
+    public QueryResult evaluate(ConjunctiveQuery q, String ontologyIRI) throws ExternalToolException {
+        VariableBinding varBinding;
+        
+        /* 0: Naive Evaluation (only stratifight prorgams)<BR> 
+         * 1: Dynamic Filtering Evaluation (only stratifight prorgams)<BR> 
+         * 2: Wellfounded Evaluation with alternating fixed point (juergen says works)<BR> 
+         * 3: Wellfounded Evaluation (juergen says probably buggy!) */
+        int evaluationMethod = 2;
+        
         try {
-
-            QueryResult result = new QueryResult(query);
             // retrieve KB ment for IRI:
-            Evaluator minsEngine = registeredKbs.get(ontologyIRI);
-
-            // remove already contained queries in the KB
-            minsEngine.deleteQueries();
-            
-            //check contraint query
-            List<Literal> cqlits = new LinkedList<Literal>();
-            org.wsml.reasoner.datalog.Variable var =new org.wsml.reasoner.datalog.Variable("query");
-            cqlits.add(new Literal(PRED_CONSTRAINT,
-                    new org.wsml.reasoner.datalog.Term[]{var}));
-            translateQuery(new ConjunctiveQuery(cqlits),minsEngine);
-            logger.info("Starting MINS evaluation of constraints");
-            minsEngine.evaluate();
-            Vector v1 = minsEngine.computeSubstitutions();
-            // we only have one query
-            Iterator<Vector> subst1 = ((Vector)v1.iterator().next()).iterator();
-            if (subst1.hasNext()) {
-                // for all vars in one substitution
-                Iterator<FLSubst> vars = subst1.next().iterator();
-                FLSubst sub = vars.next();
-                //String varName = symbTransfomer.convertToWSML(sub.Var);
-                throw new ConstraintViolationError(
-                        symbTransfomer.convertToWSML(sub.getSubstitutionString()));
-            }
-
-            minsEngine.deleteQueries();
-            translateQuery(query, minsEngine);
+            RuleSet minsEngine = registeredKbs.get(ontologyIRI);
+            Rule query = translateQuery(q, minsEngine); 
+            logger.info("Starting Constraint Check");
+            checkConstraint(minsEngine);
 
             logger.info("Starting MINS evaluation");
+            
+            minsEngine.setEvaluationMethod(evaluationMethod);
             minsEngine.evaluate();
- 
-            logger.info("Computing substitutions");
-            Vector v = minsEngine.computeSubstitutions();
-            // for all queries in KB
-            Iterator<Vector> queries = v.iterator();
-
-            if (v.size() > 1) {
-                // Should not happen, since we only have a KB which contains a
-                // single query.
-                throw new RuntimeException(
-                        "We unexpectetly have a MINS engine which contains multiple queries at once!");
-            }
-
-            // we only have one query
-            Iterator<Vector> subst = queries.next().iterator();
-            while (subst.hasNext()) {
-                // for all vars in one substitution
-                Iterator<FLSubst> vars = subst.next().iterator();
-                VariableBinding varBinding = new VariableBindingImpl();
-                while (vars.hasNext()) {
-                    FLSubst sub = vars.next();
-                    String varName = symbTransfomer.convertToWSML(sub.Var);
-                    String varValue = symbTransfomer.convertToWSML(sub
-                            .getSubstitutionString());
-                    varBinding.put(varName, varValue);
+            Substitution s = minsEngine.getSubstitution(query);
+            
+            QueryResult result = new QueryResult(q);
+            GroundAtom a = (GroundAtom) s.First();
+            while (a!=null) {
+                varBinding = new VariableBindingImpl();
+                for (int i = 0; i < a.terms.length; i++) {
+                    //terms has length of numbers of variables!
+                    //not each index has necessarily a subsitution one that does not have is a variable
+                    if (!(a.terms[i] instanceof Variable)){
+                        String wsmlVariable = symbTransfomer.convertToWSML(i,q);
+                        String wsmlTerm = symbTransfomer.convertToWSML(a.terms[i]);
+                        varBinding.put(wsmlVariable, wsmlTerm);
+                    }
                 }
                 result.getVariableBindings().add(varBinding);
-                logger.info("Added new variable binding to result set: "
-                        + varBinding);
+                logger.info("Added new variable binding to result set: " + varBinding);
+                a=s.Next();
             }
-
             return result;
-
         } catch (UnsupportedFeatureException e) {
-            //System.out.println("\n\n\n\n\n\n");
-            //e.printStackTrace();
-            throw new ExternalToolException("MINS can not handle given query",
-                    e, query);
+            throw new ExternalToolException("MINS can not handle given query", e, q); 
         }
-
     }
-
+    
     /**
      * Translate a knowledgebase
      * 
@@ -149,17 +127,15 @@ public class MinsFacade implements DatalogReasonerFacade {
      *            the datalog program that constitutes the knowledgebase
      * @throws UnsupportedFeatureException
      */
-    private void translateKnowledgebase(Program p, Evaluator minsEval)
+    private void translateKnowledgebase(Program p, RuleSet minsEngine)
             throws ExternalToolException, UnsupportedFeatureException {
         logger.info("Translate knowledgebase :" + p);
-
         if (p == null) {
             logger.info("KB is not referenced. Assume empty KB.");
             return;
         }
-
         for (org.wsml.reasoner.datalog.Rule r : p) {
-            translateRule(r, minsEval);
+            translateRule(r, minsEngine);
         }
     }
 
@@ -171,221 +147,131 @@ public class MinsFacade implements DatalogReasonerFacade {
      * @return an object that represents the same query in the Mandrax system
      * @throws UnsupportedFeatureException
      */
-    private void translateQuery(ConjunctiveQuery q, Evaluator minsEval)
-            throws ExternalToolException, UnsupportedFeatureException {
-        // At present we convert the rule into a string representation that can
-        // be
-        // used as input for the MINS engine.
-        // This is not optimal but works for a quick prototype.
-
-        List body = new ArrayList();
-
-        String sRepresentation = " <- ";
-
+    private Rule translateQuery(ConjunctiveQuery query, RuleSet minsEngine) throws ExternalToolException, UnsupportedFeatureException {
+        Atom atom;
+        Body body;
+        Body[] bodies;
+        Literal l;
+        int no;
+        
         // Care about body
-        List<Literal> qBody = q.getLiterals();
-
-        int i = 1;
-        for (Literal bl : qBody) {
-            sRepresentation += translateLiteral(bl);
-            if (i < qBody.size()) {
-                sRepresentation += " and ";
-            }
-            i++;
+        List<Literal> qBody = query.getLiterals();
+        bodies = new Body[qBody.size()];
+        for(int i=0; i<qBody.size(); i++){
+            l = qBody.get(i);
+            no = symbTransfomer.convertToTool(l.getSymbol());
+            atom = translateLiteral2Atom(l, query); 
+            body = new Body(no, !l.isPositive(), atom.terms);
+            bodies[i] = body;
         }
-
-        sRepresentation += ".";
-
-        // Prepend all free variables with FORALL quantor
-
-        List<org.wsml.reasoner.datalog.Variable> varPrefix = q.getVariables();
-
-        if (varPrefix.size() > 0) {
-            String sVarPrefix = "FORALL ";
-
-            i = 1;
-            for (org.wsml.reasoner.datalog.Variable v : varPrefix) {
-                sVarPrefix += symbTransfomer.convertToTool(v);
-                if (i < varPrefix.size()) {
-                    sVarPrefix += ",";
-                }
-                else {
-                    sVarPrefix += " ";
-                }
-                i++;
-            }
-
-            sRepresentation = sVarPrefix + sRepresentation;
-        }
-
-        logger.info("Transformed rule:\n" + q + "\n to \n" + sRepresentation);
-
-        // Transfer the rule to the given MINS engine
-
-        try {
-            minsEval.compileString(sRepresentation);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            throw new ExternalToolException(e, query);
-        }
+        Rule rule = new Rule(null, bodies);
+        minsEngine.addRule(rule);
+        return rule;
     }
-
+    
     /**
      * Translate a datalog rule
      * 
      * @throws UnsupportedFeatureException
      */
-    private void translateRule(org.wsml.reasoner.datalog.Rule r,
-            Evaluator minsEngine) throws ExternalToolException,
-            UnsupportedFeatureException {
-
-        // At present we convert the rule into a string representation that can
-        // be
-        // used as input for the MINS engine.
-        // This is not optimal but works for a quick prototype.
-
-        String sRepresentation = null;
-
+    private void translateRule(org.wsml.reasoner.datalog.Rule r, RuleSet minsEngine) throws ExternalToolException, UnsupportedFeatureException {
+        Rule rule;
+        GroundAtom groundAtom;
+        Body body;
+        Body[] bodies;
+        Head head;
+        Predicate p;
+        int no;
+        Atom atom;
+        Literal l;
+        
         if (r.isConstraint()) {
-            //use predicate for constraints. 
-            //return;
             Constant cBody = new Constant(r.getBody().toString());
             r = new org.wsml.reasoner.datalog.Rule(new Literal(PRED_CONSTRAINT, new org.wsml.reasoner.datalog.Term[]{cBody}),
                     r.getBody());
-            
+            constraints2Queries.put(r.getBody().toString(),
+                    new ConjunctiveQuery(r.getBody()));
         } 
+        
         // Translate head
-        String head = translateLiteral(r.getHead());
-
+        l = r.getHead();
+        //avoid high number of variables!
+        no = symbTransfomer.convertToTool(l.getSymbol());
+        atom = translateLiteral2Atom(l, r);
+        head = new Head(no, atom.terms);
+        
         // Care about body
         List<Literal> rBody = r.getBody();
 
-        if (rBody.size() == 0) {
+        if (rBody.size() == 0){
             // rule is actually a fact
-            sRepresentation = head;
-        }
-        else {
-            sRepresentation = head + " <- ";
-        }
-
-        int i = 1;
-        for (Literal bl : rBody) {
-            String blString = translateLiteral(bl);
-            sRepresentation += blString;
-            if (i < rBody.size()) {
-                sRepresentation += " and ";
+            groundAtom = new GroundAtom(atom.terms);
+            minsEngine.addFact(no, groundAtom);
+        } else {
+            bodies = new Body[rBody.size()];
+            for(int i=0; i<rBody.size(); i++){
+                l = rBody.get(i);
+                no = symbTransfomer.convertToTool(l.getSymbol());
+                atom = translateLiteral2Atom(l, r); 
+                body = new Body(no, !l.isPositive(), atom.terms);
+                bodies[i] = body;
             }
-            i++;
+            rule = new Rule(new Head[] {head}, bodies);
+            minsEngine.addRule(rule);
         }
-
-        sRepresentation += ".";
-
-        // Prepend all free variables with FORALL quantor
-
-        List<org.wsml.reasoner.datalog.Variable> varPrefix = new LinkedList<org.wsml.reasoner.datalog.Variable>();
-        varPrefix.addAll(r.getHeadVariables());
-        for (org.wsml.reasoner.datalog.Variable bVar : r.getBodyVariables()) {
-            if (!varPrefix.contains(bVar)) {
-                varPrefix.add(bVar);
-            }
-        }
-
-        if (varPrefix.size() > 0) {
-            String sVarPrefix = "FORALL ";
-
-            i = 1;
-            for (org.wsml.reasoner.datalog.Variable v : varPrefix) {
-                sVarPrefix += symbTransfomer.convertToTool(v);
-                if (i < varPrefix.size()) {
-                    sVarPrefix += ",";
-                }
-                else {
-                    sVarPrefix += " ";
-                }
-                i++;
-            }
-
-            sRepresentation = sVarPrefix + sRepresentation;
-        }
-
-        logger.info("Transformed rule:\n" + r + "\n to \n" + sRepresentation);
-
-        // Transfer the rule to the given MINS engine
-
-        try {
-            minsEngine.compileString(sRepresentation);
-        } catch (ParseException e) {
-            System.out.print(sRepresentation);
-            e.printStackTrace();
-            throw new ExternalToolException(e, query);
-        }
-
     }
-
-    private String translateLiteral(Literal l) throws ExternalToolException,
-            UnsupportedFeatureException {
-
-        String predName = symbTransfomer.convertToTool(l.getSymbol());
-
-        org.wsml.reasoner.datalog.Term[] args = l.getArguments();
-        String symbName = "";
-        String argString = "";
-        for (org.wsml.reasoner.datalog.Term arg : args) {
-            if (arg instanceof org.wsml.reasoner.datalog.Variable) {
-                symbName = symbTransfomer
-                        .convertToTool((org.wsml.reasoner.datalog.Variable) arg);
+    
+    /**
+     * 
+     * @param literal
+     * @param queryOrRuleContext a datalog rule or query to keep context for Variable mapping
+     * @return
+     * @throws ExternalToolException
+     */
+    private Atom translateLiteral2Atom(Literal literal, 
+            Object queryOrRuleContext) throws ExternalToolException{
+        
+        org.wsml.reasoner.datalog.Term[] args = literal.getArguments();
+        Term[] terms = new Term[args.length];
+        Atom atom;
+        
+        long predName = symbTransfomer.convertToTool(literal.getSymbol());
+       
+        for (int i=0; i<args.length; i++){  
+            if (args[i] instanceof org.wsml.reasoner.datalog.Variable) {
+                terms[i] = new Variable(symbTransfomer.convertToTool((
+                        org.wsml.reasoner.datalog.Variable) args[i], queryOrRuleContext));
             }
-            else if (arg instanceof Constant) {
-                symbName = symbTransfomer.convertToTool((Constant) arg);
+            else if (args[i] instanceof Constant) {
+                terms[i] = new ConstTerm(symbTransfomer.convertToTool((Constant) args[i]));
             }
-            else if (arg instanceof DataTypeValue) {
-                symbName = symbTransfomer.convertToTool((DataTypeValue) arg);
-                // TODO: DataTypes unclear!
-            }
-            else {
+            else if (args[i] instanceof DataTypeValue) {
+                //terms[i] = symbTransfomer.convertToTool((DataTypeValue) arg);
+                //TODO: DataTypes unclear!
+            }else {
                 throw new RuntimeException("Uwe says we will not arrive here.");
             }
-
-            if (argString.length() == 0) {
-                argString += symbName;
-            }
-            else {
-                argString += "," + symbName;
-            }
         }
-
-        if (!l.isPositive()) {
-            // TODO: NEGATION SYNTAX of mins
-            return "not "+ predName + "(" + argString + ")"; 
-        }
-        return predName + "(" + argString + ")"; // TODO: negation needs to
-                                                    // be inserted here as well
+        atom = new Atom(terms);
+        return atom;
     }
-
-    /*
-     * (non-Javadoc)
+    
+     /** (non-Javadoc)
      * 
-     * @see org.wsml.reasoner.wsmlcore.wrapper.DatalogReasonerFacade#useSymbolFactory(org.wsml.reasoner.wsmlcore.wrapper.SymbolFactory)
+     * @see org.wsml.reasoner.wsmlcore.wrapper.mins.DatalogReasonerFacade#useSymbolFactory(org.wsml.reasoner.wsmlcore.wrapper.mins.SymbolFactory)
      */
-    public void useSymbolFactory(SymbolFactory sf) {
-        symbTransfomer = new SymbolMap(sf);
-
+    public void useSymbolFactory(
+            org.wsml.reasoner.datalog.wrapper.SymbolFactory sf) {
+        // symbTransfomer = new SymbolMap(sf);
     }
 
-    public void register(String ontologyURI, Program kb)
+    public void register(String ontologyIRI, Program kb)
             throws ExternalToolException {
-
-        // We store a MINS engine which contains the a precompiled knowledgebase
-        // for each
-        // ontology against which queries can be posed.
-
         // Set up an instance of a MINS engine
-        Evaluator minsEngine = new Evaluator();
-        // EvaluatorConfig conf = new EvaluatorConfig();
-        // conf.EVALUATIONMETHOD=40;
-        minsEngine.init();
-        
-        minsEngine.RS.setDebugLevel(0);
+        BuiltinConfig builtInConfig = new BuiltinConfig();
+        DBInterface db = new DB(); // facts stored in RAM
+        RuleSet minsEngine = new RuleSet(builtInConfig, db);
+        minsEngine.debuglevel = 0;
 
         // Translate (resp. Transfer) the knowledge base to MINS
         try {
@@ -395,7 +281,54 @@ public class MinsFacade implements DatalogReasonerFacade {
             throw new ExternalToolException(
                     "Unsupported feature for MINS in knowledgebase.");
         }
+        registeredKbs.put(ontologyIRI, minsEngine);
+    }
+    
+    private void checkConstraint(RuleSet minsEngine) throws 
+            DatalogException, ExternalToolException, 
+            UnsupportedFeatureException, ConstraintViolationError{
+        //check contraint query
+        List<Literal> cqlits = new LinkedList<Literal>();
+        cqlits.add(new Literal(PRED_CONSTRAINT,
+                new org.wsml.reasoner.datalog.Term[]{
+                    new org.wsml.reasoner.datalog.Variable("query")
+                }));
+        Rule constraintQuery = translateQuery( new ConjunctiveQuery(cqlits),minsEngine);
+        logger.info("Starting MINS evaluation of constraints");
+        minsEngine.evaluate();
+        
+        Substitution cqsubs = minsEngine.getSubstitution(constraintQuery);
+        ConjunctiveQuery violatedQuery = null;
+        GroundAtom cqAnswer = cqsubs.First();
+        if (cqAnswer!=null) {
+            //predicate only has one variable:
+            String value = symbTransfomer.convertToWSML(cqAnswer.terms[0]);
+//            System.out.println(value);
+            violatedQuery = constraints2Queries.get(value);
+        }
+        minsEngine.deleteRule(constraintQuery);
 
-        registeredKbs.put(ontologyURI, minsEngine);
+        if (violatedQuery==null) {
+            return;
+        }
+        
+        //We have a constraint violation, give client info about instances:
+        Rule violatedMinsQuery = translateQuery(violatedQuery,minsEngine);
+        minsEngine.evaluate();
+        Substitution vmqsubs = minsEngine.getSubstitution(violatedMinsQuery );
+        GroundAtom vmqAnswer = vmqsubs.First();
+        String bindings="";
+        for (int i=0; i<vmqAnswer.terms.length; i++){
+            //terms has length of numbers of variables!
+            //not each index has necessarily a subsitution one that does not have is a variable
+            if (!(vmqAnswer.terms[i] instanceof Variable)){
+                String wsmlVariable = symbTransfomer.convertToWSML(i,violatedQuery);
+                String wsmlTerm = symbTransfomer.convertToWSML(vmqAnswer.terms[i]);
+                bindings += wsmlVariable +" -> "+ wsmlTerm +"\n";
+            }
+        }
+        throw new ConstraintViolationError(
+                violatedQuery.toString() + "\n" + bindings);
+
     }
 }
