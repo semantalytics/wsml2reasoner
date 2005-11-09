@@ -19,24 +19,19 @@ axiom intSum1
       ?x[intAttr1 hasValue ?a1, intAttr2 hasValue ?a2, intAttr3 hasValue ?a3] 
       and wsml#numericAdd(?x,?a1,?a2) implies ?x[sumAttr hasValue (?v + ?a3)].
 
-axiom intSum1
+axiom intSum2
     definedBy
       ?x[intAttr1 hasValue ?a1, intAttr2 hasValue ?a2, intAttr3 hasValue ?a3] 
-      implies ?x[sumAttr2 hasValue (?a1 + ?a2 + ?a3)].
-
-/*
+      implies ?x[sumAttr hasValue (?a1 + ?a2 + ?a3)].
+      
 axiom intSum
     definedBy
       ?x[intAttr1 hasValue ?a1, intAttr2 hasValue ?a2, intAttr3 hasValue ?a3] and ?v = (?a1 + ?a2 + ?a3) implies ?x[sumAttr hasValue ?v].
-
 
 axiom sumConstraint
     definedBy
       !- ?x[intAttr1 hasValue ?a1, intAttr2 hasValue ?a2, intAttr3 hasValue ?a3] and ?v != (?a1 + ?a2 + ?a3) and ?x[sumAttr hasValue ?v].
 
-
-*/      
-      
 instance dummy memberOf myConcept
 	intAttr1 hasValue 1
 	intAttr2 hasValue 2
