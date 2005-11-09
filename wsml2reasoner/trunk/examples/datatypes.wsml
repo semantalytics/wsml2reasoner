@@ -17,7 +17,12 @@ concept myConcept
 axiom intSum1
     definedBy
       ?x[intAttr1 hasValue ?a1, intAttr2 hasValue ?a2, intAttr3 hasValue ?a3] 
-      implies ?x[sumAttr hasValue (?a1 + ?a2 + ?a3)].
+      and wsml#numericAdd(?x,?a1,?a2) implies ?x[sumAttr hasValue (?v + ?a3)].
+
+axiom intSum1
+    definedBy
+      ?x[intAttr1 hasValue ?a1, intAttr2 hasValue ?a2, intAttr3 hasValue ?a3] 
+      implies ?x[sumAttr2 hasValue (?a1 + ?a2 + ?a3)].
 
 /*
 axiom intSum
