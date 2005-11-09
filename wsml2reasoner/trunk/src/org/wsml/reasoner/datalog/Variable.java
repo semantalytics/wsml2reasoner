@@ -54,6 +54,6 @@ public class Variable extends Term {
 
     public String toString() {
         String result = this.getSymbol();
-        return "?"+result;
+        return result;
     }
 }
