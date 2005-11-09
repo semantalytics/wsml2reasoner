@@ -155,16 +155,22 @@ public class WSML2DatalogTransformer {
     public Program generateAuxilliaryRules() {
         Program result = new Program();
 
-        org.wsml.reasoner.datalog.Variable v1 = new org.wsml.reasoner.datalog.Variable(
-                "?v1");
-        org.wsml.reasoner.datalog.Variable v2 = new org.wsml.reasoner.datalog.Variable(
-                "?v2");
-        org.wsml.reasoner.datalog.Variable v3 = new org.wsml.reasoner.datalog.Variable(
-                "?v3");
-        org.wsml.reasoner.datalog.Variable v4 = new org.wsml.reasoner.datalog.Variable(
-                "?v4");
-        org.wsml.reasoner.datalog.Variable v5 = new org.wsml.reasoner.datalog.Variable(
-                "?v5");
+        org.wsml.reasoner.datalog.Variable vConcept = new org.wsml.reasoner.datalog.Variable(
+                "?concept");
+        org.wsml.reasoner.datalog.Variable vConcept2 = new org.wsml.reasoner.datalog.Variable(
+                "?concept2");
+        org.wsml.reasoner.datalog.Variable vConcept3 = new org.wsml.reasoner.datalog.Variable(
+            "?concept3");
+        org.wsml.reasoner.datalog.Variable vAttribute = new org.wsml.reasoner.datalog.Variable(
+                "?attribute");
+        org.wsml.reasoner.datalog.Variable vRange = new org.wsml.reasoner.datalog.Variable(
+                "?range");
+        org.wsml.reasoner.datalog.Variable vInstance = new org.wsml.reasoner.datalog.Variable(
+                "?instance");
+        org.wsml.reasoner.datalog.Variable vInstance2 = new org.wsml.reasoner.datalog.Variable(
+        "?instance2");
+        org.wsml.reasoner.datalog.Variable vAttributeValue = new org.wsml.reasoner.datalog.Variable(
+                "?attributeValue");
 
         List<Literal> body;
         Literal head;
@@ -173,20 +179,20 @@ public class WSML2DatalogTransformer {
         // extension-subset: mo(?o,?c2) <- mo(?o,?c1) and sco(?c1,?c2)
         body = new LinkedList<Literal>();
         head = new Literal(PRED_SUB_CONCEPT_OF,
-                new org.wsml.reasoner.datalog.Term[] { v1, v3 });
+                new org.wsml.reasoner.datalog.Term[] { vConcept, vConcept3 });
         body.add(new Literal(PRED_SUB_CONCEPT_OF,
-                new org.wsml.reasoner.datalog.Term[] { v1, v2 }));
+                new org.wsml.reasoner.datalog.Term[] { vConcept, vConcept2 }));
         body.add(new Literal(PRED_SUB_CONCEPT_OF,
-                new org.wsml.reasoner.datalog.Term[] { v2, v3 }));
+                new org.wsml.reasoner.datalog.Term[] { vConcept2, vConcept3 }));
         result.add(new Rule(head, body));
 
         body = new LinkedList<Literal>();
         head = new Literal(PRED_MEMBER_OF,
-                new org.wsml.reasoner.datalog.Term[] { v1, v3 });
+                new org.wsml.reasoner.datalog.Term[] { vInstance, vConcept2 });
         body.add(new Literal(PRED_MEMBER_OF,
-                new org.wsml.reasoner.datalog.Term[] { v1, v2 }));
+                new org.wsml.reasoner.datalog.Term[] { vInstance, vConcept }));
         body.add(new Literal(PRED_SUB_CONCEPT_OF,
-                new org.wsml.reasoner.datalog.Term[] { v2, v3 }));
+                new org.wsml.reasoner.datalog.Term[] { vConcept, vConcept2 }));
         result.add(new Rule(head, body));
 
         // Inference of attr value types: mo(v,c2) <- itype(c1, att,
@@ -194,13 +200,13 @@ public class WSML2DatalogTransformer {
         // mo(v1,v2) <- itype(v3, v4, v2), mo(v5,v3), hval(v5,v4, v1)
         body = new LinkedList<Literal>();
         head = new Literal(PRED_MEMBER_OF,
-                new org.wsml.reasoner.datalog.Term[] { v1, v2 });
+                new org.wsml.reasoner.datalog.Term[] { vInstance2, vConcept2 });
         body.add(new Literal(PRED_IMPLIES_TYPE,
-                new org.wsml.reasoner.datalog.Term[] { v3, v4, v2 }));
+                new org.wsml.reasoner.datalog.Term[] { vConcept, vAttribute, vConcept2 }));
         body.add(new Literal(PRED_MEMBER_OF,
-                new org.wsml.reasoner.datalog.Term[] { v5, v3 }));
+                new org.wsml.reasoner.datalog.Term[] { vInstance, vConcept }));
         body.add(new Literal(PRED_HAS_VALUE,
-                new org.wsml.reasoner.datalog.Term[] { v5, v4, v1 }));
+                new org.wsml.reasoner.datalog.Term[] { vInstance, vAttribute, vInstance2 }));
         result.add(new Rule(head, body));
 
         // Semantics of X1[X2 => X3] (oftype constraint)
@@ -210,14 +216,14 @@ public class WSML2DatalogTransformer {
 
         body = new LinkedList<Literal>();
         body.add(new Literal(PRED_OF_TYPE,
-                new org.wsml.reasoner.datalog.Term[] { v1, v2, v3 }));
+                new org.wsml.reasoner.datalog.Term[] { vConcept, vAttribute, vRange }));
         body.add(new Literal(PRED_MEMBER_OF,
-                new org.wsml.reasoner.datalog.Term[] { v4, v1 }));
+                new org.wsml.reasoner.datalog.Term[] { vInstance, vConcept }));
         body.add(new Literal(PRED_HAS_VALUE,
-                new org.wsml.reasoner.datalog.Term[] { v4, v2, v5 }));
+                new org.wsml.reasoner.datalog.Term[] { vInstance, vAttribute, vAttributeValue }));
         body.add(new Literal(PRED_MEMBER_OF,
                 Literal.NegationType.NEGATIONASFAILURE,
-                new org.wsml.reasoner.datalog.Term[] { v5, v3 }));
+                new org.wsml.reasoner.datalog.Term[] { vAttributeValue, vRange }));
         result.add(new Rule(null, body));
 
         return result;
