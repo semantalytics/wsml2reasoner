@@ -90,8 +90,8 @@ instance Marge memberOf Woman
   </div>
  
 <p><small><a href="history.html">Version History</a> | <a href="frame.html">Display Using Frames</a> | <a target="_top" href="index.jsp">No Frames</a> </small> </p>
-<p><small>$Date: 2005-11-08 08:59:05 $</small>
-
+<p><small>$Date: 2005-11-09 17:39:42 $</small>
+ 
 </script> 
 </body>
 </html>
