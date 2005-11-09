@@ -58,15 +58,15 @@ public class WSML2DatalogTransformer {
 
     // Some predicates that are used to represent the oo-based molecules
     // of WSML in datalog.
-    private final static String PRED_SUB_CONCEPT_OF = "wsml-subconcept-of";
+    public final static String PRED_SUB_CONCEPT_OF = "wsml-subconcept-of";
 
-    private final static String PRED_OF_TYPE = "wsml-of-type";
+    public final static String PRED_OF_TYPE = "wsml-of-type";
 
-    private final static String PRED_IMPLIES_TYPE = "wsml-implies-type";
+    public final static String PRED_IMPLIES_TYPE = "wsml-implies-type";
 
-    private final static String PRED_MEMBER_OF = "wsml-member-of";
+    public final static String PRED_MEMBER_OF = "wsml-member-of";
 
-    private final static String PRED_HAS_VALUE = "wsml-has-value";
+    public final static String PRED_HAS_VALUE = "wsml-has-value";
 
     /**
      * Generates a WSML2Datalog converter.
