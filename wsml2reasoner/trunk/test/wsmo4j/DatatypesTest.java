@@ -318,6 +318,18 @@ public class DatatypesTest extends TestCase {
         les = axiom.listDefinitions();
         assertEquals(les.size(), 1);
         le = (LogicalExpression) les.iterator().next();
+        // axiom intSum1
+        axiom = o.findAxiom(f.createIRI(NS + "intSum1"));
+        assertNotNull(axiom);
+        les = axiom.listDefinitions();
+        assertEquals(les.size(), 1);
+        le = (LogicalExpression) les.iterator().next();
+        // axiom axAdding
+        axiom = o.findAxiom(f.createIRI(NS + "axAdding"));
+        assertNotNull(axiom);
+        les = axiom.listDefinitions();
+        assertEquals(les.size(), 1);
+        le = (LogicalExpression) les.iterator().next();
     }
 
 }

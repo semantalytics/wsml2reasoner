@@ -1,7 +1,8 @@
 wsmlVariant _"http://www.wsmo.org/2004/wsml/wsml-flight"
 
 namespace {_"urn:fzi:lordoftherings#",
-    dc _"http://purl.org/dc/elements/1.1#"}
+    dc _"http://purl.org/dc/elements/1.1#",
+    wsml _"http://www.wsmo.org/wsml/wsml-syntax#"}
  
 ontology _"urn:fzi:lordoftherings"
 

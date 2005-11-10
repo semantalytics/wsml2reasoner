@@ -117,9 +117,9 @@ public class Kaon2Facade implements DatalogReasonerFacade {
             Ontology ontology = this.conn.openOntology(ontologyUri, EMPTY_MAP);
             Reasoner reasoner = ontology.createReasoner();
             Query query = translateQuery(q, reasoner, varNames);
-            // for (Literal l : query.getQueryLiterals()) {
-            // System.out.println("Query literal: " + l);
-            // }
+            for (Literal l : query.getQueryLiterals()) {
+                System.out.println("Query literal: " + l);
+            }
             query.open();
             while (!query.afterLast()) {
                 org.omwg.logicalexpression.terms.Term[] tuple = convertQueryTuple(query
@@ -281,13 +281,16 @@ public class Kaon2Facade implements DatalogReasonerFacade {
             List<Term> terms = new ArrayList<Term>();
             if (p.equals(Constants.EQUAL)) {
                 pred = f.equal();
+                translateTerms(l, terms);
             } else if (p.equals(Constants.INEQUAL)) {
                 pred = f.equal();
                 isPositive = false;
+                translateTerms(l, terms);
             } else if (p.equals(Constants.LESS_THAN)) {
                 if (l.getTerms().length == 2) {
                     pred = f.ifTrue(3);
                     terms.add(f.constant("$1 < $2"));
+                    translateTerms(l, terms);
                 } else {
                     throw new ExternalToolException(
                             "wsml#lessThan should have exactly two arguments!");
@@ -296,6 +299,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                 if (l.getTerms().length == 2) {
                     pred = f.ifTrue(3);
                     terms.add(f.constant("$1 <= $2"));
+                    translateTerms(l, terms);
                 } else {
                     throw new ExternalToolException(
                             "wsml#lessEqual should have exactly two arguments!");
@@ -304,6 +308,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                 if (l.getTerms().length == 2) {
                     pred = f.ifTrue(3);
                     terms.add(f.constant("$1 > $2"));
+                    translateTerms(l, terms);
                 } else {
                     throw new ExternalToolException(
                             "wsml#greaterThan should have exactly two arguments!");
@@ -312,6 +317,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                 if (l.getTerms().length == 2) {
                     pred = f.ifTrue(3);
                     terms.add(f.constant("$1 >= $2"));
+                    translateTerms(l, terms);
                 } else {
                     throw new ExternalToolException(
                             "wsml#greaterEqual should have exactly two arguments!");
@@ -320,6 +326,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                 if (l.getTerms().length == 2) {
                     pred = f.ifTrue(3);
                     terms.add(f.constant("$1 == $2"));
+                    translateTerms(l, terms);
                 } else {
                     throw new ExternalToolException(
                             "wsml#numericEqual should have exactly two arguments!");
@@ -328,6 +335,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                 if (l.getTerms().length == 2) {
                     pred = f.ifTrue(3);
                     terms.add(f.constant("$1 != $2"));
+                    translateTerms(l, terms);
                 } else {
                     throw new ExternalToolException(
                             "wsml#numericInEqual should have exactly two arguments!");
@@ -336,6 +344,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                 if (l.getTerms().length == 2) {
                     pred = f.ifTrue(3);
                     terms.add(f.constant("$1 == $2"));
+                    translateTerms(l, terms);
                 } else {
                     throw new ExternalToolException(
                             "wsml#stringEqual should have exactly two arguments!");
@@ -344,9 +353,62 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                 if (l.getTerms().length == 2) {
                     pred = f.ifTrue(3);
                     terms.add(f.constant("$1 != $2"));
+                    translateTerms(l, terms);
                 } else {
                     throw new ExternalToolException(
                             "wsml#lessThan should have exactly two arguments!");
+                }
+            } else if (p.equals(Constants.NUMERIC_ADD)) {
+                if (l.getTerms().length == 3) {
+                    pred = f.evaluate(4);
+                    terms.add(f.constant("$1 + $2"));
+                    org.omwg.logicalexpression.terms.Term[] literalTerms = l
+                            .getTerms();
+                    translateTerm(literalTerms[1], terms);
+                    translateTerm(literalTerms[2], terms);
+                    translateTerm(literalTerms[0], terms);
+                } else {
+                    throw new ExternalToolException(
+                            "wsml#numericAdd should have exactly three arguments!");
+                }
+            } else if (p.equals(Constants.NUMERIC_SUB)) {
+                if (l.getTerms().length == 3) {
+                    pred = f.evaluate(4);
+                    terms.add(f.constant("$1 - $2"));
+                    org.omwg.logicalexpression.terms.Term[] literalTerms = l
+                            .getTerms();
+                    translateTerm(literalTerms[1], terms);
+                    translateTerm(literalTerms[2], terms);
+                    translateTerm(literalTerms[0], terms);
+                } else {
+                    throw new ExternalToolException(
+                            "wsml#numericSubtract should have exactly three arguments!");
+                }
+            } else if (p.equals(Constants.NUMERIC_MUL)) {
+                if (l.getTerms().length == 3) {
+                    pred = f.evaluate(4);
+                    terms.add(f.constant("$1 * $2"));
+                    org.omwg.logicalexpression.terms.Term[] literalTerms = l
+                            .getTerms();
+                    translateTerm(literalTerms[1], terms);
+                    translateTerm(literalTerms[2], terms);
+                    translateTerm(literalTerms[0], terms);
+                } else {
+                    throw new ExternalToolException(
+                            "wsml#numericAdd should have exactly three arguments!");
+                }
+            } else if (p.equals(Constants.NUMERIC_DIV)) {
+                if (l.getTerms().length == 3) {
+                    pred = f.evaluate(4);
+                    terms.add(f.constant("$1 / $2"));
+                    org.omwg.logicalexpression.terms.Term[] literalTerms = l
+                            .getTerms();
+                    translateTerm(literalTerms[1], terms);
+                    translateTerm(literalTerms[2], terms);
+                    translateTerm(literalTerms[0], terms);
+                } else {
+                    throw new ExternalToolException(
+                            "wsml#numericAdd should have exactly three arguments!");
                 }
             } else if (p.equals(WSML2DatalogTransformer.PRED_IMPLIES_TYPE)) {
                 // check whether the last argument is a datatype
@@ -355,18 +417,26 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                     if (t instanceof IRI) {
                         IRI rangeIri = (IRI) t;
                         if (WsmlDataType.WSML_STRING.equals(rangeIri)
-                                || WsmlDataType.WSML_INTEGER.equals(rangeIri.toString())
-                                || WsmlDataType.WSML_DECIMAL.equals(rangeIri.toString())
-                                || WsmlDataType.WSML_BOOLEAN.equals(rangeIri.toString())) {
+                                || WsmlDataType.WSML_INTEGER.equals(rangeIri
+                                        .toString())
+                                || WsmlDataType.WSML_DECIMAL.equals(rangeIri
+                                        .toString())
+                                || WsmlDataType.WSML_BOOLEAN.equals(rangeIri
+                                        .toString())) {
                             pred = f.nonOWLPredicate(
                                     WSML2DatalogTransformer.PRED_OF_TYPE, l
                                             .getTerms().length);
-                            System.out.println("Translated implies_type for oftype for " + rangeIri);
+                            translateTerms(l, terms);
+                            System.out
+                                    .println("Translated implies_type for oftype for "
+                                            + rangeIri);
                         } else {
                             pred = f.nonOWLPredicate(p, l.getTerms().length);
+                            translateTerms(l, terms);
                         }
                     } else {
                         pred = f.nonOWLPredicate(p, l.getTerms().length);
+                        translateTerms(l, terms);
                     }
                 } else {
                     throw new ExternalToolException(
@@ -374,18 +444,23 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                 }
             } else {
                 pred = f.nonOWLPredicate(p, l.getTerms().length);
-            }
-
-            org.omwg.logicalexpression.terms.Term[] args = l.getTerms();
-            for (org.omwg.logicalexpression.terms.Term arg : args) {
-                translateTerm(arg, terms);
-
+                translateTerms(l, terms);
             }
 
             return f.literal(isPositive, pred, terms);
 
         } catch (UnsupportedFeatureException ufe) {
             throw new ExternalToolException(query, ufe);
+        }
+    }
+
+    private void translateTerms(org.wsml.reasoner.builtin.Literal literal,
+            List<Term> terms) throws UnsupportedFeatureException,
+            ExternalToolException {
+        org.omwg.logicalexpression.terms.Term[] args = literal.getTerms();
+        for (org.omwg.logicalexpression.terms.Term arg : args) {
+            translateTerm(arg, terms);
+
         }
     }
 
