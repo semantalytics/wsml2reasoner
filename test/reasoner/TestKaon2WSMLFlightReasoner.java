@@ -151,7 +151,7 @@ public class TestKaon2WSMLFlightReasoner extends BaseReasonerTest {
     }
         
     public void testBornBefore900() throws Exception {
-        String query = "?x[wasBorn hasValue ?v] and ?v < 900";
+        String query = "?x[wasBorn hasValue ?v] and ?v < 900   "   ;
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
         binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Arwen"));
@@ -162,7 +162,7 @@ public class TestKaon2WSMLFlightReasoner extends BaseReasonerTest {
     }
     
     public void testBornBeforeEqual900() throws Exception {
-        String query = "?x[wasBorn hasValue ?v] and ?v =< 900";
+        String query = "?x[wasBorn hasValue ?v] and ?v =< 900  ";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
         binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Arwen"));
