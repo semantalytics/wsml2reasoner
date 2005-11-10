@@ -268,6 +268,47 @@ public class TestKaon2WSMLFlightReasoner extends BaseReasonerTest {
         performQuery(query, expected);
         System.out.println("Finished query.");
     }
+    
+    public void testBorn490And10() throws Exception {
+        String query = "?x[wasBorn hasValue ?v] and wsml#numericEqual(?v,(490 + 10))";
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Arwen"));
+        binding.put(wsmoFactory.createVariable("v"), dataFactory.createWsmlInteger("500"));
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+    }
+    
+    public void testBorn510Minus10() throws Exception {
+        String query = "?x[wasBorn hasValue ?v] and wsml#numericEqual(?v,(510 - 10))";
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Arwen"));
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+    }
+    
+    public void testBorn250Twice() throws Exception {
+        String query = "?x[wasBorn hasValue ?v] and wsml#numericEqual(?v,(250 * 2))";
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Arwen"));
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+    }
+    
+    public void testBorn1000DividedBy2() throws Exception {
+        String query = "?x[wasBorn hasValue ?v] and wsml#numericEqual(?v,(1000 / 2))";
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Arwen"));
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+    }
 
 
 }

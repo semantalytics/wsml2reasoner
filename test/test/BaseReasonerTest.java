@@ -54,7 +54,7 @@ public class BaseReasonerTest extends TestCase {
     protected static WsmoFactory wsmoFactory = null;
 
     protected static LogicalExpressionFactory leFactory = null;
-    
+
     protected static DataFactory dataFactory = null;
 
     protected static void setupScenario(String ontologyFile) throws Exception {
@@ -63,7 +63,7 @@ public class BaseReasonerTest extends TestCase {
         leFactory = WSMO4JManager.getLogicalExpressionFactory();
 
         wsmoFactory = WSMO4JManager.getWSMOFactory();
-        
+
         dataFactory = WSMO4JManager.getDataFactory();
 
         // Set up WSML parser
@@ -117,14 +117,7 @@ public class BaseReasonerTest extends TestCase {
 
         // Register ontology
         System.out.println("Registering ontology");
-        // Set<Ontology> ontos = new HashSet<Ontology>();
-        // ontos.add(o);
         wsmlReasoner.registerOntology(o);
-        // OntologyRegistrationRequest regReq = new
-        // OntologyRegistrationRequestImpl(
-        // ontos);
-        // wsmlReasoner.execute(regReq);
-
     }
 
     protected void performQuery(String query, Set<Map<Variable, Term>> expected)
@@ -135,15 +128,9 @@ public class BaseReasonerTest extends TestCase {
         System.out.println("WSML Query LE:");
         System.out.println(logExprSerializer.serialize(qExpression));
         System.out.println("--------------\n\n");
-        String ontologyUri = o.getIdentifier().toString();
 
         Set<Map<Variable, Term>> result = wsmlReasoner.executeQuery((IRI) o
                 .getIdentifier(), qExpression);
-
-        // QueryAnsweringRequest qaRequest = new QueryAnsweringRequestImpl(
-        // ontologyUri, qExpression);
-        // QueryAnsweringResult result = (QueryAnsweringResult) wsmlReasoner
-        // .execute(qaRequest);
 
         System.out.println("Found < " + result.size()
                 + " > results to the query:");
@@ -153,9 +140,34 @@ public class BaseReasonerTest extends TestCase {
         }
         assertEquals(expected.size(), result.size());
         for (Map<Variable, Term> binding : expected) {
-            assertTrue("Result does not contain binding " + binding, result
-                    .contains(binding));
+            assertTrue("Result does not contain binding " + binding, include(
+                    result, binding));
         }
+    }
+
+    /**
+     * Checks whether there is a binding in result which contains all of the
+     * variable bindings of expected
+     * 
+     * @param result the set of bindings to check
+     * @param expectedBinding the reference binding
+     * @return true if there is such an element
+     */
+    private boolean include(Set<Map<Variable, Term>> result,
+            Map<Variable, Term> expectedBinding) {
+        boolean contains = false;
+        for (Map<Variable, Term> vBinding : result) {
+            boolean containsAll = true;
+            for (Variable var : expectedBinding.keySet()) {
+                containsAll = containsAll
+                        && expectedBinding.get(var).equals(vBinding.get(var));
+            }
+            if (containsAll) {
+                contains = true;
+                break;
+            }
+        }
+        return contains;
     }
 
     @Override

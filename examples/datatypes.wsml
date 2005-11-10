@@ -65,6 +65,11 @@ axiom axStringInEqual
 definedBy
 	dummy[strAttr hasValue ?v] and ?v != "10".
 		
+		
+axiom axAdding
+definedBy
+	dummy[intAttr1 hasValue ?v] and wsml#numericEqual(?v,(490 + 10)).
+		
 instance dummy memberOf myConcept
 	intAttr1 hasValue 1
 	intAttr2 hasValue 2
