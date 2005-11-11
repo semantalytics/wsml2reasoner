@@ -39,6 +39,7 @@ import org.wsml.reasoner.api.Result;
 import org.wsml.reasoner.api.WSMLCoreReasoner;
 import org.wsml.reasoner.api.WSMLFlightReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.builtin.ConjunctiveQuery;
 import org.wsml.reasoner.builtin.DatalogException;
 import org.wsml.reasoner.builtin.ExternalToolException;
 import org.wsml.reasoner.builtin.Literal;
@@ -47,9 +48,13 @@ import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
 import org.wsml.reasoner.transformation.LloydToporNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
+import org.wsml.reasoner.transformation.le.LloydToporRules;
 import org.wsml.reasoner.transformation.le.LogicalExpressionNormalizer;
+import org.wsml.reasoner.transformation.le.LogicalExpressionTransformer;
 import org.wsml.reasoner.transformation.le.MoleculeDecompositionRules;
 import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
+import org.wsml.reasoner.transformation.le.TopDownLESplitter;
+import org.wsml.reasoner.transformation.le.TransformationRule;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
@@ -376,11 +381,16 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     protected Set<Map<Variable, Term>> internalExecuteQuery(IRI ontologyID,
             LogicalExpression query) throws DatalogException,
             org.wsml.reasoner.builtin.ExternalToolException {
-        org.wsml.reasoner.builtin.ConjunctiveQuery datalogQuery = convertQuery(query);
-        return builtInFacade.evaluate(datalogQuery, ontologyID.toString());
+        Set<org.wsml.reasoner.builtin.ConjunctiveQuery> datalogQueries = convertQuery(query);
+        Set<Map<Variable, Term>> result = new HashSet<Map<Variable, Term>>();
+        for (ConjunctiveQuery datalogQuery : datalogQueries) {
+            result.addAll(builtInFacade.evaluate(datalogQuery, ontologyID
+                    .toString()));
+        }
+        return result;
     }
 
-    protected org.wsml.reasoner.builtin.ConjunctiveQuery convertQuery(
+    protected Set<org.wsml.reasoner.builtin.ConjunctiveQuery> convertQuery(
             org.omwg.logicalexpression.LogicalExpression q) {
         org.wsml.reasoner.builtin.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.builtin.WSML2DatalogTransformer();
 
@@ -397,23 +407,41 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // System.out.println("Q before molecule normalization: " + q);
         q = moleculeNormalizer.normalize(q);
         // System.out.println("Q after molecule normalization: " + q);
+
         org.omwg.logicalexpression.LogicalExpression resultDefRule = leFactory
                 .createInverseImplication(rHead, q);
 
-        Set<Rule> p = wsml2datalog.transform(resultDefRule);
-        // System.out.println("Query as program:" + p);
-        if (p.size() != 1)
-            throw new IllegalArgumentException("Could not transform query " + q);
-        Rule rule = p.iterator().next();
-        if (!rule.getHead().getPredicateUri().equals(WSML_RESULT_PREDICATE))
-            throw new IllegalArgumentException("Could not transform query " + q);
+        List<TransformationRule> lloydToporRules = (List<TransformationRule>) LloydToporRules
+                .instantiate();
+        LogicalExpressionTransformer lloydToporNormalizer = new TopDownLESplitter(
+                lloydToporRules);
+        Set<LogicalExpression> conjunctiveQueries = lloydToporNormalizer
+                .transform(resultDefRule);
 
-        List<Literal> body = new LinkedList<Literal>();
+        Set<Rule> p = new HashSet<Rule>();
 
-        for (Literal l : rule.getBody()) {
-            body.add(l);
+        for (LogicalExpression query : conjunctiveQueries) {
+            p.addAll(wsml2datalog.transform(query));
         }
 
-        return new org.wsml.reasoner.builtin.ConjunctiveQuery(body);
+        System.out.println("Query as program:" + p);
+        // if (p.size() != 1)
+        // throw new IllegalArgumentException("Could not transform query " + q);
+
+        Set<ConjunctiveQuery> result = new HashSet<ConjunctiveQuery>();
+
+        for (Rule rule : p) {
+            if (!rule.getHead().getPredicateUri().equals(WSML_RESULT_PREDICATE))
+                throw new IllegalArgumentException("Could not transform query "
+                        + q);
+
+            List<Literal> body = new LinkedList<Literal>();
+
+            for (Literal l : rule.getBody()) {
+                body.add(l);
+            }
+            result.add(new org.wsml.reasoner.builtin.ConjunctiveQuery(body));
+        }
+        return result;
     }
 }

@@ -309,6 +309,24 @@ public class TestKaon2WSMLFlightReasoner extends BaseReasonerTest {
         performQuery(query, expected);
         System.out.println("Finished query.");
     }
-
+    
+    public void testHappyOrSad() throws Exception {
+        String query = "?x[isHappy hasValue _boolean(\"true\")] or ?x[isHappy hasValue _boolean(\"false\")]";
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Aragorn"));
+        expected.add(binding);
+        binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Arwen"));
+        expected.add(binding);
+        binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Gloin"));
+        expected.add(binding);
+        binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Gimli"));
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+    }
 
 }
