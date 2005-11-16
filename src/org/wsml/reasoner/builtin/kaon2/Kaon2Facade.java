@@ -560,14 +560,14 @@ public class Kaon2Facade implements DatalogReasonerFacade {
             Ontology o = conn.createOntology(ontologyURI, EMPTY_MAP);
             Set<Rule> rules = translateKnowledgebase(kb);
             appendRules(o, rules);
-            try {
-                o.saveOntology(OntologyFileFormat.OWL_XML, o.getPhysicalURI(),
-                        "ISO-8859-15");
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                o.saveOntology(OntologyFileFormat.OWL_XML, o.getPhysicalURI(),
+//                        "ISO-8859-15");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
         } catch (KAON2Exception e) {
             throw new ExternalToolException(
                     "Cannot register ontology in KAON2", e);
