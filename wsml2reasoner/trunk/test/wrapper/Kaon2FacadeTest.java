@@ -19,6 +19,7 @@
 package wrapper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,16 +33,21 @@ import org.semanticweb.kaon2.api.KAON2Factory;
 import org.semanticweb.kaon2.api.KAON2Manager;
 import org.semanticweb.kaon2.api.Ontology;
 import org.semanticweb.kaon2.api.Request;
-import org.wsml.reasoner.datalog.Constant;
-import org.wsml.reasoner.datalog.Literal;
-import org.wsml.reasoner.datalog.Predicate;
-import org.wsml.reasoner.datalog.Program;
-import org.wsml.reasoner.datalog.Rule;
-import org.wsml.reasoner.datalog.wrapper.kaon2.Kaon2Facade;
+import org.wsml.reasoner.builtin.Literal;
+import org.wsml.reasoner.builtin.Rule;
+import org.wsml.reasoner.builtin.kaon2.Kaon2Facade;
+import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.factory.DataFactory;
 
 public class Kaon2FacadeTest extends TestCase {
 
     private final String ONTO_URI = "urn:test";
+
+    /**
+     * The number of built-in rules which are automatically generated for every
+     * ontology
+     */
+    private final int NUMBER_BUILT_IN = 4;
 
     private final Map<String, Object> EMPTY_MAP = new HashMap<String, Object>();
 
@@ -50,6 +56,8 @@ public class Kaon2FacadeTest extends TestCase {
     private Kaon2Facade cut = null;
 
     private KAON2Factory f = KAON2Manager.factory();
+
+    private DataFactory df = WSMO4JManager.getDataFactory();
 
     public static void main(String[] args) {
         junit.textui.TestRunner.run(Kaon2FacadeTest.class);
@@ -61,238 +69,179 @@ public class Kaon2FacadeTest extends TestCase {
     }
 
     public void testTranslateFact() throws Exception {
-        Program p = new Program();
         // arc(a,b)
-        Rule r = new Rule(
-                new Literal(new Predicate("urn:test#arc", 2),
-                        Literal.NegationType.NONNEGATED,
-                        new org.wsml.reasoner.datalog.Term[] {
-                                new Constant("urn:test#a"),
-                                new Constant("urn:test#b") }));
-        p.add(r);
-        cut.register(ONTO_URI, p);
+
+        Rule r = new Rule(new Literal(true, "urn:test#arc", df
+                .createWsmlString("urn:test#a"), df
+                .createWsmlString("urn:test#b")));
+        cut.register(ONTO_URI, Collections.singleton(r));
         KAON2Connection conn = cut.getKaon2Connection();
         Ontology o = conn.openOntology(ONTO_URI, EMPTY_MAP);
         Request<org.semanticweb.kaon2.api.rules.Rule> ruleReq = o
                 .createAxiomRequest(org.semanticweb.kaon2.api.rules.Rule.class);
         Set<org.semanticweb.kaon2.api.rules.Rule> rules = ruleReq.get();
-        assertEquals(rules.size(), 1);
-        org.semanticweb.kaon2.api.rules.Rule result = rules.iterator().next();
+        for (org.semanticweb.kaon2.api.rules.Rule rule : rules) {
+            System.out.println("Rule:" + rule);
+        }
+        assertEquals(rules.size(), 1 + NUMBER_BUILT_IN);
         org.semanticweb.kaon2.api.rules.Rule expected = f.rule(f.literal(true,
-                f.nonOWLPredicate("urn:test#arc", 2), f
-                        .individual("urn:test#a"), f.individual("urn:test#b")),
-                EL);
-        assertEquals(expected, result);
+                f.nonOWLPredicate("urn:test#arc", 2), f.constant("urn:test#a"),
+                f.constant("urn:test#b")), EL);
+        assertTrue(rules.contains(expected));
     }
 
     public void testTranslateRule() throws Exception {
-        Program p = new Program();
         // arc(a,b) :- path(a,b), arc(b,c)
-        Literal head = new Literal(
-                new Predicate("urn:test#arc", 2),
-                Literal.NegationType.NONNEGATED,
-                new org.wsml.reasoner.datalog.Term[] {
-                        new Constant("urn:test#a"), new Constant("urn:test#b") });
+        Literal head = new Literal(true, "urn:test#arc", df
+                .createWsmlString("urn:test#a"), df
+                .createWsmlString("urn:test#b"));
 
         List<Literal> body = new ArrayList<Literal>();
-        body
-                .add(new Literal(new Predicate("urn:test#path", 2),
-                        Literal.NegationType.NONNEGATED,
-                        new org.wsml.reasoner.datalog.Term[] {
-                                new Constant("urn:test#a"),
-                                new Constant("urn:test#b") }));
-        body
-                .add(new Literal(new Predicate("urn:test#arc", 2),
-                        Literal.NegationType.NONNEGATED,
-                        new org.wsml.reasoner.datalog.Term[] {
-                                new Constant("urn:test#b"),
-                                new Constant("urn:test#c") }));
+        body.add(new Literal(true, "urn:test#path", df
+                .createWsmlString("urn:test#a"), df
+                .createWsmlString("urn:test#b")));
+        body.add(new Literal(true, "urn:test#arc", df
+                .createWsmlString("urn:test#b"), df
+                .createWsmlString("urn:test#c")));
         Rule r = new Rule(head, body);
-        p.add(r);
-        cut.register(ONTO_URI, p);
+        cut.register(ONTO_URI, Collections.singleton(r));
         KAON2Connection conn = cut.getKaon2Connection();
         Ontology o = conn.openOntology(ONTO_URI, EMPTY_MAP);
         Request<org.semanticweb.kaon2.api.rules.Rule> ruleReq = o
                 .createAxiomRequest(org.semanticweb.kaon2.api.rules.Rule.class);
         Set<org.semanticweb.kaon2.api.rules.Rule> rules = ruleReq.get();
-        assertEquals(rules.size(), 1);
-        org.semanticweb.kaon2.api.rules.Rule result = rules.iterator().next();
+        assertEquals(rules.size(), 1 + NUMBER_BUILT_IN);
         org.semanticweb.kaon2.api.rules.Rule expected = f.rule(f.literal(true,
-                f.nonOWLPredicate("urn:test#arc", 2), f
-                        .individual("urn:test#a"), f.individual("urn:test#b")),
-                L(f.literal(true, f.nonOWLPredicate("urn:test#path", 2), f
-                        .individual("urn:test#a"), f.individual("urn:test#b")),
-                        f.literal(true, f.nonOWLPredicate("urn:test#arc", 2), f
-                                .individual("urn:test#b"), f
-                                .individual("urn:test#c"))));
-        assertEquals(expected, result);
+                f.nonOWLPredicate("urn:test#arc", 2), f.constant("urn:test#a"),
+                f.constant("urn:test#b")), L(f.literal(true, f.nonOWLPredicate(
+                "urn:test#path", 2), f.constant("urn:test#a"), f
+                .constant("urn:test#b")), f.literal(true, f.nonOWLPredicate(
+                "urn:test#arc", 2), f.constant("urn:test#b"), f
+                .constant("urn:test#c"))));
+        assertTrue(rules.contains(expected));
     }
 
     public void testTranslateConstraint() throws Exception {
-        //TODO Perhaps in the future create special KAON2 rules instead of real constraints.
-        Program p = new Program();
+        // TODO Perhaps in the future create special KAON2 rules instead of real
+        // constraints.
         // !- path(a,b), arc(b,c)
         Literal head = null;
 
         List<Literal> body = new ArrayList<Literal>();
-        body
-                .add(new Literal(new Predicate("urn:test#path", 2),
-                        Literal.NegationType.NONNEGATED,
-                        new org.wsml.reasoner.datalog.Term[] {
-                                new Constant("urn:test#a"),
-                                new Constant("urn:test#b") }));
-        body
-                .add(new Literal(new Predicate("urn:test#arc", 2),
-                        Literal.NegationType.NONNEGATED,
-                        new org.wsml.reasoner.datalog.Term[] {
-                                new Constant("urn:test#b"),
-                                new Constant("urn:test#c") }));
+        body.add(new Literal(true, "urn:test#path",
+
+        df.createWsmlString("urn:test#a"), df.createWsmlString("urn:test#b")));
+        body.add(new Literal(true, "urn:test#arc", df
+                .createWsmlString("urn:test#b"), df
+                .createWsmlString("urn:test#c")));
         Rule r = new Rule(head, body);
-        p.add(r);
-        cut.register(ONTO_URI, p);
+        cut.register(ONTO_URI, Collections.singleton(r));
         KAON2Connection conn = cut.getKaon2Connection();
         Ontology o = conn.openOntology(ONTO_URI, EMPTY_MAP);
         Request<org.semanticweb.kaon2.api.rules.Rule> ruleReq = o
                 .createAxiomRequest(org.semanticweb.kaon2.api.rules.Rule.class);
         Set<org.semanticweb.kaon2.api.rules.Rule> rules = ruleReq.get();
-        assertEquals(rules.size(), 1);
-        org.semanticweb.kaon2.api.rules.Rule result = rules.iterator().next();
-        org.semanticweb.kaon2.api.rules.Rule expected = f
-                .rule(EL, L(f.literal(true, f.nonOWLPredicate("urn:test#path",
-                        2), f.individual("urn:test#a"), f
-                        .individual("urn:test#b")), f.literal(true, f
-                        .nonOWLPredicate("urn:test#arc", 2), f
-                        .individual("urn:test#b"), f.individual("urn:test#c"))));
-        assertEquals(expected, result);
+        assertEquals(rules.size(), 1 + NUMBER_BUILT_IN);
+        org.semanticweb.kaon2.api.rules.Rule expected = f.rule(EL, L(f.literal(
+                true, f.nonOWLPredicate("urn:test#path", 2), f
+                        .constant("urn:test#a"), f.constant("urn:test#b")), f
+                .literal(true, f.nonOWLPredicate("urn:test#arc", 2), f
+                        .constant("urn:test#b"), f.constant("urn:test#c"))));
+        assertTrue(rules.contains(expected));
     }
-    
+
     public void testTranslateRuleNegatedBody() throws Exception {
-        Program p = new Program();
+
         // arc(a,b) :- naf path(a,b), arc(b,c)
-        Literal head = new Literal(
-                new Predicate("urn:test#arc", 2),
-                Literal.NegationType.NONNEGATED,
-                new org.wsml.reasoner.datalog.Term[] {
-                        new Constant("urn:test#a"), new Constant("urn:test#b") });
+        Literal head = new Literal(true, "urn:test#arc", df
+                .createWsmlString("urn:test#a"), df
+                .createWsmlString("urn:test#b"));
 
         List<Literal> body = new ArrayList<Literal>();
-        body
-                .add(new Literal(new Predicate("urn:test#path", 2),
-                        Literal.NegationType.NEGATIONASFAILURE,
-                        new org.wsml.reasoner.datalog.Term[] {
-                                new Constant("urn:test#a"),
-                                new Constant("urn:test#b") }));
-        body
-                .add(new Literal(new Predicate("urn:test#arc", 2),
-                        Literal.NegationType.NONNEGATED,
-                        new org.wsml.reasoner.datalog.Term[] {
-                                new Constant("urn:test#b"),
-                                new Constant("urn:test#c") }));
+        body.add(new Literal(false, "urn:test#path",
+
+        df.createWsmlString("urn:test#a"), df.createWsmlString("urn:test#b")));
+        body.add(new Literal(true, "urn:test#arc",
+
+        df.createWsmlString("urn:test#b"), df.createWsmlString("urn:test#c")));
         Rule r = new Rule(head, body);
-        p.add(r);
-        cut.register(ONTO_URI, p);
+
+        cut.register(ONTO_URI, Collections.singleton(r));
         KAON2Connection conn = cut.getKaon2Connection();
         Ontology o = conn.openOntology(ONTO_URI, EMPTY_MAP);
         Request<org.semanticweb.kaon2.api.rules.Rule> ruleReq = o
                 .createAxiomRequest(org.semanticweb.kaon2.api.rules.Rule.class);
         Set<org.semanticweb.kaon2.api.rules.Rule> rules = ruleReq.get();
-        assertEquals(rules.size(), 1);
-        org.semanticweb.kaon2.api.rules.Rule result = rules.iterator().next();
+        assertEquals(rules.size(), 1 + NUMBER_BUILT_IN);
         org.semanticweb.kaon2.api.rules.Rule expected = f.rule(f.literal(true,
-                f.nonOWLPredicate("urn:test#arc", 2), f
-                        .individual("urn:test#a"), f.individual("urn:test#b")),
-                L(f.literal(false, f.nonOWLPredicate("urn:test#path", 2), f
-                        .individual("urn:test#a"), f.individual("urn:test#b")),
-                        f.literal(true, f.nonOWLPredicate("urn:test#arc", 2), f
-                                .individual("urn:test#b"), f
-                                .individual("urn:test#c"))));
-        assertEquals(expected, result);
+                f.nonOWLPredicate("urn:test#arc", 2), f.constant("urn:test#a"),
+                f.constant("urn:test#b")), L(f.literal(false, f
+                .nonOWLPredicate("urn:test#path", 2), f.constant("urn:test#a"),
+                f.constant("urn:test#b")), f.literal(true, f.nonOWLPredicate(
+                "urn:test#arc", 2), f.constant("urn:test#b"), f
+                .constant("urn:test#c"))));
+        assertTrue(rules.contains(expected));
     }
-    
+
     public void testTranslateRuleWithEquality() throws Exception {
-        Program p = new Program();
         // arc(a,b) :- path(a,b), a=b
-        Literal head = new Literal(
-                new Predicate("urn:test#arc", 2),
-                Literal.NegationType.NONNEGATED,
-                new org.wsml.reasoner.datalog.Term[] {
-                        new Constant("urn:test#a"), new Constant("urn:test#b") });
+        Literal head = new Literal(true, "urn:test#arc",
+
+        df.createWsmlString("urn:test#a"), df.createWsmlString("urn:test#b"));
 
         List<Literal> body = new ArrayList<Literal>();
-        body
-                .add(new Literal(new Predicate("urn:test#path", 2),
-                        Literal.NegationType.NONNEGATED,
-                        new org.wsml.reasoner.datalog.Term[] {
-                                new Constant("urn:test#a"),
-                                new Constant("urn:test#b") }));
-        body
-                .add(new Literal(new Predicate(Constants.EQUAL, 2),
-                        Literal.NegationType.NONNEGATED,
-                        new org.wsml.reasoner.datalog.Term[] {
-                                new Constant("urn:test#a"),
-                                new Constant("urn:test#b") }));
+        body.add(new Literal(true, "urn:test#path",
+
+        df.createWsmlString("urn:test#a"), df.createWsmlString("urn:test#b")));
+        body.add(new Literal(true, Constants.EQUAL, df
+                .createWsmlString("urn:test#a"), df
+                .createWsmlString("urn:test#b")));
         Rule r = new Rule(head, body);
-        p.add(r);
-        cut.register(ONTO_URI, p);
+        cut.register(ONTO_URI, Collections.singleton(r));
         KAON2Connection conn = cut.getKaon2Connection();
         Ontology o = conn.openOntology(ONTO_URI, EMPTY_MAP);
         Request<org.semanticweb.kaon2.api.rules.Rule> ruleReq = o
                 .createAxiomRequest(org.semanticweb.kaon2.api.rules.Rule.class);
         Set<org.semanticweb.kaon2.api.rules.Rule> rules = ruleReq.get();
-        assertEquals(rules.size(), 1);
-        org.semanticweb.kaon2.api.rules.Rule result = rules.iterator().next();
+        assertEquals(rules.size(), 1 + NUMBER_BUILT_IN);
         org.semanticweb.kaon2.api.rules.Rule expected = f.rule(f.literal(true,
-                f.nonOWLPredicate("urn:test#arc", 2), f
-                        .individual("urn:test#a"), f.individual("urn:test#b")),
-                L(f.literal(true, f.nonOWLPredicate("urn:test#path", 2), f
-                        .individual("urn:test#a"), f.individual("urn:test#b")),
-                        f.literal(true, f.equal(), f
-                                .individual("urn:test#a"), f
-                                .individual("urn:test#b"))));
-        assertEquals(expected, result);
+                f.nonOWLPredicate("urn:test#arc", 2), f.constant("urn:test#a"),
+                f.constant("urn:test#b")), L(f.literal(true, f.nonOWLPredicate(
+                "urn:test#path", 2), f.constant("urn:test#a"), f
+                .constant("urn:test#b")), f.literal(true, f.equal(), f
+                .constant("urn:test#a"), f.constant("urn:test#b"))));
+        assertTrue(rules.contains(expected));
     }
-    
+
     public void testTranslateRuleWithInEquality() throws Exception {
-        Program p = new Program();
+
         // arc(a,b) :- path(a,b), a!=b
-        Literal head = new Literal(
-                new Predicate("urn:test#arc", 2),
-                Literal.NegationType.NONNEGATED,
-                new org.wsml.reasoner.datalog.Term[] {
-                        new Constant("urn:test#a"), new Constant("urn:test#b") });
+        Literal head = new Literal(true, "urn:test#arc", df
+                .createWsmlString("urn:test#a"), df
+                .createWsmlString("urn:test#b"));
 
         List<Literal> body = new ArrayList<Literal>();
-        body
-                .add(new Literal(new Predicate("urn:test#path", 2),
-                        Literal.NegationType.NONNEGATED,
-                        new org.wsml.reasoner.datalog.Term[] {
-                                new Constant("urn:test#a"),
-                                new Constant("urn:test#b") }));
-        body
-                .add(new Literal(new Predicate(Constants.INEQUAL, 2),
-                        Literal.NegationType.NONNEGATED,
-                        new org.wsml.reasoner.datalog.Term[] {
-                                new Constant("urn:test#a"),
-                                new Constant("urn:test#b") }));
+        body.add(new Literal(true, "urn:test#path", df
+                .createWsmlString("urn:test#a"), df
+                .createWsmlString("urn:test#b")));
+        body.add(new Literal(true, Constants.INEQUAL, df
+                .createWsmlString("urn:test#a"), df
+                .createWsmlString("urn:test#b")));
         Rule r = new Rule(head, body);
-        p.add(r);
-        cut.register(ONTO_URI, p);
+        cut.register(ONTO_URI, Collections.singleton(r));
         KAON2Connection conn = cut.getKaon2Connection();
         Ontology o = conn.openOntology(ONTO_URI, EMPTY_MAP);
         Request<org.semanticweb.kaon2.api.rules.Rule> ruleReq = o
                 .createAxiomRequest(org.semanticweb.kaon2.api.rules.Rule.class);
         Set<org.semanticweb.kaon2.api.rules.Rule> rules = ruleReq.get();
-        assertEquals(rules.size(), 1);
-        org.semanticweb.kaon2.api.rules.Rule result = rules.iterator().next();
+        assertEquals(rules.size(), 1 + NUMBER_BUILT_IN);
         org.semanticweb.kaon2.api.rules.Rule expected = f.rule(f.literal(true,
-                f.nonOWLPredicate("urn:test#arc", 2), f
-                        .individual("urn:test#a"), f.individual("urn:test#b")),
-                L(f.literal(true, f.nonOWLPredicate("urn:test#path", 2), f
-                        .individual("urn:test#a"), f.individual("urn:test#b")),
-                        f.literal(false, f.equal(), f
-                                .individual("urn:test#a"), f
-                                .individual("urn:test#b"))));
-        assertEquals(expected, result);
+                f.nonOWLPredicate("urn:test#arc", 2), f.constant("urn:test#a"),
+                f.constant("urn:test#b")), L(f.literal(true, f.nonOWLPredicate(
+                "urn:test#path", 2), f.constant("urn:test#a"), f
+                .constant("urn:test#b")), f.literal(false, f.equal(), f
+                .constant("urn:test#a"), f.constant("urn:test#b"))));
+        assertTrue(rules.contains(expected));
     }
 
     @Override

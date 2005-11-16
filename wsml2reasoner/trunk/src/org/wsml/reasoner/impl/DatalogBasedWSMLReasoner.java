@@ -28,15 +28,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.omwg.logicalexpression.Atom;
-import org.omwg.logicalexpression.CompoundExpression;
 import org.omwg.logicalexpression.LogicalExpression;
-import org.wsmo.factory.LogicalExpressionFactory;
 import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Variable;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
+import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.OntologyRegistrationRequest;
 import org.wsml.reasoner.api.Request;
 import org.wsml.reasoner.api.Result;
@@ -55,7 +53,6 @@ import org.wsml.reasoner.datalog.wrapper.DatalogReasonerFacade;
 import org.wsml.reasoner.datalog.wrapper.ExternalToolException;
 import org.wsml.reasoner.datalog.wrapper.dlv.DLVFacade;
 import org.wsml.reasoner.datalog.wrapper.flora2.Flora2Facade;
-import org.wsml.reasoner.datalog.wrapper.kaon2.Kaon2Facade;
 import org.wsml.reasoner.datalog.wrapper.mandrax.MandraxFacade;
 import org.wsml.reasoner.datalog.wrapper.mins.MinsFacade;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
@@ -67,7 +64,7 @@ import org.wsml.reasoner.transformation.le.LogicalExpressionNormalizer;
 import org.wsml.reasoner.transformation.le.MoleculeDecompositionRules;
 import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
 import org.wsmo.common.IRI;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
 /**
@@ -99,15 +96,15 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             builtInFacade = new MandraxFacade(true);
             break;
         case KAON2:
-            builtInFacade = new Kaon2Facade();
-            break;
+            throw new UnsupportedOperationException(
+                    "Please use the new Kaon2 reasoner implementation!");
         case MINS:
             builtInFacade = new MinsFacade();
             break;
         case FLORA2:
             builtInFacade = new Flora2Facade();
             break;
-            
+
         default:
             throw new UnsupportedOperationException("Reasoning with "
                     + builtInType.toString() + " is not supported yet!");
