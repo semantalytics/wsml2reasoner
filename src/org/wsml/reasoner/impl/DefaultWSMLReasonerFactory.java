@@ -90,7 +90,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
     public WSMLFlightReasoner getWSMLFlightReasoner(
             BuiltInReasoner builtInReasoner)
             throws UnsupportedOperationException {
-        return new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
+        return new org.wsml.reasoner.impl.NewDatalogBasedWSMLReasoner(
                 builtInReasoner);
     }
 

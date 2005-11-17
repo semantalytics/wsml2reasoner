@@ -16,24 +16,42 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  */
-package org.wsml.reasoner.datalog.wrapper.mins;
+
+package org.wsml.reasoner.builtin.mins;
+
+import org.wsml.reasoner.datalog.DataTypeValue.DataType;
 
 /**
- * Constraint Violation Error
- *
- * <pre>
- * Created on 08.11.2005
- * Committed by $Author$
- * $Source$,
- * </pre>
- *
- * @author Holger Lausen
- *
- * @version $Revision$ $Date$
- */
-public class ConstraintViolationError extends RuntimeException {
-    public ConstraintViolationError(String str){
-        super(str);
-    }
+ * Package: package org.wsml.reasoner.datalog.wrapper.mins;
 
+ * Author: Darko Anicic, DERI Innsbruck
+ *         Holger Lausen, DERI Innsbruck
+ * Date: 15.09.2005  17:24:24
+ */
+public class MinsSymbolFactory{
+	private int varCnt = 0;
+    private int constCnt = 0;
+    private int predCnt = 0;
+    
+    public void resetVarCount(){
+        varCnt = 0;
+    }
+    
+	public int getValidVariableName() {
+		return varCnt++;
+	}
+
+	public int getValidConstantName() {
+		return ++constCnt;
+	}
+
+	public int getValidPredicateName() {
+		return ++predCnt;
+	}
+
+	public String getValidDataValue(String wsmlName, DataType dType) {
+		String result = null;
+        result = wsmlName;
+        return result;
+	}
 }

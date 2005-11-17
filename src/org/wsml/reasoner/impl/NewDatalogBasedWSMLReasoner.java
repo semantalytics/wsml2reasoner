@@ -44,6 +44,7 @@ import org.wsml.reasoner.builtin.DatalogException;
 import org.wsml.reasoner.builtin.ExternalToolException;
 import org.wsml.reasoner.builtin.Literal;
 import org.wsml.reasoner.builtin.Rule;
+import org.wsml.reasoner.builtin.mins.*;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
 import org.wsml.reasoner.transformation.LloydToporNormalizer;
@@ -83,6 +84,9 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         switch (builtInType) {
         case KAON2:
             builtInFacade = new org.wsml.reasoner.builtin.kaon2.Kaon2Facade();
+            break;
+        case MINS:
+            builtInFacade = new MinsFacade();
             break;
         default:
             throw new UnsupportedOperationException("Reasoning with "

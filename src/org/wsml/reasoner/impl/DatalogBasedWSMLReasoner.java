@@ -54,7 +54,6 @@ import org.wsml.reasoner.datalog.wrapper.ExternalToolException;
 import org.wsml.reasoner.datalog.wrapper.dlv.DLVFacade;
 import org.wsml.reasoner.datalog.wrapper.flora2.Flora2Facade;
 import org.wsml.reasoner.datalog.wrapper.mandrax.MandraxFacade;
-import org.wsml.reasoner.datalog.wrapper.mins.MinsFacade;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
 import org.wsml.reasoner.transformation.LloydToporNormalizer;
@@ -99,8 +98,8 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             throw new UnsupportedOperationException(
                     "Please use the new Kaon2 reasoner implementation!");
         case MINS:
-            builtInFacade = new MinsFacade();
-            break;
+            throw new UnsupportedOperationException(
+                    "Please use the new MINS reasoner implementation!");
         case FLORA2:
             builtInFacade = new Flora2Facade();
             break;

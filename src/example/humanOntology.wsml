@@ -16,6 +16,18 @@ concept Human subConceptOf Animal
 //axiom some
 //  definedBy !- ?x memberOf Man.
 
+axiom Child definedBy
+  ?x memberOf Child :- ?x[age hasValue ?y] and ?y<14.
+  
+axiom GrandPa definedBy
+  ?x memberOf GrandPa :- ?x[age hasValue ?y] and ?y>=61.
+
+instance youngMan
+  age hasValue 12
+
+instance oldMan
+  age hasValue 61
+
 concept Man subConceptOf Human
 
 concept Woman subConceptOf Human
