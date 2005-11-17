@@ -35,21 +35,36 @@ method="post">
       style="font:normal 10pt Arial;" name="wsmlOntology" cols="100" 
       rows="20">namespace {_"http://www.example.org#"}
 
-ontology TheSimpsons
+ontology AboutHumans
 
 concept Human
-  hasRelative transitive symmetric impliesType Human
+  hasRelative transitive symmetric ofType Human
+  hasChild ofType Child
 
 concept Man subConceptOf Human
+  hasSpouse ofType Woman
 
 concept Woman subConceptOf Human
+  hasSpouse ofType Man
 
+concept Child subConceptOf Human
+  
 instance Homer memberOf Man
-  hasRelative hasValue Marge
+  hasSpouse hasValue Marge
   
 instance Marge memberOf Woman
-  hasRelative hasValue Lisa
+  hasChild hasValue Lisa
   
+instance Lisa 
+  ageInYears hasValue 12
+  
+axiom aChild definedBy
+  ?x memberOf Child impliedBy ?x[ageInYears hasValue ?age] and ?age<16.
+
+axiom aRelative definedBy
+  ?x[hasSpouse hasValue ?y] implies ?x[hasRelative hasValue ?y].  
+  ?x[hasChild hasValue ?y] implies ?x[hasRelative hasValue ?y].  
+        
         </textarea>
         </td>
       </tr>
@@ -90,7 +105,7 @@ instance Marge memberOf Woman
   </div>
  
 <p><small><a href="history.html">Version History</a> | <a href="frame.html">Display Using Frames</a> | <a target="_top" href="index.jsp">No Frames</a> </small> </p>
-<p><small>$Date: 2005-11-09 17:39:42 $</small>
+<p><small>$Date: 2005-11-17 15:34:24 $</small>
  
 </script> 
 </body>
