@@ -9,10 +9,7 @@ import org.omwg.logicalexpression.terms.NumberedAnonymousID;
 import org.omwg.logicalexpression.terms.Term;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
-import org.wsmo.common.Identifier;
 import org.wsmo.common.UnnumberedAnonymousID;
-import org.wsmo.factory.Factory;
-import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
 /**
@@ -62,14 +59,10 @@ public abstract class AnonymousIdUtils
         private WsmoFactory wsmoFactory;
         private Map<Byte, String> nbIdMap;
         private LogicalExpression scope;
-        private LogicalExpressionFactory leFactory;
 
         public AnonymousIdTranslator()
         {
             wsmoFactory = WSMO4JManager.getWSMOFactory();
-            Map createParams = new HashMap();
-            createParams.put(Factory.PROVIDER_CLASS, "org.deri.wsmo4j.logexpression.LogicalExpressionFactoryImpl");
-            leFactory = WSMO4JManager.getLogicalExpressionFactory();
             nbIdMap = new HashMap<Byte, String>();
         }
 

@@ -123,6 +123,7 @@ public class BaseReasonerTest extends TestCase {
     protected void performQuery(String query, Set<Map<Variable, Term>> expected)
             throws Exception {
         System.out.println("\n\nStarting reasoner with query '" + query + "'");
+        System.out.println("\n\nExpecting " + expected.size() + " results...");
         LogicalExpression qExpression = leFactory.createLogicalExpression(
                 query, o);
         System.out.println("WSML Query LE:");
@@ -149,8 +150,10 @@ public class BaseReasonerTest extends TestCase {
      * Checks whether there is a binding in result which contains all of the
      * variable bindings of expected
      * 
-     * @param result the set of bindings to check
-     * @param expectedBinding the reference binding
+     * @param result
+     *            the set of bindings to check
+     * @param expectedBinding
+     *            the reference binding
      * @return true if there is such an element
      */
     private boolean include(Set<Map<Variable, Term>> result,

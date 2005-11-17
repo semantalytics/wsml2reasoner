@@ -18,6 +18,7 @@ public class ReasonerTests {
         suite.addTest(TestWSMLCoreReasoner.suite());
         suite.addTest(TestKaon2WSMLFlightReasoner.suite());
         suite.addTest(MaciejBugTest.suite());
+        suite.addTest(MaciejBugTest2.suite());
         // $JUnit-END$
         return suite;
     }
