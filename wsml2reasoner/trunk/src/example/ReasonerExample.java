@@ -68,13 +68,13 @@ public class ReasonerExample {
 		LogicalExpressionFactory leFactory = WSMO4JManager
 				.getLogicalExpressionFactory();
 
-		// The details of creating a Query will be hidden in future
         String queryString;
         queryString="?hq memberOf Human";
         queryString="?x memberOf Man";
         queryString="Lisa [hasRelative hasValue ?relative]";
         queryString="?x subConceptOf ?y";
-        //queryString="?x memberOf Man";
+        queryString="?x memberOf Child";
+        queryString="?x[age hasValue ?y] and ?y>(30 * 2) and ?y!=60 ";
 
         LogicalExpression query = leFactory
             .createLogicalExpression(queryString, exampleOntology);
