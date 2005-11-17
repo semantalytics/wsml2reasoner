@@ -18,14 +18,16 @@
  */
 package reasoner;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.wsml.reasoner.api.queryanswering.VariableBinding;
-import org.wsml.reasoner.impl.VariableBindingImpl;
+import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.Variable;
 
 import test.BaseReasonerTest;
 
@@ -44,7 +46,7 @@ public class TestWSMLCoreReasoner extends BaseReasonerTest {
                 TestWSMLCoreReasoner.class)) {
             protected void setUp() throws Exception {
                 setupScenario(ONTOLOGY_FILE);
-             }
+            }
 
             protected void tearDown() throws Exception {
                 System.out.println("Finished!");
@@ -52,212 +54,113 @@ public class TestWSMLCoreReasoner extends BaseReasonerTest {
         };
         return test;
     }
-//
-//    public void testElementsConnectedWithF() throws Exception {
-//        String query = "path(?n,f)";
-//        Set<VariableBinding> expected = new HashSet<VariableBinding>();
-//        VariableBinding binding = new VariableBindingImpl();
-//        binding.put("n", NS + "a");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n", NS + "b");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n", NS + "c");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n", NS + "f");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n", NS + "g");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n", NS + "h");
-//        expected.add(binding);
-//        performQuery(query, expected);
-//        System.out.println("Finished query.");
-//
-//    }
-//
-//    public void testConnectedPairs() throws Exception {
-//        String query = "path(?n1,?n2)";
-//        Set<VariableBinding> expected = new HashSet<VariableBinding>();
-//        VariableBinding binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "a");
-//        binding.put("n2", NS + "a");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "a");
-//        binding.put("n2", NS + "b");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "a");
-//        binding.put("n2", NS + "c");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "a");
-//        binding.put("n2", NS + "d");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "a");
-//        binding.put("n2", NS + "e");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "a");
-//        binding.put("n2", NS + "f");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "a");
-//        binding.put("n2", NS + "g");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "a");
-//        binding.put("n2", NS + "h");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "a");
-//        binding.put("n2", NS + "i");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "b");
-//        binding.put("n2", NS + "a");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "b");
-//        binding.put("n2", NS + "b");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "b");
-//        binding.put("n2", NS + "c");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "b");
-//        binding.put("n2", NS + "d");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "b");
-//        binding.put("n2", NS + "e");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "b");
-//        binding.put("n2", NS + "f");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "b");
-//        binding.put("n2", NS + "g");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "b");
-//        binding.put("n2", NS + "h");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "b");
-//        binding.put("n2", NS + "i");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "c");
-//        binding.put("n2", NS + "a");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "c");
-//        binding.put("n2", NS + "b");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "c");
-//        binding.put("n2", NS + "c");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "c");
-//        binding.put("n2", NS + "d");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "c");
-//        binding.put("n2", NS + "e");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "c");
-//        binding.put("n2", NS + "f");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "c");
-//        binding.put("n2", NS + "g");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "c");
-//        binding.put("n2", NS + "h");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "c");
-//        binding.put("n2", NS + "i");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "f");
-//        binding.put("n2", NS + "f");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "f");
-//        binding.put("n2", NS + "g");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "f");
-//        binding.put("n2", NS + "h");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "f");
-//        binding.put("n2", NS + "i");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "g");
-//        binding.put("n2", NS + "f");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "g");
-//        binding.put("n2", NS + "g");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "g");
-//        binding.put("n2", NS + "h");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "g");
-//        binding.put("n2", NS + "i");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "h");
-//        binding.put("n2", NS + "f");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "h");
-//        binding.put("n2", NS + "g");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "h");
-//        binding.put("n2", NS + "h");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n1", NS + "h");
-//        binding.put("n2", NS + "i");
-//        expected.add(binding);
-//        performQuery(query, expected);
-//        System.out.println("Finished query.");
-//
-//    }
-//
-//    public void testScElementsOnADirecteCircleWithF() throws Exception {
-//
-//        String query = "scElement(?n) and path(?n,f) and path(f,?n)";        
-//        Set<VariableBinding> expected = new HashSet<VariableBinding>();
-//        VariableBinding binding = new VariableBindingImpl();
-//        binding.put("n", NS + "f");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n", NS + "g");
-//        expected.add(binding);
-//        binding = new VariableBindingImpl();
-//        binding.put("n", NS + "h");
-//        expected.add(binding);
-//        performQuery(query, expected);
-//        System.out.println("Finished query.");
-//    }
+
+    public void testElementsConnectedWithF() throws Exception {
+        String query = "path(?n,f)";
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
+                + "a"));
+        expected.add(binding);
+        binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
+                + "b"));
+        expected.add(binding);
+        binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
+                + "c"));
+        expected.add(binding);
+        binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
+                + "f"));
+        expected.add(binding);
+        binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
+                + "g"));
+        expected.add(binding);
+        binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
+                + "h"));
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+
+    }
+
+    public void testConnectedPairs() throws Exception {
+        String query = "path(?n1,?n2)";
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        addTwoVariableResult(expected, "a", "a"); 
+        addTwoVariableResult(expected, "a", "b");
+        addTwoVariableResult(expected, "a", "c"); 
+        addTwoVariableResult(expected, "a", "d"); 
+        addTwoVariableResult(expected, "a", "e"); 
+        addTwoVariableResult(expected, "a", "f"); 
+        addTwoVariableResult(expected, "a", "g"); 
+        addTwoVariableResult(expected, "a", "h"); 
+        addTwoVariableResult(expected, "a", "i"); 
+        addTwoVariableResult(expected, "b", "a"); 
+        addTwoVariableResult(expected, "b", "b");
+        addTwoVariableResult(expected, "b", "c");
+        addTwoVariableResult(expected, "b", "d"); 
+        addTwoVariableResult(expected, "b", "e"); 
+        addTwoVariableResult(expected, "b", "f"); 
+        addTwoVariableResult(expected, "b", "g"); 
+        addTwoVariableResult(expected, "b", "h"); 
+        addTwoVariableResult(expected, "b", "i"); 
+        addTwoVariableResult(expected, "c", "a"); 
+        addTwoVariableResult(expected, "c", "b");
+        addTwoVariableResult(expected, "c", "c");
+        addTwoVariableResult(expected, "c", "d"); 
+        addTwoVariableResult(expected, "c", "e"); 
+        addTwoVariableResult(expected, "c", "f"); 
+        addTwoVariableResult(expected, "c", "g"); 
+        addTwoVariableResult(expected, "c", "h"); 
+        addTwoVariableResult(expected, "c", "i"); 
+        addTwoVariableResult(expected, "f", "f"); 
+        addTwoVariableResult(expected, "f", "g"); 
+        addTwoVariableResult(expected, "f", "h"); 
+        addTwoVariableResult(expected, "f", "i");
+        addTwoVariableResult(expected, "g", "f"); 
+        addTwoVariableResult(expected, "g", "g"); 
+        addTwoVariableResult(expected, "g", "h"); 
+        addTwoVariableResult(expected, "g", "i");
+        addTwoVariableResult(expected, "h", "f"); 
+        addTwoVariableResult(expected, "h", "g"); 
+        addTwoVariableResult(expected, "h", "h"); 
+        addTwoVariableResult(expected, "h", "i"); 
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+
+    }
+
+    private void addTwoVariableResult(Set<Map<Variable, Term>> expected, String v1value, String v2value) {
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("n1"), wsmoFactory.createIRI(NS
+                + v1value));
+        binding.put(wsmoFactory.createVariable("n2"), wsmoFactory.createIRI(NS
+                + v2value));
+        expected.add(binding);
+    }
+
+    public void testScElementsOnADirecteCircleWithF() throws Exception {
+
+        String query = "scElement(?n) and path(?n,f) and path(f,?n)";
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
+                + "f"));
+        expected.add(binding);
+        binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
+                + "g"));
+        expected.add(binding);
+        binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
+                + "h"));
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+    }
 
 }

@@ -95,6 +95,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
      * 
      * @return an ontology represent o semantically but only consists of axioms
      */
+    @SuppressWarnings("unchecked")
     public Ontology normalize(Ontology ontology) {
         String ontologyID = (ontology.getIdentifier() != null ? ontology
                 .getIdentifier().toString()
@@ -102,7 +103,6 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 + ontology.hashCode());
         Ontology resultOntology = wsmoFactory.createOntology(wsmoFactory
                 .createIRI(ontologyID));
-        Collection<LogicalExpression> axiomExpressions = new LinkedList<LogicalExpression>();
 
         // process namespace definitions:
         for (Namespace namespace : (Collection<Namespace>) ontology
@@ -160,22 +160,26 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
     protected void addAsAxioms(Ontology ontology,
             Collection<LogicalExpression> expressions) {
-        int i = 1;
         for (LogicalExpression expression : expressions) {
-            String axiomIDString = "reasoner:axiom_" + Integer.toString(i++)
-                    + "_" + ontology.getIdentifier();
+            // String axiomIDString = "reasoner:axiom_" + Integer.toString(i++)
+            // + "_" + ontology.getIdentifier();
+            // Gabor: I think it is a bad idea to copy different URIs together,
+            // because it is possible that the result will not be a valid URI.
+            // Using
+            // anonymous ID generator instead.
+            String axiomIDString = AnonymousIdUtils.getNewIri();
             Identifier axiomID = wsmoFactory.createIRI(axiomIDString);
             Axiom axiom = wsmoFactory.createAxiom(axiomID);
             axiom.addDefinition(expression);
             try {
                 ontology.addAxiom(axiom);
             } catch (InvalidModelException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected Set<LogicalExpression> normalizeConcept(Concept concept) {
         Identifier conceptID = concept.getIdentifier();
         Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
@@ -196,13 +200,13 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         return resultExpressions;
     }
 
+    @SuppressWarnings("unchecked")
     protected Set<LogicalExpression> normalizeConceptAttribute(
             Identifier conceptID, Attribute attribute) {
         Identifier attributeID = attribute.getIdentifier();
         Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
 
         // process range types:
-        Set<Identifier> rangeTypes = new HashSet<Identifier>();
         for (Type type : (Set<Type>) attribute.listTypes()) {
             // determine Id of range type:
             Identifier typeID;
@@ -372,7 +376,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 (cardinality * cardinality + cardinality) / 2 + 1);
         for (int i = 0; i < cardinality; i++) {
             for (int j = i + 1; j < cardinality; j++) {
-                List args = new ArrayList(2);
+                List<Variable> args = new ArrayList<Variable>(2);
                 args.add(yVariable[i]);
                 args.add(yVariable[j]);
                 inEqualities.add(leFactory.createAtom(wsmoFactory
@@ -389,8 +393,12 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         conjuncts.addAll(inEqualities);
         LogicalExpression conjunction = FixedModificationRules
                 .buildNaryConjunction(conjuncts);
-        IRI newPIRI = wsmoFactory.createIRI("mincard_" + conceptID.toString()
-                + "_" + attributeID);
+        // IRI newPIRI = wsmoFactory.createIRI("mincard_" + conceptID.toString()
+        // + "_" + attributeID);
+        // Gabor: I think it is a bad idea to copy different URIs together,
+        // because it is possible that the result will not be a valid URI. Using
+        // anonymous ID generator instead.
+        IRI newPIRI = wsmoFactory.createIRI(AnonymousIdUtils.getNewIri());
         Atom newPX = leFactory.createAtom(newPIRI, Arrays
                 .asList(new Variable[] { xVariable }));
         minCardConstraints.add(leFactory.createLogicProgrammingRule(newPX,
@@ -426,7 +434,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 (cardinality * cardinality + cardinality) / 2 + 1);
         for (int i = 0; i < cardinality; i++) {
             for (int j = i + 1; j < cardinality; j++) {
-                List args = new ArrayList(2);
+                List<Variable> args = new ArrayList<Variable>(2);
                 args.add(yVariable[i]);
                 args.add(yVariable[j]);
                 inEqualities.add(leFactory.createAtom(wsmoFactory
@@ -446,6 +454,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         return (leFactory.createConstraint(conjunction));
     }
 
+    @SuppressWarnings("unchecked")
     protected Set<LogicalExpression> normalizeRelation(Relation relation) {
         Identifier relationID = relation.getIdentifier();
         Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
@@ -531,6 +540,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected Set<LogicalExpression> normalizeInstance(Instance instance) {
         Identifier instanceID = instance.getIdentifier();
         Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
@@ -571,49 +581,4 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         return resultExpressions;
     }
 
-    private Set toSet(Object o) {
-        Set s = new HashSet();
-        s.add(o);
-        return s;
-    }
-
-    /**
-     * Converts a datavalue object that one finds in the conceptual syntax to a
-     * value object that can be used to construct terms and formulae.
-     * 
-     * @param d -
-     *            the data value in the conceptual syntax part that needs to be
-     *            converted.
-     * @return a org.omwg.logicalexpression.terms.Term object that represents
-     *         the same datavalue.
-     */
-    // private Term convertDataValue(DataValue d)
-    // {
-    // Term result = null;
-    // if(d.getType() instanceof SimpleDataType)
-    // {
-    // if(d.getType().getIRI().equals(WsmlDataType.WSML_INTEGER))
-    // {
-    // java.math.BigInteger bigint = (BigInteger) d.getValue();
-    // result = leFactory.createWSMLInteger(bigint);
-    // }
-    // else if(d.getType() instanceof WsmlString)
-    // {
-    // result = leFactory.createWSMLString(d.asString());
-    // }
-    // else if(d.getType() instanceof WsmlDecimal)
-    // {
-    // java.math.BigDecimal bigdec = new java.math.BigDecimal(d.asString());
-    // result = leFactory.createWSMLDecimal(bigdec);
-    // }
-    // }
-    // else
-    // {
-    // // d instanceof ComplexDataType
-    // throw new IllegalArgumentException("Complex datatype values are at
-    // present not supported by the WSMO4j API!");
-    // }
-    //
-    // return result;
-    // }
 }
