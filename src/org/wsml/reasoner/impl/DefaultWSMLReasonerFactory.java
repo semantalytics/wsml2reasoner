@@ -46,44 +46,17 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         return aFactory;
     }
 
-    /**
-     * Gives an object for reasoning with WSML descriptions.
-     * 
-     * At present only WSML Core is supported. Furthermore, at present we only
-     * provide support for QueryAnswering over WSML Core Ontologies
-     * 
-     * 
-     * @return a WSMLReasoner object for the chosen variant of WSML.
-     */
-    public WSMLReasoner getWSMLReasoner(Map<String, Object> parameters)
-            throws UnsupportedOperationException {
-        WSMLReasoner reasoner;
-        WSMLVariant variant = (WSMLVariant) parameters.get(PARAM_WSML_VARIANT);
-        BuiltInReasoner reasonerType = (BuiltInReasoner) parameters
-                .get(PARAM_BUILT_IN_REASONER);
-        if (WSMLReasonerFactory.WSMLVariant.WSML_CORE.equals(variant)) {
-            reasoner = new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
-                    reasonerType);
-            return reasoner;
-        } else {
-            throw new UnsupportedOperationException(
-                    "The requested variant of WSML (" + variant
-                            + ") currently not supported by this factory!");
-        }
-    }
-
     public WSMLCoreReasoner getWSMLCoreReasoner(BuiltInReasoner builtInReasoner)
             throws UnsupportedOperationException {
 
-        return new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
+        return new org.wsml.reasoner.impl.NewDatalogBasedWSMLReasoner(
                 builtInReasoner);
-
     }
 
     public WSMLCoreReasoner getWSMLCoreReasoner()
             throws UnsupportedOperationException {
         // Default reasoner is KAON2
-        return new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
+        return new org.wsml.reasoner.impl.NewDatalogBasedWSMLReasoner(
                 WSMLReasonerFactory.BuiltInReasoner.KAON2);
     }
 
