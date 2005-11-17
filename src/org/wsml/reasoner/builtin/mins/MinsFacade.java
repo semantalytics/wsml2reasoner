@@ -276,7 +276,7 @@ public class MinsFacade implements DatalogReasonerFacade {
      * @throws ExternalToolException
      */
     private Atom translateLiteral2Atom(Literal literal,
-            Object queryOrRuleContext) throws ExternalToolException {
+            Object queryOrRuleContext) throws ExternalToolException, UnsupportedFeatureException {
 
         Term[] args = literal.getTerms();
         org.deri.mins.terms.Term[] minsTerms = new org.deri.mins.terms.Term[args.length];
@@ -302,7 +302,7 @@ public class MinsFacade implements DatalogReasonerFacade {
                     minsTerms[i] = new NumTerm(Double.parseDouble(val.getValue().toString()));
                 }
             } else{
-                throw new RuntimeException("No data types yet:" +args[i]);
+                throw new RuntimeException("No Complex data types yet:" +args[i]);
             }
         }
         atom = new Atom(minsTerms);

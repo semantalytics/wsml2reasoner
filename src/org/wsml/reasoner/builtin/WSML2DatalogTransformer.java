@@ -136,11 +136,14 @@ public class WSML2DatalogTransformer {
 
         WsmoFactory f = WSMO4JManager.getWSMOFactory();
 
-        Variable v1 = f.createVariable("v1");
-        Variable v2 = f.createVariable("v2");
-        Variable v3 = f.createVariable("v3");
-        Variable v4 = f.createVariable("v4");
-        Variable v5 = f.createVariable("v5");
+        Variable vConcept = f.createVariable("concept");
+        Variable vConcept2 = f.createVariable("concept2");
+        Variable vConcept3 = f.createVariable("concept3");
+        Variable vAttribute = f.createVariable("attribute");
+        Variable vRange = f.createVariable("range");
+        Variable vInstance = f.createVariable("instance");
+        Variable vInstance2 = f.createVariable("instance2");
+        Variable vAttributeValue = f.createVariable("attributevalue");
 
         List<Literal> body;
         Literal head;
@@ -148,25 +151,25 @@ public class WSML2DatalogTransformer {
         // transitivity: sco(?c1,?c3) <- sco(?c1,?c2) and sco(?c2,?c3)
         // extension-subset: mo(?o,?c2) <- mo(?o,?c1) and sco(?c1,?c2)
         body = new LinkedList<Literal>();
-        head = new Literal(true, PRED_SUB_CONCEPT_OF, v1, v3);
-        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, v1, v2));
-        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, v2, v3));
+        head = new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept3);
+        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept2));
+        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept2, vConcept3));
         result.add(new Rule(head, body));
 
         body = new LinkedList<Literal>();
-        head = new Literal(true, PRED_MEMBER_OF, v1, v3);
-        body.add(new Literal(true, PRED_MEMBER_OF, v1, v2));
-        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, v2, v3));
+        head = new Literal(true, PRED_MEMBER_OF, vInstance, vConcept2);
+        body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept ));
+        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept2 ));
         result.add(new Rule(head, body));
 
         // Inference of attr value types: mo(v,c2) <- itype(c1, att,
         // c2), mo(o,c1), hval(o,att, v)
         // mo(v1,v2) <- itype(v3, v4, v2), mo(v5,v3), hval(v5,v4, v1)
         body = new LinkedList<Literal>();
-        head = new Literal(true, PRED_MEMBER_OF, v1, v2);
-        body.add(new Literal(true, PRED_IMPLIES_TYPE, v3, v4, v2));
-        body.add(new Literal(true, PRED_MEMBER_OF, v5, v3));
-        body.add(new Literal(true, PRED_HAS_VALUE, v5, v4, v1));
+        head = new Literal(true, PRED_MEMBER_OF, vInstance2, vConcept2 );
+        body.add(new Literal(true, PRED_IMPLIES_TYPE, vConcept, vAttribute, vConcept2));
+        body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept));
+        body.add(new Literal(true, PRED_HAS_VALUE, vInstance, vAttribute, vInstance2));
         result.add(new Rule(head, body));
 
         // Semantics of X1[X2 => X3] (oftype constraint)
@@ -175,10 +178,10 @@ public class WSML2DatalogTransformer {
         // mo(v5,v3)
 
         body = new LinkedList<Literal>();
-        body.add(new Literal(true, PRED_OF_TYPE, v1, v2, v3));
-        body.add(new Literal(true, PRED_MEMBER_OF, v4, v1));
-        body.add(new Literal(true, PRED_HAS_VALUE, v4, v2, v5));
-        body.add(new Literal(false, PRED_MEMBER_OF, v5, v3));
+        body.add(new Literal(true, PRED_OF_TYPE, vConcept, vAttribute, vRange));
+        body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept));
+        body.add(new Literal(true, PRED_HAS_VALUE, vInstance, vAttribute, vAttributeValue));
+        body.add(new Literal(false, PRED_MEMBER_OF, vAttributeValue, vRange));
         result.add(new Rule(null, body));
 
         return result;

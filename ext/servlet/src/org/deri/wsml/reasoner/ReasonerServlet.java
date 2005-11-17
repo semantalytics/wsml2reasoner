@@ -34,6 +34,7 @@ import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.queryanswering.QueryAnsweringRequest;
+import org.wsml.reasoner.builtin.mins.*;
 import org.wsml.reasoner.impl.*;
 import org.wsmo.common.*;
 import org.wsmo.factory.*;
@@ -48,7 +49,7 @@ import org.wsmo.wsml.ParserException;
  * 
  * 
  * @see org.deri.wsml.reasoner.ontobroker.Reasoner
- * @author Jos de Bruijn $Author: hlausen $ $Date: 2005-11-09 18:21:11 $
+ * @author Jos de Bruijn $Author: hlausen $ $Date: 2005-11-17 15:34:24 $
  */
 public class ReasonerServlet extends HttpServlet {
     /**
@@ -127,6 +128,8 @@ public class ReasonerServlet extends HttpServlet {
             } else {
                 try{
                     doReasoning(wsmlQuery, wsmlOntology, inFrame);
+                }catch (ConstraintViolationError e){
+                    error("<b>An Integrity Constaint has been violated</b>:\n<br/>",e);
                 }catch (Exception e){
                     error("Error:",e);
                 }
@@ -142,7 +145,7 @@ public class ReasonerServlet extends HttpServlet {
     }
 
     private void error(String text) {
-        out.println("<div class=\"error\">" + text + "</div><br/><br/><br/>");
+        out.println("<div class=\"error\">" + text.replace("\n","<br/>") + "</div><br/><br/><br/>");
     }
 
     private void error(String text, Throwable e) {
@@ -247,7 +250,7 @@ public class ReasonerServlet extends HttpServlet {
                 // print out the results:
                 out.print("<table class=\"result\"><thead><tr>");
                 for (Variable var : result.iterator().next().keySet()) {
-                    out.println("<th>?" + var + "</th>");
+                    out.println("<th>" + var + "</th>");
                 }
                 out.println("</tr></thead><tbody>");
                 WsmoFactory f = Factory.createWsmoFactory(null);
