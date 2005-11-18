@@ -280,6 +280,17 @@ public class TestKaon2WSMLFlightReasoner extends BaseReasonerTest {
         System.out.println("Finished query.");
     }
     
+    public void testBorn490And10LogicEqual() throws Exception {
+        String query = "?x[wasBorn hasValue ?v] and ?v = (490 + 10)";
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Arwen"));
+        binding.put(wsmoFactory.createVariable("v"), dataFactory.createWsmlInteger("500"));
+        expected.add(binding);
+        performQuery(query, expected);
+        System.out.println("Finished query.");
+    }
+    
     public void testBorn510Minus10() throws Exception {
         String query = "?x[wasBorn hasValue ?v] and wsml#numericEqual(?v,(510 - 10))";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
