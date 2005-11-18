@@ -19,7 +19,6 @@
 
 package org.wsml.reasoner.api;
 
-import java.util.Map;
 
 /**
  * An interface for getting WSML Reasoners for the various variants of WSML.
