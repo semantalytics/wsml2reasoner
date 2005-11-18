@@ -161,12 +161,6 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
     protected void addAsAxioms(Ontology ontology,
             Collection<LogicalExpression> expressions) {
         for (LogicalExpression expression : expressions) {
-            // String axiomIDString = "reasoner:axiom_" + Integer.toString(i++)
-            // + "_" + ontology.getIdentifier();
-            // Gabor: I think it is a bad idea to copy different URIs together,
-            // because it is possible that the result will not be a valid URI.
-            // Using
-            // anonymous ID generator instead.
             String axiomIDString = AnonymousIdUtils.getNewIri();
             Identifier axiomID = wsmoFactory.createIRI(axiomIDString);
             Axiom axiom = wsmoFactory.createAxiom(axiomID);
@@ -393,11 +387,6 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         conjuncts.addAll(inEqualities);
         LogicalExpression conjunction = FixedModificationRules
                 .buildNaryConjunction(conjuncts);
-        // IRI newPIRI = wsmoFactory.createIRI("mincard_" + conceptID.toString()
-        // + "_" + attributeID);
-        // Gabor: I think it is a bad idea to copy different URIs together,
-        // because it is possible that the result will not be a valid URI. Using
-        // anonymous ID generator instead.
         IRI newPIRI = wsmoFactory.createIRI(AnonymousIdUtils.getNewIri());
         Atom newPX = leFactory.createAtom(newPIRI, Arrays
                 .asList(new Variable[] { xVariable }));
