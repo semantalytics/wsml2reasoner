@@ -74,7 +74,7 @@ public class ReasonerExample {
         queryString="Lisa [hasRelative hasValue ?relative]";
         queryString="?x subConceptOf ?y";
         queryString="?x memberOf Child";
-        queryString="?x[age hasValue ?y] and ?y>(30 * 2) and ?y!=60 ";
+        queryString="?x[hasBirthYear hasValue ?age]";
 
         LogicalExpression query = leFactory
             .createLogicalExpression(queryString, exampleOntology);

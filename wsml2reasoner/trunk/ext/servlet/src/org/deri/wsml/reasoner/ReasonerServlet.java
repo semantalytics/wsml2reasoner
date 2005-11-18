@@ -49,7 +49,7 @@ import org.wsmo.wsml.ParserException;
  * 
  * 
  * @see org.deri.wsml.reasoner.ontobroker.Reasoner
- * @author Jos de Bruijn $Author: hlausen $ $Date: 2005-11-17 15:34:24 $
+ * @author Jos de Bruijn $Author: hlausen $ $Date: 2005-11-18 09:30:50 $
  */
 public class ReasonerServlet extends HttpServlet {
     /**
@@ -200,7 +200,7 @@ public class ReasonerServlet extends HttpServlet {
         }
         WsmlValidator wv = new WsmlValidatorImpl();
         List errors = new LinkedList();
-        if (!wv.isValid(ontology,WSML.WSML_FLIGHT,errors)){
+        if (!wv.isValid(ontology,WSML.WSML_RULE,errors)){
             error("Given input ontology is not within WSML flight.");
             out.print("<ul>");
             for (Object error :errors){
