@@ -1,32 +1,29 @@
-wsmlVariant _"http://www.wsmo.org/2004/wsml/wsml-core"
+wsmlVariant _"http://www.wsmo.org/2004/wsml/wsml-rule"
 
-namespace {_"http://www.example.org#",
-    dc _"http://purl.org/dc/elements/1.1#"}
+namespace {_"urn://deri/",
+    dc _"http://purl.org/dc/elements/1.1#",
+    wsml _"http://www.wsmo.org/wsml/wsml-syntax#"}
  
-ontology TheSimpsons
+ontology AboutHumans 
 
-//axiom myAx
-//  definedBy
-//   man impliedBy ?f memberOf Human and ?t memberOf Dummy and ?l memberOf noClue.
-   
+axiom BirthDate
+  definedBy
+    ?human[ageInYear(?year) hasValue ?age] 
+    and (?year-?age)=?birthyear 
+    implies
+    ?human[hasBirthYear hasValue ?birthyear].
+
+    Lisa[ageInYear(2005) hasValue 4].
 
 concept Human subConceptOf Animal
   hasRelative transitive symmetric ofType Human
   
-//axiom some
-//  definedBy !- ?x memberOf Man.
+concept Child subConceptOf Human
 
 axiom Child definedBy
   ?x memberOf Child :- ?x[age hasValue ?y] and ?y<14.
   
-axiom GrandPa definedBy
-  ?x memberOf GrandPa :- ?x[age hasValue ?y] and ?y>=61.
 
-instance youngMan
-  age hasValue 12
-
-instance oldMan
-  age hasValue 61
 
 concept Man subConceptOf Human
 
@@ -39,5 +36,3 @@ instance Marge memberOf Woman
   hasRelative hasValue Lisa
   
 instance Lisa memberOf Human 
-
-concept a

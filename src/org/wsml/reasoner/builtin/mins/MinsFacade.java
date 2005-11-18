@@ -27,6 +27,7 @@ import org.deri.mins.api.*;
 import org.deri.mins.builtins.*;
 import org.deri.mins.terms.*;
 import org.deri.wsmo4j.io.parser.wsml.*;
+import org.omwg.logicalexpression.terms.*;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.*;
 import org.omwg.ontology.Variable;
@@ -212,6 +213,9 @@ public class MinsFacade implements DatalogReasonerFacade {
         if(l!=null){
         // use predicatesymbol + arity to obtain mins pred number
         no = symbTransfomer.convertToTool(l);
+        if (no==-1){
+            throw new RuntimeException("No BuiltIns Allowed in the Head of a Rule: "+r);
+        }
         atom = translateLiteral2Atom(l, r);
         head = new Head(no, atom.terms);
         
@@ -234,6 +238,7 @@ public class MinsFacade implements DatalogReasonerFacade {
                 bodies[i] = body;
             }
             rule = new Rule(new Head[] { head }, bodies);
+            System.out.println(r+"\n"+rule);
             minsEngine.addRule(rule);
         }
         }
@@ -260,6 +265,7 @@ public class MinsFacade implements DatalogReasonerFacade {
                     predSym.equals(org.omwg.logicalexpression.Constants.INEQUAL)){
                 positive = !positive;
             }
+            int num = symbTransfomer.minsBuiltIn2No.get(predSym);
             return new BuiltinBody(symbTransfomer.minsBuiltIn2No.get(predSym),
                 positive,terms, 
                 symbTransfomer.minsBuiltinFunc.get(predSym));
@@ -285,28 +291,45 @@ public class MinsFacade implements DatalogReasonerFacade {
         long predNo = symbTransfomer.convertToTool(literal);
 
         for (int i = 0; i < args.length; i++) {
-            if (args[i] instanceof Variable) {
-                minsTerms[i] = new org.deri.mins.terms.Variable(
-                        symbTransfomer.convertToTool(
-                                (Variable) args[i], queryOrRuleContext));
-            } else if (args[i] instanceof IRI) {
-                minsTerms[i] = new ConstTerm(symbTransfomer
-                        .convertToTool((IRI) args[i]));
-            } else if (args[i] instanceof SimpleDataValue){
-                SimpleDataValue val = (SimpleDataValue)args[i];
-                String type = val.getType().getIRI().toString();
-                //System.out.println(type);
-                if (type.equals(WsmlDataType.WSML_STRING)){
-                    minsTerms[i] = new StringTerm(val.toString());
-                }else{ //decimal or int
-                    minsTerms[i] = new NumTerm(Double.parseDouble(val.getValue().toString()));
-                }
-            } else{
-                throw new RuntimeException("No Complex data types yet:" +args[i]);
-            }
+            minsTerms[i]=createMinsTerm(args[i],queryOrRuleContext);
         }
         atom = new Atom(minsTerms);
         return atom;
+    }
+    
+    private org.deri.mins.terms.Term createMinsTerm(Term wsmlTerm, Object queryOrRuleContext){
+        org.deri.mins.terms.Term minsTerm;
+        if (wsmlTerm instanceof Variable) {
+            minsTerm = new org.deri.mins.terms.Variable(
+                    symbTransfomer.convertToTool(
+                            (Variable) wsmlTerm, queryOrRuleContext));
+        } else if (wsmlTerm instanceof IRI) {
+            minsTerm = new ConstTerm(symbTransfomer
+                    .convertToTool((IRI) wsmlTerm));
+        } else if (wsmlTerm instanceof ConstructedTerm) {
+            ConstructedTerm ct = (ConstructedTerm) wsmlTerm;
+            org.deri.mins.terms.Term[] argTerms = new org.deri.mins.terms.Term[ct.getArity()];
+            for (int i=0; i<ct.getArity(); i++){
+                argTerms[i]=createMinsTerm(ct.getParameter(i),queryOrRuleContext);
+            }
+            minsTerm = new ConstTerm(
+                    symbTransfomer.convertToTool((IRI) ct.getFunctionSymbol()),
+                    argTerms);
+        }  
+        else if (wsmlTerm instanceof SimpleDataValue){
+            SimpleDataValue val = (SimpleDataValue)wsmlTerm;
+            String type = val.getType().getIRI().toString();
+            //System.out.println(type);
+            if (type.equals(WsmlDataType.WSML_STRING)){
+                minsTerm = new StringTerm(val.toString());
+            }else{ //decimal or int
+                minsTerm = new NumTerm(Double.parseDouble(val.getValue().toString()));
+            }
+        } else{
+            throw new RuntimeException("No Complex data types yet:" +wsmlTerm);
+        }
+        return minsTerm;
+
     }
 
     /**
