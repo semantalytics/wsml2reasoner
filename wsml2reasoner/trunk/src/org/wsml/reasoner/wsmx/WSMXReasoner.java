@@ -1,19 +1,20 @@
 package org.wsml.reasoner.wsmx;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
+import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLFlightReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
-import org.wsmo.common.Identifier;
 import org.wsmo.execution.common.exception.ComponentException;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
@@ -31,7 +32,7 @@ import org.wsmo.factory.WsmoFactory;
  * 
  * @author Stephan Grimm, FZI Karlsruhe
  */
-public class WSMXReasoner implements org.wsmo.execution.common.component.WSMLReasoner
+public class WSMXReasoner implements WSMXReasonerInterface//implements org.wsmo.execution.common.component.WSMLReasoner
 {
     protected WSMLFlightReasoner reasoner;
     protected WsmoFactory wsmoFactory;
@@ -58,39 +59,11 @@ public class WSMXReasoner implements org.wsmo.execution.common.component.WSMLRea
      * concepts are created having the appropriate instance's identifiers
      * augmented by "_as_concept".)
      */
-    public Set<Concept> getAllInstances(Concept concept, Identifier ontology) throws ComponentException, UnsupportedOperationException
+    public Set<Instance> getAllInstances(Concept concept, IRI ontology) throws ComponentException, UnsupportedOperationException
     {
         System.err.println("note that there is currently a misconceptualization in the method org.wsmo.execution.common.component.WSMLReasoner::getAllInstances() (wrong generic return type)!");
 
-/*        
-        // build query:
-        Variable xVariable = wsmoFactory.createVariable("x");
-        LogicalExpression query = leFactory.createMemberShipMolecule(xVariable, wsmoFactory.createIRI(concept.getIdentifier().toString()));
-
-        // submit query to reasoner:
-        QueryAnsweringRequest qaRequest = new QueryAnsweringRequestImpl(ontology.toString(), query);
-        QueryAnsweringResult result = (QueryAnsweringResult)reasoner.execute(qaRequest);
-        
-        // extract instances out of result:
-        Set<Instance> instances = new HashSet<Instance>();
-        for(VariableBinding vBinding : result)
-        {
-            String instanceID = vBinding.get("x");
-            Instance instance = wsmoFactory.getInstance(wsmoFactory.createIRI(instanceID));
-            instances.add(instance);
-        }
-*/
-        Set<Instance> instances = reasoner.getInstances((IRI)ontology, concept);
-       
-        // copy set of instances to set of concepts (API-bug)
-        Set<Concept> dummyConcepts = new HashSet<Concept>();
-        for(Instance instance : instances)
-        {
-            Identifier dummyID = wsmoFactory.createIRI(instance.getIdentifier().toString() + "_as_concept");
-            dummyConcepts.add(wsmoFactory.createConcept(dummyID));
-        }
-
-        return dummyConcepts;
+        return reasoner.getInstances((IRI)ontology, concept);
     }
 
     /**
@@ -98,7 +71,7 @@ public class WSMXReasoner implements org.wsmo.execution.common.component.WSMLRea
      * given ontology, such that "Csub subConceptOf Csup" holds in WSML terms.
      * The ontology must have been registered with the reasoner beforehand.
      */
-    public Set<Concept> getAllSubconcepts(Concept concept, Identifier ontology) throws ComponentException, UnsupportedOperationException
+    public Set<Concept> getAllSubconcepts(Concept concept, IRI ontology) throws ComponentException, UnsupportedOperationException
     {
         return reasoner.getSubConcepts((IRI)ontology, concept);
 /*        
@@ -128,7 +101,7 @@ public class WSMXReasoner implements org.wsmo.execution.common.component.WSMLRea
      * a given ontology, such that "Csub subConceptOf Csup" holds in WSML terms.
      * The ontology must have been registered with the reasoner beforehand.
      */
-    public Set<Concept> getAllSuperconcepts(Concept concept, Identifier ontology) throws ComponentException, UnsupportedOperationException
+    public Set<Concept> getAllSuperconcepts(Concept concept, IRI ontology) throws ComponentException, UnsupportedOperationException
     {
         return reasoner.getSuperConcepts((IRI)ontology, concept);
 /*
@@ -162,7 +135,7 @@ public class WSMXReasoner implements org.wsmo.execution.common.component.WSMLRea
      * concept C in a given ontology, i.e. "i memberOf C" holds in WSMl terms.
      * The ontology must have been registered with the reasoner beforehand.
      */
-    public boolean isInstanceOf(Instance instance, Concept concept, Identifier ontology) throws ComponentException, UnsupportedOperationException
+    public boolean isInstanceOf(Instance instance, Concept concept, IRI ontology) throws ComponentException, UnsupportedOperationException
     {
         return reasoner.isMemberOf((IRI)ontology, instance, concept);
 /*        
@@ -202,7 +175,7 @@ public class WSMXReasoner implements org.wsmo.execution.common.component.WSMLRea
      * holds in WSML terms. The ontology must have been registered with the
      * reasoner beforehand.
      */
-    public boolean subsumes(Concept superConcept, Concept subConcept, Identifier ontology) throws ComponentException, UnsupportedOperationException
+    public boolean subsumes(Concept superConcept, Concept subConcept, IRI ontology) throws ComponentException, UnsupportedOperationException
     {
         return reasoner.isSubConceptOf((IRI)ontology, subConcept, superConcept);
 /*        
@@ -220,15 +193,43 @@ public class WSMXReasoner implements org.wsmo.execution.common.component.WSMLRea
 */        
     }
 
-//    /**
-//     * This method allows to pose a conjunctive query to an ontology registered
-//     * with the reasoner. As a result it returns a set of bindings for the free
-//     * variables occurring in the query.
-//     */
-//    public QueryAnsweringResult retrieve(LogicalExpression query, Identifier ontology)
-//    {
-//        QueryAnsweringRequest request = new QueryAnsweringRequestImpl(ontology.toString(), query);
-//        return (QueryAnsweringResult)reasoner.execute(request);
-//    }
+    public void deRegister(IRI ontology) throws ComponentException, UnsupportedOperationException
+    {
+        reasoner.deRegisterOntology(ontology);
+    }
 
+    public void deRegister(Set<IRI> ontologies) throws ComponentException, UnsupportedOperationException
+    {
+        reasoner.deRegisterOntology(ontologies);
+    }
+
+    public void register(Set<Ontology> ontologies) throws ComponentException, UnsupportedOperationException
+    {
+        reasoner.registerOntology(ontologies);
+    }
+
+    public boolean entails(IRI ontologyID, LogicalExpression expression)
+    {
+        return reasoner.entails(ontologyID, expression);
+    }
+    
+    public boolean entails(IRI ontologyID, Set<LogicalExpression> expressions)
+    {
+        return reasoner.entails(ontologyID, expressions);
+    }
+
+    public Set<Map<Variable, Term>> executeQuery(LogicalExpression query, IRI ontology)
+    {
+        return reasoner.executeQuery(ontology, query);
+    }
+
+    public boolean executeGroundQuery(LogicalExpression query, IRI ontology)
+    {
+        return reasoner.executeGroundQuery(ontology, query);
+    }
+
+    public boolean isSatisfiable(IRI ontologyID)
+    {
+        return reasoner.isSatisfiable(ontologyID);
+    }
 }
