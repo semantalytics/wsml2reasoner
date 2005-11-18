@@ -172,7 +172,7 @@ public class WSML2DatalogTransformer {
         body.add(new Literal(true, PRED_HAS_VALUE, vInstance, vAttribute, vInstance2));
         result.add(new Rule(head, body));
 
-        // Semantics of X1[X2 => X3] (oftype constraint)
+        // Semantics of C1[att => C2] (oftype constraint)
         // !- oftype(c1, att, c2), mo(i,c1), hval(i, att, v), NAF mo(v,c2)
         // With variables: oftype(v1, v2, v3), mo(v4,v1), hval(v4, v2, v5), NAF
         // mo(v5,v3)
