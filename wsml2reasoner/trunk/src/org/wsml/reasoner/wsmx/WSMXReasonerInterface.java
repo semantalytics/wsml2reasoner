@@ -10,7 +10,6 @@ import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsmo.common.IRI;
-import org.wsmo.common.Identifier;
 import org.wsmo.execution.common.exception.ComponentException;
 
 public interface WSMXReasonerInterface
