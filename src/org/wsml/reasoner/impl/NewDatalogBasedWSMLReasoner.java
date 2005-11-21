@@ -44,7 +44,8 @@ import org.wsml.reasoner.builtin.DatalogException;
 import org.wsml.reasoner.builtin.ExternalToolException;
 import org.wsml.reasoner.builtin.Literal;
 import org.wsml.reasoner.builtin.Rule;
-import org.wsml.reasoner.builtin.mins.*;
+import org.wsml.reasoner.builtin.mins.MinsFacade;
+import org.wsml.reasoner.transformation.AnonymousIdUtils;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
 import org.wsml.reasoner.transformation.LloydToporNormalizer;
@@ -139,7 +140,15 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     }
 
     public boolean isSatisfiable(IRI ontologyID) {
-        throw new UnsupportedOperationException();
+        LogicalExpression dummyQuery = leFactory.createMemberShipMolecule(wsmoFactory.createIRI(AnonymousIdUtils.getNewIri()), wsmoFactory.createIRI(AnonymousIdUtils.getNewIri()));
+        try
+        {
+            executeGroundQuery(ontologyID, dummyQuery);
+        } catch(Exception e)
+        {
+            return false;
+        }
+        return true;
     }
 
     public void deRegisterOntology(IRI ontologyID) {
@@ -165,7 +174,7 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     }
 
     public boolean entails(IRI ontologyID, LogicalExpression expression) {
-        throw new UnsupportedOperationException();
+        return executeGroundQuery(ontologyID, expression);
     }
 
     public boolean entails(IRI ontologyID, Set<LogicalExpression> expressions) {
