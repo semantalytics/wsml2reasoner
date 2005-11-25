@@ -34,6 +34,7 @@ import org.omwg.ontology.Variable;
 import org.wsml.reasoner.builtin.*;
 import org.wsml.reasoner.impl.*;
 import org.wsmo.common.*;
+import org.wsmo.factory.*;
 
 import com.ontotext.wsmo4j.ontology.*;
 
@@ -59,8 +60,7 @@ public class MinsFacade implements DatalogReasonerFacade {
      */
     private Map<String, RuleSet> registeredKbs = new HashMap<String, RuleSet>();
 
-    private MinsSymbolMap symbTransfomer = new MinsSymbolMap(
-            new MinsSymbolFactory());
+    private MinsSymbolMap symbTransfomer = new MinsSymbolMap();
 
     /**
      * Creates a facade object that allows to invoke the MINS rule system for
@@ -238,7 +238,7 @@ public class MinsFacade implements DatalogReasonerFacade {
                 bodies[i] = body;
             }
             rule = new Rule(new Head[] { head }, bodies);
-            System.out.println(r+"\n"+rule);
+            //System.out.println(r+"\n"+rule);
             minsEngine.addRule(rule);
         }
         }
@@ -261,7 +261,8 @@ public class MinsFacade implements DatalogReasonerFacade {
                 terms = new org.deri.mins.terms.Term[]{
                     terms[0],terms[2],terms[1]};
             }
-            if (predSym.equals(org.omwg.logicalexpression.Constants.NUMERIC_INEQUAL) ||
+            if (predSym.equals(org.omwg.logicalexpression.Constants.STRING_INEQUAL) ||
+                    predSym.equals(org.omwg.logicalexpression.Constants.NUMERIC_INEQUAL) ||
                     predSym.equals(org.omwg.logicalexpression.Constants.INEQUAL)){
                 positive = !positive;
             }
@@ -360,6 +361,7 @@ public class MinsFacade implements DatalogReasonerFacade {
             throw new ExternalToolException(
                     "Unsupported feature for MINS in knowledgebase.");
         }
+        addDataTypeMemberShipRules(minsEngine);
         registeredKbs.put(ontologyURI, minsEngine);
     }
     
@@ -426,5 +428,56 @@ public class MinsFacade implements DatalogReasonerFacade {
 
     }
 
+    private void addDataTypeMemberShipRules(RuleSet rs){
+        WsmoFactory f = WSMO4JManager.getWSMOFactory();
+        int memberOfNo = symbTransfomer.convertToTool(
+                new Literal(true, WSML2DatalogTransformer.PRED_MEMBER_OF,new Term[2]));
+        int integerNo = symbTransfomer.convertToTool(
+                f.createIRI(WsmlDataType.WSML_INTEGER));
+        int stringNo = symbTransfomer.convertToTool(
+                f.createIRI(WsmlDataType.WSML_STRING));
+        int decimalNo = symbTransfomer.convertToTool(
+                f.createIRI(WsmlDataType.WSML_DECIMAL));
+        
+        //?x memberOf _integer :- isInteger(?x)
+        rs.addRule(new Rule(
+                new Head[]{ 
+                        new Head(memberOfNo, new org.deri.mins.terms.Term[]{
+                                new org.deri.mins.terms.Variable(0),
+                                new ConstTerm(integerNo)}
+                        )},
+                new Body[] {
+                        new BuiltinBody(13, false,
+                                new org.deri.mins.terms.Term[]{
+                                    new org.deri.mins.terms.Variable(0)},
+                                new IsInteger()
+                        )}));      
+        //?x memberOf _String :- isString(?x)
+        rs.addRule(new Rule(
+                new Head[]{ 
+                        new Head(memberOfNo, new org.deri.mins.terms.Term[]{
+                                new org.deri.mins.terms.Variable(0),
+                                new ConstTerm(stringNo)}
+                        )},
+                new Body[] {
+                        new BuiltinBody(14, false,
+                                new org.deri.mins.terms.Term[]{
+                                    new org.deri.mins.terms.Variable(0)},
+                                new IsString()
+                        )}));      
+        //?x memberOf _String :- isNum(?x)
+        rs.addRule(new Rule(
+                new Head[]{ 
+                        new Head(memberOfNo, new org.deri.mins.terms.Term[]{
+                                new org.deri.mins.terms.Variable(0),
+                                new ConstTerm(stringNo)}
+                        )},
+                new Body[] {
+                        new BuiltinBody(12, false,
+                                new org.deri.mins.terms.Term[]{
+                                    new org.deri.mins.terms.Variable(0)},
+                                new IsNum()
+                        )}));      
+    }
 
 }
