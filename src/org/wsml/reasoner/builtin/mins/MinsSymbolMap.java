@@ -36,8 +36,14 @@ import org.wsml.reasoner.impl.*;
  */
 
 public class MinsSymbolMap {
-    private MinsSymbolFactory sFactory;
-   
+    
+    int predNo=100;
+    int constNo=0;
+    
+    String IS_INTEGER = "isInteger";
+    String IS_DECIMAL = "isDecimal";
+    String IS_STRING = "isString";
+    
 	private Map<String,Integer> wsml2toolPredicates = new HashMap<String,Integer>();
     private Map<org.omwg.logicalexpression.terms.Term,Integer> wsml2toolConstants = new HashMap<org.omwg.logicalexpression.terms.Term,Integer>();
     private Map<String,String>  wsml2toolDataValues = new HashMap<String,String>();
@@ -52,8 +58,7 @@ public class MinsSymbolMap {
     protected Map<String, BuiltinFunc> minsBuiltinFunc = new HashMap<String, BuiltinFunc>();
     protected Map<String, Integer> minsBuiltIn2No = new HashMap<String, Integer>();
     
-    public MinsSymbolMap(MinsSymbolFactory sf){
-        sFactory = sf;
+    public MinsSymbolMap(){
         minsBuiltinFunc.put(Constants.LESS_THAN, new Less());
         minsBuiltIn2No.put(Constants.LESS_THAN, 0);
         
@@ -81,14 +86,20 @@ public class MinsSymbolMap {
         minsBuiltinFunc.put(Constants.EQUAL, new Equal());
         minsBuiltIn2No.put(Constants.EQUAL, 6);
         
+        minsBuiltinFunc.put(Constants.INEQUAL, new Equal());
+        minsBuiltIn2No.put(Constants.INEQUAL, 6);
+
         minsBuiltinFunc.put(Constants.NUMERIC_EQUAL, new Equal());
         minsBuiltIn2No.put(Constants.NUMERIC_EQUAL, 6);
         
-        minsBuiltinFunc.put(Constants.INEQUAL, new Equal());
-        minsBuiltIn2No.put(Constants.INEQUAL, 6);
-        
         minsBuiltinFunc.put(Constants.NUMERIC_INEQUAL, new Equal());
         minsBuiltIn2No.put(Constants.NUMERIC_INEQUAL, 6);
+        
+        minsBuiltinFunc.put(Constants.STRING_EQUAL, new Equal());
+        minsBuiltIn2No.put(Constants.STRING_EQUAL, 6);
+
+        minsBuiltinFunc.put(Constants.STRING_INEQUAL, new Equal());
+        minsBuiltIn2No.put(Constants.STRING_INEQUAL, 6);
     }
     
     public int convertToTool(org.wsml.reasoner.builtin.Literal literal){
@@ -103,12 +114,12 @@ public class MinsSymbolMap {
         if (wsml2toolPredicates.containsKey(modName)){
             result = wsml2toolPredicates.get(modName);
         } else {
-            result = sFactory.getValidPredicateName();
+            result = predNo++;
             wsml2toolPredicates.put(modName, result);
             tool2wsmlPredicates.put(result,modName);
         }
         
-        return result+100;
+        return result;
     }
     
     public int convertToTool(org.omwg.logicalexpression.terms.Term t){
@@ -116,7 +127,7 @@ public class MinsSymbolMap {
         if (wsml2toolConstants.containsKey(t)){
             result = wsml2toolConstants.get(t);
         } else {
-            result = sFactory.getValidConstantName();
+            result = constNo++;
             wsml2toolConstants.put(t, result);
             tool2wsmlConstants.put(result,t);
         }
