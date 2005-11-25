@@ -481,7 +481,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                     typeID = ((ComplexDataType) type).getIRI();
                 }
                 typeMemberships.add(leFactory.createMemberShipMolecule(
-                        variables.get(i), typeID));
+                        variables.get(i++), typeID));
             }
             if (!typeMemberships.isEmpty()) {
                 if (parameter.isConstraining()) {
@@ -499,6 +499,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 }
             }
         }
+        System.out.println(parameterAxioms);
         resultExpressions.addAll(parameterAxioms);
 
         // process relation instances:
