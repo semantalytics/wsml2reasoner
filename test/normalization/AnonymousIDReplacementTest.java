@@ -53,20 +53,20 @@ public class AnonymousIDReplacementTest extends WSMLNormalizationTest
     {
         // create test ontology:
         Ontology ontology = createOntology();
-        Concept manConcept = wsmoFactory.createConcept(wsmoFactory.createIRI("Man"));
-        Concept locationConcept = wsmoFactory.createConcept(wsmoFactory.createIRI("Location"));
-        Attribute hasParentAttr = manConcept.createAttribute(wsmoFactory.createIRI("hasParent"));
+        Concept manConcept = wsmoFactory.createConcept(wsmoFactory.createIRI("urn://Man"));
+        Concept locationConcept = wsmoFactory.createConcept(wsmoFactory.createIRI("urn://Location"));
+        Attribute hasParentAttr = manConcept.createAttribute(wsmoFactory.createIRI("urn://hasParent"));
         hasParentAttr.addType(manConcept);
-        Attribute livesAtAttr = manConcept.createAttribute(wsmoFactory.createIRI("livesAt"));
+        Attribute livesAtAttr = manConcept.createAttribute(wsmoFactory.createIRI("urn://livesAt"));
         livesAtAttr.addType(locationConcept);
-        Instance aragorn = wsmoFactory.createInstance(wsmoFactory.createIRI("Aragorn"), manConcept);
-        Instance arathorn = wsmoFactory.createInstance(wsmoFactory.createIRI("Arathorn"), manConcept);
-        Instance elendil = wsmoFactory.createInstance(wsmoFactory.createIRI("Elendil"), manConcept);
+        Instance aragorn = wsmoFactory.createInstance(wsmoFactory.createIRI("urn://Aragorn"), manConcept);
+        Instance arathorn = wsmoFactory.createInstance(wsmoFactory.createIRI("urn://Arathorn"), manConcept);
+        Instance elendil = wsmoFactory.createInstance(wsmoFactory.createIRI("urn://Elendil"), manConcept);
         aragorn.addAttributeValue(hasParentAttr, arathorn);
         aragorn.addAttributeValue(hasParentAttr, wsmoFactory.createInstance(wsmoFactory.createAnonymousID()));
-        Axiom aragornLivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI("aragornLivesSomewhere"));
+        Axiom aragornLivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI("urn://aragornLivesSomewhere"));
         aragornLivesAx.addDefinition(leFactory.createConjunction(leFactory.createAttributeValue(aragorn.getIdentifier(), livesAtAttr.getIdentifier(), leFactory.createAnonymousID((byte)1)) , leFactory.createMemberShipMolecule(leFactory.createAnonymousID((byte)1),locationConcept.getIdentifier())));
-        Axiom arathornLivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI("arathornLivesSomewhere"));
+        Axiom arathornLivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI("urn://arathornLivesSomewhere"));
         arathornLivesAx.addDefinition(leFactory.createConjunction(leFactory.createConjunction(leFactory.createConjunction(leFactory.createConjunction(leFactory.createAttributeValue(arathorn.getIdentifier(), livesAtAttr.getIdentifier(), leFactory.createAnonymousID((byte)1)), leFactory.createMemberShipMolecule(leFactory.createAnonymousID((byte)1), locationConcept.getIdentifier())), leFactory.createAttributeValue(elendil.getIdentifier(),livesAtAttr.getIdentifier(), leFactory.createAnonymousID((byte)2))), leFactory.createMemberShipMolecule(leFactory.createAnonymousID((byte)2), locationConcept.getIdentifier())), leFactory.createAttributeValue(elendil.getIdentifier(), livesAtAttr.getIdentifier(), wsmoFactory.createAnonymousID())));
         ontology.addConcept(manConcept);
         ontology.addConcept(locationConcept);
@@ -92,8 +92,8 @@ System.out.println(normString);
     
     public void testLEEquality()
     {
-        LogicalExpression leftArg = leFactory.createMemberShipMolecule(wsmoFactory.createVariable("x"), wsmoFactory.createIRI("Left"));
-        LogicalExpression rightArg = leFactory.createMemberShipMolecule(wsmoFactory.createVariable("x"), wsmoFactory.createIRI("Right"));
+        LogicalExpression leftArg = leFactory.createMemberShipMolecule(wsmoFactory.createVariable("x"), wsmoFactory.createIRI("urn://Left"));
+        LogicalExpression rightArg = leFactory.createMemberShipMolecule(wsmoFactory.createVariable("x"), wsmoFactory.createIRI("urn://Right"));
         LogicalExpression correctExp = leFactory.createDisjunction(leftArg, rightArg);
         LogicalExpression wrongExp = leFactory.createDisjunction(rightArg, leftArg);
         assertTrue(correctExp.equals(wrongExp));

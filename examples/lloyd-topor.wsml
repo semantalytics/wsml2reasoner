@@ -1,4 +1,4 @@
-namespace { _"mu#",
+namespace { _"tun://mu#",
       xsd _"http://www.w3.org/2001/XMLSchema#"}
 
 ontology _"http://wsmo4jtests/test.wsml"
