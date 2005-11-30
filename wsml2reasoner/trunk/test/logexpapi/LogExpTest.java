@@ -170,9 +170,9 @@ public class LogExpTest extends TestCase {
     }
 
     public void testManySubconceptOfMolecule() throws Exception {
-        Term sub = wsmoFactory.createIRI("sub1");
-        Term super1 = wsmoFactory.createIRI("super1");
-        Term super2 = wsmoFactory.createIRI("super2");
+        Term sub = wsmoFactory.createIRI("urn:sub1");
+        Term super1 = wsmoFactory.createIRI("urn:super1");
+        Term super2 = wsmoFactory.createIRI("urn:super2");
         List<SubConceptMolecule> molecules = new ArrayList<SubConceptMolecule>();
         molecules.add(leFactory.createSubConceptMolecule(sub, super1));
         molecules.add(leFactory.createSubConceptMolecule(sub, super2));
@@ -184,13 +184,13 @@ public class LogExpTest extends TestCase {
     }
 
     public void testMixedfMolecule1() throws Exception {
-        Term sub = wsmoFactory.createIRI("sub1");
-        Term super1 = wsmoFactory.createIRI("super1");
-        Term super2 = wsmoFactory.createIRI("super2");
-        Term a1 = wsmoFactory.createIRI("a1");
-        Term v1 = wsmoFactory.createIRI("v1");
-        Term a2 = wsmoFactory.createIRI("a2");
-        Term v2 = wsmoFactory.createIRI("v2");
+        Term sub = wsmoFactory.createIRI("urn:sub1");
+        Term super1 = wsmoFactory.createIRI("urn:super1");
+        Term super2 = wsmoFactory.createIRI("urn:super2");
+        Term a1 = wsmoFactory.createIRI("urn:a1");
+        Term v1 = wsmoFactory.createIRI("urn:v1");
+        Term a2 = wsmoFactory.createIRI("urn:a2");
+        Term v2 = wsmoFactory.createIRI("urn:v2");
         List<Molecule> molecules = new ArrayList<Molecule>();
         molecules.add(leFactory.createSubConceptMolecule(sub, super1));
         molecules.add(leFactory.createSubConceptMolecule(sub, super2));
@@ -204,13 +204,13 @@ public class LogExpTest extends TestCase {
     }
 
     public void testMixedfMolecule2() throws Exception {
-        Term sub = wsmoFactory.createIRI("sub1");
-        Term meta1 = wsmoFactory.createIRI("meta1");
-        Term meta2 = wsmoFactory.createIRI("meta2");
-        Term a1 = wsmoFactory.createIRI("a1");
-        Term v1 = wsmoFactory.createIRI("v1");
-        Term a2 = wsmoFactory.createIRI("a2");
-        Term v2 = wsmoFactory.createIRI("v2");
+        Term sub = wsmoFactory.createIRI("urn:sub1");
+        Term meta1 = wsmoFactory.createIRI("urn:meta1");
+        Term meta2 = wsmoFactory.createIRI("urn:meta2");
+        Term a1 = wsmoFactory.createIRI("urn:a1");
+        Term v1 = wsmoFactory.createIRI("urn:v1");
+        Term a2 = wsmoFactory.createIRI("urn:a2");
+        Term v2 = wsmoFactory.createIRI("urn:v2");
         List<Molecule> molecules = new ArrayList<Molecule>();
         molecules.add(leFactory.createMemberShipMolecule(sub, meta1));
         molecules.add(leFactory.createMemberShipMolecule(sub, meta2));
@@ -224,15 +224,15 @@ public class LogExpTest extends TestCase {
     }
 
     public void testMixedfMolecule3() throws Exception {
-        Term sub = wsmoFactory.createIRI("sub1");
-        Term super1 = wsmoFactory.createIRI("super1");
-        Term super2 = wsmoFactory.createIRI("super2");
-        Term a1 = wsmoFactory.createIRI("a1");
-        Term v1 = wsmoFactory.createIRI("v1");
-        Term a2 = wsmoFactory.createIRI("a2");
-        Term v2 = wsmoFactory.createIRI("v2");
-        Term implType = wsmoFactory.createIRI("implied");
-        Term typeConstr = wsmoFactory.createIRI("constrained");
+        Term sub = wsmoFactory.createIRI("urn:sub1");
+        Term super1 = wsmoFactory.createIRI("urn:super1");
+        Term super2 = wsmoFactory.createIRI("urn:super2");
+        Term a1 = wsmoFactory.createIRI("urn:a1");
+        Term v1 = wsmoFactory.createIRI("urn:v1");
+        Term a2 = wsmoFactory.createIRI("urn:a2");
+        Term v2 = wsmoFactory.createIRI("urn:v2");
+        Term implType = wsmoFactory.createIRI("urn:implied");
+        Term typeConstr = wsmoFactory.createIRI("urn:constrained");
         List<Molecule> molecules = new ArrayList<Molecule>();
         molecules.add(leFactory.createSubConceptMolecule(sub, super1));
         molecules.add(leFactory.createSubConceptMolecule(sub, super2));

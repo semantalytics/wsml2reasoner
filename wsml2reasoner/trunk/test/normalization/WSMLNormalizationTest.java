@@ -69,7 +69,7 @@ public abstract class WSMLNormalizationTest extends TestCase
     protected Ontology createOntology(String namespace)
     {
         int ontologyNumber = ontologyCount++;
-        Ontology ontology = wsmoFactory.createOntology(wsmoFactory.createIRI("LoR" + Integer.toString(ontologyNumber)));
+        Ontology ontology = wsmoFactory.createOntology(wsmoFactory.createIRI("urn://LoR" + Integer.toString(ontologyNumber)));
         ontology.setDefaultNamespace(wsmoFactory.createIRI(namespace));
         return ontology;
     }
