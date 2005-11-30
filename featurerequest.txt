@@ -1,0 +1,19 @@
+General:
+ - better handling of constraint violations
+ 
+Boris Danev:
+ - support for path expressions
+ - retrieve only direct subclasses
+ - Anonymous or don't Care variabkes: 
+ A nice feature for query support will be the 'exists'
+ Forall task,v ?task[hasName hasValue ?v] and exists ?R ?task[relatedTo hasValue ?R]
+ In this case I do not want in my result tuples the ?R variable
+
+
+> 1) Datatypes is definitely good to have
+> 
+> 2) I think it will be nice to get the forall/exists in the rule body, just it makes
+> the reading of the rule much more comprehensible.
+> In current version everything is universally quantified.
+> 
+> 2) Unsafe rules - we have couple of cases that we might use them, but it is not a priority for now 
