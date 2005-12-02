@@ -6,33 +6,29 @@ namespace {_"urn://deri/",
  
 ontology AboutHumans 
 
-axiom BirthDate
-  definedBy
-    ?human[ageInYear(?year) hasValue ?age] 
-    and (?year-?age)=?birthyear 
-    implies
-    ?human[hasBirthYear hasValue ?birthyear].
-
-    Lisa[ageInYear(2005) hasValue 4].
-
 concept Human subConceptOf Animal
   hasRelative transitive symmetric ofType Human
+  hasBirthYear  ofType (1) _integer
+  hasName ofType (0 1) _string
   
 concept Child subConceptOf Human
 
 axiom Child definedBy
-  ?x memberOf Child :- ?x[age hasValue ?y] and ?y<14.
+  ?x memberOf Child :- ?x[age hasValue ?y] and ?y < 14  .  
   
-
-
 concept Man subConceptOf Human
 
 concept Woman subConceptOf Human
 
 instance Homer memberOf Man
   hasRelative hasValue Marge
- 
+  hasName hasValue "Humer"
+  age hasValue 30
+  
 instance Marge memberOf Woman
   hasRelative hasValue Lisa
   
 instance Lisa memberOf Human 
+  age hasValue 12
+  
+  

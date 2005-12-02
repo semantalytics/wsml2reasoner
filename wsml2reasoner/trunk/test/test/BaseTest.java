@@ -41,12 +41,12 @@ import org.wsmo.wsml.Serializer;
  *
  * <pre>
  * Created on Aug 17, 2005
- * Committed by $Author: gabor $
+ * Committed by $Author: hlausen $
  * $Source: /home/richi/temp/w2r/wsml2reasoner/test/test/BaseTest.java,v $,
  * </pre>
  *
  * @author Holger Lausen
- * @version $Revision: 1.8 $ $Date: 2005-10-17 13:30:30 $
+ * @version $Revision: 1.9 $ $Date: 2005-12-02 12:51:03 $
  */
 public class BaseTest extends TestCase {
 	public LogicalExpressionFactory leFactory;
@@ -74,24 +74,13 @@ public class BaseTest extends TestCase {
 
         // Set up WSML parser
 
-        Map<String, Object> parserProperties = new HashMap<String, Object>();
-        parserProperties.put(Parser.PARSER_WSMO_FACTORY, wsmoFactory);
-        parserProperties.put(Parser.PARSER_LE_FACTORY, leFactory);
 
-        parserProperties.put(org.wsmo.factory.Factory.PROVIDER_CLASS,
-                "com.ontotext.wsmo4j.parser.WSMLParserImpl");
-
-        wsmlParser = org.wsmo.factory.Factory
-                .createParser(parserProperties);
+        wsmlParser = org.wsmo.factory.Factory.createParser(null);
 
         // Set up serializer
 
-        Map<String, String> serializerProperties = new HashMap<String, String>();
-        serializerProperties.put(org.wsmo.factory.Factory.PROVIDER_CLASS,
-                "com.ontotext.wsmo4j.parser.WSMLSerializerImpl");
-
         wsmlSerializer = org.wsmo.factory.Factory
-                .createSerializer(serializerProperties);
+                .createSerializer(null);
 	}
     
     /**

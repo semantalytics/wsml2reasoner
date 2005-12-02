@@ -21,10 +21,25 @@ Boris Danev:
  In this case I do not want in my result tuples the ?R variable
 
 #6
+Jos:
 loyd topper is not supported for exists in rule body for existentials.
 
 #7 
+Jos:
 Unsafe rules for wsml rule
 
 #8
+Jos:
 Variable Binding Results have unituitive (no) ordering.
+
+#9
+Boris Danev:
+more fine grained control over reregister procedure of ontology:
+//insertion of an instance of a concept or relation
+addInstance("instance Dave memberOf Human"); 
+//modifies or inserts the hasName value to an already existing instance).
+updateInstance("uri#Dave[hasName hasValue \"Dave\"]"). 
+//deletes the instance with name Dave
+removeInstance("uri#Dave"); 
+
+This should not be that difficult I think because it does not changes the ontology. Of course checking with cardinalities, other rules, axioms must be performed to ensure successful insertion.

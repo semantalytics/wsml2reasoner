@@ -1,0 +1,87 @@
+wsmlVariant _"http://www.wsmo.org/2004/wsml/wsml-rule"
+
+namespace {_"urn://deri/",
+    dc _"http://purl.org/dc/elements/1.1#",
+    wsml _"http://www.wsmo.org/wsml/wsml-syntax#"}
+ 
+ontology AboutTasks
+
+concept Human
+
+concept Task subConceptOf GenericTask
+//  hasPost transitive impliesType GenericTask
+  hasName ofType (0 2) Human
+  hasTitle ofType (0 1) dc#title
+  relatedTo impliesType (0 *) Element
+
+concept FirstTask subConceptOf Task
+concept SecondTask subConceptOf Task
+concept ThirdTask subConceptOf Task
+
+concept Element
+connectedTo impliesType (0 *) Element
+hasTitle ofType (0 1) _integer
+
+relation unaryRel(ofType FirstTask)
+relation tripleRel(ofType Element, ofType Element, ofType Task)
+
+axiom NamePropagation 
+definedBy
+?task[hasName hasValue ?name] impliedBy ?t1 memberOf FirstTask and ?t1[hasName hasValue ?name ] and ?t1[hasPost hasValue ?task] and ?task memberOf SecondTask.
+
+axiom TaskHumanDisjointness
+definedBy
+!- ?x memberOf Human and ?x memberOf Task.
+
+axiom Rep
+definedBy
+hell(?e1,?e2,?t) equivalent ?e1[connectedTo hasValue ?e2] and ?t[relatedTo hasValue ?e2].
+
+/* axiom Concat
+definedBy
+?x[hasTitle hasValue ?t] :- ?x memberOf Element and ?t = (1 + 2). 
+*//* unsafe rule testing concatenation */
+/* axiom Concat
+definedBy
+?x[hasTitle hasValue (1+2) ] :- ?x memberOf Element. */
+/* unsafe rule testinf builin +*/
+
+instance Boris memberOf Human
+instance Dave memberOf Human
+
+instance T1 memberOf FirstTask
+hasPost hasValue T2
+hasName hasValue Boris
+hasName hasValue Dave
+
+instance T2 memberOf SecondTask
+hasPost hasValue T3
+hasName hasValue Boris
+/* hasTitle hasValue "Hello World" */ /* Does not work??? */
+
+instance T3 memberOf ThirdTask
+hasName hasValue Boris
+
+instance E1 memberOf Element
+hasName hasValue Boris
+/* hasTitle hasValue 1 */ /* Does not work??? */
+
+instance E2 memberOf Element
+connectedTo hasValue E1
+
+relationInstance unaryRel(T1)
+relationInstance tripleRel(E1,E2,T1) 
+
+/* Does not work??? */
+
+/* Query: T1 memberOf ?x  */
+
+
+concept TaskElement
+  element ofType(2) Element
+  task ofType (1) Task
+  
+instance someTask
+  element hasValue {E1,E2}
+  task hasValue T1
+  
