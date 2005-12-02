@@ -68,24 +68,13 @@ public class BaseReasonerTest extends TestCase {
 
         // Set up WSML parser
 
-        Map<String, Object> parserProperties = new HashMap<String, Object>();
-        parserProperties.put(Parser.PARSER_WSMO_FACTORY, wsmoFactory);
-        parserProperties.put(Parser.PARSER_LE_FACTORY, leFactory);
-
-        parserProperties.put(org.wsmo.factory.Factory.PROVIDER_CLASS,
-                "com.ontotext.wsmo4j.parser.WSMLParserImpl");
-
         Parser wsmlparserimpl = org.wsmo.factory.Factory
-                .createParser(parserProperties);
+                .createParser(null);
 
         // Set up serializer
 
-        Map<String, String> serializerProperties = new HashMap<String, String>();
-        serializerProperties.put(org.wsmo.factory.Factory.PROVIDER_CLASS,
-                "com.ontotext.wsmo4j.parser.WSMLSerializerImpl");
-
         Serializer ontologySerializer = org.wsmo.factory.Factory
-                .createSerializer(serializerProperties);
+                .createSerializer(null);
 
         // Read simple ontology from file
         final Reader ontoReader = BaseTest.getReaderForFile(ontologyFile);

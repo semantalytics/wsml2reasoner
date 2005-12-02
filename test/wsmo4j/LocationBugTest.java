@@ -30,15 +30,8 @@ public class LocationBugTest extends TestCase {
 
         // Set up WSML parser
 
-        Map<String, Object> parserProperties = new HashMap<String, Object>();
-        parserProperties.put(Parser.PARSER_WSMO_FACTORY, factory);
-        parserProperties.put(Parser.PARSER_LE_FACTORY, leFactory);
-
-        parserProperties.put(org.wsmo.factory.Factory.PROVIDER_CLASS,
-                "com.ontotext.wsmo4j.parser.WSMLParserImpl");
-
         Parser wsmlparserimpl = org.wsmo.factory.Factory
-                .createParser(parserProperties);
+                .createParser(null);
 //      Read simple ontology from file
         final Reader ontoReader = BaseTest.getReaderForFile(ONTOLOGY_FILE);
         final TopEntity[] identifiable = wsmlparserimpl.parse(ontoReader);

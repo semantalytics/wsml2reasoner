@@ -17,30 +17,24 @@
 package org.deri.wsml.reasoner;
 
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.*;
 import java.util.*;
 
-import javax.servlet.ServletException;
+import javax.servlet.*;
 import javax.servlet.http.*;
 
-import org.deri.wsmo4j.io.serializer.wsml.VisitorSerializeWSMLTerms;
-import org.deri.wsmo4j.validator.ValidationError;
-import org.deri.wsmo4j.validator.WsmlValidatorImpl;
-import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Ontology;
-import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.WSMLReasoner;
-import org.wsml.reasoner.api.WSMLReasonerFactory;
-import org.wsml.reasoner.api.queryanswering.QueryAnsweringRequest;
+import org.deri.wsmo4j.io.serializer.wsml.*;
+import org.omwg.logicalexpression.*;
+import org.omwg.logicalexpression.terms.*;
+import org.omwg.ontology.*;
+import org.wsml.reasoner.api.*;
+import org.wsml.reasoner.api.queryanswering.*;
 import org.wsml.reasoner.builtin.mins.*;
 import org.wsml.reasoner.impl.*;
 import org.wsmo.common.*;
 import org.wsmo.factory.*;
-import org.wsmo.validator.WsmlValidator;
-import org.wsmo.wsml.Parser;
-import org.wsmo.wsml.ParserException;
+import org.wsmo.validator.*;
+import org.wsmo.wsml.*;
 
 /**
  * Web front-end for the WSML Ontobroker reasoner. Loads the given ontology into
@@ -49,7 +43,7 @@ import org.wsmo.wsml.ParserException;
  * 
  * 
  * @see org.deri.wsml.reasoner.ontobroker.Reasoner
- * @author Jos de Bruijn $Author: hlausen $ $Date: 2005-11-18 09:30:50 $
+ * @author Jos de Bruijn $Author: hlausen $ $Date: 2005-12-02 12:51:03 $
  */
 public class ReasonerServlet extends HttpServlet {
     /**
@@ -109,8 +103,10 @@ public class ReasonerServlet extends HttpServlet {
             else if (request.getParameter("wsmlOntology") != null)
                 wsmlOntology = request.getParameter("wsmlOntology");
 
-            if (request.getParameter("wsmlQuery") != null)
+            if (request.getParameter("wsmlQuery") != null){
                 wsmlQuery = request.getParameter("wsmlQuery");
+                //System.out.println(wsmlQuery);
+            }
 
             out.println("<!DOCTYPE html PUBLIC '-W3CDTD HTML 4.01 TransitionalEN'>");
             out.println("<html>");
@@ -127,6 +123,7 @@ public class ReasonerServlet extends HttpServlet {
                 error("No Query found, enter Query ");
             } else {
                 try{
+                    //System.out.println("wsmlQuery0:" +wsmlQuery);
                     doReasoning(wsmlQuery, wsmlOntology, inFrame);
                 }catch (ConstraintViolationError e){
                     error("<b>An Integrity Constaint has been violated</b>:\n<br/>",e);
@@ -168,6 +165,8 @@ public class ReasonerServlet extends HttpServlet {
     }
 
     private void doReasoning(String wsmlQuery, String wsmlOntology, boolean inFrame) {
+        //System.out.println("wsmlQuery1:" +wsmlQuery);
+
         // setup factories
         if (debug)
             out.println("doReasoning");
@@ -198,9 +197,9 @@ public class ReasonerServlet extends HttpServlet {
             error("Could not parse Ontology:"+errorline,e);
             return;
         }
-        WsmlValidator wv = new WsmlValidatorImpl();
+        WsmlValidator wv = Factory.createWsmlValidator(null);
         List errors = new LinkedList();
-        if (!wv.isValid(ontology,WSML.WSML_RULE,errors)){
+        if (!wv.isValid(ontology,WSML.WSML_RULE,errors, null)){
             error("Given input ontology is not within WSML flight.");
             out.print("<ul>");
             for (Object error :errors){
@@ -220,8 +219,7 @@ public class ReasonerServlet extends HttpServlet {
         try {
             query = _leFactory.createLogicalExpression(wsmlQuery, ontology);
         } catch (ParserException e) {
-            String errorline="<br/> "+wsmlQuery+"<br/>";
-            error("Error parsing Query:"+markErrorPos(errorline,e.getErrorPos()),e);
+            error("Error parsing Query:"+markErrorPos(wsmlQuery,e.getErrorPos()),e);
             return;
         }
 
