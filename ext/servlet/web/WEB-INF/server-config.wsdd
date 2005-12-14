@@ -6,8 +6,13 @@
       No need for Admin Servlet -->
       
   <service name="reasoner" provider="java:RPC">
-      <parameter name="className" value="org.deri.wsml.reasoner.ontobroker.Reasoner"/>
-      <parameter name="allowedMethods" value="convertQuery convertWSML queryOntology"/>
+      <namespace>http://tools.deri.org/wsml/rule-reasoner#</namespace>
+      <parameter name="className" value="org.deri.wsml.reasoner.ReasonerWS"/>
+      <parameter name="allowedMethods" value="*"/>
+      <beanMapping qname="myNS:VariableBindung" 
+          xmlns:myNS="http://tools.deri.org/wsml/rule-reasoner#" 
+          type="java:org.deri.wsml.reasoner.VariableBinding"/>
+      <endpointURL>http://dev1.deri.at:8080/wsml-mins-reasoner-20051214/services/reasoner</endpointURL>    
   </service>
  
  <transport name="http">

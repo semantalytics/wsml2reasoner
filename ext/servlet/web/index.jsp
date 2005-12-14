@@ -89,23 +89,26 @@ axiom aRelative definedBy
 <%if (!inFrame) {%>
   <p>&nbsp;</p>
   <div style="font-size:smaller">
-  <p>This reasoner is at present able to process WSML-Flight Ontologies, with the following limitations:</p>
+  <p>This reasoner is at present able to process WSML-Rule Ontologies, with the following limitations:</p>
   <ul>
-  <li> constraints are not processed.</li>
-  <li> datatype predicates are not processed.</li>
+  <li> only simple datatypes are supported (int, decimal, string).</li>
   </ul>
   <p> The reasoner is based on the following components:</P>
   <ul>
     <li><a href="http://wsmo4j.sourceforge.net/">WSMO4J</a>, the WSMO API and reference implementation.</li>
     <li><a href="http://dev1.deri.at/wsml2reasoner/">WSML 2 Reasoner</a> framework, for handling the translation to the underlying reasoner.</li>
-    <li><a href="http://cvs.deri.at/cgi-bin/viewcvs.cgi/mins/">MINS</a> as underlying reasoner engine.</li>
+    <li><a href="http://dev1.deri.at/mins/">MINS</a> as underlying reasoner engine.</li>
   </ul>
   </div>
+  
+  <p>This service is also accessible as <a href="services/reasoner?wsdl">Web Service</a>. <br/>
+  <small>The current interface might be change without notice, so
+  please drop us a <a href="mailto:holger.lausen@deri.org">line</a> if you use it.</small></p>
 <%}%>
   </div>
  
 <p><small><a href="history.html">Version History</a> | <a href="frame.html">Display Using Frames</a> | <a target="_top" href="index.jsp">No Frames</a> </small> </p>
-<p><small>$Date: 2005-11-17 15:34:24 $</small>
+<p><small>$Date: 2005-12-14 09:25:34 $</small>
  
 </script> 
 </body>
