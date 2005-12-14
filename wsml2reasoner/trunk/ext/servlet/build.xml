@@ -49,7 +49,7 @@
     </copy>
     <copy todir="${dir.build}/WEB-INF/lib" flatten="true">
       <fileset dir="${dir.lib}" 
-        includes="**/wsmo4j*/*.jar,**/mins/*.*" />
+        includes="**/wsmo4j*/*.jar,**/mins/*.jar,**/axis/*.jar" />
     </copy>
     <javac classpathref="classpath"
            srcdir="../../"
