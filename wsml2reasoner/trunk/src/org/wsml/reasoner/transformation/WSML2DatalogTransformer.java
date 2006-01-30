@@ -114,9 +114,9 @@ public class WSML2DatalogTransformer {
         Program result = new Program();
 
         DatalogVisitor datalogVisitor = new DatalogVisitor();
-//        int i = 0;
+        int i = 0;
         for (org.omwg.logicalexpression.LogicalExpression r : rules) {
-//            i++;
+            i++;
 //            System.out.println(i+""+r);
             r.accept(datalogVisitor);
             Program translation = (Program) datalogVisitor
@@ -128,6 +128,7 @@ public class WSML2DatalogTransformer {
                         "WSML rule can not be translated to datalog: "
                                 + r.toString());
             }
+            System.out.println(i+""+translation);
             // Reset the internal state of the visitor such that it can be
             // reused.
             datalogVisitor.reset();

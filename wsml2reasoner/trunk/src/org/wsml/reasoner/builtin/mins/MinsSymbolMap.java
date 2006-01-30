@@ -176,7 +176,7 @@ public class MinsSymbolMap {
     	if(term.isConstTerm()){
             return tool2wsmlConstants.get(((org.deri.mins.terms.ConstTerm)term).symbol);
     	}else if (term.isStringTerm()){
-    	    return WSMO4JManager.getDataFactory().createWsmlString(term.toString());
+    	    return WSMO4JManager.getDataFactory().createWsmlString(((StringTerm)term).s);
         }else if (term.isNumTerm()){
             org.deri.mins.terms.NumTerm numTerm = (org.deri.mins.terms.NumTerm)term;
             if (numTerm.zahl - Math.floor(numTerm.zahl) == 0)
