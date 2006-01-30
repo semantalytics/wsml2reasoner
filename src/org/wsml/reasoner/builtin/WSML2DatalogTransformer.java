@@ -109,6 +109,7 @@ public class WSML2DatalogTransformer {
             }
             // Reset the internal state of the visitor such that it can be
             // reused.
+            //System.out.println(translation);
             datalogVisitor.reset();
         }
         return result;

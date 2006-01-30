@@ -21,6 +21,8 @@ package org.wsml.reasoner.builtin.mins;
 import java.util.*;
 import java.util.logging.*;
 
+import javax.swing.text.StyledEditorKit.*;
+
 import org.deri.mins.*;
 import org.deri.mins.Rule;
 import org.deri.mins.api.*;
@@ -84,7 +86,7 @@ public class MinsFacade implements DatalogReasonerFacade {
          * 2: Wellfounded Evaluation with alternating fixed point (juergen says works)<BR> 
          * 3: Wellfounded Evaluation (juergen says probably buggy!)
          */
-        int evaluationMethod = 2;
+        int evaluationMethod = 1;
 
         try {
             // retrieve KB ment for IRI:
@@ -327,7 +329,14 @@ public class MinsFacade implements DatalogReasonerFacade {
                 minsTerm = new NumTerm(Double.parseDouble(val.getValue().toString()));
             }
         } else{
-            throw new RuntimeException("No Complex data types yet:" +wsmlTerm);
+            ComplexDataValue val = (ComplexDataValue)wsmlTerm;
+            String type = val.getType().getIRI().toString();
+            if (type.equals(WsmlDataType.WSML_BOOLEAN)){
+                minsTerm = new StringTerm(val.toString());
+                //System.out.print(minsTerm);
+            }else{
+                throw new RuntimeException("No Complex data types yet:" +wsmlTerm);
+            }
         }
         return minsTerm;
 
@@ -352,6 +361,8 @@ public class MinsFacade implements DatalogReasonerFacade {
         DBInterface db = new DB(); // facts stored in RAM
         RuleSet minsEngine = new RuleSet(builtInConfig, db);
         minsEngine.debuglevel = 0;
+        
+        System.out.println(kb);
 
         // Translate (resp. Transfer) the knowledge base to MINS
         try {
@@ -423,8 +434,8 @@ public class MinsFacade implements DatalogReasonerFacade {
                 bindings += wsmlVariable + " -> " + wsmlTerm + "\n";
             }
         }
-        throw new ConstraintViolationError(violatedQuery.toString() + "\n"
-                + bindings);
+        throw (new ConstraintViolationError(violatedQuery.toString() + "\n"
+                + bindings));
 
     }
 
@@ -438,6 +449,8 @@ public class MinsFacade implements DatalogReasonerFacade {
                 f.createIRI(WsmlDataType.WSML_STRING));
         int decimalNo = symbTransfomer.convertToTool(
                 f.createIRI(WsmlDataType.WSML_DECIMAL));
+        int booleanNo = symbTransfomer.convertToTool(
+                f.createIRI(WsmlDataType.WSML_BOOLEAN));
         
         //?x memberOf _integer :- isInteger(?x)
         rs.addRule(new Rule(
@@ -465,19 +478,59 @@ public class MinsFacade implements DatalogReasonerFacade {
                                     new org.deri.mins.terms.Variable(0)},
                                 new IsString()
                         )}));      
-        //?x memberOf _String :- isNum(?x)
+        //?x memberOf _decimal :- isNum(?x)
         rs.addRule(new Rule(
                 new Head[]{ 
                         new Head(memberOfNo, new org.deri.mins.terms.Term[]{
                                 new org.deri.mins.terms.Variable(0),
-                                new ConstTerm(stringNo)}
+                                new ConstTerm(decimalNo)}
                         )},
                 new Body[] {
                         new BuiltinBody(12, false,
                                 new org.deri.mins.terms.Term[]{
                                     new org.deri.mins.terms.Variable(0)},
                                 new IsNum()
-                        )}));      
+                        )}));
+        
+        //?x memberOf wsml#boolean :- isString(?x) , ?x = "_boolean("true") ;
+        rs.addRule(new Rule(
+                new Head[]{ 
+                        new Head(memberOfNo, new org.deri.mins.terms.Term[]{
+                                new org.deri.mins.terms.Variable(0),
+                                new ConstTerm(booleanNo)}
+                        )},
+                new Body[] {
+                        new BuiltinBody(14, false,
+                                new org.deri.mins.terms.Term[]{
+                                    new org.deri.mins.terms.Variable(0)},
+                                new IsString()
+                        ),
+                        new BuiltinBody(6, false,
+                                new org.deri.mins.terms.Term[]{
+                                    new org.deri.mins.terms.Variable(0),
+                                    new StringTerm("_boolean(\"true\")")},
+                            new Equal())
+                        }));      
+
+        //?x memberOf wsml#boolean :- isString(?x) , ?x = "_boolean("true") ;
+        rs.addRule(new Rule(
+                new Head[]{ 
+                        new Head(memberOfNo, new org.deri.mins.terms.Term[]{
+                                new org.deri.mins.terms.Variable(0),
+                                new ConstTerm(booleanNo)}
+                        )},
+                new Body[] {
+                        new BuiltinBody(14, false,
+                                new org.deri.mins.terms.Term[]{
+                                    new org.deri.mins.terms.Variable(0)},
+                                new IsString()
+                        ),
+                        new BuiltinBody(6, false,
+                                new org.deri.mins.terms.Term[]{
+                                    new org.deri.mins.terms.Variable(0),
+                                    new StringTerm("_boolean(\"false\")")},
+                            new Equal())
+                        }));      
     }
 
 }
