@@ -1,0 +1,8 @@
+#1
+MINS does not properly implement datatypes, thus decimals are sometime converted to ints
+
+#2
+MINS has some problem with constant porpergation:
+TestWSMLCoreReasoner#testElementsConnectedWithF
+
+#3

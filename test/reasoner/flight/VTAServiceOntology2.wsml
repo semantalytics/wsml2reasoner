@@ -1,0 +1,47 @@
+wsmlVariant _"http://www.wsmo.org/2004/wsml/wsml-flight"
+namespace { _"http://www.wsmo.org/TR/d13/d13.7/ontologies/VTAServiceOntology1212#"
+, 
+     xsd _"http://www.w3.org/2001/XMLSchema#", 
+     dc _"http://purl.org/dc/elements/1.1#", 
+     wsml _"http://www.wsmo.org/wsml/wsml-syntax#" }
+
+ontology _"urn:fzi:travel23212"
+
+concept station
+     code ofType (1) _string
+     sourceLocBool ofType _boolean
+     destLocBool ofType _boolean
+
+concept price
+     amount ofType _integer
+     currency ofType _string
+
+concept dateOfDeparture
+     dateAttr ofType _string
+
+concept timeOfDeparture
+     timeAttr ofType _string
+
+concept route
+     sourceLocation ofType station
+     destinationLocation ofType station
+
+concept routeOnDate
+     forRoute ofType route
+     onDate ofType dateOfDeparture
+     onTime ofType timeOfDeparture
+     forPrice ofType price
+
+concept person
+     firstname ofType _string
+     lastname ofType _string
+
+concept creditCard
+     number ofType _integer
+     owner ofType person
+     expirationDate ofType _date
+
+concept reservation
+     reservationNumber ofType _integer
+     reservedRoute ofType routeOnDate
+     reservationHolder ofType person
