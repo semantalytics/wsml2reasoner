@@ -44,11 +44,7 @@ import org.semanticweb.kaon2.api.rules.Rule;
 import org.semanticweb.kaon2.api.rules.Term;
 import org.semanticweb.kaon2.api.rules.Variable;
 import org.semanticweb.kaon2.extensionapi.datatype.DatatypeManager;
-import org.wsml.reasoner.builtin.ConjunctiveQuery;
-import org.wsml.reasoner.builtin.DatalogReasonerFacade;
-import org.wsml.reasoner.builtin.ExternalToolException;
-import org.wsml.reasoner.builtin.UnsupportedFeatureException;
-import org.wsml.reasoner.builtin.WSML2DatalogTransformer;
+import org.wsml.reasoner.*;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.DataFactory;
@@ -67,7 +63,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
 
     private final Map<String, Object> EMPTY_MAP = new HashMap<String, Object>();
 
-    private org.wsml.reasoner.builtin.ConjunctiveQuery query;
+    private org.wsml.reasoner.ConjunctiveQuery query;
 
     private KAON2Factory f = KAON2Manager.factory();
 
@@ -154,7 +150,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
      *            the datalog program that constitutes the knowledgebase
      */
     private Set<Rule> translateKnowledgebase(
-            Set<org.wsml.reasoner.builtin.Rule> p) throws ExternalToolException {
+            Set<org.wsml.reasoner.Rule> p) throws ExternalToolException {
 
         if (p == null) {
             return null;
@@ -162,7 +158,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
 
         Set<Rule> result = new HashSet<Rule>();
 
-        for (org.wsml.reasoner.builtin.Rule r : p) {
+        for (org.wsml.reasoner.Rule r : p) {
             result.add(translateRule(r));
         }
         // Add some static rules to infer membership statements for datatype
@@ -221,10 +217,10 @@ public class Kaon2Facade implements DatalogReasonerFacade {
         // where x1,...,xk is the subsequence of x1,...,xn where multiple
         // occurrences of the
         // same variable have been removed.
-        List<org.wsml.reasoner.builtin.Literal> body = q.getLiterals();
+        List<org.wsml.reasoner.Literal> body = q.getLiterals();
         List<Literal> queryLiterals = new ArrayList<Literal>();
 
-        for (org.wsml.reasoner.builtin.Literal l : body) {
+        for (org.wsml.reasoner.Literal l : body) {
             queryLiterals.add(translateLiteral(l));
         }
 
@@ -241,7 +237,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
     /**
      * Translate a datalog rule
      */
-    private Rule translateRule(org.wsml.reasoner.builtin.Rule r)
+    private Rule translateRule(org.wsml.reasoner.Rule r)
             throws ExternalToolException {
 
         Literal head = null;
@@ -253,7 +249,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
         List<Literal> body = new ArrayList<Literal>();
 
         // Care about body
-        for (org.wsml.reasoner.builtin.Literal bl : r.getBody()) {
+        for (org.wsml.reasoner.Literal bl : r.getBody()) {
             body.add(translateLiteral(bl));
         }
 
@@ -270,7 +266,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
 
     }
 
-    private Literal translateLiteral(org.wsml.reasoner.builtin.Literal l)
+    private Literal translateLiteral(org.wsml.reasoner.Literal l)
             throws ExternalToolException {
         if (l == null)
             return null;
@@ -454,7 +450,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
         }
     }
 
-    private void translateTerms(org.wsml.reasoner.builtin.Literal literal,
+    private void translateTerms(org.wsml.reasoner.Literal literal,
             List<Term> terms) throws UnsupportedFeatureException,
             ExternalToolException {
         org.omwg.logicalexpression.terms.Term[] args = literal.getTerms();
@@ -541,7 +537,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
     }
 
     public void register(String ontologyURI,
-            Set<org.wsml.reasoner.builtin.Rule> kb)
+            Set<org.wsml.reasoner.Rule> kb)
             throws ExternalToolException {
         if (conn == null) {
             conn = KAON2Manager.newConnection();

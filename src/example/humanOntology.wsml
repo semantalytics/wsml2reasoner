@@ -1,4 +1,4 @@
-wsmlVariant _"http://www.wsmo.org/2004/wsml/wsml-rule"
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
 
 namespace {_"urn://deri/",
     dc _"http://purl.org/dc/elements/1.1#",
@@ -8,7 +8,7 @@ ontology AboutHumans
 
 concept Human subConceptOf Animal
   hasRelative transitive symmetric ofType Human
-  hasBirthYear  ofType (1) _integer
+  age  ofType (1) _integer
   hasName ofType (0 1) _string
   
 concept Child subConceptOf Human
@@ -23,10 +23,11 @@ concept Woman subConceptOf Human
 instance Homer memberOf Man
   hasRelative hasValue Marge
   hasName hasValue "Humer"
-  age hasValue 30
+  age hasValue 45
   
 instance Marge memberOf Woman
   hasRelative hasValue Lisa
+  age hasValue 40
   
 instance Lisa memberOf Human 
   age hasValue 12

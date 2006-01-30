@@ -24,6 +24,7 @@ import org.deri.mins.builtins.*;
 import org.deri.mins.terms.*;
 import org.omwg.logicalexpression.*;
 import org.omwg.ontology.Variable;
+import org.wsml.reasoner.*;
 import org.wsml.reasoner.builtin.*;
 import org.wsml.reasoner.impl.*;
 
@@ -102,7 +103,7 @@ public class MinsSymbolMap {
         minsBuiltIn2No.put(Constants.STRING_INEQUAL, 6);
     }
     
-    public int convertToTool(org.wsml.reasoner.builtin.Literal literal){
+    public int convertToTool(org.wsml.reasoner.Literal literal){
     	int result;
         int arity = 0;
         if(minsBuiltinFunc.containsKey(literal.getPredicateUri()))

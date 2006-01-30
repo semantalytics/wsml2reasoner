@@ -1,11 +1,8 @@
 package wsml2reasoner;
 
-import reasoner.core.*;
-import reasoner.flight.*;
+import junit.framework.*;
 import wsml2reasoner.normalization.*;
 import wsml2reasoner.transformation.*;
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 /**
  * @author nagypal
@@ -24,7 +21,6 @@ public class FrameworkTests {
         suite.addTestSuite(LloydToporNormalizerTest.class);
         suite.addTestSuite(WSMLNormalizationTest.class);
         suite.addTestSuite(AnonymousIdUtilsTest.class);
-        suite.addTestSuite(WSML2DatalogTransformerTest.class);
         // $JUnit-END$
         return suite;
     }

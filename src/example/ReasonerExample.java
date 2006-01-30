@@ -63,20 +63,17 @@ public class ReasonerExample {
 	 */
 	public void doTestRun() throws Exception {
 		//Ontology exampleOntology = loadOntology("example/humanOntology.wsml");
-        Ontology exampleOntology = loadOntology("example/task.wsml");
+        Ontology exampleOntology = loadOntology("example/humanOntology.wsml");
 		if (exampleOntology == null)
 			return;
 		LogicalExpressionFactory leFactory = WSMO4JManager
 				.getLogicalExpressionFactory();
 
         String queryString;
-        queryString="?hq memberOf Human";
-        queryString="?x memberOf Man";
+        queryString="?human memberOf Human";
+        queryString="?man memberOf Man";
         queryString="Lisa [hasRelative hasValue ?relative]";
         queryString="?x subConceptOf ?y";
-        queryString="?x memberOf Child";
-        queryString="?x[hasBirthYear hasValue ?age]";
-        queryString="Man";
 
         LogicalExpression query = leFactory
             .createLogicalExpression(queryString, exampleOntology);
