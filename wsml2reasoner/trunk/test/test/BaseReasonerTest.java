@@ -19,29 +19,20 @@
  */
 package test;
 
-import java.io.Reader;
-import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
-import junit.framework.TestCase;
+import junit.framework.*;
 
-import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
-import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Ontology;
-import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.WSMLReasoner;
-import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.common.IRI;
-import org.wsmo.common.TopEntity;
-import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
-import org.wsmo.wsml.Parser;
-import org.wsmo.wsml.Serializer;
+import org.deri.wsmo4j.io.serializer.wsml.*;
+import org.omwg.logicalexpression.*;
+import org.omwg.logicalexpression.terms.*;
+import org.omwg.ontology.*;
+import org.wsml.reasoner.api.*;
+import org.wsml.reasoner.impl.*;
+import org.wsmo.common.*;
+import org.wsmo.factory.*;
+import org.wsmo.wsml.*;
 
 public class BaseReasonerTest extends TestCase {
 
@@ -77,7 +68,7 @@ public class BaseReasonerTest extends TestCase {
                 .createSerializer(null);
 
         // Read simple ontology from file
-        final Reader ontoReader = BaseTest.getReaderForFile(ontologyFile);
+        final Reader ontoReader = getReaderForFile(ontologyFile);
         final TopEntity[] identifiable = wsmlparserimpl.parse(ontoReader);
         if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {
             o = (Ontology) identifiable[0];
@@ -102,7 +93,7 @@ public class BaseReasonerTest extends TestCase {
         // params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
         // WSMLReasonerFactory.BuiltInReasoner.KAON2);
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
-                .getWSMLFlightReasoner();
+                .getWSMLFlightReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
 
         // Register ontology
         System.out.println("Registering ontology");
@@ -167,4 +158,26 @@ public class BaseReasonerTest extends TestCase {
         logExprSerializer = new LogExprSerializerWSML(o);
     }
 
+    /**
+     * Utiltiy to get a Reader, tries first fileReader and then to load
+     * from clath pass, helps avoiding FileNotFound exception during automated testing
+     * @param location of file
+     * @return Reader
+     */
+    public static Reader getReaderForFile(String location){
+        Reader ontoReader= null;
+        try{
+            ontoReader = new FileReader(location);
+        }catch (FileNotFoundException e){
+            //get current class loader and try to load from there...
+            InputStream is = new BaseReasonerTest().getClass().getClassLoader().getResourceAsStream(location);
+            //System.out.println();
+            assertNotNull("Could not Load file from class path: "+location, is);
+            ontoReader = new InputStreamReader(is);
+        }
+        assertNotNull("Could not Load file from file system: "+location, ontoReader);
+        return ontoReader;
+    }
+    
+    
 }

@@ -32,6 +32,7 @@ public class OntologyRegistrationTest extends TestCase {
         junit.textui.TestRunner.run(OntologyRegistrationTest.class);
     }
 
+    
     public void testOntologyRegistration() throws Exception {
 
         Ontology o1 = wsmoFactory.createOntology(wsmoFactory

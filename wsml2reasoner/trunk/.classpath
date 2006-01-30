@@ -13,8 +13,8 @@
 	<classpathentry kind="lib" path="lib/ext/flora2/XSBFlora.jar"/>
 	<classpathentry kind="lib" path="lib/ext/interprolog.jar"/>
 	<classpathentry kind="lib" path="lib/ext/kaon2/kaon2-2005-11-14.jar"/>
-	<classpathentry kind="lib" path="lib/ext/mins/mins-v0_1.jar"/>
-	<classpathentry kind="lib" path="lib/ext/wsmo4j/wsmo4j-20051202.jar"/>
 	<classpathentry kind="lib" path="lib/ext/wsmo4j/wsmlparser-20051201.jar"/>
+	<classpathentry kind="lib" path="lib/ext/wsmo4j/wsmo4j-20051202.jar"/>
+	<classpathentry kind="lib" path="lib/ext/mins/mins-v0.1.01.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

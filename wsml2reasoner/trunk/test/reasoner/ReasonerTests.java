@@ -1,5 +1,7 @@
 package reasoner;
 
+import reasoner.core.*;
+import reasoner.flight.*;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -15,10 +17,12 @@ public class ReasonerTests {
     public static Test suite() {
         TestSuite suite = new TestSuite("Test suite for the WSML reasoner");
         // $JUnit-BEGIN$
-        suite.addTest(TestWSMLCoreReasoner.suite());
-        suite.addTest(TestKaon2WSMLFlightReasoner.suite());
-        suite.addTest(MaciejBugTest.suite());
-        suite.addTest(MaciejBugTest2.suite());
+        suite.addTest(SimpleGraph.suite());
+        suite.addTest(DogsworldTest.suite());
+        suite.addTest(MaciejVTABug.suite());
+        suite.addTest(MaciejVTABug2.suite());
+        suite.addTest(LordOfRings.suite());
+        suite.addTestSuite(OntologyRegistrationTest.class);
         // $JUnit-END$
         return suite;
     }
