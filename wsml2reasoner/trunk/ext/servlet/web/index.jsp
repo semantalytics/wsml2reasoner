@@ -102,13 +102,13 @@ axiom aRelative definedBy
   </div>
   
   <p>This service is also accessible as <a href="services/reasoner?wsdl">Web Service</a>. <br/>
-  <small>The current interface might be change without notice, so
+  <small>The current interface might be changed without notice, so
   please drop us a <a href="mailto:holger.lausen@deri.org">line</a> if you use it.</small></p>
 <%}%>
   </div>
  
 <p><small><a href="history.html">Version History</a> | <a href="frame.html">Display Using Frames</a> | <a target="_top" href="index.jsp">No Frames</a> </small> </p>
-<p><small>$Date: 2005-12-14 09:25:34 $</small>
+<p><small>$Date: 2006-01-30 18:30:31 $</small>
  
 </script> 
 </body>

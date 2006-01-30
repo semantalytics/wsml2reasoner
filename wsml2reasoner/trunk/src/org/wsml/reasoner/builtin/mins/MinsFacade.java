@@ -21,8 +21,6 @@ package org.wsml.reasoner.builtin.mins;
 import java.util.*;
 import java.util.logging.*;
 
-import javax.swing.text.StyledEditorKit.*;
-
 import org.deri.mins.*;
 import org.deri.mins.Rule;
 import org.deri.mins.api.*;
@@ -33,7 +31,9 @@ import org.omwg.logicalexpression.terms.*;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.*;
 import org.omwg.ontology.Variable;
+import org.wsml.reasoner.*;
 import org.wsml.reasoner.builtin.*;
+import org.wsml.reasoner.builtin.wrapper.*;
 import org.wsml.reasoner.impl.*;
 import org.wsmo.common.*;
 import org.wsmo.factory.*;
@@ -137,14 +137,14 @@ public class MinsFacade implements DatalogReasonerFacade {
      *            the datalog program that constitutes the knowledgebase
      * @throws UnsupportedFeatureException
      */
-    private void translateKnowledgebase(Set<org.wsml.reasoner.builtin.Rule> p, RuleSet minsEngine)
+    private void translateKnowledgebase(Set<org.wsml.reasoner.Rule> p, RuleSet minsEngine)
             throws ExternalToolException, UnsupportedFeatureException {
         logger.info("Translate knowledgebase :" + p);
         if (p == null) {
             logger.info("KB is not referenced. Assume empty KB.");
             return;
         }
-        for (org.wsml.reasoner.builtin.Rule r : p) {
+        for (org.wsml.reasoner.Rule r : p) {
             translateRule(r, minsEngine);
         }
     }
@@ -186,7 +186,7 @@ public class MinsFacade implements DatalogReasonerFacade {
      * 
      * @throws UnsupportedFeatureException
      */
-    private void translateRule(org.wsml.reasoner.builtin.Rule r,
+    private void translateRule(org.wsml.reasoner.Rule r,
             RuleSet minsEngine) throws ExternalToolException,
             UnsupportedFeatureException {
         Rule rule;
@@ -199,7 +199,7 @@ public class MinsFacade implements DatalogReasonerFacade {
         Literal l;
 
         if (r.isConstraint()) {
-            r = new org.wsml.reasoner.builtin.Rule(
+            r = new org.wsml.reasoner.Rule(
                     //head
                     new Literal(true, PRED_CONSTRAINT,
                             WSMO4JManager.getDataFactory().createWsmlString(r.getBody().toString())),
@@ -348,14 +348,14 @@ public class MinsFacade implements DatalogReasonerFacade {
      * @see org.wsml.reasoner.wsmlcore.wrapper.mins.DatalogReasonerFacade#useSymbolFactory(org.wsml.reasoner.wsmlcore.wrapper.mins.SymbolFactory)
      */
     public void useSymbolFactory(
-            org.wsml.reasoner.datalog.wrapper.SymbolFactory sf) {
+            org.wsml.reasoner.builtin.wrapper.SymbolFactory sf) {
         // symbTransfomer = new SymbolMap(sf);
     }
 
     /**
      * @see DatalogReasonerFacade#register(String, Set)
      */
-    public void register(String ontologyURI, Set<org.wsml.reasoner.builtin.Rule> kb) throws ExternalToolException {
+    public void register(String ontologyURI, Set<org.wsml.reasoner.Rule> kb) throws ExternalToolException {
         // Set up an instance of a MINS engine
         BuiltinConfig builtInConfig = new BuiltinConfig();
         DBInterface db = new DB(); // facts stored in RAM

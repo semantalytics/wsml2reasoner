@@ -34,16 +34,12 @@ import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
+import org.wsml.reasoner.*;
 import org.wsml.reasoner.api.Request;
 import org.wsml.reasoner.api.Result;
 import org.wsml.reasoner.api.WSMLCoreReasoner;
 import org.wsml.reasoner.api.WSMLFlightReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
-import org.wsml.reasoner.builtin.ConjunctiveQuery;
-import org.wsml.reasoner.builtin.DatalogException;
-import org.wsml.reasoner.builtin.ExternalToolException;
-import org.wsml.reasoner.builtin.Literal;
-import org.wsml.reasoner.builtin.Rule;
 import org.wsml.reasoner.builtin.mins.MinsFacade;
 import org.wsml.reasoner.transformation.AnonymousIdUtils;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
@@ -74,7 +70,7 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         WSMLCoreReasoner {
     protected final static String WSML_RESULT_PREDICATE = "wsml:query_result";
 
-    protected org.wsml.reasoner.builtin.DatalogReasonerFacade builtInFacade = null;
+    protected org.wsml.reasoner.DatalogReasonerFacade builtInFacade = null;
 
     protected WsmoFactory wsmoFactory;
 
@@ -102,7 +98,7 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         throw new UnsupportedOperationException("This method is deprecated!!!");
     }
 
-    protected Set<org.wsml.reasoner.builtin.Rule> convertOntology(Ontology o) {
+    protected Set<org.wsml.reasoner.Rule> convertOntology(Ontology o) {
 
         Ontology normalizedOntology;
 
@@ -125,8 +121,8 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 
         // System.out.println("\n-------\n Ontology after Lloyd-Topor:" +
         // WSMLNormalizationTest.serializeOntology(normalizedOntology));
-        Set<org.wsml.reasoner.builtin.Rule> p;
-        org.wsml.reasoner.builtin.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.builtin.WSML2DatalogTransformer();
+        Set<org.wsml.reasoner.Rule> p;
+        org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer();
         Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
         for (Object a : normalizedOntology.listAxioms()) {
             lExprs.addAll(((Axiom) a).listDefinitions());
@@ -163,7 +159,7 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         for (IRI id : ontologyIDs) {
             try {
                 builtInFacade.deregister(id.toString());
-            } catch (org.wsml.reasoner.builtin.ExternalToolException e) {
+            } catch (org.wsml.reasoner.ExternalToolException e) {
                 e.printStackTrace();
                 throw new IllegalArgumentException(
                         "This set of ontologies could not have been deregistered at the built-in reasoner",
@@ -371,13 +367,13 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         for (Ontology o : ontologies) {
             // convert the ontology to Datalog Program:
             String ontologyUri = o.getIdentifier().toString();
-            Set<org.wsml.reasoner.builtin.Rule> kb = new HashSet<org.wsml.reasoner.builtin.Rule>();
+            Set<org.wsml.reasoner.Rule> kb = new HashSet<org.wsml.reasoner.Rule>();
             kb.addAll(convertOntology(o));
 
             // Register the program at the built-in reasoner:
             try {
                 builtInFacade.register(ontologyUri, kb);
-            } catch (org.wsml.reasoner.builtin.ExternalToolException e) {
+            } catch (org.wsml.reasoner.ExternalToolException e) {
                 e.printStackTrace();
                 throw new IllegalArgumentException(
                         "This set of ontologies could not have been registered at the built-in reasoner",
@@ -393,8 +389,8 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 
     protected Set<Map<Variable, Term>> internalExecuteQuery(IRI ontologyID,
             LogicalExpression query) throws DatalogException,
-            org.wsml.reasoner.builtin.ExternalToolException {
-        Set<org.wsml.reasoner.builtin.ConjunctiveQuery> datalogQueries = convertQuery(query);
+            org.wsml.reasoner.ExternalToolException {
+        Set<org.wsml.reasoner.ConjunctiveQuery> datalogQueries = convertQuery(query);
         Set<Map<Variable, Term>> result = new HashSet<Map<Variable, Term>>();
         for (ConjunctiveQuery datalogQuery : datalogQueries) {
             result.addAll(builtInFacade.evaluate(datalogQuery, ontologyID
@@ -403,9 +399,9 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return result;
     }
 
-    protected Set<org.wsml.reasoner.builtin.ConjunctiveQuery> convertQuery(
+    protected Set<org.wsml.reasoner.ConjunctiveQuery> convertQuery(
             org.omwg.logicalexpression.LogicalExpression q) {
-        org.wsml.reasoner.builtin.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.builtin.WSML2DatalogTransformer();
+        org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer();
 
         List<Variable> params = new LinkedList<Variable>();
         LogicalExpressionVariableVisitor varVisitor = new LogicalExpressionVariableVisitor();
@@ -453,7 +449,7 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             for (Literal l : rule.getBody()) {
                 body.add(l);
             }
-            result.add(new org.wsml.reasoner.builtin.ConjunctiveQuery(body));
+            result.add(new org.wsml.reasoner.ConjunctiveQuery(body));
         }
         return result;
     }
