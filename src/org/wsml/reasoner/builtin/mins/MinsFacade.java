@@ -32,8 +32,6 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.*;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.*;
-import org.wsml.reasoner.builtin.*;
-import org.wsml.reasoner.builtin.wrapper.*;
 import org.wsml.reasoner.impl.*;
 import org.wsmo.common.*;
 import org.wsmo.factory.*;
