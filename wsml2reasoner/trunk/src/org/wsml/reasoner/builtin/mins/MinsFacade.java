@@ -90,13 +90,16 @@ public class MinsFacade implements DatalogReasonerFacade {
             // retrieve KB ment for IRI:
             RuleSet minsEngine = registeredKbs.get(ontologyURI);
             Rule query = translateQuery(q, minsEngine);
-            logger.info("Starting Constraint Check");
-            checkConstraint(minsEngine);
 
             logger.info("Starting MINS evaluation");
-
             minsEngine.setEvaluationMethod(evaluationMethod);
             minsEngine.evaluate();
+
+            logger.info("Starting Constraint Check");
+
+            checkConstraint(minsEngine);
+
+
             Substitution s = minsEngine.getSubstitution(query);
 
             Set<Map<Variable, Term>> result = new HashSet<Map<Variable, Term>>();
@@ -395,7 +398,6 @@ public class MinsFacade implements DatalogReasonerFacade {
                 minsEngine);
 //        System.out.println("\n\n"+cqlits+"\n-"+constraintQuery);
         logger.info("Starting MINS evaluation of constraints");
-        minsEngine.evaluate();
 
         Substitution cqsubs = minsEngine.getSubstitution(constraintQuery);
         ConjunctiveQuery violatedQuery = null;

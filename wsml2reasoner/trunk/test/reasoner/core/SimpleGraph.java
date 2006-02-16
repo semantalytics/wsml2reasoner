@@ -61,7 +61,7 @@ public class SimpleGraph extends BaseReasonerTest {
      * @throws Exception
      */
     public void testElementsConnectedWithF() throws Exception {
-        String query = "path(?n,f)";
+        String query = "path(?n,f)  ";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
         binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
