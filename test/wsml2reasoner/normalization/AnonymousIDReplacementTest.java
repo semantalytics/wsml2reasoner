@@ -62,8 +62,8 @@ public class AnonymousIDReplacementTest extends WSMLNormalizationTest
         Instance aragorn = wsmoFactory.createInstance(wsmoFactory.createIRI("urn://Aragorn"), manConcept);
         Instance arathorn = wsmoFactory.createInstance(wsmoFactory.createIRI("urn://Arathorn"), manConcept);
         Instance elendil = wsmoFactory.createInstance(wsmoFactory.createIRI("urn://Elendil"), manConcept);
-        aragorn.addAttributeValue(hasParentAttr, arathorn);
-        aragorn.addAttributeValue(hasParentAttr, wsmoFactory.createInstance(wsmoFactory.createAnonymousID()));
+        aragorn.addAttributeValue(hasParentAttr.getIdentifier(), arathorn);
+        aragorn.addAttributeValue(hasParentAttr.getIdentifier(), wsmoFactory.createInstance(wsmoFactory.createAnonymousID()));
         Axiom aragornLivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI("urn://aragornLivesSomewhere"));
         aragornLivesAx.addDefinition(leFactory.createConjunction(leFactory.createAttributeValue(aragorn.getIdentifier(), livesAtAttr.getIdentifier(), leFactory.createAnonymousID((byte)1)) , leFactory.createMemberShipMolecule(leFactory.createAnonymousID((byte)1),locationConcept.getIdentifier())));
         Axiom arathornLivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI("urn://arathornLivesSomewhere"));

@@ -542,11 +542,10 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         }
 
         // process attribute values:
-        Map<Attribute, Set<Value>> attributeValues = (Map<Attribute, Set<Value>>) instance
+        Map<Identifier, Set<Value>> attributeValues = (Map<Identifier, Set<Value>>) instance
                 .listAttributeValues();
-        for (Attribute attribute : attributeValues.keySet()) {
-            Identifier attributeID = attribute.getIdentifier();
-            Set<Value> values = attributeValues.get(attribute);
+        for (Identifier attributeID : attributeValues.keySet()) {
+            Set<Value> values = attributeValues.get(attributeID);
             List<AttributeValueMolecule> molecules = new ArrayList<AttributeValueMolecule>(
                     values.size());
             for (Value value : values) {
