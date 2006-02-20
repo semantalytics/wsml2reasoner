@@ -433,7 +433,7 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             p.addAll(wsml2datalog.transform(query));
         }
 
-        System.out.println("Query as program:" + p);
+        //System.out.println("Query as program:" + p);
         // if (p.size() != 1)
         // throw new IllegalArgumentException("Could not transform query " + q);
 

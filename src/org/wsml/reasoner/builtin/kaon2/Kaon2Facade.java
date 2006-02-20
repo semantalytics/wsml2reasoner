@@ -114,7 +114,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
             Reasoner reasoner = ontology.createReasoner();
             Query query = translateQuery(q, reasoner, varNames);
             for (Literal l : query.getQueryLiterals()) {
-                System.out.println("Query literal: " + l);
+                //System.out.println("Query literal: " + l);
             }
             query.open();
             while (!query.afterLast()) {
@@ -423,9 +423,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                                     WSML2DatalogTransformer.PRED_OF_TYPE, l
                                             .getTerms().length);
                             translateTerms(l, terms);
-                            System.out
-                                    .println("Translated implies_type for oftype for "
-                                            + rangeIri);
+                            //System.out.println("Translated implies_type for oftype for " + rangeIri);
                         } else {
                             pred = f.nonOWLPredicate(p, l.getTerms().length);
                             translateTerms(l, terms);
