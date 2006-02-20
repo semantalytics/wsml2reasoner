@@ -1,5 +1,7 @@
 package org.wsml.reasoner.impl;
 
+import java.util.Map;
+
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -34,6 +36,15 @@ public abstract class WSMO4JManager {
             dataFactory = (DataFactory) Factory.createDataFactory(null);
         }
         return dataFactory;
+    }
+    
+    /*
+     * Quick fix to allow both a WSMO Factory
+     * to be created with desired properties
+    */
+    public static WsmoFactory createWSMOFactory(Map properties) {
+    	wsmoFactory = Factory.createWsmoFactory(properties);
+        return wsmoFactory;
     }
 
 }
