@@ -23,7 +23,6 @@ import java.util.*;
 
 import org.omwg.logicalexpression.terms.*;
 import org.wsml.reasoner.*;
-import org.wsml.reasoner.builtin.*;
 
 /**
  * Allows to convert between symbol names in WSML and the names that are accepted by 
