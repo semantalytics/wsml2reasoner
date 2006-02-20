@@ -20,7 +20,6 @@
 package org.wsml.reasoner.builtin.wrapper;
 
 import org.wsml.reasoner.*;
-import org.wsml.reasoner.builtin.*;
 
 /**
  * An interface for classes that encasulate the knowledge about tool specific

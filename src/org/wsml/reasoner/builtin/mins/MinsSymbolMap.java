@@ -25,7 +25,6 @@ import org.deri.mins.terms.*;
 import org.omwg.logicalexpression.*;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.*;
-import org.wsml.reasoner.builtin.*;
 import org.wsml.reasoner.impl.*;
 
 /**
