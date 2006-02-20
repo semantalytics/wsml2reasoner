@@ -131,7 +131,16 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         // process axioms:
         for (Axiom axiom : (Collection<Axiom>) ontology.listAxioms()) {
             try {
-                resultOntology.addAxiom(axiom);
+            	Axiom copy = null;
+            	//FIXME this is a dirty hotfix for destructive normalisation, where the same definitions get wrapped up in another axiom
+            	for (LogicalExpression definition : (Set<LogicalExpression>)axiom.listDefinitions()) {
+            		 copy = wsmoFactory.createAxiom(wsmoFactory.createIRI(axiom.getIdentifier().toString() + "_copy"));
+            		copy.addDefinition(definition);
+            	}
+            	if (copy != null)
+            		resultOntology.addAxiom(copy);
+            	else
+            		; //TODO logger.warn()
             } catch (InvalidModelException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -499,7 +508,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 }
             }
         }
-        System.out.println(parameterAxioms);
+        //System.out.println(parameterAxioms);
         resultExpressions.addAll(parameterAxioms);
 
         // process relation instances:
@@ -542,10 +551,10 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         }
 
         // process attribute values:
-        Map<Identifier, Set<Value>> attributeValues = (Map<Identifier, Set<Value>>) instance
+        Map<Attribute, Set<Value>> attributeValues = (Map<Attribute, Set<Value>>) instance
                 .listAttributeValues();
-        for (Identifier attributeID : attributeValues.keySet()) {
-            Set<Value> values = attributeValues.get(attributeID);
+        for (Attribute attribute : attributeValues.keySet()) {
+            Set<Value> values = attributeValues.get(attribute);
             List<AttributeValueMolecule> molecules = new ArrayList<AttributeValueMolecule>(
                     values.size());
             for (Value value : values) {
@@ -557,7 +566,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                     valueTerm = ((DataValue) value);
                 }
                 molecules.add(leFactory.createAttributeValue(instanceID,
-                        attributeID, valueTerm));
+                        attribute.getIdentifier(), valueTerm));
             }
             if (molecules.size() > 1) {
                 resultExpressions.add(leFactory
