@@ -363,7 +363,7 @@ public class MinsFacade implements DatalogReasonerFacade {
         RuleSet minsEngine = new RuleSet(builtInConfig, db);
         minsEngine.debuglevel = 0;
         
-        System.out.println(kb);
+        //System.out.println(kb);
 
         // Translate (resp. Transfer) the knowledge base to MINS
         try {
