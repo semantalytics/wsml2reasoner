@@ -35,6 +35,12 @@ Note for Eclipse User: When using ant from eclipse you can get jsse.jar by using
     <fileset dir="${dir.lib}" includes="**/*.jar" />
   </path>
 
+  
+  <target name="create_jar_local" depends="compile">
+    <jar jarfile="wsml2reasoner.jar"
+         basedir="${dir.build}"
+         index="true" />
+  </target>
   <target name="compile">
     <mkdir dir="${dir.build}" />
     <javac debug="yes"
