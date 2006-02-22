@@ -68,7 +68,7 @@ public class LloydToporNormalizer implements OntologyNormalizer
 
         // create new ontology containing the resulting logical expressions:
         String resultIRI = (ontology.getIdentifier() != null ? ontology.getIdentifier().toString() + "-as-axioms" : "iri:normalized-ontology-" + ontology.hashCode());
-        Ontology resultOnt = wsmoFactory.createOntology(wsmoFactory.createIRI("reasoner:"+resultIRI));
+        Ontology resultOnt = wsmoFactory.createOntology(wsmoFactory.createIRI(resultIRI));
         for(Object n : ontology.listNamespaces())
         {
             resultOnt.addNamespace((Namespace)n);
@@ -77,7 +77,7 @@ public class LloydToporNormalizer implements OntologyNormalizer
         int axiomCount = 1;
         for(LogicalExpression expression : resultExp)
         {
-            Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI("reasoner:axiom-" + Integer.toString(axiomCount++) + Long.toString(System.currentTimeMillis())));
+            Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI("reasoner_axiom-" + Integer.toString(axiomCount++) + Long.toString(System.currentTimeMillis())));
             axiom.addDefinition(expression);
             try
             {

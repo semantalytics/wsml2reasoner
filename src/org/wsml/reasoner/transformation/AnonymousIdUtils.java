@@ -19,7 +19,7 @@ public abstract class AnonymousIdUtils
 {
     protected static AnonymousIdTranslator anonymousIdTranslator;
     protected static final Random RND = new Random();
-    protected static final String PREFIX = "anonymous:";
+    protected static final String PREFIX = "anonymous_";
 
     /**
      * Generates a new IRI URI with reasonable degree of uniqueness.

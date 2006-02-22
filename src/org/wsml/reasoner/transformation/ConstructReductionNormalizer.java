@@ -90,7 +90,7 @@ public class ConstructReductionNormalizer implements OntologyNormalizer
         int axiomCount = 1;
         for(LogicalExpression expression : resultExp)
         {
-            Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI("reasoner:axiom-" + Integer.toString(axiomCount++)));
+            Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI("reasoner_axiom-" + Integer.toString(axiomCount++)));
             axiom.addDefinition(expression);
             try
             {
