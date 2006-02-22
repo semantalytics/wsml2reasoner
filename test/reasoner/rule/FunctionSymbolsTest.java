@@ -37,17 +37,17 @@ import test.BaseReasonerTest;
  * @author Adrian Mocan
  *
  * Created on 17-Feb-2006
- * Committed by $Author: adrian $
+ * Committed by $Author: darko $
  * 
  * $Source: /home/richi/temp/w2r/wsml2reasoner/test/reasoner/rule/FunctionSymbolsTest.java,v $, 
- * @version $Revision: 1.1 $ $Date: 2006-02-17 16:07:11 $
+ * @version $Revision: 1.2 $ $Date: 2006-02-22 13:17:46 $
  */
 
 public class FunctionSymbolsTest extends BaseReasonerTest {
 
     private static final String NS = "http://examples.com/ontologies/travel#";
 
-    private static final String ONTOLOGY_FILE = "reasoner/flight/Travel.wsml";
+    private static final String ONTOLOGY_FILE = "reasoner/rule/Travel.wsml";
 
     public static void main(String[] args) {
         junit.textui.TestRunner.run(FunctionSymbolsTest.suite());
