@@ -38,13 +38,40 @@ public abstract class WSMO4JManager {
         return dataFactory;
     }
     
+    
+   /* 
+    The following three 'create' methods have not been tested-
+    Simply, quick fixes to allow creation of factories with a param other
+    than null
+   */
+    
     /*
-     * Quick fix to allow both a WSMO Factory
+     * Quick fix to allow a WSMO Factory
      * to be created with desired properties
     */
-    public static WsmoFactory createWSMOFactory(Map properties) {
+    public static WsmoFactory createWsmoFactory(Map properties) {
     	wsmoFactory = Factory.createWsmoFactory(properties);
         return wsmoFactory;
+    }
+    
+    /*
+     * Quick fix to allow a LE Factory
+     * to be created with desired properties
+    */
+    public static LogicalExpressionFactory createLEFactory(Map properties) {
+    	leFactory = (org.wsmo.factory.LogicalExpressionFactory) Factory
+        	.createLogicalExpressionFactory(properties);
+    	return leFactory;
+    	
+    }
+    
+    /*
+     * Quick fix to allow a Data Factory
+     * to be created with desired properties
+    */
+    public static DataFactory createDataFactory(Map properties) {
+    	dataFactory = (DataFactory) Factory.createDataFactory(properties);
+        return dataFactory;
     }
 
 }
