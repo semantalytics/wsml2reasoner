@@ -77,7 +77,7 @@ public class LloydToporNormalizer implements OntologyNormalizer
         int axiomCount = 1;
         for(LogicalExpression expression : resultExp)
         {
-            Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI("reasoner_axiom-" + Integer.toString(axiomCount++) + Long.toString(System.currentTimeMillis())));
+            Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI("http://www.wsmo.org/reasoner/" + "reasoner_axiom-" + Integer.toString(axiomCount++) + Long.toString(System.currentTimeMillis())));
             axiom.addDefinition(expression);
             try
             {
