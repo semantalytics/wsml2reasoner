@@ -26,6 +26,7 @@ import org.omwg.logicalexpression.*;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.*;
 import org.wsml.reasoner.impl.*;
+import org.wsmo.common.IRI;
 
 /**
  * Package: package org.wsml.reasoner.datalog.wrapper.mins;
@@ -171,10 +172,23 @@ public class MinsSymbolMap {
         return mins2wsml.get(variableNo);
     }
     
+    /*
+    convert2wsml(Term) now handles function symbols --- not yet fully tested!!
+    */
+    
     public org.omwg.logicalexpression.terms.Term convertToWSML(Term term) throws UnsupportedFeatureException {
         org.omwg.logicalexpression.terms.Term result = null;
     	if(term.isConstTerm()){
-            return tool2wsmlConstants.get(((org.deri.mins.terms.ConstTerm)term).symbol);
+    		org.omwg.logicalexpression.terms.Term id = tool2wsmlConstants.get(((org.deri.mins.terms.ConstTerm)term).symbol);
+    		if(term.pars==null || term.pars.length == 0) return id;
+    		ArrayList<org.omwg.logicalexpression.terms.Term> termList = 
+    			new ArrayList<org.omwg.logicalexpression.terms.Term>();
+    		for (int i=0; i < term.pars.length; i++) {
+    			termList.add(convertToWSML(term.pars[i]));
+    		}
+    		return WSMO4JManager.getLogicalExpressionFactory().createConstructedTerm(
+    				(IRI)id,termList);
+    		
     	}else if (term.isStringTerm()){
     	    return WSMO4JManager.getDataFactory().createWsmlString(((StringTerm)term).s);
         }else if (term.isNumTerm()){
