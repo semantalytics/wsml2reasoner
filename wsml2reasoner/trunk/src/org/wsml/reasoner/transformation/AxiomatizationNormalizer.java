@@ -244,10 +244,10 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
             resultExpressions.add(createTransitivityConstraint(conceptID,
                     attributeID));
         }
-        Attribute inverseAttribute = attribute.getInverseOf();
+        Identifier inverseAttribute = attribute.getInverseOf();
         if (inverseAttribute != null) {
             resultExpressions.addAll(createInverseConstraints(conceptID,
-                    attributeID, inverseAttribute.getIdentifier()));
+                    attributeID, inverseAttribute));
         }
 
         // process cardinality constraints:
@@ -551,9 +551,9 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         }
 
         // process attribute values:
-        Map<Attribute, Set<Value>> attributeValues = (Map<Attribute, Set<Value>>) instance
+        Map<Identifier, Set<Value>> attributeValues = (Map<Identifier, Set<Value>>) instance
                 .listAttributeValues();
-        for (Attribute attribute : attributeValues.keySet()) {
+        for (Identifier attribute : attributeValues.keySet()) {
             Set<Value> values = attributeValues.get(attribute);
             List<AttributeValueMolecule> molecules = new ArrayList<AttributeValueMolecule>(
                     values.size());
@@ -566,7 +566,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                     valueTerm = ((DataValue) value);
                 }
                 molecules.add(leFactory.createAttributeValue(instanceID,
-                        attribute.getIdentifier(), valueTerm));
+                        attribute, valueTerm));
             }
             if (molecules.size() > 1) {
                 resultExpressions.add(leFactory
