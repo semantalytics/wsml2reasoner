@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2005 National University of Ireland, Galway
+ *                    University of Innsbruck, Austria
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,10 +19,7 @@
 
 package reasoner.rule;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -34,13 +32,13 @@ import test.BaseReasonerTest;
 /** 
  * Interface or class description
  * 
- * @author Adrian Mocan
+ * @author Adrian Mocan, Holger Lausen
  *
  * Created on 17-Feb-2006
- * Committed by $Author: darko $
+ * Committed by $Author: hlausen $
  * 
  * $Source: /home/richi/temp/w2r/wsml2reasoner/test/reasoner/rule/FunctionSymbolsTest.java,v $, 
- * @version $Revision: 1.2 $ $Date: 2006-02-22 13:17:46 $
+ * @version $Revision: 1.3 $ $Date: 2006-03-02 13:41:49 $
  */
 
 public class FunctionSymbolsTest extends BaseReasonerTest {
@@ -71,8 +69,11 @@ public class FunctionSymbolsTest extends BaseReasonerTest {
         String query = "?x memberOf travelVoucher";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS
-                + "f(" + NS + "my_trainTicket)"));
+        List terms = new ArrayList();
+        terms.add(wsmoFactory.createIRI(NS+"my_trainTicket"));
+        binding.put(wsmoFactory.createVariable("x"), 
+                leFactory.createConstructedTerm(
+                        wsmoFactory.createIRI(NS+ "f"),terms));
         expected.add(binding);
         performQuery(query, expected);
         System.out.println("Finished query.");
