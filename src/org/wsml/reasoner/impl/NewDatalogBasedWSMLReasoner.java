@@ -68,7 +68,7 @@ import org.wsmo.factory.WsmoFactory;
  */
 public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         WSMLCoreReasoner {
-    protected final static String WSML_RESULT_PREDICATE = "wsml_query_result";
+    protected final static String WSML_RESULT_PREDICATE = "http://www.wsmo.org/reasoner/" + "wsml_query_result";
 
     protected org.wsml.reasoner.DatalogReasonerFacade builtInFacade = null;
 
