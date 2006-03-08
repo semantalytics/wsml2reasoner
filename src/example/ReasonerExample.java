@@ -29,11 +29,13 @@ import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
-import org.wsml.reasoner.api.queryanswering.QueryAnsweringRequest;
-import org.wsml.reasoner.impl.*;
+import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
+import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
-import org.wsmo.factory.*;
+import org.wsmo.factory.Factory;
+import org.wsmo.factory.LogicalExpressionFactory;
+import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.Serializer;
 
@@ -77,8 +79,6 @@ public class ReasonerExample {
 
         LogicalExpression query = leFactory
             .createLogicalExpression(queryString, exampleOntology);
-		QueryAnsweringRequest qaRequest = new QueryAnsweringRequestImpl(
-				exampleOntology.getIdentifier().toString(), query);
 
 		// get A reasoner
 		WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()

@@ -16,25 +16,43 @@
  */
 package org.deri.wsml.reasoner;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.deri.wsmo4j.io.serializer.wsml.*;
-import org.omwg.logicalexpression.*;
-import org.omwg.logicalexpression.terms.*;
-import org.omwg.ontology.*;
-import org.wsml.reasoner.api.*;
-import org.wsml.reasoner.api.queryanswering.*;
-import org.wsml.reasoner.builtin.mins.*;
-import org.wsml.reasoner.impl.*;
-import org.wsmo.common.*;
-import org.wsmo.factory.*;
-import org.wsmo.validator.*;
-import org.wsmo.wsml.*;
+import org.deri.wsmo4j.io.serializer.wsml.VisitorSerializeWSMLTerms;
+import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.Ontology;
+import org.omwg.ontology.Variable;
+import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.builtin.mins.ConstraintViolationError;
+import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
+import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.common.IRI;
+import org.wsmo.common.TopEntity;
+import org.wsmo.common.WSML;
+import org.wsmo.factory.Factory;
+import org.wsmo.factory.LogicalExpressionFactory;
+import org.wsmo.factory.WsmoFactory;
+import org.wsmo.validator.ValidationError;
+import org.wsmo.validator.WsmlValidator;
+import org.wsmo.wsml.Parser;
+import org.wsmo.wsml.ParserException;
 
 /**
  * Web front-end for the WSML Ontobroker reasoner. Loads the given ontology into
@@ -43,7 +61,7 @@ import org.wsmo.wsml.*;
  * 
  * 
  * @see org.deri.wsml.reasoner.ontobroker.Reasoner
- * @author Jos de Bruijn $Author: hlausen $ $Date: 2005-12-02 12:51:03 $
+ * @author Jos de Bruijn $Author: gabor $ $Date: 2006-03-08 18:08:41 $
  */
 public class ReasonerServlet extends HttpServlet {
     /**
@@ -227,9 +245,6 @@ public class ReasonerServlet extends HttpServlet {
             if (!inFrame){
                 out.println("<h3>Query answer:</h3>");
             }
-
-            QueryAnsweringRequest qaRequest = new QueryAnsweringRequestImpl(
-                    ontology.getIdentifier().toString(), query);
 
             // get A reasoner
             WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().

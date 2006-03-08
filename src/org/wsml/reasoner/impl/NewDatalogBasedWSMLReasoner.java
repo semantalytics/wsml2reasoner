@@ -34,9 +34,11 @@ import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.*;
-import org.wsml.reasoner.api.Request;
-import org.wsml.reasoner.api.Result;
+import org.wsml.reasoner.ConjunctiveQuery;
+import org.wsml.reasoner.DatalogException;
+import org.wsml.reasoner.ExternalToolException;
+import org.wsml.reasoner.Literal;
+import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.api.WSMLCoreReasoner;
 import org.wsml.reasoner.api.WSMLFlightReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
@@ -91,11 +93,6 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         }
         wsmoFactory = WSMO4JManager.getWSMOFactory();
         leFactory = WSMO4JManager.getLogicalExpressionFactory();
-    }
-
-    public Result execute(Request req) throws UnsupportedOperationException,
-            IllegalArgumentException {
-        throw new UnsupportedOperationException("This method is deprecated!!!");
     }
 
     protected Set<org.wsml.reasoner.Rule> convertOntology(Ontology o) {

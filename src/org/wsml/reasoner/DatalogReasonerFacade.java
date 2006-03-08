@@ -65,8 +65,7 @@ public interface DatalogReasonerFacade {
      * Evaluates a given query on a particular external tool.
      * 
      * @param q
-     *            the query to be evaluated. The query contains a reference to
-     *            the knowledgebase against which the query is posed.
+     *            the query to be evaluated.
      * @return a set of variable bindings (map with variables as keys, and the
      *         bindings: IRIs or DataValues as values)
      * @throws ExternalToolException
