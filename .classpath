@@ -10,7 +10,7 @@
 	<classpathentry kind="lib" path="lib/ext/wsmx/wsmx-integration-0.2.1b.jar"/>
 	<classpathentry kind="lib" path="lib/ext/mins/mins-v0.1.01.jar"/>
 	<classpathentry kind="lib" path="lib/ext/wsmo4j/wsmlparser-20060210.jar"/>
-	<classpathentry kind="lib" path="lib/ext/wsmo4j/wsmo4j-20060301.jar"/>
 	<classpathentry kind="lib" path="lib/ext/kaon2/kaon2-2005-12-08.jar"/>
+	<classpathentry kind="lib" path="lib/ext/wsmo4j/wsmo4j-20060308.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
