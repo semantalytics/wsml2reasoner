@@ -117,7 +117,7 @@ concept Woman subConceptOf { Female, Humanoid}
 
 relation killing( ofType Being,  ofType Living,  ofType _integer)
 
-relation slaying/3 subRelationOf killing
+//relation slaying( ofType Being,  ofType Living,  ofType _integer) subRelationOf killing
 
 instance Arathorn memberOf Man
      hasName hasValue "Arathorn"

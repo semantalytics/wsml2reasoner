@@ -59,8 +59,7 @@ public class BaseReasonerTest extends TestCase {
 
         // Set up WSML parser
 
-        Parser wsmlparserimpl = org.wsmo.factory.Factory
-                .createParser(null);
+        Parser wsmlparserimpl = org.wsmo.factory.Factory.createParser(null);
 
         // Set up serializer
 
@@ -92,8 +91,12 @@ public class BaseReasonerTest extends TestCase {
         // WSMLReasonerFactory.WSMLVariant.WSML_CORE);
         // params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
         // WSMLReasonerFactory.BuiltInReasoner.KAON2);
+        // wsmlReasoner = DefaultWSMLReasonerFactory
+        // .getFactory()
+        // .getWSMLFlightReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
-                .getWSMLFlightReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
+                .getWSMLFlightReasoner(
+                        WSMLReasonerFactory.BuiltInReasoner.KAON2);
 
         // Register ontology
         System.out.println("Registering ontology");
@@ -159,25 +162,30 @@ public class BaseReasonerTest extends TestCase {
     }
 
     /**
-     * Utiltiy to get a Reader, tries first fileReader and then to load
-     * from clath pass, helps avoiding FileNotFound exception during automated testing
-     * @param location of file
+     * Utiltiy to get a Reader, tries first fileReader and then to load from
+     * clath pass, helps avoiding FileNotFound exception during automated
+     * testing
+     * 
+     * @param location
+     *            of file
      * @return Reader
      */
-    public static Reader getReaderForFile(String location){
-        Reader ontoReader= null;
-        try{
+    public static Reader getReaderForFile(String location) {
+        Reader ontoReader = null;
+        try {
             ontoReader = new FileReader(location);
-        }catch (FileNotFoundException e){
-            //get current class loader and try to load from there...
-            InputStream is = new BaseReasonerTest().getClass().getClassLoader().getResourceAsStream(location);
-            //System.out.println();
-            assertNotNull("Could not Load file from class path: "+location, is);
+        } catch (FileNotFoundException e) {
+            // get current class loader and try to load from there...
+            InputStream is = new BaseReasonerTest().getClass().getClassLoader()
+                    .getResourceAsStream(location);
+            // System.out.println();
+            assertNotNull("Could not Load file from class path: " + location,
+                    is);
             ontoReader = new InputStreamReader(is);
         }
-        assertNotNull("Could not Load file from file system: "+location, ontoReader);
+        assertNotNull("Could not Load file from file system: " + location,
+                ontoReader);
         return ontoReader;
     }
-    
-    
+
 }
