@@ -69,7 +69,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
     public WSMLCoreReasoner getWSMLCoreReasoner(Map<String, Object> params)
             throws UnsupportedOperationException {
         if (params == null) {
-            return new org.wsml.reasoner.impl.NewDatalogBasedWSMLReasoner(
+            return new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
                     BuiltInReasoner.KAON2, new WSMO4JManager());
         } else {
             WSMO4JManager wsmoManager = extractWsmoManager(params);
@@ -77,7 +77,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
                     .containsKey(PARAM_BUILT_IN_REASONER) ? (BuiltInReasoner) params
                     .get(PARAM_BUILT_IN_REASONER)
                     : BuiltInReasoner.KAON2;
-            return new org.wsml.reasoner.impl.NewDatalogBasedWSMLReasoner(
+            return new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
                     builtin, wsmoManager);
         }
     }
@@ -90,7 +90,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
     public WSMLFlightReasoner getWSMLFlightReasoner(Map<String, Object> params)
             throws UnsupportedOperationException {
         if (params == null) {
-            return new org.wsml.reasoner.impl.NewDatalogBasedWSMLReasoner(
+            return new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
                     BuiltInReasoner.KAON2, new WSMO4JManager());
         } else {
             WSMO4JManager wsmoManager = extractWsmoManager(params);
@@ -98,7 +98,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
                     .containsKey(PARAM_BUILT_IN_REASONER) ? (BuiltInReasoner) params
                     .get(PARAM_BUILT_IN_REASONER)
                     : BuiltInReasoner.KAON2;
-            return new org.wsml.reasoner.impl.NewDatalogBasedWSMLReasoner(
+            return new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
                     builtin, wsmoManager);
         }
     }
