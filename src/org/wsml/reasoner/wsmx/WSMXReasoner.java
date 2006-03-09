@@ -40,12 +40,10 @@ public class WSMXReasoner implements WSMXReasonerInterface// implements
     public WSMXReasoner() {
         // create reasoner:
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put(WSMLReasonerFactory.PARAM_WSML_VARIANT,
-                WSMLReasonerFactory.WSMLVariant.WSML_CORE);
         params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
                 WSMLReasonerFactory.BuiltInReasoner.KAON2);
         reasoner = DefaultWSMLReasonerFactory.getFactory()
-                .getWSMLFlightReasoner();
+                .getWSMLFlightReasoner(params);
     }
 
     /**

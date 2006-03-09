@@ -47,12 +47,12 @@ public class BaseReasonerTest extends TestCase {
     protected static LogicalExpressionFactory leFactory = null;
 
     protected static DataFactory dataFactory = null;
-    
+
     protected static WSMO4JManager wsmoManager = null;
 
     protected static void setupScenario(String ontologyFile) throws Exception {
         // Set up factories for creating WSML elements
-        
+
         wsmoManager = new WSMO4JManager();
 
         leFactory = wsmoManager.getLogicalExpressionFactory();
@@ -90,17 +90,13 @@ public class BaseReasonerTest extends TestCase {
         System.out.println("--------------\n\n");
 
         // Create reasoner
-        // Map<String, Object> params = new HashMap<String, Object>();
-        // params.put(WSMLReasonerFactory.PARAM_WSML_VARIANT,
-        // WSMLReasonerFactory.WSMLVariant.WSML_CORE);
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
+                WSMLReasonerFactory.BuiltInReasoner.KAON2);
         // params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
-        // WSMLReasonerFactory.BuiltInReasoner.KAON2);
-        // wsmlReasoner = DefaultWSMLReasonerFactory
-        // .getFactory()
-        // .getWSMLFlightReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
+        // WSMLReasonerFactory.BuiltInReasoner.MINS);
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
-                .getWSMLFlightReasoner(
-                        WSMLReasonerFactory.BuiltInReasoner.KAON2);
+                .getWSMLFlightReasoner(params);
 
         // Register ontology
         System.out.println("Registering ontology");

@@ -65,8 +65,11 @@ public class ReasonerWS{
         
         WsmlValidator wv = Factory.createWsmlValidator(null);
 
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
+                WSMLReasonerFactory.BuiltInReasoner.MINS);
         WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().
-                getWSMLFlightReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
+                getWSMLFlightReasoner(params);
 
         // Register ontology
         reasoner.registerOntology(ont);
