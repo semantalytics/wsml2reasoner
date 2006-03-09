@@ -28,7 +28,6 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsml.reasoner.transformation.AnonymousIdUtils.AnonymousIdTranslator;
 import org.wsml.reasoner.transformation.le.DisjunctionPullRules;
 import org.wsml.reasoner.transformation.le.ImplicationReductionRules;
 import org.wsml.reasoner.transformation.le.LogicalExpressionNormalizer;
@@ -38,7 +37,6 @@ import org.wsml.reasoner.transformation.le.NormalizationRule;
 import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
 import org.wsmo.common.Namespace;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 
 public class ConstructReductionNormalizer implements OntologyNormalizer
@@ -58,7 +56,7 @@ public class ConstructReductionNormalizer implements OntologyNormalizer
         postOrderRules.addAll((List<NormalizationRule>)DisjunctionPullRules.instantiate());
         leNormalizer = new OnePassReplacementNormalizer(preOrderRules, postOrderRules); 
         wsmoFactory = WSMO4JManager.getWSMOFactory();
-        anonymousIdTranslator = AnonymousIdUtils.getAnonymousIdTranslator();
+        anonymousIdTranslator = new AnonymousIdTranslator(wsmoFactory);
     }
 
     public Ontology normalize(Ontology ontology)
