@@ -69,7 +69,7 @@ import org.wsmo.factory.WsmoFactory;
  * @author Uwe Keller, DERI Innsbruck
  * @author Gabor Nagypal, FZI
  */
-public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
+public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         WSMLCoreReasoner {
     protected final static String WSML_RESULT_PREDICATE = "http://www.wsmo.org/reasoner/"
             + "wsml_query_result";
@@ -82,7 +82,7 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 
     protected WSMO4JManager wsmoManager;
 
-    public NewDatalogBasedWSMLReasoner(
+    public DatalogBasedWSMLReasoner(
             WSMLReasonerFactory.BuiltInReasoner builtInType,
             WSMO4JManager wsmoManager) {
         this.wsmoManager = wsmoManager;
