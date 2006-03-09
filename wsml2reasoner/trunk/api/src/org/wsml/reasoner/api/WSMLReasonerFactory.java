@@ -19,6 +19,7 @@
 
 package org.wsml.reasoner.api;
 
+import java.util.Map;
 
 /**
  * An interface for getting WSML Reasoners for the various variants of WSML.
@@ -27,35 +28,54 @@ package org.wsml.reasoner.api;
  */
 public interface WSMLReasonerFactory {
 
-    public String PARAM_WSML_VARIANT = "WSML VARIANT";
+    // public String PARAM_WSML_VARIANT = "WSML VARIANT";
+    //
+    // public enum WSMLVariant {
+    // WSML_CORE, WSML_FLIGHT, WSML_RULE, WSML_DL, WSML_FULL
+    // };
 
-    public enum WSMLVariant {
-        WSML_CORE, WSML_FLIGHT, WSML_RULE, WSML_DL, WSML_FULL
-    };
+    public String PARAM_WSMO_FACTORY = "WSML FACTORY";
+
+    public String PARAM_LE_FACTORY = "LE FACTORY";
+
+    public String PARAM_DATA_FACTORY = "DATA FACTORY";
 
     public String PARAM_BUILT_IN_REASONER = "BUILT IN REASONER";
 
     public enum BuiltInReasoner {
-        DLV, MANDARAX, KAON2, MINS, FLORA2
+        KAON2, MINS
     };
 
     /**
      * Creates a WSML Core reasoner backed up by the chosen Datalog
      * implementation
      * 
-     * @param builtInReasoner
-     *            the built-in reasoner to be used by the WSML reasoner
+     * @param params
+     *            configuration parameters. The following parameters are
+     *            accepted at the moment:
+     *            <ul>
+     *            <li>PARAM_WSMO_FACTORY: The WsmoFactory implementation to use</li>
+     *            <li>PARAM_LE_FACTORY: The LogicalExpressionFactory
+     *            implementation to use</li>
+     *            <li>PARAM_DATA_FACTORY: The DataFactory implementation to use</li>
+     *            <li>PARAM_BUILT_IN_REASONER: The internal reasoner
+     *            implementation to use, see
+     * @link BuiltInReasoner</li>
+     *       </ul>
+     *       Meaningful defaults are used, if a specific parameter is not
+     *       defined. For the WSMO4J factories the factories with "null" as
+     *       parameter are used, and as the internal reasoner Kaon2 is used by
+     *       default.
      * @return the resoner
      * @throws UnsupportedOperationException
      */
-    public WSMLCoreReasoner getWSMLCoreReasoner(BuiltInReasoner builtInReasoner)
+    public WSMLCoreReasoner getWSMLCoreReasoner(Map<String, Object> params)
             throws UnsupportedOperationException;
 
     /**
-     * Creates a WSML Core reasoner backed up by the default Datalog engine
+     * Creates a WSML Core reasoner backed up by the default Datalog engine, and
+     * using the default WSMO4J factories.
      * 
-     * @param builtInReasoner
-     *            the built-in reasoner to be used by the WSML reasoner
      * @return the resoner
      * @throws UnsupportedOperationException
      */
@@ -66,20 +86,32 @@ public interface WSMLReasonerFactory {
      * Creates a WSML Flight reasoner backed up by the chosen Datalog
      * implementation
      * 
-     * @param builtInReasoner
-     *            the built-in reasoner to be used by the WSML reasoner
+     * @param params
+     *            configuration parameters. The following parameters are
+     *            accepted at the moment:
+     *            <ul>
+     *            <li>PARAM_WSMO_FACTORY: The WsmoFactory implementation to use</li>
+     *            <li>PARAM_LE_FACTORY: The LogicalExpressionFactory
+     *            implementation to use</li>
+     *            <li>PARAM_DATA_FACTORY: The DataFactory implementation to use</li>
+     *            <li>PARAM_BUILT_IN_REASONER: The internal reasoner
+     *            implementation to use, see
+     * @link BuiltInReasoner</li>
+     *       </ul>
+     *       Meaningful defaults are used, if a specific parameter is not
+     *       defined. For the WSMO4J factories the factories with "null" as
+     *       parameter are used, and as the internal reasoner Kaon2 is used by
+     *       default.
      * @return the resoner
      * @throws UnsupportedOperationException
      */
-    public WSMLFlightReasoner getWSMLFlightReasoner(
-            BuiltInReasoner builtInReasoner)
+    public WSMLFlightReasoner getWSMLFlightReasoner(Map<String, Object> params)
             throws UnsupportedOperationException;
 
     /**
      * Creates a WSML Flight reasoner backed up by the default Datalog engine
+     * and the default WSMO4J factories.
      * 
-     * @param builtInReasoner
-     *            the built-in reasoner to be used by the WSML reasoner
      * @return the resoner
      * @throws UnsupportedOperationException
      */

@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +62,7 @@ import org.wsmo.wsml.ParserException;
  * 
  * 
  * @see org.deri.wsml.reasoner.ontobroker.Reasoner
- * @author Jos de Bruijn $Author: gabor $ $Date: 2006-03-09 15:26:20 $
+ * @author Jos de Bruijn $Author: gabor $ $Date: 2006-03-09 16:54:32 $
  */
 public class ReasonerServlet extends HttpServlet {
     /**
@@ -248,8 +249,11 @@ public class ReasonerServlet extends HttpServlet {
             }
 
             // get A reasoner
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
+                    WSMLReasonerFactory.BuiltInReasoner.MINS);
             WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().
-                    getWSMLFlightReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
+                    getWSMLFlightReasoner(params);
 
             // Register ontology
             reasoner.registerOntology(ontology);

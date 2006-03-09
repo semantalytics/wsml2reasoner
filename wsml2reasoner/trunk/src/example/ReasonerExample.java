@@ -20,6 +20,7 @@ package example;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -82,9 +83,11 @@ public class ReasonerExample {
                 queryString, exampleOntology);
 
         // get A reasoner
-        WSMLReasoner reasoner = DefaultWSMLReasonerFactory
-                .getFactory()
-                .getWSMLFlightReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
+                WSMLReasonerFactory.BuiltInReasoner.MINS);
+        WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
+                .getWSMLFlightReasoner(params);
 
         // Register ontology
         reasoner.registerOntology(exampleOntology);
