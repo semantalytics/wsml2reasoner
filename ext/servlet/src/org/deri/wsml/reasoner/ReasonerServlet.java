@@ -62,7 +62,7 @@ import org.wsmo.wsml.ParserException;
  * 
  * 
  * @see org.deri.wsml.reasoner.ontobroker.Reasoner
- * @author Jos de Bruijn $Author: gabor $ $Date: 2006-03-09 16:54:32 $
+ * @author Jos de Bruijn $Author: gabor $ $Date: 2006-03-09 17:04:00 $
  */
 public class ReasonerServlet extends HttpServlet {
     /**
@@ -253,7 +253,7 @@ public class ReasonerServlet extends HttpServlet {
             params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
                     WSMLReasonerFactory.BuiltInReasoner.MINS);
             WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().
-                    getWSMLFlightReasoner(params);
+                    createWSMLFlightReasoner(params);
 
             // Register ontology
             reasoner.registerOntology(ontology);

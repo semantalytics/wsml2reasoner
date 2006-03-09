@@ -124,7 +124,7 @@ public class OntologyRegistrationTest extends TestCase {
         wsmoFactory = wsmoManager.getWSMOFactory();
 
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
-                .getWSMLFlightReasoner();
+                .createWSMLFlightReasoner();
     }
 
 }

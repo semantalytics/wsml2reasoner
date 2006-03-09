@@ -66,7 +66,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         return new WSMO4JManager(wsmoFactory, leFactory, dataFactory);
     }
 
-    public WSMLCoreReasoner getWSMLCoreReasoner(Map<String, Object> params)
+    public WSMLCoreReasoner createWSMLCoreReasoner(Map<String, Object> params)
             throws UnsupportedOperationException {
         if (params == null) {
             return new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
@@ -82,12 +82,12 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         }
     }
 
-    public WSMLCoreReasoner getWSMLCoreReasoner()
+    public WSMLCoreReasoner createWSMLCoreReasoner()
             throws UnsupportedOperationException {
-        return getWSMLCoreReasoner(null);
+        return createWSMLCoreReasoner(null);
     }
 
-    public WSMLFlightReasoner getWSMLFlightReasoner(Map<String, Object> params)
+    public WSMLFlightReasoner createWSMLFlightReasoner(Map<String, Object> params)
             throws UnsupportedOperationException {
         if (params == null) {
             return new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
@@ -103,9 +103,9 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         }
     }
 
-    public WSMLFlightReasoner getWSMLFlightReasoner()
+    public WSMLFlightReasoner createWSMLFlightReasoner()
             throws UnsupportedOperationException {
-        return getWSMLFlightReasoner(null);
+        return createWSMLFlightReasoner(null);
     }
 
 }
