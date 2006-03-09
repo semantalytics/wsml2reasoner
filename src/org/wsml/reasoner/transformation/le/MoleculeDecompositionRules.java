@@ -24,19 +24,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.omwg.logicalexpression.Atom;
-import org.omwg.logicalexpression.AttributeConstraintMolecule;
-import org.omwg.logicalexpression.AttributeInferenceMolecule;
-import org.omwg.logicalexpression.AttributeMolecule;
-import org.omwg.logicalexpression.AttributeValueMolecule;
-import org.omwg.logicalexpression.CompoundMolecule;
-import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.logicalexpression.MembershipMolecule;
-import org.omwg.logicalexpression.Molecule;
-import org.omwg.logicalexpression.SubConceptMolecule;
+import org.omwg.logicalexpression.*;
 import org.omwg.logicalexpression.terms.Term;
-import org.wsml.reasoner.transformation.AnonymousIdUtils;
-import org.wsml.reasoner.transformation.AnonymousIdUtils.AnonymousIdTranslator;
+import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsml.reasoner.transformation.AnonymousIdTranslator;
 import org.wsmo.common.Identifier;
 
 /**
@@ -52,7 +43,7 @@ public class MoleculeDecompositionRules extends FixedModificationRules
 
     private MoleculeDecompositionRules()
     {
-        anonymousIDTranslator = AnonymousIdUtils.getAnonymousIdTranslator();
+        anonymousIDTranslator = new AnonymousIdTranslator(WSMO4JManager.getWSMOFactory());
         rules.add(new MoleculeDecompositionRule());
         rules.add(new MoleculeAnonymousIDRule());
         rules.add(new AtomAnonymousIDRule());
@@ -189,12 +180,6 @@ public class MoleculeDecompositionRules extends FixedModificationRules
 
     protected class AtomAnonymousIDRule implements NormalizationRule
     {
-        protected AnonymousIdTranslator anonymousIDTranslator;
-
-        public AtomAnonymousIDRule()
-        {
-            anonymousIDTranslator = AnonymousIdUtils.getAnonymousIdTranslator();
-        }
 
         public LogicalExpression apply(LogicalExpression expression)
         {
@@ -221,12 +206,6 @@ public class MoleculeDecompositionRules extends FixedModificationRules
     
     protected class MoleculeAnonymousIDRule implements NormalizationRule
     {
-        protected AnonymousIdTranslator anonymousIDTranslator;
-
-        public MoleculeAnonymousIDRule()
-        {
-            anonymousIDTranslator = AnonymousIdUtils.getAnonymousIdTranslator();
-        }
 
         public LogicalExpression apply(LogicalExpression expression)
         {
