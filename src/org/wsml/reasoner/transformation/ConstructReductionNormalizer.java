@@ -39,66 +39,75 @@ import org.wsmo.common.Namespace;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.WsmoFactory;
 
-public class ConstructReductionNormalizer implements OntologyNormalizer
-{
+public class ConstructReductionNormalizer implements OntologyNormalizer {
     protected LogicalExpressionNormalizer leNormalizer;
+
     protected WsmoFactory wsmoFactory;
+
     protected AnonymousIdTranslator anonymousIdTranslator;
 
-    public ConstructReductionNormalizer()
-    {
+    public ConstructReductionNormalizer(WSMO4JManager wsmoManager) {
         List<NormalizationRule> preOrderRules = new ArrayList<NormalizationRule>();
         List<NormalizationRule> postOrderRules = new ArrayList<NormalizationRule>();
-        preOrderRules.addAll((List<NormalizationRule>)ImplicationReductionRules.instantiate());
-//        preOrderRules.addAll((List<NormalizationRule>)DisjunctionPullRules.instantiate());
-        preOrderRules.addAll((List<NormalizationRule>)NegationPushRules.instantiate());
-        postOrderRules.addAll((List<NormalizationRule>)MoleculeDecompositionRules.instantiate());
-        postOrderRules.addAll((List<NormalizationRule>)DisjunctionPullRules.instantiate());
-        leNormalizer = new OnePassReplacementNormalizer(preOrderRules, postOrderRules); 
-        wsmoFactory = WSMO4JManager.getWSMOFactory();
+        preOrderRules
+                .addAll((List<NormalizationRule>) new ImplicationReductionRules(
+                        wsmoManager));
+        // preOrderRules.addAll((List<NormalizationRule>)DisjunctionPullRules.instantiate());
+        preOrderRules.addAll((List<NormalizationRule>) new NegationPushRules(
+                wsmoManager));
+        postOrderRules
+                .addAll((List<NormalizationRule>) new MoleculeDecompositionRules(
+                        wsmoManager));
+        postOrderRules
+                .addAll((List<NormalizationRule>) new DisjunctionPullRules(
+                        wsmoManager));
+        leNormalizer = new OnePassReplacementNormalizer(preOrderRules,
+                postOrderRules, wsmoManager);
+        wsmoFactory = wsmoManager.getWSMOFactory();
         anonymousIdTranslator = new AnonymousIdTranslator(wsmoFactory);
     }
 
-    public Ontology normalize(Ontology ontology)
-    {
+    public Ontology normalize(Ontology ontology) {
         // gather logical expressions from axioms in ontology:
         Set<LogicalExpression> expressions = new HashSet<LogicalExpression>();
-        Set<Axiom> axioms = (Set<Axiom>)ontology.listAxioms();
-        for(Axiom axiom : axioms)
-        {
-            expressions.addAll((Collection<LogicalExpression>)axiom.listDefinitions());
+        Set<Axiom> axioms = (Set<Axiom>) ontology.listAxioms();
+        for (Axiom axiom : axioms) {
+            expressions.addAll((Collection<LogicalExpression>) axiom
+                    .listDefinitions());
         }
 
         // iteratively normalize logical expressions:
         Set<LogicalExpression> resultExp = new HashSet<LogicalExpression>();
-        for(LogicalExpression expression : expressions)
-        {
+        for (LogicalExpression expression : expressions) {
             anonymousIdTranslator.setScope(expression);
             resultExp.add(leNormalizer.normalize(expression));
         }
 
         // create new ontology containing the resulting logical expressions:
-        String resultIRI = (ontology.getIdentifier() != null ? ontology.getIdentifier().toString() + "-as-axioms" : "iri:normalized-ontology-" + ontology.hashCode());
-        Ontology resultOnt = wsmoFactory.createOntology(wsmoFactory.createIRI(resultIRI));
-        for(Object n : ontology.listNamespaces())
-        {
-            resultOnt.addNamespace((Namespace)n);
+        String resultIRI = (ontology.getIdentifier() != null ? ontology
+                .getIdentifier().toString()
+                + "-as-axioms" : "iri:normalized-ontology-"
+                + ontology.hashCode());
+        Ontology resultOnt = wsmoFactory.createOntology(wsmoFactory
+                .createIRI(resultIRI));
+        for (Object n : ontology.listNamespaces()) {
+            resultOnt.addNamespace((Namespace) n);
         }
         resultOnt.setDefaultNamespace(ontology.getDefaultNamespace());
         int axiomCount = 1;
-        for(LogicalExpression expression : resultExp)
-        {
-            Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI("http://www.wsmo.org/reasoner/" + "reasoner_axiom-" + Integer.toString(axiomCount++)));
+        for (LogicalExpression expression : resultExp) {
+            Axiom axiom = wsmoFactory.createAxiom(wsmoFactory
+                    .createIRI("http://www.wsmo.org/reasoner/"
+                            + "reasoner_axiom-"
+                            + Integer.toString(axiomCount++)));
             axiom.addDefinition(expression);
-            try
-            {
+            try {
                 resultOnt.addAxiom(axiom);
-            } catch(InvalidModelException e)
-            {
+            } catch (InvalidModelException e) {
                 e.printStackTrace();
             }
         }
-        
+
         return resultOnt;
     }
 }

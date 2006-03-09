@@ -41,10 +41,8 @@ import com.ontotext.wsmo4j.ontology.*;
 /**
  * Package: package org.wsml.reasoner.datalog.wrapper.mins;
  * 
- * Author: Darko Anicic, DERI Innsbruck,
- *         Holger Lausen, DERI Innsbruck,
- *         Uwe Keller, DERI Innsbruck,
- * Date $Date$
+ * Author: Darko Anicic, DERI Innsbruck, Holger Lausen, DERI Innsbruck, Uwe
+ * Keller, DERI Innsbruck, Date $Date$
  */
 public class MinsFacade implements DatalogReasonerFacade {
     private Logger logger = Logger
@@ -60,14 +58,18 @@ public class MinsFacade implements DatalogReasonerFacade {
      */
     private Map<String, RuleSet> registeredKbs = new HashMap<String, RuleSet>();
 
-    private MinsSymbolMap symbTransfomer = new MinsSymbolMap();
+    private WSMO4JManager wsmoManager;
+
+    private MinsSymbolMap symbTransfomer;
 
     /**
      * Creates a facade object that allows to invoke the MINS rule system for
      * performing query evaluation tasks.
      */
-    public MinsFacade() {
+    public MinsFacade(WSMO4JManager wsmoManager) {
         super();
+        this.wsmoManager = wsmoManager;
+        this.symbTransfomer = new MinsSymbolMap(wsmoManager);
         logger.setLevel(Level.OFF);
     }
 
@@ -77,12 +79,13 @@ public class MinsFacade implements DatalogReasonerFacade {
      * 
      * @throws ExternalToolException
      */
-    public Set<Map<Variable, Term>> evaluate(ConjunctiveQuery q, String ontologyURI) throws ExternalToolException {
+    public Set<Map<Variable, Term>> evaluate(ConjunctiveQuery q,
+            String ontologyURI) throws ExternalToolException {
         /*
-         * 0: Naive Evaluation (only stratifight prorgams)<BR> 
-         * 1: Dynamic Filtering Evaluation (only stratifight prorgams)<BR>
-         * 2: Wellfounded Evaluation with alternating fixed point (juergen says works)<BR> 
-         * 3: Wellfounded Evaluation (juergen says probably buggy!)
+         * 0: Naive Evaluation (only stratifight prorgams)<BR> 1: Dynamic
+         * Filtering Evaluation (only stratifight prorgams)<BR> 2: Wellfounded
+         * Evaluation with alternating fixed point (juergen says works)<BR> 3:
+         * Wellfounded Evaluation (juergen says probably buggy!)
          */
         int evaluationMethod = 1;
 
@@ -99,7 +102,6 @@ public class MinsFacade implements DatalogReasonerFacade {
 
             checkConstraint(minsEngine);
 
-
             Substitution s = minsEngine.getSubstitution(query);
 
             Set<Map<Variable, Term>> result = new HashSet<Map<Variable, Term>>();
@@ -111,8 +113,8 @@ public class MinsFacade implements DatalogReasonerFacade {
                     // not each index has necessarily a subsitution one that
                     // does not have is a variable
                     if (!(a.terms[i] instanceof Variable)) {
-                        Variable wsmlVariable = symbTransfomer
-                                .convertToWSML(i, q);
+                        Variable wsmlVariable = symbTransfomer.convertToWSML(i,
+                                q);
                         Term wsmlTerm = symbTransfomer
                                 .convertToWSML(a.terms[i]);
                         if (!(wsmlVariable instanceof TempVariable))
@@ -138,8 +140,9 @@ public class MinsFacade implements DatalogReasonerFacade {
      *            the datalog program that constitutes the knowledgebase
      * @throws UnsupportedFeatureException
      */
-    private void translateKnowledgebase(Set<org.wsml.reasoner.Rule> p, RuleSet minsEngine)
-            throws ExternalToolException, UnsupportedFeatureException {
+    private void translateKnowledgebase(Set<org.wsml.reasoner.Rule> p,
+            RuleSet minsEngine) throws ExternalToolException,
+            UnsupportedFeatureException {
         logger.info("Translate knowledgebase :" + p);
         if (p == null) {
             logger.info("KB is not referenced. Assume empty KB.");
@@ -187,9 +190,8 @@ public class MinsFacade implements DatalogReasonerFacade {
      * 
      * @throws UnsupportedFeatureException
      */
-    private void translateRule(org.wsml.reasoner.Rule r,
-            RuleSet minsEngine) throws ExternalToolException,
-            UnsupportedFeatureException {
+    private void translateRule(org.wsml.reasoner.Rule r, RuleSet minsEngine)
+            throws ExternalToolException, UnsupportedFeatureException {
         Rule rule;
         GroundAtom groundAtom;
         Body body;
@@ -201,78 +203,88 @@ public class MinsFacade implements DatalogReasonerFacade {
 
         if (r.isConstraint()) {
             r = new org.wsml.reasoner.Rule(
-                    //head
-                    new Literal(true, PRED_CONSTRAINT,
-                            WSMO4JManager.getDataFactory().createWsmlString(r.getBody().toString())),
-                    //body
+            // head
+                    new Literal(true, PRED_CONSTRAINT, wsmoManager
+                            .getDataFactory().createWsmlString(
+                                    r.getBody().toString())),
+                    // body
                     r.getBody());
             constraints2Queries.put(r.getBody().toString(),
                     new ConjunctiveQuery(r.getBody()));
-            //System.out.println(r);
+            // System.out.println(r);
         }
 
         // Translate head
         l = r.getHead();
-        if(l!=null){
-        // use predicatesymbol + arity to obtain mins pred number
-        no = symbTransfomer.convertToTool(l);
-        if (no==-1){
-            throw new RuntimeException("No BuiltIns Allowed in the Head of a Rule: "+r);
-        }
-        atom = translateLiteral2Atom(l, r);
-        head = new Head(no, atom.terms);
-        
-
-        // Care about body
-        List<Literal> rBody = r.getBody();
-
-        if (rBody.size() == 0) {
-            // rule is actually a fact
-            groundAtom = new GroundAtom(atom.terms);
-            minsEngine.addFact(no, groundAtom);
-        } else {
-            bodies = new Body[rBody.size()];
-            for (int i = 0; i < rBody.size(); i++) {
-                l = rBody.get(i);
-                // use predicatesymbol + arity to obtain mins pred number
-                no = symbTransfomer.convertToTool(l);
-                atom = translateLiteral2Atom(l, r);
-                body = createBody(no, atom.terms, l);
-                bodies[i] = body;
+        if (l != null) {
+            // use predicatesymbol + arity to obtain mins pred number
+            no = symbTransfomer.convertToTool(l);
+            if (no == -1) {
+                throw new RuntimeException(
+                        "No BuiltIns Allowed in the Head of a Rule: " + r);
             }
-            rule = new Rule(new Head[] { head }, bodies);
-            //System.out.println(r+"\n"+rule);
-            minsEngine.addRule(rule);
-        }
+            atom = translateLiteral2Atom(l, r);
+            head = new Head(no, atom.terms);
+
+            // Care about body
+            List<Literal> rBody = r.getBody();
+
+            if (rBody.size() == 0) {
+                // rule is actually a fact
+                groundAtom = new GroundAtom(atom.terms);
+                minsEngine.addFact(no, groundAtom);
+            } else {
+                bodies = new Body[rBody.size()];
+                for (int i = 0; i < rBody.size(); i++) {
+                    l = rBody.get(i);
+                    // use predicatesymbol + arity to obtain mins pred number
+                    no = symbTransfomer.convertToTool(l);
+                    atom = translateLiteral2Atom(l, r);
+                    body = createBody(no, atom.terms, l);
+                    bodies[i] = body;
+                }
+                rule = new Rule(new Head[] { head }, bodies);
+                // System.out.println(r+"\n"+rule);
+                minsEngine.addRule(rule);
+            }
         }
     }
-    
-    private Body createBody(int no, org.deri.mins.terms.Term[] terms, Literal lit){
+
+    private Body createBody(int no, org.deri.mins.terms.Term[] terms,
+            Literal lit) {
         String predSym = lit.getPredicateUri();
         boolean positive = !lit.isPositive();
         int arity = 0;
-        if (lit.getTerms()!=null) arity=lit.getTerms().length;
-        
-        if (no==-1){
-            if (predSym.equals(org.omwg.logicalexpression.Constants.NUMERIC_ADD) ||
-                    predSym.equals(org.omwg.logicalexpression.Constants.NUMERIC_MUL)){
-                terms = new org.deri.mins.terms.Term[]{
-                    terms[1],terms[2],terms[0]};
+        if (lit.getTerms() != null)
+            arity = lit.getTerms().length;
+
+        if (no == -1) {
+            if (predSym
+                    .equals(org.omwg.logicalexpression.Constants.NUMERIC_ADD)
+                    || predSym
+                            .equals(org.omwg.logicalexpression.Constants.NUMERIC_MUL)) {
+                terms = new org.deri.mins.terms.Term[] { terms[1], terms[2],
+                        terms[0] };
             }
-            if (predSym.equals(org.omwg.logicalexpression.Constants.NUMERIC_SUB) ||
-                    predSym.equals(org.omwg.logicalexpression.Constants.NUMERIC_DIV)){
-                terms = new org.deri.mins.terms.Term[]{
-                    terms[0],terms[2],terms[1]};
+            if (predSym
+                    .equals(org.omwg.logicalexpression.Constants.NUMERIC_SUB)
+                    || predSym
+                            .equals(org.omwg.logicalexpression.Constants.NUMERIC_DIV)) {
+                terms = new org.deri.mins.terms.Term[] { terms[0], terms[2],
+                        terms[1] };
             }
-            if (predSym.equals(org.omwg.logicalexpression.Constants.STRING_INEQUAL) ||
-                    predSym.equals(org.omwg.logicalexpression.Constants.NUMERIC_INEQUAL) ||
-                    predSym.equals(org.omwg.logicalexpression.Constants.INEQUAL)){
+            if (predSym
+                    .equals(org.omwg.logicalexpression.Constants.STRING_INEQUAL)
+                    || predSym
+                            .equals(org.omwg.logicalexpression.Constants.NUMERIC_INEQUAL)
+                    || predSym
+                            .equals(org.omwg.logicalexpression.Constants.INEQUAL)) {
                 positive = !positive;
             }
             int num = symbTransfomer.minsBuiltIn2No.get(predSym);
             return new BuiltinBody(symbTransfomer.minsBuiltIn2No.get(predSym),
-                positive,terms, 
-                symbTransfomer.minsBuiltinFunc.get(predSym));
+                    positive, terms, symbTransfomer.minsBuiltinFunc
+                            .get(predSym));
         }
         return new Body(no, positive, terms);
     }
@@ -286,7 +298,8 @@ public class MinsFacade implements DatalogReasonerFacade {
      * @throws ExternalToolException
      */
     private Atom translateLiteral2Atom(Literal literal,
-            Object queryOrRuleContext) throws ExternalToolException, UnsupportedFeatureException {
+            Object queryOrRuleContext) throws ExternalToolException,
+            UnsupportedFeatureException {
 
         Term[] args = literal.getTerms();
         org.deri.mins.terms.Term[] minsTerms = new org.deri.mins.terms.Term[args.length];
@@ -295,48 +308,50 @@ public class MinsFacade implements DatalogReasonerFacade {
         long predNo = symbTransfomer.convertToTool(literal);
 
         for (int i = 0; i < args.length; i++) {
-            minsTerms[i]=createMinsTerm(args[i],queryOrRuleContext);
+            minsTerms[i] = createMinsTerm(args[i], queryOrRuleContext);
         }
         atom = new Atom(minsTerms);
         return atom;
     }
-    
-    private org.deri.mins.terms.Term createMinsTerm(Term wsmlTerm, Object queryOrRuleContext){
+
+    private org.deri.mins.terms.Term createMinsTerm(Term wsmlTerm,
+            Object queryOrRuleContext) {
         org.deri.mins.terms.Term minsTerm;
         if (wsmlTerm instanceof Variable) {
-            minsTerm = new org.deri.mins.terms.Variable(
-                    symbTransfomer.convertToTool(
-                            (Variable) wsmlTerm, queryOrRuleContext));
+            minsTerm = new org.deri.mins.terms.Variable(symbTransfomer
+                    .convertToTool((Variable) wsmlTerm, queryOrRuleContext));
         } else if (wsmlTerm instanceof IRI) {
             minsTerm = new ConstTerm(symbTransfomer
                     .convertToTool((IRI) wsmlTerm));
         } else if (wsmlTerm instanceof ConstructedTerm) {
             ConstructedTerm ct = (ConstructedTerm) wsmlTerm;
-            org.deri.mins.terms.Term[] argTerms = new org.deri.mins.terms.Term[ct.getArity()];
-            for (int i=0; i<ct.getArity(); i++){
-                argTerms[i]=createMinsTerm(ct.getParameter(i),queryOrRuleContext);
+            org.deri.mins.terms.Term[] argTerms = new org.deri.mins.terms.Term[ct
+                    .getArity()];
+            for (int i = 0; i < ct.getArity(); i++) {
+                argTerms[i] = createMinsTerm(ct.getParameter(i),
+                        queryOrRuleContext);
             }
-            minsTerm = new ConstTerm(
-                    symbTransfomer.convertToTool((IRI) ct.getFunctionSymbol()),
-                    argTerms);
-        }  
-        else if (wsmlTerm instanceof SimpleDataValue){
-            SimpleDataValue val = (SimpleDataValue)wsmlTerm;
+            minsTerm = new ConstTerm(symbTransfomer.convertToTool((IRI) ct
+                    .getFunctionSymbol()), argTerms);
+        } else if (wsmlTerm instanceof SimpleDataValue) {
+            SimpleDataValue val = (SimpleDataValue) wsmlTerm;
             String type = val.getType().getIRI().toString();
-            //System.out.println(type);
-            if (type.equals(WsmlDataType.WSML_STRING)){
+            // System.out.println(type);
+            if (type.equals(WsmlDataType.WSML_STRING)) {
                 minsTerm = new StringTerm(val.toString());
-            }else{ //decimal or int
-                minsTerm = new NumTerm(Double.parseDouble(val.getValue().toString()));
+            } else { // decimal or int
+                minsTerm = new NumTerm(Double.parseDouble(val.getValue()
+                        .toString()));
             }
-        } else{
-            ComplexDataValue val = (ComplexDataValue)wsmlTerm;
+        } else {
+            ComplexDataValue val = (ComplexDataValue) wsmlTerm;
             String type = val.getType().getIRI().toString();
-            if (type.equals(WsmlDataType.WSML_BOOLEAN)){
+            if (type.equals(WsmlDataType.WSML_BOOLEAN)) {
                 minsTerm = new StringTerm(val.toString());
-                //System.out.print(minsTerm);
-            }else{
-                throw new RuntimeException("No Complex data types yet:" +wsmlTerm);
+                // System.out.print(minsTerm);
+            } else {
+                throw new RuntimeException("No Complex data types yet:"
+                        + wsmlTerm);
             }
         }
         return minsTerm;
@@ -356,14 +371,15 @@ public class MinsFacade implements DatalogReasonerFacade {
     /**
      * @see DatalogReasonerFacade#register(String, Set)
      */
-    public void register(String ontologyURI, Set<org.wsml.reasoner.Rule> kb) throws ExternalToolException {
+    public void register(String ontologyURI, Set<org.wsml.reasoner.Rule> kb)
+            throws ExternalToolException {
         // Set up an instance of a MINS engine
         BuiltinConfig builtInConfig = new BuiltinConfig();
         DBInterface db = new DB(); // facts stored in RAM
         RuleSet minsEngine = new RuleSet(builtInConfig, db);
         minsEngine.debuglevel = 0;
-        
-        //System.out.println(kb);
+
+        // System.out.println(kb);
 
         // Translate (resp. Transfer) the knowledge base to MINS
         try {
@@ -376,13 +392,13 @@ public class MinsFacade implements DatalogReasonerFacade {
         addDataTypeMemberShipRules(minsEngine);
         registeredKbs.put(ontologyURI, minsEngine);
     }
-    
+
     /**
      * @see DatalogReasonerFacade#deregister(String)
      */
     public void deregister(String ontologyURI) throws ExternalToolException {
         registeredKbs.remove(ontologyURI);
-        
+
     }
 
     private void checkConstraint(RuleSet minsEngine) throws DatalogException,
@@ -390,24 +406,22 @@ public class MinsFacade implements DatalogReasonerFacade {
             ConstraintViolationError {
         // check contraint query
         List<Literal> cqlits = new LinkedList<Literal>();
-        cqlits.add(new Literal(
-                        true,
-                        PRED_CONSTRAINT,
-                        new Term[] { new VariableImpl("query") }));
+        cqlits.add(new Literal(true, PRED_CONSTRAINT,
+                new Term[] { new VariableImpl("query") }));
         Rule constraintQuery = translateQuery(new ConjunctiveQuery(cqlits),
                 minsEngine);
-//        System.out.println("\n\n"+cqlits+"\n-"+constraintQuery);
+        // System.out.println("\n\n"+cqlits+"\n-"+constraintQuery);
         logger.info("Starting MINS evaluation of constraints");
 
         Substitution cqsubs = minsEngine.getSubstitution(constraintQuery);
         ConjunctiveQuery violatedQuery = null;
         GroundAtom cqAnswer = cqsubs.First();
-//        System.out.println(cqAnswer);
+        // System.out.println(cqAnswer);
         if (cqAnswer != null) {
             // predicate only has one variable:
             String orgQuery = cqAnswer.terms[0].toString();
-            orgQuery = orgQuery.substring(1,orgQuery.length()-1);
-            System.out.println("violated"+orgQuery);
+            orgQuery = orgQuery.substring(1, orgQuery.length() - 1);
+            System.out.println("violated" + orgQuery);
             violatedQuery = constraints2Queries.get(orgQuery);
         }
         minsEngine.deleteRule(constraintQuery);
@@ -439,98 +453,101 @@ public class MinsFacade implements DatalogReasonerFacade {
 
     }
 
-    private void addDataTypeMemberShipRules(RuleSet rs){
-        WsmoFactory f = WSMO4JManager.getWSMOFactory();
-        int memberOfNo = symbTransfomer.convertToTool(
-                new Literal(true, WSML2DatalogTransformer.PRED_MEMBER_OF,new Term[2]));
-        int integerNo = symbTransfomer.convertToTool(
-                f.createIRI(WsmlDataType.WSML_INTEGER));
-        int stringNo = symbTransfomer.convertToTool(
-                f.createIRI(WsmlDataType.WSML_STRING));
-        int decimalNo = symbTransfomer.convertToTool(
-                f.createIRI(WsmlDataType.WSML_DECIMAL));
-        int booleanNo = symbTransfomer.convertToTool(
-                f.createIRI(WsmlDataType.WSML_BOOLEAN));
-        
-        //?x memberOf _integer :- isInteger(?x)
-        rs.addRule(new Rule(
-                new Head[]{ 
-                        new Head(memberOfNo, new org.deri.mins.terms.Term[]{
-                                new org.deri.mins.terms.Variable(0),
-                                new ConstTerm(integerNo)}
-                        )},
-                new Body[] {
-                        new BuiltinBody(13, false,
-                                new org.deri.mins.terms.Term[]{
-                                    new org.deri.mins.terms.Variable(0)},
-                                new IsInteger()
-                        )}));      
-        //?x memberOf _String :- isString(?x)
-        rs.addRule(new Rule(
-                new Head[]{ 
-                        new Head(memberOfNo, new org.deri.mins.terms.Term[]{
-                                new org.deri.mins.terms.Variable(0),
-                                new ConstTerm(stringNo)}
-                        )},
-                new Body[] {
-                        new BuiltinBody(14, false,
-                                new org.deri.mins.terms.Term[]{
-                                    new org.deri.mins.terms.Variable(0)},
-                                new IsString()
-                        )}));      
-        //?x memberOf _decimal :- isNum(?x)
-        rs.addRule(new Rule(
-                new Head[]{ 
-                        new Head(memberOfNo, new org.deri.mins.terms.Term[]{
-                                new org.deri.mins.terms.Variable(0),
-                                new ConstTerm(decimalNo)}
-                        )},
-                new Body[] {
-                        new BuiltinBody(12, false,
-                                new org.deri.mins.terms.Term[]{
-                                    new org.deri.mins.terms.Variable(0)},
-                                new IsNum()
-                        )}));
-        
-        //?x memberOf wsml#boolean :- isString(?x) , ?x = "_boolean("true") ;
-        rs.addRule(new Rule(
-                new Head[]{ 
-                        new Head(memberOfNo, new org.deri.mins.terms.Term[]{
-                                new org.deri.mins.terms.Variable(0),
-                                new ConstTerm(booleanNo)}
-                        )},
-                new Body[] {
-                        new BuiltinBody(14, false,
-                                new org.deri.mins.terms.Term[]{
-                                    new org.deri.mins.terms.Variable(0)},
-                                new IsString()
-                        ),
-                        new BuiltinBody(6, false,
-                                new org.deri.mins.terms.Term[]{
-                                    new org.deri.mins.terms.Variable(0),
-                                    new StringTerm("_boolean(\"true\")")},
-                            new Equal())
-                        }));      
+    private void addDataTypeMemberShipRules(RuleSet rs) {
+        WsmoFactory f = wsmoManager.getWSMOFactory();
+        int memberOfNo = symbTransfomer.convertToTool(new Literal(true,
+                WSML2DatalogTransformer.PRED_MEMBER_OF, new Term[2]));
+        int integerNo = symbTransfomer.convertToTool(f
+                .createIRI(WsmlDataType.WSML_INTEGER));
+        int stringNo = symbTransfomer.convertToTool(f
+                .createIRI(WsmlDataType.WSML_STRING));
+        int decimalNo = symbTransfomer.convertToTool(f
+                .createIRI(WsmlDataType.WSML_DECIMAL));
+        int booleanNo = symbTransfomer.convertToTool(f
+                .createIRI(WsmlDataType.WSML_BOOLEAN));
 
-        //?x memberOf wsml#boolean :- isString(?x) , ?x = "_boolean("true") ;
-        rs.addRule(new Rule(
-                new Head[]{ 
-                        new Head(memberOfNo, new org.deri.mins.terms.Term[]{
-                                new org.deri.mins.terms.Variable(0),
-                                new ConstTerm(booleanNo)}
-                        )},
-                new Body[] {
-                        new BuiltinBody(14, false,
-                                new org.deri.mins.terms.Term[]{
-                                    new org.deri.mins.terms.Variable(0)},
-                                new IsString()
-                        ),
-                        new BuiltinBody(6, false,
-                                new org.deri.mins.terms.Term[]{
-                                    new org.deri.mins.terms.Variable(0),
-                                    new StringTerm("_boolean(\"false\")")},
-                            new Equal())
-                        }));      
+        // ?x memberOf _integer :- isInteger(?x)
+        rs
+                .addRule(new Rule(
+                        new Head[] { new Head(memberOfNo,
+                                new org.deri.mins.terms.Term[] {
+                                        new org.deri.mins.terms.Variable(0),
+                                        new ConstTerm(integerNo) }) },
+                        new Body[] { new BuiltinBody(
+                                13,
+                                false,
+                                new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(
+                                        0) }, new IsInteger()) }));
+        // ?x memberOf _String :- isString(?x)
+        rs
+                .addRule(new Rule(
+                        new Head[] { new Head(memberOfNo,
+                                new org.deri.mins.terms.Term[] {
+                                        new org.deri.mins.terms.Variable(0),
+                                        new ConstTerm(stringNo) }) },
+                        new Body[] { new BuiltinBody(
+                                14,
+                                false,
+                                new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(
+                                        0) }, new IsString()) }));
+        // ?x memberOf _decimal :- isNum(?x)
+        rs
+                .addRule(new Rule(
+                        new Head[] { new Head(memberOfNo,
+                                new org.deri.mins.terms.Term[] {
+                                        new org.deri.mins.terms.Variable(0),
+                                        new ConstTerm(decimalNo) }) },
+                        new Body[] { new BuiltinBody(
+                                12,
+                                false,
+                                new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(
+                                        0) }, new IsNum()) }));
+
+        // ?x memberOf wsml#boolean :- isString(?x) , ?x = "_boolean("true") ;
+        rs
+                .addRule(new Rule(
+                        new Head[] { new Head(memberOfNo,
+                                new org.deri.mins.terms.Term[] {
+                                        new org.deri.mins.terms.Variable(0),
+                                        new ConstTerm(booleanNo) }) },
+                        new Body[] {
+                                new BuiltinBody(
+                                        14,
+                                        false,
+                                        new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(
+                                                0) }, new IsString()),
+                                new BuiltinBody(
+                                        6,
+                                        false,
+                                        new org.deri.mins.terms.Term[] {
+                                                new org.deri.mins.terms.Variable(
+                                                        0),
+                                                new StringTerm(
+                                                        "_boolean(\"true\")") },
+                                        new Equal()) }));
+
+        // ?x memberOf wsml#boolean :- isString(?x) , ?x = "_boolean("true") ;
+        rs
+                .addRule(new Rule(
+                        new Head[] { new Head(memberOfNo,
+                                new org.deri.mins.terms.Term[] {
+                                        new org.deri.mins.terms.Variable(0),
+                                        new ConstTerm(booleanNo) }) },
+                        new Body[] {
+                                new BuiltinBody(
+                                        14,
+                                        false,
+                                        new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(
+                                                0) }, new IsString()),
+                                new BuiltinBody(
+                                        6,
+                                        false,
+                                        new org.deri.mins.terms.Term[] {
+                                                new org.deri.mins.terms.Variable(
+                                                        0),
+                                                new StringTerm(
+                                                        "_boolean(\"false\")") },
+                                        new Equal()) }));
     }
 
 }

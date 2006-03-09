@@ -19,6 +19,7 @@
 package wsml2reasoner.normalization;
 
 import org.omwg.ontology.Ontology;
+import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.LloydToporNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsml.reasoner.transformation.le.LloydToporRules;
@@ -31,7 +32,8 @@ public class LloydToporNormalizerTest extends WSMLNormalizationTest
     protected void setUp() throws Exception
     {
         super.setUp();
-        normalizer = new LloydToporNormalizer();
+        WSMO4JManager wmsoManager = new WSMO4JManager();
+        normalizer = new LloydToporNormalizer(wmsoManager);
     }
 
     @Override
@@ -47,7 +49,7 @@ public class LloydToporNormalizerTest extends WSMLNormalizationTest
 
         // normalize ontology with the LELloydToporNormalizer:
         Ontology normOnt = normalizer.normalize(ontology);
-        System.out.println("\n\n***\n"+LloydToporRules.instantiate().toString());
+        System.out.println("\n\n***\n"+ new LloydToporRules(new WSMO4JManager()).toString());
 
         // test whether produced ontology contains exactly 4 axioms:
         assertTrue(normOnt.listAxioms().size() == 4);

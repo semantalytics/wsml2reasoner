@@ -25,6 +25,7 @@ import org.omwg.logicalexpression.Binary;
 import org.omwg.logicalexpression.Conjunction;
 import org.omwg.logicalexpression.Disjunction;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.wsml.reasoner.impl.WSMO4JManager;
 
 /**
  * This singleton class represents a set of normalization rules for pulling
@@ -33,86 +34,64 @@ import org.omwg.logicalexpression.LogicalExpression;
  * 
  * @author Stephan Grimm, FZI Karlsruhe
  */
-public class DisjunctionPullRules extends FixedModificationRules
-{
-    protected static DisjunctionPullRules instance;
+public class DisjunctionPullRules extends FixedModificationRules {
 
-    private DisjunctionPullRules()
-    {
-        super();
+    public DisjunctionPullRules(WSMO4JManager wsmoManager) {
+        super(wsmoManager);
         rules.add(new ConjunctionPushRule());
     }
 
-    public static DisjunctionPullRules instantiate()
-    {
-        if(instance == null)
-        {
-            instance = new DisjunctionPullRules();
-        }
-        return instance;
-    }
-
-    protected class ConjunctionPushRule implements NormalizationRule
-    {
-        public LogicalExpression apply(LogicalExpression expression)
-        {
-            Conjunction conjunction = (Conjunction)expression;
+    protected class ConjunctionPushRule implements NormalizationRule {
+        public LogicalExpression apply(LogicalExpression expression) {
+            Conjunction conjunction = (Conjunction) expression;
             LogicalExpression conjunct;
             Disjunction disjunction;
-            if(hasLeftDisjunction(conjunction))
-            {
+            if (hasLeftDisjunction(conjunction)) {
                 conjunct = conjunction.getRightOperand();
-                disjunction = (Disjunction)conjunction.getLeftOperand();
-            }
-            else
-            {
+                disjunction = (Disjunction) conjunction.getLeftOperand();
+            } else {
                 conjunct = conjunction.getLeftOperand();
-                disjunction = (Disjunction)conjunction.getRightOperand();
+                disjunction = (Disjunction) conjunction.getRightOperand();
             }
             Set<LogicalExpression> disjuncts = new HashSet<LogicalExpression>();
             collectDirectDisjuncts(disjunction, disjuncts);
             Set<LogicalExpression> newDisjuncts = new HashSet<LogicalExpression>();
-            for(LogicalExpression disjunct : disjuncts)
-            {
-                newDisjuncts.add(leFactory.createConjunction(conjunct, disjunct));
+            for (LogicalExpression disjunct : disjuncts) {
+                newDisjuncts.add(leFactory
+                        .createConjunction(conjunct, disjunct));
             }
             return buildNaryDisjunction(newDisjuncts);
         }
 
-        public boolean isApplicable(LogicalExpression expression)
-        {
-            if(expression instanceof Conjunction)
-            {
-                Conjunction conjunction = (Conjunction)expression;
-                return hasLeftDisjunction(conjunction) || hasRightDisjunction(conjunction);
+        public boolean isApplicable(LogicalExpression expression) {
+            if (expression instanceof Conjunction) {
+                Conjunction conjunction = (Conjunction) expression;
+                return hasLeftDisjunction(conjunction)
+                        || hasRightDisjunction(conjunction);
             }
             return false;
         }
-        
-        protected boolean hasLeftDisjunction(Binary binary)
-        {
+
+        protected boolean hasLeftDisjunction(Binary binary) {
             return binary.getLeftOperand() instanceof Disjunction;
         }
 
-        protected boolean hasRightDisjunction(Binary binary)
-        {
+        protected boolean hasRightDisjunction(Binary binary) {
             return binary.getRightOperand() instanceof Disjunction;
         }
 
-        protected void collectDirectDisjuncts(LogicalExpression expression, Set<LogicalExpression> disjuncts)
-        {
-            if(expression instanceof Disjunction)
-            {
-                Disjunction disjunction = (Disjunction)expression;
+        protected void collectDirectDisjuncts(LogicalExpression expression,
+                Set<LogicalExpression> disjuncts) {
+            if (expression instanceof Disjunction) {
+                Disjunction disjunction = (Disjunction) expression;
                 collectDirectDisjuncts(disjunction.getLeftOperand(), disjuncts);
                 collectDirectDisjuncts(disjunction.getRightOperand(), disjuncts);
                 return;
             }
             disjuncts.add(expression);
         }
-        
-        public String toString()
-        {
+
+        public String toString() {
             return "A or B and (C or D)\n\t=>\n A or B and C or B and D\n";
         }
     }

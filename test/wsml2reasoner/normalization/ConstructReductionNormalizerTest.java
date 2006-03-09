@@ -21,6 +21,7 @@ package wsml2reasoner.normalization;
 import java.util.regex.*;
 
 import org.omwg.ontology.*;
+import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.*;
 import org.wsmo.common.*;
 
@@ -32,7 +33,8 @@ public class ConstructReductionNormalizerTest extends WSMLNormalizationTest
     protected void setUp() throws Exception
     {
         super.setUp();
-        normalizer = new ConstructReductionNormalizer();
+        WSMO4JManager wmsoManager = new WSMO4JManager();
+        normalizer = new ConstructReductionNormalizer(wmsoManager);
     }
 
     @Override

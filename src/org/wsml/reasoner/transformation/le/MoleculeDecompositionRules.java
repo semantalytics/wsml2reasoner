@@ -38,25 +38,17 @@ import org.wsmo.common.Identifier;
  */
 public class MoleculeDecompositionRules extends FixedModificationRules
 {
-    protected static MoleculeDecompositionRules instance;
     protected AnonymousIdTranslator anonymousIDTranslator;
 
-    private MoleculeDecompositionRules()
+    public MoleculeDecompositionRules(WSMO4JManager wsmoManager)
     {
-        anonymousIDTranslator = new AnonymousIdTranslator(WSMO4JManager.getWSMOFactory());
+        super(wsmoManager);
+        anonymousIDTranslator = new AnonymousIdTranslator(wsmoManager.getWSMOFactory());
         rules.add(new MoleculeDecompositionRule());
         rules.add(new MoleculeAnonymousIDRule());
         rules.add(new AtomAnonymousIDRule());
     }
 
-    public static MoleculeDecompositionRules instantiate()
-    {
-        if(instance == null)
-        {
-            instance = new MoleculeDecompositionRules();
-        }
-        return instance;
-    }
     
     protected class MoleculeDecompositionRule implements NormalizationRule
     {

@@ -61,7 +61,7 @@ import org.wsmo.wsml.ParserException;
  * 
  * 
  * @see org.deri.wsml.reasoner.ontobroker.Reasoner
- * @author Jos de Bruijn $Author: gabor $ $Date: 2006-03-08 18:08:41 $
+ * @author Jos de Bruijn $Author: gabor $ $Date: 2006-03-09 15:26:20 $
  */
 public class ReasonerServlet extends HttpServlet {
     /**
@@ -189,8 +189,9 @@ public class ReasonerServlet extends HttpServlet {
         if (debug)
             out.println("doReasoning");
 
-        WsmoFactory _factory = WSMO4JManager.getWSMOFactory();
-        LogicalExpressionFactory _leFactory = WSMO4JManager.getLogicalExpressionFactory();
+        WSMO4JManager wsmoManager = new WSMO4JManager();
+        WsmoFactory _factory = wsmoManager.getWSMOFactory();
+        LogicalExpressionFactory _leFactory = wsmoManager.getLogicalExpressionFactory();
         Parser _parser = Factory.createParser(null);
 
         Ontology ontology = null;

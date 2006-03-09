@@ -50,28 +50,28 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
             throws UnsupportedOperationException {
 
         return new org.wsml.reasoner.impl.NewDatalogBasedWSMLReasoner(
-                builtInReasoner);
+                builtInReasoner, new WSMO4JManager());
     }
 
     public WSMLCoreReasoner getWSMLCoreReasoner()
             throws UnsupportedOperationException {
         // Default reasoner is KAON2
         return new org.wsml.reasoner.impl.NewDatalogBasedWSMLReasoner(
-                WSMLReasonerFactory.BuiltInReasoner.KAON2);
+                WSMLReasonerFactory.BuiltInReasoner.KAON2, new WSMO4JManager());
     }
 
     public WSMLFlightReasoner getWSMLFlightReasoner(
             BuiltInReasoner builtInReasoner)
             throws UnsupportedOperationException {
         return new org.wsml.reasoner.impl.NewDatalogBasedWSMLReasoner(
-                builtInReasoner);
+                builtInReasoner, new WSMO4JManager());
     }
 
     public WSMLFlightReasoner getWSMLFlightReasoner()
             throws UnsupportedOperationException {
         // Default reasoner is KAON2
         return new org.wsml.reasoner.impl.NewDatalogBasedWSMLReasoner(
-                WSMLReasonerFactory.BuiltInReasoner.KAON2);
+                WSMLReasonerFactory.BuiltInReasoner.KAON2, new WSMO4JManager());
     }
 
 }

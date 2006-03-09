@@ -21,6 +21,7 @@ package org.wsml.reasoner.transformation.le;
 import org.omwg.logicalexpression.Equivalence;
 import org.omwg.logicalexpression.Implication;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.wsml.reasoner.impl.WSMO4JManager;
 
 /**
  * This singleton class represents a set of normalization rules for replacing
@@ -29,68 +30,52 @@ import org.omwg.logicalexpression.LogicalExpression;
  * 
  * @author Stephan Grimm, FZI Karlsruhe
  */
-public class ImplicationReductionRules extends FixedModificationRules
-{
-    protected static ImplicationReductionRules instance;
-
-    private ImplicationReductionRules()
-    {
-        super();
+public class ImplicationReductionRules extends FixedModificationRules {
+    public ImplicationReductionRules(WSMO4JManager wsmoManager) {
+        super(wsmoManager);
         rules.add(new EquivalenceReplacementRule());
         rules.add(new RightImplicationReplacementRule());
     }
 
-    public static ImplicationReductionRules instantiate()
-    {
-        if(instance == null)
-        {
-            instance = new ImplicationReductionRules();
-        }
-        return instance;
-    }
-
-    protected class EquivalenceReplacementRule implements NormalizationRule
-    {
-        public LogicalExpression apply(LogicalExpression expression)
-        {
-            Equivalence equivalence = (Equivalence)expression;
+    protected class EquivalenceReplacementRule implements NormalizationRule {
+        public LogicalExpression apply(LogicalExpression expression) {
+            Equivalence equivalence = (Equivalence) expression;
             LogicalExpression leftArg = equivalence.getLeftOperand();
             LogicalExpression rightArg = equivalence.getRightOperand();
-            LogicalExpression impliedBy1 = leFactory.createInverseImplication(rightArg, leftArg);
-            LogicalExpression impliedBy2 = leFactory.createInverseImplication(leftArg, rightArg);
-            LogicalExpression and = leFactory.createConjunction(impliedBy1, impliedBy2);
+            LogicalExpression impliedBy1 = leFactory.createInverseImplication(
+                    rightArg, leftArg);
+            LogicalExpression impliedBy2 = leFactory.createInverseImplication(
+                    leftArg, rightArg);
+            LogicalExpression and = leFactory.createConjunction(impliedBy1,
+                    impliedBy2);
             return and;
         }
 
-        public boolean isApplicable(LogicalExpression expression)
-        {
+        public boolean isApplicable(LogicalExpression expression) {
             return expression instanceof Equivalence;
         }
 
-        public String toString()
-        {
+        public String toString() {
             return "A equivalent B\n\t=>\n (A impliedBy B) and (B impliedBy A)\n";
         }
     }
 
-    protected class RightImplicationReplacementRule implements NormalizationRule
-    {
-        public LogicalExpression apply(LogicalExpression expression)
-        {
-            Implication implication = (Implication)expression;
+    protected class RightImplicationReplacementRule implements
+            NormalizationRule {
+        public LogicalExpression apply(LogicalExpression expression) {
+            Implication implication = (Implication) expression;
             LogicalExpression leftArg = implication.getLeftOperand();
             LogicalExpression rightArg = implication.getRightOperand();
-            LogicalExpression impliedBy = leFactory.createInverseImplication(rightArg, leftArg);
+            LogicalExpression impliedBy = leFactory.createInverseImplication(
+                    rightArg, leftArg);
             return impliedBy;
         }
 
-        public boolean isApplicable(LogicalExpression expression)
-        {
+        public boolean isApplicable(LogicalExpression expression) {
             return expression instanceof Implication;
         }
 
-        public String toString()
-        {
+        public String toString() {
             return "A implies B\n\t=>\n B impliedBy A\n";
         }
     }

@@ -47,15 +47,19 @@ public class BaseReasonerTest extends TestCase {
     protected static LogicalExpressionFactory leFactory = null;
 
     protected static DataFactory dataFactory = null;
+    
+    protected static WSMO4JManager wsmoManager = null;
 
     protected static void setupScenario(String ontologyFile) throws Exception {
         // Set up factories for creating WSML elements
+        
+        wsmoManager = new WSMO4JManager();
 
-        leFactory = WSMO4JManager.getLogicalExpressionFactory();
+        leFactory = wsmoManager.getLogicalExpressionFactory();
 
-        wsmoFactory = WSMO4JManager.getWSMOFactory();
+        wsmoFactory = wsmoManager.getWSMOFactory();
 
-        dataFactory = WSMO4JManager.getDataFactory();
+        dataFactory = wsmoManager.getDataFactory();
 
         // Set up WSML parser
 

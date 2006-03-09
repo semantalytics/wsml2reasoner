@@ -36,58 +36,59 @@ import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 
-public class LloydToporNormalizer implements OntologyNormalizer
-{
+public class LloydToporNormalizer implements OntologyNormalizer {
     protected LogicalExpressionTransformer leTransformer;
 
     protected WsmoFactory wsmoFactory;
 
-    public LloydToporNormalizer()
-    {
-        List<TransformationRule> lloydToporRules = (List<TransformationRule>)LloydToporRules.instantiate();
+    public LloydToporNormalizer(WSMO4JManager wsmoManager) {
+        List<TransformationRule> lloydToporRules = (List<TransformationRule>) new LloydToporRules(
+                wsmoManager);
         leTransformer = new TopDownLESplitter(lloydToporRules);
-        wsmoFactory = WSMO4JManager.getWSMOFactory();
+        wsmoFactory = wsmoManager.getWSMOFactory();
     }
 
-    public Ontology normalize(Ontology ontology)
-    {
+    public Ontology normalize(Ontology ontology) {
         // gather logical expressions from axioms in ontology:
         Set<LogicalExpression> expressions = new HashSet<LogicalExpression>();
-        Set<Axiom> axioms = (Set<Axiom>)ontology.listAxioms();
-        for(Axiom axiom : axioms)
-        {
-            expressions.addAll((Collection<LogicalExpression>)axiom.listDefinitions());
+        Set<Axiom> axioms = (Set<Axiom>) ontology.listAxioms();
+        for (Axiom axiom : axioms) {
+            expressions.addAll((Collection<LogicalExpression>) axiom
+                    .listDefinitions());
         }
 
         // iteratively normalize logical expressions:
         Set<LogicalExpression> resultExp = new HashSet<LogicalExpression>();
-        for(LogicalExpression expression : expressions)
-        {
+        for (LogicalExpression expression : expressions) {
             resultExp.addAll(leTransformer.transform(expression));
         }
 
         // create new ontology containing the resulting logical expressions:
-        String resultIRI = (ontology.getIdentifier() != null ? ontology.getIdentifier().toString() + "-as-axioms" : "iri:normalized-ontology-" + ontology.hashCode());
-        Ontology resultOnt = wsmoFactory.createOntology(wsmoFactory.createIRI(resultIRI));
-        for(Object n : ontology.listNamespaces())
-        {
-            resultOnt.addNamespace((Namespace)n);
+        String resultIRI = (ontology.getIdentifier() != null ? ontology
+                .getIdentifier().toString()
+                + "-as-axioms" : "iri:normalized-ontology-"
+                + ontology.hashCode());
+        Ontology resultOnt = wsmoFactory.createOntology(wsmoFactory
+                .createIRI(resultIRI));
+        for (Object n : ontology.listNamespaces()) {
+            resultOnt.addNamespace((Namespace) n);
         }
         resultOnt.setDefaultNamespace(ontology.getDefaultNamespace());
         int axiomCount = 1;
-        for(LogicalExpression expression : resultExp)
-        {
-            Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI("http://www.wsmo.org/reasoner/" + "reasoner_axiom-" + Integer.toString(axiomCount++) + Long.toString(System.currentTimeMillis())));
+        for (LogicalExpression expression : resultExp) {
+            Axiom axiom = wsmoFactory.createAxiom(wsmoFactory
+                    .createIRI("http://www.wsmo.org/reasoner/"
+                            + "reasoner_axiom-"
+                            + Integer.toString(axiomCount++)
+                            + Long.toString(System.currentTimeMillis())));
             axiom.addDefinition(expression);
-            try
-            {
+            try {
                 resultOnt.addAxiom(axiom);
-            } catch(InvalidModelException e)
-            {
+            } catch (InvalidModelException e) {
                 e.printStackTrace();
             }
         }
-        
+
         return resultOnt;
     }
 }

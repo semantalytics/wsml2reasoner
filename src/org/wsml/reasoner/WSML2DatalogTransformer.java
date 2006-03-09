@@ -63,11 +63,14 @@ public class WSML2DatalogTransformer {
     public final static String PRED_MEMBER_OF = "wsml-member-of";
 
     public final static String PRED_HAS_VALUE = "wsml-has-value";
+    
+    WSMO4JManager wsmoManager;
 
     /**
      * Generates a WSML2Datalog converter.
      */
-    public WSML2DatalogTransformer() {
+    public WSML2DatalogTransformer(WSMO4JManager wsmoManager) {
+        this.wsmoManager = wsmoManager;
     }
 
     /**
@@ -131,7 +134,7 @@ public class WSML2DatalogTransformer {
     public Set<Rule> generateAuxilliaryRules() {
         Set<Rule> result = new HashSet<Rule>();
 
-        WsmoFactory f = WSMO4JManager.getWSMOFactory();
+        WsmoFactory f = this.wsmoManager.getWSMOFactory();
 
         Variable vConcept = f.createVariable("concept");
         Variable vConcept2 = f.createVariable("concept2");
