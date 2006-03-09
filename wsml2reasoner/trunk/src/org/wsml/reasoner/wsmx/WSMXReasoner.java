@@ -43,7 +43,7 @@ public class WSMXReasoner implements WSMXReasonerInterface// implements
         params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
                 WSMLReasonerFactory.BuiltInReasoner.KAON2);
         reasoner = DefaultWSMLReasonerFactory.getFactory()
-                .getWSMLFlightReasoner(params);
+                .createWSMLFlightReasoner(params);
     }
 
     /**

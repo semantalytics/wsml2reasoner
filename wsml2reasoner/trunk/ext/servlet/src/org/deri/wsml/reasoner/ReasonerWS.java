@@ -69,7 +69,7 @@ public class ReasonerWS{
         params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
                 WSMLReasonerFactory.BuiltInReasoner.MINS);
         WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().
-                getWSMLFlightReasoner(params);
+                createWSMLFlightReasoner(params);
 
         // Register ontology
         reasoner.registerOntology(ont);

@@ -96,7 +96,7 @@ public class BaseReasonerTest extends TestCase {
         // params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
         // WSMLReasonerFactory.BuiltInReasoner.MINS);
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
-                .getWSMLFlightReasoner(params);
+                .createWSMLFlightReasoner(params);
 
         // Register ontology
         System.out.println("Registering ontology");

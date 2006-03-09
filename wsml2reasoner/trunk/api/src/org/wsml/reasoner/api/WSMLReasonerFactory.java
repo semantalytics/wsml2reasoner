@@ -69,7 +69,7 @@ public interface WSMLReasonerFactory {
      * @return the resoner
      * @throws UnsupportedOperationException
      */
-    public WSMLCoreReasoner getWSMLCoreReasoner(Map<String, Object> params)
+    public WSMLCoreReasoner createWSMLCoreReasoner(Map<String, Object> params)
             throws UnsupportedOperationException;
 
     /**
@@ -79,7 +79,7 @@ public interface WSMLReasonerFactory {
      * @return the resoner
      * @throws UnsupportedOperationException
      */
-    public WSMLCoreReasoner getWSMLCoreReasoner()
+    public WSMLCoreReasoner createWSMLCoreReasoner()
             throws UnsupportedOperationException;
 
     /**
@@ -105,7 +105,7 @@ public interface WSMLReasonerFactory {
      * @return the resoner
      * @throws UnsupportedOperationException
      */
-    public WSMLFlightReasoner getWSMLFlightReasoner(Map<String, Object> params)
+    public WSMLFlightReasoner createWSMLFlightReasoner(Map<String, Object> params)
             throws UnsupportedOperationException;
 
     /**
@@ -115,7 +115,7 @@ public interface WSMLReasonerFactory {
      * @return the resoner
      * @throws UnsupportedOperationException
      */
-    public WSMLFlightReasoner getWSMLFlightReasoner()
+    public WSMLFlightReasoner createWSMLFlightReasoner()
             throws UnsupportedOperationException;
 
 }
