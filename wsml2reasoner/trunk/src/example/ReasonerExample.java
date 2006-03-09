@@ -46,107 +46,110 @@ import org.wsmo.wsml.Serializer;
  */
 public class ReasonerExample {
 
-	/**
-	 * @param args
-	 *            none expected
-	 */
-	public static void main(String[] args) throws Exception {
-		ReasonerExample ex = new ReasonerExample();
-		try {
-			ex.doTestRun();
-			System.exit(0);
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-	}
+    /**
+     * @param args
+     *            none expected
+     */
+    public static void main(String[] args) throws Exception {
+        ReasonerExample ex = new ReasonerExample();
+        try {
+            ex.doTestRun();
+            System.exit(0);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
 
-	/**
-	 * loads an Ontology and performs sample query
-	 */
-	public void doTestRun() throws Exception {
-		//Ontology exampleOntology = loadOntology("example/humanOntology.wsml");
+    /**
+     * loads an Ontology and performs sample query
+     */
+    public void doTestRun() throws Exception {
+        // Ontology exampleOntology =
+        // loadOntology("example/humanOntology.wsml");
         Ontology exampleOntology = loadOntology("example/humanOntology.wsml");
-		if (exampleOntology == null)
-			return;
-		LogicalExpressionFactory leFactory = WSMO4JManager
-				.getLogicalExpressionFactory();
+        if (exampleOntology == null)
+            return;
+        LogicalExpressionFactory leFactory = new WSMO4JManager()
+                .getLogicalExpressionFactory();
 
         String queryString;
-        queryString="?human memberOf Human";
-        queryString="?man memberOf Man";
-        queryString="Lisa [hasRelative hasValue ?relative]";
-        queryString="?x subConceptOf ?y";
+        queryString = "?human memberOf Human";
+        queryString = "?man memberOf Man";
+        queryString = "Lisa [hasRelative hasValue ?relative]";
+        queryString = "?x subConceptOf ?y";
 
-        LogicalExpression query = leFactory
-            .createLogicalExpression(queryString, exampleOntology);
+        LogicalExpression query = leFactory.createLogicalExpression(
+                queryString, exampleOntology);
 
-		// get A reasoner
-		WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
-				.getWSMLFlightReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
+        // get A reasoner
+        WSMLReasoner reasoner = DefaultWSMLReasonerFactory
+                .getFactory()
+                .getWSMLFlightReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
 
-		// Register ontology
-		reasoner.registerOntology(exampleOntology);
+        // Register ontology
+        reasoner.registerOntology(exampleOntology);
 
-		// Execute query request
-		Set<Map<Variable, Term>> result = reasoner.executeQuery(
-				(IRI) exampleOntology.getIdentifier(), query);
+        // Execute query request
+        Set<Map<Variable, Term>> result = reasoner.executeQuery(
+                (IRI) exampleOntology.getIdentifier(), query);
 
-		// print out the results:
-		System.out.println("The query '" + query
-				+ "' has the following results:");
-		for (Map<Variable, Term> vBinding : result) {
-			for (Variable var : vBinding.keySet()) {
-				System.out.print(var + ": " + vBinding.get(var) + "; ");
-			}
-			System.out.println();
-		}
-	}
+        // print out the results:
+        System.out.println("The query '" + query
+                + "' has the following results:");
+        for (Map<Variable, Term> vBinding : result) {
+            for (Variable var : vBinding.keySet()) {
+                System.out.print(var + ": " + vBinding.get(var) + "; ");
+            }
+            System.out.println();
+        }
+    }
 
-	/**
-	 * Utility Method to get the object model of a wsml ontology
-	 * 
-	 * @param file
-	 *            location of source file (It will be attemted to be loaded from
-	 *            current class path)
-	 * @return object model of ontology at file location
-	 */
-	private Ontology loadOntology(String file) {
-		LogicalExpressionFactory leFactory = WSMO4JManager
-				.getLogicalExpressionFactory();
-		WsmoFactory wsmoFactory = WSMO4JManager.getWSMOFactory();
-		Parser wsmlParser = Factory.createParser(null);
+    /**
+     * Utility Method to get the object model of a wsml ontology
+     * 
+     * @param file
+     *            location of source file (It will be attemted to be loaded from
+     *            current class path)
+     * @return object model of ontology at file location
+     */
+    private Ontology loadOntology(String file) {
+        WSMO4JManager wsmoManager = new WSMO4JManager();
+        LogicalExpressionFactory leFactory = wsmoManager
+                .getLogicalExpressionFactory();
+        WsmoFactory wsmoFactory = wsmoManager.getWSMOFactory();
+        Parser wsmlParser = Factory.createParser(null);
 
-		InputStream is = this.getClass().getClassLoader().getResourceAsStream(
-				file);
-		try {
-			final TopEntity[] identifiable = wsmlParser
-					.parse(new InputStreamReader(is));
-			if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {
-				return (Ontology) identifiable[0];
-			} else {
-				System.out.println("First Element of file no ontology ");
-				return null;
-			}
+        InputStream is = this.getClass().getClassLoader().getResourceAsStream(
+                file);
+        try {
+            final TopEntity[] identifiable = wsmlParser
+                    .parse(new InputStreamReader(is));
+            if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {
+                return (Ontology) identifiable[0];
+            } else {
+                System.out.println("First Element of file no ontology ");
+                return null;
+            }
 
-		} catch (Exception e) {
-			System.out.println("Unable to parse ontology: " + e.getMessage());
-			return null;
-		}
+        } catch (Exception e) {
+            System.out.println("Unable to parse ontology: " + e.getMessage());
+            return null;
+        }
 
-	}
+    }
 
-	/**
-	 * small utility method for debugging
-	 * 
-	 * @param ont
-	 *            ontology to be serialized to string
-	 * @return string representation of ontology
-	 */
-	private String toString(Ontology ont) {
-		Serializer wsmlSerializer = Factory.createSerializer(null);
+    /**
+     * small utility method for debugging
+     * 
+     * @param ont
+     *            ontology to be serialized to string
+     * @return string representation of ontology
+     */
+    private String toString(Ontology ont) {
+        Serializer wsmlSerializer = Factory.createSerializer(null);
 
-		StringBuffer str = new StringBuffer();
-		wsmlSerializer.serialize(new TopEntity[] { ont }, str);
-		return str.toString();
-	}
+        StringBuffer str = new StringBuffer();
+        wsmlSerializer.serialize(new TopEntity[] { ont }, str);
+        return str.toString();
+    }
 }

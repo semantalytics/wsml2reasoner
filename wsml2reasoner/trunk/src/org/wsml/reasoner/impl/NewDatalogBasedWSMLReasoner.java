@@ -42,6 +42,7 @@ import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.api.WSMLCoreReasoner;
 import org.wsml.reasoner.api.WSMLFlightReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.builtin.kaon2.Kaon2Facade;
 import org.wsml.reasoner.builtin.mins.MinsFacade;
 import org.wsml.reasoner.transformation.AnonymousIdUtils;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
@@ -70,7 +71,8 @@ import org.wsmo.factory.WsmoFactory;
  */
 public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         WSMLCoreReasoner {
-    protected final static String WSML_RESULT_PREDICATE = "http://www.wsmo.org/reasoner/" + "wsml_query_result";
+    protected final static String WSML_RESULT_PREDICATE = "http://www.wsmo.org/reasoner/"
+            + "wsml_query_result";
 
     protected org.wsml.reasoner.DatalogReasonerFacade builtInFacade = null;
 
@@ -78,21 +80,25 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 
     protected LogicalExpressionFactory leFactory;
 
+    protected WSMO4JManager wsmoManager;
+
     public NewDatalogBasedWSMLReasoner(
-            WSMLReasonerFactory.BuiltInReasoner builtInType) {
+            WSMLReasonerFactory.BuiltInReasoner builtInType,
+            WSMO4JManager wsmoManager) {
+        this.wsmoManager = wsmoManager;
         switch (builtInType) {
         case KAON2:
-            builtInFacade = new org.wsml.reasoner.builtin.kaon2.Kaon2Facade();
+            builtInFacade = new Kaon2Facade(wsmoManager);
             break;
         case MINS:
-            builtInFacade = new MinsFacade();
+            builtInFacade = new MinsFacade(wsmoManager);
             break;
         default:
             throw new UnsupportedOperationException("Reasoning with "
                     + builtInType.toString() + " is not supported yet!");
         }
-        wsmoFactory = WSMO4JManager.getWSMOFactory();
-        leFactory = WSMO4JManager.getLogicalExpressionFactory();
+        wsmoFactory = this.wsmoManager.getWSMOFactory();
+        leFactory = this.wsmoManager.getLogicalExpressionFactory();
     }
 
     protected Set<org.wsml.reasoner.Rule> convertOntology(Ontology o) {
@@ -103,23 +109,25 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // TODO Check whether ontology import is currently handled
 
         // Convert conceptual syntax to logical expressions
-        OntologyNormalizer normalizer = new AxiomatizationNormalizer();
+        OntologyNormalizer normalizer = new AxiomatizationNormalizer(
+                wsmoManager);
         normalizedOntology = normalizer.normalize(o);
 
         // Simplify axioms
-        normalizer = new ConstructReductionNormalizer();
+        normalizer = new ConstructReductionNormalizer(wsmoManager);
         normalizedOntology = normalizer.normalize(normalizedOntology);
         // System.out.println("\n-------\n Ontology after simplification:" +
         // WSMLNormalizationTest.serializeOntology(normalizedOntology));
 
         // Apply Lloyd-Topor rules to get Datalog-compatible LEs
-        normalizer = new LloydToporNormalizer();
+        normalizer = new LloydToporNormalizer(wsmoManager);
         normalizedOntology = normalizer.normalize(normalizedOntology);
 
         // System.out.println("\n-------\n Ontology after Lloyd-Topor:" +
         // WSMLNormalizationTest.serializeOntology(normalizedOntology));
         Set<org.wsml.reasoner.Rule> p;
-        org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer();
+        org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
+                wsmoManager);
         Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
         for (Object a : normalizedOntology.listAxioms()) {
             lExprs.addAll(((Axiom) a).listDefinitions());
@@ -133,12 +141,12 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     }
 
     public boolean isSatisfiable(IRI ontologyID) {
-        LogicalExpression dummyQuery = leFactory.createMemberShipMolecule(wsmoFactory.createIRI(AnonymousIdUtils.getNewIri()), wsmoFactory.createIRI(AnonymousIdUtils.getNewIri()));
-        try
-        {
+        LogicalExpression dummyQuery = leFactory.createMemberShipMolecule(
+                wsmoFactory.createIRI(AnonymousIdUtils.getNewIri()),
+                wsmoFactory.createIRI(AnonymousIdUtils.getNewIri()));
+        try {
             executeGroundQuery(ontologyID, dummyQuery);
-        } catch(Exception e)
-        {
+        } catch (Exception e) {
             return false;
         }
         return true;
@@ -398,7 +406,8 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 
     protected Set<org.wsml.reasoner.ConjunctiveQuery> convertQuery(
             org.omwg.logicalexpression.LogicalExpression q) {
-        org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer();
+        org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
+                wsmoManager);
 
         List<Variable> params = new LinkedList<Variable>();
         LogicalExpressionVariableVisitor varVisitor = new LogicalExpressionVariableVisitor();
@@ -409,7 +418,7 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // System.out.println("Query head:" + rHead);
 
         LogicalExpressionNormalizer moleculeNormalizer = new OnePassReplacementNormalizer(
-                MoleculeDecompositionRules.instantiate());
+                new MoleculeDecompositionRules(wsmoManager), wsmoManager);
         // System.out.println("Q before molecule normalization: " + q);
         q = moleculeNormalizer.normalize(q);
         // System.out.println("Q after molecule normalization: " + q);
@@ -417,8 +426,8 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         org.omwg.logicalexpression.LogicalExpression resultDefRule = leFactory
                 .createInverseImplication(rHead, q);
 
-        List<TransformationRule> lloydToporRules = (List<TransformationRule>) LloydToporRules
-                .instantiate();
+        List<TransformationRule> lloydToporRules = (List<TransformationRule>) new LloydToporRules(
+                wsmoManager);
         LogicalExpressionTransformer lloydToporNormalizer = new TopDownLESplitter(
                 lloydToporRules);
         Set<LogicalExpression> conjunctiveQueries = lloydToporNormalizer
@@ -430,7 +439,7 @@ public class NewDatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             p.addAll(wsml2datalog.transform(query));
         }
 
-        //System.out.println("Query as program:" + p);
+        // System.out.println("Query as program:" + p);
         // if (p.size() != 1)
         // throw new IllegalArgumentException("Could not transform query " + q);
 

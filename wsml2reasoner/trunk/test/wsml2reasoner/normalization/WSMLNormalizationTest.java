@@ -42,8 +42,9 @@ public abstract class WSMLNormalizationTest extends TestCase
     protected void setUp() throws Exception
     {
         super.setUp();
-        wsmoFactory = WSMO4JManager.getWSMOFactory();
-        leFactory = WSMO4JManager.getLogicalExpressionFactory();
+        WSMO4JManager wmsoManager = new WSMO4JManager();
+        wsmoFactory = wmsoManager.getWSMOFactory();
+        leFactory = wmsoManager.getLogicalExpressionFactory();
     }
 
     @Override

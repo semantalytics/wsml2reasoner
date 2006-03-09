@@ -59,7 +59,10 @@ public class MinsSymbolMap {
     protected Map<String, BuiltinFunc> minsBuiltinFunc = new HashMap<String, BuiltinFunc>();
     protected Map<String, Integer> minsBuiltIn2No = new HashMap<String, Integer>();
     
-    public MinsSymbolMap(){
+    protected WSMO4JManager wsmoManager;
+    
+    public MinsSymbolMap(WSMO4JManager wsmoManager){
+        this.wsmoManager = wsmoManager;
         minsBuiltinFunc.put(Constants.LESS_THAN, new Less());
         minsBuiltIn2No.put(Constants.LESS_THAN, 0);
         
@@ -186,17 +189,17 @@ public class MinsSymbolMap {
     		for (int i=0; i < term.pars.length; i++) {
     			termList.add(convertToWSML(term.pars[i]));
     		}
-    		return WSMO4JManager.getLogicalExpressionFactory().createConstructedTerm(
+    		return wsmoManager.getLogicalExpressionFactory().createConstructedTerm(
     				(IRI)id,termList);
     		
     	}else if (term.isStringTerm()){
-    	    return WSMO4JManager.getDataFactory().createWsmlString(((StringTerm)term).s);
+    	    return wsmoManager.getDataFactory().createWsmlString(((StringTerm)term).s);
         }else if (term.isNumTerm()){
             org.deri.mins.terms.NumTerm numTerm = (org.deri.mins.terms.NumTerm)term;
             if (numTerm.zahl - Math.floor(numTerm.zahl) == 0)
-                return WSMO4JManager.getDataFactory().createWsmlInteger(new java.lang.Double(numTerm.zahl).intValue()+"");
+                return wsmoManager.getDataFactory().createWsmlInteger(new java.lang.Double(numTerm.zahl).intValue()+"");
             else 
-                return WSMO4JManager.getDataFactory().createWsmlDecimal(term.toString());
+                return wsmoManager.getDataFactory().createWsmlDecimal(term.toString());
         }
         throw new RuntimeException("Unknown Term Symbol:"+term);
     }

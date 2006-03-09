@@ -118,9 +118,10 @@ public class OntologyRegistrationTest extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
-        leFactory = WSMO4JManager.getLogicalExpressionFactory();
+        WSMO4JManager wsmoManager = new WSMO4JManager();
+        leFactory = wsmoManager.getLogicalExpressionFactory();
 
-        wsmoFactory = WSMO4JManager.getWSMOFactory();
+        wsmoFactory = wsmoManager.getWSMOFactory();
 
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
                 .getWSMLFlightReasoner();

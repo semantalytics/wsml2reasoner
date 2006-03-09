@@ -27,6 +27,7 @@ import org.omwg.logicalexpression.Disjunction;
 import org.omwg.logicalexpression.InverseImplication;
 import org.omwg.logicalexpression.LogicProgrammingRule;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.wsml.reasoner.impl.WSMO4JManager;
 
 /**
  * This singleton class represents a set of transformation rules for splitting
@@ -37,26 +38,15 @@ import org.omwg.logicalexpression.LogicalExpression;
  */
 public class LloydToporRules extends FixedModificationRules
 {
-    protected static LloydToporRules instance;
-
-    private LloydToporRules()
+    public LloydToporRules(WSMO4JManager wsmoManager)
     {
-        super();
+        super(wsmoManager);
         rules.add(new SplitDisjunctiveBody());
         rules.add(new SplitConstraint());
         rules.add(new SplitConjunctiveHead());
         rules.add(new TransformNestedImplication());
         rules.add(new SplitConjunction());
         rules.add(new TransformImplication());
-    }
-
-    public static LloydToporRules instantiate()
-    {
-        if(instance == null)
-        {
-            instance = new LloydToporRules();
-        }
-        return instance;
     }
 
     public class SplitConjunctiveHead implements TransformationRule

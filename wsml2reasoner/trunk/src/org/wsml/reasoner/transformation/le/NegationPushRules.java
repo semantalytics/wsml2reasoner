@@ -22,6 +22,7 @@ import org.omwg.logicalexpression.Conjunction;
 import org.omwg.logicalexpression.Disjunction;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.NegationAsFailure;
+import org.wsml.reasoner.impl.WSMO4JManager;
 
 /**
  * This singleton class represents a set of normalization rules for pushing
@@ -33,23 +34,12 @@ import org.omwg.logicalexpression.NegationAsFailure;
  */
 public class NegationPushRules extends FixedModificationRules
 {
-    protected static NegationPushRules instance;
-
-    private NegationPushRules()
+    public NegationPushRules(WSMO4JManager wsmoManager)
     {
-        super();
+        super(wsmoManager);
         rules.add(new DoubleNegationRule());
         rules.add(new NegateConjunctionRule());
         rules.add(new NegateDisjunctionRule());
-    }
-
-    public static NegationPushRules instantiate()
-    {
-        if(instance == null)
-        {
-            instance = new NegationPushRules();
-        }
-        return instance;
     }
 
     protected class DoubleNegationRule implements NormalizationRule

@@ -19,13 +19,10 @@
 package org.wsml.reasoner.transformation.le;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.omwg.logicalexpression.*;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 /**
@@ -45,7 +42,7 @@ public class OnePassReplacementNormalizer implements
 
     protected List<NormalizationRule> postOrderRules;
 
-    protected static LogicalExpressionFactory leFactory;
+    protected LogicalExpressionFactory leFactory;
 
     /**
      * This constructor accepts two sets of normalization rules: one for
@@ -55,12 +52,10 @@ public class OnePassReplacementNormalizer implements
      * @param postorderRules
      */
     public OnePassReplacementNormalizer(List<NormalizationRule> preorderRules,
-            List<NormalizationRule> postorderRules) {
+            List<NormalizationRule> postorderRules, WSMO4JManager wsmoManager) {
         this.preOrderRules = preorderRules;
         this.postOrderRules = postorderRules;
-        if (leFactory == null) {
-            leFactory = WSMO4JManager.getLogicalExpressionFactory();
-        }
+        this.leFactory = wsmoManager.getLogicalExpressionFactory();
     }
 
     /**
@@ -69,8 +64,9 @@ public class OnePassReplacementNormalizer implements
      * 
      * @param rules
      */
-    public OnePassReplacementNormalizer(List<NormalizationRule> rules) {
-        this(rules, new ArrayList<NormalizationRule>(0));
+    public OnePassReplacementNormalizer(List<NormalizationRule> rules,
+            WSMO4JManager wsmoManager) {
+        this(rules, new ArrayList<NormalizationRule>(0), wsmoManager);
     }
 
     /**

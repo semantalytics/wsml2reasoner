@@ -69,11 +69,16 @@ public class Kaon2Facade implements DatalogReasonerFacade {
 
     private KAON2Connection conn = null;
 
-    private DataFactory df = WSMO4JManager.getDataFactory();
+    private DataFactory df;
 
-    private WsmoFactory wf = WSMO4JManager.getWSMOFactory();
+    private WsmoFactory wf;
 
     private Set<String> registeredOntologies = new HashSet<String>();
+
+    public Kaon2Facade(WSMO4JManager wsmoManager) {
+        df = wsmoManager.getDataFactory();
+        wf = wsmoManager.getWSMOFactory();
+    }
 
     /**
      * Needed for testing purposes
@@ -114,7 +119,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
             Reasoner reasoner = ontology.createReasoner();
             Query query = translateQuery(q, reasoner, varNames);
             for (Literal l : query.getQueryLiterals()) {
-                //System.out.println("Query literal: " + l);
+                // System.out.println("Query literal: " + l);
             }
             query.open();
             while (!query.afterLast()) {
@@ -149,8 +154,8 @@ public class Kaon2Facade implements DatalogReasonerFacade {
      * @param p -
      *            the datalog program that constitutes the knowledgebase
      */
-    private Set<Rule> translateKnowledgebase(
-            Set<org.wsml.reasoner.Rule> p) throws ExternalToolException {
+    private Set<Rule> translateKnowledgebase(Set<org.wsml.reasoner.Rule> p)
+            throws ExternalToolException {
 
         if (p == null) {
             return null;
@@ -423,7 +428,8 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                                     WSML2DatalogTransformer.PRED_OF_TYPE, l
                                             .getTerms().length);
                             translateTerms(l, terms);
-                            //System.out.println("Translated implies_type for oftype for " + rangeIri);
+                            // System.out.println("Translated implies_type for
+                            // oftype for " + rangeIri);
                         } else {
                             pred = f.nonOWLPredicate(p, l.getTerms().length);
                             translateTerms(l, terms);
@@ -534,8 +540,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
         return result;
     }
 
-    public void register(String ontologyURI,
-            Set<org.wsml.reasoner.Rule> kb)
+    public void register(String ontologyURI, Set<org.wsml.reasoner.Rule> kb)
             throws ExternalToolException {
         if (conn == null) {
             conn = KAON2Manager.newConnection();
@@ -554,14 +559,14 @@ public class Kaon2Facade implements DatalogReasonerFacade {
             Ontology o = conn.createOntology(ontologyURI, EMPTY_MAP);
             Set<Rule> rules = translateKnowledgebase(kb);
             appendRules(o, rules);
-//            try {
-//                o.saveOntology(OntologyFileFormat.OWL_XML, o.getPhysicalURI(),
-//                        "ISO-8859-15");
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
+            // try {
+            // o.saveOntology(OntologyFileFormat.OWL_XML, o.getPhysicalURI(),
+            // "ISO-8859-15");
+            // } catch (IOException e) {
+            // e.printStackTrace();
+            // } catch (InterruptedException e) {
+            // e.printStackTrace();
+            // }
         } catch (KAON2Exception e) {
             throw new ExternalToolException(
                     "Cannot register ontology in KAON2", e);

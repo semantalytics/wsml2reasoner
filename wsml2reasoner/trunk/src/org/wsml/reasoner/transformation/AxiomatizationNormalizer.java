@@ -80,10 +80,13 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
     private WsmoFactory wsmoFactory;
 
     private LogicalExpressionFactory leFactory;
+    
+    private FixedModificationRules fixedRules;
 
-    public AxiomatizationNormalizer() {
-        leFactory = WSMO4JManager.getLogicalExpressionFactory();
-        wsmoFactory = WSMO4JManager.getWSMOFactory();
+    public AxiomatizationNormalizer(WSMO4JManager wsmoManager) {
+        leFactory = wsmoManager.getLogicalExpressionFactory();
+        wsmoFactory = wsmoManager.getWSMOFactory();
+        fixedRules = new FixedModificationRules(wsmoManager);
     }
 
     /**
@@ -284,7 +287,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         conjuncts.add(moY);
         conjuncts.add(valXY);
         conjuncts.add(valYZ);
-        LogicalExpression conjunction = FixedModificationRules
+        LogicalExpression conjunction = fixedRules
                 .buildNaryConjunction(conjuncts);
         return leFactory.createImplication(conjunction, valXZ);
     }
@@ -306,7 +309,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         conjuncts.add(moX);
         conjuncts.add(moY);
         conjuncts.add(valXY);
-        LogicalExpression conjunction = FixedModificationRules
+        LogicalExpression conjunction = fixedRules
                 .buildNaryConjunction(conjuncts);
         return leFactory.createImplication(conjunction, valYX);
     }
@@ -394,7 +397,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         conjuncts.add(moX);
         conjuncts.addAll(Arrays.asList(valXY));
         conjuncts.addAll(inEqualities);
-        LogicalExpression conjunction = FixedModificationRules
+        LogicalExpression conjunction = fixedRules
                 .buildNaryConjunction(conjuncts);
         IRI newPIRI = wsmoFactory.createIRI(AnonymousIdUtils.getNewIri());
         Atom newPX = leFactory.createAtom(newPIRI, Arrays
@@ -447,7 +450,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         conjuncts.add(moX);
         conjuncts.addAll(Arrays.asList(valXY));
         conjuncts.addAll(inEqualities);
-        LogicalExpression conjunction = FixedModificationRules
+        LogicalExpression conjunction = fixedRules
                 .buildNaryConjunction(conjuncts);
         return (leFactory.createConstraint(conjunction));
     }
