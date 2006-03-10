@@ -41,7 +41,9 @@ import org.wsml.reasoner.Literal;
 import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.api.WSMLCoreReasoner;
 import org.wsml.reasoner.api.WSMLFlightReasoner;
+import org.wsml.reasoner.api.InternalReasonerException;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
 import org.wsml.reasoner.builtin.kaon2.Kaon2Facade;
 import org.wsml.reasoner.builtin.mins.MinsFacade;
 import org.wsml.reasoner.transformation.AnonymousIdUtils;
@@ -105,7 +107,6 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 
         Ontology normalizedOntology;
 
-        // TODO Missing tranformation: convert anonymous IDs to IRIs
         // TODO Check whether ontology import is currently handled
 
         // Convert conceptual syntax to logical expressions
@@ -193,9 +194,9 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         try {
             bindings = internalExecuteQuery(ontologyID, query);
         } catch (DatalogException e) {
-            throw new WSMLReasonerException(e);
+            throw new InternalReasonerException(e);
         } catch (ExternalToolException e) {
-            throw new WSMLReasonerException(e);
+            throw new InternalReasonerException(e);
         }
 
         return bindings;
@@ -214,9 +215,9 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         try {
             bindings = internalExecuteQuery(ontologyID, query);
         } catch (DatalogException e) {
-            throw new WSMLReasonerException();
+            throw new InternalReasonerException();
         } catch (ExternalToolException e) {
-            throw new WSMLReasonerException();
+            throw new InternalReasonerException();
         }
 
         // extract concepts from result:
@@ -241,9 +242,9 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         try {
             bindings = internalExecuteQuery(ontologyID, query);
         } catch (DatalogException e) {
-            throw new WSMLReasonerException();
+            throw new InternalReasonerException();
         } catch (ExternalToolException e) {
-            throw new WSMLReasonerException();
+            throw new InternalReasonerException();
         }
 
         // extract concepts from result:
@@ -269,9 +270,9 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         try {
             bindings = internalExecuteQuery(ontologyID, query);
         } catch (DatalogException e) {
-            throw new WSMLReasonerException();
+            throw new InternalReasonerException();
         } catch (ExternalToolException e) {
-            throw new WSMLReasonerException();
+            throw new InternalReasonerException();
         }
 
         // extract concepts from result:
@@ -298,9 +299,9 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         try {
             bindings = internalExecuteQuery(ontologyID, query);
         } catch (DatalogException e) {
-            throw new WSMLReasonerException();
+            throw new InternalReasonerException();
         } catch (ExternalToolException e) {
-            throw new WSMLReasonerException();
+            throw new InternalReasonerException();
         }
 
         // extract concepts from result:
@@ -327,9 +328,9 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         try {
             bindings = internalExecuteQuery(ontologyID, query);
         } catch (DatalogException e) {
-            throw new WSMLReasonerException();
+            throw new InternalReasonerException();
         } catch (ExternalToolException e) {
-            throw new WSMLReasonerException();
+            throw new InternalReasonerException();
         }
 
         // check for non-empty result:
@@ -351,9 +352,9 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         try {
             bindings = internalExecuteQuery(ontologyID, query);
         } catch (DatalogException e) {
-            throw new WSMLReasonerException();
+            throw new InternalReasonerException();
         } catch (ExternalToolException e) {
-            throw new WSMLReasonerException();
+            throw new InternalReasonerException();
         }
 
         // check for non-empty result:
@@ -388,8 +389,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     }
 
     public boolean entails(IRI baseOntologyID, IRI consequenceOntologyID) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Method not implemented yet!");
     }
 
     protected Set<Map<Variable, Term>> internalExecuteQuery(IRI ontologyID,
@@ -458,5 +458,9 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             result.add(new org.wsml.reasoner.ConjunctiveQuery(body));
         }
         return result;
+    }
+
+    public Set<ConsistencyViolation> checkConsistency(IRI ontologyID) {
+       throw new UnsupportedOperationException("Method not implemented yet!");
     }
 }

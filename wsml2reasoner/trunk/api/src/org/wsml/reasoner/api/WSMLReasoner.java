@@ -28,6 +28,8 @@ import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
+import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
+import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsmo.common.IRI;
 
 /**
@@ -36,22 +38,6 @@ import org.wsmo.common.IRI;
  * @author Uwe Keller, DERI Innsbruck
  */
 public interface WSMLReasoner {
-
-//    /**
-//     * Sends a request about some reasoning task to a reasoner. A reasoner might
-//     * support different reasoning tasks such as for instance query answering or
-//     * checking logical entailment of a statement wrt. to some ontology or
-//     * knowledgebase.
-//     * 
-//     * @param req -
-//     *            a description of the reasoning task to be performed.
-//     * @return the result to the given request.
-//     * @throws UnsupportedOperationException -
-//     *             in case that the given request referes to a reasoning task
-//     *             that is not supported by the respective reasoner.
-//     * @deprecated
-//     */
-//    public Result execute(Request req) throws UnsupportedOperationException;
 
     public void registerOntology(Set<Ontology> ontologies);
 
@@ -76,23 +62,40 @@ public interface WSMLReasoner {
     public Set<Map<Variable, Term>> executeQuery(IRI ontologyID,
             LogicalExpression query);
 
-    public boolean executeGroundQuery(IRI ontologyID, LogicalExpression query);
+    public boolean executeGroundQuery(IRI ontologyID, LogicalExpression query)
+            throws InconsistencyException;
 
-    public boolean entails(IRI ontologyID, LogicalExpression expression);
+    public boolean entails(IRI ontologyID, LogicalExpression expression)
+            throws InconsistencyException;
 
-    public boolean entails(IRI ontologyID, Set<LogicalExpression> expressions);
+    public boolean entails(IRI ontologyID, Set<LogicalExpression> expressions)
+            throws InconsistencyException;
 
     public boolean isSubConceptOf(IRI ontologyID, Concept subConcept,
-            Concept superConcept);
+            Concept superConcept) throws InconsistencyException;
 
-    public boolean isMemberOf(IRI ontologyID, Instance instance, Concept concept);
+    public boolean isMemberOf(IRI ontologyID, Instance instance, Concept concept)
+            throws InconsistencyException;
 
-    public Set<Concept> getSubConcepts(IRI ontologyID, Concept concept);
+    public Set<Concept> getSubConcepts(IRI ontologyID, Concept concept)
+            throws InconsistencyException;
 
-    public Set<Concept> getSuperConcepts(IRI ontologyID, Concept concept);
+    public Set<Concept> getSuperConcepts(IRI ontologyID, Concept concept)
+            throws InconsistencyException;
 
-    public Set<Instance> getInstances(IRI ontologyID, Concept concept);
+    public Set<Instance> getInstances(IRI ontologyID, Concept concept)
+            throws InconsistencyException;
 
-    public Set<Concept> getConcepts(IRI ontologyID, Instance instance);
+    public Set<Concept> getConcepts(IRI ontologyID, Instance instance)
+            throws InconsistencyException;
+
+    public boolean isSatisfiable(IRI ontologyID);
+
+    /**
+     * @param ontologyID
+     * @return a set of violation objects, or an empty set, if the ontology is
+     *         consistent (satisfiable)
+     */
+    public Set<ConsistencyViolation> checkConsistency(IRI ontologyID);
 
 }
