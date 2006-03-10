@@ -28,7 +28,7 @@ public final class AnonymousIdTranslator {
 
     public Term translate(LogicalExpression scope, Term term) {
         if (term instanceof UnnumberedAnonymousID) {
-            return wsmoFactory.createIRI(AnonymousIdUtils.getNewIri());
+            return wsmoFactory.createIRI(AnonymousIdUtils.getNewAnonymousIri());
         } else if (term instanceof NumberedAnonymousID) {
             return translate(scope, (NumberedAnonymousID) term);
         } else
@@ -47,7 +47,7 @@ public final class AnonymousIdTranslator {
         Byte number = new Byte(nbId.getNumber());
         String idString = nbIdMap.get(number);
         if (idString == null) {
-            idString = AnonymousIdUtils.getNewIri();
+            idString = AnonymousIdUtils.getNewAnonymousIri();
             nbIdMap.put(number, idString);
         }
         return wsmoFactory.createIRI(idString);
