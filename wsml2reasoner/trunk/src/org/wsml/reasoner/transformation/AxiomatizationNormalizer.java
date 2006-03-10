@@ -173,7 +173,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
     protected void addAsAxioms(Ontology ontology,
             Collection<LogicalExpression> expressions) {
         for (LogicalExpression expression : expressions) {
-            String axiomIDString = AnonymousIdUtils.getNewIri();
+            String axiomIDString = AnonymousIdUtils.getNewAnonymousIri();
             Identifier axiomID = wsmoFactory.createIRI(axiomIDString);
             Axiom axiom = wsmoFactory.createAxiom(axiomID);
             axiom.addDefinition(expression);
@@ -399,7 +399,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         conjuncts.addAll(inEqualities);
         LogicalExpression conjunction = fixedRules
                 .buildNaryConjunction(conjuncts);
-        IRI newPIRI = wsmoFactory.createIRI(AnonymousIdUtils.getNewIri());
+        IRI newPIRI = wsmoFactory.createIRI(AnonymousIdUtils.getNewAnonymousIri());
         Atom newPX = leFactory.createAtom(newPIRI, Arrays
                 .asList(new Variable[] { xVariable }));
         minCardConstraints.add(leFactory.createLogicProgrammingRule(newPX,

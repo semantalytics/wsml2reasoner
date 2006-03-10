@@ -143,8 +143,8 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 
     public boolean isSatisfiable(IRI ontologyID) {
         LogicalExpression dummyQuery = leFactory.createMemberShipMolecule(
-                wsmoFactory.createIRI(AnonymousIdUtils.getNewIri()),
-                wsmoFactory.createIRI(AnonymousIdUtils.getNewIri()));
+                wsmoFactory.createIRI(AnonymousIdUtils.getNewAnonymousIri()),
+                wsmoFactory.createIRI(AnonymousIdUtils.getNewAnonymousIri()));
         try {
             executeGroundQuery(ontologyID, dummyQuery);
         } catch (Exception e) {
