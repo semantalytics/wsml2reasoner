@@ -11,8 +11,8 @@ import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.InternalReasonerException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.WSMLReasonerException;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -47,7 +47,7 @@ public class OntologyRegistrationTest extends TestCase {
         try {
             executeQuery("_\"urn:test:xxx\"()", o1);
             fail();
-        } catch (WSMLReasonerException expected) {
+        } catch (InternalReasonerException expected) {
 
         }
 
@@ -66,7 +66,7 @@ public class OntologyRegistrationTest extends TestCase {
         try {
             executeQuery("_\"urn:test:a2\"()", o2);
             fail();
-        } catch (WSMLReasonerException expected) {
+        } catch (InternalReasonerException expected) {
 
         }
         wsmlReasoner.registerOntology(o2);
@@ -90,7 +90,7 @@ public class OntologyRegistrationTest extends TestCase {
          try {
              executeQuery("_\"urn:test:a2\"()", o2);
              fail();
-         } catch (WSMLReasonerException expected) {
+         } catch (InternalReasonerException expected) {
 
          }
          assertEquals(1, executeQuery("_\"urn:test:a1\"()", o1).size());
@@ -100,7 +100,7 @@ public class OntologyRegistrationTest extends TestCase {
          try {
              executeQuery("_\"urn:test:a1\"()", o2);
              fail();
-         } catch (WSMLReasonerException expected) {
+         } catch (InternalReasonerException expected) {
 
          }
  

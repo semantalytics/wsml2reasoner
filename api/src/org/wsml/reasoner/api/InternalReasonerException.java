@@ -17,20 +17,20 @@
  * 
  */
 
-package org.wsml.reasoner.impl;
+package org.wsml.reasoner.api;
 
-public class WSMLReasonerException extends RuntimeException {
+public class InternalReasonerException extends RuntimeException {
 
     /**
      * Needed for Java 5
      */
     private static final long serialVersionUID = -1814208889596998279L;
     
-    public WSMLReasonerException() {
+    public InternalReasonerException() {
         super();
     }
     
-    public WSMLReasonerException(Throwable e) {
+    public InternalReasonerException(Throwable e) {
         super(e);
     }
 }
