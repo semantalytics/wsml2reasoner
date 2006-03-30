@@ -44,6 +44,7 @@ import org.wsml.reasoner.api.WSMLFlightReasoner;
 import org.wsml.reasoner.api.InternalReasonerException;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
+import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.builtin.kaon2.Kaon2Facade;
 import org.wsml.reasoner.builtin.mins.MinsFacade;
 import org.wsml.reasoner.transformation.AnonymousIdUtils;
@@ -364,10 +365,10 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     public void registerOntology(Ontology ontology) {
         Set<Ontology> ontologySingletonSet = new HashSet<Ontology>();
         ontologySingletonSet.add(ontology);
-        registerOntology(ontologySingletonSet);
+        registerOntologies(ontologySingletonSet);
     }
 
-    public void registerOntology(Set<Ontology> ontologies) {
+    public void registerOntologies(Set<Ontology> ontologies) {
         // TODO Do some extra checking to make sure that ontologies which
         // are imported are converted before ontologies which import them
         for (Ontology o : ontologies) {
@@ -461,6 +462,15 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     }
 
     public Set<ConsistencyViolation> checkConsistency(IRI ontologyID) {
-       throw new UnsupportedOperationException("Method not implemented yet!");
+        throw new UnsupportedOperationException("Method not implemented yet!");
+    }
+
+    public void registerOntologiesNoVerification(Set<Ontology> ontologies) {
+        throw new UnsupportedOperationException("Method not implemented yet!");
+
+    }
+
+    public void registerOntologyNoVerification(Ontology ontology) {
+        throw new UnsupportedOperationException("Method not implemented yet!");
     }
 }

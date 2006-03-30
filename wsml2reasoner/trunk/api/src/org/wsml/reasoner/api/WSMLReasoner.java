@@ -39,7 +39,8 @@ import org.wsmo.common.IRI;
  */
 public interface WSMLReasoner {
 
-    public void registerOntology(Set<Ontology> ontologies);
+    public void registerOntologies(Set<Ontology> ontologies)
+            throws InconsistencyException;
 
     /**
      * Registers the ontology. If the ontology is already registered, updates
@@ -47,7 +48,18 @@ public interface WSMLReasoner {
      * 
      * @param ontology
      */
-    public void registerOntology(Ontology ontology);
+    public void registerOntology(Ontology ontology)
+            throws InconsistencyException;
+
+    public void registerOntologiesNoVerification(Set<Ontology> ontologies);
+
+    /**
+     * Registers the ontology. If the ontology is already registered, updates
+     * the ontology content.
+     * 
+     * @param ontology
+     */
+    public void registerOntologyNoVerification(Ontology ontology);
 
     /**
      * Deregisters the ontology. Any further request using this ontologyID will
@@ -62,32 +74,24 @@ public interface WSMLReasoner {
     public Set<Map<Variable, Term>> executeQuery(IRI ontologyID,
             LogicalExpression query);
 
-    public boolean executeGroundQuery(IRI ontologyID, LogicalExpression query)
-            throws InconsistencyException;
+    public boolean executeGroundQuery(IRI ontologyID, LogicalExpression query);
 
-    public boolean entails(IRI ontologyID, LogicalExpression expression)
-            throws InconsistencyException;
+    public boolean entails(IRI ontologyID, LogicalExpression expression);
 
-    public boolean entails(IRI ontologyID, Set<LogicalExpression> expressions)
-            throws InconsistencyException;
+    public boolean entails(IRI ontologyID, Set<LogicalExpression> expressions);
 
     public boolean isSubConceptOf(IRI ontologyID, Concept subConcept,
-            Concept superConcept) throws InconsistencyException;
+            Concept superConcept);
 
-    public boolean isMemberOf(IRI ontologyID, Instance instance, Concept concept)
-            throws InconsistencyException;
+    public boolean isMemberOf(IRI ontologyID, Instance instance, Concept concept);
 
-    public Set<Concept> getSubConcepts(IRI ontologyID, Concept concept)
-            throws InconsistencyException;
+    public Set<Concept> getSubConcepts(IRI ontologyID, Concept concept);
 
-    public Set<Concept> getSuperConcepts(IRI ontologyID, Concept concept)
-            throws InconsistencyException;
+    public Set<Concept> getSuperConcepts(IRI ontologyID, Concept concept);
 
-    public Set<Instance> getInstances(IRI ontologyID, Concept concept)
-            throws InconsistencyException;
+    public Set<Instance> getInstances(IRI ontologyID, Concept concept);
 
-    public Set<Concept> getConcepts(IRI ontologyID, Instance instance)
-            throws InconsistencyException;
+    public Set<Concept> getConcepts(IRI ontologyID, Instance instance);
 
     public boolean isSatisfiable(IRI ontologyID);
 
