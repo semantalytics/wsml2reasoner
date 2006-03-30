@@ -1,7 +1,6 @@
 package org.wsml.reasoner.api.inconsistency;
 
 import org.omwg.ontology.Attribute;
-import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Type;
 import org.omwg.ontology.Value;
