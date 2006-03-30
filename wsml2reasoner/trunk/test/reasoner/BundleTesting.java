@@ -31,14 +31,16 @@ public class BundleTesting
     public BundleTesting(String ontologyFile)
     {
         // Set up factories for creating WSML elements
-        leFactory = WSMO4JManager.getLogicalExpressionFactory();
-        wsmoFactory = WSMO4JManager.getWSMOFactory();
+        WSMO4JManager wsmoManager = new WSMO4JManager();
+        leFactory = wsmoManager.getLogicalExpressionFactory();
+        wsmoFactory = wsmoManager.getWSMOFactory();
+        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLFlightReasoner();
 
         // Set up WSML parser
         Map<String, Object> parserProperties = new HashMap<String, Object>();
-        parserProperties.put(Parser.PARSER_WSMO_FACTORY, wsmoFactory);
-        parserProperties.put(Parser.PARSER_LE_FACTORY, leFactory);
-        parserProperties.put(org.wsmo.factory.Factory.PROVIDER_CLASS, "com.ontotext.wsmo4j.parser.WSMLParserImpl");
+//        parserProperties.put(Parser.PARSER_WSMO_FACTORY, wsmoFactory);
+//        parserProperties.put(Parser.PARSER_LE_FACTORY, leFactory);
+//        parserProperties.put(org.wsmo.factory.Factory.PROVIDER_CLASS, "com.ontotext.wsmo4j.parser.WSMLParserImpl");
         Parser wsmlparserimpl = org.wsmo.factory.Factory.createParser(parserProperties);
 
         // Read simple ontology from file
@@ -63,7 +65,7 @@ public class BundleTesting
             return;
         }
 
-        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().getWSMLFlightReasoner();
+        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLFlightReasoner();
 
         // Register ontology
         System.out.println("Registering ontology:\n\t\"" + o.getIdentifier().toString() + "\"");
