@@ -31,6 +31,13 @@ import org.wsmo.factory.WsmoFactory;
 
 public class ConstraintReplacementNormalizer implements OntologyNormalizer
 {
+    private static final String PREFIX = "http://www.wsmo.org/reasoner/";
+    public static final String ATTR_OFTYPE_IRI = PREFIX + "ATTR_OFTYPE";
+    public static final String MIN_CARD_IRI = PREFIX + "MIN_CARD";
+    public static final String MAX_CARD_IRI = PREFIX + "MAX_CARD";
+    public static final String NAMED_USER_IRI = PREFIX + "NAMED_USER";
+    public static final String UNNAMED_USER_IRI = PREFIX + "UNNAMED_USER";
+    
     public Relation attributeOfTypePredicate;
     public Relation minCardinalityPredicate;
     public Relation maxCardinalityPredicate;
@@ -46,20 +53,20 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer
         wsmoFactory = wsmoManager.getWSMOFactory();
         try
         {
-            attributeOfTypePredicate = wsmoFactory.createRelation(wsmoFactory.createIRI("ATTR_OFTYPE"));
+            attributeOfTypePredicate = wsmoFactory.createRelation(wsmoFactory.createIRI(ATTR_OFTYPE_IRI));
             attributeOfTypePredicate.createParameter((byte)0);
             attributeOfTypePredicate.createParameter((byte)1);
             attributeOfTypePredicate.createParameter((byte)2);
             attributeOfTypePredicate.createParameter((byte)3);
-            minCardinalityPredicate = wsmoFactory.createRelation(wsmoFactory.createIRI("MIN_CARD"));
+            minCardinalityPredicate = wsmoFactory.createRelation(wsmoFactory.createIRI(MIN_CARD_IRI));
             minCardinalityPredicate.createParameter((byte)0);
             minCardinalityPredicate.createParameter((byte)1);
-            maxCardinalityPredicate = wsmoFactory.createRelation(wsmoFactory.createIRI("MIN_CARD"));
+            maxCardinalityPredicate = wsmoFactory.createRelation(wsmoFactory.createIRI(MAX_CARD_IRI));
             maxCardinalityPredicate.createParameter((byte)0);
             maxCardinalityPredicate.createParameter((byte)1);
-            namedUserAxiomPredicate = wsmoFactory.createRelation(wsmoFactory.createIRI("NAMED_USER"));
+            namedUserAxiomPredicate = wsmoFactory.createRelation(wsmoFactory.createIRI(NAMED_USER_IRI));
             namedUserAxiomPredicate.createParameter((byte)0);
-            unnamedUserAxiomPredicate = wsmoFactory.createRelation(wsmoFactory.createIRI("UNNAMED_USER"));
+            unnamedUserAxiomPredicate = wsmoFactory.createRelation(wsmoFactory.createIRI(UNNAMED_USER_IRI));
             unnamedUserAxiomPredicate.createParameter((byte)0);
         } catch(Exception e)
         {
@@ -205,20 +212,20 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer
         Constraint constraint = (Constraint)axiom.listDefinitions().iterator().next();
         Conjunction body = (Conjunction)constraint.getOperand();
         Collection<LogicalExpression> conjuncts = extractConjuncts(body);
-        Identifier instanceID = null, attributeID = null;
+        Term instanceID = null, attributeID = null;
         for(LogicalExpression conjunct : conjuncts)
         {
             if(conjunct instanceof MembershipMolecule)
             {
                 MembershipMolecule mOf = (MembershipMolecule)conjunct;
-                instanceID = (Identifier)mOf.getLeftParameter();
+                instanceID = (Term)mOf.getLeftParameter();
             }
             else if(conjunct instanceof CompoundMolecule)
             {
                 CompoundMolecule compound = (CompoundMolecule)conjunct;
                 List attrValMols = compound.listAttributeValueMolecules();
                 AttributeValueMolecule attrValMol = (AttributeValueMolecule)(attrValMols.get(0));
-                attributeID = (Identifier)attrValMol.getAttribute();
+                attributeID = (Term)attrValMol.getAttribute();
             }
         }
 
@@ -252,14 +259,14 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer
         {
             pNew = (Atom)(((NegationAsFailure)rightConjunct).getOperand());
         }
-        Identifier instanceID = (Identifier)pNew.listParameters().get(0);
-        Identifier attributeID = (Identifier)pNew.listParameters().get(1);
+        Term instanceID = (Term)pNew.listParameters().get(0);
+        Term attributeID = (Term)pNew.listParameters().get(1);
         
         // create corresponding rule:
         List<Term> params = new ArrayList<Term>(2);
         params.add(instanceID);
         params.add(attributeID);
-        Atom head = leFactory.createAtom(maxCardinalityPredicate.getIdentifier(), params);
+        Atom head = leFactory.createAtom(minCardinalityPredicate.getIdentifier(), params);
         LogicProgrammingRule rule = leFactory.createLogicProgrammingRule(head, body);
 
         // create an axiom from rule:
