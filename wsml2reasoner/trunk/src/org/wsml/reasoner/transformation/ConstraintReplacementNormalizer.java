@@ -18,7 +18,6 @@ import org.omwg.logicalexpression.NegationAsFailure;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
-import org.omwg.ontology.Relation;
 import org.omwg.ontology.Value;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.impl.WSMO4JManager;
@@ -33,16 +32,21 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer
 {
     private static final String PREFIX = "http://www.wsmo.org/reasoner/";
     public static final String ATTR_OFTYPE_IRI = PREFIX + "ATTR_OFTYPE";
+    public static final int ATTR_OFTYPE_ARITY = 4;
     public static final String MIN_CARD_IRI = PREFIX + "MIN_CARD";
+    public static final int MIN_CARD_ARITY = 2;
     public static final String MAX_CARD_IRI = PREFIX + "MAX_CARD";
+    public static final int MAX_CARD_ARITY = 2;
     public static final String NAMED_USER_IRI = PREFIX + "NAMED_USER";
+    public static final int NAMED_USER_ARITY = 1;
     public static final String UNNAMED_USER_IRI = PREFIX + "UNNAMED_USER";
+    public static final int UNNAMED_USER_ARITY = 1;
     
-    public Relation attributeOfTypePredicate;
-    public Relation minCardinalityPredicate;
-    public Relation maxCardinalityPredicate;
-    public Relation namedUserAxiomPredicate;
-    public Relation unnamedUserAxiomPredicate;
+    public IRI attributeOfTypePredicateID;
+    public IRI minCardinalityPredicateID;
+    public IRI maxCardinalityPredicateID;
+    public IRI namedUserAxiomPredicateID;
+    public IRI unnamedUserAxiomPredicateID;
 
     private WsmoFactory wsmoFactory;
     private LogicalExpressionFactory leFactory;
@@ -53,21 +57,11 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer
         wsmoFactory = wsmoManager.getWSMOFactory();
         try
         {
-            attributeOfTypePredicate = wsmoFactory.createRelation(wsmoFactory.createIRI(ATTR_OFTYPE_IRI));
-            attributeOfTypePredicate.createParameter((byte)0);
-            attributeOfTypePredicate.createParameter((byte)1);
-            attributeOfTypePredicate.createParameter((byte)2);
-            attributeOfTypePredicate.createParameter((byte)3);
-            minCardinalityPredicate = wsmoFactory.createRelation(wsmoFactory.createIRI(MIN_CARD_IRI));
-            minCardinalityPredicate.createParameter((byte)0);
-            minCardinalityPredicate.createParameter((byte)1);
-            maxCardinalityPredicate = wsmoFactory.createRelation(wsmoFactory.createIRI(MAX_CARD_IRI));
-            maxCardinalityPredicate.createParameter((byte)0);
-            maxCardinalityPredicate.createParameter((byte)1);
-            namedUserAxiomPredicate = wsmoFactory.createRelation(wsmoFactory.createIRI(NAMED_USER_IRI));
-            namedUserAxiomPredicate.createParameter((byte)0);
-            unnamedUserAxiomPredicate = wsmoFactory.createRelation(wsmoFactory.createIRI(UNNAMED_USER_IRI));
-            unnamedUserAxiomPredicate.createParameter((byte)0);
+            attributeOfTypePredicateID = wsmoFactory.createIRI(ATTR_OFTYPE_IRI);
+            minCardinalityPredicateID = wsmoFactory.createIRI(MIN_CARD_IRI);
+            maxCardinalityPredicateID = wsmoFactory.createIRI(MAX_CARD_IRI);
+            namedUserAxiomPredicateID = wsmoFactory.createIRI(NAMED_USER_IRI);
+            unnamedUserAxiomPredicateID = wsmoFactory.createIRI(UNNAMED_USER_IRI);
         } catch(Exception e)
         {
             // TODO Auto-generated catch block
@@ -179,7 +173,7 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer
         params.add(yVariable);
         params.add(attributeID);
         params.add(typeID);
-        Atom head = leFactory.createAtom(attributeOfTypePredicate.getIdentifier(), params);
+        Atom head = leFactory.createAtom(attributeOfTypePredicateID, params);
         LogicProgrammingRule rule = leFactory.createLogicProgrammingRule(head, body);
 
         // create an axiom from rule:
@@ -196,7 +190,7 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer
         LogicalExpression body = constraint.getOperand();
         List<Term> params = new ArrayList<Term>(1);
         params.add(axiom.getIdentifier());
-        Atom head = leFactory.createAtom(unnamedUserAxiomPredicate.getIdentifier(), params);
+        Atom head = leFactory.createAtom(unnamedUserAxiomPredicateID, params);
         LogicProgrammingRule rule = leFactory.createLogicProgrammingRule(head, body);
 
         // create an axiom from rule:
@@ -233,7 +227,7 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer
         List<Term> params = new ArrayList<Term>(2);
         params.add(instanceID);
         params.add(attributeID);
-        Atom head = leFactory.createAtom(maxCardinalityPredicate.getIdentifier(), params);
+        Atom head = leFactory.createAtom(maxCardinalityPredicateID, params);
         LogicProgrammingRule rule = leFactory.createLogicProgrammingRule(head, body);
 
         // create an axiom from rule:
@@ -266,7 +260,7 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer
         List<Term> params = new ArrayList<Term>(2);
         params.add(instanceID);
         params.add(attributeID);
-        Atom head = leFactory.createAtom(minCardinalityPredicate.getIdentifier(), params);
+        Atom head = leFactory.createAtom(minCardinalityPredicateID, params);
         LogicProgrammingRule rule = leFactory.createLogicProgrammingRule(head, body);
 
         // create an axiom from rule:
@@ -307,7 +301,7 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer
         LogicalExpression body = constraint.getOperand();
         List<Term> params = new ArrayList<Term>(1);
         params.add(axiom.getIdentifier());
-        Atom head = leFactory.createAtom(namedUserAxiomPredicate.getIdentifier(), params);
+        Atom head = leFactory.createAtom(namedUserAxiomPredicateID, params);
         LogicProgrammingRule rule = leFactory.createLogicProgrammingRule(head, body);
 
         // create an axiom from rule:
