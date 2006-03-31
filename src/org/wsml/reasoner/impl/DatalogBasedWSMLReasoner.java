@@ -114,6 +114,8 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         OntologyNormalizer normalizer = new AxiomatizationNormalizer(
                 wsmoManager);
         normalizedOntology = normalizer.normalize(o);
+        
+        //TODO Add ContraintReplacementNormalizer
 
         // Simplify axioms
         normalizer = new ConstructReductionNormalizer(wsmoManager);
