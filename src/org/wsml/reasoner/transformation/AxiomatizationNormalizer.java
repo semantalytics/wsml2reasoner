@@ -58,6 +58,7 @@ import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.Namespace;
 import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.common.exception.SynchronisationException;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -148,20 +149,21 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
         // process axioms:
         for (Axiom axiom : (Collection<Axiom>) ontology.listAxioms()) {
-            try {
-            	Axiom copy = null;
-            	//FIXME this is a dirty hotfix for destructive normalisation, where the same definitions get wrapped up in another axiom
-            	for (LogicalExpression definition : (Set<LogicalExpression>)axiom.listDefinitions()) {
-            		 copy = wsmoFactory.createAxiom(wsmoFactory.createIRI(axiom.getIdentifier().toString() + "_copy"));
-            		copy.addDefinition(definition);
-            	}
-            	if (copy != null)
-            		resultOntology.addAxiom(copy);
-            	else
-            		; //TODO logger.warn()
-            } catch (InvalidModelException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+            int sequential = 1;
+            String seqString = (axiom.listDefinitions().size() == 1) ? "" : "_" + Integer.toString(sequential);
+            for(LogicalExpression definition : (Set<LogicalExpression>)axiom.listDefinitions())
+            {
+                Axiom newAxiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(axiom.getIdentifier().toString() + seqString));
+                newAxiom.addDefinition(definition);
+                try
+                {
+                    resultOntology.addAxiom(newAxiom);
+                } catch(InvalidModelException e)
+                {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                seqString = "_" + Integer.toString(++sequential);
             }
         }
         
@@ -488,7 +490,8 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         // yn!=yn+1."
         Set<LogicalExpression> conjuncts = new HashSet<LogicalExpression>();
         conjuncts.add(moX);
-        conjuncts.addAll(Arrays.asList(valXY));
+//        conjuncts.addAll(Arrays.asList(valXY));
+        conjuncts.add(leFactory.createCompoundMolecule(Arrays.asList(valXY)));
         conjuncts.addAll(inEqualities);
         LogicalExpression conjunction = fixedRules
                 .buildNaryConjunction(conjuncts);
