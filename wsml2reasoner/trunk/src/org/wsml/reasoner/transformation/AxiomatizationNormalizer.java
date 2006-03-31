@@ -22,6 +22,7 @@ package org.wsml.reasoner.transformation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,7 +38,20 @@ import org.omwg.logicalexpression.MembershipMolecule;
 import org.omwg.logicalexpression.Molecule;
 import org.omwg.logicalexpression.NegationAsFailure;
 import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.*;
+import org.omwg.ontology.Attribute;
+import org.omwg.ontology.Axiom;
+import org.omwg.ontology.ComplexDataType;
+import org.omwg.ontology.Concept;
+import org.omwg.ontology.DataValue;
+import org.omwg.ontology.Instance;
+import org.omwg.ontology.Ontology;
+import org.omwg.ontology.Parameter;
+import org.omwg.ontology.Relation;
+import org.omwg.ontology.RelationInstance;
+import org.omwg.ontology.SimpleDataType;
+import org.omwg.ontology.Type;
+import org.omwg.ontology.Value;
+import org.omwg.ontology.Variable;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.FixedModificationRules;
 import org.wsmo.common.IRI;
@@ -75,18 +89,19 @@ import org.wsmo.factory.WsmoFactory;
  * v0.3 of the WSML Working Group.
  * 
  * @author Uwe Keller, DERI Innsbruck
+ * @author Stephan Grimm, FZI Karlsruhe
  */
 public class AxiomatizationNormalizer implements OntologyNormalizer {
     private WsmoFactory wsmoFactory;
-
     private LogicalExpressionFactory leFactory;
-    
     private FixedModificationRules fixedRules;
+    private Map<Integer,String> axiomIDs;
 
     public AxiomatizationNormalizer(WSMO4JManager wsmoManager) {
         leFactory = wsmoManager.getLogicalExpressionFactory();
         wsmoFactory = wsmoManager.getWSMOFactory();
         fixedRules = new FixedModificationRules(wsmoManager);
+        axiomIDs = new HashMap<Integer, String>();
     }
 
     /**
@@ -149,7 +164,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 e.printStackTrace();
             }
         }
-
+        
         // process concepts:
         for (Concept concept : (Collection<Concept>) ontology.listConcepts()) {
             addAsAxioms(resultOntology, normalizeConcept(concept));
@@ -167,14 +182,14 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
             addAsAxioms(resultOntology, normalizeInstance(instance));
         }
 
+        repealAxiomIDs();
         return resultOntology;
     }
 
     protected void addAsAxioms(Ontology ontology,
             Collection<LogicalExpression> expressions) {
         for (LogicalExpression expression : expressions) {
-            String axiomIDString = AnonymousIdUtils.getNewAnonymousIri();
-            Identifier axiomID = wsmoFactory.createIRI(axiomIDString);
+            Identifier axiomID = fetchAxiomID(expression);
             Axiom axiom = wsmoFactory.createAxiom(axiomID);
             axiom.addDefinition(expression);
             try {
@@ -183,6 +198,22 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 e.printStackTrace();
             }
         }
+    }
+    
+    private Identifier fetchAxiomID(LogicalExpression expression)
+    {
+        Integer hashCode = new Integer(expression.toString().hashCode());
+        String axiomIDString = axiomIDs.get(hashCode);
+        if(axiomIDString == null)
+        {
+            axiomIDString = AnonymousIdUtils.getNewAnonymousIri();
+        }
+        return wsmoFactory.createIRI(axiomIDString);
+    }
+    
+    private void repealAxiomIDs()
+    {
+        axiomIDs.clear();
     }
 
     @SuppressWarnings("unchecked")
@@ -226,8 +257,9 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
             // create an appropriate molecule per range type:
             if (attribute.isConstraining()) {
-                resultExpressions.add(leFactory.createAttributeConstraint(
-                        conceptID, attributeID, typeID));
+                LogicalExpression ofTypeConstraint = leFactory.createAttributeConstraint(conceptID, attributeID, typeID);
+                resultExpressions.add(ofTypeConstraint);
+                proclaimAxiomID(ofTypeConstraint, AnonymousIdUtils.getNewOfTypeIri());
             } else {
                 resultExpressions.add(leFactory.createAttributeInference(
                         conceptID, attributeID, typeID));
@@ -264,6 +296,12 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         }
 
         return resultExpressions;
+    }
+    
+    private void proclaimAxiomID(LogicalExpression expression, String id)
+    {
+        Integer hashCode = new Integer(expression.toString().hashCode());
+        axiomIDs.put(hashCode, id);
     }
 
     protected LogicalExpression createTransitivityConstraint(
@@ -390,7 +428,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
             }
         }
 
-        // build LP-rule: "Pnew(?x) :- ?x memberOf <concept> and ?x[<attribute>
+        // build LP-rule: "Pnew(?x,<attrID>) :- ?x memberOf <concept> and ?x[<attribute>
         // hasValue ?y1, ... <attribute> hasValue yn] and ?y1!=?y2 and ... and
         // yn-1!=yn."
         Set<LogicalExpression> conjuncts = new HashSet<LogicalExpression>();
@@ -401,14 +439,16 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 .buildNaryConjunction(conjuncts);
         IRI newPIRI = wsmoFactory.createIRI(AnonymousIdUtils.getNewAnonymousIri());
         Atom newPX = leFactory.createAtom(newPIRI, Arrays
-                .asList(new Variable[] { xVariable }));
+                .asList(new Term[] { xVariable, attributeID }));
         minCardConstraints.add(leFactory.createLogicProgrammingRule(newPX,
                 conjunction));
 
-        // build constraint: "!- ?x memberOf <concept> and naf Pnew(?x)."
+        // build constraint: "!- ?x memberOf <concept> and naf Pnew(?x,<attrID>)."
         NegationAsFailure naf = leFactory.createNegationAsFailure(newPX);
         conjunction = leFactory.createConjunction(moX, naf);
-        minCardConstraints.add(leFactory.createConstraint(conjunction));
+        LogicalExpression minCardConstraint = leFactory.createConstraint(conjunction);
+        proclaimAxiomID(minCardConstraint, AnonymousIdUtils.getNewMinCardIri());
+        minCardConstraints.add(minCardConstraint);
 
         return minCardConstraints;
     }
@@ -452,7 +492,9 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         conjuncts.addAll(inEqualities);
         LogicalExpression conjunction = fixedRules
                 .buildNaryConjunction(conjuncts);
-        return (leFactory.createConstraint(conjunction));
+        LogicalExpression maxCardConstraint = leFactory.createConstraint(conjunction);
+        proclaimAxiomID(maxCardConstraint, AnonymousIdUtils.getNewMaxCardIri());
+        return maxCardConstraint;
     }
 
     @SuppressWarnings("unchecked")
