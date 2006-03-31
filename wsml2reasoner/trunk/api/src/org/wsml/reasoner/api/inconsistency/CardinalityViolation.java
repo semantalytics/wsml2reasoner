@@ -2,6 +2,7 @@ package org.wsml.reasoner.api.inconsistency;
 
 import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Instance;
+import org.wsmo.common.IRI;
 
 public abstract class CardinalityViolation extends ConsistencyViolation {
 
@@ -17,7 +18,8 @@ public abstract class CardinalityViolation extends ConsistencyViolation {
         return instance;
     }
 
-    public CardinalityViolation(Instance instance, Attribute attribute) {
+    public CardinalityViolation(IRI ontologyIri, Instance instance, Attribute attribute) {
+        super(ontologyIri);
         this.instance = instance;
         this.attribute = attribute;
     }

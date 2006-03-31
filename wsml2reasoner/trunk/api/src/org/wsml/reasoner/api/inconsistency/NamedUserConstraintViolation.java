@@ -6,7 +6,8 @@ public class NamedUserConstraintViolation extends UserConstraintViolation {
 
     private IRI axiomId;
 
-    public NamedUserConstraintViolation(IRI axiomId) {
+    public NamedUserConstraintViolation(IRI ontologyIri, IRI axiomId) {
+        super(ontologyIri);
         this.axiomId = axiomId;
     }
 
