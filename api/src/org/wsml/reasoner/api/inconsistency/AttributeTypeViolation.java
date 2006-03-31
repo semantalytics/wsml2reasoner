@@ -4,6 +4,7 @@ import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Type;
 import org.omwg.ontology.Value;
+import org.wsmo.common.IRI;
 
 public class AttributeTypeViolation extends ConsistencyViolation {
     
@@ -31,7 +32,8 @@ public class AttributeTypeViolation extends ConsistencyViolation {
         return violatingValue;
     }
 
-    public AttributeTypeViolation(Instance instance, Value violatingValue, Attribute attribute, Type expectedType) {
+    public AttributeTypeViolation(IRI ontologyIri, Instance instance, Value violatingValue, Attribute attribute, Type expectedType) {
+        super(ontologyIri);
         this.instance = instance;
         this.violatingValue = violatingValue;
         this.attribute = attribute;
