@@ -21,6 +21,7 @@ package test;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -42,10 +43,12 @@ import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
+import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
+import org.wsmo.wsml.ParserException;
 import org.wsmo.wsml.Serializer;
 
 public class BaseReasonerTest extends TestCase {
@@ -64,7 +67,7 @@ public class BaseReasonerTest extends TestCase {
 
     protected static WSMO4JManager wsmoManager = null;
 
-    protected static void setupScenario(String ontologyFile) throws Exception {
+    protected static void setupScenario(String ontologyFile) throws IOException, ParserException, InvalidModelException {
         // Set up factories for creating WSML elements
 
         wsmoManager = new WSMO4JManager();

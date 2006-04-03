@@ -67,7 +67,7 @@ public class WSML2DatalogTransformer {
     public final static String PRED_MEMBER_OF = "wsml-member-of";
 
     public final static String PRED_HAS_VALUE = "wsml-has-value";
-    
+
     WSMO4JManager wsmoManager;
 
     /**
@@ -112,7 +112,7 @@ public class WSML2DatalogTransformer {
             }
             // Reset the internal state of the visitor such that it can be
             // reused.
-            //System.out.println(translation);
+            // System.out.println(translation);
             datalogVisitor.reset();
         }
         return result;
@@ -162,18 +162,20 @@ public class WSML2DatalogTransformer {
 
         body = new LinkedList<Literal>();
         head = new Literal(true, PRED_MEMBER_OF, vInstance, vConcept2);
-        body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept ));
-        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept2 ));
+        body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept));
+        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept2));
         result.add(new Rule(head, body));
 
         // Inference of attr value types: mo(v,c2) <- itype(c1, att,
         // c2), mo(o,c1), hval(o,att, v)
         // mo(v1,v2) <- itype(v3, v4, v2), mo(v5,v3), hval(v5,v4, v1)
         body = new LinkedList<Literal>();
-        head = new Literal(true, PRED_MEMBER_OF, vInstance2, vConcept2 );
-        body.add(new Literal(true, PRED_IMPLIES_TYPE, vConcept, vAttribute, vConcept2));
+        head = new Literal(true, PRED_MEMBER_OF, vInstance2, vConcept2);
+        body.add(new Literal(true, PRED_IMPLIES_TYPE, vConcept, vAttribute,
+                vConcept2));
         body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept));
-        body.add(new Literal(true, PRED_HAS_VALUE, vInstance, vAttribute, vInstance2));
+        body.add(new Literal(true, PRED_HAS_VALUE, vInstance, vAttribute,
+                vInstance2));
         result.add(new Rule(head, body));
 
         // Semantics of C1[att => C2] (oftype constraint)
@@ -181,12 +183,18 @@ public class WSML2DatalogTransformer {
         // With variables: oftype(v1, v2, v3), mo(v4,v1), hval(v4, v2, v5), NAF
         // mo(v5,v3)
 
-        body = new LinkedList<Literal>();
-        body.add(new Literal(true, PRED_OF_TYPE, vConcept, vAttribute, vRange));
-        body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept));
-        body.add(new Literal(true, PRED_HAS_VALUE, vInstance, vAttribute, vAttributeValue));
-        body.add(new Literal(false, PRED_MEMBER_OF, vAttributeValue, vRange));
-        result.add(new Rule(null, body));
+        // Commented out, because it is handled by
+        // ConstraintReplacementNormalizer
+
+        // body = new LinkedList<Literal>();
+        // body.add(new Literal(true, PRED_OF_TYPE, vConcept, vAttribute,
+        // vRange));
+        // body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept));
+        // body.add(new Literal(true, PRED_HAS_VALUE, vInstance, vAttribute,
+        // vAttributeValue));
+        // body.add(new Literal(false, PRED_MEMBER_OF, vAttributeValue,
+        // vRange));
+        // result.add(new Rule(null, body));
 
         return result;
     }

@@ -378,17 +378,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         Set<ConsistencyViolation> errors = new HashSet<ConsistencyViolation>();
         for (Ontology o : ontologies) {
             IRI ontologyId = (IRI) o.getIdentifier();
-            if (!isSatisfiable(ontologyId)) {
-                try {
-                    addAttributeOfTypeViolations(errors, ontologyId);
-                    addMinCardinalityViolations(errors, ontologyId);
-                    addMaxCardinalityViolations(errors, ontologyId);
-                    addNamedUserViolations(errors, ontologyId);
-                    addUnNamedUserViolations(errors, ontologyId);
-                } catch (InvalidModelException e) {
-                    throw new InternalReasonerException(e);
-                }
-            }
+            errors.addAll(checkConsistency(ontologyId));
         }
         if (errors.size() > 0) {
             Set<IRI> ids = new HashSet<IRI>();
@@ -424,8 +414,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         Set<Map<Variable, Term>> violations = executeQuery(ontologyId, atom);
         for (Map<Variable, Term> violation : violations) {
             // Construct error object
-            Instance instance = wsmoFactory.getInstance((IRI) violation
-                    .get(i));
+            Instance instance = wsmoFactory.getInstance((IRI) violation.get(i));
             Term rawValue = violation.get(v);
             Value value;
             if (rawValue instanceof DataValue)
@@ -433,14 +422,14 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             else
                 value = wsmoFactory.createInstance((IRI) rawValue);
             Concept concept = wsmoFactory.getConcept((IRI) violation.get(c));
-            Attribute attribute = (Attribute) concept.findAttributes((IRI) violation
-                    .get(a)).iterator().next();
+            Attribute attribute = (Attribute) concept.findAttributes(
+                    (IRI) violation.get(a)).iterator().next();
             Type type;
             IRI typeId = (IRI) violation.get(t);
-            if (WsmlDataType.WSML_STRING.equals(typeId)
-                    || WsmlDataType.WSML_INTEGER.equals(typeId)
-                    || WsmlDataType.WSML_DECIMAL.equals(typeId)
-                    || WsmlDataType.WSML_BOOLEAN.equals(typeId))
+            if (WsmlDataType.WSML_STRING.equals(typeId.toString())
+                    || WsmlDataType.WSML_INTEGER.equals(typeId.toString())
+                    || WsmlDataType.WSML_DECIMAL.equals(typeId.toString())
+                    || WsmlDataType.WSML_BOOLEAN.equals(typeId.toString()))
                 type = wsmoManager.getDataFactory().createWsmlDataType(typeId);
             else
                 type = wsmoFactory.getConcept(typeId);
@@ -471,11 +460,10 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         Set<Map<Variable, Term>> violations = executeQuery(ontologyId, atom);
         for (Map<Variable, Term> violation : violations) {
             // Construct error object
-            Instance instance = wsmoFactory.getInstance((IRI) violation
-                    .get(i));
+            Instance instance = wsmoFactory.getInstance((IRI) violation.get(i));
             Concept concept = wsmoFactory.getConcept((IRI) violation.get(c));
-            Attribute attribute = (Attribute) concept.findAttributes((IRI) violation
-                    .get(a)).iterator().next();
+            Attribute attribute = (Attribute) concept.findAttributes(
+                    (IRI) violation.get(a)).iterator().next();
             errors.add(new MinCardinalityViolation(ontologyId, instance,
                     attribute));
         }
@@ -501,11 +489,10 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         Set<Map<Variable, Term>> violations = executeQuery(ontologyId, atom);
         for (Map<Variable, Term> violation : violations) {
             // Construct error object
-            Instance instance = wsmoFactory.getInstance((IRI) violation
-                    .get(i));
+            Instance instance = wsmoFactory.getInstance((IRI) violation.get(i));
             Concept concept = wsmoFactory.getConcept((IRI) violation.get(c));
-            Attribute attribute = (Attribute) concept.findAttributes((IRI) violation
-                    .get(a)).iterator().next();
+            Attribute attribute = (Attribute) concept.findAttributes(
+                    (IRI) violation.get(a)).iterator().next();
             errors.add(new MaxCardinalityViolation(ontologyId, instance,
                     attribute));
         }
@@ -624,8 +611,20 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return result;
     }
 
-    public Set<ConsistencyViolation> checkConsistency(IRI ontologyID) {
-        throw new UnsupportedOperationException("Method not implemented yet!");
+    public Set<ConsistencyViolation> checkConsistency(IRI ontologyId) {
+        Set<ConsistencyViolation> errors = new HashSet<ConsistencyViolation>();
+        if (!isSatisfiable(ontologyId)) {
+            try {
+                addAttributeOfTypeViolations(errors, ontologyId);
+                addMinCardinalityViolations(errors, ontologyId);
+                addMaxCardinalityViolations(errors, ontologyId);
+                addNamedUserViolations(errors, ontologyId);
+                addUnNamedUserViolations(errors, ontologyId);
+            } catch (InvalidModelException e) {
+                throw new InternalReasonerException(e);
+            }
+        }
+        return errors;
     }
 
     public void registerOntologiesNoVerification(Set<Ontology> ontologies) {
