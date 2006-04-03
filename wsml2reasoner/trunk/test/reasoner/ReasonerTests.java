@@ -7,6 +7,7 @@ import reasoner.flight.DogsworldTest;
 import reasoner.flight.LordOfRings;
 import reasoner.flight.MaciejVTABug;
 import reasoner.flight.MaciejVTABug2;
+import reasoner.flight.ViolationsTest;
 
 /**
  * @author nagypal
@@ -26,6 +27,7 @@ public class ReasonerTests {
         suite.addTest(MaciejVTABug2.suite());
         suite.addTest(LordOfRings.suite());
         suite.addTestSuite(OntologyRegistrationTest.class);
+        suite.addTestSuite(ViolationsTest.class);
         // $JUnit-END$
         return suite;
     }
