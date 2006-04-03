@@ -33,7 +33,6 @@ import org.wsml.reasoner.transformation.le.TopDownLESplitter;
 import org.wsml.reasoner.transformation.le.TransformationRule;
 import org.wsmo.common.Namespace;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 
 public class LloydToporNormalizer implements OntologyNormalizer {

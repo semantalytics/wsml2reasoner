@@ -19,7 +19,12 @@
 
 package reasoner.rule;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -35,10 +40,10 @@ import test.BaseReasonerTest;
  * @author Adrian Mocan, Holger Lausen
  *
  * Created on 17-Feb-2006
- * Committed by $Author: hlausen $
+ * Committed by $Author: gabor $
  * 
  * $Source: /home/richi/temp/w2r/wsml2reasoner/test/reasoner/rule/FunctionSymbolsTest.java,v $, 
- * @version $Revision: 1.3 $ $Date: 2006-03-02 13:41:49 $
+ * @version $Revision: 1.4 $ $Date: 2006-04-03 11:34:09 $
  */
 
 public class FunctionSymbolsTest extends BaseReasonerTest {

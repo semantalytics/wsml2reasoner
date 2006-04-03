@@ -1,8 +1,12 @@
 package wsml2reasoner;
 
-import junit.framework.*;
-import wsml2reasoner.normalization.*;
-import wsml2reasoner.transformation.*;
+import junit.framework.Test;
+import junit.framework.TestSuite;
+import wsml2reasoner.normalization.AnonymousIDReplacementTest;
+import wsml2reasoner.normalization.ConstructReductionNormalizerTest;
+import wsml2reasoner.normalization.LloydToporNormalizerTest;
+import wsml2reasoner.normalization.WSMLNormalizationTest;
+import wsml2reasoner.transformation.AnonymousIdUtilsTest;
 
 /**
  * @author nagypal

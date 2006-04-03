@@ -19,7 +19,6 @@
 
 package org.wsml.reasoner.builtin.kaon2;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -34,7 +33,13 @@ import org.omwg.logicalexpression.Constants;
 import org.omwg.ontology.DataValue;
 import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.WsmlDataType;
-import org.semanticweb.kaon2.api.*;
+import org.semanticweb.kaon2.api.DefaultOntologyResolver;
+import org.semanticweb.kaon2.api.KAON2Connection;
+import org.semanticweb.kaon2.api.KAON2Exception;
+import org.semanticweb.kaon2.api.KAON2Factory;
+import org.semanticweb.kaon2.api.KAON2Manager;
+import org.semanticweb.kaon2.api.Ontology;
+import org.semanticweb.kaon2.api.OntologyChangeEvent;
 import org.semanticweb.kaon2.api.owl.elements.Individual;
 import org.semanticweb.kaon2.api.reasoner.Query;
 import org.semanticweb.kaon2.api.reasoner.Reasoner;
@@ -43,8 +48,11 @@ import org.semanticweb.kaon2.api.rules.NonOWLPredicate;
 import org.semanticweb.kaon2.api.rules.Rule;
 import org.semanticweb.kaon2.api.rules.Term;
 import org.semanticweb.kaon2.api.rules.Variable;
-import org.semanticweb.kaon2.extensionapi.datatype.DatatypeManager;
-import org.wsml.reasoner.*;
+import org.wsml.reasoner.ConjunctiveQuery;
+import org.wsml.reasoner.DatalogReasonerFacade;
+import org.wsml.reasoner.ExternalToolException;
+import org.wsml.reasoner.UnsupportedFeatureException;
+import org.wsml.reasoner.WSML2DatalogTransformer;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.DataFactory;

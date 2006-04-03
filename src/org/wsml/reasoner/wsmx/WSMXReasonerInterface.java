@@ -1,16 +1,5 @@
 package org.wsml.reasoner.wsmx;
 
-import java.util.Map;
-import java.util.Set;
-
-import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Concept;
-import org.omwg.ontology.Instance;
-import org.omwg.ontology.Ontology;
-import org.omwg.ontology.Variable;
-import org.wsmo.common.IRI;
-import org.wsmo.execution.common.exception.ComponentException;
 
 public interface WSMXReasonerInterface
 {

@@ -1,9 +1,12 @@
 package reasoner;
 
-import reasoner.core.*;
-import reasoner.flight.*;
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import reasoner.core.SimpleGraph;
+import reasoner.flight.DogsworldTest;
+import reasoner.flight.LordOfRings;
+import reasoner.flight.MaciejVTABug;
+import reasoner.flight.MaciejVTABug2;
 
 /**
  * @author nagypal

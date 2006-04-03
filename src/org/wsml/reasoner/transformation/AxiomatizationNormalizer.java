@@ -19,46 +19,17 @@
 
 package org.wsml.reasoner.transformation;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import org.omwg.logicalexpression.Atom;
-import org.omwg.logicalexpression.AttributeValueMolecule;
-import org.omwg.logicalexpression.Conjunction;
-import org.omwg.logicalexpression.Constants;
-import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.logicalexpression.MembershipMolecule;
-import org.omwg.logicalexpression.Molecule;
-import org.omwg.logicalexpression.NegationAsFailure;
+import org.omwg.logicalexpression.*;
 import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Attribute;
-import org.omwg.ontology.Axiom;
-import org.omwg.ontology.ComplexDataType;
-import org.omwg.ontology.Concept;
-import org.omwg.ontology.DataValue;
-import org.omwg.ontology.Instance;
-import org.omwg.ontology.Ontology;
-import org.omwg.ontology.Parameter;
-import org.omwg.ontology.Relation;
-import org.omwg.ontology.RelationInstance;
-import org.omwg.ontology.SimpleDataType;
-import org.omwg.ontology.Type;
-import org.omwg.ontology.Value;
-import org.omwg.ontology.Variable;
+import org.omwg.ontology.*;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.FixedModificationRules;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.Namespace;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.common.exception.SynchronisationException;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
