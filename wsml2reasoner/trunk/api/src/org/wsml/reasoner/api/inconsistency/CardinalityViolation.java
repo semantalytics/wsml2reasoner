@@ -23,5 +23,5 @@ public abstract class CardinalityViolation extends ConsistencyViolation {
         this.instance = instance;
         this.attribute = attribute;
     }
-
+    
 }

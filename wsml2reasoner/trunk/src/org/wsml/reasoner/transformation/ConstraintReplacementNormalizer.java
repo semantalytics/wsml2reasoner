@@ -118,10 +118,6 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
                     Identifier axiomID = axiom.getIdentifier();
                     String axiomIDString = axiomID.toString();
                     if (axiomIDString
-                            .startsWith(AnonymousIdUtils.OFTYPE_PREFIX)) {
-                        resultOntology
-                                .addAxiom(replaceAttrOfTypeConstraint(axiom));
-                    } else if (axiomIDString
                             .startsWith(AnonymousIdUtils.MINCARD_PREFIX)) {
                         resultOntology
                                 .addAxiom(replaceMinCardConstraint(axiom));
@@ -138,6 +134,11 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
                         resultOntology
                                 .addAxiom(replaceNamedUserConstraint(axiom));
                     }
+                } else if (definition instanceof AttributeConstraintMolecule) // oftype
+                                                                                // statement
+                {
+                    resultOntology.addAxiom(replaceAttrOfTypeConstraint(axiom));
+
                 } else // no constraint axiom
                 {
                     resultOntology.addAxiom(axiom);
@@ -167,7 +168,8 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
         Atom head = leFactory.createAtom(violationPredicateID,
                 Collections.EMPTY_LIST);
 
-        // VIOLATION :- ATTR_OFTYPE(instance,value,concept,attribute,violated_type)
+        // VIOLATION :-
+        // ATTR_OFTYPE(instance,value,concept,attribute,violated_type)
         List<Term> params = new ArrayList<Term>(5);
         params.add(v1);
         params.add(v2);
@@ -337,7 +339,7 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
                 attributeID = (Term) pNew.listParameters().get(1);
             }
         }
-        
+
         // create corresponding rule:
         List<Term> params = new ArrayList<Term>(3);
         params.add(instanceID);

@@ -29,6 +29,7 @@ import org.wsml.reasoner.transformation.le.FixedModificationRules;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.Namespace;
+import org.wsmo.common.UnnumberedAnonymousID;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
@@ -124,7 +125,13 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
             String seqString = (axiom.listDefinitions().size() == 1) ? "" : "_" + Integer.toString(sequential);
             for(LogicalExpression definition : (Set<LogicalExpression>)axiom.listDefinitions())
             {
-                Axiom newAxiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(axiom.getIdentifier().toString() + seqString));
+                Identifier axiomId = axiom.getIdentifier();
+                Identifier newAxiomId;
+                if (axiomId instanceof UnnumberedAnonymousID)
+                    newAxiomId = wsmoFactory.createIRI(AnonymousIdUtils.getNewAnonymousIri());
+                else
+                    newAxiomId = wsmoFactory.createIRI(axiomId.toString() + seqString);
+                Axiom newAxiom = wsmoFactory.createAxiom(newAxiomId);
                 newAxiom.addDefinition(definition);
                 try
                 {
