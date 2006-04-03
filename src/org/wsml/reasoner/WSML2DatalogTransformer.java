@@ -186,15 +186,15 @@ public class WSML2DatalogTransformer {
         // Commented out, because it is handled by
         // ConstraintReplacementNormalizer
 
-        // body = new LinkedList<Literal>();
-        // body.add(new Literal(true, PRED_OF_TYPE, vConcept, vAttribute,
-        // vRange));
-        // body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept));
-        // body.add(new Literal(true, PRED_HAS_VALUE, vInstance, vAttribute,
-        // vAttributeValue));
-        // body.add(new Literal(false, PRED_MEMBER_OF, vAttributeValue,
-        // vRange));
-        // result.add(new Rule(null, body));
+         body = new LinkedList<Literal>();
+         body.add(new Literal(true, PRED_OF_TYPE, vConcept, vAttribute,
+         vRange));
+         body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept));
+         body.add(new Literal(true, PRED_HAS_VALUE, vInstance, vAttribute,
+         vAttributeValue));
+         body.add(new Literal(false, PRED_MEMBER_OF, vAttributeValue,
+         vRange));
+         result.add(new Rule(null, body));
 
         return result;
     }
