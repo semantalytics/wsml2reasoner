@@ -19,14 +19,18 @@
 
 package org.wsml.reasoner;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import org.omwg.logicalexpression.*;
-import org.omwg.logicalexpression.terms.*;
-import org.omwg.ontology.*;
-import org.wsml.reasoner.impl.*;
-import org.wsml.reasoner.transformation.*;
-import org.wsmo.factory.*;
+import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.Variable;
+import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsml.reasoner.transformation.InfixOrderLogicalExpressionVisitor;
+import org.wsmo.factory.WsmoFactory;
 
 /**
  * <p>

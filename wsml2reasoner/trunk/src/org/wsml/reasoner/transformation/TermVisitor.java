@@ -19,7 +19,10 @@
 
 package org.wsml.reasoner.transformation;
 
-import org.omwg.logicalexpression.terms.*;
+import org.omwg.logicalexpression.terms.ConstructedTerm;
+import org.omwg.logicalexpression.terms.NumberedAnonymousID;
+import org.omwg.logicalexpression.terms.Term;
+import org.omwg.logicalexpression.terms.Visitor;
 import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.Variable;

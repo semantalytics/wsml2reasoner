@@ -18,12 +18,15 @@
  */
 package wsml2reasoner.normalization;
 
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.omwg.ontology.*;
+import org.omwg.ontology.Axiom;
+import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsml.reasoner.transformation.*;
-import org.wsmo.common.*;
+import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
+import org.wsml.reasoner.transformation.OntologyNormalizer;
+import org.wsmo.common.IRI;
 
 public class ConstructReductionNormalizerTest extends WSMLNormalizationTest
 {

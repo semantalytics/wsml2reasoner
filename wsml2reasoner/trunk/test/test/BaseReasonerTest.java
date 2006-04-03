@@ -19,20 +19,34 @@
  */
 package test;
 
-import java.io.*;
-import java.util.*;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-import junit.framework.*;
+import junit.framework.TestCase;
 
-import org.deri.wsmo4j.io.serializer.wsml.*;
-import org.omwg.logicalexpression.*;
-import org.omwg.logicalexpression.terms.*;
-import org.omwg.ontology.*;
-import org.wsml.reasoner.api.*;
-import org.wsml.reasoner.impl.*;
-import org.wsmo.common.*;
-import org.wsmo.factory.*;
-import org.wsmo.wsml.*;
+import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
+import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.Ontology;
+import org.omwg.ontology.Variable;
+import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
+import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.common.IRI;
+import org.wsmo.common.TopEntity;
+import org.wsmo.factory.DataFactory;
+import org.wsmo.factory.LogicalExpressionFactory;
+import org.wsmo.factory.WsmoFactory;
+import org.wsmo.wsml.Parser;
+import org.wsmo.wsml.Serializer;
 
 public class BaseReasonerTest extends TestCase {
 

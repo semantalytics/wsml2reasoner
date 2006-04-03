@@ -18,14 +18,21 @@
  */
 package org.wsml.reasoner.builtin.mins;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.deri.mins.builtins.*;
-import org.deri.mins.terms.*;
-import org.omwg.logicalexpression.*;
+import org.deri.mins.terms.StringTerm;
+import org.deri.mins.terms.Term;
+import org.omwg.logicalexpression.Constants;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.*;
-import org.wsml.reasoner.impl.*;
+import org.wsml.reasoner.ConjunctiveQuery;
+import org.wsml.reasoner.Rule;
+import org.wsml.reasoner.UnsupportedFeatureException;
+import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 
 /**

@@ -19,7 +19,8 @@
 
 package org.wsml.reasoner;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 /**
  * Represents a rule of a datalog program.
  * 

@@ -19,10 +19,11 @@
 
 package org.wsml.reasoner.builtin.wrapper;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.omwg.logicalexpression.terms.*;
-import org.wsml.reasoner.*;
+import org.omwg.logicalexpression.terms.Term;
+import org.wsml.reasoner.UnsupportedFeatureException;
 
 /**
  * Allows to convert between symbol names in WSML and the names that are accepted by 

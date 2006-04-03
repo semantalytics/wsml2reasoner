@@ -4,21 +4,21 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
+import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.InternalReasonerException;
+import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
-
-import junit.framework.TestCase;
 
 public class OntologyRegistrationTest extends TestCase {
 

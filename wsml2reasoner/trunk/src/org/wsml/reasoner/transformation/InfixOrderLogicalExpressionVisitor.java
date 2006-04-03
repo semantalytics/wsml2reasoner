@@ -22,12 +22,6 @@ package org.wsml.reasoner.transformation;
 import java.util.Iterator;
 
 import org.omwg.logicalexpression.*;
-import org.omwg.logicalexpression.Atom;
-import org.omwg.logicalexpression.Binary;
-import org.omwg.logicalexpression.Molecule;
-import org.omwg.logicalexpression.Quantified;
-import org.omwg.logicalexpression.Unary;
-import org.omwg.logicalexpression.Visitor;
 
 /**
  * Implements a left-first, depth-first traversal over logical expressions.

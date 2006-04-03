@@ -18,18 +18,21 @@
  */
 package wsml2reasoner.normalization;
 
-import java.io.*;
+import java.io.Reader;
 
-import junit.framework.*;
+import junit.framework.TestCase;
 
-import org.omwg.ontology.*;
-import org.wsml.reasoner.impl.*;
-import org.wsml.reasoner.transformation.*;
-import org.wsmo.common.*;
-import org.wsmo.factory.*;
-import org.wsmo.wsml.*;
+import org.omwg.ontology.Ontology;
+import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsml.reasoner.transformation.OntologyNormalizer;
+import org.wsmo.common.TopEntity;
+import org.wsmo.factory.Factory;
+import org.wsmo.factory.LogicalExpressionFactory;
+import org.wsmo.factory.WsmoFactory;
+import org.wsmo.wsml.Parser;
+import org.wsmo.wsml.Serializer;
 
-import test.*;
+import test.BaseReasonerTest;
 
 public abstract class WSMLNormalizationTest extends TestCase
 {

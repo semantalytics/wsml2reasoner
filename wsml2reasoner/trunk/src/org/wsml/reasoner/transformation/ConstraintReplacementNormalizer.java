@@ -7,16 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.omwg.logicalexpression.Atom;
-import org.omwg.logicalexpression.AttributeConstraintMolecule;
-import org.omwg.logicalexpression.AttributeValueMolecule;
-import org.omwg.logicalexpression.CompoundMolecule;
-import org.omwg.logicalexpression.Conjunction;
-import org.omwg.logicalexpression.Constraint;
-import org.omwg.logicalexpression.LogicProgrammingRule;
-import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.logicalexpression.MembershipMolecule;
-import org.omwg.logicalexpression.NegationAsFailure;
+import org.omwg.logicalexpression.*;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;

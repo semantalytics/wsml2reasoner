@@ -19,7 +19,7 @@
 
 package org.wsml.reasoner.builtin.wrapper;
 
-import org.wsml.reasoner.*;
+import org.wsml.reasoner.UnsupportedFeatureException;
 
 /**
  * An interface for classes that encasulate the knowledge about tool specific

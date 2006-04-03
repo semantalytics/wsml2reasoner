@@ -1,23 +1,5 @@
 package org.wsml.reasoner.wsmx;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Concept;
-import org.omwg.ontology.Instance;
-import org.omwg.ontology.Ontology;
-import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.WSMLFlightReasoner;
-import org.wsml.reasoner.api.WSMLReasonerFactory;
-import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.common.IRI;
-import org.wsmo.execution.common.exception.ComponentException;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
 
 /**
  * The class WSMXReasoner provides a WSML reasoner to be plugged into the WSMX
