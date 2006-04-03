@@ -19,21 +19,12 @@
 
 package org.wsml.reasoner.impl;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Axiom;
-import org.omwg.ontology.Concept;
-import org.omwg.ontology.Instance;
-import org.omwg.ontology.Ontology;
-import org.omwg.ontology.Variable;
+import org.omwg.ontology.*;
 import org.wsml.reasoner.ConjunctiveQuery;
 import org.wsml.reasoner.DatalogException;
 import org.wsml.reasoner.ExternalToolException;
@@ -43,12 +34,18 @@ import org.wsml.reasoner.api.WSMLCoreReasoner;
 import org.wsml.reasoner.api.WSMLFlightReasoner;
 import org.wsml.reasoner.api.InternalReasonerException;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.inconsistency.AttributeTypeViolation;
 import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
+import org.wsml.reasoner.api.inconsistency.MaxCardinalityViolation;
+import org.wsml.reasoner.api.inconsistency.MinCardinalityViolation;
+import org.wsml.reasoner.api.inconsistency.NamedUserConstraintViolation;
+import org.wsml.reasoner.api.inconsistency.UserConstraintViolation;
 import org.wsml.reasoner.builtin.kaon2.Kaon2Facade;
 import org.wsml.reasoner.builtin.mins.MinsFacade;
 import org.wsml.reasoner.transformation.AnonymousIdUtils;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
+import org.wsml.reasoner.transformation.ConstraintReplacementNormalizer;
 import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
 import org.wsml.reasoner.transformation.LloydToporNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
@@ -60,6 +57,7 @@ import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
 import org.wsml.reasoner.transformation.le.TopDownLESplitter;
 import org.wsml.reasoner.transformation.le.TransformationRule;
 import org.wsmo.common.IRI;
+import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -104,6 +102,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         leFactory = this.wsmoManager.getLogicalExpressionFactory();
     }
 
+    @SuppressWarnings("unchecked")
     protected Set<org.wsml.reasoner.Rule> convertOntology(Ontology o) {
 
         Ontology normalizedOntology;
@@ -114,8 +113,10 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         OntologyNormalizer normalizer = new AxiomatizationNormalizer(
                 wsmoManager);
         normalizedOntology = normalizer.normalize(o);
-        
-        //TODO Add ContraintReplacementNormalizer
+
+        // Convert constraints to support debugging
+        normalizer = new ConstraintReplacementNormalizer(wsmoManager);
+        normalizedOntology = normalizer.normalize(normalizedOntology);
 
         // Simplify axioms
         normalizer = new ConstructReductionNormalizer(wsmoManager);
@@ -145,15 +146,13 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     }
 
     public boolean isSatisfiable(IRI ontologyID) {
-        LogicalExpression dummyQuery = leFactory.createMemberShipMolecule(
-                wsmoFactory.createIRI(AnonymousIdUtils.getNewAnonymousIri()),
-                wsmoFactory.createIRI(AnonymousIdUtils.getNewAnonymousIri()));
-        try {
-            executeGroundQuery(ontologyID, dummyQuery);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
+        IRI violationIRI = wsmoFactory
+                .createIRI(ConstraintReplacementNormalizer.VIOLATION_IRI);
+        Atom violation = leFactory.createAtom(violationIRI,
+                Collections.EMPTY_LIST);
+        boolean result = executeGroundQuery(ontologyID, violation) ? false
+                : true;
+        return result;
     }
 
     public void deRegisterOntology(IRI ontologyID) {
@@ -183,7 +182,11 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     }
 
     public boolean entails(IRI ontologyID, Set<LogicalExpression> expressions) {
-        throw new UnsupportedOperationException();
+        for (LogicalExpression e : expressions) {
+            if (!executeGroundQuery(ontologyID, e))
+                return false;
+        }
+        return true;
     }
 
     public boolean executeGroundQuery(IRI ontologyID, LogicalExpression query) {
@@ -371,23 +374,182 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     }
 
     public void registerOntologies(Set<Ontology> ontologies) {
-        // TODO Do some extra checking to make sure that ontologies which
-        // are imported are converted before ontologies which import them
+        registerOntologiesNoVerification(ontologies);
+        // check satisfiability
+        Set<ConsistencyViolation> errors = new HashSet<ConsistencyViolation>();
         for (Ontology o : ontologies) {
-            // convert the ontology to Datalog Program:
-            String ontologyUri = o.getIdentifier().toString();
-            Set<org.wsml.reasoner.Rule> kb = new HashSet<org.wsml.reasoner.Rule>();
-            kb.addAll(convertOntology(o));
-
-            // Register the program at the built-in reasoner:
-            try {
-                builtInFacade.register(ontologyUri, kb);
-            } catch (org.wsml.reasoner.ExternalToolException e) {
-                e.printStackTrace();
-                throw new IllegalArgumentException(
-                        "This set of ontologies could not have been registered at the built-in reasoner",
-                        e);
+            IRI ontologyId = (IRI) o.getIdentifier();
+            if (!isSatisfiable(ontologyId)) {
+                try {
+                    addAttributeOfTypeViolations(errors, ontologyId);
+                    addMinCardinalityViolations(errors, ontologyId);
+                    addMaxCardinalityViolations(errors, ontologyId);
+                    addNamedUserViolations(errors, ontologyId);
+                    addUnNamedUserViolations(errors, ontologyId);
+                } catch (InvalidModelException e) {
+                    throw new InternalReasonerException(e);
+                }
             }
+        }
+        if (errors.size() > 0) {
+            Set<IRI> ids = new HashSet<IRI>();
+            for (Ontology o : ontologies) {
+                ids.add((IRI) o.getIdentifier());
+            }
+            deRegisterOntology(ids);
+            throw new InconsistencyException(errors);
+        }
+    }
+
+    private void addAttributeOfTypeViolations(Set<ConsistencyViolation> errors,
+            IRI ontologyId) throws InvalidModelException {
+        // ATTR_OFTYPE(instance,value,concept, attribute,violated_type)
+
+        Variable i = wsmoFactory.createVariable("i");
+        Variable v = wsmoFactory.createVariable("v");
+        Variable c = wsmoFactory.createVariable("c");
+        Variable a = wsmoFactory.createVariable("a");
+        Variable t = wsmoFactory.createVariable("t");
+
+        IRI atomId = wsmoFactory
+                .createIRI(ConstraintReplacementNormalizer.ATTR_OFTYPE_IRI);
+
+        List<Term> params = new ArrayList<Term>(5);
+        params.add(i);
+        params.add(v);
+        params.add(c);
+        params.add(a);
+        params.add(t);
+        Atom atom = leFactory.createAtom(atomId, params);
+
+        Set<Map<Variable, Term>> violations = executeQuery(ontologyId, atom);
+        for (Map<Variable, Term> violation : violations) {
+            // Construct error object
+            Instance instance = wsmoFactory.getInstance((IRI) violation
+                    .get(i));
+            Term rawValue = violation.get(v);
+            Value value;
+            if (rawValue instanceof DataValue)
+                value = (DataValue) rawValue;
+            else
+                value = wsmoFactory.createInstance((IRI) rawValue);
+            Concept concept = wsmoFactory.getConcept((IRI) violation.get(c));
+            Attribute attribute = (Attribute) concept.findAttributes((IRI) violation
+                    .get(a)).iterator().next();
+            Type type;
+            IRI typeId = (IRI) violation.get(t);
+            if (WsmlDataType.WSML_STRING.equals(typeId)
+                    || WsmlDataType.WSML_INTEGER.equals(typeId)
+                    || WsmlDataType.WSML_DECIMAL.equals(typeId)
+                    || WsmlDataType.WSML_BOOLEAN.equals(typeId))
+                type = wsmoManager.getDataFactory().createWsmlDataType(typeId);
+            else
+                type = wsmoFactory.getConcept(typeId);
+
+            errors.add(new AttributeTypeViolation(ontologyId, instance, value,
+                    attribute, type));
+        }
+
+    }
+
+    private void addMinCardinalityViolations(Set<ConsistencyViolation> errors,
+            IRI ontologyId) throws InvalidModelException {
+        // MIN_CARD(instance, concept, attribute)
+
+        Variable i = wsmoFactory.createVariable("i");
+        Variable c = wsmoFactory.createVariable("c");
+        Variable a = wsmoFactory.createVariable("a");
+
+        IRI atomId = wsmoFactory
+                .createIRI(ConstraintReplacementNormalizer.MIN_CARD_IRI);
+
+        List<Term> params = new ArrayList<Term>(3);
+        params.add(i);
+        params.add(c);
+        params.add(a);
+        Atom atom = leFactory.createAtom(atomId, params);
+
+        Set<Map<Variable, Term>> violations = executeQuery(ontologyId, atom);
+        for (Map<Variable, Term> violation : violations) {
+            // Construct error object
+            Instance instance = wsmoFactory.getInstance((IRI) violation
+                    .get(i));
+            Concept concept = wsmoFactory.getConcept((IRI) violation.get(c));
+            Attribute attribute = (Attribute) concept.findAttributes((IRI) violation
+                    .get(a)).iterator().next();
+            errors.add(new MinCardinalityViolation(ontologyId, instance,
+                    attribute));
+        }
+    }
+
+    private void addMaxCardinalityViolations(Set<ConsistencyViolation> errors,
+            IRI ontologyId) throws InvalidModelException {
+        // MAX_CARD(instance, concept, attribute)
+
+        Variable i = wsmoFactory.createVariable("i");
+        Variable c = wsmoFactory.createVariable("c");
+        Variable a = wsmoFactory.createVariable("a");
+
+        IRI atomId = wsmoFactory
+                .createIRI(ConstraintReplacementNormalizer.MAX_CARD_IRI);
+
+        List<Term> params = new ArrayList<Term>(3);
+        params.add(i);
+        params.add(c);
+        params.add(a);
+        Atom atom = leFactory.createAtom(atomId, params);
+
+        Set<Map<Variable, Term>> violations = executeQuery(ontologyId, atom);
+        for (Map<Variable, Term> violation : violations) {
+            // Construct error object
+            Instance instance = wsmoFactory.getInstance((IRI) violation
+                    .get(i));
+            Concept concept = wsmoFactory.getConcept((IRI) violation.get(c));
+            Attribute attribute = (Attribute) concept.findAttributes((IRI) violation
+                    .get(a)).iterator().next();
+            errors.add(new MaxCardinalityViolation(ontologyId, instance,
+                    attribute));
+        }
+    }
+
+    private void addNamedUserViolations(Set<ConsistencyViolation> errors,
+            IRI ontologyId) throws InvalidModelException {
+        // NAMED_USER(axiom)
+
+        Variable i = wsmoFactory.createVariable("i");
+
+        IRI atomId = wsmoFactory
+                .createIRI(ConstraintReplacementNormalizer.NAMED_USER_IRI);
+
+        List<Term> params = new ArrayList<Term>(1);
+        params.add(i);
+        Atom atom = leFactory.createAtom(atomId, params);
+
+        Set<Map<Variable, Term>> violations = executeQuery(ontologyId, atom);
+        for (Map<Variable, Term> violation : violations) {
+            // Construct error object
+            Axiom axiom = wsmoFactory.getAxiom((IRI) violation.get(i));
+            errors.add(new NamedUserConstraintViolation(ontologyId, axiom));
+        }
+    }
+
+    private void addUnNamedUserViolations(Set<ConsistencyViolation> errors,
+            IRI ontologyId) throws InvalidModelException {
+        // UNNAMED_USER(axiom)
+
+        Variable i = wsmoFactory.createVariable("i");
+
+        IRI atomId = wsmoFactory
+                .createIRI(ConstraintReplacementNormalizer.UNNAMED_USER_IRI);
+
+        List<Term> params = new ArrayList<Term>(1);
+        params.add(i);
+        Atom atom = leFactory.createAtom(atomId, params);
+
+        Set<Map<Variable, Term>> violations = executeQuery(ontologyId, atom);
+        for (int k = 0; k < violations.size(); k++) {
+            // Construct error object
+            errors.add(new UserConstraintViolation(ontologyId));
         }
     }
 
@@ -468,11 +630,29 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     }
 
     public void registerOntologiesNoVerification(Set<Ontology> ontologies) {
-        throw new UnsupportedOperationException("Method not implemented yet!");
+        // TODO Do some extra checking to make sure that ontologies which
+        // are imported are converted before ontologies which import them
+        for (Ontology o : ontologies) {
+            // convert the ontology to Datalog Program:
+            String ontologyUri = o.getIdentifier().toString();
+            Set<org.wsml.reasoner.Rule> kb = new HashSet<org.wsml.reasoner.Rule>();
+            kb.addAll(convertOntology(o));
 
+            // Register the program at the built-in reasoner:
+            try {
+                builtInFacade.register(ontologyUri, kb);
+            } catch (org.wsml.reasoner.ExternalToolException e) {
+                e.printStackTrace();
+                throw new IllegalArgumentException(
+                        "This set of ontologies could not have been registered at the built-in reasoner",
+                        e);
+            }
+        }
     }
 
     public void registerOntologyNoVerification(Ontology ontology) {
-        throw new UnsupportedOperationException("Method not implemented yet!");
+        Set<Ontology> ontologySingletonSet = new HashSet<Ontology>();
+        ontologySingletonSet.add(ontology);
+        registerOntologiesNoVerification(ontologySingletonSet);
     }
 }
