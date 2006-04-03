@@ -2,7 +2,7 @@ package org.wsml.reasoner.api.inconsistency;
 
 import java.util.Set;
 
-public class InconsistencyException extends RuntimeException {
+public class InconsistencyException extends Exception {
 
     private static final long serialVersionUID = 7674954034000599115L;
     

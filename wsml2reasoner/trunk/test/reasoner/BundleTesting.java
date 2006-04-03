@@ -11,6 +11,7 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLFlightReasoner;
+import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
@@ -69,7 +70,12 @@ public class BundleTesting
 
         // Register ontology
         System.out.println("Registering ontology:\n\t\"" + o.getIdentifier().toString() + "\"");
-        wsmlReasoner.registerOntology(o);
+        try {
+            wsmlReasoner.registerOntology(o);
+        } catch (InconsistencyException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         ontologyID = (IRI)o.getIdentifier();
     }
 

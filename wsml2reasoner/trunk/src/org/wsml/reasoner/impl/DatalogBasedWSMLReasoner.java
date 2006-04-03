@@ -366,13 +366,13 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return bindings.size() != 0;
     }
 
-    public void registerOntology(Ontology ontology) {
+    public void registerOntology(Ontology ontology) throws InconsistencyException {
         Set<Ontology> ontologySingletonSet = new HashSet<Ontology>();
         ontologySingletonSet.add(ontology);
         registerOntologies(ontologySingletonSet);
     }
 
-    public void registerOntologies(Set<Ontology> ontologies) {
+    public void registerOntologies(Set<Ontology> ontologies) throws InconsistencyException {
         registerOntologiesNoVerification(ontologies);
         // check satisfiability
         Set<ConsistencyViolation> errors = new HashSet<ConsistencyViolation>();

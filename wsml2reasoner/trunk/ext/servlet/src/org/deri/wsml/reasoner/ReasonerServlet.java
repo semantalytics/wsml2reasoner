@@ -41,6 +41,7 @@ import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.builtin.mins.ConstraintViolationError;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
@@ -62,7 +63,7 @@ import org.wsmo.wsml.ParserException;
  * 
  * 
  * @see org.deri.wsml.reasoner.ontobroker.Reasoner
- * @author Jos de Bruijn $Author: gabor $ $Date: 2006-03-09 17:04:00 $
+ * @author Jos de Bruijn $Author: gabor $ $Date: 2006-04-03 14:09:25 $
  */
 public class ReasonerServlet extends HttpServlet {
     /**
@@ -256,7 +257,12 @@ public class ReasonerServlet extends HttpServlet {
                     createWSMLFlightReasoner(params);
 
             // Register ontology
-            reasoner.registerOntology(ontology);
+            try {
+                reasoner.registerOntology(ontology);
+            } catch (InconsistencyException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
 
             Set<Map<Variable,Term>> result = reasoner.executeQuery(
                     (IRI)ontology.getIdentifier(),query);

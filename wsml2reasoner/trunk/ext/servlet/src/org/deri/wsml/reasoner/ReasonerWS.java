@@ -26,6 +26,7 @@ import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
@@ -81,7 +82,12 @@ public class ReasonerWS{
                 createWSMLFlightReasoner(params);
 
         // Register ontology
-        reasoner.registerOntology(ont);
+        try {
+            reasoner.registerOntology(ont);
+        } catch (InconsistencyException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
         Set<Map<Variable,Term>> result = reasoner.executeQuery(
                 (IRI)ont.getIdentifier(),query);
