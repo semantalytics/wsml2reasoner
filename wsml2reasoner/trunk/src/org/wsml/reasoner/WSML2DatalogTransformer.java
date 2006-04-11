@@ -184,7 +184,7 @@ public class WSML2DatalogTransformer {
         // mo(v5,v3)
 
         // Commented out, because it is handled by
-        // ConstraintReplacementNormalizer
+        /*
 
          body = new LinkedList<Literal>();
          body.add(new Literal(true, PRED_OF_TYPE, vConcept, vAttribute,
@@ -195,7 +195,7 @@ public class WSML2DatalogTransformer {
          body.add(new Literal(false, PRED_MEMBER_OF, vAttributeValue,
          vRange));
          result.add(new Rule(null, body));
-
+         */
         return result;
     }
 
