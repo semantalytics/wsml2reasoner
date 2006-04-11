@@ -16,4 +16,8 @@ public class NamedUserConstraintViolation extends UserConstraintViolation {
         return axiom;
     }
     
+    public String toString(){
+        return "User constraint Violation due to axiom : " + axiom.getIdentifier();  
+    }
+    
 }

@@ -24,4 +24,9 @@ public abstract class CardinalityViolation extends ConsistencyViolation {
         this.attribute = attribute;
     }
     
+    public String toString(){
+        return "Cardinality violation on attribute: " + attribute.getIdentifier() +
+            " violating instance " + instance.getIdentifier();  
+    }
+    
 }

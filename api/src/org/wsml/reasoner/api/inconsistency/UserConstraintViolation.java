@@ -9,4 +9,7 @@ public class UserConstraintViolation extends ConsistencyViolation {
         super(ontologyIri);
     }
     
+    public String toString(){
+        return "Unnamed user Axiom is violated!";
+    }
 }
