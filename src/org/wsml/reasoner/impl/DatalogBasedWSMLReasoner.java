@@ -81,6 +81,8 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     protected LogicalExpressionFactory leFactory;
 
     protected WSMO4JManager wsmoManager;
+    
+//    private boolean disableConsitencyCheck=false;
 
     public DatalogBasedWSMLReasoner(
             WSMLReasonerFactory.BuiltInReasoner builtInType,
@@ -100,6 +102,10 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         wsmoFactory = this.wsmoManager.getWSMOFactory();
         leFactory = this.wsmoManager.getLogicalExpressionFactory();
     }
+    
+//    public void setDisableConsitencyCheck(boolean check){
+//        this.disableConsitencyCheck = check;
+//    }
 
     @SuppressWarnings("unchecked")
     protected Set<org.wsml.reasoner.Rule> convertOntology(Ontology o) {
@@ -378,7 +384,9 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         Set<ConsistencyViolation> errors = new HashSet<ConsistencyViolation>();
         for (Ontology o : ontologies) {
             IRI ontologyId = (IRI) o.getIdentifier();
-            errors.addAll(checkConsistency(ontologyId));
+//            if (!disableConsitencyCheck){
+//                errors.addAll(checkConsistency(ontologyId));
+//            }
         }
         if (errors.size() > 0) {
             Set<IRI> ids = new HashSet<IRI>();
@@ -513,8 +521,32 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 
         Set<Map<Variable, Term>> violations = executeQuery(ontologyId, atom);
         for (Map<Variable, Term> violation : violations) {
+            Axiom axiom = null;
+            //dirty but should work:
+            String id = violation.get(i).toString();
+            int idx_ = id.lastIndexOf('_');
+            if (idx_ > 0){
+                boolean isNumberedID = true;
+                for (int n=idx_; n < id.length(); n++){
+                    if (Character.isDigit(id.charAt(n))){
+                        isNumberedID=false;
+                    }
+                }
+                IRI iri = wsmoFactory.createIRI(id.substring(0,idx_));
+                Axiom tmp =wsmoFactory.getAxiom(iri);
+                int no = Integer.parseInt(id.substring(idx_+1));
+                Iterator iter = tmp.listDefinitions().iterator();
+                LogicalExpression le = null;
+                for (int n=0;n<no;n++){
+                    le = (LogicalExpression)iter.next();
+                }
+                axiom = wsmoFactory.createAxiom((IRI)violation.get(i));
+                axiom.addDefinition(le);
+            }
             // Construct error object
-            Axiom axiom = wsmoFactory.getAxiom((IRI) violation.get(i));
+            if (axiom==null){
+                axiom = wsmoFactory.getAxiom((IRI) violation.get(i));
+            }
             errors.add(new NamedUserConstraintViolation(ontologyId, axiom));
         }
     }
