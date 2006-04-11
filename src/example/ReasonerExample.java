@@ -74,10 +74,8 @@ public class ReasonerExample {
                 .getLogicalExpressionFactory();
 
         String queryString;
-        queryString = "?human memberOf Human";
-        queryString = "?man memberOf Man";
-        queryString = "Lisa [hasRelative hasValue ?relative]";
-        queryString = "?x subConceptOf ?y";
+        queryString = "?a subConceptOf ?b";
+        //queryString = "?a[?b impliesType ?c]";
 
         LogicalExpression query = leFactory.createLogicalExpression(
                 queryString, exampleOntology);
