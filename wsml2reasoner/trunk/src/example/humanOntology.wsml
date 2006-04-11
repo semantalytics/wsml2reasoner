@@ -1,35 +1,42 @@
-wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace {_"http://www.example.org#"}
 
-namespace {_"urn://deri/",
-    dc _"http://purl.org/dc/elements/1.1#",
-    wsml _"http://www.wsmo.org/wsml/wsml-syntax#"}
- 
-ontology AboutHumans 
+ontology AboutHumans
 
-concept Human subConceptOf Animal
-  hasRelative transitive symmetric ofType Human
-  age  ofType (1) _integer
-  hasName ofType (0 1) _string
-  
-concept Child subConceptOf Human
+concept Human
+  hasRelative symmetric ofType Human
+  hasChild ofType Child
 
-axiom Child definedBy
-  ?x memberOf Child :- ?x[age hasValue ?y] and ?y < 14  .  
-  
 concept Man subConceptOf Human
+  hasWife inverseOf(hasHusband) ofType Woman
 
 concept Woman subConceptOf Human
+  hasHusbund ofType Man
+
+concept Child subConceptOf Human
 
 instance Homer memberOf Man
-  hasRelative hasValue Marge
-  hasName hasValue "Humer"
-  age hasValue 45
-  
+  hasWife hasValue Marge
+
 instance Marge memberOf Woman
-  hasRelative hasValue Lisa
-  age hasValue 40
-  
-instance Lisa memberOf Human 
-  age hasValue 12
-  
-  
+  hasChild hasValue Lisa
+
+instance Lisa
+  ageInYears hasValue 12
+
+axiom aChild definedBy
+  ?child[ageInYears hasValue ?age] and ?age<16 implies ?child memberOf
+Child .
+
+axiom aRelative definedBy
+  ?x[hasWife hasValue ?y] implies ?x[hasSpouse hasValue ?y].
+  ?x[hasHusband hasValue ?y] implies ?x[hasSpouse hasValue ?y].
+  ?x[hasSpouse hasValue ?y] implies ?x[hasRelative hasValue ?y].
+  ?x[hasChild hasValue ?y] implies ?x[hasRelative hasValue ?y].
+        
+/* some queries
+?wife[hasHusband hasValue ?husband]
+  (finds a husband although only hasWife was explicit)
+
+?child memberOf Child
+  (finds a the class membership although not explicit)
+*/
