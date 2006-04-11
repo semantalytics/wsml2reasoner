@@ -16,45 +16,24 @@
  */
 package org.deri.wsml.reasoner;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.*;
+import javax.servlet.http.*;
 
-import org.deri.wsmo4j.io.serializer.wsml.VisitorSerializeWSMLTerms;
-import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Ontology;
-import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.WSMLReasoner;
-import org.wsml.reasoner.api.WSMLReasonerFactory;
-import org.wsml.reasoner.api.inconsistency.InconsistencyException;
-import org.wsml.reasoner.builtin.mins.ConstraintViolationError;
-import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.common.IRI;
-import org.wsmo.common.TopEntity;
-import org.wsmo.common.WSML;
-import org.wsmo.factory.Factory;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
-import org.wsmo.validator.ValidationError;
-import org.wsmo.validator.WsmlValidator;
-import org.wsmo.wsml.Parser;
-import org.wsmo.wsml.ParserException;
+import org.deri.wsmo4j.io.serializer.wsml.*;
+import org.omwg.logicalexpression.*;
+import org.omwg.logicalexpression.terms.*;
+import org.omwg.ontology.*;
+import org.wsml.reasoner.api.*;
+import org.wsml.reasoner.api.inconsistency.*;
+import org.wsml.reasoner.impl.*;
+import org.wsmo.common.*;
+import org.wsmo.factory.*;
+import org.wsmo.validator.*;
+import org.wsmo.wsml.*;
 
 /**
  * Web front-end for the WSML Ontobroker reasoner. Loads the given ontology into
@@ -63,7 +42,7 @@ import org.wsmo.wsml.ParserException;
  * 
  * 
  * @see org.deri.wsml.reasoner.ontobroker.Reasoner
- * @author Jos de Bruijn $Author: gabor $ $Date: 2006-04-03 14:09:25 $
+ * @author Jos de Bruijn $Author: hlausen $ $Date: 2006-04-11 14:11:21 $
  */
 public class ReasonerServlet extends HttpServlet {
     /**
@@ -120,12 +99,12 @@ public class ReasonerServlet extends HttpServlet {
 
             }
             // wsml file input from textarea
-            else if (request.getParameter("wsmlOntology") != null)
+            else if (request.getParameter("wsmlOntology") != null){
                 wsmlOntology = request.getParameter("wsmlOntology");
+            }
 
             if (request.getParameter("wsmlQuery") != null){
                 wsmlQuery = request.getParameter("wsmlQuery");
-                //System.out.println(wsmlQuery);
             }
 
             out.println("<!DOCTYPE html PUBLIC '-W3CDTD HTML 4.01 TransitionalEN'>");
@@ -145,8 +124,6 @@ public class ReasonerServlet extends HttpServlet {
                 try{
                     //System.out.println("wsmlQuery0:" +wsmlQuery);
                     doReasoning(wsmlQuery, wsmlOntology, inFrame);
-                }catch (ConstraintViolationError e){
-                    error("<b>An Integrity Constaint has been violated</b>:\n<br/>",e);
                 }catch (Exception e){
                     error("Error:",e);
                 }
@@ -260,8 +237,8 @@ public class ReasonerServlet extends HttpServlet {
             try {
                 reasoner.registerOntology(ontology);
             } catch (InconsistencyException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                handleInconsistencyException(e, ontology);
+                return;
             }
 
             Set<Map<Variable,Term>> result = reasoner.executeQuery(
@@ -271,22 +248,7 @@ public class ReasonerServlet extends HttpServlet {
                 out.println("<pre>the query returned no variable bindings.</pre>");
             }
             else {
-                // print out the results:
-                out.print("<table class=\"result\"><thead><tr>");
-                for (Variable var : result.iterator().next().keySet()) {
-                    out.println("<th>" + var + "</th>");
-                }
-                out.println("</tr></thead><tbody>");
-                WsmoFactory f = Factory.createWsmoFactory(null);
-                
-                for (Map<Variable,Term> vBinding : result) {
-                    out.println("<tr>");
-                    for (Variable var : vBinding.keySet()) {
-                        out.println("<td>" + resolve(vBinding.get(var), ontology) +"</td>");
-                    }
-                    out.println("</tr>");
-                }
-                out.println("</tbody></table>");
+                print(result, ontology, Integer.MAX_VALUE);
             }
         }
     }
@@ -311,5 +273,99 @@ public class ReasonerServlet extends HttpServlet {
         ret.append(error.substring(i)+"</span>");
         return ret.toString();
     }
+    
+    private void handleInconsistencyException(InconsistencyException e, Ontology ontology){
+        out.println("<div class=\"error\"><b>Constraint violation error detected:</b></div>");
+        out.println("<ul>");
+        for (ConsistencyViolation v : e.getViolations()){
+            out.print("<li style=\"padding-bottom:15px;\">");
+            if (v instanceof AttributeTypeViolation){
+                AttributeTypeViolation a = (AttributeTypeViolation)v;
+                out.println("Attribute Error at Concept: "+
+                        getShortNotion(a.getAttribute().getConcept().getIdentifier(),ontology));
+                out.println(", expected type:" + getShortNotion(a.getExpectedType(),ontology)+"<br/>");
+                out.println("Found instance: "+ getShortNotion(a.getInstance().getIdentifier(),ontology)+
+                        " with attribute value: "+getShortNotion(a.getViolatingValue(),ontology));
+            }
+            else if (v instanceof NamedUserConstraintViolation){
+                NamedUserConstraintViolation namedV = (NamedUserConstraintViolation) v;
+                for (LogicalExpression le : (Set<LogicalExpression>)namedV.getAxiom().listDefinitions()){
+                    // get A reasoner
+                    Map<String, Object> params = new HashMap<String, Object>();
+                    params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
+                            WSMLReasonerFactory.BuiltInReasoner.MINS);
+//                    params.put(WSMLReasonerFactory.DIABLE_CONSISTENCY_CHECK,"true");
+                    WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().
+                            createWSMLFlightReasoner(params);
+                    reasoner.registerOntologyNoVerification(ontology);
+                    Set<Map<Variable, Term>> binding = reasoner.executeQuery(
+                            (IRI)ontology.getIdentifier(),
+                            ((Constraint)le).getOperand());
+                    out.print("<div style=\"float:left;padding-right:15px;\">");
+                    print(binding, ontology, 3);
+                    out.print("</div>");
+                    out.println("Violated query: " + le.toString(ontology) +"<br/>");
+                }
+                out.println("User constraint violated: " + getShortNotion(namedV.getAxiom().getIdentifier(),ontology));
+                out.println("<div style=\"clear:both\"></div>");
+            }
+            else{
+                error("Inconsitency violation: "+v);
+            }
+            out.print("</li>");
+        }
+        out.println("</ul>");
+    }
+    
+    private String getShortNotion(Type t, TopEntity te){
+        if (t instanceof Concept){
+            return getShortNotion(((Concept)t).getIdentifier(),te);
+        }else {
+            return getShortNotion(((WsmlDataType)t).getIRI(),te);
+        }
+    }
+    
+    private String getShortNotion(Value val, TopEntity te){
+        if (val instanceof Instance){
+            return getShortNotion(((Instance)val).getIdentifier(),te);
+        }else {
+            return getShortNotion((Term)val, te);
+        }
+    }
 
+    private String getShortNotion(Term term, TopEntity te){
+        //lazy makes it dependent on default impl of wsmo4j!!
+        VisitorSerializeWSMLTerms v = new VisitorSerializeWSMLTerms(te); 
+        term.accept(v);
+        return v.getSerializedObject().toString();
+    }
+    
+    private void print(Set<Map<Variable, Term>> result, Ontology ontology, int maxResult){
+        // print out the results:
+        if (result.size()==0){
+            out.println("No Results");
+            return;
+        }
+        out.print("<table class=\"result\"><thead><tr>");
+        for (Variable var : result.iterator().next().keySet()) {
+            out.println("<th>" + var + "</th>");
+        }
+        out.println("</tr></thead><tbody>");
+        WsmoFactory f = Factory.createWsmoFactory(null);
+        int i = 0;
+        for (Map<Variable,Term> vBinding : result) {
+            out.println("<tr>");
+            if(i<maxResult){
+                for (Variable var : vBinding.keySet()) {
+                    out.println("<td>" + resolve(vBinding.get(var), ontology) +"</td>");
+                }
+            }else if (i==maxResult){
+                out.println("<td colspan=\""+vBinding.keySet().size()+"\">" +
+                        "[...] (further results repressed)</td>");
+            }
+            out.println("</tr>");
+            i++;
+        }
+        out.println("</tbody></table>");
+    }
 }
