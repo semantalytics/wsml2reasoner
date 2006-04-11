@@ -42,6 +42,8 @@ public interface WSMLReasonerFactory {
 
     public String PARAM_BUILT_IN_REASONER = "BUILT IN REASONER";
 
+//    public String DIABLE_CONSISTENCY_CHECK = "Disable consistency check";
+
     public enum BuiltInReasoner {
         KAON2, MINS
     };

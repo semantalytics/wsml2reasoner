@@ -98,8 +98,13 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
                     .containsKey(PARAM_BUILT_IN_REASONER) ? (BuiltInReasoner) params
                     .get(PARAM_BUILT_IN_REASONER)
                     : BuiltInReasoner.KAON2;
-            return new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
+            DatalogBasedWSMLReasoner dbwsmlr = new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
                     builtin, wsmoManager);
+//            Object o = params.get(DIABLE_CONSISTENCY_CHECK);
+//            if (o!=null && !o.equals("false")){
+//                dbwsmlr.setDisableConsitencyCheck(true);
+//            }
+            return dbwsmlr;
         }
     }
 
