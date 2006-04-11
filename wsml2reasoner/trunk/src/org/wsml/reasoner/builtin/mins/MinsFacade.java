@@ -107,7 +107,7 @@ public class MinsFacade implements DatalogReasonerFacade {
          * Evaluation with alternating fixed point (juergen says works)<BR> 3:
          * Wellfounded Evaluation (juergen says probably buggy!)
          */
-        int evaluationMethod = 1;
+        int evaluationMethod = 2;
 
         try {
             // retrieve KB ment for IRI:
@@ -117,10 +117,7 @@ public class MinsFacade implements DatalogReasonerFacade {
             logger.info("Starting MINS evaluation");
             minsEngine.setEvaluationMethod(evaluationMethod);
             minsEngine.evaluate();
-
-            logger.info("Starting Constraint Check");
-
-            checkConstraint(minsEngine);
+            minsEngine.evalQueries();
 
             Substitution s = minsEngine.getSubstitution(query);
 
@@ -128,7 +125,7 @@ public class MinsFacade implements DatalogReasonerFacade {
             GroundAtom a = (GroundAtom) s.First();
             while (a != null) {
                 Map<Variable, Term> varBinding = new HashMap<Variable, Term>();
-                for (int i = 0; i < a.terms.length; i++) {
+                for (int i = a.terms.length-1; i >=0 ; i--) {
                     // terms has length of numbers of variables!
                     // not each index has necessarily a subsitution one that
                     // does not have is a variable
@@ -222,16 +219,8 @@ public class MinsFacade implements DatalogReasonerFacade {
         Literal l;
 
         if (r.isConstraint()) {
-            r = new org.wsml.reasoner.Rule(
-            // head
-                    new Literal(true, PRED_CONSTRAINT, wsmoManager
-                            .getDataFactory().createWsmlString(
-                                    r.getBody().toString())),
-                    // body
-                    r.getBody());
-            constraints2Queries.put(r.getBody().toString(),
-                    new ConjunctiveQuery(r.getBody()));
-            // System.out.println(r);
+            System.err.append("Constraints should not apear  in translated Datalog Program" +
+                    " "+r);
         }
 
         // Translate head
@@ -418,58 +407,6 @@ public class MinsFacade implements DatalogReasonerFacade {
      */
     public void deregister(String ontologyURI) throws ExternalToolException {
         registeredKbs.remove(ontologyURI);
-
-    }
-
-    private void checkConstraint(RuleSet minsEngine) throws DatalogException,
-            ExternalToolException, UnsupportedFeatureException,
-            ConstraintViolationError {
-        // check contraint query
-        List<Literal> cqlits = new LinkedList<Literal>();
-        cqlits.add(new Literal(true, PRED_CONSTRAINT,
-                new Term[] { new VariableImpl("query") }));
-        Rule constraintQuery = translateQuery(new ConjunctiveQuery(cqlits),
-                minsEngine);
-        // System.out.println("\n\n"+cqlits+"\n-"+constraintQuery);
-        logger.info("Starting MINS evaluation of constraints");
-
-        Substitution cqsubs = minsEngine.getSubstitution(constraintQuery);
-        ConjunctiveQuery violatedQuery = null;
-        GroundAtom cqAnswer = cqsubs.First();
-        // System.out.println(cqAnswer);
-        if (cqAnswer != null) {
-            // predicate only has one variable:
-            String orgQuery = cqAnswer.terms[0].toString();
-            orgQuery = orgQuery.substring(1, orgQuery.length() - 1);
-            System.out.println("violated" + orgQuery);
-            violatedQuery = constraints2Queries.get(orgQuery);
-        }
-        minsEngine.deleteRule(constraintQuery);
-
-        if (violatedQuery == null) {
-            return;
-        }
-
-        // We have a constraint violation, give client info about instances:
-        Rule violatedMinsQuery = translateQuery(violatedQuery, minsEngine);
-        minsEngine.evaluate();
-        Substitution vmqsubs = minsEngine.getSubstitution(violatedMinsQuery);
-        GroundAtom vmqAnswer = vmqsubs.First();
-        String bindings = "";
-        for (int i = 0; i < vmqAnswer.terms.length; i++) {
-            // terms has length of numbers of variables!
-            // not each index has necessarily a subsitution one that does not
-            // have is a variable
-            if (!(vmqAnswer.terms[i] instanceof Variable)) {
-                Variable wsmlVariable = symbTransfomer.convertToWSML(i,
-                        violatedQuery);
-                Term wsmlTerm = symbTransfomer
-                        .convertToWSML(vmqAnswer.terms[i]);
-                bindings += wsmlVariable + " -> " + wsmlTerm + "\n";
-            }
-        }
-        throw (new ConstraintViolationError(violatedQuery.toString() + "\n"
-                + bindings));
 
     }
 
