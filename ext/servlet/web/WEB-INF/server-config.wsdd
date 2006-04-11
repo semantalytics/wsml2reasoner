@@ -12,7 +12,7 @@
       <beanMapping qname="myNS:VariableBindung" 
           xmlns:myNS="http://tools.deri.org/wsml/rule-reasoner#" 
           type="java:org.deri.wsml.reasoner.VariableBinding"/>
-      <endpointURL>http://dev1.deri.at:8080/wsml-mins-reasoner-20051214/services/reasoner</endpointURL>    
+      <endpointURL>http://tools.deri.org/wsml/rule-reasoner/v0.1/services/reasoner</endpointURL>    
   </service>
  
  <transport name="http">
