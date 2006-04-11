@@ -18,7 +18,7 @@
 package org.deri.wsml.reasoner;
 
 /**
- * Interface or class description
+ * Test Class
  *
  * <pre>
  * Created on 12.12.2005
@@ -26,9 +26,7 @@ package org.deri.wsml.reasoner;
  * $Source$,
  * </pre>
  *
- * @author AuthorFirstName AuthorLastName
- * @author ContributorFirstName ContributorLastName
- * @author ContributorFirstName ContributorLastName
+ * @author Holger Lausen
  *
  * @version $Revision$ $Date$
  */
