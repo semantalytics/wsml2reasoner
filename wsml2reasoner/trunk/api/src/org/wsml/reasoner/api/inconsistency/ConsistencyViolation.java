@@ -13,5 +13,9 @@ public class ConsistencyViolation {
     public ConsistencyViolation(IRI ontologyIRI) {
         this.ontologyIRI = ontologyIRI;
     }
+    
+    public String toString(){
+        return "ConsitencyViolation at ontology: " + ontologyIRI.toString();
+    }
 
 }

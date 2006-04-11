@@ -39,5 +39,12 @@ public class AttributeTypeViolation extends ConsistencyViolation {
         this.attribute = attribute;
         this.expectedType = expectedType;
     }
+    
+    public String toString(){
+        return "AttributeTypeViolation due to instance: " + instance.getIdentifier() +
+            " expected type: "+expectedType+ " found value: " +
+            violatingValue + " at attribute: " + attribute.getIdentifier();  
+    }
+
 
 }

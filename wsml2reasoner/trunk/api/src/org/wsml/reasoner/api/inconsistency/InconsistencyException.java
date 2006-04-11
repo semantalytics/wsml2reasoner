@@ -9,6 +9,7 @@ public class InconsistencyException extends Exception {
     private Set<ConsistencyViolation> violations;
     
     public InconsistencyException(Set<ConsistencyViolation> violations) {
+        super("Consitency Violation detected! (first: "+violations.iterator().next()+")");
         this.violations = violations;
     }
 
