@@ -25,6 +25,10 @@ public class InternalReasonerException extends RuntimeException {
      * Needed for Java 5
      */
     private static final long serialVersionUID = -1814208889596998279L;
+
+    public InternalReasonerException(String msg) {
+        super(msg);
+    }
     
     public InternalReasonerException() {
         super();
