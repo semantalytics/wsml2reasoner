@@ -23,7 +23,7 @@ public class FrameworkTests {
         suite.addTestSuite(AnonymousIDReplacementTest.class);
         suite.addTestSuite(ConstructReductionNormalizerTest.class);
         suite.addTestSuite(LloydToporNormalizerTest.class);
-        suite.addTestSuite(WSMLNormalizationTest.class);
+        //suite.addTestSuite(WSMLNormalizationTest.class);
         suite.addTestSuite(AnonymousIdUtilsTest.class);
         // $JUnit-END$
         return suite;
