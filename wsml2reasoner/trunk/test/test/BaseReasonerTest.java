@@ -54,6 +54,10 @@ import org.wsmo.wsml.Serializer;
 
 public class BaseReasonerTest extends TestCase {
 
+    //CHANGE HERE TO CHECK DIFFERENT REASONERS!
+    private static WSMLReasonerFactory.BuiltInReasoner reasoner = 
+        WSMLReasonerFactory.BuiltInReasoner.MINS;
+
     protected static WSMLReasoner wsmlReasoner = null;
 
     protected static Ontology o = null;
@@ -67,7 +71,7 @@ public class BaseReasonerTest extends TestCase {
     protected static DataFactory dataFactory = null;
 
     protected static WSMO4JManager wsmoManager = null;
-
+    
     protected static void setupScenario(String ontologyFile) throws IOException, ParserException, InvalidModelException, InconsistencyException {
         // Set up factories for creating WSML elements
 
@@ -109,8 +113,7 @@ public class BaseReasonerTest extends TestCase {
 
         // Create reasoner
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
-                WSMLReasonerFactory.BuiltInReasoner.KAON2);
+        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,reasoner);
         // params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
         // WSMLReasonerFactory.BuiltInReasoner.MINS);
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
