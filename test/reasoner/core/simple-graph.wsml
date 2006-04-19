@@ -39,7 +39,7 @@ axiom pathDefinition1
     
 axiom pathDefinition2
   definedBy
-    path(?x,?y) impliedBy arc(?x,?z) and path(?z,?y).
+    path(?x,?y) impliedBy path(?x,?z) and path(?z,?y).
     
 axiom strongComponentElementDefinition
   definedBy
