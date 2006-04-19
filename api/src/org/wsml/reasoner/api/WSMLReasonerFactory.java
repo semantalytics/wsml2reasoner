@@ -42,8 +42,12 @@ public interface WSMLReasonerFactory {
 
     public String PARAM_BUILT_IN_REASONER = "BUILT IN REASONER";
 
-//    public String DIABLE_CONSISTENCY_CHECK = "Disable consistency check";
-
+    //public String DISABLE_CONSISTENCY_CHECK = "Disable consistency check";
+    /**
+     * underlying reasoner reasoner uses a specific evaluation method (if supported)
+     */
+    public String PARAM_EVAL_METHOD = "Evaluation Method";
+    
     public enum BuiltInReasoner {
         KAON2, MINS
     };
@@ -61,8 +65,8 @@ public interface WSMLReasonerFactory {
      *            implementation to use</li>
      *            <li>PARAM_DATA_FACTORY: The DataFactory implementation to use</li>
      *            <li>PARAM_BUILT_IN_REASONER: The internal reasoner
-     *            implementation to use, see
-     * @link BuiltInReasoner</li>
+     *            implementation to use, see @link BuiltInReasoner</li>
+     *            <li>PARAM_EVAL_METHOD: Evaluation Method of underlying reasoner;</li>
      *       </ul>
      *       Meaningful defaults are used, if a specific parameter is not
      *       defined. For the WSMO4J factories the factories with "null" as
@@ -99,6 +103,7 @@ public interface WSMLReasonerFactory {
      *            <li>PARAM_BUILT_IN_REASONER: The internal reasoner
      *            implementation to use, see
      * @link BuiltInReasoner</li>
+     *            <li>PARAM_EVAL_METHOD: Evaluation Method of underlying reasoner;</li>
      *       </ul>
      *       Meaningful defaults are used, if a specific parameter is not
      *       defined. For the WSMO4J factories the factories with "null" as

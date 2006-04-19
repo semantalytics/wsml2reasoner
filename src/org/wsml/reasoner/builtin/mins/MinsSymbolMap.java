@@ -208,6 +208,8 @@ public class MinsSymbolMap {
             else 
                 return wsmoManager.getDataFactory().createWsmlDecimal(term.toString());
         }
-        throw new RuntimeException("Unknown Term Symbol:"+term);
+        System.err.println("ERROR UNKOWN MINS TERM: "+term+" "+term.getClass());
+        return wsmoManager.getDataFactory().createWsmlString("unkown");
+        //throw new RuntimeException("Unknown Term Symbol:"+term);
     }
 }

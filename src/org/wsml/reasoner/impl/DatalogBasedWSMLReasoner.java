@@ -55,7 +55,7 @@ import org.wsml.reasoner.transformation.le.MoleculeDecompositionRules;
 import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
 import org.wsml.reasoner.transformation.le.TopDownLESplitter;
 import org.wsml.reasoner.transformation.le.TransformationRule;
-import org.wsmo.common.IRI;
+import org.wsmo.common.*;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
@@ -106,6 +106,12 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 //    public void setDisableConsitencyCheck(boolean check){
 //        this.disableConsitencyCheck = check;
 //    }
+    
+    public void setEvalMethod(int method){
+        if (builtInFacade instanceof MinsFacade){
+            ((MinsFacade)builtInFacade).evaluationMethod=method;
+        }
+      }
 
     @SuppressWarnings("unchecked")
     protected Set<org.wsml.reasoner.Rule> convertOntology(Ontology o) {
@@ -468,10 +474,10 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         Set<Map<Variable, Term>> violations = executeQuery(ontologyId, atom);
         for (Map<Variable, Term> violation : violations) {
             // Construct error object
-            Instance instance = wsmoFactory.getInstance((IRI) violation.get(i));
-            Concept concept = wsmoFactory.getConcept((IRI) violation.get(c));
+            Instance instance = wsmoFactory.getInstance((Identifier) violation.get(i));
+            Concept concept = wsmoFactory.getConcept((Identifier) violation.get(c));
             Attribute attribute = (Attribute) concept.findAttributes(
-                    (IRI) violation.get(a)).iterator().next();
+                    (Identifier) violation.get(a)).iterator().next();
             errors.add(new MinCardinalityViolation(ontologyId, instance,
                     attribute));
         }

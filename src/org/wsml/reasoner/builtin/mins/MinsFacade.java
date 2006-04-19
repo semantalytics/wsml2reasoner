@@ -52,6 +52,7 @@ import org.wsml.reasoner.ExternalToolException;
 import org.wsml.reasoner.Literal;
 import org.wsml.reasoner.UnsupportedFeatureException;
 import org.wsml.reasoner.WSML2DatalogTransformer;
+import org.wsml.reasoner.api.*;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.WsmoFactory;
@@ -81,6 +82,14 @@ public class MinsFacade implements DatalogReasonerFacade {
     private WSMO4JManager wsmoManager;
 
     private MinsSymbolMap symbTransfomer;
+    
+    /*
+     * 0: Naive Evaluation (only stratifight prorgams)<BR> 
+     * 1: Dynamic Filtering Evaluation (only stratifight prorgams)<BR> 
+     * 2: Wellfounded  Evaluation with alternating fixed point (juergen says works)<BR> 
+     * 3: Wellfounded Evaluation (juergen says probably buggy!)
+     */
+    public int evaluationMethod = 2;
 
     /**
      * Creates a facade object that allows to invoke the MINS rule system for
@@ -101,17 +110,13 @@ public class MinsFacade implements DatalogReasonerFacade {
      */
     public Set<Map<Variable, Term>> evaluate(ConjunctiveQuery q,
             String ontologyURI) throws ExternalToolException {
-        /*
-         * 0: Naive Evaluation (only stratifight prorgams)<BR> 1: Dynamic
-         * Filtering Evaluation (only stratifight prorgams)<BR> 2: Wellfounded
-         * Evaluation with alternating fixed point (juergen says works)<BR> 3:
-         * Wellfounded Evaluation (juergen says probably buggy!)
-         */
-        int evaluationMethod = 2;
 
         try {
             // retrieve KB ment for IRI:
             RuleSet minsEngine = registeredKbs.get(ontologyURI);
+            if (minsEngine == null){
+                throw new InternalReasonerException("No KB with given ID registered"+ontologyURI);
+            }
             Rule query = translateQuery(q, minsEngine);
 
             logger.info("Starting MINS evaluation");

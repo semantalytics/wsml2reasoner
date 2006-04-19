@@ -100,10 +100,14 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
                     : BuiltInReasoner.KAON2;
             DatalogBasedWSMLReasoner dbwsmlr = new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
                     builtin, wsmoManager);
-//            Object o = params.get(DIABLE_CONSISTENCY_CHECK);
+            Object o = params.get(PARAM_EVAL_METHOD);
 //            if (o!=null && !o.equals("false")){
 //                dbwsmlr.setDisableConsitencyCheck(true);
 //            }
+            if (o!=null && o instanceof Integer){
+                dbwsmlr.setEvalMethod((Integer)o);
+            }
+
             return dbwsmlr;
         }
     }

@@ -42,13 +42,16 @@ import org.wsmo.wsml.*;
  * 
  * 
  * @see org.deri.wsml.reasoner.ontobroker.Reasoner
- * @author Jos de Bruijn $Author: hlausen $ $Date: 2006-04-11 14:11:21 $
+ * @author Jos de Bruijn $Author: hlausen $ $Date: 2006-04-19 08:30:16 $
  */
 public class ReasonerServlet extends HttpServlet {
     /**
      * 
      */
     private static final long serialVersionUID = 1L;
+
+    int evalmethod=1;
+    WSMLReasonerFactory.BuiltInReasoner reasoner=WSMLReasonerFactory.BuiltInReasoner.MINS;
 
     private boolean debug = false;
 
@@ -78,7 +81,16 @@ public class ReasonerServlet extends HttpServlet {
         
         //needed to get rid of old object in weak hashmap
         System.gc();
-        
+        String eval= request.getParameter("eval");
+        if (eval!=null){
+            evalmethod = Integer.parseInt(eval);
+        }
+        String rsnr = request.getParameter("reasoner");
+        if (rsnr!=null ){
+            if (rsnr.equals("kaon")){
+                reasoner = WSMLReasonerFactory.BuiltInReasoner.KAON2;
+            }
+        }
         boolean inFrame = request.getParameter("inframe") != null;
 
         try {
@@ -230,6 +242,8 @@ public class ReasonerServlet extends HttpServlet {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
                     WSMLReasonerFactory.BuiltInReasoner.MINS);
+            params.put(WSMLReasonerFactory.PARAM_EVAL_METHOD,
+                    new Integer(evalmethod));            
             WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().
                     createWSMLFlightReasoner(params);
 
