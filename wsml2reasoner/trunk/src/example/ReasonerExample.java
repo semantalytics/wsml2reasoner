@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.deri.wsmo4j.io.serializer.wsml.*;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
@@ -46,12 +47,14 @@ import org.wsmo.wsml.Serializer;
  * @author Holger Lausen, DERI Innsbruck
  */
 public class ReasonerExample {
+    
+    int evalmethod = 2;
 
     /**
      * @param args
      *            none expected
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         ReasonerExample ex = new ReasonerExample();
         try {
             ex.doTestRun();
@@ -65,17 +68,13 @@ public class ReasonerExample {
      * loads an Ontology and performs sample query
      */
     public void doTestRun() throws Exception {
-        // Ontology exampleOntology =
-        // loadOntology("example/humanOntology.wsml");
         Ontology exampleOntology = loadOntology("example/humanOntology.wsml");
         if (exampleOntology == null)
             return;
         LogicalExpressionFactory leFactory = new WSMO4JManager()
                 .getLogicalExpressionFactory();
 
-        String queryString;
-        queryString = "?a subConceptOf ?b";
-        //queryString = "?a[?b impliesType ?c]";
+        String queryString = "?x memberOf ?y";
 
         LogicalExpression query = leFactory.createLogicalExpression(
                 queryString, exampleOntology);
@@ -84,11 +83,14 @@ public class ReasonerExample {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
                 WSMLReasonerFactory.BuiltInReasoner.MINS);
+        params.put(WSMLReasonerFactory.PARAM_EVAL_METHOD,
+                new Integer(evalmethod));
         WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
                 .createWSMLFlightReasoner(params);
 
         // Register ontology
         reasoner.registerOntology(exampleOntology);
+        //reasoner.registerOntologyNoVerification(exampleOntology);
 
         // Execute query request
         Set<Map<Variable, Term>> result = reasoner.executeQuery(
@@ -99,7 +101,9 @@ public class ReasonerExample {
                 + "' has the following results:");
         for (Map<Variable, Term> vBinding : result) {
             for (Variable var : vBinding.keySet()) {
-                System.out.print(var + ": " + vBinding.get(var) + "; ");
+                System.out.print(var + ": " + 
+                        termToString(vBinding.get(var),exampleOntology) 
+                        + "\t ");
             }
             System.out.println();
         }
@@ -152,5 +156,11 @@ public class ReasonerExample {
         StringBuffer str = new StringBuffer();
         wsmlSerializer.serialize(new TopEntity[] { ont }, str);
         return str.toString();
+    }
+    
+    private String termToString(Term t, Ontology o){
+        VisitorSerializeWSMLTerms v = new VisitorSerializeWSMLTerms(o);
+        t.accept(v);
+        return v.getSerializedObject();
     }
 }

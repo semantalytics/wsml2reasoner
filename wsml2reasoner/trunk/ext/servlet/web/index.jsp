@@ -3,6 +3,7 @@
   if (request.getParameter("inframe")!=null){ 
     inFrame=true;
   }
+  String eval=request.getParameter("eval");
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -38,33 +39,35 @@ method="post">
 ontology AboutHumans
 
 concept Human
-  hasRelative transitive symmetric ofType Human
+  hasRelative symmetric ofType Human
   hasChild ofType Child
 
 concept Man subConceptOf Human
-  hasSpouse ofType Woman
+  hasWife inverseOf(hasHusband) ofType Woman
 
 concept Woman subConceptOf Human
-  hasSpouse ofType Man
+  hasHusbund ofType Man
 
 concept Child subConceptOf Human
-  
+
 instance Homer memberOf Man
-  hasSpouse hasValue Marge
-  
+  hasWife hasValue Marge
+
 instance Marge memberOf Woman
   hasChild hasValue Lisa
-  
-instance Lisa 
+
+instance Lisa
   ageInYears hasValue 12
-  
+
 axiom aChild definedBy
-  ?x memberOf Child impliedBy ?x[ageInYears hasValue ?age] and ?age<16.
+  ?child[ageInYears hasValue ?age] and ?age<16 implies ?child memberOf
+Child .
 
 axiom aRelative definedBy
-  ?x[hasSpouse hasValue ?y] implies ?x[hasRelative hasValue ?y].  
-  ?x[hasChild hasValue ?y] implies ?x[hasRelative hasValue ?y].  
-        
+  ?x[hasWife hasValue ?y] implies ?x[hasSpouse hasValue ?y].
+  ?x[hasHusband hasValue ?y] implies ?x[hasSpouse hasValue ?y].
+  ?x[hasSpouse hasValue ?y] implies ?x[hasRelative hasValue ?y].
+  ?x[hasChild hasValue ?y] implies ?x[hasRelative hasValue ?y].
         </textarea>
         </td>
       </tr>
@@ -73,15 +76,27 @@ axiom aRelative definedBy
           <td><input type="text" size="80" name="url" value="[url]"></td>
      </tr>
        <tr><td colspan="2"></td></tr>
+       <%if (eval!=null) {%>
+      <tr>
+         <td colspan="2">Evaluation Method:
+         <input type="text" size="10" name="eval" value="<%=eval %>"/>
+         &nbsp; &nbsp; Reasoner: <select name="reasoner">
+         <option id="mins" value="mins"/><option id="kaon" value="kaon"/>
+         </select></td>
+      </tr>
+      <%} %>       
       <tr>
          <td>Conjunctive Query:</td>
-         <td><input type="text" size="80" name="wsmlQuery" value="?person [hasRelative hasValue ?relative] memberOf Human"/>
+         <td><input type="text" size="80" name="wsmlQuery" value="?wife[hasHusband hasValue ?husband]"/>
          <input class="button" type="submit" value="go">
          </td>
       </tr>
   </table>
 <%if (inFrame){%>
 <input type="hidden" name="inframe" value="true"/>
+  <% if (eval!=null){ %>
+    <input type="hidden" name="eval" value="<%=eval %>"/>
+  <%}%>
 <%}%>
 </form>
 
@@ -107,8 +122,8 @@ axiom aRelative definedBy
 <%}%>
   </div>
  
-<p><small><a href="history.html">Version History</a> | <a href="frame.html">Display Using Frames</a> | <a target="_top" href="index.jsp">No Frames</a> </small> </p>
-<p><small>$Date: 2006-01-30 18:30:31 $</small>
+<p><small><a href="history.html">Version History</a> | <a href="frame.jsp">Display Using Frames</a> | <a target="_top" href="index.jsp">No Frames</a> </small> </p>
+<p><small>$Date: 2006-04-19 08:30:16 $</small>
  
 </script> 
 </body>
