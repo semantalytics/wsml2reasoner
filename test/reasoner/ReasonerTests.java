@@ -12,6 +12,8 @@ import reasoner.flight.ViolationsTest;
 /**
  * @author nagypal
  */
+//CAN BE DELETED - NO HANDLED BY
+//test.test.ReasonerTests
 public class ReasonerTests {
 
     public static void main(String[] args) {

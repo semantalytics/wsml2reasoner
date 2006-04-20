@@ -55,8 +55,13 @@ import org.wsmo.wsml.Serializer;
 public class BaseReasonerTest extends TestCase {
 
     //CHANGE HERE TO CHECK DIFFERENT REASONERS!
-    private static WSMLReasonerFactory.BuiltInReasoner reasoner = 
+    public static WSMLReasonerFactory.BuiltInReasoner reasoner = 
         WSMLReasonerFactory.BuiltInReasoner.MINS;
+    
+    //CHANGE HERE TO CHECK DIFFERENT EVALUATION METHODS-
+    //IS ALSO SET FROM BUNDLED VARIANT TEST SUITES
+    //e.g. ReasonerCoreTest
+    public static int evalMethod = 1;
 
     protected static WSMLReasoner wsmlReasoner = null;
 
@@ -114,6 +119,8 @@ public class BaseReasonerTest extends TestCase {
         // Create reasoner
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,reasoner);
+        System.out.println("Eval Method: " + evalMethod);
+        params.put(WSMLReasonerFactory.PARAM_EVAL_METHOD,evalMethod);
         // params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
         // WSMLReasonerFactory.BuiltInReasoner.MINS);
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
