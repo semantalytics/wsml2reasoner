@@ -16,6 +16,9 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  */
+
+//THIS TEST CAN BE DELETED - MORE
+//SPECIFIC ERROR NOW HANDLED BY SimpleGraph2
 package reasoner.core;
 
 import java.util.HashMap;
