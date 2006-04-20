@@ -10,7 +10,9 @@ import wsml2reasoner.transformation.AnonymousIdUtilsTest;
 
 /**
  * @author nagypal
+ * 
  */
+//CAN BE DELETED - NOW HANDLED BY NormalizationTests
 public class FrameworkTests {
 
     public static void main(String[] args) {
