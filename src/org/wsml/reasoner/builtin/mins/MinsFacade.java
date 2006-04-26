@@ -35,9 +35,7 @@ import org.deri.mins.builtins.Equal;
 import org.deri.mins.builtins.IsInteger;
 import org.deri.mins.builtins.IsNum;
 import org.deri.mins.builtins.IsString;
-import org.deri.mins.terms.ConstTerm;
-import org.deri.mins.terms.NumTerm;
-import org.deri.mins.terms.StringTerm;
+import org.deri.mins.terms.*;
 import org.deri.wsmo4j.io.parser.wsml.TempVariable;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
@@ -88,8 +86,11 @@ public class MinsFacade implements DatalogReasonerFacade {
      * 1: Dynamic Filtering Evaluation (only stratifight prorgams)<BR> 
      * 2: Wellfounded  Evaluation with alternating fixed point (juergen says works)<BR> 
      * 3: Wellfounded Evaluation (juergen says probably buggy!)
+     * 
+     * 3 IS the only one that works! Probably the numbers are 
+     * mixed up or Jürgen does not like us
      */
-    public int evaluationMethod = 2;
+    public int evaluationMethod = 3;
 
     /**
      * Creates a facade object that allows to invoke the MINS rule system for
@@ -353,7 +354,10 @@ public class MinsFacade implements DatalogReasonerFacade {
             // System.out.println(type);
             if (type.equals(WsmlDataType.WSML_STRING)) {
                 minsTerm = new StringTerm(val.toString());
+            }else if (type.equals(WsmlDataType.WSML_INTEGER)) {
+                minsTerm = new IntegerTerm(Integer.parseInt(val.toString()));
             } else { // decimal or int
+                //TODO create decimal term in mins
                 minsTerm = new NumTerm(Double.parseDouble(val.getValue()
                         .toString()));
             }

@@ -40,15 +40,15 @@ import test.BaseReasonerTest;
  * @author Adrian Mocan, Holger Lausen
  *
  * Created on 17-Feb-2006
- * Committed by $Author: gabor $
+ * Committed by $Author: hlausen $
  * 
  * $Source: /home/richi/temp/w2r/wsml2reasoner/test/reasoner/rule/FunctionSymbolsTest.java,v $, 
- * @version $Revision: 1.4 $ $Date: 2006-04-03 11:34:09 $
+ * @version $Revision: 1.5 $ $Date: 2006-04-26 16:48:17 $
  */
 
 public class FunctionSymbolsTest extends BaseReasonerTest {
 
-    private static final String NS = "http://examples.com/ontologies/travel#";
+    private static final String NS = "http://examples.com/ontologies/mytravel#";
 
     private static final String ONTOLOGY_FILE = "reasoner/rule/Travel.wsml";
 

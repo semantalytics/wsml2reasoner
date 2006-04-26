@@ -61,7 +61,7 @@ public class BaseReasonerTest extends TestCase {
     //CHANGE HERE TO CHECK DIFFERENT EVALUATION METHODS-
     //IS ALSO SET FROM BUNDLED VARIANT TEST SUITES
     //e.g. ReasonerCoreTest
-    public static int evalMethod = 1;
+    public static int evalMethod = 3;
 
     protected static WSMLReasoner wsmlReasoner = null;
 

@@ -17,7 +17,7 @@ concept BigDog subConceptOf Dog
 concept SmallDog subConceptOf Dog
 
 concept DogOwner subConceptOf Human
-	owns ofType (1 *) Dog
+//	owns ofType (1 *) Dog
 	
 instance Anne memberOf DogOwner
 	owns hasValue Paul

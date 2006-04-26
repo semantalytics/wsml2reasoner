@@ -25,8 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.deri.mins.builtins.*;
-import org.deri.mins.terms.StringTerm;
-import org.deri.mins.terms.Term;
+import org.deri.mins.terms.*;
 import org.omwg.logicalexpression.Constants;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.ConjunctiveQuery;
@@ -202,11 +201,12 @@ public class MinsSymbolMap {
     	}else if (term.isStringTerm()){
     	    return wsmoManager.getDataFactory().createWsmlString(((StringTerm)term).s);
         }else if (term.isNumTerm()){
+            if (term instanceof IntegerTerm){
+                return wsmoManager.getDataFactory().createWsmlInteger(
+                        ((IntegerTerm)term).zahl+"");
+            }
             org.deri.mins.terms.NumTerm numTerm = (org.deri.mins.terms.NumTerm)term;
-            if (numTerm.zahl - Math.floor(numTerm.zahl) == 0)
-                return wsmoManager.getDataFactory().createWsmlInteger(new java.lang.Double(numTerm.zahl).intValue()+"");
-            else 
-                return wsmoManager.getDataFactory().createWsmlDecimal(term.toString());
+            return wsmoManager.getDataFactory().createWsmlDecimal(term.toString());
         }
         System.err.println("ERROR UNKOWN MINS TERM: "+term+" "+term.getClass());
         return wsmoManager.getDataFactory().createWsmlString("unkown");

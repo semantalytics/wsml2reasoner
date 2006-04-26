@@ -18,47 +18,52 @@
  */
 package reasoner.flight;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.omwg.logicalexpression.*;
+import org.omwg.logicalexpression.terms.*;
+import org.omwg.ontology.*;
+import org.wsml.reasoner.api.*;
+import org.wsml.reasoner.api.inconsistency.*;
+import org.wsml.reasoner.impl.*;
+import org.wsmo.common.*;
+import org.wsmo.common.exception.*;
+import org.wsmo.factory.*;
+import org.wsmo.wsml.*;
 
-import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Concept;
-import org.omwg.ontology.Instance;
-import org.omwg.ontology.Ontology;
-import org.omwg.ontology.SimpleDataType;
-import org.omwg.ontology.SimpleDataValue;
-import org.omwg.ontology.Variable;
-import org.omwg.ontology.WsmlDataType;
-import org.wsml.reasoner.api.InternalReasonerException;
-import org.wsml.reasoner.api.WSMLFlightReasoner;
-import org.wsml.reasoner.api.inconsistency.AttributeTypeViolation;
-import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
-import org.wsml.reasoner.api.inconsistency.InconsistencyException;
-import org.wsml.reasoner.api.inconsistency.MaxCardinalityViolation;
-import org.wsml.reasoner.api.inconsistency.MinCardinalityViolation;
-import org.wsml.reasoner.api.inconsistency.NamedUserConstraintViolation;
-import org.wsml.reasoner.api.inconsistency.UserConstraintViolation;
-import org.wsmo.common.IRI;
-import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.wsml.ParserException;
-
-import reasoner.OntologyRegistrationTest;
-import test.BaseReasonerTest;
+import test.*;
 
 public class ViolationsTest extends BaseReasonerTest {
     private static final String NS = "urn:bad#";
 
     private static final String ONTOLOGY_FILE = "reasoner/flight/bad.wsml";
 
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(ViolationsTest.class);
+    public static void main(String[] args) throws Exception{
+        //junit.textui.TestRunner.run(ViolationsTest.class);
+        // Set up factories for creating WSML elements
+        Parser wsmlparserimpl = Factory.createParser(null);
+        // Read simple ontology from file
+        final Ontology o = (Ontology)wsmlparserimpl.parse(new InputStreamReader(
+                ViolationsTest.class.getClassLoader().getResourceAsStream(ONTOLOGY_FILE)))[0];
+
+        // Create reasoner
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
+                WSMLReasonerFactory.BuiltInReasoner.MINS);
+        // params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
+        // WSMLReasonerFactory.BuiltInReasoner.MINS);
+        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
+                .createWSMLFlightReasoner(params);
+
+        // Register ontology
+        System.out.println("Registering ontology");
+        try{
+        wsmlReasoner.registerOntology(o);
+        }catch (Exception e){
+            System.out.println();
+            e.printStackTrace();
+        }
     }
 
     public void testViolations() throws IOException, ParserException,

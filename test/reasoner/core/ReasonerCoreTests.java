@@ -15,7 +15,6 @@ public class ReasonerCoreTests {
 
  	public static Test suite() {
         TestSuite suite = new TestSuite("Test suite for the WSML-Core reasoner");
-        BaseReasonerTest.evalMethod = 1;
         //$JUnit-BEGIN$
         suite.addTest(SimpleGraph.suite());
         suite.addTest(SimpleGraph2.suite());

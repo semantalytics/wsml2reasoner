@@ -74,7 +74,7 @@ public class ConstructReductionNormalizerTest extends WSMLNormalizationTest
         a.addDefinition(leFactory.createLogicalExpression(
                 "a[r1 hasValue v1, r2 hasValue v2] " +
                 "or b[r1 hasValue v2] " +
-                "or c[r3 hasValue v3, r2 hasValue v2, r1 hasValue v1].", ontology));
+                "or c[r2 hasValue v2, r1 hasValue v1].", ontology));
         a.addDefinition(leFactory.createLogicalExpression(
                 "A[r1 ofType v1, r2 impliesType v2].", ontology));
         
@@ -85,14 +85,12 @@ public class ConstructReductionNormalizerTest extends WSMLNormalizationTest
         // by means of regular expressions matched against serialized result
         // ontology:
         String normString = serializeOntology(normOnt);
-//        Pattern pattern3 = Pattern.compile("c.*\\[.*r1.*hasValue.*v1.*\\].*and.*c.*\\[.*r2.*hasValue.*v2.*].*and.*c.*\\[.*r3.*hasValue.*v3.*\\].*", Pattern.DOTALL);
-//        Matcher matcher3 = pattern3.matcher(normString);
-        Pattern pattern = Pattern.compile("c.*\\[.*r1.*hasValue.*v1.*\\].*and.*c.*\\[.*r2.*hasValue.*v2.*].*and.*c.*\\[.*r3.*hasValue.*v3.*\\].*", Pattern.DOTALL);
+        Pattern pattern = Pattern.compile("c.*\\[.*r1.*hasValue.*v1.*\\].*and.*c.*\\[.*r2.*hasValue.*v2.*].*", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(normString);
-        Pattern pattern2 = Pattern.compile("c.*\\[.*r3.*hasValue.*v3.*\\].*and.*c.*\\[.*r1.*hasValue.*v1.*].*and.*c.*\\[.*r2.*hasValue.*v2.*\\].*", Pattern.DOTALL);
+        Pattern pattern2 = Pattern.compile("c.*\\[.*r2.*hasValue.*v2.*\\].*and.*c.*\\[.*r1.*hasValue.*v1.*].*", Pattern.DOTALL);
         Matcher matcher2 = pattern2.matcher(normString);
         System.out.println(normString);
-        assertTrue("Error in Nordmalization!",matcher.find() || matcher2.find());
+        assertTrue("Error in Nordmalization!",matcher.find() || matcher2.find() );
     }
 
     public void testNegationNormalization() throws Exception

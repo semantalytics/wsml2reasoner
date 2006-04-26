@@ -56,16 +56,6 @@ public class DogsworldTest extends BaseReasonerTest {
         return test;
     }
     
-    public void testConsistency() throws Exception {
-        assertTrue(((WSMLFlightReasoner)wsmlReasoner).isSatisfiable((IRI)o.getIdentifier()));
-    }
-
-    public void testAnneCatOwner() throws Exception {
-        String query = "Anne memberOf CatOwner";
-        LogicalExpression qExpression = leFactory.createLogicalExpression(query, o);
-        assertTrue(wsmlReasoner.executeGroundQuery((IRI)o.getIdentifier(), qExpression));
-    }
-
     public void testSubconceptsOfMammal() throws Exception {
         String query = "?x subConceptOf Mammal";
         Set<Map<Variable,Term>> expected = new HashSet<Map<Variable,Term>>();
@@ -77,4 +67,17 @@ public class DogsworldTest extends BaseReasonerTest {
         expected.add(binding);
         performQuery(query, expected);
     }
+    
+    public void testConsistency() throws Exception {
+        assertTrue(((WSMLFlightReasoner)wsmlReasoner).isSatisfiable((IRI)o.getIdentifier()));
+    }
+
+
+
+    public void testAnneCatOwner() throws Exception {
+        String query = "Anne memberOf CatOwner";
+        LogicalExpression qExpression = leFactory.createLogicalExpression(query, o);
+        assertTrue(wsmlReasoner.executeGroundQuery((IRI)o.getIdentifier(), qExpression));
+    }
+
 }
