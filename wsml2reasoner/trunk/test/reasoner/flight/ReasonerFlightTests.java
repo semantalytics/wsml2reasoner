@@ -15,7 +15,7 @@ public class ReasonerFlightTests {
 
  	public static Test suite(){
         TestSuite suite = new TestSuite("Test suite for the WSML-Flight reasoner");
-        BaseReasonerTest.evalMethod = 3;
+        //BaseReasonerTest.evalMethod = 3;
         //$JUnit-BEGIN$
         suite.addTest(DogsworldTest.suite());
         suite.addTest(LordOfRings.suite());

@@ -21,12 +21,13 @@ public class ReasonerTests {
     public static Test suite() {
         TestSuite suite = new TestSuite("Test suite for the WSML reasoner");
         // $JUnit-BEGIN$
+        BaseReasonerTest.evalMethod=3;
+        suite.addTest(ReasonerRuleTests.suite());
+        suite.addTestSuite(OntologyRegistrationTest.class);
         suite.addTest(ReasonerCoreTests.suite());
         suite.addTest(ReasonerFlightTests.suite());
-        suite.addTest(ReasonerRuleTests.suite());
         suite.addTest(NormalizationTests.suite());
         suite.addTest(TransformationTests.suite());
-        suite.addTestSuite(OntologyRegistrationTest.class);
         // $JUnit-END$
         return suite;
     }

@@ -15,7 +15,7 @@ public class ReasonerRuleTests {
 
  	public static Test suite(){
         TestSuite suite = new TestSuite("Test suite for the WSML-Rule reasoner");
-        BaseReasonerTest.evalMethod = 1;
+        //BaseReasonerTest.evalMethod = 1;
         //$JUnit-BEGIN$
         suite.addTest(FunctionSymbolsTest.suite());
         //$JUnit-END$
