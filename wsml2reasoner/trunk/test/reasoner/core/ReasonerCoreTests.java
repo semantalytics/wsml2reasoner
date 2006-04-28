@@ -18,8 +18,11 @@ public class ReasonerCoreTests {
         //$JUnit-BEGIN$
         suite.addTest(SimpleGraph.suite());
         suite.addTest(SimpleGraph2.suite());
+        suite.addTest(RegisterMultipleTimes.suite());
         //$JUnit-END$
         return suite;
     }
+    
+    
  	
 }

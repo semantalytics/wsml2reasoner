@@ -56,7 +56,7 @@ public class BaseReasonerTest extends TestCase {
 
     //CHANGE HERE TO CHECK DIFFERENT REASONERS!
     public static WSMLReasonerFactory.BuiltInReasoner reasoner = 
-        WSMLReasonerFactory.BuiltInReasoner.MINS;
+        WSMLReasonerFactory.BuiltInReasoner.KAON2;
     
     //CHANGE HERE TO CHECK DIFFERENT EVALUATION METHODS-
     //IS ALSO SET FROM BUNDLED VARIANT TEST SUITES

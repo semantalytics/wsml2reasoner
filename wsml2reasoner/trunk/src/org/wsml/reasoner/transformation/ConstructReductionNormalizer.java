@@ -96,10 +96,13 @@ public class ConstructReductionNormalizer implements OntologyNormalizer {
         resultOnt.setDefaultNamespace(ontology.getDefaultNamespace());
         int axiomCount = 1;
         for (LogicalExpression expression : resultExp) {
-            Axiom axiom = wsmoFactory.createAxiom(wsmoFactory
-                    .createIRI("http://www.wsmo.org/reasoner/"
-                            + "reasoner_axiom-"
-                            + Integer.toString(axiomCount++)));
+            Axiom axiom = wsmoFactory.createAxiom(
+//creates problems on deregistering ontologies, since wsmo4j caches
+//                    wsmoFactory.createIRI("http://www.wsmo.org/reasoner/"
+//                            + "reasoner_axiom-"
+//                            + Integer.toString(axiomCount++))
+                    wsmoFactory.createAnonymousID()
+            );
             axiom.addDefinition(expression);
             try {
                 resultOnt.addAxiom(axiom);
