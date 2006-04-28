@@ -60,6 +60,8 @@ import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
+import wsml2reasoner.normalization.*;
+
 /**
  * A prototypical implementation of a reasoner for WSML Core and WSML Flight.
  * 
@@ -124,6 +126,9 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         OntologyNormalizer normalizer = new AxiomatizationNormalizer(
                 wsmoManager);
         normalizedOntology = normalizer.normalize(o);
+//      System.out.println("\n-------\n Ontology after Normalization:\n" +
+//      WSMLNormalizationTest.serializeOntology(normalizedOntology));
+
 
         // Convert constraints to support debugging
         normalizer = new ConstraintReplacementNormalizer(wsmoManager);
@@ -132,15 +137,15 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // Simplify axioms
         normalizer = new ConstructReductionNormalizer(wsmoManager);
         normalizedOntology = normalizer.normalize(normalizedOntology);
-        // System.out.println("\n-------\n Ontology after simplification:" +
-        // WSMLNormalizationTest.serializeOntology(normalizedOntology));
+//         System.out.println("\n-------\n Ontology after simplification:\n" +
+//         WSMLNormalizationTest.serializeOntology(normalizedOntology));
 
         // Apply Lloyd-Topor rules to get Datalog-compatible LEs
         normalizer = new LloydToporNormalizer(wsmoManager);
         normalizedOntology = normalizer.normalize(normalizedOntology);
 
-        // System.out.println("\n-------\n Ontology after Lloyd-Topor:" +
-        // WSMLNormalizationTest.serializeOntology(normalizedOntology));
+//        System.out.println("\n-------\n Ontology after Lloyd-Topor:\n" +
+//        WSMLNormalizationTest.serializeOntology(normalizedOntology));
         Set<org.wsml.reasoner.Rule> p;
         org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
                 wsmoManager);
@@ -148,6 +153,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         for (Object a : normalizedOntology.listAxioms()) {
             lExprs.addAll(((Axiom) a).listDefinitions());
         }
+//        System.out.println(lExprs);
         p = wsml2datalog.transform(lExprs);
         p.addAll(wsml2datalog.generateAuxilliaryRules());
         // System.out.println("datalog program:");

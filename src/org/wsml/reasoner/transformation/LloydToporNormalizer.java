@@ -75,11 +75,15 @@ public class LloydToporNormalizer implements OntologyNormalizer {
         resultOnt.setDefaultNamespace(ontology.getDefaultNamespace());
         int axiomCount = 1;
         for (LogicalExpression expression : resultExp) {
-            Axiom axiom = wsmoFactory.createAxiom(wsmoFactory
-                    .createIRI("http://www.wsmo.org/reasoner/"
-                            + "reasoner_axiom-"
-                            + Integer.toString(axiomCount++)
-                            + Long.toString(System.currentTimeMillis())));
+            Axiom axiom = wsmoFactory.createAxiom(
+                    //wsmoFactory
+                    //.createIRI("http://www.wsmo.org/reasoner/"
+                    //        + "reasoner_axiom-"
+                    //        + Integer.toString(axiomCount++)
+                    //        + Long.toString(System.currentTimeMillis()))
+                    //did cause caching problems
+                    wsmoFactory.createAnonymousID()
+                            );
             axiom.addDefinition(expression);
             try {
                 resultOnt.addAxiom(axiom);

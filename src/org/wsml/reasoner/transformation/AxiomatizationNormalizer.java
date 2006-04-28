@@ -127,10 +127,11 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
             {
                 Identifier axiomId = axiom.getIdentifier();
                 Identifier newAxiomId;
-                if (axiomId instanceof UnnumberedAnonymousID)
+                //Holger: don't see why number should be preserved, causes chaching problems with wsmo4j
+                //if (axiomId instanceof UnnumberedAnonymousID)
                     newAxiomId = wsmoFactory.createIRI(AnonymousIdUtils.getNewAnonymousIri());
-                else
-                    newAxiomId = wsmoFactory.createIRI(axiomId.toString() + seqString);
+                //else
+                //    newAxiomId = wsmoFactory.createIRI(axiomId.toString() + seqString);
                 Axiom newAxiom = wsmoFactory.createAxiom(newAxiomId);
                 newAxiom.addDefinition(definition);
                 try
