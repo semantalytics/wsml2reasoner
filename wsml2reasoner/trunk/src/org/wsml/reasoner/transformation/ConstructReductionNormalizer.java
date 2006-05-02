@@ -36,6 +36,7 @@ import org.wsml.reasoner.transformation.le.NegationPushRules;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
 import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
 import org.wsmo.common.Namespace;
+import org.wsmo.common.exception.*;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.WsmoFactory;
 
@@ -72,8 +73,7 @@ public class ConstructReductionNormalizer implements OntologyNormalizer {
         Set<LogicalExpression> expressions = new HashSet<LogicalExpression>();
         Set<Axiom> axioms = (Set<Axiom>) ontology.listAxioms();
         for (Axiom axiom : axioms) {
-            expressions.addAll((Collection<LogicalExpression>) axiom
-                    .listDefinitions());
+            expressions.addAll((Collection<LogicalExpression>) axiom.listDefinitions());
         }
 
         // iteratively normalize logical expressions:
@@ -84,33 +84,27 @@ public class ConstructReductionNormalizer implements OntologyNormalizer {
         }
 
         // create new ontology containing the resulting logical expressions:
-        String resultIRI = (ontology.getIdentifier() != null ? ontology
-                .getIdentifier().toString()
-                + "-as-axioms" : "iri:normalized-ontology-"
-                + ontology.hashCode());
-        Ontology resultOnt = wsmoFactory.createOntology(wsmoFactory
-                .createIRI(resultIRI));
-        for (Object n : ontology.listNamespaces()) {
-            resultOnt.addNamespace((Namespace) n);
-        }
-        resultOnt.setDefaultNamespace(ontology.getDefaultNamespace());
-        int axiomCount = 1;
-        for (LogicalExpression expression : resultExp) {
-            Axiom axiom = wsmoFactory.createAxiom(
-//creates problems on deregistering ontologies, since wsmo4j caches
-//                    wsmoFactory.createIRI("http://www.wsmo.org/reasoner/"
-//                            + "reasoner_axiom-"
-//                            + Integer.toString(axiomCount++))
-                    wsmoFactory.createAnonymousID()
-            );
-            axiom.addDefinition(expression);
+        String resultIRI = ontology.getIdentifier() + "-as-axioms";
+        Ontology resultOnt = wsmoFactory.createOntology(wsmoFactory.createIRI(resultIRI));
+        
+        //delete old axioms (wsmo4j statics :(
+        for (Axiom a: (Set<Axiom>)resultOnt.listAxioms()){
             try {
-                resultOnt.addAxiom(axiom);
+                a.setOntology(null);
             } catch (InvalidModelException e) {
                 e.printStackTrace();
             }
         }
-
+        
+        Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
+        for (LogicalExpression expression : resultExp) {
+            axiom.addDefinition(expression);
+        }
+        try {
+            resultOnt.addAxiom(axiom);
+        } catch (InvalidModelException e) {
+            e.printStackTrace();
+        }
         return resultOnt;
     }
 }

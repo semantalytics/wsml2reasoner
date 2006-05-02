@@ -21,6 +21,7 @@ package org.wsml.reasoner.transformation;
 
 import java.util.*;
 
+import org.deri.wsmo4j.common.*;
 import org.omwg.logicalexpression.*;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.*;
@@ -30,7 +31,7 @@ import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.Namespace;
 import org.wsmo.common.UnnumberedAnonymousID;
-import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.common.exception.*;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -46,10 +47,6 @@ import org.wsmo.factory.WsmoFactory;
  * In order to guarantee the assumptions, one possibly must run a separate
  * normalization step before running this one.
  * 
- * NOTE: At present the transformation does not support COMPLEX DATATYPES and
- * their respective values that are present in WSML! SIMPLE DATATYPES and their
- * values are supported.
- * 
  * The result is presented as an ontology which consists of axioms only.
  * 
  * Axioms of the original ontology are inserted themselves in the new onotology
@@ -63,6 +60,7 @@ import org.wsmo.factory.WsmoFactory;
  * 
  * @author Uwe Keller, DERI Innsbruck
  * @author Stephan Grimm, FZI Karlsruhe
+ * @author Holger Lausen, DERI Innsbruck
  */
 public class AxiomatizationNormalizer implements OntologyNormalizer {
     private WsmoFactory wsmoFactory;
@@ -88,61 +86,27 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
      */
     @SuppressWarnings("unchecked")
     public Ontology normalize(Ontology ontology) {
-        String ontologyID = (ontology.getIdentifier() != null ? ontology
-                .getIdentifier().toString()
-                + "-as-axioms" : "iri:normalized-ontology-"
-                + ontology.hashCode());
-        Ontology resultOntology = wsmoFactory.createOntology(wsmoFactory
-                .createIRI(ontologyID));
-
-        // process namespace definitions:
-        for (Namespace namespace : (Collection<Namespace>) ontology
-                .listNamespaces()) {
-            resultOntology.addNamespace(namespace);
-        }
-        resultOntology.setDefaultNamespace(ontology.getDefaultNamespace());
-
-        // process non-functional properties:
-        for (Object nfp : ontology.listNFPValues().entrySet()) {
+        String ontologyID = ontology.getIdentifier() + "-as-axioms";
+        Ontology resultOntology = wsmoFactory.createOntology(wsmoFactory.createIRI(ontologyID));
+        for (Axiom a : (Set<Axiom>) resultOntology.listAxioms()) {
             try {
-                if (nfp instanceof Identifier) {
-                    Map.Entry entry = (Map.Entry) nfp;
-                    resultOntology.addNFPValue((IRI) entry.getKey(),
-                            (Identifier) entry.getValue());
-                } else if (nfp instanceof Value) {
-                    Map.Entry entry = (Map.Entry) nfp;
-                    resultOntology.addNFPValue((IRI) entry.getKey(),
-                            (Value) entry.getValue());
-                }
+                a.setOntology(null);
             } catch (InvalidModelException e) {
-                // TODO: handle exception
+                e.printStackTrace();
             }
         }
 
         // process axioms:
         for (Axiom axiom : (Collection<Axiom>) ontology.listAxioms()) {
-            int sequential = 1;
-            String seqString = (axiom.listDefinitions().size() == 1) ? "" : "_" + Integer.toString(sequential);
-            for(LogicalExpression definition : (Set<LogicalExpression>)axiom.listDefinitions())
-            {
-                Identifier axiomId = axiom.getIdentifier();
-                Identifier newAxiomId;
-                //Holger: don't see why number should be preserved, causes chaching problems with wsmo4j
-                //if (axiomId instanceof UnnumberedAnonymousID)
-                    newAxiomId = wsmoFactory.createIRI(AnonymousIdUtils.getNewAnonymousIri());
-                //else
-                //    newAxiomId = wsmoFactory.createIRI(axiomId.toString() + seqString);
-                Axiom newAxiom = wsmoFactory.createAxiom(newAxiomId);
+            Identifier newAxiomId = wsmoFactory.createIRI(axiom.getIdentifier()+"_");;
+            Axiom newAxiom = wsmoFactory.createAxiom(newAxiomId);
+            for(LogicalExpression definition : (Set<LogicalExpression>)axiom.listDefinitions()){
                 newAxiom.addDefinition(definition);
-                try
-                {
-                    resultOntology.addAxiom(newAxiom);
-                } catch(InvalidModelException e)
-                {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                seqString = "_" + Integer.toString(++sequential);
+            }
+            try{
+                resultOntology.addAxiom(newAxiom);
+            } catch(InvalidModelException e){
+                e.printStackTrace();
             }
         }
         
@@ -163,39 +127,41 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
             addAsAxioms(resultOntology, normalizeInstance(instance));
         }
 
-        repealAxiomIDs();
+//        repealAxiomIDs();
         return resultOntology;
     }
 
     protected void addAsAxioms(Ontology ontology,
             Collection<LogicalExpression> expressions) {
+        if (expressions.isEmpty()){
+            return;
+        }
+        Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
+        try {
+            ontology.addAxiom(axiom);
+        } catch (InvalidModelException e) {
+            e.printStackTrace();
+        }
         for (LogicalExpression expression : expressions) {
-            Identifier axiomID = fetchAxiomID(expression);
-            Axiom axiom = wsmoFactory.createAxiom(axiomID);
             axiom.addDefinition(expression);
-            try {
-                ontology.addAxiom(axiom);
-            } catch (InvalidModelException e) {
-                e.printStackTrace();
-            }
         }
     }
     
-    private Identifier fetchAxiomID(LogicalExpression expression)
-    {
-        Integer hashCode = new Integer(expression.toString().hashCode());
-        String axiomIDString = axiomIDs.get(hashCode);
-        if(axiomIDString == null)
-        {
-            axiomIDString = AnonymousIdUtils.getNewAnonymousIri();
-        }
-        return wsmoFactory.createIRI(axiomIDString);
-    }
+//    private Identifier fetchAxiomID(LogicalExpression expression)
+//    {
+//        Integer hashCode = new Integer(expression.toString().hashCode());
+//        String axiomIDString = axiomIDs.get(hashCode);
+//        if(axiomIDString == null)
+//        {
+//            axiomIDString = AnonymousIdUtils.getNewAnonymousIri();
+//        }
+//        return wsmoFactory.createIRI(axiomIDString);
+//    }
     
-    private void repealAxiomIDs()
-    {
-        axiomIDs.clear();
-    }
+//    private void repealAxiomIDs()
+//    {
+//        axiomIDs.clear();
+//    }
 
     @SuppressWarnings("unchecked")
     protected Set<LogicalExpression> normalizeConcept(Concept concept) {

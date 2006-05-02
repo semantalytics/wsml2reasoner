@@ -1,7 +1,8 @@
 /**
  * WSML Reasoner Implementation.
  *
- * Copyright (c) 2005, FZI, Germany.
+ * Copyright (c) 2005-2006, FZI, Germany
+ *                          University of Innsbruck, Austria.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -18,22 +19,14 @@
  */
 package org.wsml.reasoner.transformation;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.ontology.Axiom;
-import org.omwg.ontology.Ontology;
-import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsml.reasoner.transformation.le.LloydToporRules;
-import org.wsml.reasoner.transformation.le.LogicalExpressionTransformer;
-import org.wsml.reasoner.transformation.le.TopDownLESplitter;
-import org.wsml.reasoner.transformation.le.TransformationRule;
-import org.wsmo.common.Namespace;
-import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.WsmoFactory;
+import org.omwg.logicalexpression.*;
+import org.omwg.ontology.*;
+import org.wsml.reasoner.impl.*;
+import org.wsml.reasoner.transformation.le.*;
+import org.wsmo.common.exception.*;
+import org.wsmo.factory.*;
 
 public class LloydToporNormalizer implements OntologyNormalizer {
     protected LogicalExpressionTransformer leTransformer;
@@ -41,8 +34,7 @@ public class LloydToporNormalizer implements OntologyNormalizer {
     protected WsmoFactory wsmoFactory;
 
     public LloydToporNormalizer(WSMO4JManager wsmoManager) {
-        List<TransformationRule> lloydToporRules = (List<TransformationRule>) new LloydToporRules(
-                wsmoManager);
+        List<TransformationRule> lloydToporRules = (List<TransformationRule>) new LloydToporRules(wsmoManager);
         leTransformer = new TopDownLESplitter(lloydToporRules);
         wsmoFactory = wsmoManager.getWSMOFactory();
     }
@@ -52,8 +44,7 @@ public class LloydToporNormalizer implements OntologyNormalizer {
         Set<LogicalExpression> expressions = new HashSet<LogicalExpression>();
         Set<Axiom> axioms = (Set<Axiom>) ontology.listAxioms();
         for (Axiom axiom : axioms) {
-            expressions.addAll((Collection<LogicalExpression>) axiom
-                    .listDefinitions());
+            expressions.addAll((Collection<LogicalExpression>) axiom.listDefinitions());
         }
 
         // iteratively normalize logical expressions:
@@ -63,35 +54,27 @@ public class LloydToporNormalizer implements OntologyNormalizer {
         }
 
         // create new ontology containing the resulting logical expressions:
-        String resultIRI = (ontology.getIdentifier() != null ? ontology
-                .getIdentifier().toString()
-                + "-as-axioms" : "iri:normalized-ontology-"
-                + ontology.hashCode());
-        Ontology resultOnt = wsmoFactory.createOntology(wsmoFactory
-                .createIRI(resultIRI));
-        for (Object n : ontology.listNamespaces()) {
-            resultOnt.addNamespace((Namespace) n);
-        }
-        resultOnt.setDefaultNamespace(ontology.getDefaultNamespace());
-        int axiomCount = 1;
-        for (LogicalExpression expression : resultExp) {
-            Axiom axiom = wsmoFactory.createAxiom(
-                    //wsmoFactory
-                    //.createIRI("http://www.wsmo.org/reasoner/"
-                    //        + "reasoner_axiom-"
-                    //        + Integer.toString(axiomCount++)
-                    //        + Long.toString(System.currentTimeMillis()))
-                    //did cause caching problems
-                    wsmoFactory.createAnonymousID()
-                            );
-            axiom.addDefinition(expression);
+        String resultIRI = ontology.getIdentifier() + "-after-loyd topper" ;
+        Ontology resultOnt = wsmoFactory.createOntology(wsmoFactory.createIRI(resultIRI));
+
+        //clean ontology from previous axioms (WSMO4J BUG)
+        for (Axiom a: (Set<Axiom>)resultOnt.listAxioms()){
             try {
-                resultOnt.addAxiom(axiom);
+                a.setOntology(null);
             } catch (InvalidModelException e) {
                 e.printStackTrace();
             }
         }
-
+        
+        Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
+        for (LogicalExpression expression : resultExp) {
+            axiom.addDefinition(expression);
+        }
+        try {
+            resultOnt.addAxiom(axiom);
+        } catch (InvalidModelException e) {
+            e.printStackTrace();
+        }
         return resultOnt;
     }
 }
