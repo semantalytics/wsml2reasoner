@@ -21,19 +21,14 @@ package org.wsml.reasoner.transformation;
 
 import java.util.*;
 
-import org.deri.wsmo4j.common.*;
 import org.omwg.logicalexpression.*;
-import org.omwg.logicalexpression.terms.Term;
+import org.omwg.logicalexpression.terms.*;
 import org.omwg.ontology.*;
-import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsml.reasoner.transformation.le.FixedModificationRules;
-import org.wsmo.common.IRI;
-import org.wsmo.common.Identifier;
-import org.wsmo.common.Namespace;
-import org.wsmo.common.UnnumberedAnonymousID;
+import org.wsml.reasoner.impl.*;
+import org.wsml.reasoner.transformation.le.*;
+import org.wsmo.common.*;
 import org.wsmo.common.exception.*;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
+import org.wsmo.factory.*;
 
 /**
  * A normalization step of an ontology that transforms the conceptual syntax
