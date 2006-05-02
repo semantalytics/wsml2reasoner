@@ -1,11 +1,6 @@
 package org.wsml.reasoner.transformation;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.omwg.logicalexpression.*;
 import org.omwg.logicalexpression.terms.Term;
@@ -18,7 +13,7 @@ import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.Namespace;
-import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.common.exception.*;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -79,41 +74,19 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
 
     @SuppressWarnings("unchecked")
     public Ontology normalize(Ontology ontology) {
-        String ontologyID = (ontology.getIdentifier() != null ? ontology
-                .getIdentifier().toString()
-                + "-contraints-replaced" : "iri:normalized-ontology-"
-                + ontology.hashCode());
+        String ontologyID = ontology.getIdentifier() + "-contraints-replaced";
         Ontology resultOntology = wsmoFactory.createOntology(wsmoFactory
                 .createIRI(ontologyID));
 
-        // process namespace definitions:
-        for (Namespace namespace : (Collection<Namespace>) ontology
-                .listNamespaces()) {
-            resultOntology.addNamespace(namespace);
-        }
-        resultOntology.setDefaultNamespace(ontology.getDefaultNamespace());
         try {
-
-            // process non-functional properties:
-            for (Object nfp : ontology.listNFPValues().entrySet()) {
-
-                if (nfp instanceof Identifier) {
-                    Map.Entry entry = (Map.Entry) nfp;
-                    resultOntology.addNFPValue((IRI) entry.getKey(),
-                            (Identifier) entry.getValue());
-                } else if (nfp instanceof Value) {
-                    Map.Entry entry = (Map.Entry) nfp;
-                    resultOntology.addNFPValue((IRI) entry.getKey(),
-                            (Value) entry.getValue());
-                }
-
+            for (Axiom a : (Set<Axiom>) resultOntology.listAxioms()) {
+                a.setOntology(null);
             }
 
             // process axioms:
             for (Axiom axiom : (Collection<Axiom>) ontology.listAxioms()) {
-
-                LogicalExpression definition = (LogicalExpression) (axiom
-                        .listDefinitions().iterator().next());
+                LogicalExpression definition = (LogicalExpression) 
+                        axiom.listDefinitions().iterator().next();
                 if (definition instanceof Constraint) {
                     Identifier axiomID = axiom.getIdentifier();
                     String axiomIDString = axiomID.toString();
@@ -135,7 +108,7 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
                                 .addAxiom(replaceNamedUserConstraint(axiom));
                     }
                 } else if (definition instanceof AttributeConstraintMolecule) // oftype
-                                                                                // statement
+                // statement
                 {
                     resultOntology.addAxiom(replaceAttrOfTypeConstraint(axiom));
 
@@ -145,9 +118,12 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
                 }
 
             }
-            for (Axiom axiom : createMetaViolationAxioms()) {
-                resultOntology.addAxiom(axiom);
+            Axiom axiom = wsmoFactory.createAxiom(wsmoFactory
+                    .createAnonymousID());
+            for (LogicalExpression le : createMetaViolationAxioms()) {
+                axiom.addDefinition(le);
             }
+            resultOntology.addAxiom(axiom);
         } catch (InvalidModelException e) {
             throw new InternalReasonerException(e);
         }
@@ -155,9 +131,9 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
         return resultOntology;
     }
 
-    private List<Axiom> createMetaViolationAxioms() {
+    private List<LogicalExpression> createMetaViolationAxioms() {
 
-        List<Axiom> resultAxioms = new LinkedList<Axiom>();
+        List<LogicalExpression> resultLEs = new LinkedList<LogicalExpression>();
 
         Variable v1 = wsmoFactory.createVariable("v1");
         Variable v2 = wsmoFactory.createVariable("v2");
@@ -177,7 +153,7 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
         params.add(v4);
         params.add(v5);
         Atom body = leFactory.createAtom(attributeOfTypePredicateID, params);
-        addNewViolationAxiom(resultAxioms, head, body);
+        addNewViolationAxiom(resultLEs, head, body);
 
         // VIOLATION :- MIN_CARD(instance, concept, attribute)
         params = new ArrayList<Term>(3);
@@ -185,7 +161,7 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
         params.add(v2);
         params.add(v3);
         body = leFactory.createAtom(minCardinalityPredicateID, params);
-        addNewViolationAxiom(resultAxioms, head, body);
+        addNewViolationAxiom(resultLEs, head, body);
 
         // VIOLATION :- MAX_CARD(instance, concept, attribute)
         params = new ArrayList<Term>(3);
@@ -193,31 +169,27 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
         params.add(v2);
         params.add(v3);
         body = leFactory.createAtom(maxCardinalityPredicateID, params);
-        addNewViolationAxiom(resultAxioms, head, body);
+        addNewViolationAxiom(resultLEs, head, body);
 
         // VIOLATION :- NAMED_USER(axiom_id)
         params = new ArrayList<Term>(1);
         params.add(v1);
         body = leFactory.createAtom(namedUserAxiomPredicateID, params);
-        addNewViolationAxiom(resultAxioms, head, body);
+        addNewViolationAxiom(resultLEs, head, body);
 
         // VIOLATION :- UNNAMED_USER(axiom_id)
         params = new ArrayList<Term>(1);
         params.add(v1);
         body = leFactory.createAtom(unnamedUserAxiomPredicateID, params);
-        addNewViolationAxiom(resultAxioms, head, body);
+        addNewViolationAxiom(resultLEs, head, body);
 
-        return resultAxioms;
+        return resultLEs;
     }
 
-    private void addNewViolationAxiom(List<Axiom> resultAxioms, Atom head,
+    private void addNewViolationAxiom(List<LogicalExpression> resultAxioms, Atom head,
             Atom body) {
-        LogicProgrammingRule rule = leFactory.createLogicProgrammingRule(head,
-                body);
-        Axiom axiom = wsmoFactory.createAxiom(wsmoFactory
-                .createIRI(AnonymousIdUtils.getNewAnonymousIri()));
-        axiom.addDefinition(rule);
-        resultAxioms.add(axiom);
+        LogicProgrammingRule rule = leFactory.createLogicProgrammingRule(head, body);
+        resultAxioms.add(rule);
     }
 
     private Axiom replaceAttrOfTypeConstraint(Axiom axiom) {

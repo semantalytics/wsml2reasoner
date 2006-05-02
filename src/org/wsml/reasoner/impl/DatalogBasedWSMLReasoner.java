@@ -123,8 +123,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // TODO Check whether ontology import is currently handled
 
         // Convert conceptual syntax to logical expressions
-        OntologyNormalizer normalizer = new AxiomatizationNormalizer(
-                wsmoManager);
+        OntologyNormalizer normalizer = new AxiomatizationNormalizer(wsmoManager);
         normalizedOntology = normalizer.normalize(o);
 //      System.out.println("\n-------\n Ontology after Normalization:\n" +
 //      WSMLNormalizationTest.serializeOntology(normalizedOntology));
@@ -133,19 +132,21 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // Convert constraints to support debugging
         normalizer = new ConstraintReplacementNormalizer(wsmoManager);
         normalizedOntology = normalizer.normalize(normalizedOntology);
+//        System.out.println("\n-------\n Ontology after constraints:\n" +
+//        WSMLNormalizationTest.serializeOntology(normalizedOntology));
 
         // Simplify axioms
         normalizer = new ConstructReductionNormalizer(wsmoManager);
         normalizedOntology = normalizer.normalize(normalizedOntology);
-//         System.out.println("\n-------\n Ontology after simplification:\n" +
-//         WSMLNormalizationTest.serializeOntology(normalizedOntology));
+//        System.out.println("\n-------\n Ontology after simplification:\n" +
+//        WSMLNormalizationTest.serializeOntology(normalizedOntology));
 
         // Apply Lloyd-Topor rules to get Datalog-compatible LEs
         normalizer = new LloydToporNormalizer(wsmoManager);
         normalizedOntology = normalizer.normalize(normalizedOntology);
-
 //        System.out.println("\n-------\n Ontology after Lloyd-Topor:\n" +
 //        WSMLNormalizationTest.serializeOntology(normalizedOntology));
+        
         Set<org.wsml.reasoner.Rule> p;
         org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
                 wsmoManager);

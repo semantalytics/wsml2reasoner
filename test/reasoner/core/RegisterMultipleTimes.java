@@ -31,6 +31,7 @@ public class RegisterMultipleTimes extends TestCase {
     String FILE = "RegisterMultipleTimes.wsml";
     Parser parser;
     LogicalExpressionFactory leFactory;
+    WsmoFactory wsmoFactory;
     WSMLReasoner reasoner;
     
     public void setUp(){
@@ -42,6 +43,8 @@ public class RegisterMultipleTimes extends TestCase {
         leFactory = Factory.createLogicalExpressionFactory(null);
         reasoner = DefaultWSMLReasonerFactory.getFactory()
         .createWSMLFlightReasoner(m);
+        
+        wsmoFactory = Factory.createWsmoFactory(null);
     }
 
     /**
@@ -78,6 +81,49 @@ public class RegisterMultipleTimes extends TestCase {
             assertEquals("failed in run:"+i,1, result.size());
 
         }
+
+    }
+    
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testRemoveInstances() throws Exception {
+        String ns = "http://ex1.org#";
+        String test = "namespace _\""+ns+"\" \n" +
+                "ontology o1 \n" +
+                "concept c \n" +
+                "instance i1 memberOf c \n " +
+                "instance i2 memberOf c \n ";
+        
+
+        Ontology o = (Ontology) parser.parse(new StringBuffer(test))[0];
+
+        LogicalExpression query = leFactory.createLogicalExpression(
+                "?x memberOf ?y", o);
+        Instance instance = o.findInstance(wsmoFactory.createIRI(ns+"i1"));
+
+
+        for (int i=0; i<10; i++){
+            Set<Map<Variable, Term>> result = null;
+            // with 2 instances
+            reasoner.registerOntology(o);
+            result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
+            reasoner.deRegisterOntology((IRI) o.getIdentifier());
+            assertEquals("failure in run "+i ,2,o.listInstances().size());
+            assertEquals("failure in run "+i ,2,result.size());
+            
+            
+            o.removeInstance(instance);
+            // with 1 instance
+            reasoner.registerOntology(o);
+            result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
+            reasoner.deRegisterOntology((IRI) o.getIdentifier());
+            assertEquals("failure in run "+i ,1,o.listInstances().size());
+            assertEquals("failure in run "+i ,1,result.size());
+            o.addInstance(instance);
+        }
+
 
     }
     
