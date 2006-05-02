@@ -3,19 +3,13 @@ package org.wsml.reasoner.transformation;
 import java.util.*;
 
 import org.omwg.logicalexpression.*;
-import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Axiom;
-import org.omwg.ontology.Ontology;
-import org.omwg.ontology.Value;
-import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.InternalReasonerException;
-import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.common.IRI;
-import org.wsmo.common.Identifier;
-import org.wsmo.common.Namespace;
+import org.omwg.logicalexpression.terms.*;
+import org.omwg.ontology.*;
+import org.wsml.reasoner.api.*;
+import org.wsml.reasoner.impl.*;
+import org.wsmo.common.*;
 import org.wsmo.common.exception.*;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
+import org.wsmo.factory.*;
 
 public class ConstraintReplacementNormalizer implements OntologyNormalizer {
     private static final String PREFIX = "http://www.wsmo.org/reasoner/";
