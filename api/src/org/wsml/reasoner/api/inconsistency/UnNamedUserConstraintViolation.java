@@ -10,7 +10,7 @@ public class UnNamedUserConstraintViolation extends UserConstraintViolation {
     }
 
     public String toString(){
-        return "User constraint Violation due to anonymous axiom : ";  
+        return "User constraint Violation due to anonymous axiom (for more details you must name your axioms)";  
     }
     
 }
