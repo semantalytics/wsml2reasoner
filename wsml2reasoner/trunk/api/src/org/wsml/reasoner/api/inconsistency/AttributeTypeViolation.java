@@ -1,10 +1,7 @@
 package org.wsml.reasoner.api.inconsistency;
 
-import org.omwg.ontology.Attribute;
-import org.omwg.ontology.Instance;
-import org.omwg.ontology.Type;
-import org.omwg.ontology.Value;
-import org.wsmo.common.IRI;
+import org.omwg.ontology.*;
+import org.wsmo.common.*;
 
 public class AttributeTypeViolation extends ConsistencyViolation {
     
@@ -41,10 +38,11 @@ public class AttributeTypeViolation extends ConsistencyViolation {
     }
     
     public String toString(){
-        return "AttributeTypeViolation due to instance: " + instance.getIdentifier() +
-            " expected type: "+expectedType+ " found value: " +
-            violatingValue + " at attribute: " + attribute.getIdentifier();  
+        TopEntity te = instance.getOntology();
+        return "AttributeTypeViolation due to instance: " + 
+            toString(instance.getIdentifier(),te) +
+            " expected type: "+ toString(expectedType,te)+ 
+            " found value: " + toString(violatingValue,te) + 
+            " at attribute: " + toString(attribute.getIdentifier(),te);  
     }
-
-
 }

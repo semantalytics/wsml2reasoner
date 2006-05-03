@@ -1,7 +1,7 @@
 package org.wsml.reasoner.api.inconsistency;
 
 import org.omwg.ontology.Axiom;
-import org.wsmo.common.IRI;
+import org.wsmo.common.*;
 
 public class NamedUserConstraintViolation extends UserConstraintViolation {
 
@@ -17,7 +17,9 @@ public class NamedUserConstraintViolation extends UserConstraintViolation {
     }
     
     public String toString(){
-        return "User constraint Violation due to axiom : " + axiom.getIdentifier();  
+        TopEntity te=axiom.getOntology();
+        return "User constraint Violation due to axiom: " + 
+                toString(axiom.getIdentifier(),te);  
     }
     
 }
