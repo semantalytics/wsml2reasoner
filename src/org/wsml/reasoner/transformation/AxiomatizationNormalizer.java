@@ -61,13 +61,13 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
     private WsmoFactory wsmoFactory;
     private LogicalExpressionFactory leFactory;
     private FixedModificationRules fixedRules;
-    private Map<Integer,String> axiomIDs;
+    private Map<LogicalExpression,String> axiomIDs;
 
     public AxiomatizationNormalizer(WSMO4JManager wsmoManager) {
         leFactory = wsmoManager.getLogicalExpressionFactory();
         wsmoFactory = wsmoManager.getWSMOFactory();
         fixedRules = new FixedModificationRules(wsmoManager);
-        axiomIDs = new HashMap<Integer, String>();
+        axiomIDs = new HashMap<LogicalExpression, String>();
     }
 
     /**
@@ -93,7 +93,15 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
         // process axioms:
         for (Axiom axiom : (Collection<Axiom>) ontology.listAxioms()) {
-            Identifier newAxiomId = wsmoFactory.createIRI(axiom.getIdentifier()+"_");;
+            Identifier newAxiomId;
+            if (axiom.getIdentifier() instanceof UnnumberedAnonymousID){
+                newAxiomId = wsmoFactory.createAnonymousID(); 
+            }else {
+                //create an axiom such that orginal one is not touched.
+                newAxiomId = wsmoFactory.createIRI(axiom.getIdentifier()
+                        +AnonymousIdUtils.NAMED_AXIOM_SUFFIX+System.currentTimeMillis());;
+            }
+            
             Axiom newAxiom = wsmoFactory.createAxiom(newAxiomId);
             for(LogicalExpression definition : (Set<LogicalExpression>)axiom.listDefinitions()){
                 newAxiom.addDefinition(definition);
@@ -128,35 +136,26 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
     protected void addAsAxioms(Ontology ontology,
             Collection<LogicalExpression> expressions) {
-        if (expressions.isEmpty()){
+        if (expressions.isEmpty()) {
             return;
         }
-        Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
-        try {
-            ontology.addAxiom(axiom);
-        } catch (InvalidModelException e) {
-            e.printStackTrace();
-        }
         for (LogicalExpression expression : expressions) {
-            axiom.addDefinition(expression);
+            try {
+                //corelate IDs to type of axioms
+                Identifier id; 
+                if (axiomIDs.containsKey(expression)){
+                   id = wsmoFactory.createIRI(axiomIDs.get(expression)); 
+                }else {
+                   id = wsmoFactory.createAnonymousID();
+                }
+                Axiom axiom = wsmoFactory.createAxiom(id);
+                ontology.addAxiom(axiom);
+                axiom.addDefinition(expression);
+            } catch (InvalidModelException e) {
+                e.printStackTrace();
+            }
         }
     }
-    
-//    private Identifier fetchAxiomID(LogicalExpression expression)
-//    {
-//        Integer hashCode = new Integer(expression.toString().hashCode());
-//        String axiomIDString = axiomIDs.get(hashCode);
-//        if(axiomIDString == null)
-//        {
-//            axiomIDString = AnonymousIdUtils.getNewAnonymousIri();
-//        }
-//        return wsmoFactory.createIRI(axiomIDString);
-//    }
-    
-//    private void repealAxiomIDs()
-//    {
-//        axiomIDs.clear();
-//    }
 
     @SuppressWarnings("unchecked")
     protected Set<LogicalExpression> normalizeConcept(Concept concept) {
@@ -242,8 +241,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
     
     private void proclaimAxiomID(LogicalExpression expression, String id)
     {
-        Integer hashCode = new Integer(expression.toString().hashCode());
-        axiomIDs.put(hashCode, id);
+        axiomIDs.put(expression, id);
     }
 
     protected LogicalExpression createTransitivityConstraint(

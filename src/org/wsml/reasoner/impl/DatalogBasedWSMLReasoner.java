@@ -34,20 +34,10 @@ import org.wsml.reasoner.api.InternalReasonerException;
 import org.wsml.reasoner.api.WSMLCoreReasoner;
 import org.wsml.reasoner.api.WSMLFlightReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
-import org.wsml.reasoner.api.inconsistency.AttributeTypeViolation;
-import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
-import org.wsml.reasoner.api.inconsistency.InconsistencyException;
-import org.wsml.reasoner.api.inconsistency.MaxCardinalityViolation;
-import org.wsml.reasoner.api.inconsistency.MinCardinalityViolation;
-import org.wsml.reasoner.api.inconsistency.NamedUserConstraintViolation;
-import org.wsml.reasoner.api.inconsistency.UserConstraintViolation;
+import org.wsml.reasoner.api.inconsistency.*;
 import org.wsml.reasoner.builtin.kaon2.Kaon2Facade;
 import org.wsml.reasoner.builtin.mins.MinsFacade;
-import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
-import org.wsml.reasoner.transformation.ConstraintReplacementNormalizer;
-import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
-import org.wsml.reasoner.transformation.LloydToporNormalizer;
-import org.wsml.reasoner.transformation.OntologyNormalizer;
+import org.wsml.reasoner.transformation.*;
 import org.wsml.reasoner.transformation.le.LloydToporRules;
 import org.wsml.reasoner.transformation.le.LogicalExpressionNormalizer;
 import org.wsml.reasoner.transformation.le.LogicalExpressionTransformer;
@@ -125,27 +115,27 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // Convert conceptual syntax to logical expressions
         OntologyNormalizer normalizer = new AxiomatizationNormalizer(wsmoManager);
         normalizedOntology = normalizer.normalize(o);
-//      System.out.println("\n-------\n Ontology after Normalization:\n" +
-//      WSMLNormalizationTest.serializeOntology(normalizedOntology));
+      System.out.println("\n-------\n Ontology after Normalization:\n" +
+      WSMLNormalizationTest.serializeOntology(normalizedOntology));
 
 
         // Convert constraints to support debugging
         normalizer = new ConstraintReplacementNormalizer(wsmoManager);
         normalizedOntology = normalizer.normalize(normalizedOntology);
-//        System.out.println("\n-------\n Ontology after constraints:\n" +
-//        WSMLNormalizationTest.serializeOntology(normalizedOntology));
+        System.out.println("\n-------\n Ontology after constraints:\n" +
+        WSMLNormalizationTest.serializeOntology(normalizedOntology));
 
         // Simplify axioms
         normalizer = new ConstructReductionNormalizer(wsmoManager);
         normalizedOntology = normalizer.normalize(normalizedOntology);
-//        System.out.println("\n-------\n Ontology after simplification:\n" +
-//        WSMLNormalizationTest.serializeOntology(normalizedOntology));
+        System.out.println("\n-------\n Ontology after simplification:\n" +
+        WSMLNormalizationTest.serializeOntology(normalizedOntology));
 
         // Apply Lloyd-Topor rules to get Datalog-compatible LEs
         normalizer = new LloydToporNormalizer(wsmoManager);
         normalizedOntology = normalizer.normalize(normalizedOntology);
-//        System.out.println("\n-------\n Ontology after Lloyd-Topor:\n" +
-//        WSMLNormalizationTest.serializeOntology(normalizedOntology));
+        System.out.println("\n-------\n Ontology after Lloyd-Topor:\n" +
+        WSMLNormalizationTest.serializeOntology(normalizedOntology));
         
         Set<org.wsml.reasoner.Rule> p;
         org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
@@ -535,31 +525,14 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         Set<Map<Variable, Term>> violations = executeQuery(ontologyId, atom);
         for (Map<Variable, Term> violation : violations) {
             Axiom axiom = null;
-            //dirty but should work:
             String id = violation.get(i).toString();
-            int idx_ = id.lastIndexOf('_');
-            if (idx_ > 0){
-                boolean isNumberedID = true;
-                for (int n=idx_; n < id.length(); n++){
-                    if (Character.isDigit(id.charAt(n))){
-                        isNumberedID=false;
-                    }
-                }
-                IRI iri = wsmoFactory.createIRI(id.substring(0,idx_));
-                Axiom tmp =wsmoFactory.getAxiom(iri);
-                int no = Integer.parseInt(id.substring(idx_+1));
-                Iterator iter = tmp.listDefinitions().iterator();
-                LogicalExpression le = null;
-                for (int n=0;n<no;n++){
-                    le = (LogicalExpression)iter.next();
-                }
-                axiom = wsmoFactory.createAxiom((IRI)violation.get(i));
-                axiom.addDefinition(le);
+            if (AnonymousIdUtils.isAnonymousIri(id)){
+                errors.add(new UnNamedUserConstraintViolation(ontologyId));
+                return;
             }
-            // Construct error object
-            if (axiom==null){
-                axiom = wsmoFactory.getAxiom((IRI) violation.get(i));
-            }
+            id = id.substring(0,id.indexOf(AnonymousIdUtils.NAMED_AXIOM_SUFFIX));
+            IRI iri = wsmoFactory.createIRI(id);
+            axiom =wsmoFactory.getAxiom(iri);
             errors.add(new NamedUserConstraintViolation(ontologyId, axiom));
         }
     }

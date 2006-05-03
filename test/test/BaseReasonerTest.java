@@ -37,8 +37,7 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.WSMLReasoner;
-import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.*;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
@@ -76,6 +75,19 @@ public class BaseReasonerTest extends TestCase {
     protected static DataFactory dataFactory = null;
 
     protected static WSMO4JManager wsmoManager = null;
+    
+    public static WSMLReasoner getReasoner(){
+        // Create reasoner
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,reasoner);
+        System.out.println("Eval Method: " + evalMethod);
+        params.put(WSMLReasonerFactory.PARAM_EVAL_METHOD,evalMethod);
+        // params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
+        // WSMLReasonerFactory.BuiltInReasoner.MINS);
+        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
+                .createWSMLFlightReasoner(params);
+        return wsmlReasoner;
+    }
     
     protected static void setupScenario(String ontologyFile) throws IOException, ParserException, InvalidModelException, InconsistencyException {
         // Set up factories for creating WSML elements
@@ -116,15 +128,7 @@ public class BaseReasonerTest extends TestCase {
         System.out.println(sw.toString());
         System.out.println("--------------\n\n");
 
-        // Create reasoner
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,reasoner);
-        System.out.println("Eval Method: " + evalMethod);
-        params.put(WSMLReasonerFactory.PARAM_EVAL_METHOD,evalMethod);
-        // params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
-        // WSMLReasonerFactory.BuiltInReasoner.MINS);
-        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
-                .createWSMLFlightReasoner(params);
+        wsmlReasoner = getReasoner();
 
         // Register ontology
         System.out.println("Registering ontology");
