@@ -15,6 +15,8 @@ public abstract class AnonymousIdUtils {
     protected static final String MINCARD_PREFIX = "http://www.wsmo.org/reasoner/mincard_";
 
     protected static final String MAXCARD_PREFIX = "http://www.wsmo.org/reasoner/maxcard_";
+    
+    public static final String NAMED_AXIOM_SUFFIX = "~~";
 
     /**
      * Generates a new IRI URI with reasonable degree of uniqueness.

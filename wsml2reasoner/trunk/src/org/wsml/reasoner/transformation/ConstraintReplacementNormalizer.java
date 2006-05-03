@@ -69,8 +69,7 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
     @SuppressWarnings("unchecked")
     public Ontology normalize(Ontology ontology) {
         String ontologyID = ontology.getIdentifier() + "-contraints-replaced";
-        Ontology resultOntology = wsmoFactory.createOntology(wsmoFactory
-                .createIRI(ontologyID));
+        Ontology resultOntology = wsmoFactory.createOntology(wsmoFactory.createIRI(ontologyID));
 
         try {
             for (Axiom a : (Set<Axiom>) resultOntology.listAxioms()) {
@@ -79,38 +78,26 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
 
             // process axioms:
             for (Axiom axiom : (Collection<Axiom>) ontology.listAxioms()) {
-                LogicalExpression definition = (LogicalExpression) 
-                        axiom.listDefinitions().iterator().next();
-                if (definition instanceof Constraint) {
-                    Identifier axiomID = axiom.getIdentifier();
-                    String axiomIDString = axiomID.toString();
-                    if (axiomIDString
-                            .startsWith(AnonymousIdUtils.MINCARD_PREFIX)) {
-                        resultOntology
-                                .addAxiom(replaceMinCardConstraint(axiom));
-                    } else if (axiomIDString
-                            .startsWith(AnonymousIdUtils.MAXCARD_PREFIX)) {
-                        resultOntology
-                                .addAxiom(replaceMaxCardConstraint(axiom));
-                    } else if (axiomIDString
-                            .startsWith(AnonymousIdUtils.ANONYMOUS_PREFIX)) {
-                        resultOntology
-                                .addAxiom(replaceUnnamedUserConstraint(axiom));
-                    } else // axiom named by user
-                    {
-                        resultOntology
-                                .addAxiom(replaceNamedUserConstraint(axiom));
+                for (LogicalExpression definition : (Set<LogicalExpression>)axiom.listDefinitions()){
+                    if (definition instanceof Constraint) {
+                        Identifier axiomID = axiom.getIdentifier();
+                        String axiomIDString = axiomID.toString();
+                        if (axiomIDString.startsWith(AnonymousIdUtils.MINCARD_PREFIX)) {
+                            resultOntology.addAxiom(replaceMinCardConstraint(axiom));
+                        } else if (axiomIDString.startsWith(AnonymousIdUtils.MAXCARD_PREFIX)) {
+                            resultOntology.addAxiom(replaceMaxCardConstraint(axiom));
+                        } else if (axiomIDString.startsWith(AnonymousIdUtils.ANONYMOUS_PREFIX)) {
+                            resultOntology.addAxiom(replaceUnnamedUserConstraint(axiom));
+                        } else { // axiom named by user
+                            resultOntology.addAxiom(replaceNamedUserConstraint(axiom));
+                        }
+                    } else if (definition instanceof AttributeConstraintMolecule) {// oftype statement
+                        resultOntology.addAxiom(replaceAttrOfTypeConstraint(axiom));
+    
+                    } else{ // no constraint axiom
+                        resultOntology.addAxiom(axiom);
                     }
-                } else if (definition instanceof AttributeConstraintMolecule) // oftype
-                // statement
-                {
-                    resultOntology.addAxiom(replaceAttrOfTypeConstraint(axiom));
-
-                } else // no constraint axiom
-                {
-                    resultOntology.addAxiom(axiom);
                 }
-
             }
             Axiom axiom = wsmoFactory.createAxiom(wsmoFactory
                     .createAnonymousID());
