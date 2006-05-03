@@ -26,6 +26,7 @@ import org.omwg.logicalexpression.*;
 import org.omwg.logicalexpression.terms.*;
 import org.omwg.ontology.*;
 import org.wsml.reasoner.api.*;
+import org.wsml.reasoner.api.inconsistency.*;
 import org.wsmo.common.*;
 import org.wsmo.factory.*;
 import org.wsmo.wsml.*;
@@ -88,9 +89,9 @@ public class SubConceptOfTest extends TestCase {
         String test = "namespace { _\"i:\"} \n" +
                 "ontology simpsons \n" +
                 "concept sub  \n" +
-                "  c impliesType (1 *) test \n" +
-                "instance ia memberOf sub" +
-                "//  c hasValue i \n";
+                "//  c impliesType (1 *)_string \n" +
+                "instance ia memberOf sub  \n" +
+                "axiom i definedBy !-?x memberOf sub. ";
         
         Ontology ont = (Ontology) parser.parse(new StringBuffer(test))[0];
 
@@ -98,14 +99,13 @@ public class SubConceptOfTest extends TestCase {
         String q = "?x memberOf super";
         LogicalExpression query = leFactory.createLogicalExpression(
                 q, ont);
-        System.out.println("LE:"+query+"\n\n");
+        //System.out.println("LE:"+query+"\n\n");
 
         Set<Map<Variable, Term>> result = null;
         try{
             reasoner.registerOntology(ont);
-        }catch(Exception e){
-            Exception e1 = e; 
-            System.out.println(e1);
+        }catch(InconsistencyException e){
+            System.out.println(e.getViolations().iterator().next());
         }
         //result = reasoner.executeQuery((IRI) ont.getIdentifier(), query);
         //System.out.println(result);
