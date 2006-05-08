@@ -12,5 +12,6 @@
 	<classpathentry kind="lib" path="lib/ext/wsmo4j/wsmo4j.jar"/>
 	<classpathentry kind="lib" path="lib/ext/kaon2/kaon2-2005-12-08.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mins"/>
+	<classpathentry kind="lib" path="lib/ext/mins/mins-20060508.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
