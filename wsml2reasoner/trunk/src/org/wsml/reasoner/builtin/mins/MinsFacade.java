@@ -18,44 +18,26 @@
  */
 package org.wsml.reasoner.builtin.mins;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.*;
+import java.util.logging.*;
 
 import org.deri.mins.*;
-import org.deri.mins.api.DBInterface;
-import org.deri.mins.builtins.BuiltinBody;
-import org.deri.mins.builtins.BuiltinConfig;
-import org.deri.mins.builtins.Equal;
-import org.deri.mins.builtins.IsInteger;
-import org.deri.mins.builtins.IsNum;
-import org.deri.mins.builtins.IsString;
+import org.deri.mins.Rule;
+import org.deri.mins.api.*;
+import org.deri.mins.builtins.*;
+import org.deri.mins.datatype.*;
 import org.deri.mins.terms.*;
-import org.deri.wsmo4j.io.parser.wsml.TempVariable;
-import org.omwg.logicalexpression.terms.ConstructedTerm;
+import org.deri.wsmo4j.io.parser.wsml.*;
+import org.omwg.logicalexpression.terms.*;
 import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.ComplexDataValue;
-import org.omwg.ontology.SimpleDataValue;
+import org.omwg.ontology.*;
 import org.omwg.ontology.Variable;
-import org.omwg.ontology.WsmlDataType;
-import org.wsml.reasoner.ConjunctiveQuery;
-import org.wsml.reasoner.DatalogException;
-import org.wsml.reasoner.DatalogReasonerFacade;
-import org.wsml.reasoner.ExternalToolException;
+import org.wsml.reasoner.*;
 import org.wsml.reasoner.Literal;
-import org.wsml.reasoner.UnsupportedFeatureException;
-import org.wsml.reasoner.WSML2DatalogTransformer;
 import org.wsml.reasoner.api.*;
-import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.common.IRI;
-import org.wsmo.factory.WsmoFactory;
-
-import com.ontotext.wsmo4j.ontology.VariableImpl;
+import org.wsml.reasoner.impl.*;
+import org.wsmo.common.*;
+import org.wsmo.factory.*;
 
 /**
  * Package: package org.wsml.reasoner.datalog.wrapper.mins;
@@ -364,9 +346,16 @@ public class MinsFacade implements DatalogReasonerFacade {
         } else {
             ComplexDataValue val = (ComplexDataValue) wsmlTerm;
             String type = val.getType().getIRI().toString();
+            int arity = val.getArity();
             if (type.equals(WsmlDataType.WSML_BOOLEAN)) {
-                minsTerm = new StringTerm(val.toString());
-                // System.out.print(minsTerm);
+                minsTerm = new BooleanTerm((Boolean)val.getValue());
+//            } else if (type.equals(WsmlDataType.WSML_DATE)){
+//                IntegerTerm[] intTerm = new IntegerTerm[arirty];
+//                for (int i=0; i<arity;i++){
+//                    intTerm [i] = new IntegerTerm(
+//                            val.getArgumentValue((byte)i));
+//                }
+//                minsTerm = new DateTerm(); 
             } else {
                 throw new RuntimeException("No Complex data types yet:"
                         + wsmlTerm);

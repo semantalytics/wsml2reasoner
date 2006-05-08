@@ -207,6 +207,10 @@ public class MinsSymbolMap {
             }
             org.deri.mins.terms.NumTerm numTerm = (org.deri.mins.terms.NumTerm)term;
             return wsmoManager.getDataFactory().createWsmlDecimal(term.toString());
+        }else if (term instanceof BooleanTerm){
+            boolean value = ((BooleanTerm)term).getValue();
+            return wsmoManager.getDataFactory().createWsmlBoolean(
+                    value);
         }
         System.err.println("ERROR UNKOWN MINS TERM: "+term+" "+term.getClass());
         return wsmoManager.getDataFactory().createWsmlString("unkown");
