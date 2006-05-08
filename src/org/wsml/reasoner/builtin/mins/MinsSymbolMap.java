@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.deri.mins.builtins.*;
 import org.deri.mins.terms.*;
+import org.deri.mins.terms.concrete.*;
 import org.omwg.logicalexpression.Constants;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.ConjunctiveQuery;
