@@ -79,8 +79,26 @@ instance Galway memberOf irishCity
 
 axiom MapingRule1
      definedBy 
-          f(?x) memberOf travelVoucher
+          f(?x, ?y) memberOf travelVoucher
 			:-
-			?x memberOf ticket. 
-			
-instance my_trainTicket memberOf ticket
+			?x memberOf ticket 
+			[firstName hasValue ?f] and
+		 	?y memberOf customer
+		 	[firstName hasValue ?f].
+		 	
+instance my_trainTicket1 memberOf ticket
+	firstName hasValue Uwe
+
+instance my_trainTicket2 memberOf ticket
+	firstName hasValue Graham
+	
+instance customer1 memberOf customer
+	firstName hasValue Tim
+	
+instance customer2 memberOf customer
+	firstName hasValue Uwe
+		
+instance my_trainTicket3 memberOf ticket
+	firstName hasValue Uwe		
+
+	
