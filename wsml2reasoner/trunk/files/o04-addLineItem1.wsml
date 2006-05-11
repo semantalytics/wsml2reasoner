@@ -1,0 +1,101 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight" 
+namespace { _"http://www.example.org/ontologies/sws-challenge/Moon#"
+, 
+     dc _"http://purl.org/dc/elements/1.1#", 
+     wsml _"http://www.wsmo.org/wsml/wsml-syntax#" }
+
+ontology _"http://www.wsmx.org/choreography/state_id-0_at-1147362549355"
+
+axiom _"http://www.wsmx.org/choreography/state/attribute0"
+     definedBy 
+          _"http://www.wsmo.org/ontologies/choreography/oasm#controlstate"[_"http://www.wsmo.org/ontologies/choreography/oasm#value" hasValue _"http://www.wsmo.org/ontologies/choreography/oasm#InitialState"]. 
+
+concept _"http://www.wsmo.org/ontologies/choreography/oasm#ControlState"
+
+concept Contact
+     nonFunctionalProperties
+          dc#title hasValue "Contact definition for CRM and OM systems"
+     endNonFunctionalProperties
+     contactName ofType _string
+     telephone ofType _string
+     email ofType _string
+
+concept Address
+     nonFunctionalProperties
+          dc#title hasValue "Address definition for CRM and OM systems"
+     endNonFunctionalProperties
+     businessName ofType _string
+     street ofType _string
+     city ofType _string
+     countryCode ofType _string
+     postalCode ofType _string
+
+concept CreateOrderResponse
+     orderId ofType  (1 1) _string
+
+concept item
+     articleId ofType _string
+     quantity ofType _integer
+
+concept CloseOrderRequest
+     authToken ofType  (1 1) _string
+     orderId ofType _integer
+
+concept AddLineItemRequest
+     authToken ofType _string
+     orderId ofType _integer
+     lineItem impliesType item
+
+concept Customer
+     nonFunctionalProperties
+          dc#title hasValue "Customer definition for CRM system"
+     endNonFunctionalProperties
+     customerId ofType  (0 1) _integer
+     roleCode ofType  (0 1) _string
+     contact impliesType  (0 1) Contact
+     address impliesType  (0 1) Address
+
+concept SearchCustomerResponse
+     customer impliesType  (1 1) Customer
+
+concept CreateOrderRequest
+     authToken ofType  (0 1) _string
+     contact impliesType  (0 1) Contact
+     shipTo impliesType  (0 1) Address
+     billTo impliesType  (0 1) Address
+
+concept CloseOrderResponse
+     orderId ofType  (1 1) _integer
+     itemsNo ofType  (1 1) _integer
+
+concept SearchCustomerRequest
+     searchString ofType _string
+
+concept AddLineItemResponse
+     orderId ofType  (1 1) _integer
+     lineItemId ofType  (1 1) _integer
+
+instance _"http://www.wsmo.org/ontologies/choreography/oasm#controlstate" memberOf _"http://www.wsmo.org/ontologies/choreography/oasm#ControlState"
+
+instance _"http://www.wsmx.org/ontologies/moon/target#Customer1" memberOf Customer
+     customerId hasValue 1
+     roleCode hasValue "Buyer"
+     contact hasValue _"http://www.wsmx.org/ontologies/moon/target#Contact1"
+     address hasValue _"http://www.wsmx.org/ontologies/moon/target#Address1"
+
+instance _"http://www.wsmx.org/ontologies/moon/target#orderReq" memberOf CreateOrderRequest
+     authToken hasValue "DERI_NUIG2]TfOu>q"
+     contact hasValue _"http://www.wsmx.org/ontologies/moon/target#contactInf"
+     shipTo hasValue _"http://www.wsmx.org/ontologies/moon/target#shipToAddr"
+     billTo hasValue _"http://www.wsmx.org/ontologies/moon/target#billToAddr"
+
+instance _"http://www.wsmx.org/ontologies/moon/target#shipToAddr" memberOf Address
+     businessName hasValue "Blue Company"
+     city hasValue "Innsbruck"
+     street hasValue "North Business Center, Block 9"
+     countryCode hasValue "AT"
+     postalCode hasValue "A-6020"
+
+instance _"http://www.wsmx.org/ontologies/moon/target#addLineItem1" memberOf AddLineItemRequest
+     authToken hasValue "DERI_NUIG2]TfOu>q"
+     lineItem hasValue _"http://www.wsmx.org/ontologies/moon/target#item1"
