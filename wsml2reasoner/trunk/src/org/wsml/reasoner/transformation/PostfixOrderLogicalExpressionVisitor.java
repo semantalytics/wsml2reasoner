@@ -21,7 +21,27 @@ package org.wsml.reasoner.transformation;
 
 import java.util.Iterator;
 
-import org.omwg.logicalexpression.*;
+import org.omwg.logicalexpression.Atom;
+import org.omwg.logicalexpression.AttributeConstraintMolecule;
+import org.omwg.logicalexpression.AttributeInferenceMolecule;
+import org.omwg.logicalexpression.AttributeValueMolecule;
+import org.omwg.logicalexpression.CompoundExpression;
+import org.omwg.logicalexpression.CompoundMolecule;
+import org.omwg.logicalexpression.Conjunction;
+import org.omwg.logicalexpression.Constraint;
+import org.omwg.logicalexpression.Disjunction;
+import org.omwg.logicalexpression.Equivalence;
+import org.omwg.logicalexpression.ExistentialQuantification;
+import org.omwg.logicalexpression.Implication;
+import org.omwg.logicalexpression.InverseImplication;
+import org.omwg.logicalexpression.LogicProgrammingRule;
+import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.MembershipMolecule;
+import org.omwg.logicalexpression.Negation;
+import org.omwg.logicalexpression.NegationAsFailure;
+import org.omwg.logicalexpression.SubConceptMolecule;
+import org.omwg.logicalexpression.UniversalQuantification;
+import org.omwg.logicalexpression.Visitor;
 
 /**
  * Implements a left-first, depth-first traversal over logical expressions. The

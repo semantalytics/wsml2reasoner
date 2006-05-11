@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.serializer.wsml.*;
+import org.deri.wsmo4j.io.serializer.wsml.VisitorSerializeWSMLTerms;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;

@@ -18,14 +18,25 @@
  */
 package org.wsml.reasoner.transformation;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import org.omwg.logicalexpression.*;
-import org.omwg.ontology.*;
-import org.wsml.reasoner.impl.*;
-import org.wsml.reasoner.transformation.le.*;
-import org.wsmo.common.exception.*;
-import org.wsmo.factory.*;
+import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.ontology.Axiom;
+import org.omwg.ontology.Ontology;
+import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsml.reasoner.transformation.le.DisjunctionPullRules;
+import org.wsml.reasoner.transformation.le.ImplicationReductionRules;
+import org.wsml.reasoner.transformation.le.LogicalExpressionNormalizer;
+import org.wsml.reasoner.transformation.le.MoleculeDecompositionRules;
+import org.wsml.reasoner.transformation.le.NegationPushRules;
+import org.wsml.reasoner.transformation.le.NormalizationRule;
+import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
+import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.factory.WsmoFactory;
 
 public class ConstructReductionNormalizer implements OntologyNormalizer {
     protected LogicalExpressionNormalizer leNormalizer;

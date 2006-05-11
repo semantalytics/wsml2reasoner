@@ -24,7 +24,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.omwg.logicalexpression.*;
+import org.omwg.logicalexpression.Atom;
+import org.omwg.logicalexpression.AttributeConstraintMolecule;
+import org.omwg.logicalexpression.AttributeInferenceMolecule;
+import org.omwg.logicalexpression.AttributeMolecule;
+import org.omwg.logicalexpression.AttributeValueMolecule;
+import org.omwg.logicalexpression.CompoundMolecule;
+import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.MembershipMolecule;
+import org.omwg.logicalexpression.Molecule;
+import org.omwg.logicalexpression.SubConceptMolecule;
 import org.omwg.logicalexpression.terms.Term;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.AnonymousIdTranslator;

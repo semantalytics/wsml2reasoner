@@ -19,12 +19,28 @@
 
 package org.wsml.reasoner.impl;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.*;
+import org.omwg.ontology.Attribute;
+import org.omwg.ontology.Axiom;
+import org.omwg.ontology.Concept;
+import org.omwg.ontology.DataValue;
+import org.omwg.ontology.Instance;
+import org.omwg.ontology.Ontology;
+import org.omwg.ontology.Type;
+import org.omwg.ontology.Value;
+import org.omwg.ontology.Variable;
+import org.omwg.ontology.WsmlDataType;
 import org.wsml.reasoner.ConjunctiveQuery;
 import org.wsml.reasoner.DatalogException;
 import org.wsml.reasoner.ExternalToolException;
@@ -34,10 +50,22 @@ import org.wsml.reasoner.api.InternalReasonerException;
 import org.wsml.reasoner.api.WSMLCoreReasoner;
 import org.wsml.reasoner.api.WSMLFlightReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
-import org.wsml.reasoner.api.inconsistency.*;
+import org.wsml.reasoner.api.inconsistency.AttributeTypeViolation;
+import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
+import org.wsml.reasoner.api.inconsistency.InconsistencyException;
+import org.wsml.reasoner.api.inconsistency.MaxCardinalityViolation;
+import org.wsml.reasoner.api.inconsistency.MinCardinalityViolation;
+import org.wsml.reasoner.api.inconsistency.NamedUserConstraintViolation;
+import org.wsml.reasoner.api.inconsistency.UnNamedUserConstraintViolation;
+import org.wsml.reasoner.api.inconsistency.UserConstraintViolation;
 import org.wsml.reasoner.builtin.kaon2.Kaon2Facade;
 import org.wsml.reasoner.builtin.mins.MinsFacade;
-import org.wsml.reasoner.transformation.*;
+import org.wsml.reasoner.transformation.AnonymousIdUtils;
+import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
+import org.wsml.reasoner.transformation.ConstraintReplacementNormalizer;
+import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
+import org.wsml.reasoner.transformation.LloydToporNormalizer;
+import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsml.reasoner.transformation.le.LloydToporRules;
 import org.wsml.reasoner.transformation.le.LogicalExpressionNormalizer;
 import org.wsml.reasoner.transformation.le.LogicalExpressionTransformer;
@@ -45,12 +73,11 @@ import org.wsml.reasoner.transformation.le.MoleculeDecompositionRules;
 import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
 import org.wsml.reasoner.transformation.le.TopDownLESplitter;
 import org.wsml.reasoner.transformation.le.TransformationRule;
-import org.wsmo.common.*;
+import org.wsmo.common.IRI;
+import org.wsmo.common.Identifier;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
-
-import wsml2reasoner.normalization.*;
 
 /**
  * A prototypical implementation of a reasoner for WSML Core and WSML Flight.
