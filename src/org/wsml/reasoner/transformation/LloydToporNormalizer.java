@@ -19,14 +19,21 @@
  */
 package org.wsml.reasoner.transformation;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import org.omwg.logicalexpression.*;
-import org.omwg.ontology.*;
-import org.wsml.reasoner.impl.*;
-import org.wsml.reasoner.transformation.le.*;
-import org.wsmo.common.exception.*;
-import org.wsmo.factory.*;
+import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.ontology.Axiom;
+import org.omwg.ontology.Ontology;
+import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsml.reasoner.transformation.le.LloydToporRules;
+import org.wsml.reasoner.transformation.le.LogicalExpressionTransformer;
+import org.wsml.reasoner.transformation.le.TopDownLESplitter;
+import org.wsml.reasoner.transformation.le.TransformationRule;
+import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.factory.WsmoFactory;
 
 public class LloydToporNormalizer implements OntologyNormalizer {
     protected LogicalExpressionTransformer leTransformer;

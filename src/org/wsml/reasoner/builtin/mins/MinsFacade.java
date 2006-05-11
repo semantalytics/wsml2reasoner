@@ -18,26 +18,51 @@
  */
 package org.wsml.reasoner.builtin.mins;
 
-import java.util.*;
-import java.util.logging.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.deri.mins.*;
+import org.deri.mins.Atom;
+import org.deri.mins.Body;
+import org.deri.mins.DB;
+import org.deri.mins.GroundAtom;
+import org.deri.mins.Head;
 import org.deri.mins.Rule;
-import org.deri.mins.api.*;
-import org.deri.mins.builtins.*;
-import org.deri.mins.terms.*;
-import org.deri.mins.terms.concrete.*;
-import org.deri.wsmo4j.io.parser.wsml.*;
-import org.omwg.logicalexpression.terms.*;
+import org.deri.mins.RuleSet;
+import org.deri.mins.Substitution;
+import org.deri.mins.api.DBInterface;
+import org.deri.mins.builtins.BuiltinBody;
+import org.deri.mins.builtins.BuiltinConfig;
+import org.deri.mins.builtins.Equal;
+import org.deri.mins.builtins.IsInteger;
+import org.deri.mins.builtins.IsNum;
+import org.deri.mins.builtins.IsString;
+import org.deri.mins.terms.BooleanTerm;
+import org.deri.mins.terms.ConstTerm;
+import org.deri.mins.terms.IntegerTerm;
+import org.deri.mins.terms.NumTerm;
+import org.deri.mins.terms.StringTerm;
+import org.deri.wsmo4j.io.parser.wsml.TempVariable;
+import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.*;
+import org.omwg.ontology.ComplexDataValue;
+import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.*;
+import org.omwg.ontology.WsmlDataType;
+import org.wsml.reasoner.ConjunctiveQuery;
+import org.wsml.reasoner.DatalogReasonerFacade;
+import org.wsml.reasoner.ExternalToolException;
 import org.wsml.reasoner.Literal;
-import org.wsml.reasoner.api.*;
-import org.wsml.reasoner.impl.*;
-import org.wsmo.common.*;
-import org.wsmo.factory.*;
+import org.wsml.reasoner.UnsupportedFeatureException;
+import org.wsml.reasoner.WSML2DatalogTransformer;
+import org.wsml.reasoner.api.InternalReasonerException;
+import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.common.IRI;
+import org.wsmo.factory.WsmoFactory;
 
 /**
  * Package: package org.wsml.reasoner.datalog.wrapper.mins;

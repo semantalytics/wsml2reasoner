@@ -1,15 +1,33 @@
 package org.wsml.reasoner.transformation;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
-import org.omwg.logicalexpression.*;
-import org.omwg.logicalexpression.terms.*;
-import org.omwg.ontology.*;
-import org.wsml.reasoner.api.*;
-import org.wsml.reasoner.impl.*;
-import org.wsmo.common.*;
-import org.wsmo.common.exception.*;
-import org.wsmo.factory.*;
+import org.omwg.logicalexpression.Atom;
+import org.omwg.logicalexpression.AttributeConstraintMolecule;
+import org.omwg.logicalexpression.AttributeValueMolecule;
+import org.omwg.logicalexpression.CompoundMolecule;
+import org.omwg.logicalexpression.Conjunction;
+import org.omwg.logicalexpression.Constraint;
+import org.omwg.logicalexpression.LogicProgrammingRule;
+import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.MembershipMolecule;
+import org.omwg.logicalexpression.NegationAsFailure;
+import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.Axiom;
+import org.omwg.ontology.Ontology;
+import org.omwg.ontology.Variable;
+import org.wsml.reasoner.api.InternalReasonerException;
+import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.common.IRI;
+import org.wsmo.common.Identifier;
+import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.factory.LogicalExpressionFactory;
+import org.wsmo.factory.WsmoFactory;
 
 public class ConstraintReplacementNormalizer implements OntologyNormalizer {
     private static final String PREFIX = "http://www.wsmo.org/reasoner/";
