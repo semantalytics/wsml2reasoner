@@ -1,6 +1,12 @@
 package reasoner;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,11 +20,17 @@ import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.InternalReasonerException;
 import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
+import org.wsmo.common.TopEntity;
+import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
+import org.wsmo.wsml.Parser;
+import org.wsmo.wsml.ParserException;
 
 public class OntologyRegistrationTest extends TestCase {
 
@@ -27,6 +39,8 @@ public class OntologyRegistrationTest extends TestCase {
     private LogicalExpressionFactory leFactory;
 
     private WSMLReasoner wsmlReasoner;
+
+    private Parser parser; 
 
     public static void main(String[] args) {
         junit.textui.TestRunner.run(OntologyRegistrationTest.class);
@@ -120,11 +134,52 @@ public class OntologyRegistrationTest extends TestCase {
     protected void setUp() throws Exception {
         WSMO4JManager wsmoManager = new WSMO4JManager();
         leFactory = wsmoManager.getLogicalExpressionFactory();
-
         wsmoFactory = wsmoManager.getWSMOFactory();
-
-        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
-                .createWSMLFlightReasoner();
+        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLFlightReasoner();
+		parser = Factory.createParser(null);
     }
+
+    /* This triggers a bug in MINS where it gets confused about
+     * the indexing of an array. It's occurs when we register and deregister ontologies
+     * in particular sequences. It's one of these bugs that are not easy to track down and
+     * make unit tests for, because the /seems/ behavior varies.
+     * This piece of code will fail on the registration of o14 most of the time, but if you
+     * run it enough time then you'll see it also fail on o13 and others.
+     */
+    public void testIntenseOntologyRegistration() throws Exception {
+        Map<String, Object> c = new HashMap<String, Object>();
+        c.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, BuiltInReasoner.MINS);
+        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLFlightReasoner(c); 		
+		String path = "files" + File.separator;
+
+		parser.parse(new FileReader(path + "MoonOntology.wsml"));
+		parser.parse(new FileReader(path + File.separator + "WSMoon.wsml"));
+	
+		parseRegisterDeregister(path + "o01-Customer1.wsml");
+		parseRegisterDeregister(path + "o02-orderReq.wsml");
+		parseRegisterDeregister(path + "o03-shipAddr.wsml");
+		parseRegisterDeregister(path + "o04-addLineItem1.wsml");
+		parseRegisterDeregister(path + "o05-searchCustomerResp1.wsml");
+		parseRegisterDeregister(path + "o06-searchCustomerReq.wsml");
+		parseRegisterDeregister(path + "o07-ContactInf.wsml");
+		parseRegisterDeregister(path + "o08-addLineItem2.wsml");
+		parseRegisterDeregister(path + "o09-billToAddr.wsml");	
+		parseRegisterDeregister(path + "o10-item2.wsml");
+		parseRegisterDeregister(path + "o11-item1.wsml");
+		parseRegisterDeregister(path + "o12-closeReq.wsml");
+		parseRegisterDeregister(path + "o13-contact1.wsml");
+		parseRegisterDeregister(path + "o14-Address1.wsml");
+       }
+
+	private void parseRegisterDeregister(String filePath) throws Exception {
+		TopEntity[] topEntities = parser.parse(new FileReader(filePath));
+		Ontology onto = (Ontology) topEntities[0];
+		Set<Ontology> ontos = new HashSet<Ontology>();
+		ontos.add(onto);
+		Set<IRI> iris = new HashSet<IRI>();
+		iris.add((IRI)onto.getIdentifier());
+		wsmlReasoner.registerOntologies(ontos);
+		wsmlReasoner.deRegisterOntology(iris);
+	}
 
 }
