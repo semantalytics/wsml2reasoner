@@ -63,11 +63,12 @@ public class Martin extends BaseReasonerTest {
     }
 
     /**
-     * 
+     * This function tests the query: ?x[?att ofType ?y] on an ontologgy with a Concept having an
+     * attirubte.
      * 
      * @throws Exception
      */
-    public void testMMMM() throws Exception {
+    public void testConceptWithAttribute() throws Exception {
     	String test = getOntHeader() +
     			"concept c attr ofType integer ";
         TopEntity[] topEntity = parser.parse(new StringBuffer(test));
