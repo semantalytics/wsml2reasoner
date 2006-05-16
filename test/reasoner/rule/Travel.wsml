@@ -71,32 +71,38 @@ concept irishCity
 
 instance euro memberOf currency
 
-instance dolar memberOf currency
+instance dollar memberOf currency
 
 instance Dublin memberOf irishCity
 
 instance Galway memberOf irishCity
 
-axiom MapingRule1
+axiom hasVoucher
      definedBy 
-          f(?x, ?y) memberOf travelVoucher
+          f(?x) memberOf travelVoucher
 			:-
-			?x memberOf ticket 
-			[firstName hasValue ?f] and
-		 	?y memberOf customer
-		 	[firstName hasValue ?f].
+			?x memberOf ticket.
 		 	
+axiom hasValidVoucher
+     definedBy 
+          f(?x, ?y) memberOf validVoucher
+			:-
+			?x memberOf ticket
+			[firstName hasValue ?q] and
+			?y memberOf customer
+			[firstName hasValue ?q].
+			
 instance my_trainTicket1 memberOf ticket
-	firstName hasValue Uwe
+	firstName hasValue Scruffy
 
 instance my_trainTicket2 memberOf ticket
 	firstName hasValue Graham
 	
 instance customer1 memberOf customer
-	firstName hasValue Tim
+	firstName hasValue Scruffy
 	
 instance customer2 memberOf customer
-	firstName hasValue Uwe
+	firstName hasValue Graham
 		
 instance my_trainTicket3 memberOf ticket
 	firstName hasValue Uwe		
