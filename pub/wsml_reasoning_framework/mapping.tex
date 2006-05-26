@@ -175,7 +175,15 @@ constant that represents a WSML instance and one that represents a
 WSML concept to state that the instance is in the extension of
 this concept.
 
-In contrast to a direct mapping from WSML to datalog with 
+In contrast to a direct mapping from WSML to datalog with
+concepts, attributes and instances mapping to unary predicates,
+binary predicates and constants, respectively, this indirect
+mapping allows for the WSML metamodelling facilities.
+Metamodelling allows an entity to be a concept and an instance at
+the same time. By representing a WSML entity as a datalog
+constant, it could, for example, fill both the first as well as
+the second argument of e.g.\ the predicate \pmo, in which case it
+is interpreted as both an instance and a concept.
 
 \begin{figure}[tb]
         \includegraphics[width=8cm]{figures/meta}
