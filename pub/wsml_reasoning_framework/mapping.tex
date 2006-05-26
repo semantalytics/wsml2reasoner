@@ -53,25 +53,19 @@ according to \cite{wsml-spec}(Table 8.1). \sgr{give the complete
 conversion table ??}
 
 To give an example, the WSML fragment
-\begin{quote}
 \begin{lstlisting}[style=wsml]
 concept C subConceptOf D
     r ofType (0 2) T
 instance a memberOf C
     r hasValue b,c
 \end{lstlisting}
-\end{quote}
 is translated by \transtxt{axiom} to the following logical
 expressions.
-
-\begin{quote}
 \begin{lstlisting}[style=wsml]
-C subConceptOf D.%
-!- ?x memberOf C and ?x[r hasValue ?y] and naf ?y memberOf T.%
-!- ?x memberOf C and ?x[r hasValue ?y1, r hasValue ?y2] and ?y1 != ?y2.%
+C subConceptOf D. C[r ofType T].
+!- ?x memberOf C and ?x[r hasValue?y1, r hasValue ?y2] and ?y1 != ?y2.
 a memberOf C.  a hasValue b,c.
 \end{lstlisting}
-\end{quote}
 
 \paragraph{Normalization} -- The transformation \transtxt{norm} is
 applied to normalize WSML logical expressions as a mapping
@@ -88,15 +82,16 @@ well as decomposition of complex WSML molecules (see
 \mapsto \powset{\LE}$ to flatten the complex WSML logical
 expressions, producing simple rules according to the Lloyd-Topor
 transformations \cite{lloyd-topor} as follows.
+
 \begin{center}
 \begin{tabular}{|c|c|}
   \hline
   % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
   \emph{original expression} & \emph{simplified rule(s)} \\
   \hline
-  $H_1 \wedge H_2 \wedge \dots \wedge H_n \leftarrow B$ & $H_1 \leftarrow B , H_2 \leftarrow B , \dots , H_n \leftarrow B$ \\
+  $H_1 \wedge \dots \wedge H_n \leftarrow B$ & $H_1 \leftarrow B , \dots , H_n \leftarrow B$ \\
   $H_1 \leftarrow H_2 \leftarrow B$ & $H_1 \leftarrow H_2 \wedge B$ \\
-  $H \leftarrow B_1 \vee B_2 \vee \dots \vee B_n$ & $H \leftarrow B_1 , H \leftarrow B_2 , \dots , H \leftarrow B_n$ \\
+  $H \leftarrow B_1 \vee \dots \vee B_n$ & $H \leftarrow B_1 , \dots , H \leftarrow B_n$ \\
   \hline
 \end{tabular}
 \end{center}
@@ -154,18 +149,43 @@ with respect to the meta-level axioms discussed next.
 -- describe how a fixed set of rules implements (part of) the WSML semantics during reasoning \\
 
 The mapping from WSML to datalog in the reasoning framework works
-such that all WSML-identifiable entities, namely concepts,
-instances, attributes etc., are mapped to datalog instances.
+such that each WSML-identifiable entity, i.e. concepts, instances,
+attributes etc., is mapped to an instance (or logical constant) in
+datalog, as depictef in Figure \ref{fig:meta}. There, the concepts
+$C_1, C_2$ as well as the instances $I_1, I_2$ and the attribute
+$a$ are mapped to constants such as $I_{C_1}$, $I_{I_1}$ or $I_a$
+in datalog, representing the original WSML entities on the
+instance level.
+
+Accordingly, the various special-purpose relations that hold
+between WSML entities, such as \wsml{subConceptOf},
+\wsml{memberOf} or \wsml{hasValue}, are mapped to datalog
+predicates that form a meta-level vocabulary that reflects the
+WSML language constructs. They are applied to the datalog
+instances that represent the WSML concepts instances and
+attributes. Table \ref{tab:meta-level} shows all the meta-level
+predicates together with the WSML language construct they stand
+for. The facts listed in Figure \ref{fig:meta} illustrate the use
+of the meta-level predicates. For example, the predicate \psco
+takes two datalog constants as arguments that represent WSML
+concepts to state that the concept represented by the first
+argument is a subconcept of the one represented by the second
+argument; on the other hand, the predicate \pmo takes a datalog
+constant that represents a WSML instance and one that represents a
+WSML concept to state that the instance is in the extension of
+this concept.
+
+In contrast to a direct mapping from WSML to datalog with 
 
 \begin{figure}[tb]
-        \includegraphics[width=11cm]{figures/meta}
+        \includegraphics[width=8cm]{figures/meta}
         \centering
     \caption{Meta-level predicates and axioms for realising the WSML semantics. \label{fig:meta}}
 \end{figure}
 
 
-\def\filler{\quad}
-\begin{table}[b]\label{tab:LE2datalog}\centering
+\def\filler{\phantom{l}}
+\begin{table}[tb]\label{tab:meta-level}\centering
 \begin{tabular}{|l|l|}
   \hline
   \multicolumn{2}{|l|}{\emph{Meta-Level Predicates}} \\
@@ -176,13 +196,18 @@ instances, attributes etc., are mapped to datalog instances.
   \filler $\phval(I,a,V)$ & $I[a$ \wsml{hasValue} $V]$ \\
   \filler $\pitype(C,a,T)$ & $C[a$ \wsml{impliesType} $T]$ \\
   \filler $\potype(C,a,T)$ & $C[a$ \wsml{ofType} $T]$ \\
-  \hline
+  \hline\hline
   \multicolumn{2}{|l|}{\emph{Meta-Level Axioms}} \\
+  \hline
   \multicolumn{2}{|l|}{\filler $\psco(C_1,C_3) \leftarrow \psco(C_1,C_2) \wedge \psco(C_2,C_3)$} \\
   \multicolumn{2}{|l|}{\filler $\pmo(I,C_2) \leftarrow \pmo(I,C_1) \wedge \psco(C_1,C_2)$} \\
-  \multicolumn{2}{|l|}{\filler $\pmo(V,C_2) \leftarrow \pitype(C_1,a,C_2) \wedge \pmo(I,C_1) \wedge \phval(I,a,V)$} \\
-  \multicolumn{2}{|l|}{\filler $ \leftarrow \potype(C_1,a,C_2) \wedge \pmo(I,C_1) \wedge \phval(I,a,V) \wedge \neg \pmo(V,C_2)$} \\
-  \hline
+%  \multicolumn{2}{|l|}{\filler $\pmo(V,C_2) \leftarrow \pitype(C_1,a,C_2) \wedge \pmo(I,C_1) \wedge \phval(I,a,V)$} \\
+  \multicolumn{2}{|l|}{\filler $\pmo(V,C_2) \leftarrow \pitype(C_1,a,C_2) \wedge \pmo(I,C_1)$} \\
+  \multicolumn{2}{|l|}{\filler \phantom{$\pmo(V,C_2) \leftarrow$} \qquad $\wedge \phval(I,a,V)$} \\
+%  \multicolumn{2}{|l|}{\filler $ \leftarrow \potype(C_1,a,C_2) \wedge \pmo(I,C_1) \wedge \phval(I,a,V) \wedge \neg \pmo(V,C_2)$} \\
+  \multicolumn{2}{|l|}{\filler $ \leftarrow \potype(C_1,a,C_2) \wedge \pmo(I,C_1)$} \\
+  \multicolumn{2}{|l|}{\filler $ \phantom{\leftarrow} \qquad \wedge \phval(I,a,V) \wedge \neg \pmo(V,C_2)$} \\
+ \hline
 \end{tabular}
 \caption{Meta-level axioms and predicates for WSMl semantics in
 datalog.}
