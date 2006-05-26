@@ -8,6 +8,15 @@
 \def\P{\ensuremath{\mathcal{P}}\xspace}
 \newcommand{\powset}[1]{\ensuremath{2^{#1}}\xspace}
 
+% -- meta-level predicates
+\newcommand{\predicate}[1]{\ensuremath{p_{#1}}\xspace}
+\newcommand{\predsubtxt}[1]{\mathrm{\tt #1}}
+\def\psco{\predicate{\predsubtxt{sco}}}
+\def\pmo{\predicate{\predsubtxt{mo}}}
+\def\phval{\predicate{\predsubtxt{hval}}}
+\def\pitype{\predicate{\predsubtxt{itype}}}
+\def\potype{\predicate{\predsubtxt{otype}}}
+
 \section{Realistion of WSML Reasoning through a Mapping to Datalog\label{sec:mapping}}
 -- briefly sketch the idea of reasoning via rule based inferencing \\
 
@@ -145,8 +154,40 @@ with respect to the meta-level axioms discussed next.
 -- describe how a fixed set of rules implements (part of) the WSML semantics during reasoning \\
 
 The mapping from WSML to datalog in the reasoning framework works
-such that all WSMl-identifiable entities, namely concepts,
+such that all WSML-identifiable entities, namely concepts,
 instances, attributes etc., are mapped to datalog instances.
+
+\begin{figure}[tb]
+        \includegraphics[width=11cm]{figures/meta}
+        \centering
+    \caption{Meta-level predicates and axioms for realising the WSML semantics. \label{fig:meta}}
+\end{figure}
+
+
+\def\filler{\quad}
+\begin{table}[b]\label{tab:LE2datalog}\centering
+\begin{tabular}{|l|l|}
+  \hline
+  \multicolumn{2}{|l|}{\emph{Meta-Level Predicates}} \\
+  \filler \begin{small}Predicate\end{small} & \begin{small}WSML construct\end{small} \\
+  \hline
+  \filler $\psco(C_{sub},C_{sup})$ \qquad\qquad & $C_{sub}$ \wsml{subConceptOf} $C_{sup}$ \\
+  \filler $\pmo(I,C)$ & $I$ \wsml{memberOf} $C$ \\
+  \filler $\phval(I,a,V)$ & $I[a$ \wsml{hasValue} $V]$ \\
+  \filler $\pitype(C,a,T)$ & $C[a$ \wsml{impliesType} $T]$ \\
+  \filler $\potype(C,a,T)$ & $C[a$ \wsml{ofType} $T]$ \\
+  \hline
+  \multicolumn{2}{|l|}{\emph{Meta-Level Axioms}} \\
+  \multicolumn{2}{|l|}{\filler $\psco(C_1,C_3) \leftarrow \psco(C_1,C_2) \wedge \psco(C_2,C_3)$} \\
+  \multicolumn{2}{|l|}{\filler $\pmo(I,C_2) \leftarrow \pmo(I,C_1) \wedge \psco(C_1,C_2)$} \\
+  \multicolumn{2}{|l|}{\filler $\pmo(V,C_2) \leftarrow \pitype(C_1,a,C_2) \wedge \pmo(I,C_1) \wedge \phval(I,a,V)$} \\
+  \multicolumn{2}{|l|}{\filler $ \leftarrow \potype(C_1,a,C_2) \wedge \pmo(I,C_1) \wedge \phval(I,a,V) \wedge \neg \pmo(V,C_2)$} \\
+  \hline
+\end{tabular}
+\caption{Meta-level axioms and predicates for WSMl semantics in
+datalog.}
+\end{table}
+
 
 \subsection{Mapping WSML Reasoning Tasks to Datalog Querying}
 -- describe how to realise WSML satisfiability and entailment to datalog querying \\
