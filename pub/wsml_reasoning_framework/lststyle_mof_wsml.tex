@@ -1,0 +1,56 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%wsmo listings
+\lstdefinelanguage{MOF}{
+  alsodigit=-,%
+  morekeywords={Class,type,multiplicity,single-valued,sub-Class},
+  sensitive=true
+}
+
+\lstdefinestyle{mof}{
+ language=MOF,
+ basicstyle=\scriptsize\sffamily,
+ keywordstyle=\bfseries,
+ showstringspaces=false,
+ flexiblecolumns=true,
+ frame=tb,
+ xleftmargin=15pt,
+ xrightmargin=15pt,
+}
+
+%wsml listing
+\lstdefinelanguage{WSML}{
+  morekeywords={wsmlVariant,namespace,nonFunctionalProperties,endNonFunctionalProperties,importsOntology,
+    usesMediator,ontology,goal,ooMediator,ggMediator,wgMediator,wwMediator,webService,concept,
+    subConceptOf,ofType,impliesType,transitive,symmetric,inverseOf,reflexive,relation,subRelationOf,
+    function,instance,relationInstance,memberOf,hasValue,axiom,definedBy,source,target,useService,
+    capability,precondition,postcondition,assumption,effect,interface,choreography,orchestration,
+    exists, forAll, implies, impliedBy, equivalent},
+  sensitive=true,
+  morestring=[b]",morestring=[d]’,
+  morecomment=[s]{/*}{*/},
+}
+
+\lstdefinestyle{wsml}{
+ language=WSML,
+ basicstyle=\scriptsize\sffamily,
+ keywordstyle=\bfseries,
+ showstringspaces=false,
+ mathescape=true,
+ flexiblecolumns=true,
+ frame=tb,
+ xleftmargin=15pt,
+ xrightmargin=15pt,
+}
+
+
+\lstdefinestyle{xml}{
+ language=XML,
+ basicstyle=\scriptsize\sffamily,
+ keywordstyle=\bfseries,
+ showstringspaces=false,
+ mathescape=true,
+ frame=tb,
+ flexiblecolumns=true,
+ xleftmargin=15pt,
+ xrightmargin=15pt,
+}

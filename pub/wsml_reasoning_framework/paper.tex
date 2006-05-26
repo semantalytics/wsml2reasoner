@@ -1,0 +1,45 @@
+\documentclass[runningheads]{llncs}
+\usepackage{graphicx}
+\usepackage{epsfig}
+\usepackage{xspace}
+\usepackage{amssymb}
+\usepackage{listings}
+
+\newcommand{\sgr}[1]{\textbf{sgr: {#1}}}
+\newcommand{\wsml}[1]{\begin{scriptsize}{\sf {\bf #1}}\end{scriptsize}}
+
+\begin{document}
+
+\input{lststyle_mof_wsml}
+
+\title{A Reasoning Framework for Rule-Based WSML}
+
+\author{Stephan Grimm\inst{1} \and Uwe Keller\inst{2} \and Holger Lausen\inst{2} \and G\'abor Nagyp\'al\inst{1}\newline\textbf{order of authors is currently alphabetic}}
+\institute{
+    FZI Research Center for Information Technologies at the University of Karlsruhe\\
+    Karlsruhe, Germany\\
+    \email{$\{$grimm,nagypal$\}$@fzi.de}\\
+\and
+    Digital Enterprise Research Institute\\
+    Innsbruck, Austria\\
+    \email{$\{$keller,lausen$\}$@deri.org}\\
+}
+
+\maketitle
+
+\begin{abstract}
+\input{abstract}
+\end{abstract}
+
+\input{motivation}
+\input{wsml}
+\input{mapping}
+\input{debugging}
+\input{framework}
+\input{usecase}
+\input{outlook}
+
+\bibliographystyle{plain}
+\bibliography{paper}
+
+\end{document}

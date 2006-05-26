@@ -1,0 +1,155 @@
+\newcommand{\smtxtit}[1]{\begin{scriptsize}\ensuremath{\textit{#1}}\end{scriptsize}}
+\newcommand{\trans}[1]{\ensuremath{\tau_{#1}}\xspace}
+\newcommand{\transtxt}[1]{\trans{\smtxtit{#1}}}
+%\newcommand{\transmap}[3]{\ensuremath{\tau_{#1}^{{#2},{#3}}}\xspace}
+%\newcommand{\transtxtmap}[3]{\transmap{\smtxtit{#1}}{#2}{#3}}
+\def\LE{\ensuremath{\mathcal{L\!E}}\xspace}
+\def\O{\ensuremath{\mathcal{O}}\xspace}
+\def\P{\ensuremath{\mathcal{P}}\xspace}
+\newcommand{\powset}[1]{\ensuremath{2^{#1}}\xspace}
+
+\section{Realistion of WSML Reasoning through a Mapping to Datalog\label{sec:mapping}}
+-- briefly sketch the idea of reasoning via rule based inferencing \\
+
+The semantics of rule-based WSML is defined via a mapping to
+datalog with (in)equality and integrity constraints. \sgr{probably
+use a special denotation like $\textit{datalog}^{!=,IC}$, which
+then has to be introduced in Section 2} Thus, the reasoning
+framework performs various transformations to convert an original
+ontology in WSML syntax into datalog rules. To maintain the
+semantics of more complex WSML language constructs that cannot
+directly be expressed in datalog, a fixed set of rules form the
+meta-level axioms that realise part of the WSML semantics during
+reasoning. Finally, the WSML reasoning tasks of knowledge base
+satisfiability and instance retrieval are realised by datalog
+querying via calls to an underlying datalog inference engine that
+is fed with the rules produced during transformation together with
+the meta-level axioms.
+
+\subsection{Transformation of WSML into Datalog}
+-- describe different transformation steps \\
+
+The transformation of a WSML ontology to datalog rules forms a
+pipeline of single transformation steps which are subsequently
+applied, starting from the original ontology.
+
+\paragraph{Axiomatization} -- In a first step, the transformation
+\transtxt{axiom} is applied as a mapping $\O \mapsto \powset{\LE}$
+from the set of all valid ontologies formulated in rule-based WSML
+to the powerset of all logical expressions that conform to
+rule-based WSML. \transtxt{axiom} converts all conceptual syntax
+elements, such as concept and attribute definitions or cardinality
+and type constraints, into appropriate logical expressions
+according to \cite{wsml-spec}(Table 8.1). \sgr{give the complete
+conversion table ??}
+
+To give an example, the WSML fragment
+\begin{quote}
+\begin{lstlisting}[style=wsml]
+concept C subConceptOf D
+    r ofType (0 2) T
+instance a memberOf C
+    r hasValue b,c
+\end{lstlisting}
+\end{quote}
+is translated by \transtxt{axiom} to the following logical
+expressions.
+
+\begin{quote}
+\begin{lstlisting}[style=wsml]
+C subConceptOf D.%
+!- ?x memberOf C and ?x[r hasValue ?y] and naf ?y memberOf T.%
+!- ?x memberOf C and ?x[r hasValue ?y1, r hasValue ?y2] and ?y1 != ?y2.%
+a memberOf C.  a hasValue b,c.
+\end{lstlisting}
+\end{quote}
+
+\paragraph{Normalization} -- The transformation \transtxt{norm} is
+applied to normalize WSML logical expressions as a mapping
+$\powset{\LE} \mapsto \powset{\LE}$. This normalization step
+reduces the complexity of WSML logical expressions according to
+\cite{wsml-spec}(Section 8.2) to make them better fit the simple
+syntactic form of literals in datalog rules. This reduction
+includes conversion to negation and disjunctive normal forms as
+well as decomposition of complex WSML molecules (see
+\cite{wsml-spec}).
+
+\paragraph{Lloyd-Topor Transformation} -- The transformation
+\transtxt{Lloyd-Topor} is applied as a mapping $\powset{\LE}
+\mapsto \powset{\LE}$ to flatten the complex WSML logical
+expressions, producing simple rules according to the Lloyd-Topor
+transformations \cite{lloyd-topor} as follows.
+\begin{center}
+\begin{tabular}{|c|c|}
+  \hline
+  % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
+  \emph{original expression} & \emph{simplified rule(s)} \\
+  \hline
+  $H_1 \wedge H_2 \wedge \dots \wedge H_n \leftarrow B$ & $H_1 \leftarrow B , H_2 \leftarrow B , \dots , H_n \leftarrow B$ \\
+  $H_1 \leftarrow H_2 \leftarrow B$ & $H_1 \leftarrow H_2 \wedge B$ \\
+  $H \leftarrow B_1 \vee B_2 \vee \dots \vee B_n$ & $H \leftarrow B_1 , H \leftarrow B_2 , \dots , H \leftarrow B_n$ \\
+  \hline
+\end{tabular}
+\end{center}
+
+After this step, the resulting WSML expressions have the form of
+proper datalog rules with a single head and conjunctive (possibly
+negated) body literals.
+
+\paragraph{Datalog Rule Generation} -- In a final step, the
+transformation \transtxt{datalog} is applied as a mapping
+$\powset{\LE} \mapsto \P$ from all valid logical expressions in
+rule-based WSML to the set of all datalog programs, yielding
+generic datalog rules that represent the content of the original
+WSML ontology. In this generic datalog program, all remaining
+WSML-specific language constructs, such as \wsml{subConceptOf} or
+\wsml{ofType}, are replaced by special meta-level predicates for
+which the semantics of the respective language construct is
+encoded in meta-level axioms as described in a further subsection.
+\begin{table}[b]\label{tab:LE2datalog}\centering
+\begin{tabular}{|l|c|}
+  \hline
+  bla & bla \\
+  \hline
+\end{tabular}
+\caption{Transformation from logical expressions in rule-based
+WSML to datalog including meta-level predicates.}
+\end{table}
+Table \ref{tab:LE2datalog} shows the mapping from WSML logical
+expressions to generic datalog including such meta-level
+predicates.
+
+Notice that the \wsml{memberOf} construct for instantiation is
+also mapped to an appropriate meta-level predicate instead of
+direct instantiation of the form $C(i)$, which is available in
+datalog. This decision was taken in order to facilitate the
+metamodelling capabilities of rule-based WSML, which allows an
+entity to be both an instance and class at the same time.
+\sgr{genauer darstellen für was welche metal-level Predikate
+erzeugt werden!}
+
+\bigskip
+
+Ultimately, the basic transformation pipeline for converting a
+rule-based WSML ontology into a datalog program is the following,
+constituted by the single transformation steps introduced before.
+\begin{displaymath}
+    \tau = \transtxt{datalog} \circ \transtxt{Lloyd-Topor} \circ \transtxt{norm} \circ \transtxt{axiom}
+\end{displaymath}
+As a mapping $\O \mapsto \P$, this chaining of the single steps is
+applied to a WSML ontology $O \in \O$ to yield a semantically
+equivalent datalog program $\tau (O) = P \in \P$ when interpreted
+with respect to the meta-level axioms discussed next.
+
+\subsection{Realising WSML Semantics through Meta Axioms}
+-- describe how a fixed set of rules implements (part of) the WSML semantics during reasoning \\
+
+The mapping from WSML to datalog in the reasoning framework works
+such that all WSMl-identifiable entities, namely concepts,
+instances, attributes etc., are mapped to datalog instances.
+
+\subsection{Mapping WSML Reasoning Tasks to Datalog Querying}
+-- describe how to realise WSML satisfiability and entailment to datalog querying \\
+
+\subsection{Realising Datatype Reasoning}
+-- describe how reasoning with datatypes is realised
