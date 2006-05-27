@@ -24,25 +24,26 @@
 \def\potype{\predicate{\predsubtxt{otype}}}
 \def\mlaxioms{\ensuremath{P_{\smtxtit{meta}}}\xspace}
 
-\section{Realistion of WSML Reasoning through a Mapping to Datalog\label{sec:mapping}}
+\section{Realizing WSML Reasoning through a Mapping to Datalog\label{sec:mapping}}
 -- briefly sketch the idea of reasoning via rule based inferencing \\
 
 The semantics of rule-based WSML is defined via a mapping to
 datalog with (in)equality and integrity constraints. \sgr{probably
 use a special denotation like $\textit{datalog}^{!=,IC}$, which
-then has to be introduced in Section 2} Thus, the reasoning
-framework performs various transformations to convert an original
-ontology in WSML syntax into datalog rules. To maintain the
-semantics of more complex WSML language constructs that cannot
-directly be expressed in datalog, a fixed set of rules form the
-meta-level axioms that realise part of the WSML semantics during
-reasoning. Finally, the WSML reasoning tasks of knowledge base
+then has to be introduced in Section 2} To make use of existing
+rule engines, the reasoning framework performs various
+transformations to convert an original ontology in WSML syntax
+into datalog rules. To maintain the semantics of more complex WSML
+language constructs that cannot directly be expressed in datalog,
+a fixed set of rules form the meta-level axioms that realise part
+of the WSML semantics during reasoning. Based on the transformed
+ontology, the WSML reasoning tasks of knowledge base
 satisfiability and instance retrieval are realised by datalog
 querying via calls to an underlying datalog inference engine that
 is fed with the rules produced during transformation together with
 the meta-level axioms.
 
-\subsection{Transformation of WSML into Datalog}
+\subsection{Transforming WSML to Datalog}
 -- describe different transformation steps \\
 
 The transformation of a WSML ontology to datalog rules forms a
@@ -51,13 +52,13 @@ applied, starting from the original ontology.
 
 \paragraph{Axiomatization} -- In a first step, the transformation
 \transax is applied as a mapping $\O \mapsto \powset{\LE}$ from
-the set of all valid ontologies formulated in rule-based WSML to
-the powerset of all logical expressions that conform to rule-based
-WSML. \transax converts all conceptual syntax elements, such as
-concept and attribute definitions or cardinality and type
-constraints, into appropriate logical expressions according to
+the set of all valid rule-based WSML ontologies to the powerset of
+all logical expressions that conform to rule-based WSML. \transax
+converts all conceptual syntax elements, such as concept and
+attribute definitions or cardinality and type constraints, into
+appropriate logical expressions according to
 \cite{wsml-spec}(Table 8.1). \sgr{give the complete conversion
-table ??}
+table instead of the following example ??}
 
 To give an example, the WSML fragment
 \begin{lstlisting}[style=wsml]
@@ -82,6 +83,10 @@ syntactic form of literals in datalog rules. This reduction
 includes conversion to negation and disjunctive normal forms as
 well as decomposition of complex WSML molecules. The various
 normalization steps are shown in Table \ref{tab:normalization}.
+\sgr{include this table or rather skip it??} After \transnorm has
+been applied, the resulting WSML logical expressions have the form
+of logic programming rules with no deep nesting of logical
+connectives.
 
 \begin{table}[tb]\label{tab:normalization}\centering
 \begin{footnotesize}
@@ -101,14 +106,14 @@ normalization steps are shown in Table \ref{tab:normalization}.
 \caption{Normalization of WSML logical expressions.}
 \end{table}
 
-
-
 \paragraph{Lloyd-Topor Transformation} -- The transformation
 \translt is applied as a mapping $\powset{\LE} \mapsto
 \powset{\LE}$ to flatten the complex WSML logical expressions,
 producing simple rules according to the Lloyd-Topor
-transformations \cite{lloyd-topor} as shown in Table
-\ref{tab:lloyd-topor}.
+transformations \cite{lloyd-topor}, as shown in Table
+\ref{tab:lloyd-topor}. \sgr{is the specification of the
+lloyd-topor transformations correct? (esp. the middle one with
+nested LP-rule and the lack of parenthesis)}
 \begin{table}[tb]\label{tab:lloyd-topor}\centering
 \begin{footnotesize}
 \begin{tabular}{|l|l|}
@@ -148,7 +153,6 @@ constructs, such as \wsml{subConceptOf} or \wsml{ofType}, are
 replaced by special meta-level predicates for which the semantics
 of the respective language construct is encoded in meta-level
 axioms as described in a further subsection.
-
 \begin{table}[b]\label{tab:LE2datalog}\centering
 \begin{footnotesize}
 \begin{tabular}{|l|l|}
@@ -174,23 +178,17 @@ axioms as described in a further subsection.
 WSML to datalog including meta-level predicates.}
 \end{table}
 Table \ref{tab:LE2datalog} shows the mapping from WSML logical
-expressions to generic datalog including such meta-level
-predicates.
-
-Notice that the \wsml{memberOf} construct for instantiation is
-also mapped to an appropriate meta-level predicate instead of
-direct instantiation of the form $C(i)$, which is available in
-datalog. This decision was taken in order to facilitate the
-metamodelling capabilities of rule-based WSML, which allows an
-entity to be both an instance and class at the same time.
-\sgr{genauer darstellen für was welche metal-level Predikate
-erzeugt werden!}
+expressions to datalog including the meta-level predicates \psco,
+\pmo, \phval, \pitype and \potype that represent their respective
+WSMl language constructs as can be seen from the mapping.
 
 \bigskip
 
-Ultimately, the basic transformation pipeline for converting a
-rule-based WSML ontology into a datalog program is the following,
-constituted by the single transformation steps introduced before.
+Ultimately, the basic\footnote{In Section \ref{sec:debugging} the
+transformation pipeline is modified to support debugging
+features.} transformation pipeline for converting a rule-based
+WSML ontology into a datalog program is the following, constituted
+by the single transformation steps introduced before.
 \begin{displaymath}
     \tau = \transdlog \circ \translt \circ \transnorm \circ \transax
 \end{displaymath}
@@ -209,8 +207,8 @@ with respect to the meta-level axioms discussed next.
 -- -- explain the intuition behind the various meta-level axioms \\
 
 The mapping from WSML to datalog in the reasoning framework works
-such that each WSML-identifiable entity, i.e. concepts, instances,
-attributes etc., is mapped to an instance (or logical constant) in
+such that each WSML-identifiable entity, i.e.\ concept, instance,
+attribute etc., is mapped to an instance (or logical constant) in
 datalog, as depicted in Figure \ref{fig:meta}. There, the concepts
 $C_1, C_2$ as well as the instances $I_1, I_2$ and the attribute
 $a$ are mapped to constants such as $I_{C_1}$, $I_{I_1}$ or $I_a$
@@ -223,16 +221,15 @@ between WSML entities, such as \wsml{subConceptOf},
 predicates that form a meta-level vocabulary for the WSML language
 constructs. These are the meta-level predicates that appear in
 Table \ref{tab:LE2datalog}, and which are applied to the datalog
-constants that represent the WSML concepts, instances and
-attributes. The facts listed in Figure \ref{fig:meta} illustrate
-the use of the meta-level predicates. For example, the predicate
-\psco takes two datalog constants as arguments that represent WSML
-concepts to state that the concept represented by the first
-argument is a subconcept of the one represented by the second
-argument; on the other hand, the predicate \pmo takes a datalog
-constant that represents a WSML instance and one that represents a
-WSML concept to state that the instance is in the extension of
-this concept.
+constants that represent the WSML entities. The facts listed in
+Figure \ref{fig:meta} illustrate the use of the meta-level
+predicates. For example, the predicate \psco takes two datalog
+constants as arguments that represent WSML concepts, to state that
+the concept represented by the first argument is a subconcept of
+the one represented by the second argument; on the other hand, the
+predicate \pmo takes a datalog constant that represents a WSML
+instance and one that represents a WSML concept, to state that the
+instance is in the extension of this concept.
 
 In contrast to a direct mapping from WSML to datalog with
 concepts, attributes and instances mapping to unary predicates,
@@ -242,7 +239,8 @@ Metamodelling allows an entity to be a concept and an instance at
 the same time. By representing a WSML entity as a datalog
 constant, it could, for example, fill both the first as well as
 the second argument of e.g.\ the predicate \pmo, in which case it
-is interpreted as both an instance and a concept.
+is interpreted as both an instance and a concept.\sgr{does this
+become clear or is there more that needs to be said?}
 
 \begin{figure}[tb]
         \includegraphics[width=8cm]{figures/meta}
