@@ -94,12 +94,16 @@ connectives.
   \hline
   \rule{0cm}{3.2mm}{\normalsize \emph{original expression}} & {\normalsize \emph{normalized expression}} \\
   \hline
-    $\transnorm(X$ \wsml{and} $(Y$ \wsml{or} $Z).)$ & $\transnorm(X)$ \wsml{and} $\transnorm(Y)$ \wsml{or} \\
-    & $\transnorm(X)$ \wsml{and} $\transnorm(Z).$ \\
-    \qquad$\dots$ & \\
-    $\transnorm(X$ \wsml{implies} $Y.)$ & $\transnorm(Y)$\wsml{\lprl}$\transnorm(X).$ \\
-    $\transnorm(X$ \wsml{impliedBy} $Y.)$ & $\transnorm(X)$\wsml{\lprl}$\transnorm(Y).$ \\
-    \qquad$\dots$ & \\
+    $\transnorm(X$ \wsml{and} $Y.)$ & $\transnorm(X)$ \wsml{and} $\transnorm(Y)$ \\[1ex]
+    $\transnorm(X$ \wsml{or} $Y.)$ & $\transnorm(X)$ \wsml{or} $\transnorm(Y)$ \\[1ex]
+    $\transnorm(X$ \wsml{and} $(Y$ \wsml{or} $Z).)$/ & $\transnorm(\transnorm(X)$ \wsml{and} $\transnorm(Y)$ \wsml{or} \\
+    $\transnorm((Y$ \wsml{or} $Z)$ \wsml{and} $X).)$  & $\phantom{\transnorm(}\transnorm(X)$ \wsml{and} $\transnorm(Z).)$ \\[1ex]
+    $\transnorm($ \wsml{naf} $ (X$ \wsml{and} $Y).)$ & $$ \wsml{naf} $ \transnorm(X)$ \wsml{or} $$ \wsml{naf} $ \transnorm(Y).$ \\[1ex]
+    $\transnorm($ \wsml{naf} $ (X$ \wsml{or} $Y).)$ & $$ \wsml{naf} $ \transnorm(X)$ \wsml{and} $$ \wsml{naf} $ \transnorm(Y).$ \\[1ex]
+    $\transnorm($ \wsml{naf} $ ($ \wsml{naf} $ X).)$ & $\transnorm(X)$ \\[1ex]
+    $\transnorm(X$ \wsml{implies} $Y.)$ & $\transnorm(Y)$\wsml{\lprl}$\transnorm(X).$ \\[1ex]
+    $\transnorm(X$ \wsml{impliedBy} $Y.)$ & $\transnorm(X)$\wsml{\lprl}$\transnorm(Y).$ \\[1ex]
+    $\transnorm(X[Y_1 , \dots , Y_n].)$ & $X[Y_1]$ \wsml{and} $\dots$ \wsml{and} $X[Y_n].$ \\[1ex]
   \hline
 \end{tabular}
 \end{footnotesize}
@@ -153,7 +157,7 @@ constructs, such as \wsml{subConceptOf} or \wsml{ofType}, are
 replaced by special meta-level predicates for which the semantics
 of the respective language construct is encoded in meta-level
 axioms as described in a further subsection.
-\begin{table}[b]\label{tab:LE2datalog}\centering
+\begin{table}[tb]\label{tab:LE2datalog}\centering
 \begin{footnotesize}
 \begin{tabular}{|l|l|}
   \hline
@@ -161,16 +165,17 @@ axioms as described in a further subsection.
   \hline
   $\transdlog(\{E_1, \dots , E_n\})$ & $\{\transdlog(E_1), \dots , \transdlog(E_n)\}$ \\
   $\transdlog($ \wsml{\cstr} $B.)$ & $\leftarrow \transdlog(B)$ \\
+  $\transdlog(H)$ & $\transdlog(H) \leftarrow$ \\
   $\transdlog(H$ \wsml{\lprl} $B.)$ & $\transdlog(H) \leftarrow \transdlog(B)$ \\
-  $\transdlog(X$ \wsml{and} $Y.)$ & $\transdlog(X) \wedge \transdlog(Y) \leftarrow$ \\
-  $\transdlog(C$ \wsml{subConceptOf} $D.)$ & $\psco(C,D) \leftarrow$ \\
-  $\transdlog(I$ \wsml{memberOf} $C.)$ & $\pmo(I,C) \leftarrow$ \\
-  $\transdlog(I[a$ \wsml{hasValue} $V].)$ & $\phval(I,a,V) \leftarrow$ \\
-  $\transdlog(C[a$ \wsml{impliesType} $T].)$ & $\pitype(C,a,T) \leftarrow$ \\
-  $\transdlog(C[a$ \wsml{ofType} $T].)$ & $\potype(C,a,T) \leftarrow$ \\
-  $\transdlog($\wsml{r}$(X_1, \dots , X_n).)$ & $r(X_1, \dots , X_n) \leftarrow$ \\
-  $\transdlog(X$ \wsml{=} $Y.)$ & $X = Y \leftarrow$ \\
-  $\transdlog(X$ \wsml{!=} $Y.)$ & $X \neq Y \leftarrow$ \\
+  $\transdlog(X$ \wsml{and} $Y.)$ & $\transdlog(X) \wedge \transdlog(Y)$ \\
+  $\transdlog(C$ \wsml{subConceptOf} $D.)$ & $\psco(C,D)$ \\
+  $\transdlog(I$ \wsml{memberOf} $C.)$ & $\pmo(I,C)$ \\
+  $\transdlog(I[a$ \wsml{hasValue} $V].)$ & $\phval(I,a,V)$ \\
+  $\transdlog(C[a$ \wsml{impliesType} $T].)$ & $\pitype(C,a,T)$ \\
+  $\transdlog(C[a$ \wsml{ofType} $T].)$ & $\potype(C,a,T)$ \\
+  $\transdlog($\wsml{r}$(X_1, \dots , X_n).)$ & $r(X_1, \dots , X_n)$ \\
+  $\transdlog(X$ \wsml{=} $Y.)$ & $X = Y$ \\
+  $\transdlog(X$ \wsml{!=} $Y.)$ & $X \neq Y$ \\
   \hline
 \end{tabular}
 \end{footnotesize}

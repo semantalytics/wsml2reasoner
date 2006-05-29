@@ -1,3 +1,9 @@
+\def\transdebug{\transtxt{debug}}
+\def\pcotype{\predicate{\predsubtxt{c\_otype}}}
+\def\pcmincard{\predicate{\predsubtxt{c\_mincard}}}
+\def\pcmaxcard{\predicate{\predsubtxt{c\_maxcard}}}
+\def\pcuser{\predicate{\predsubtxt{c\_user}}}
+
 \section{Debugging Support\label{sec:debugging}}
 -- briefly motivate debugging features for the ontology engineering process \\
 
@@ -6,3 +12,24 @@
 
 \subsection{Realisation of Debugging Features through Meta Axioms}
 -- describe how these debugging features are realised via an additional fixed set of rules \\
+
+\begin{table}[tb]\label{tab:debugging}\centering
+\begin{footnotesize}
+\begin{tabular}{|l|l|}
+  \hline
+  \rule{0cm}{3.2mm} {\normalsize \emph{Constraint}} & {\normalsize \emph{Rule}} \\
+  \hline
+  $\transdebug(C[a$ \wsml{ofType} $T.)$ & $\pcotype(C,a,T,I_C,I_{\neg T})$\wsml{\lprl}$\dots .$ \\
+  $\transdebug($\wsml{\cstr}$B_{mincard}.)$ & $\pcmincard(C,a,I)$\wsml{\lprl}$B_{mincard}.$ \\
+  $\transdebug($\wsml{\cstr}$B_{maxcard}.)$ & $\pcmaxcard(C,a,I)$\wsml{\lprl}$B_{maxcard}.$ \\
+  $\transdebug($\wsml{\cstr}$B_{user}.)$ & $\pcuser(ID)$\wsml{\lprl}$B_{user}.$ \\
+  \qquad \dots & \\
+  \hline
+\end{tabular}
+\end{footnotesize}
+\caption{Replacing constraints by rules for debugging.}
+\end{table}
+
+\begin{displaymath}
+    \tau = \transdlog \circ \translt \circ \transnorm \circ \transdebug \circ \transax
+\end{displaymath}
