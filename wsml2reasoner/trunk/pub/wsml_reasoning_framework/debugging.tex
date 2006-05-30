@@ -1,17 +1,84 @@
 \def\transdebug{\transtxt{debug}}
-\def\pcotype{\predicate{\predsubtxt{c\_otype}}}
-\def\pcmincard{\predicate{\predsubtxt{c\_mincard}}}
-\def\pcmaxcard{\predicate{\predsubtxt{c\_maxcard}}}
-\def\pcuser{\predicate{\predsubtxt{c\_user}}}
+\def\pvotype{\predicate{\predsubtxt{v\_otype}}}
+\def\pvmincard{\predicate{\predsubtxt{v\_mincard}}}
+\def\pvmaxcard{\predicate{\predsubtxt{v\_maxcard}}}
+\def\pvuser{\predicate{\predsubtxt{v\_user}}}
+\def\axiomid{\ensuremath{Ax_{I\!D}}}
 
 \section{Debugging Support\label{sec:debugging}}
--- briefly motivate debugging features for the ontology engineering process \\
+-- briefly motivate debugging for the ontology engineering process \\
+-- -- during the process of ontology engineering, a modeller easily produces erroneous contradictory information, which he needs to get aware of \\
+-- -- the source for contradictory information in rule-based WSML are primarily constraints \\
+-- -- with plain datalog mechanisms, modellers only get aware of whether some constraint is violated, i.e. whether the empty clause is derived from $P_O$ indicating that the original ontology $O$ contains erroneous modelling; the modeller is not informed about the type of problem and why the problem occurs \\
+-- -- our framework offers debugging features that allow for identifying violated constraints and involved WSML entities, which is achieved by replacing constraints by rules with special additional meta-level predicates in their head \\
 
-\subsection{Debugging Features to Support Ontology Development}
+\subsection{Identifying Constraint Violations}
 -- describe the kind of debugging features the framework supports and what they allow for \\
+-- -- in a WMSL ontology, constraints can be violated by the instance situation, making the ontology inconsistent \\
+-- -- two things a of interest to the modeller when a constraint is violated: a) the type of constraint and the entities involved \\
+-- -- $<$ give an example of a violated constraint to illustrate what information is relevant for the modeller in such a situation $>$ \\
+-- -- in the different situations of violation of different types of constraints, different information is relevant for the modeller to repair the erroneous situation  \\
+-- -- $<$ list different types of violations $>$ \\
 
-\subsection{Realisation of Debugging Features through Meta Axioms}
--- describe how these debugging features are realised via an additional fixed set of rules \\
+    \subparagraph{Attribute Type Violation} -- An attribute type
+    constraint of the form $C[a$ \wsml{ofType} $T]$ is violated in
+    any situation where an instance of the concept $C$ has value
+    $V$ for the attribute $a$ but where $V$ cannot be derived to
+    belong to the extension of the type $T$. Here, $T$ can be
+    either a concept or a datatype, while $V$ is then an instance
+    or a data value, accordingly. In such a situation, an ontology
+    engineer is particularly interested in the attribute value $V$
+    that caused the constraint violation, together with the
+    attribute $a$ and the expected type $T$ which the value $V$
+    failed to adhere to.
+
+    \subparagraph{Minimum Cardinality Violation} -- A minimum
+    cardinality constraint, contained in a concept definition of
+    the form \wsml{concept} $C$ $a (n *)$, is violated in any
+    situation where the number of distinguished values of the
+    attribute $a$ for some instance $I$ of the concept $C$ is less
+    than the specified cardinality $n$. In such a situation, an
+    ontology engineer is particularly interested in the instance
+    $I$ that failed to have a sufficient number of attribute
+    values, together with the actual attribute $a$. (Information about
+    how many values were missing can be learned by querying the
+    ontology separately.)
+
+    \subparagraph{Maximum Cardinality Violation} -- A maximum
+    cardinality constraint, contained in a concept definition of
+    the form \wsml{concept} $C$ $a (0 n)$, is violated in any
+    situation where the number of distinguished values of the
+    attribute $a$ for some instance $I$ of the concept $C$ exceeds
+    the specified cardinality $n$. Again, here an ontology
+    engineer is particulary interested in the instance $I$ for which
+    the number of attribute values has been exceeded, together the
+    actual attribute $a$.
+
+    \subparagraph{User-Defined Constraint Violation} -- A
+    user-defined constraint, contained in an axiom definition of
+    the form \wsml{axiom} \axiomid \wsml{definedBy} $B.$, is
+    violated in any situation where the body $B$ of the constraint
+    evaluates to true for any instantiation of its free variables.
+    In such a situation, the information which helps an ontology
+    engineer to repair an erroneous situation is specific to the user-defined
+    constraint given by $B$ and cannot be specified in a generic
+    manner. However, a generic framework can at least identify the
+    violated constraint by pointing out the name \axiomid of the axiom.
+
+
+\subsection{Debugging through Meta-Level Reasoning}
+-- describe how these debugging features are realised via additional meta-level predicates an additional fixed set of rules \\
+-- -- in our framework we realise the debugging features for identifying constraint violations together with involved entities by replacing constraints with rules \\
+-- -- these rules have additional debugging-specific meta-level predicates in their heads which are instantiated when a constraint body evaluates to true; this way the debugging information is derived by datalog rules and can be queried for \\
+-- -- the replacements of constraints is included in the transformation pipeline $\tau$ as an additional step \\
+\begin{displaymath}
+    \tau = \transdlog \circ \translt \circ \transnorm \circ \transdebug \circ \transax
+\end{displaymath}
+-- -- the additional transformation step $\transdebug$ is applied after conceptual syntax has been resolved, replacing constraints on the level of WSML logical expressions \\
+-- -- the detailed constrained replacement performed by \transdebug can be seen from Table \ref{tab:debugging} \\
+-- -- the body variables are supposed to match the appropriate form of constraint body; notice: the semantics of ofType is encoded in the meta-level axioms \mlaxioms, so ofType-constraints can't be as easily replaced but have to be generated by \transdebug \\
+-- -- to maintain the constraint-semantics, some additional debugging-specific meta-level axioms have to be included, which are shown in Table \ref{tab:debugging-axioms} \\
+-- --  \\
 
 \begin{table}[tb]\label{tab:debugging}\centering
 \begin{footnotesize}
@@ -19,17 +86,30 @@
   \hline
   \rule{0cm}{3.2mm} {\normalsize \emph{Constraint}} & {\normalsize \emph{Rule}} \\
   \hline
-  $\transdebug(C[a$ \wsml{ofType} $T.)$ & $\pcotype(C,a,T,I_C,I_{\neg T})$\wsml{\lprl}$\dots .$ \\
-  $\transdebug($\wsml{\cstr}$B_{mincard}.)$ & $\pcmincard(C,a,I)$\wsml{\lprl}$B_{mincard}.$ \\
-  $\transdebug($\wsml{\cstr}$B_{maxcard}.)$ & $\pcmaxcard(C,a,I)$\wsml{\lprl}$B_{maxcard}.$ \\
-  $\transdebug($\wsml{\cstr}$B_{user}.)$ & $\pcuser(ID)$\wsml{\lprl}$B_{user}.$ \\
-  \qquad \dots & \\
+  $\transdebug(C[a$ \wsml{ofType} $T.)$ & $\pvotype(a,T,I,V)$\wsml{\lprl} \\
+  & $\;C[a$ \wsml{ofType} $T]$ \wsml{and} $I$ \wsml{memberOf} $C$ \\
+  & $\;I[a$ \wsml{hasValue} $V]$ \wsml{and naf} $V$\wsml{memberOf} $T.$ \\
+  $\transdebug($\wsml{\cstr}$B_{mincard}.)$ & $\pvmincard(a,I)$\wsml{\lprl}$B_{mincard}.$ \\
+  $\transdebug($\wsml{\cstr}$B_{maxcard}.)$ & $\pvmaxcard(a,I)$\wsml{\lprl}$B_{maxcard}.$ \\
+  $\transdebug($\wsml{\cstr}$B_{user}.)$ & $\pvuser(\axiomid)$\wsml{\lprl}$B_{user}.$ \\
   \hline
 \end{tabular}
 \end{footnotesize}
 \caption{Replacing constraints by rules for debugging.}
 \end{table}
 
-\begin{displaymath}
-    \tau = \transdlog \circ \translt \circ \transnorm \circ \transdebug \circ \transax
-\end{displaymath}
+\begin{table}[tb]\label{tab:debugging-axioms}\centering
+\begin{small}
+\begin{tabular}{|ll|}
+  \hline
+  \multicolumn{2}{|l|}{\rule{0cm}{3.2mm}{\normalsize \emph{Debugging Meta-Level Axioms}}} \\
+  \hline
+  (1) & $\dlogcstr \pvotype(a,T,I,V)$ \\
+  (2) & $\dlogcstr \pvmincard(a,I)$ \\
+  (3) & $\dlogcstr \pvmaxcard(a,I)$ \\
+  (4) & $\dlogcstr \pvuser(\axiomid)$ \\
+ \hline
+\end{tabular}
+\end{small} \caption{Meta-level axioms for WSML semantics in
+datalog.}
+\end{table}
