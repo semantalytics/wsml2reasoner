@@ -13,6 +13,8 @@
 \newcommand{\powset}[1]{\ensuremath{2^{#1}}\xspace}
 \def\lprl{\ensuremath{\;:\!-\:}}
 \def\cstr{\ensuremath{\;!-\:}}
+\def\dlogrule{\lprl}
+\def\dlogcstr{\box\lprl}
 
 % -- meta-level predicates
 \newcommand{\predicate}[1]{\ensuremath{p_{#1}}\xspace}
@@ -94,16 +96,19 @@ connectives.
   \hline
   \rule{0cm}{3.2mm}{\normalsize \emph{original expression}} & {\normalsize \emph{normalized expression}} \\
   \hline
-    $\transnorm(X$ \wsml{and} $Y.)$ & $\transnorm(X)$ \wsml{and} $\transnorm(Y)$ \\[1ex]
-    $\transnorm(X$ \wsml{or} $Y.)$ & $\transnorm(X)$ \wsml{or} $\transnorm(Y)$ \\[1ex]
-    $\transnorm(X$ \wsml{and} $(Y$ \wsml{or} $Z).)$/ & $\transnorm(\transnorm(X)$ \wsml{and} $\transnorm(Y)$ \wsml{or} \\
-    $\transnorm((Y$ \wsml{or} $Z)$ \wsml{and} $X).)$  & $\phantom{\transnorm(}\transnorm(X)$ \wsml{and} $\transnorm(Z).)$ \\[1ex]
-    $\transnorm($ \wsml{naf} $ (X$ \wsml{and} $Y).)$ & $$ \wsml{naf} $ \transnorm(X)$ \wsml{or} $$ \wsml{naf} $ \transnorm(Y).$ \\[1ex]
-    $\transnorm($ \wsml{naf} $ (X$ \wsml{or} $Y).)$ & $$ \wsml{naf} $ \transnorm(X)$ \wsml{and} $$ \wsml{naf} $ \transnorm(Y).$ \\[1ex]
-    $\transnorm($ \wsml{naf} $ ($ \wsml{naf} $ X).)$ & $\transnorm(X)$ \\[1ex]
-    $\transnorm(X$ \wsml{implies} $Y.)$ & $\transnorm(Y)$\wsml{\lprl}$\transnorm(X).$ \\[1ex]
-    $\transnorm(X$ \wsml{impliedBy} $Y.)$ & $\transnorm(X)$\wsml{\lprl}$\transnorm(Y).$ \\[1ex]
-    $\transnorm(X[Y_1 , \dots , Y_n].)$ & $X[Y_1]$ \wsml{and} $\dots$ \wsml{and} $X[Y_n].$ \\[1ex]
+    $\transnorm(\{E_1 , \dots , E_n\})$ & $\{\transnorm(E_1) , \dots , \transnorm(E_n)\}$ \\
+    $\transnorm(X$ \wsml{and} $Y.)$ & $\transnorm(X)$ \wsml{and} $\transnorm(Y)$ \\
+    $\transnorm(X$ \wsml{or} $Y.)$ & $\transnorm(X)$ \wsml{or} $\transnorm(Y)$ \\
+    $\transnorm(X$ \wsml{and} $(Y$ \wsml{or} $Z).)$ & $\transnorm(\transnorm(X)$ \wsml{and} $\transnorm(Y)$ \wsml{or} \\
+    & $\phantom{\transnorm(}\transnorm(X)$ \wsml{and} $\transnorm(Z).)$ \\
+    $\transnorm((X$ \wsml{or} $Y)$ \wsml{and} $Z).)$ & $\transnorm(\transnorm(X)$ \wsml{and} $\transnorm(Z)$ \wsml{or} \\
+    & $\phantom{\transnorm(}\transnorm(Y)$ \wsml{and} $\transnorm(Z).)$ \\
+    $\transnorm($ \wsml{naf} $ (X$ \wsml{and} $Y).)$ & $$ \wsml{naf} $ \transnorm(X)$ \wsml{or} $$ \wsml{naf} $ \transnorm(Y).$ \\
+    $\transnorm($ \wsml{naf} $ (X$ \wsml{or} $Y).)$ & $$ \wsml{naf} $ \transnorm(X)$ \wsml{and} $$ \wsml{naf} $ \transnorm(Y).$ \\
+    $\transnorm($ \wsml{naf} $ ($ \wsml{naf} $ X).)$ & $\transnorm(X)$ \\
+    $\transnorm(X$ \wsml{implies} $Y.)$ & $\transnorm(Y)$\wsml{\lprl}$\transnorm(X).$ \\
+    $\transnorm(X$ \wsml{impliedBy} $Y.)$ & $\transnorm(X)$\wsml{\lprl}$\transnorm(Y).$ \\
+    $\transnorm(X[Y_1 , \dots , Y_n].)$ & $X[Y_1]$ \wsml{and} $\dots$ \wsml{and} $X[Y_n].$ \\
   \hline
 \end{tabular}
 \end{footnotesize}
@@ -164,9 +169,9 @@ axioms as described in a further subsection.
   \rule{0cm}{3.2mm} {\normalsize \emph{WSML}} & {\normalsize \emph{Datalog}} \\
   \hline
   $\transdlog(\{E_1, \dots , E_n\})$ & $\{\transdlog(E_1), \dots , \transdlog(E_n)\}$ \\
-  $\transdlog($ \wsml{\cstr} $B.)$ & $\leftarrow \transdlog(B)$ \\
-  $\transdlog(H)$ & $\transdlog(H) \leftarrow$ \\
-  $\transdlog(H$ \wsml{\lprl} $B.)$ & $\transdlog(H) \leftarrow \transdlog(B)$ \\
+  $\transdlog($ \wsml{\cstr} $B.)$ & $\dlogrule \transdlog(B)$ \\
+  $\transdlog(H)$ & $\transdlog(H) .$ \\
+  $\transdlog(H$ \wsml{\lprl} $B.)$ & $\transdlog(H) \dlogrule \transdlog(B)$ \\
   $\transdlog(X$ \wsml{and} $Y.)$ & $\transdlog(X) \wedge \transdlog(Y)$ \\
   $\transdlog(C$ \wsml{subConceptOf} $D.)$ & $\psco(C,D)$ \\
   $\transdlog(I$ \wsml{memberOf} $C.)$ & $\pmo(I,C)$ \\
@@ -185,7 +190,7 @@ WSML to datalog including meta-level predicates.}
 Table \ref{tab:LE2datalog} shows the mapping from WSML logical
 expressions to datalog including the meta-level predicates \psco,
 \pmo, \phval, \pitype and \potype that represent their respective
-WSMl language constructs as can be seen from the mapping.
+WSML language constructs as can be seen from the mapping.
 
 \bigskip
 
