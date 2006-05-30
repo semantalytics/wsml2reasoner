@@ -3,10 +3,10 @@ Type=TeXnicCenterProjectInformation
 Version=4
 
 [ProjectInfo]
-MainFile=paper.tex
+MainFile=paper-ieee.tex
 UseBibTeX=1
 UseMakeIndex=0
-ActiveProfile=LaTeX => PS => PDF
+ActiveProfile=LaTeX => PDF
 ProjectLanguage=en
 ProjectDialect=US
 
