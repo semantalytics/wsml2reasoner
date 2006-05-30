@@ -14,7 +14,10 @@
 \def\lprl{\ensuremath{\;:\!-\:}}
 \def\cstr{\ensuremath{\;!-\:}}
 \def\dlogrule{\lprl}
-\def\dlogcstr{\box\lprl}
+\def\dlogcstr{\square\lprl}
+\def\dlogand{\wedge}
+\def\dlognot{\sim}
+\newcommand{\dlogfact}[1]{\ensuremath{{#1}\;.}}
 
 % -- meta-level predicates
 \newcommand{\predicate}[1]{\ensuremath{p_{#1}}\xspace}
@@ -169,10 +172,10 @@ axioms as described in a further subsection.
   \rule{0cm}{3.2mm} {\normalsize \emph{WSML}} & {\normalsize \emph{Datalog}} \\
   \hline
   $\transdlog(\{E_1, \dots , E_n\})$ & $\{\transdlog(E_1), \dots , \transdlog(E_n)\}$ \\
-  $\transdlog($ \wsml{\cstr} $B.)$ & $\dlogrule \transdlog(B)$ \\
-  $\transdlog(H)$ & $\transdlog(H) .$ \\
+  $\transdlog($ \wsml{\cstr} $B.)$ & $\dlogcstr \transdlog(B)$ \\
+  $\transdlog(H)$ & \dlogfact{\transdlog(H)} \\
   $\transdlog(H$ \wsml{\lprl} $B.)$ & $\transdlog(H) \dlogrule \transdlog(B)$ \\
-  $\transdlog(X$ \wsml{and} $Y.)$ & $\transdlog(X) \wedge \transdlog(Y)$ \\
+  $\transdlog(X$ \wsml{and} $Y.)$ & $\transdlog(X) \dlogand \transdlog(Y)$ \\
   $\transdlog(C$ \wsml{subConceptOf} $D.)$ & $\psco(C,D)$ \\
   $\transdlog(I$ \wsml{memberOf} $C.)$ & $\pmo(I,C)$ \\
   $\transdlog(I[a$ \wsml{hasValue} $V].)$ & $\phval(I,a,V)$ \\
@@ -293,12 +296,12 @@ become clear or is there more that needs to be said?}
   \hline
   \multicolumn{2}{|l|}{\rule{0cm}{3.2mm}{\normalsize \emph{Meta-Level Axioms}}} \\
   \hline
-  (1) & $\psco(C_1,C_3) \leftarrow \psco(C_1,C_2) \wedge \psco(C_2,C_3)$ \\
-  (2) & $\pmo(I,C_2) \leftarrow \pmo(I,C_1) \wedge \psco(C_1,C_2)$ \\
-  (3) & $\pmo(V,C_2) \leftarrow \pitype(C_1,a,C_2) \wedge \pmo(I,C_1)$ \\
-  & \phantom{$\pmo(V,C_2) \leftarrow$} $\wedge \phval(I,a,V)$ \\
-  (4) & $\leftarrow \potype(C_1,a,C_2) \wedge \pmo(I,C_1)$ \\
-  & \phantom{$\leftarrow$} $\wedge \phval(I,a,V) \wedge \neg \pmo(V,C_2)$ \\
+  (1) & $\psco(C_1,C_3) \dlogrule \psco(C_1,C_2) \dlogand \psco(C_2,C_3)$ \\
+  (2) & $\pmo(I,C_2) \dlogrule \pmo(I,C_1) \dlogand \psco(C_1,C_2)$ \\
+  (3) & $\pmo(V,C_2) \dlogrule \pitype(C_1,a,C_2) \dlogand \pmo(I,C_1)$ \\
+  & \phantom{$\pmo(V,C_2) \dlogrule$} $\dlogand \phval(I,a,V)$ \\
+  (4) & $\dlogcstr \potype(C_1,a,C_2) \dlogand \pmo(I,C_1)$ \\
+  & \phantom{$\dlogcstr$} $\dlogand \phval(I,a,V) \dlogand \dlognot \pmo(V,C_2)$ \\
  \hline
 \end{tabular}
 \end{small} \caption{Meta-level axioms for WSML semantics in
@@ -337,9 +340,9 @@ realized by performing datalog queries on $P_O$, as follows.
 \begin{small}
 \begin{tabular}{|l|l|}
   \hline
-  $O$ is satisfiable & $(P_O, ?\textit{dummyQuery}) \rightarrow true$ \\
-  $O \models \phi_g$ & $(P_O, ?\phi_g) \rightarrow true$ \\
-  $\{\vec{X} : O \models Q(\vec{X})\}$ & $\{\vec{X} : (P_O, ?Q(\vec{X}) \rightarrow true)\}$ \\
+  $O$ is satisfiable & $(P_O, ?\dlognot \square) \rightarrow \top$ \\
+  $O \models \phi(\vec{C})$ & $(P_O, ?\phi(\vec{C})) \rightarrow \top$ \\
+  $\{\vec{X} : O \models Q(\vec{X})\}$ & $\{\vec{X} : (P_O, ?Q(\vec{X}) \rightarrow \top)\}$ \\
  \hline
 \end{tabular}
 \end{small}
