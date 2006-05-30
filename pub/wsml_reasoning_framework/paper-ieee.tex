@@ -1,0 +1,58 @@
+% -------------------------------------------------
+% - The same paper in IEEE two column format as
+% - required by RuleML 2006
+% -------------------------------------------------
+
+\documentclass[times, 10pt,twocolumn]{article}
+\usepackage{latex8}
+\usepackage{times}
+
+\usepackage{graphicx}
+\usepackage{epsfig}
+\usepackage{xspace}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{url}
+
+\newcommand{\sgr}[1]{\textbf{sgr: {#1}}}
+\newcommand{\wsml}[1]{\begin{scriptsize}{\sf {\bf #1}}\end{scriptsize}}
+
+% WSML language keywords; and general syntax (for inline usage)
+\newcommand{\synkw}[1]{\textsf{\small \textbf{#1}}}
+\newcommand{\syn}[1]{\textsf{\small #1}}
+
+\newcommand{\emau}[1]{\textbf{sgr: {#1}}}
+
+
+\begin{document}
+
+\input{lststyle_mof_wsml}
+
+\title{A Reasoning Framework for Rule-Based WSML}
+
+\author{Stephan Grimm$^1$, Uwe Keller$^2$, Holger Lausen$^2$ and G\'abor Nagyp\'al$^1$\\
+% \textbf{order of authors is currently alphabetic}\\
+\normalsize $^1$FZI Research Center for Information
+Technologies at the University of Karlsruhe, Karlsruhe, Germany\\
+\normalsize \sf $\{$grimm,nagypal$\}$@fzi.de\\[1mm]
+\normalsize $^2$ Digital Enterprise Research Institute (DERI),
+ University of Innsbruck, Austria\\ \normalsize \sf {$\{$uwe.keller,holger.lausen$\}$@deri.org} }
+
+\maketitle
+
+\begin{abstract}
+\input{abstract}
+\end{abstract}
+
+\input{motivation}
+\input{wsml}
+\input{mapping}
+\input{debugging}
+\input{framework}
+\input{usecase}
+\input{outlook}
+
+\bibliographystyle{plain}
+\bibliography{paper}
+
+\end{document}
