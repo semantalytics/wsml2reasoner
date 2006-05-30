@@ -29,6 +29,8 @@
 \def\potype{\predicate{\predsubtxt{otype}}}
 \def\mlaxioms{\ensuremath{P_{\smtxtit{meta}}}\xspace}
 
+\newcommand{\typeof}{\ensuremath{typeOf}\xspace}
+
 \section{Realizing WSML Reasoning through a Mapping to Datalog\label{sec:mapping}}
 -- briefly sketch the idea of reasoning via rule based inferencing \\
 
@@ -351,4 +353,98 @@ realized by performing datalog queries on $P_O$, as follows.
 
 
 \subsection{Realising Datatype Reasoning}
--- describe how reasoning with datatypes is realised
+-- describe how reasoning with datatypes is realised As a result
+of the transformations described previously, a generic Datalog
+program is created. This generic program cannot be executed,
+however, on a particular Datalog implementation without any
+changes. Although most of the Datalog rules are understood by any
+Datalog implementations, realizing datatype reasoning has some
+intricate challenges.
+
+To demonstrate the problems with datatype reasoning, consider the
+ontology snippet shown in Figure~\ref{fig:datatype_example}.
+
+\begin{figure}[hbt]
+\centering
+\begin{lstlisting}[style=wsml, frame=none]
+concept Humanoid
+  heightInFeet ofType _decimal
+
+//Humanoids that are bigger than 7 feet are big
+axiom bigHumanoidDefinition definedBy BigHumanoid(?x) :- ?x
+memberOf Humanoid and ?x[heightInFeet hasValue ?v] and ?v > 7.0.
+
+instance arwen memberOf Humanoid
+  heightInFeet hasValue 5.5
+
+instance aragorn memberOf Humanoid
+  heightInFeet hasValue "big"
+\end{lstlisting}
+ \caption{Datatype example. \label{fig:datatype_example}}
+\end{figure}
+
+It is easy to see that the definition of \syn{aragorn} is not
+correct, because the constant "big" is not a decimal number. I.e.,
+the ontology is not satisfiable. On the other hand, the definition
+of \syn{arwen} is correct, because $5.5$ is a decimal number.
+
+The constraint that should check the datatype constraint on
+\syn{heightInFeet} is the following, according Axiom (4) in
+Table~\ref{tab:meta-level}:
+\begin{displaymath}
+    \leftarrow \potype(Humanoid,heightInFeet,_decimal) \wedge \\
+    \phantom{\leftarrow} \pmo(I,Humanoid) \\
+  \phantom{\leftarrow} \wedge \phval(I,heightInFeet,V) \\
+  \phantom{\leftarrow} \wedge \neg \pmo(V,_decimal)
+\end{displaymath}
+
+The problem is that during the transformation steps no $\neg
+\pmo(V,_decimal)$ statement is generated, because datatype
+constants such as $5.5$ or "big" are built-in constructs, and no
+explicit axioms state their type. As a result, the constraint will
+be always violated whenever the \syn{heightInFeet} attribute has a
+value; independently from the fact whether the value is correct
+(as in the case of \syn{arwen}) or incorrect (as in the case of
+\syn{aragorn}).
+
+To solve this problem, \pmo facts for all datatype constants that
+appear in the ontology should be generated. I.e., for each
+constant in the ontology axioms of the following form should
+appear:
+\begin{displaymath}
+    \pmo(V,D) \wsml{\lprl} \typeof(V, D_T)
+\end{displaymath} where $D$ denotes the WSML datatype, $D_T$ denotes a datatype supported by the underlying Datalog implementation, which is compatible with the WSML datatype, and \typeof denotes a built-in predicate implemented by the Datalog tool, which checks whether a constant value belongs to the specified datatype.
+
+Including such axioms into the tool-specific Datalog program
+yields the correct result that the definition of \syn{aragorn}
+violates the \synkw{ofType} constraint, while the definition of
+\syn{arwen} does not.
+
+WSML also supports some built-in predicates on datatypes, such as
+numeric comparison\footnote{A full list of WSML datatypes can be
+found in the WSML specification \cite{wsml-spec}.}. E.g., the
+definition of \syn{BigHumanoid} uses a shortcut of the WSML
+\synkw{numericGreaterThan} predicate. Clearly, these special WSML
+predicates have to be translated to the corresponding built-in
+predicates supported by the built-in Datalog reasoner.
+
+To summarize the discussion, the underlying Datalog implementation
+must fulfill the following requirements to support WSML datatype
+reasoning:
+\begin{itemize}
+    \item It should provide built-in datatypes that correspond to WSML built-in datatypes.
+    \item It should provide a predicate (or predicates) for checking the datatype of a constant.
+    \item It should provide built-in predicates that correspond to WSML built-in predicates.
+\end{itemize}
+
+The main Datalog engine we used during our work was the KAON2
+inference engine\footnote{KAON2 is available for download from
+\url{http://kaon2.semanticweb.org}} \cite{hustadt04reducing}.
+KAON2 provides a very flexible type system that allows for
+user-defined datatypes, together with user-defined predicates on
+these datatypes, including type checking predicates. Therefore,
+KAON2 meets the identified requirements easily. As a matter of
+fact, KAON2 already provided most of the required datatypes and
+predicates out of the box. Of course, any other Datalog
+implementation, can be used that fulfills the requirements (such
+as MINS (TODO: insert reference here)).

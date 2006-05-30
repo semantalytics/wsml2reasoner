@@ -21,51 +21,47 @@
 -- -- in the different situations of violation of different types of constraints, different information is relevant for the modeller to repair the erroneous situation  \\
 -- -- $<$ list different types of violations $>$ \\
 
-    \subparagraph{Attribute Type Violation} -- An attribute type
-    constraint of the form $C[a$ \wsml{ofType} $T]$ is violated in
-    any situation where an instance of the concept $C$ has value
-    $V$ for the attribute $a$ but where $V$ cannot be derived to
-    belong to the extension of the type $T$. Here, $T$ can be
-    either a concept or a datatype, while $V$ is then an instance
-    or a data value, accordingly. In such a situation, an ontology
-    engineer is particularly interested in the attribute value $V$
-    that caused the constraint violation, together with the
-    attribute $a$ and the expected type $T$ which the value $V$
-    failed to adhere to.
+\subparagraph{Attribute Type Violation} -- An attribute type
+constraint of the form $C[a$ \wsml{ofType} $T]$ is violated in any
+situation where an instance of the concept $C$ has value $V$ for
+the attribute $a$ but where $V$ cannot be derived to belong to the
+extension of the type $T$. Here, $T$ can be either a concept or a
+datatype, while $V$ is then an instance or a data value,
+accordingly. In such a situation, an ontology engineer is
+particularly interested in the attribute value $V$ that caused the
+constraint violation, together with the attribute $a$ and the
+expected type $T$ which the value $V$ failed to adhere to.
 
-    \subparagraph{Minimum Cardinality Violation} -- A minimum
-    cardinality constraint, contained in a concept definition of
-    the form \wsml{concept} $C$ $a (n *)$, is violated in any
-    situation where the number of distinguished values of the
-    attribute $a$ for some instance $I$ of the concept $C$ is less
-    than the specified cardinality $n$. In such a situation, an
-    ontology engineer is particularly interested in the instance
-    $I$ that failed to have a sufficient number of attribute
-    values, together with the actual attribute $a$. (Information about
-    how many values were missing can be learned by querying the
-    ontology separately.)
+\subparagraph{Minimum Cardinality Violation} -- A minimum
+cardinality constraint, contained in a concept definition of the
+form \wsml{concept} $C$ $a (n *)$, is violated in any situation
+where the number of distinguished values of the attribute $a$ for
+some instance $I$ of the concept $C$ is less than the specified
+cardinality $n$. In such a situation, an ontology engineer is
+particularly interested in the instance $I$ that failed to have a
+sufficient number of attribute values, together with the actual
+attribute $a$. (Information about how many values were missing can
+be learned by querying the ontology separately.)
 
-    \subparagraph{Maximum Cardinality Violation} -- A maximum
-    cardinality constraint, contained in a concept definition of
-    the form \wsml{concept} $C$ $a (0 n)$, is violated in any
-    situation where the number of distinguished values of the
-    attribute $a$ for some instance $I$ of the concept $C$ exceeds
-    the specified cardinality $n$. Again, here an ontology
-    engineer is particulary interested in the instance $I$ for which
-    the number of attribute values has been exceeded, together the
-    actual attribute $a$.
+\subparagraph{Maximum Cardinality Violation} -- A maximum
+cardinality constraint, contained in a concept definition of the
+form \wsml{concept} $C$ $a (0 n)$, is violated in any situation
+where the number of distinguished values of the attribute $a$ for
+some instance $I$ of the concept $C$ exceeds the specified
+cardinality $n$. Again, here an ontology engineer is particulary
+interested in the instance $I$ for which the number of attribute
+values has been exceeded, together the actual attribute $a$.
 
-    \subparagraph{User-Defined Constraint Violation} -- A
-    user-defined constraint, contained in an axiom definition of
-    the form \wsml{axiom} \axiomid \wsml{definedBy} $B.$, is
-    violated in any situation where the body $B$ of the constraint
-    evaluates to true for any instantiation of its free variables.
-    In such a situation, the information which helps an ontology
-    engineer to repair an erroneous situation is specific to the user-defined
-    constraint given by $B$ and cannot be specified in a generic
-    manner. However, a generic framework can at least identify the
-    violated constraint by pointing out the name \axiomid of the axiom.
-
+\subparagraph{User-Defined Constraint Violation} -- A user-defined
+constraint, contained in an axiom definition of the form
+\wsml{axiom} \axiomid \wsml{definedBy} $B.$, is violated in any
+situation where the body $B$ of the constraint evaluates to true
+for any instantiation of its free variables. In such a situation,
+the information which helps an ontology engineer to repair an
+erroneous situation is specific to the user-defined constraint
+given by $B$ and cannot be specified in a generic manner. However,
+a generic framework can at least identify the violated constraint
+by pointing out the name \axiomid of the axiom.
 
 \subsection{Debugging through Meta-Level Reasoning}
 -- describe how these debugging features are realised via additional meta-level predicates an additional fixed set of rules \\
