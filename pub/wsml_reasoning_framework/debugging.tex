@@ -85,18 +85,88 @@ by pointing out the name \axiomid of the axiom.
 \end{displaymath}
 -- -- which asks for all occurrences of type violations by means of datalog querying mechanisms; if this set is empty then there is no problem concerning types \\
 
+In our framework, we realize the debugging features for pointing
+out constraint violations by replacing constraints with a special
+kind of rules. Instead of deriving the empty clause as constraints
+do, these rule derive information about occurrences of constraint
+violations by instantiating debugging-specific meta-level
+predicates with the entities involved in a violation. In this way,
+information about constraint violations can be queried for by
+means of datalog inferencing.
+
+The replacement of constraints for debugging is included in the
+transformation pipeline
+\begin{displaymath}
+    \tau = \transdlog \circ \translt \circ \transnorm \circ \transdebug \circ \transax
+\end{displaymath}
+where the additional transformation step \transdebug is applied
+after the WSML conceptual syntax has been resolved, replacing
+constraints on the level of WSML logical expressions. Table
+\ref{tab:debugging} shows the detailed replacements performed by
+\transdebug for the different kinds of constraints.
+
+The two types of cardinality constraints with bodies $B_{mincard}$
+and $B_{maxcard}$ are turned into rules by keeping the respective
+body and including a head that instantiates one of the predicates
+\pvmincard and \pvmaxcard to indicate the respective cardinality
+violation. The body variables are supposed to syntactically match
+the respective bodies for cardinality constraints produced by
+\transax (Table \ref{tab:conceptual-logical}), in which the
+arguments for these predicates, namely the involved attribute $a$
+and instance $I$, occur. Similarly, a user-defined constraint is
+turned into a rule by keeping the predefined body $B_{user}$ and
+including a head that instantiates the predicate \pvuser to
+indicate a user-defined violation. Since the body $B_{user}$ can
+be an arbitrarily complex logical expression, the only argument of
+this predicate is the identifier \axiomid of the axiom that
+contains the  specification of the user-defined constraint.
+Contrarily, constraints on attribute types are handled in a
+different way because these constraints are not expanded during
+the transformation \transax ; they are rather represented by WSML
+\wsml{ofType} molecules for which the semantics is encoded in the
+meta-level axioms \mlaxioms. In order to avoid the modification of
+\mlaxioms in the reasoning framework, such molecules are expanded
+by \transdebug, as shown in Table
+\ref{tab:debugging}.\footnote{After this expansion of
+\wsml{ofType} molecules, the respective axiom in \mlaxioms for
+realising the semantics of attribute type constraints does not
+apply anymore.}
+
+To maintain the constraining semantics of the replaced
+constraints, an additional set of meta-level axioms $\debugaxioms
+\in \mathcal{P}$ is included for reasoning that derive the empty
+clause for any occurrence of a constraint violation, as shown in
+Table \ref{tab:debugging-axioms}. Including the debugging
+features, the datalog program used to reason about the original
+ontology then turns to
+\begin{displaymath}
+    P_O = \mlaxioms \cup \debugaxioms \cup \tau(O) \;\;\;.
+\end{displaymath}
+Occurrences of constraint violations can be recognized by querying
+$P_O$ for instantiations of the various debugging-specific
+meta-level predicates \pvotype, \pvmincard, \pvmaxcard and
+\pvuser. For example, the set
+\begin{displaymath}
+    \{(a,T,I,V) : (P_O , ?\pvotype(a,T,I,V)) \rightarrow \top \}
+\end{displaymath}
+contains tuples for all occurrences of attribute type violations
+in $P_O$, identifying the respective attribute $a$, expected type
+$T$, involved instance $I$ and violating value $V$ for each. This
+set is empty if there are no types violated in $P_O$.
+
+
 \begin{table}[tb]\label{tab:debugging}\centering
 \begin{footnotesize}
 \begin{tabular}{|l|l|}
   \hline
   \rule{0cm}{3.2mm} {\normalsize \emph{Constraint}} & {\normalsize \emph{Rule}} \\
   \hline
-  $\transdebug(C[a$ \wsml{ofType} $T.)$ & $\pvotype(a,T,I,V)$\wsml{\lprl} \\
-  & $\;C[a$ \wsml{ofType} $T]$ \wsml{and} $I$ \wsml{memberOf} $C$ \\
-  & $\;I[a$ \wsml{hasValue} $V]$ \wsml{and naf} $V$\wsml{memberOf} $T.$ \\
   $\transdebug($\wsml{\cstr}$B_{mincard}.)$ & $\pvmincard(a,I)$\wsml{\lprl}$B_{mincard}.$ \\
   $\transdebug($\wsml{\cstr}$B_{maxcard}.)$ & $\pvmaxcard(a,I)$\wsml{\lprl}$B_{maxcard}.$ \\
   $\transdebug($\wsml{\cstr}$B_{user}.)$ & $\pvuser(\axiomid)$\wsml{\lprl}$B_{user}.$ \\
+  $\transdebug(C[a$ \wsml{ofType} $T.)$ & $\pvotype(a,T,I,V)$\wsml{\lprl} \\
+  & $\;C[a$ \wsml{ofType} $T]$ \wsml{and} $I$ \wsml{memberOf} $C$ \\
+  & $\;I[a$ \wsml{hasValue} $V]$ \wsml{and naf} $V$\wsml{memberOf} $T.$ \\
   \hline
 \end{tabular}
 \end{footnotesize}
