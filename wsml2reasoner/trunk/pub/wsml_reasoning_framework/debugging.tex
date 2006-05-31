@@ -21,6 +21,27 @@
 -- -- in the different situations of violation of different types of constraints, different information is relevant for the modeller to repair the erroneous situation  \\
 -- -- $<$ list different types of violations $>$ \\
 
+An ontology in rule-based WSML is inconsistent when constraints
+are violated by the particular situation of its instances and
+their relation via attributes. In such a violating situation, two
+things are of interest to the ontology engineer: a) the type of
+constraint that is violated and b) the entities, i.e.\ concepts,
+attributes, instances, etc., that are involved in the violation.
+
+\def\bla{\textbf{{\sf bla}}}
+To give an example, consider the WSML ontology in Section
+\ref{sec:wsml}. There, the attribute \bla of the concept \bla is
+constrained to instances of type \bla. If we would add \bla, this
+constraint would be violated because \bla cannot be derived to be
+an instance of the concept \bla. For an ontology engineer who
+needs to repair this this erroneous modelling, it is important to
+know the entities that cause the violation, which in this case are
+the attribute \bla together with the range concept \bla and the
+non-conform instance \bla. In different situations of violation of
+the various kinds of constraints, the information important for
+the ontology engineer to know is also different, as listed in the
+following.
+
 \subparagraph{Attribute Type Violation} -- An attribute type
 constraint of the form $C[a$ \wsml{ofType} $T]$ is violated in any
 situation where an instance of the concept $C$ has value $V$ for
@@ -63,7 +84,7 @@ given by $B$ and cannot be specified in a generic manner. However,
 a generic framework can at least identify the violated constraint
 by pointing out the name \axiomid of the axiom.
 
-\subsection{Debugging through Meta-Level Reasoning}
+\subsection{Debugging by Meta-Level Reasoning}
 -- describe how these debugging features are realised via additional meta-level predicates an additional fixed set of rules \\
 -- -- in our framework we realise the debugging features for identifying constraint violations together with involved entities by replacing constraints with rules \\
 -- -- these rules have additional debugging-specific meta-level predicates in their heads which are instantiated when a constraint body evaluates to true; this way the debugging information is derived by datalog rules and can be queried for \\
