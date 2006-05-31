@@ -13,6 +13,7 @@
 \newcommand{\powset}[1]{\ensuremath{2^{#1}}\xspace}
 \def\lprl{\ensuremath{\;:\!-\:}}
 \def\cstr{\ensuremath{\;!-\:}}
+\def\qury{\ensuremath{\;?-\:}}
 \def\dlogrule{\lprl}
 \def\dlogcstr{\square\lprl}
 \def\dlogand{\wedge}
@@ -342,9 +343,9 @@ realized by performing datalog queries on $P_O$, as follows.
 \begin{small}
 \begin{tabular}{|l|l|}
   \hline
-  $O$ is satisfiable & $(P_O, ?\dlognot \square) \rightarrow \top$ \\
-  $O \models \phi(\vec{C})$ & $(P_O, ?\phi(\vec{C})) \rightarrow \top$ \\
-  $\{\vec{X} : O \models Q(\vec{X})\}$ & $\{\vec{X} : (P_O, ?Q(\vec{X})) \rightarrow \top\}$ \\
+  $O$ is satisfiable & $(P_O, \qury \dlognot \square) \rightarrow \top$ \\
+  $O \models \phi(\vec{C})$ & $(P_O, \qury \phi(\vec{C})) \rightarrow \top$ \\
+  $\{\vec{X} : O \models Q(\vec{X})\}$ & $\{\vec{X} : (P_O, \qury Q(\vec{X})) \rightarrow \top\}$ \\
  \hline
 \end{tabular}
 \end{small}
