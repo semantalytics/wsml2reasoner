@@ -1,79 +1,41 @@
+\def\dataaxioms{\ensuremath{P_{\smtxtit{data}}}\xspace}
+\def\transdpred{\transtxt{dpred}}
+
 \subsection{Realising Datatype Reasoning}
 \label{sec:datatype_reasoning}
--- describe how reasoning with datatypes is realised As a result
+As a result
 of the transformations described previously, a generic Datalog
-program is created. This generic program cannot be executed,
-however, on a particular Datalog implementation without any
-changes. Although most of the Datalog rules are understood by any
-Datalog implementations, realizing datatype reasoning has some
+program is created. Although most of the generic Datalog rules are understood by practically any
+Datalog implementation, realizing datatype reasoning has some
 intricate challenges.
 
-To demonstrate the problems with datatype reasoning, consider the
-ontology snippet shown in Figure~\ref{fig:datatype_example}.
+The main challenge in implementing datatype reasoning is caused by Axiom (4) in Table~\ref{tab:meta-level}, which checks the WSML \synkw{ofType} constraints. The problem is the \[\dlognot \pmo(V,C_2)\] part of the axiom, because for datatype values no explicit membership facts are included in the ontology. E.g., considering the instance \syn{MSNDialup} in Figure~\ref{xxx}, there is no $\pmo(10,\syn{\_integer})$ fact for the value of the \syn{providesBandwidth} attribute. I.e., any time a value is defined for an attribute constrained by an \synkw{ofType} constraint, Axiom (4) would cause a constraint violation.
 
-\begin{figure}[hbt]
-\centering
-\begin{lstlisting}[style=wsml, frame=none]
-concept Humanoid
-  heightInFeet ofType _decimal
-
-//Humanoids that are bigger than 7 feet are big
-axiom bigHumanoidDefinition definedBy BigHumanoid(?x) :- ?x
-memberOf Humanoid and ?x[heightInFeet hasValue ?v] and ?v > 7.0.
-
-instance arwen memberOf Humanoid
-  heightInFeet hasValue 5.5
-
-instance aragorn memberOf Humanoid
-  heightInFeet hasValue "big"
-\end{lstlisting}
- \caption{Datatype example. \label{fig:datatype_example}}
-\end{figure}
-
-It is easy to see that the definition of \syn{aragorn} is not
-correct, because the constant "big" is not a decimal number. I.e.,
-the ontology is not satisfiable. On the other hand, the definition
-of \syn{arwen} is correct, because $5.5$ is a decimal number.
-
-The constraint that should check the datatype constraint on
-\syn{heightInFeet} is the following, according Axiom (4) in
-Table~\ref{tab:meta-level}:
-\begin{displaymath}
-    \leftarrow \potype(Humanoid,heightInFeet,_decimal) \wedge \\
-    \phantom{\leftarrow} \pmo(I,Humanoid) \\
-  \phantom{\leftarrow} \wedge \phval(I,heightInFeet,V) \\
-  \phantom{\leftarrow} \wedge \neg \pmo(V,_decimal)
-\end{displaymath}
-
-The problem is that during the transformation steps no $\neg
-\pmo(V,_decimal)$ statement is generated, because datatype
-constants such as $5.5$ or "big" are built-in constructs, and no
-explicit axioms state their type. As a result, the constraint will
-be always violated whenever the \syn{heightInFeet} attribute has a
-value; independently from the fact whether the value is correct
-(as in the case of \syn{arwen}) or incorrect (as in the case of
-\syn{aragorn}).
-
-To solve this problem, \pmo facts for all datatype constants that
-appear in the ontology should be generated. I.e., for each
+To solve this problem, \pmo facts should be generated for all datatype constants that
+appear in the ontology. I.e., for each
 constant in the ontology axioms of the following form should
 appear:
 \begin{displaymath}
     \pmo(V,D) \lprl \typeof(V, D_T)
 \end{displaymath} where $D$ denotes the WSML datatype, $D_T$ denotes a datatype supported by the underlying Datalog implementation, which is compatible with the WSML datatype, and \typeof denotes a built-in predicate implemented by the Datalog tool, which checks whether a constant value belongs to the specified datatype.
 
-Including such axioms into the tool-specific Datalog program
-yields the correct result that the definition of \syn{aragorn}
-violates the \synkw{ofType} constraint, while the definition of
-\syn{arwen} does not.
+Those tool-specific axioms result in a new set of Datalog rules, denoted as \dataaxioms. 
+I.e., the Datalog program $P_O$ that is executed by the Datalog reasoner, should be extended with this new set of rules. 
+\begin{displaymath}
+    P_O = \mlaxioms \cup \dataaxioms \cup \tau(O)
+\end{displaymath}
 
-WSML also supports some built-in predicates on datatypes, such as
+In addition to datatypes, WSML also supports some built-in predicates on datatypes, such as
 numeric comparison\footnote{A full list of WSML datatypes can be
 found in the WSML specification \cite{wsml-spec}.}. E.g., the
-definition of \syn{BigHumanoid} uses a shortcut of the WSML
-\synkw{numericGreaterThan} predicate. Clearly, these special WSML
+definition of the \syn{SharePriceFeed\_requires\_bandwidth} axiom in Figure~\ref{xxx} uses a shortcut of the WSML
+\synkw{numericLessThan} predicate. Clearly, these special WSML
 predicates have to be translated to the corresponding built-in
-predicates supported by the built-in Datalog reasoner.
+predicates supported by the built-in Datalog reasoner. I.e., a new, tool-specific
+mapping $\transdpred : \P \mapsto \P$ has to be applied to the generic Datalog program, which translates all built-in WSML predicates into tool-specific predicates. I.e., the transformation pipeline $\tau$ is redefined as
+\begin{displaymath}
+    \tau = \transdpred \circ \transdlog \circ \translt \circ \transnorm \circ \transax
+\end{displaymath}
 
 To summarize the discussion, the underlying Datalog implementation
 must fulfill the following requirements to support WSML datatype
