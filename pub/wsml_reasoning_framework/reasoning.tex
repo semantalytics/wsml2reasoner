@@ -1,24 +1,62 @@
 \subsection{Mapping WSML Reasoning Tasks to Datalog Querying}
--- describe how to realise WSML satisfiability and entailment through datalog querying \\
--- -- characterize the KB (datalog program) on which reasoning is performed with the different facts and rules  \\
--- -- show how the WSML reasoning tasks are mapped to datalog queries (KB sat., entailment and conjunctive query answering) \\
+%-- describe how to realise WSML satisfiability and entailment through datalog querying \\
+%-- -- characterize the KB (datalog program) on which reasoning is performed with the different facts and rules  \\
+%-- -- show how the WSML reasoning tasks are mapped to datalog queries (KB sat., entailment and conjunctive query answering) \\
 
 To perform reasoning over the original WSML ontology $O$ with an
 underlying datalog inference engine, a datalog program
 \begin{displaymath}
     P_O = \mlaxioms \cup \tau(O)
 \end{displaymath}
-is build up, consisting of the meta-level axioms togeter with the
-transformed ontology. The different WSML reasoning tasks are then
-realized by performing datalog queries on $P_O$, as follows.
-\begin{small}
-\begin{tabular}{|l|l|}
-  \hline
-  $O$ is satisfiable & $(P_O, \qury \dlognot \square) \rightarrow \top$ \\
-  $O \models \phi(\vec{C})$ & $(P_O, \qury \phi(\vec{C})) \rightarrow \top$ \\
-  $\{\vec{X} : O \models Q(\vec{X})\}$ & $\{\vec{X} : (P_O, \qury Q(\vec{X})) \rightarrow \top\}$ \\
- \hline
-\end{tabular}
-\end{small}
+is build up that consists of the meta-level axioms together with
+the transformed ontology. The different WSML reasoning tasks are
+then realized by performing datalog queries on $P_O$. A Query
+$Q(\vec{x})$ posed to a Datalog program $P$ is denoted by
+$$(P,\qury Q(\vec{x}))$$ and yields a set of tuples that instantiate
+the variable vector $\vec{x}$.
 
-( $\phi_g$ : ground fact ; $\vec{X}$ : variable binding )
+\subparagraph{Ontology Consistency} -- The task of checking a WMSL
+ontology for consistency is done by querying for the empty clause,
+as expressed by the following equivalence.
+\begin{displaymath}
+    O \; \textrm{\footnotesize{is satisfiable}} \; \Leftrightarrow \; (P_O , \qury \square) =
+    \emptyset
+\end{displaymath}
+If the resulting set is empty then the empty clause could not be
+derived from the program and the original ontology is satisfiable.
+
+\subparagraph{Entailment} -- The reasoning task of entailment of
+ground facts by a WSML ontology can be done by using queries that
+contain no variables, as expressed in the following equivalence.
+\begin{displaymath}
+    O \models \phi \; \Leftrightarrow \; (P_O, \qury
+    \tau(\phi)) \not= \emptyset
+\end{displaymath}
+The WSML ground fact $\phi$ is transformed to Datalog and
+evaluated together with the Datalog program $P_O$. If the
+resulting set is non-empty then $\phi$ is entailed by the original
+ontology.
+
+\subparagraph{Retrieval} -- Similarly, instance retrieval can be
+performed by posing queries that contain variables to the Datalog
+program $P_O$, as expressed in the following equivalence.
+\begin{displaymath}
+    \{\vec{x} : O \models Q(\vec{x})\} \; \Leftrightarrow \; (P_O, \qury \tau(Q(\vec{x})))
+\end{displaymath}
+The query $Q(\vec{x})$, formulated as a WSML logical expression
+with free variables $\vec{x}$, is transformed to Datalog and
+evaluated together with the Datalog program $P_O$. The resulting
+set contains all tuples $\vec{x}$ for which the query expression
+is entailed by the original ontology.
+
+%\begin{small}
+%\begin{tabular}{|l|l|}
+%  \hline
+%  $O$ is satisfiable & $(P_O, \qury \dlognot \square) \rightarrow \top$ \\
+%  $O \models \phi(\vec{C})$ & $(P_O, \qury \phi(\vec{C})) \rightarrow \top$ \\
+%  $\{\vec{X} : O \models Q(\vec{X})\}$ & $\{\vec{X} : (P_O, \qury Q(\vec{X})) \rightarrow \top\}$ \\
+% \hline
+%\end{tabular}
+%\end{small}
+%
+%( $\phi_g$ : ground fact ; $\vec{X}$ : variable binding )
