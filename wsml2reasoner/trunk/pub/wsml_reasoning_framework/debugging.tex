@@ -14,25 +14,19 @@
 %-- -- our framework offers debugging features that allow for identifying violated constraints and involved WSML entities, which is achieved by replacing constraints by rules with special additional meta-level predicates in their head \\
 
 During the process of ontology development, an ontology engineer
-can easily construct a situation of erroneous modelling with
+can easily construct an erroneous model containing
 contradictory information. In order to produce consistent
-ontologies, engineers need to be pointed out to such defects with
-some detail about the involved ontological elements that cause the
-problem.
+ontologies, inconsistencies should be reported to engineers with
+some details about ontological elements that cause the inconsistency.
 
-In rule-based WSML, the source for erroneous modelling by
-contradictory information are primarily constraints together with
-a violating situation of concrete instances related via
-attributes. The plain datalog mechanisms employed in the reasoning
+In rule-based WSML, the source for errors in the ontology is always a constraint violation. The plain Datalog mechanisms employed in the reasoning
 framework according to Section \ref{sec:mapping} only allow for
 checking whether some constraint is violated, i.e.\ whether the
 empty clause is derived from $P_O$ indicating that the original
-ontology $O$ contains erroneous modelling; more detailed
-information about the problematic situation is not reported per
-se. In our framework, we support debugging features that allow for
-identifying violated constraints together with the ontological
-entities involved, which we achieve by replacing constraints with
-appropriate rules that build on additional meta-level predicates.
+ontology $O$ contains errors. A more detailed
+information about the problem is not reported. Experience shows that it is a very hard task to identify and correct errors in the ontology without such background information.
+
+Our framework provides information about the ontology entities, which are involved in the constraint violation. We achieve this by replacing constraints with appropriate rules that contain the needed additional information in their heads.
 
 \subsection{Identifying Constraint Violations}
 %-- describe the kind of debugging features the framework supports and what they allow for \\
@@ -42,9 +36,8 @@ appropriate rules that build on additional meta-level predicates.
 %-- -- in the different situations of violation of different types of constraints, different information is relevant for the modeller to repair the erroneous situation  \\
 %-- -- $<$ list different types of violations $>$ \\
 
-An ontology in rule-based WSML is inconsistent when constraints
-are violated by the particular situation of its instances and
-their relation via attributes. In such a violating situation, two
+As was mentioned, an ontology in rule-based WSML is inconsistent when constraints
+are violated. In this case, two
 things are of interest to the ontology engineer: a) the type of
 constraint that is violated and b) the entities, i.e.\ concepts,
 attributes, instances, etc., that are involved in the violation.
@@ -55,29 +48,24 @@ To give an example, consider the WSML ontology in Section
 constrained to instances of type \bla. If we would add \bla, this
 constraint would be violated because \bla cannot be derived to be
 an instance of the concept \bla. For an ontology engineer who
-needs to repair this erroneous modelling, it is important to know
+needs to repair this ontology error, it is important to know
 the entities that cause the violation, which in this case are the
 attribute \bla together with the range concept \bla and the
-non-conforming instance \bla. In different situations of violation
-of the various kinds of constraints, the information important for
-the ontology engineer to know is also different, as listed in the
-following.
+non-conforming instance \bla. 
 
-\subparagraph{Attribute Type Violation} -- An attribute type
-constraint of the form $C[a$ \wsml{ofType} $T]$ is violated in any
-situation where an instance of the concept $C$ has value $V$ for
-the attribute $a$ but where $V$ cannot be derived to belong to the
-extension of the type $T$. Here, $T$ can be either a concept or a
-datatype, while $V$ is then an instance or a data value,
-accordingly. In such a situation, an ontology engineer is
-particularly interested in the attribute value $V$ that caused the
+For different types of constraint violations different set of additional information is needed by the ontology engineer to track down the problem successfully. 
+
+\subparagraph{Attribute Type Violation} An attribute type
+constraint of the form $C[a$ \wsml{ofType} $T]$ is violated whenever an instance of the concept $C$ has value $V$ for
+the attribute $a$, and it cannot be inferred that $V$ belongs to the type $T$. Here, $T$ can be either a concept or a datatype, while $V$ is then an instance or a data value,
+accordingly. In such a situation, an ontology engineer is particularly
+interested in the instance $I$, in the attribute value $V$ that caused the
 constraint violation, together with the attribute $a$ and the
 expected type $T$ which the value $V$ failed to adhere to.
 
-\subparagraph{Minimum Cardinality Violation} -- A minimum
-cardinality constraint, contained in a concept definition of the
-form \wsml{concept} $C$ $a (n *)$, is violated in any situation
-where the number of distinguished values of the attribute $a$ for
+\subparagraph{Minimum Cardinality Violation} A minimum
+cardinality constraint of the
+form \wsml{concept} $C$ $a (n *)$, is violated whenever the number of distinguished values of the attribute $a$ for
 some instance $I$ of the concept $C$ is less than the specified
 cardinality $n$. In such a situation, an ontology engineer is
 particularly interested in the instance $I$ that failed to have a
@@ -85,25 +73,17 @@ sufficient number of attribute values, together with the actual
 attribute $a$. (Information about how many values were missing can
 be learned by querying the ontology separately.)
 
-\subparagraph{Maximum Cardinality Violation} -- A maximum
-cardinality constraint, contained in a concept definition of the
-form \wsml{concept} $C$ $a (0 n)$, is violated in any situation
-where the number of distinguished values of the attribute $a$ for
+\subparagraph{Maximum Cardinality Violation} A maximum
+cardinality constraint of the
+form \wsml{concept} $C$ $a (0 n)$, is violated whenever the number of distinguished values of the attribute $a$ for
 some instance $I$ of the concept $C$ exceeds the specified
 cardinality $n$. Again, here an ontology engineer is particularly
 interested in the instance $I$ for which the number of attribute
 values was exceeded, together with the actual attribute $a$.
 
-\subparagraph{User-Defined Constraint Violation} -- A user-defined
-constraint, contained in an axiom definition of the form
-\wsml{axiom} \axiomid \wsml{definedBy} $B.$, is violated in any
-situation where the body $B$ of the constraint evaluates to true
-for any instantiation of its free variables. In such a situation,
-the information which helps an ontology engineer to repair an
-erroneous situation is specific to the user-defined constraint
-given by $B$ and cannot be reported in a generic manner. However,
+\subparagraph{User-Defined Constraint Violation} Not only built-in WSML constraints, but also user-defined constraints can be violated, which are defined as WSML axioms. Unfortunately, those constraints can have an arbitrarily complex body, therefore it is impossible to determine the set of entities in advance that are potentially interesting for the ontology engineer. However,
 a generic framework can at least identify the violated constraint
-by pointing out the name \axiomid of the axiom.
+by reporting the ID of the axiom.
 
 \subsection{Debugging by Meta-Level Reasoning}
 %-- describe how these debugging features are realised via additional meta-level predicates an additional fixed set of rules \\
@@ -127,19 +107,18 @@ by pointing out the name \axiomid of the axiom.
 %\end{displaymath}
 %-- -- which asks for all occurrences of type violations by means of datalog querying mechanisms; if this set is empty then there is no problem concerning types \\
 
-In our framework, we realize the debugging features for pointing
-out constraint violations by replacing constraints with a special
+In our framework, we realize the debugging features for reporting constraint violations by replacing constraints with a special
 kind of rules. Instead of deriving the empty clause, as
-constraints do, these rule derive information about occurrences of
+constraints do, these rules derive information about occurrences of
 constraint violations by instantiating debugging-specific
 meta-level predicates with the entities involved in a violation.
-In this way, information about constraint violations can be
-queried for by means of datalog inferencing.
+Such a way, information about constraint violations can be
+queried using Datalog inferencing.
 
 The replacement of constraints for debugging is included in the
 transformation pipeline
 \begin{displaymath}
-    \tau = \transdlog \circ \translt \circ \transnorm \circ \transdebug \circ \transax
+    \tau = \transdpred \circ \transdlog \circ \translt \circ \transnorm \circ \transdebug \circ \transax
 \end{displaymath}
 where the additional transformation step \transdebug is applied
 after the WSML conceptual syntax has been resolved, replacing
@@ -147,26 +126,18 @@ constraints on the level of WSML logical expressions. Table
 \ref{tab:debugging} shows the detailed replacements performed by
 \transdebug for the different kinds of constraints.
 
-The two types of cardinality constraints with bodies $B_{mincard}$
-and $B_{maxcard}$ are turned into rules by keeping the respective
-body and including a head that instantiates one of the predicates
+Constraints representing minimal cardinality constraints (with bodies $B_{mincard}$) and maximal cardinality constraints (with bodies $B_{maxcard}$) are transformed into rules by keeping their respective
+bodies and adding a head that instantiates one of the predicates
 \pvmincard and \pvmaxcard to indicate the respective cardinality
-violation. The meta variables $B_{<X>}$ are supposed to
-syntactically match the respective bodies for cardinality
-constraints produced by \transax (Table
-\ref{tab:conceptual-logical}), in which the arguments for the
-meta-level predicates, namely the involved attribute $a$ and
-instance $I$, occur.
+violation. The new predicate heads also contain the variables $I$ and $a$, which will be unified with the violating instance and attribute, respectively, when the constraint is violated\footnote{Of course, the same variables $I$ and $a$ appear also in the $B_{mincard}$ and $B_{maxcard}$ rule bodies.}. 
 
 Similarly, a user-defined constraint is turned into a rule by
 keeping the predefined body $B_{user}$ and including a head that
 instantiates the predicate \pvuser to indicate a user-defined
-violation. Since the body $B_{user}$ can be an arbitrarily complex
-logical expression, the only argument of this predicate is the
-identifier \axiomid of the axiom that contains the  specification
-of the user-defined constraint.
+violation. Because the body $B_{user}$ can be an arbitrarily complex
+logical expression, only the \axiomid ID of the axiom is included into the predicate in the rule head.
 
-Constraints on attribute types are handled in a different way
+Constraints on attribute types are handled differently
 because these constraints are not expanded during the
 transformation \transax ; they are rather represented by WSML
 \wsml{ofType}-molecules for which the semantics is encoded in the
@@ -188,20 +159,19 @@ Table \ref{tab:debugging-axioms}. Including the debugging
 features, the datalog program for reasoning about the original
 ontology then turns to
 \begin{displaymath}
-    P_O = \mlaxioms \cup \debugaxioms \cup \tau(O) \;\;\;.
+    P_O = \mlaxioms \cup \dataaxioms \cup \debugaxioms \cup \tau(O) \;\;\;.
 \end{displaymath}
 Occurrences of constraint violations can be recognized by querying
 $P_O$ for instantiations of the various debugging-specific
 meta-level predicates \pvotype, \pvmincard, \pvmaxcard and
 \pvuser. For example, the set
 \begin{displaymath}
-    \{(a,T,I,V) : (P_O , \qury \pvotype(a,T,I,V)) \rightarrow \top \}
+    (P_O , \qury \pvotype(a,T,I,V))
 \end{displaymath}
 contains tuples for all occurrences of attribute type violations
 in $P_O$, identifying the respective attribute $a$, expected type
-$T$, involved instance $I$ and violating value $V$ for each. This
+$T$, involved instance $I$ and violating value $V$ for each violation. This
 set is empty if there are no attribute types violated.
-
 
 \begin{table}[tb]\label{tab:debugging}\centering
 \begin{footnotesize}
