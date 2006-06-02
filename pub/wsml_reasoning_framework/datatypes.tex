@@ -1,4 +1,5 @@
 \subsection{Realising Datatype Reasoning}
+\label{sec:datatype_reasoning}
 -- describe how reasoning with datatypes is realised As a result
 of the transformations described previously, a generic Datalog
 program is created. This generic program cannot be executed,
@@ -83,14 +84,3 @@ reasoning:
     \item It should provide built-in predicates that correspond to WSML built-in predicates.
 \end{itemize}
 
-The main Datalog engine we used during our work was the KAON2
-inference engine\footnote{KAON2 is available for download from
-\url{http://kaon2.semanticweb.org}} \cite{hustadt04reducing}.
-KAON2 provides a very flexible type system that allows for
-user-defined datatypes, together with user-defined predicates on
-these datatypes, including type checking predicates. Therefore,
-KAON2 meets the identified requirements easily. As a matter of
-fact, KAON2 already provided most of the required datatypes and
-predicates out of the box. Of course, any other Datalog
-implementation, can be used that fulfills the requirements (such
-as MINS (TODO: insert reference here)).
