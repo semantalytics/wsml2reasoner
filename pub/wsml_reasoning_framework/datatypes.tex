@@ -9,7 +9,7 @@ program is created. Although most of the generic Datalog rules are understood by
 Datalog implementation, realizing datatype reasoning has some
 intricate challenges.
 
-The main challenge in implementing datatype reasoning is caused by Axiom (4) in Table~\ref{tab:meta-level}, which checks the WSML \synkw{ofType} constraints. The problem is the \[\dlognot \pmo(V,C_2)\] part of the axiom, because for datatype values no explicit membership facts are included in the ontology. E.g., considering the instance \syn{MSNDialup} in Figure~\ref{xxx}, there is no $\pmo(10,\syn{\_integer})$ fact for the value of the \syn{providesBandwidth} attribute. I.e., any time a value is defined for an attribute constrained by an \synkw{ofType} constraint, Axiom (4) would cause a constraint violation.
+The main challenge in implementing datatype reasoning is caused by Axiom (4) in Table~\ref{tab:meta-level}, which checks the WSML \synkw{ofType} constraints. The problem is the \[\dlognot \pmo(V,C_2)\] part of the axiom, because for datatype values no explicit membership facts are included in the ontology. E.g., considering the instance \syn{MSNDialup} from the WSML ontology in Section~\ref{sec:wsml}, there is no $\pmo(10,\syn{\_integer})$ fact for the value of the \syn{providesBandwidth} attribute. I.e., any time a value is defined for an attribute constrained by an \synkw{ofType} constraint, Axiom (4) would cause a constraint violation.
 
 To solve this problem, \pmo facts should be generated for all datatype constants that
 appear in the ontology. I.e., for each
@@ -28,8 +28,7 @@ I.e., the Datalog program $P_O$ that is executed by the Datalog reasoner, should
 In addition to datatypes, WSML also supports some built-in predicates on datatypes, such as
 numeric comparison\footnote{A full list of WSML datatypes can be
 found in the WSML specification \cite{wsml-spec}.}. E.g., the
-definition of the \syn{SharePriceFeed\_requires\_bandwidth} axiom in Figure~\ref{xxx} uses a shortcut of the WSML
-\synkw{numericLessThan} predicate. Clearly, these special WSML
+definition of the \syn{SharePriceFeed\_requires\_bandwidth} axiom from the WSML ontology in Section~\ref{sec:wsml} uses a shortcut of the WSML \synkw{numericLessThan} predicate. Clearly, these special WSML
 predicates have to be translated to the corresponding built-in
 predicates supported by the built-in Datalog reasoner. I.e., a new, tool-specific
 mapping $\transdpred : \P \mapsto \P$ has to be applied to the generic Datalog program, which translates all built-in WSML predicates into tool-specific predicates. I.e., the transformation pipeline $\tau$ is redefined as
