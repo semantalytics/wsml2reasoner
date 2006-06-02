@@ -1,3 +1,47 @@
 \section{Motivation\label{sec:motivation}}
 -- motivate the provision of reasoning support for (rule-based) WSML based on existing inference engines \\
--- stress that this is the first specific WSML Reasoner implementation available \\
+-- -- in SWS, reasoning support for the ontology languages used is needed to perform e.g. matchmaking or type subsumption \\
+-- -- a relatively new ontology language specific for SWS is WSML, which has variants following the  rule-based KR paradigm \\
+-- -- we present a framework for reasoning with rule-based WSML \\
+-- -- it bases on a semantics-preserving translation of WSML to datalog and thus builds on existing datalog inference engines \\
+-- -- -- instead of directly mapping WSML to datalog, it realises the preserving of the WSML semantics by special meta-level predicates and axioms which build a vocabulary for reproducing the WSML language constructs in datalog \\
+-- -- -- the WSML reasoning tasks can be performed by datalog querying \\
+-- -- -- it supports debugging features for identifying violated constraints together with the involved ontological entities \\
+-- -- it is implemented and can be readily used to reason with WSML ontologies; it is the first implementation of this kind \\
+-- -- it is being developed within and partly funded by the DIP project where it is applied to SWS discovery and to support domain modelling in various use cases \\
+
+In the Semantic Web, recently Web Services are annotated by
+semantic descriptions of their functionality in order to
+facilitate tasks like automated discovery or composition of
+services. Such semantic annotation is formulated using ontology
+languages with underlying logical formalisms. The matching of
+semantic annotation for discovery or the checking of type
+compatibility for composition requires reasoning support for these
+languages. A relatively new ontology language specifically
+tailored for the description of Web Services is WSML (Web Service
+Modeling Language) \cite{wsml}, which comes in variants that
+follow the rule-based knowledge representation paradigm of logic
+programming \cite{}.
+
+We present a framework for reasoning with rule-based WSML variants
+that builds on existing infrastructure for inferencing in
+rule-based formalisms. The framework bases on a
+semantics-preserving syntactic transformation of WSML ontologies
+to Datalog programs. Instead of directly mapping WSML entities,
+i.e.\ concepts, instances, attributes, to datalog predicates and
+constants, we use special meta-level predicates and axioms which
+form a vocabulary on reified entities for reproducing the WSML
+language constructs in the Datalog formalism, which facilitates
+metamodelling features. The WSML reasoning tasks of checking
+knowledge base satisfiability and of instance retrieval can then
+be performed by means of Datalog querying applied on a transformed
+ontology. Thus, the framework directly build on top of existing
+Datalog inference engines. Besides these standard reasoning tasks,
+the framework provides debugging features that support an ontology
+engineer in the task of ontology development: the engineer is
+pointed out to violated constraints together with some details on
+the ontological entities that cause the violation. Such a feature
+helps to improve the error reporting in situations of erroneous
+modelling.
+
+The framework is
