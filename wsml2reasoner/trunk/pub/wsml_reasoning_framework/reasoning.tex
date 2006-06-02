@@ -1,0 +1,24 @@
+\subsection{Mapping WSML Reasoning Tasks to Datalog Querying}
+-- describe how to realise WSML satisfiability and entailment through datalog querying \\
+-- -- characterize the KB (datalog program) on which reasoning is performed with the different facts and rules  \\
+-- -- show how the WSML reasoning tasks are mapped to datalog queries (KB sat., entailment and conjunctive query answering) \\
+
+To perform reasoning over the original WSML ontology $O$ with an
+underlying datalog inference engine, a datalog program
+\begin{displaymath}
+    P_O = \mlaxioms \cup \tau(O)
+\end{displaymath}
+is build up, consisting of the meta-level axioms togeter with the
+transformed ontology. The different WSML reasoning tasks are then
+realized by performing datalog queries on $P_O$, as follows.
+\begin{small}
+\begin{tabular}{|l|l|}
+  \hline
+  $O$ is satisfiable & $(P_O, \qury \dlognot \square) \rightarrow \top$ \\
+  $O \models \phi(\vec{C})$ & $(P_O, \qury \phi(\vec{C})) \rightarrow \top$ \\
+  $\{\vec{X} : O \models Q(\vec{X})\}$ & $\{\vec{X} : (P_O, \qury Q(\vec{X})) \rightarrow \top\}$ \\
+ \hline
+\end{tabular}
+\end{small}
+
+( $\phi_g$ : ground fact ; $\vec{X}$ : variable binding )
