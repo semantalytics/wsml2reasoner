@@ -11,13 +11,13 @@ The main challenge in implementing datatype reasoning is realted
 to Axiom (4) in Table~\ref{tab:meta-level}, which checks attribute
 type constraints. The crucial part of the axiom is the literal
 \[\dlognot \pmo(V,C_2)\] because for datatype values no explicit
-membership facts are included in the ontology. For example,
-considering the instance \syn{MSNDialup} from the WSML ontology in
-Section~\ref{sec:wsml}, there is no fact
-$\pmo(10,\syn{\_integer})$ for the value of the
-\syn{providesBandwidth} attribute. Any time a value is defined for
-an attribute constrained by \synkw{ofType}, Axiom (4) would cause
-a constraint violation.
+membership facts are included in the ontology that could
+instantiate this literal. Consider, for example, the instance
+\syn{MSNDialup} from the WSML ontology in Section~\ref{sec:wsml}
+-- there is no fact $\pmo(10,\syn{\_integer})$ for the value of
+the \syn{providesBandwidth} attribute. Any time a value is defined
+for an attribute constrained by \synkw{ofType}, Axiom (4) would
+cause a constraint violation.
 
 To solve this problem, \pmo facts should be generated for all
 datatype constants that appear in the ontology that could
