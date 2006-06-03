@@ -1,11 +1,11 @@
-\subsection{Realising WSML Semantics through Meta Axioms}
--- describe how a fixed set of rules implements (part of) the WSML semantics during reasoning \\
--- -- each WSMl entity is mapped to a datalog constant \\
--- -- special meta-level predicates stand for specific WSMl constructs with a certain semantics; they are applied to datalog constants (give example in picture) \\
--- -- a direct mapping would not facilitate metamodelling as a feature of WSML \\
--- -- meta-level axioms assure that the proper semantics of the wSMl constructs is maintained \\
--- -- the meta-level axioms form rules for the meta-level predicates (, which appear in these rules) \\
--- -- explain the intuition behind the various meta-level axioms \\
+\subsection{WSML Semantics through Meta-Level Axioms}
+%-- describe how a fixed set of rules implements (part of) the WSML semantics during reasoning \\
+%-- -- each WSMl entity is mapped to a datalog constant \\
+%-- -- special meta-level predicates stand for specific WSMl constructs with a certain semantics; they are applied to datalog constants (give example in picture) \\
+%-- -- a direct mapping would not facilitate metamodelling as a feature of WSML \\
+%-- -- meta-level axioms assure that the proper semantics of the wSMl constructs is maintained \\
+%-- -- the meta-level axioms form rules for the meta-level predicates (, which appear in these rules) \\
+%-- -- explain the intuition behind the various meta-level axioms \\
 
 The mapping from WSML to datalog in the reasoning framework works
 such that each WSML-identifiable entity, i.e.\ concept, instance,
@@ -40,8 +40,7 @@ Metamodelling allows an entity to be a concept and an instance at
 the same time. By representing a WSML entity as a datalog
 constant, it could, for example, fill both the first as well as
 the second argument of e.g.\ the predicate \pmo, in which case it
-is interpreted as both an instance and a concept.\sgr{does this
-become clear or is there more that needs to be said?}
+is interpreted as both an instance and a concept.
 
 \begin{figure}[tb]
         \includegraphics[width=8cm]{figures/meta}

@@ -14,10 +14,10 @@
 %-- -- our framework offers debugging features that allow for identifying violated constraints and involved WSML entities, which is achieved by replacing constraints by rules with special additional meta-level predicates in their head \\
 
 During the process of ontology development, an ontology engineer
-can easily construct an erroneous model containing
-contradictory information. In order to produce consistent
-ontologies, inconsistencies should be reported to engineers with
-some details about ontological elements that cause the inconsistency.
+can easily construct an erroneous model containing contradictory
+information. In order to produce consistent ontologies,
+inconsistencies should be reported to engineers with some details
+about ontological elements that cause the inconsistency.
 
 In rule-based WSML, the source for errors in the ontology is always a constraint violation. The plain Datalog mechanisms employed in the reasoning
 framework according to Section \ref{sec:mapping} only allow for
@@ -42,18 +42,17 @@ things are of interest to the ontology engineer: a) the type of
 constraint that is violated and b) the entities, i.e.\ concepts,
 attributes, instances, etc., that are involved in the violation.
 
-\def\bla{\textbf{{\sf bla}}\xspace}
 To give an example, consider the WSML ontology in Section
 \ref{sec:wsml}. There, the attribute \bla of the concept \bla is
 constrained to instances of type \bla. If we would add \bla, this
 constraint would be violated because \bla cannot be derived to be
 an instance of the concept \bla. For an ontology engineer who
-needs to repair this ontology error, it is important to know
-the entities that cause the violation, which in this case are the
+needs to repair this ontology error, it is important to know the
+entities that cause the violation, which in this case are the
 attribute \bla together with the range concept \bla and the
-non-conforming instance \bla. 
+non-conforming instance \bla.
 
-For different types of constraint violations different set of additional information is needed by the ontology engineer to track down the problem successfully. 
+For different types of constraint violations different set of additional information is needed by the ontology engineer to track down the problem successfully.
 
 \subparagraph{Attribute Type Violation} An attribute type
 constraint of the form $C[a$ \wsml{ofType} $T]$ is violated whenever an instance of the concept $C$ has value $V$ for
@@ -129,7 +128,7 @@ constraints on the level of WSML logical expressions. Table
 Constraints representing minimal cardinality constraints (with bodies $B_{mincard}$) and maximal cardinality constraints (with bodies $B_{maxcard}$) are transformed into rules by keeping their respective
 bodies and adding a head that instantiates one of the predicates
 \pvmincard and \pvmaxcard to indicate the respective cardinality
-violation. The new predicate heads also contain the variables $I$ and $a$, which will be unified with the violating instance and attribute, respectively, when the constraint is violated\footnote{Of course, the same variables $I$ and $a$ appear also in the $B_{mincard}$ and $B_{maxcard}$ rule bodies.}. 
+violation. The new predicate heads also contain the variables $I$ and $a$, which will be unified with the violating instance and attribute, respectively, when the constraint is violated\footnote{Of course, the same variables $I$ and $a$ appear also in the $B_{mincard}$ and $B_{maxcard}$ rule bodies.}.
 
 Similarly, a user-defined constraint is turned into a rule by
 keeping the predefined body $B_{user}$ and including a head that

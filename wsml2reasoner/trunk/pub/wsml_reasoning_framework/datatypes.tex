@@ -2,36 +2,60 @@
 \def\transdpred{\transtxt{dpred}}
 
 \subsection{Realising Datatype Reasoning}
-\label{sec:datatype_reasoning}
-As a result
-of the transformations described previously, a generic Datalog
-program is created. Although most of the generic Datalog rules are understood by practically any
-Datalog implementation, realizing datatype reasoning has some
-intricate challenges.
+\label{sec:datatype_reasoning} Although most of the generic
+Datalog rules are understood by practically any Datalog
+implementation, realizing datatype reasoning has some intricate
+challenges.
 
-The main challenge in implementing datatype reasoning is caused by Axiom (4) in Table~\ref{tab:meta-level}, which checks the WSML \synkw{ofType} constraints. The problem is the \[\dlognot \pmo(V,C_2)\] part of the axiom, because for datatype values no explicit membership facts are included in the ontology. E.g., considering the instance \syn{MSNDialup} from the WSML ontology in Section~\ref{sec:wsml}, there is no $\pmo(10,\syn{\_integer})$ fact for the value of the \syn{providesBandwidth} attribute. I.e., any time a value is defined for an attribute constrained by an \synkw{ofType} constraint, Axiom (4) would cause a constraint violation.
+The main challenge in implementing datatype reasoning is realted
+to Axiom (4) in Table~\ref{tab:meta-level}, which checks attribute
+type constraints. The crucial part of the axiom is the literal
+\[\dlognot \pmo(V,C_2)\] because for datatype values no explicit
+membership facts are included in the ontology. For example,
+considering the instance \syn{MSNDialup} from the WSML ontology in
+Section~\ref{sec:wsml}, there is no fact
+$\pmo(10,\syn{\_integer})$ for the value of the
+\syn{providesBandwidth} attribute. Any time a value is defined for
+an attribute constrained by \synkw{ofType}, Axiom (4) would cause
+a constraint violation.
 
-To solve this problem, \pmo facts should be generated for all datatype constants that
-appear in the ontology. I.e., for each
-constant in the ontology axioms of the following form should
-appear:
+To solve this problem, \pmo facts should be generated for all
+datatype constants that appear in the ontology that could
+instantiate this literal. I.e., for each constant in the ontology
+axioms of the following form should appear:
 \begin{displaymath}
     \pmo(V,D) \lprl \typeof(V, D_T)
-\end{displaymath} where $D$ denotes the WSML datatype, $D_T$ denotes a datatype supported by the underlying Datalog implementation, which is compatible with the WSML datatype, and \typeof denotes a built-in predicate implemented by the Datalog tool, which checks whether a constant value belongs to the specified datatype.
+\end{displaymath}
+where $D$ denotes the WSML datatype, $D_T$ denotes a datatype
+supported by the underlying Datalog implementation, which is
+compatible with the WSML datatype, and \typeof denotes a built-in
+predicate implemented by the Datalog tool, which checks whether a
+constant value belongs to the specified datatype.
 
-Those tool-specific axioms result in a new set of Datalog rules, denoted as \dataaxioms. 
-I.e., the Datalog program $P_O$ that is executed by the Datalog reasoner, should be extended with this new set of rules. 
+These additional meta-level axioms result in a new set of Datalog
+rules, denoted by \dataaxioms, which are no longer in generic
+datalog but use tool-specific built-in predicates of the
+underlying inference engine. The Datalog program $P_O$ is extended
+with this new set of rules as follows.
 \begin{displaymath}
     P_O = \mlaxioms \cup \dataaxioms \cup \tau(O)
 \end{displaymath}
 
-In addition to datatypes, WSML also supports some built-in predicates on datatypes, such as
-numeric comparison\footnote{A full list of WSML datatypes can be
-found in the WSML specification \cite{wsml-spec}.}. E.g., the
-definition of the \syn{SharePriceFeed\_requires\_bandwidth} axiom from the WSML ontology in Section~\ref{sec:wsml} uses a shortcut of the WSML \synkw{numericLessThan} predicate. Clearly, these special WSML
+In addition to datatypes, WSML also supports some predefined
+predicates on datatypes, such as numeric comparison\footnote{A
+full list of WSML datatypes can be found in the WSML specification
+\cite{wsml-spec}.}. For example, the definition of the
+\syn{SharePriceFeed\_requires\_bandwidth} axiom from the WSML
+ontology in Section~\ref{sec:wsml} uses a shortcut of the WSML
+\synkw{numericLessThan} predicate. Clearly, these special WSML
 predicates have to be translated to the corresponding built-in
-predicates supported by the built-in Datalog reasoner. I.e., a new, tool-specific
-mapping $\transdpred : \P \mapsto \P$ has to be applied to the generic Datalog program, which translates all built-in WSML predicates into tool-specific predicates. I.e., the transformation pipeline $\tau$ is redefined as
+predicates supported by the underlying Datalog reasoner.
+Therefore, we introduce a new tool-specific transformation step
+\transdpred as a mapping $\P \mapsto \P$, which translates all
+predefined WSML predicates in the generic Datalog program to
+tool-specific built-in predicates. The transformation pipeline
+$\tau$ is augmented by this additional step and is redefined as
+follows.
 \begin{displaymath}
     \tau = \transdpred \circ \transdlog \circ \translt \circ \transnorm \circ \transax
 \end{displaymath}
@@ -40,8 +64,7 @@ To summarize the discussion, the underlying Datalog implementation
 must fulfill the following requirements to support WSML datatype
 reasoning:
 \begin{itemize}
-    \item It should provide built-in datatypes that correspond to WSML built-in datatypes.
-    \item It should provide a predicate (or predicates) for checking the datatype of a constant.
-    \item It should provide built-in predicates that correspond to WSML built-in predicates.
+    \item It should provide built-in datatypes that correspond to WSML datatypes.
+    \item It should provide a predicate (or predicates) for checking whether a datatype covers a constant.
+    \item It should provide built-in predicates that correspond to datatype-related predefined predicates in WSML.
 \end{itemize}
-
