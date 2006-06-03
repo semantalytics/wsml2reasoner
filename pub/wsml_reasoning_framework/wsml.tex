@@ -60,38 +60,41 @@ example which demonstrates the elements of an ontology in Listing
 \ref{lst:wsml-ontology-example}, and detail the elements below.
 
 \begin{lstlisting}[label=lst:wsml-ontology-example,style=wsml]
-wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
-namespace {_"http://example.org/bookOntology#",
-        dc _"http://purl.org/dc/elements/1.1/"}
-ontology _"http://example.org/bookOntology"
-  nonFunctionalProperties
-    dc#title hasValue "Example Book ontology"
-    dc#description hasValue "Example ontology about books and shopping carts"
-  endNonFunctionalProperties
-    concept book
-        title ofType _string
-        hasAuthor ofType author
-    concept author subConceptOf person
-        authorOf inverseOf(hasAuthor) ofType book
-    concept cart
-      nonFunctionalProperties
-        dc#description hasValue "A shopping cart has exactly one id
-          and zero or more items, which are books."
-      endNonFunctionalProperties
-        id ofType (1) _string
-        items ofType book
-    instance crimeAndPunishment memberOf book
-        title hasValue "Crime and Punishment"
-        hasAuthor hasValue dostoyevsky
+// bundle
+concept ITBundle subConceptOf Product
+    hasNetwork ofType (0 1) NetworkConnection
+    hasOnlineService ofType (0 1) OnlineService
 
-    relation authorship(impliesType author, impliesType document)
-      nonFunctionalProperties
-        dc#relation hasValue authorshipFromAuthor
-      endNonFunctionalProperties
+// -- network connections:
+concept NetworkConnection subConceptOf BundlePart
+    providesBandwidth ofType (0 1) _integer
+concept DialupConnection subConceptOf NetworkConnection
+concept DSLConnection subConceptOf NetworkConnection axiom
+DialupConnection_DSLConnection_Disjoint definedBy
+    !- ?x memberOf DialupConnection and ?x memberOf DSLConnection.
 
-    axiom authorshipFromAuthor
-      definedBy
-        authorship(?x,?y) :- ?x[authorOf hasValue ?y] memberOf author.
+// -- online services:
+concept OnlineService subConceptOf BundlePart
+concept SharePriceFeed subConceptOf OnlineService
+axiom SharePriceFeed_requires_bandwidth definedBy
+    !- ?b memberOf ITBundle and ?b[hasOnlineService hasValue ?o] and ?o memberOf SharePriceFeed and
+                  ?b[hasNetwork hasValue ?n] and ?n[providesBandwidth hasValue ?x] and
+                  ?x < 512.
+
+concept BroadbandBundle subConceptOf ITBundle
+    hasNetwork ofType (1 1) DSLConnection
+axiom BroadbandBundle_sufficient_condition definedBy
+    ?b memberOf BroadbandBundle :- ?b memberOf ITBundle and ?b[hasNetwork hasValue ?n] and ?n memberOf DSLConnection.
+
+// Instances:
+instance MyBundle memberOf ITBundle
+    hasNetwork hasValue MSNDialup
+    hasOnlineService hasValue UbiqBankShareInfo
+instance MSNDialup memberOf DialupConnection
+    providesBandwidth hasValue 10
+instance ArcorDSL memberOf DSLConnection
+    providesBandwidth hasValue 1024
+instance UbiqBankShareInfo memberOf SharePriceFeed
 \end{lstlisting}
 
 \paragraph{Concepts}

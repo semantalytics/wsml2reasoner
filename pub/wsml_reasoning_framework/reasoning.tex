@@ -10,12 +10,13 @@ underlying datalog inference engine, a datalog program
 \end{displaymath}
 is build up that consists of the meta-level axioms together with
 the transformed ontology. The different WSML reasoning tasks are
-then realized by performing datalog queries on $P_O$. A Query
-$Q(\vec{x})$ posed to a Datalog program $P$ is denoted by
+then realized by performing datalog queries on $P_O$. Posing a
+query $Q(\vec{x}) \in \LE$ to a Datalog program $P \in \P$ is
+denoted by
 $$(P,\qury Q(\vec{x}))$$ and yields a set of tuples that instantiate
-the variable vector $\vec{x}$.
+the vector $\vec{x}$ of variables in the query.
 
-\subparagraph{Ontology Consistency} -- The task of checking a WMSL
+\paragraph{Ontology Consistency} -- The task of checking a WMSL
 ontology for consistency is done by querying for the empty clause,
 as expressed by the following equivalence.
 \begin{displaymath}
@@ -23,21 +24,24 @@ as expressed by the following equivalence.
     \emptyset
 \end{displaymath}
 If the resulting set is empty then the empty clause could not be
-derived from the program and the original ontology is satisfiable.
+derived from the program and the original ontology is satisfiable,
+otherwise it is not.
 
-\subparagraph{Entailment} -- The reasoning task of entailment of
+\paragraph{Entailment} -- The reasoning task of entailment of
 ground facts by a WSML ontology can be done by using queries that
 contain no variables, as expressed in the following equivalence.
 \begin{displaymath}
     O \models \phi \; \Leftrightarrow \; (P_O, \qury
     \tau(\phi)) \not= \emptyset
 \end{displaymath}
-The WSML ground fact $\phi$ is transformed to Datalog and
-evaluated together with the Datalog program $P_O$. If the
-resulting set is non-empty then $\phi$ is entailed by the original
-ontology.
+The WSML ground fact $\phi \in \LE$ is transformed to Datalog with
+a transformation $\transdlog \circ \translt \circ \transnorm$,
+similar to the one that apply to the ontology, and is evaluated
+together with the Datalog program $P_O$. If the resulting set is
+non-empty then $\phi$ is entailed by the original ontology,
+otherwise it is not.
 
-\subparagraph{Retrieval} -- Similarly, instance retrieval can be
+\paragraph{Retrieval} -- Similarly, instance retrieval can be
 performed by posing queries that contain variables to the Datalog
 program $P_O$, as expressed in the following equivalence.
 \begin{displaymath}
@@ -45,9 +49,15 @@ program $P_O$, as expressed in the following equivalence.
 \end{displaymath}
 The query $Q(\vec{x})$, formulated as a WSML logical expression
 with free variables $\vec{x}$, is transformed to Datalog and
-evaluated together with the Datalog program $P_O$. The resulting
-set contains all tuples $\vec{x}$ for which the query expression
-is entailed by the original ontology.
+evaluated together with the program $P_O$. The resulting set
+contains all tuples $\vec{x}$ for which an instantiation of the
+query expression is entailed by the original ontology.
+
+To give an example, the query \syn{?x} \synkw{memberOf}
+\syn{BroadbandBundle} posed to the ontology from Section
+\ref{sec:wsml} yields the set $\{ (\textit{MyBundle}) \}$ that
+contains one tuple with the instance \textit{MyBundle}, which can
+be inferred to be a broadband bundle.
 
 %\begin{small}
 %\begin{tabular}{|l|l|}
