@@ -21,7 +21,9 @@ languages. A relatively new ontology language specifically
 tailored for the description of Web Services is WSML (Web Service
 Modeling Language) \cite{wsml}, which comes in variants that
 follow the rule-based knowledge representation paradigm of logic
-programming \cite{lloyd-FoundationsOfLP}.
+programming \cite{lloyd-FoundationsOfLP}. WSML adds features of
+conceptual modelling and datatypes, known from frame-base
+knowledge representation, on top of logic programming rules.
 
 \smallskip
 
@@ -43,13 +45,12 @@ constraints together with some details on the ontological entities
 that cause the violation. Such a feature helps to improve the
 error reporting in situations of erroneous modelling.
 
-% meta-level:
 Instead of directly mapping WSML entities, i.e.\ concepts,
 instances, attributes, to datalog predicates and constants, we use
 special meta-level predicates and axioms which form a vocabulary
 on reified entities for reproducing the WSML language constructs
-in the Datalog formalism, which facilitates metamodelling
-features.
+in Datalog. This way of using Datalog as an underlying formalism
+facilitates the metamodelling features of WSML.
 
 \smallskip
 
@@ -59,12 +60,12 @@ first implementation of a reasoning tool for this language. In
 contrast to most of the available rule engines and Datalog
 implementations, this reasoning framework supports the combination
 of typical rule-style representation with frame-style conceptual
-modelling, as offered by WSML. This allows a modeller to work with
-ontologies using both logic programming rules ontology building
-features such as conceptual structures or datatype predicates.
+modelling, as offered by WSML.
 
-The WSML reasoning framework is developed in and partly funded by
-the European project DIP (IST-FP6-507483), where it is applied to
-Semantic Web Services discovery and to support domain modelling in
-various use case scenarios in eBanking, egovernment and
-telecommunications.
+The WSML reasoning framework is developed within, and partly
+funded by, the European project DIP (IST-FP6-507483), where it is
+applied to Semantic Web Services discovery and to support domain
+modelling in various use case scenarios of eBanking, eGovernment
+and telecommunications. Thus, the features implemented have a
+close link to the needs in these use cases driven by industrial
+partners.
