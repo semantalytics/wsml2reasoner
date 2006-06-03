@@ -1,22 +1,24 @@
 \section{Reasoning Framework Overview\label{sec:framework}}
 
 The design goals of our framework are modularity for the
-transformation steps and flexibility with respect to the underlying
-inference engine. The modularity allows to reuse transformation
-functionality across different WSML variants and reduces the effort
-for accomplishing other reasoning tasks. By reducing WSML to simple
-Datalog constructs and providing a respective object model we have
-reduced the effort of integrating new reasoners to a minimum. In
-fact, the adaptation of the framework to the MINS rule engine took
-less then a day.
+transformation steps and flexibility with respect to the
+underlying inference engine. The modularity allows to reuse
+transformation functionality across different WSML variants and
+reduces the effort for accomplishing other reasoning tasks. By
+reducing WSML to simple Datalog constructs and providing a
+respective object model we have reduced the effort of integrating
+new reasoners to a minimum\footnote{In fact, the adaptation of the
+framework to the MINS rule engine took less then a day.}.
 
 \subsection{Architecture and Internal Layering}
 Figure~\ref{fig:layering} shows the basic components of the system
-as well as the data flow during a prototypical usage scenario. The
-inner box shows the currently implemented transformations that are
-bundled to reduce the incoming WSML ontology to a Datalog program.
+\sgr{it is not clear what "the system" is here.} as well as the
+data flow during a prototypical usage scenario. The inner box
+shows the currently implemented transformations that are bundled
+to reduce the incoming WSML ontology to a Datalog program.
 Different implementations of the ReasonerFacade provide the
-translation of the generic Datalog program into tool specific versions. 
+translation of the generic Datalog program into tool specific
+versions.
 
 Queries in fact use the same infrastructure, except that a new transformation pipeline is
 composed where the axiomatization and constraint replacement transformations are not included.
