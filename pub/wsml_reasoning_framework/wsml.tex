@@ -1,110 +1,147 @@
-\section{Reasoning in the WSML Language\label{sec:wsml}}
--- give an overview of the WSML language; focus on semantics of rule-based variants (also show how syntax looks like, e.g. by an example) \\
--- focus on the ontology language part of WSML (only briefly mention WS-specific parts) and sketch its features, such as constraints, datatypes, conceptual modelling + axiomatic formulations, ... \\
--- describe the reasoning tasks in WSML, i.e. KB satisfiability and entailment \\
--- relate language features and reasoning, e.g. constraints and satisfiability, to emphasise the close connection of these features to reasoning \\
+%\section{Reasoning in the WSML Language}
+\section{The WSML Language}\label{sec:wsml}
 
+%-- give an overview of the WSML language; focus on semantics of rule-based variants (also show how syntax looks like, e.g. by an example) \\
+%-- focus on the ontology language part of WSML (only briefly mention WS-specific parts) and sketch its features, such as constraints, datatypes, conceptual modelling + axiomatic formulations, ... \\
+%-- describe the reasoning tasks in WSML, i.e. KB satisfiability and entailment \\
+%-- relate language features and reasoning, e.g. constraints and satisfiability, to emphasise the close connection of these features to reasoning \\
+%
 The Web Service Modeling Language (WSML) is a language for the
-specification of different aspects of Semantic Web Services. It
-provides a formal language for the Web Service Modeling Ontology
-WSMO which is based on well-known logical formalisms, specifying one
-coherent language framework for the semantic description of Web
-Services, starting from the intersection of Datalog and the
-Description Logic $\mathcal{SHIQ}$. This core language is extended
-in the directions of Description Logics and Logic Programming in a
-principled manner with strict layering. WSML distinguishes between
-conceptual and logical modeling in order to support users who are
-not familiar with formal logic, while not restricting the expressive
-power of the language  for the expert user. IRIs play a central role
-in WSML as identifiers. Furthermore, WSML defines XML and RDF
-serializations for inter-operation over the Semantic Web.
+specification of various aspects of Semantic Web Services (SWS),
+such as what functionality is provided by a SWS or how to interact
+with the SWS. It provides a formal language for the Web Service
+Modeling Ontology (WSMO) and is based on well-known logic-based
+knowledge representation (KR) formalisms (i.e. Description Logics
+and Logic Programming), specifying one coherent language framework
+for the semantic description of Web Services. The least expressive
+core language represents conceptually the intersection of the two
+KR formalisms Datalog and the Description Logic $\mathcal{SHIQ}(\mathbf{D)}$.
+This core language is extended in the directions of Description
+Logics and Logic Programming in a principled manner with strict
+layering.
 
-The Web Service Modeling Language WSML takes into account all
-aspects of Web Service description identified by WSMO, i.e. Web
-services, goals, mediators and ontologies. WSML comprises different
-formalisms in order to investigate their applicability to the
-description of SWS. It would have been too restrictive to base our
-effort on existing language recommendations such as OWL
-\cite{Dean+Schreiber-OntoLangRefe:04}. A concrete goal in our
-development of WSML is to investigate the usage of different
-formalisms, most notably Description Logics and Logic Programming,
-in the context of Ontologies and Web services. Within this paper we
-furthermore focus only on the Ontology part of WSML. Note that we
-expect that reasoning tasks with the other elements of WSMO, e.g.
-the over capabilities is expected to be reducible to reasoning tasks
-within ontologies.
+%WSML distinguishes between
+%conceptual and logical modeling in order to support users who are
+%not familiar with formal logic, while not restricting the
+%expressive power of the language  for the expert user.
+Internationalized Resource Identifier (IRIs) play a central role
+in WSML as identifiers. The concept of namespaces is used for
+logically grouping symbols in a vocabulary. Furthermore, WSML
+defines XML and RDF serializations for inter-operation over the
+Semantic Web. Thus, WSML is a Web and Semantic Web compliant KR
+language.
 
-WSML makes a clear distinction between the modeling of the different
-conceptual elements on the one hand and the specification of complex
-logical definitions on the other. To this end, the WSML syntax is
-split into two parts: the conceptual syntax and logical expression
-syntax. The conceptual syntax was developed from the user
-perspective, and is independent from the particular underlying
-logic; it shields the user from the peculiarities of the underlying
-logic. Having such a conceptual syntax allows for easy adoption of
-the language, since it allows for an intuitive understanding of the
-language for people not familiar with logical languages. In case the
-full power of the underlying logic is required, the logical
-expression syntax can be used. There are several entry points for
-logical expressions in the conceptual syntax, namely, axioms in
-ontologies and capability descriptions in Goals and Web Services.
+Although WSML takes into account all aspects of Web Service
+description identified by WSMO (i.e. Web services, goals,
+mediators and ontologies) we focus in the following on the WSML
+ontology description (sub)language. Reasoning with other elements
+of WSMO (e.g. matching of two Web Service capability descriptions)
+fundamentally relies on ontology reasoning in WSML and is reduced
+to ontology reasoning whenever this is possible.
 
-\subsection{Conceptual Syntax}
+WSML makes a clear distinction between the modeling of the
+different conceptual elements on the one hand and the
+specification of complex logical definitions on the other. To this
+end, the WSML syntax is split into two parts: the conceptual
+syntax and logical expression syntax. The conceptual syntax was
+developed from the user perspective, and is independent from the
+particular underlying logic; it shields the user from the
+peculiarities of the underlying logic. Having such a conceptual
+syntax allows for easy adoption of the language, since it allows
+for an intuitive understanding of the language for people not
+familiar with logical languages. In case the full power of the
+underlying logic is required, the logical expression syntax can be
+used. There are several entry points for logical expressions in
+the conceptual syntax, e.g. axioms in ontologies or capability
+descriptions in Goals and Web Services.
+
+\paragraph{A. Conceptual Syntax --}
+%\subsection{Conceptual Syntax}
 \label{sec:conceptual-syntax}
 
-The WSML conceptual syntax for ontologies allows for the modeling of
-concepts, instances, relations and relation instances. Additionally,
-an ontology may have non-functional properties and may import other
-ontologies. We start the description of WSML ontologies with an
-example which demonstrates the elements of an ontology in Listing
-\ref{lst:wsml-ontology-example}, and detail the elements below.
+The WSML conceptual syntax for ontologies essentially allows for
+the modeling of concepts, instances, relations and relation
+instances. Additionally, each of this modelling elements may have
+non-functional properties (describing meta-information about the
+element, such as the author or version etc.). An ontology may
+import other ontologies. We illustrate the description of WSML
+ontologies with an example in Listing
+\ref{lst:wsml-ontology-example} and discuss its modeling elements
+below.
 
-\begin{lstlisting}[label=lst:wsml-ontology-example,style=wsml]
-// bundle
+%wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+%namespace {_"http://example.org/telcomProductsOntology#",
+%        dc _"http://purl.org/dc/elements/1.1/"}
+%
+%ontology _"http://example.org/telcomProductsOntology"
+%  nonFunctionalProperties
+%    dc#title hasValue "Telcom Products Ontology"
+%    dc#description hasValue "products of telcom service providers"
+%  endNonFunctionalProperties
+%
+%concept Bundle subConceptOf Product
+%axiom Bundle_OnlyAttributeRanges_Provider_Or_Product definedBy
+%  !- ?b memberOf Bundle and
+%     ?b[?att impliesType ?t] and
+%     naf (?t subConceptOf Provider or ?t subConceptOf BundlePart).
+%axiom ITBundle_hasAtLeastOneBundlePart definedBy
+%    !- ?b memberOf ITBundle and
+%        naf (exists ?c (?b[hasNetwork hasValue ?c]) or
+%           exists ?s (?b[hasOnlineService hasValue ?s])).
+
+\begin{lstlisting}[label=lst:wsml-ontology-example,style=wsml, caption=WSML Example Ontology]
+concept Product
+    hasProvider inverseOf(Provider#provides) impliesType Provider
 concept ITBundle subConceptOf Product
     hasNetwork ofType (0 1) NetworkConnection
     hasOnlineService ofType (0 1) OnlineService
-
-// -- network connections:
+    hasProvider impliesType TelecomProvider
 concept NetworkConnection subConceptOf BundlePart
     providesBandwidth ofType (0 1) _integer
 concept DialupConnection subConceptOf NetworkConnection
-concept DSLConnection subConceptOf NetworkConnection axiom
-DialupConnection_DSLConnection_Disjoint definedBy
-    !- ?x memberOf DialupConnection and ?x memberOf DSLConnection.
+concept DSLConnection subConceptOf NetworkConnection
+axiom DialupConnection_DSLConnection_Disjoint definedBy
+ !- ?x memberOf DialupConnection and ?x memberOf DSLConnection.
 
-// -- online services:
 concept OnlineService subConceptOf BundlePart
 concept SharePriceFeed subConceptOf OnlineService
-axiom SharePriceFeed_requires_bandwidth definedBy
-    !- ?b memberOf ITBundle and ?b[hasOnlineService hasValue ?o] and ?o memberOf SharePriceFeed and
-                  ?b[hasNetwork hasValue ?n] and ?n[providesBandwidth hasValue ?x] and
-                  ?x < 512.
-
+axiom SharePriceFeed_requires_bandwidth
+definedBy
+ !- ?b memberOf ITBundle and ?b[hasOnlineService hasValue ?o]
+    and ?o memberOf SharePriceFeed and
+    ?b[hasNetwork hasValue ?n] and
+    ?n[providesBandwidth hasValue ?x] and ?x < 512.
 concept BroadbandBundle subConceptOf ITBundle
     hasNetwork ofType (1 1) DSLConnection
-axiom BroadbandBundle_sufficient_condition definedBy
-    ?b memberOf BroadbandBundle :- ?b memberOf ITBundle and ?b[hasNetwork hasValue ?n] and ?n memberOf DSLConnection.
+axiom BroadbandBundle_sufficient_condition
+definedBy
+    ?b memberOf BroadbandBundle :- ?b memberOf ITBundle
+    and ?b[hasNetwork hasValue ?n] and ?n memberOf DSLConnection.
 
-// Instances:
+instance GermanTelekom memberOf TelecomProvider.
+instance UbiqBankShareInfo memberOf SharePriceFeed.
 instance MyBundle memberOf ITBundle
     hasNetwork hasValue MSNDialup
     hasOnlineService hasValue UbiqBankShareInfo
+    hasProvider GermanTelekom.
 instance MSNDialup memberOf DialupConnection
-    providesBandwidth hasValue 10
+    providesBandwidth hasValue 10.
 instance ArcorDSL memberOf DSLConnection
-    providesBandwidth hasValue 1024
-instance UbiqBankShareInfo memberOf SharePriceFeed
+    providesBandwidth hasValue 1024.
+
 \end{lstlisting}
 
-\paragraph{Concepts}
-The notion of concepts (sometimes also called `classes') plays a
-central role in ontologies. Concepts form the basic terminology of
-the domain of discourse. A concept may have instances and may have a
-number of attributes associated with it. The non-functional
-properties, as well as the attribute definitions, are grouped
-together in one frame, as can be seen from the example concept
-\syn{book} in Listing \ref{lst:wsml-ontology-example}.
+\subparagraph{\it \bfseries (1) Concepts \& Relations.} The notion of concepts
+(or classes) plays a central role in ontologies. Concepts form the
+basic terminology of the domain of discourse. A concept may have
+instances and may have a number of attributes associated with it.
+Non-functional properties as well
+as attribute definitions are grouped together in one frame (e.g.
+concept \syn{ITBundle} in Listing \ref{lst:wsml-ontology-example}
+representing a product bundle (provided by
+a telecom provider) that consists up to one online network
+connection and up-to one online service which can be used over the
+network connection.)
 
 Attribute definitions can take two forms, namely \emph{constraining}
 (using \synkw{ofType}) and \emph{inferring} (using
@@ -113,8 +150,8 @@ Attribute definitions can take two forms, namely \emph{constraining}
   explained in more detail in \cite[Section
   2]{Bruijn+PolleresETAL-:05}}. Constraining attribute definitions
 define a typing constraint on the values for this attribute, similar
-to integrity constraints in Databases; inferring attribute
-definitions imply that the type of the values for the attribute is
+to integrity constraints in databases; inferring attribute
+definitions allow that the type of the values for the attribute is
 inferred from the attribute definition, similar to range
 restrictions on properties in
 RDFS~\cite{Brickley+Guha-VocaDescLang:03} and
@@ -122,135 +159,115 @@ OWL~\cite{Dean+Schreiber-OntoLangRefe:04}.  Each attribute
 definition may have a number of features associated with it, namely,
 transitivity, symmetry, reflexivity, and the inverse of an
 attribute, as well as minimal and maximal cardinality constraints.
+In Listing~\ref{lst:wsml-ontology-example}, e.g concept \syn{Product}
+is defined to have an attribute \syn{hasProvider} which is
+considered as the inverse of the attribute \syn{provides} in concept \syn{Provider}.
+Furthermore, it is allowed to infer for values of \syn{hasProvider} of
+\syn{Product}-instances to be instances of \syn{Provider}.
+As opposed to features of roles in Description Logics, attribute features
+such as transitivity, symmetry, reflexivity and inverse attributes are local
+to a concept in WSML.
+%For a motivation on the use of constraining attributes, see \cite{Bruijn+PolleresETAL-:05}.
 
-Constraining attribute definitions, as well as cardinality
-constraints, require closed-world reasoning and are thus not allowed
-in WSML-Core and WSML-DL. As opposed to features of roles in
-Description Logics, attribute features such as transitivity,
-symmetry, reflexivity and inverse attributes are local to a concept
-in WSML. Thus, none of these features may be used in WSML-Core and
-WSML-DL. For a motivation on the use of constraining attributes, see
-\cite{Bruijn+PolleresETAL-:05}.
-
-\paragraph{Relations}
-Relations in WSML can have an arbitrary arity, may be organized in a
-hierarchy using \synkw{subRelationOf} and the parameters may be
-typed using parameter type definitions of the form
-(\syn{\synkw{ofType}
-  $type$} ) and (\syn{\synkw{impliesType} $type$}), where $type$ is a
-concept identifier. The usage of \synkw{ofType} and
-\synkw{impliesType} correspond with the usage in attribute
-definitions. Namely, parameter definitions with the \synkw{ofType}
-keyword are used to check the type of parameter values, whereas
-parameter definitions with the \synkw{impliesType} keyword are used
-to infer concept membership of parameter values.
-
-The allowed arity of the relation may be constrained by the
-underlying logic of the WSML language variant. WSML-Core and WSML-DL
-allow only binary relations and, similar to attribute definitions,
-they allow only parameter typing using the keyword
-\synkw{impliesType}.
-
-
-\paragraph{Instances}
-A concept may have a number of instances associated with it.
-Instances explicitly specified in an ontology are those which are
-shared as part of the ontology. However, most instance data exists
-outside the ontology in private databases. WSML does not prescribe
-how to connect such a database to an ontology, since different
-organizations will use the same ontology to query different
-databases and such corporate databases are typically not shared.
-
-An instance may be member of zero or more concepts and may have a
+Similar constructs are available to define ($n$-ary) relations (denoting
+logical inter-relation between individuals and values) in WSML
+ontologies.
+\\ {\it \bfseries (2) Instances of Concepts and Relations.}
+Concepts and relations may have a arbitrary number of
+instances associated with it. Instances explicitly specified in an
+ontology are those which are shared as part of the ontology. An
+instance may be member of zero or more concepts (or relations) and may have a
 number of attribute values associated with it, see for example the
-instance \syn{crimeAndPunishment} in Listing
-\ref{lst:wsml-ontology-example}. Note that the specification of
-concept membership is optional and the attributes used in the
-instance specification do not necessarily have to occur in the
-associated concept definition. Consequently, WSML instances can be
-used to represent semi-structured data, since without concept
-membership and constraints on the use of attributes, instances form
-a directed labelled graph. Because of this possibility to capture
-semi-structured data, most RDF graphs can be represented as WSML
-instance data, and vice versa.
+instance \syn{MyBundle} in Listing
+\ref{lst:wsml-ontology-example} that is an \syn{MyBundle} provided by the \syn{GermanTelekom}.
+In WSML that the specification of
+concept membership for instances is optional and the attributes
+used in the instance specification do not necessarily have to
+occur in the associated concept definition. Consequently, WSML
+instances can be used to represent semi-structured data.
+%, since without concept membership and constraints on the use of
+%attributes, instances form a directed labelled graph. Because of
+%this possibility to capture semi-structured data, most RDF graphs
+%can be represented as WSML instance data, and vice versa.
+\\ {\it \bfseries (3) Axioms.} Axioms provide a means to add arbitrary
+logical expressions to an ontology. Such logical expressions can
+be used to refine concept or relation definitions in the ontology,
+but also to add arbitrary axiomatic domain knowledge or express
+constraints.
+For exampe, a \syn{SharePriceFeed} instances represent financial services
+that report in real-time of current prices of certain shares
+at the stock-market. Thus, a certain bandwidth is required, which
+is captured by axiom \syn{SharePriceFeed\_requires\_bandwidth}
+in Listing \ref{lst:wsml-ontology-example}: it states that the
+ontology may not contain an instance of \syn{ITBundle} that
+provides a \syn{SharePriceFeed} online services over a network
+which can only provide a bandwith under a certain limit (here
+\syn{512}). Other examples are axiom \syn{DialupConnection\_DSLConnection\_Disjoint}
+stating there can not be an object which is a dial-up
+connection and a DSL connection at the same time, or axiom
+\syn{BroadbandBundle\_sufficient\_condition} which specifies that
+any ITBundle that provides a DSLConnection as its
+network connection actually is a BroadbandBundle. Thus, the latter
+axiom together with the (partial) definition of concept
+\syn{BroadbandBundle} provides an exact characterization of the
+instances of this class.
 
-
-\paragraph{Axioms} Axioms provide a means to add arbitrary logical
-expressions to an ontology. Such logical expressions can be used to
-refine concept or relation definitions in the ontology, but also to
-add arbitrary axiomatic domain knowledge or express constraints. The
-axiom \syn{authorshipFromAuthor} in Listing
-\ref{lst:wsml-ontology-example} states that the relation
-\syn{authorship} exists between any author and any book of which he
-is an author; consequently, $\langle \syn{dostoyesksy},
-\syn{crimeAndPunishment} \rangle$ is in the relation
-\syn{authorship}. Logical expressions are explained in more detail
-in Section~\ref{sec:log-expr-syntax}.
-
-\subsection{Logical Expression Syntax}
+\paragraph{B. Logical Expression Syntax --}
+%\subsection{Logical Expression Syntax}
 \label{sec:log-expr-syntax}
 
 We will first explain the general logical expression syntax, which
 encompasses all WSML variants, and then describe the restrictions on
 this general syntax for each of the variants. The general logical
-expression syntax for WSML has a First-Order Logic style, in the
+expression syntax for WSML has a First-Order Logic (FOL) style, in the
 sense that it has constants, function symbols, variables, predicates
-and the usual logical connectives. Furthermore, WSML has F-Logic
+and the usual logical connectives. WSML provides F-Logic
 \cite{Kifer+LausenETAL-LogiFounObjeFram:95} based extensions in
 order to model concepts, attributes, attribute definitions, and
-subconcept and concept membership relationships. Finally, WSML has a
+subconcept and instance relationships. Finally, WSML has a
 number of connectives to facilitate the Logic Programming based
 variants, namely default negation (negation-as-failure),
 LP-implication (which differs from classical implication) and
 database-style integrity constraints.
 
-Variables in WSML start with a question mark, followed by an
-arbitrary number of alphanumeric characters, e.g., \syn{?x},
-\syn{?name}, \syn{?123}. Free variables in WSML (i.e., variables
-which are not explicitly quantified), are implicitly universally
-quantified outside of the formula (i.e., the logical expression in
-which the variable occurs is the scope of quantification), unless
-indicated otherwise, through the \synkw{sharedVariables} construct
-(see the previous Section).
-
-Terms are either identifiers, variables, or constructed terms. An
-atom is, as usual, a predicate symbol with a number of terms as
-arguments. Besides the usual atoms, WSML has a special kind of
-atoms, called \emph{molecules}, which are used to capture
-information about concepts, instances, attributes and attribute
-values. The are two types of molecules, analogous to F-Logic:
-
-\begin{itemize}
-\item An \emph{isa} molecule is a concept membership molecule of
-  the form \syn{\emph{A} \synkw{memberOf} \emph{B}} or a subconcept
-  molecule of the form \syn{\emph{A} \synkw{subConceptOf} \emph{B}}
-  with \syn{\emph{A}} and \syn{\emph{B}} arbitrary terms
-
-\item An \emph{object} molecule is an attribute value expressions
-  of the form \syn{\emph{A}[\emph{B} \synkw{hasValue} \emph{C}]}, a
-  constraining attribute signature expression of the form
-  \syn{\emph{A}[\emph{B} \synkw{ofType} \emph{C}]}, or an inferring attribute signature expression of the form
-  \syn{\emph{A}[\emph{B} \synkw{ofType} \emph{C}]}, with
-  \syn{\emph{A,B,C}} arbitrary terms
-\end{itemize}
+Variables in WSML start with a question mark.
+Terms are either identifiers, variables, or constructed terms. As usual, an
+atom is constituted of an $n$-ary predicate symbol with $n$ terms as
+arguments. Besides these standard atoms of FOL, WSML has a two special kind of
+atoms, called \emph{molecules}, which are inspired by F-Logic and can be used
+to capture information about concepts, instances, attributes and attribute
+values:
+(a) An {\bfseries \emph{isa}-molecule} is an expression of
+  the form \syn{\emph{A} \synkw{memberOf} \emph{B}} (denoting a concept membership)
+  or of the form \syn{\emph{A} \synkw{subConceptOf} \emph{B}}
+  (denoting a subconcept relationship)
+  whereby \syn{\emph{A}} and \syn{\emph{B}} are arbitrary
+  terms.
+(b) An {\bfseries  \emph{object}-molecule} is an expression of the form
+   \syn{\emph{A}[\emph{B} \synkw{hasValue} \emph{C}]} (denoting attribute values of objects),
+   of the form \syn{\emph{A}[\emph{B} \synkw{ofType} \emph{C}]} (denoting a
+  constraining attribute signature), or of the form
+  \syn{\emph{A}[\emph{B} \synkw{ofType} \emph{C}]} (denoting an inferring attribute signature), with
+  \syn{\emph{A,B,C}} being arbitrary terms.
 
 WSML has the usual first-order connectives: the unary negation
 operator \synkw{neg}, and the binary operators for conjunction
 \synkw{and}, disjunction \synkw{or}, right implication
-\synkw{implies}, left implication \synkw{impliedBy}, and dual
-implication \synkw{equivalent}. Variables may be universally
+\synkw{implies}, left implication \synkw{impliedBy}, and bi-implication
+\synkw{equivalent}. Variables may be universally
 quantified using \synkw{forall} or existentially quantified using
 \synkw{exists}. First-order formulae are obtained by combining atoms
-using the mentioned connectives in the usual way. The following are
-examples of First-Order formulae in WSML:
-
-\begin{lstlisting}[style=wsml, frame=none]
-//every person has a father
-forall ?x (?x memberOf Person implies exists ?y (?x[father hasValue
-?y])).
-//john is member of a class which has some attribute called 'name'
-exists ?x,?y (john memberOf ?x and ?x[name ofType ?y]).
-\end{lstlisting}
+using the mentioned connectives in the usual way.
+%The following are
+%examples of First-Order formulae in WSML:
+%
+%\begin{lstlisting}[style=wsml, frame=none]
+%//every person has a father
+%forall ?x (?x memberOf Person implies exists ?y (?x[father hasValue
+%?y])).
+%//john is member of a class which has some attribute called 'name'
+%exists ?x,?y (john memberOf ?x and ?x[name ofType ?y]).
+%\end{lstlisting}
 
 Apart from First-Order formulae, WSML allows the use of the
 negation-as-failure symbol \synkw{naf} on atoms, the special Logic
@@ -265,29 +282,36 @@ Programming rules is restricted. The following logical connectives
 are allowed in the head of a rule: \synkw{and}, \synkw{implies},
 \synkw{impliedBy}, and \synkw{equivalent}. The following connectives
 are allowed in the body of a rule (or constraint): \synkw{and},
-\synkw{or}, and \synkw{naf}. The following are examples of LP rules
-and database constraints:
+\synkw{or}, and \synkw{naf}.
+%The following are examples of LP rules
+%and database constraints:
+%
+%\begin{lstlisting}[style=wsml, frame=none]
+%//every person has a father
+%?x[father hasValue f(?y)] :- ?x memberOf Person.
+%//Man and Woman are disjoint
+%!- ?x memberOf Man and ?x memberOf Woman.
+%//in case a person is not involved in a marriage, the person is a bachelor
+%?x memberOf Bachelor :- ?x memberOf Person and naf
+%Marriage(?x,?y,?z).
+%\end{lstlisting}
 
-\begin{lstlisting}[style=wsml, frame=none]
-//every person has a father
-?x[father hasValue f(?y)] :- ?x memberOf Person.
-//Man and Woman are disjoint
-!- ?x memberOf Man and ?x memberOf Woman.
-//in case a person is not involved in a marriage, the person is a bachelor
-?x memberOf Bachelor :- ?x memberOf Person and naf
-Marriage(?x,?y,?z).
-\end{lstlisting}
+Axioms \syn{BroadbandBundle\_sufficient\_condition} and
+\syn{SharePriceFeed\_requires\_bandwidth} in Listing~\ref{lst:wsml-ontology-example}
+are examples for the use of LP rules and integrity constraints in
+WSML ontologies.
 
-\subsection{Particularities of the WSML Variants}
-
+%\subsection{Particularities of the WSML Variants}
+\paragraph{C. Particularities of the WSML Variants --}
 Each of the WSML variants defines a number of restrictions on the
-logical expression syntax. For example, LP rules and constraints are
-not allowed in WSML-Core and WSML-DL. Table \ref{table:wsml-matrix}
-presents a number of language features and indicates in which
-variant the feature can occur.
+logical expression syntax. For example, LP rules and constraints
+are not allowed in WSML-Core and WSML-DL. Table
+\ref{table:wsml-matrix} presents a number of language features and
+indicates in which variant the feature can occur.
 
+{
 \begin{table}[ht]
-\center
+\center \footnotesize
 \begin{tabular}{|l|c|c|c|c|c|}
     \hline
 Feature             & Core  & DL    & Flight    & Rule  & Full \\
@@ -316,116 +340,103 @@ Unsafe Rules
 \end{tabular}
 \caption{WSML Variants and Feature Matrix} \label{table:wsml-matrix}
 \end{table}
+}
 
-\begin{itemize}
-\item \emph{WSML-Core}
-allows only first-order formulae which can be translated to the DLP
-subset of $\mathcal{SHIQ}(\mathbf{D)}$
-\cite{Grosof+HorrocksETAL-DescLogiProg:03}. This subset is very
-close to the 2-variable fragment of First-Order Logic, restricted to
-Horn logic. Although WSML-Core might appear in the Table
+\noindent {\sl \bfseries WSML-Core}  allows only first-order
+formulae which can be translated to the DLP subset of
+$\mathcal{SHIQ}(\mathbf{D)}$~\cite{Grosof+HorrocksETAL-DescLogiProg:03}. This subset is very
+close to the 2-variable fragment of First-Order Logic, restricted
+to Horn logic. Although WSML-Core might appear in the Table
 \ref{table:wsml-matrix} featureless, it captures most of the
-conceptual model of WSML, but has only limited expressiveness within
-the logical expressions.
-
-\item \emph{WSML-DL}
-allows first-order formulae which can be translated to
-$\mathcal{SHIQ}(\mathbf{D)}$. This subset is very close to the
-2-variable fragment of First-Order Logic. Thus, WSML DL allows
-classical negation, and disjunction and existential quantification
-in the heads of implications.
-
-\item \emph{WSML-Flight}
-extends the set of formulae allowed in WSML-Core by allowing
-variables in place of instance, concept and attribute identifiers
-and by allowing relations of arbitrary arity. In fact, any such
-formula is allowed in the head of a WSML-Flight rule. The body of a
-WSML-Flight rule allows conjunction, disjunction and default
-negation. The head and body are separated by the LP implication
-symbol.
-
-WSML-Flight additionally allows meta-modeling (e.g.,
-classes-as-instances) and reasoning over the signature, because
-variables are allowed to occur in place of concept and attribute
-names.
-
-\item \emph{WSML-Rule}
-extends WSML-Flight by allowing function symbols and unsafe rules,
-i.e., variables which occur in the head or in a negative body
-literal do not need to occur in a positive body literal.
-
-\item \emph{WSML-Full}
-The logical syntax of WSML-Full is equivalent to the general logical
-expression syntax of WSML and allows the full expressiveness of all
-other WSML variants.
-
-\end{itemize}
-
-The separation between conceptual and logical modeling allows for an
-easy adoption by non-experts, since the conceptual syntax does not
-require expert knowledge in logical modeling, whereas complex
-logical expressions require more familiarity and training with the
-language. Thus, WSML allows the modeling of different aspects
-related to Web services on a conceptual level, while still offering
-the full expressive power of the logic underlying the chosen WSML
-variant. Part of the conceptual syntax for ontologies has an
-equivalent in the logical syntax. This correspondence is used to
-define the semantics of the conceptual syntax. Notice that, since
-only parts of the conceptual syntax are mapped to the logical
-syntax, only a part of the conceptual syntax has a semantics in the
-logical language for ontologies. For example, non-functional
-properties are not translated (hence, the name `non-functional').
-The translation between the conceptual and logical syntax is
-sketched in Table \ref{tab:conceptual-logical}.
-
-\begin{table}[ht]
-  \centering
-\footnotesize{
-  \begin{tabular}{l|l}
-    \textbf{Conceptual} & \textbf{Logical} \\
-\hline
-    \begin{lstlisting}[style=wsml-table]
-concept A subConcepOf B
-    \end{lstlisting}
-    &
-    \begin{lstlisting}[style=wsml-table]
-A subConceptOf B.
-    \end{lstlisting}
-    \\
-    \begin{lstlisting}[style=wsml-table]
-concept A
-  B ofType (0 1) C
-    \end{lstlisting}
-    &
-    \begin{lstlisting}[style=wsml-table]
-A[B ofType C]. !- ?x memberOf A and
-  ?x[B hasValue ?y, B hasValue ?z] and ?y != ?z.
-    \end{lstlisting}\\
-    \begin{lstlisting}[style=wsml-table]
-concept A B ofType C
-    \end{lstlisting}
-    &
-    \begin{lstlisting}[style=wsml-table]
-A[B ofType C].
-    \end{lstlisting}\\
-    \begin{lstlisting}[style=wsml-table]
-relation A/n subRelationOf B
-    \end{lstlisting}
-    &
-    \begin{lstlisting}[style=wsml-table]
-A(x$_1$,...,x$_n$) implies B(x$_1$,...,x$_n$)
-    \end{lstlisting}\\
-    \begin{lstlisting}[style=wsml-table]
-instance A memberOf B
-  C hasValue D
-    \end{lstlisting}
-    &
-    \begin{lstlisting}[style=wsml-table]
-A memberOf B. A[C hasValue D].
-    \end{lstlisting}\\
-    \hline
-  \end{tabular}}
-
-  \caption{Translating conceptual to logical
-    syntax}\label{tab:conceptual-logical}
-\end{table}
+conceptual model of WSML, but has only limited expressiveness
+within the logical expressions.
+\\
+{\sl \bfseries WSML-DL} allows first-order formulae which can be
+translated to $\mathcal{SHIQ}(\mathbf{D)}$. This subset is very
+close to the 2-variable fragment of First-Order Logic. Thus, WSML
+DL allows classical negation, and disjunction and existential
+quantification in the heads of implications.
+\\
+{\sl \bfseries WSML-Flight} extends the set of formulae allowed
+in WSML-Core by allowing variables in place of instance, concept
+and attribute identifiers and by allowing relations of arbitrary
+arity. In fact, any such formula is allowed in the head of a
+WSML-Flight rule. The body of a WSML-Flight rule allows
+conjunction, disjunction and default negation. The head and body
+are separated by the LP implication symbol. WSML-Flight
+additionally allows meta-modeling (e.g., classes-as-instances) and
+ reasoning over the signature, because variables are allowed to
+occur in place of concept and attribute names.
+\\
+{\sl \bfseries WSML-Rule} extends WSML-Flight by allowing
+function symbols and unsafe rules, i.e., variables which occur in
+the head or in a negative body literal do not need to occur in a
+positive body literal.
+\\
+{\sl \bfseries WSML-Full} The logical syntax of WSML-Full is
+equivalent to the general logical expression syntax of WSML and
+allows the full expressiveness of all other WSML variants.
+%
+%
+%Part of the conceptual syntax for ontologies has an equivalent in
+%the logical syntax. This correspondence is used to define the
+%semantics of the conceptual syntax. Notice that, since only parts
+%of the conceptual syntax are mapped to the logical syntax, only a
+%part of the conceptual syntax has a semantics in the logical
+%language for ontologies. For example, non-functional properties
+%are not translated, since they represent only meta-information of
+%elements in the model that are meant for documentation purposes.
+%The translation between the conceptual and logical syntax is
+%sketched in Table \ref{tab:conceptual-logical}.
+%
+%\begin{table}[ht]
+%  \centering
+%\footnotesize{
+%  \begin{tabular}{l|l}
+%    \textbf{Conceptual} & \textbf{Logical} \\
+%\hline
+%    \begin{lstlisting}[style=wsml-table]
+%concept A subConcepOf B
+%    \end{lstlisting}
+%    &
+%    \begin{lstlisting}[style=wsml-table]
+%A subConceptOf B.
+%    \end{lstlisting}
+%    \\
+%    \begin{lstlisting}[style=wsml-table]
+%concept A
+%  B ofType (0 1) C
+%    \end{lstlisting}
+%    &
+%    \begin{lstlisting}[style=wsml-table]
+%A[B ofType C]. !- ?x memberOf A and
+%  ?x[B hasValue ?y, B hasValue ?z] and ?y != ?z.
+%    \end{lstlisting}\\
+%    \begin{lstlisting}[style=wsml-table]
+%concept A B ofType C
+%    \end{lstlisting}
+%    &
+%    \begin{lstlisting}[style=wsml-table]
+%A[B ofType C].
+%    \end{lstlisting}\\
+%    \begin{lstlisting}[style=wsml-table]
+%relation A/n subRelationOf B
+%    \end{lstlisting}
+%    &
+%    \begin{lstlisting}[style=wsml-table]
+%A(x$_1$,...,x$_n$) implies B(x$_1$,...,x$_n$)
+%    \end{lstlisting}\\
+%    \begin{lstlisting}[style=wsml-table]
+%instance A memberOf B
+%  C hasValue D
+%    \end{lstlisting}
+%    &
+%    \begin{lstlisting}[style=wsml-table]
+%A memberOf B. A[C hasValue D].
+%    \end{lstlisting}\\
+%    \hline
+%  \end{tabular}}
+%
+%  \caption{Translating conceptual to logical
+%    syntax}\label{tab:conceptual-logical}
+%\end{table}
