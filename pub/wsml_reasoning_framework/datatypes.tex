@@ -7,7 +7,7 @@ Datalog rules are understood by practically any Datalog
 implementation, realizing datatype reasoning has some intricate
 challenges.
 
-The main challenge in implementing datatype reasoning is realted
+The main challenge in implementing datatype reasoning is related
 to Axiom (4) in Table~\ref{tab:meta-level}, which checks attribute
 type constraints. The crucial part of the axiom is the literal
 \[\dlognot \pmo(V,C_2)\] because for datatype values no explicit
@@ -15,13 +15,13 @@ membership facts are included in the ontology that could
 instantiate this literal. Consider, for example, the instance
 \syn{MSNDialup} from the WSML ontology in Section~\ref{sec:wsml}
 -- there is no fact $\pmo(10,\syn{\_integer})$ for the value of
-the \syn{providesBandwidth} attribute. Any time a value is defined
+the \syn{providesBandwidth} attribute. Whenever a value is defined
 for an attribute constrained by \synkw{ofType}, Axiom (4) would
 cause a constraint violation.
 
 To solve this problem, \pmo facts should be generated for all
-datatype constants that appear in the ontology that could
-instantiate this literal. I.e., for each constant in the ontology
+datatype constants that appear as values of attributes having \synkw{ofType} constraints in the ontology. 
+I.e., for each such constant in the ontology,
 axioms of the following form should appear:
 \begin{displaymath}
     \pmo(V,D) \lprl \typeof(V, D_T)
@@ -34,7 +34,7 @@ constant value belongs to the specified datatype.
 
 These additional meta-level axioms result in a new set of Datalog
 rules, denoted by \dataaxioms, which are no longer in generic
-datalog but use tool-specific built-in predicates of the
+Datalog but use tool-specific built-in predicates of the
 underlying inference engine. The Datalog program $P_O$ is extended
 with this new set of rules as follows.
 \begin{displaymath}
