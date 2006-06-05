@@ -31,23 +31,25 @@ GN: I do not agree, meta level axioms are added in the WSML2Datalog transformer,
 \begin{figure}[h]
     \includegraphics[width=11cm]{figures/layering}
     \centering
-    \caption{Layering of the Internal Architecture. \label{fig:layering}}
+    \caption{Internal framework architecture. \label{fig:layering}}
 \end{figure}
 
 
 \subsection{Interface and Integration with Existing Technology}
 So far we have not detailed on what data structure the framework
 operates on. One could implement it directly with a parser and
-compiler framework that generates some abstract syntax tree for WSML
-which is directly transformed to the target format (Datalog).
+compiler framework that generates some abstract syntax tree for
+WSML which is directly transformed to the target format (Datalog).
 Although this would have performance advantages, it would greatly
-reduce reusability and would make maintenance harder. Our framework is
-based on an intermediate object model of the language that is
-provided by the WSMO4J\footnote{http://wsmo4j.sourceforge.net}
-project. WSMO4J performs the task of parsing and validating WSML ontologies and provides the source object model for our translations. In order to enable the usage of different Datalog
-engines we additionally implemented a simple object model for
-Datalog that is independent from any particular
-engine.
+reduce reusability and would make maintenance harder. Our
+framework is based on an intermediate object model of the language
+that is provided by the
+WSMO4J\footnote{\url{http://wsmo4j.sourceforge.net}} project.
+WSMO4J performs the task of parsing and validating WSML ontologies
+and provides the source object model for our translations. In
+order to enable the usage of different Datalog engines we
+additionally implemented a simple object model for Datalog that is
+independent from any particular engine.
 
 The main Datalog engine we used during our work was the KAON2
 inference engine\footnote{KAON2 is available for download from
