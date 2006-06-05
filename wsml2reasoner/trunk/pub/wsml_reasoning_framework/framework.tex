@@ -8,7 +8,12 @@ reduces the effort for accomplishing other reasoning tasks. By
 reducing WSML to simple Datalog constructs and providing a
 respective object model we have reduced the effort of integrating
 new reasoners to a minimum\footnote{In fact, the adaptation of the
-framework to the MINS rule engine took less then a day.}.
+framework to the MINS rule engine took less then a day.}. The
+presented framework has been implemented in Java and can be
+downloaded at {\tt http://dev1.deri.at/wsml2reasoner} for
+ready-usage. An online demo is available at {\tt
+http://tools.deri.org/wsml/rule-reasoner}.
+
 
 \subsection{Architecture and Internal Layering}
 Figure~\ref{fig:layering} shows the basic components of the system
@@ -23,10 +28,10 @@ versions.
 Queries in fact use the same infrastructure, except that a new transformation pipeline is
 composed where the axiomatization and constraint replacement transformations are not included.
 
-{\bf HL: please correct the graphic, meta level axioms are injected
-on the wsml level and not on the lower level!
-
-GN: I do not agree, meta level axioms are added in the WSML2Datalog transformer, check the Java code. So the graphics seems to be OK.}
+%{\bf HL: please correct the graphic, meta level axioms are injected
+%on the wsml level and not on the lower level!
+%
+%GN: I do not agree, meta level axioms are added in the WSML2Datalog transformer, check the Java code. So the graphics seems to be OK.}
 
 \begin{figure}[h]
     \includegraphics[width=11cm]{figures/layering}

@@ -102,7 +102,7 @@ actual attribute $a$.
 \paragraph{User-Defined Constraint Violation} -- Not only
 built-in WSML constraints, but also user-defined constraints,
 contained in an axiom definition of the form \wsml{axiom} \axiomid
-\wsml{definedBy} $B$, can be violated. In this case, the
+\wsml{definedBy !-} $B$, can be violated. In this case, the
 information which helps an ontology engineer to repair an
 erroneous situation is dependent on the arbitrarily complex body
 $B$ and cannot be determined in advance. However, a generic
@@ -216,7 +216,7 @@ $T$, involved instance $I$ and violating value $V$ for each
 violation. This set is empty if there are no attribute types
 violated.
 
-\begin{table}[tb]\label{tab:debugging}\centering
+\begin{table}[tb]\centering
 \begin{footnotesize}
 \begin{tabular}{|l|l|}
   \hline
@@ -232,10 +232,10 @@ violated.
   \hline
 \end{tabular}
 \end{footnotesize}
-\caption{Replacing constraints by rules.}
+\caption{Replacing constraints by rules.} \label{tab:debugging}
 \end{table}
 
-\begin{table}[tb]\label{tab:debugging-axioms}\centering
+\begin{table}[tb]\centering
 \begin{small}
 \begin{tabular}{|ll|}
   \hline
@@ -248,4 +248,5 @@ violated.
  \hline
 \end{tabular}
 \end{small} \caption{Meta-level axioms for debugging.}
+\label{tab:debugging-axioms}
 \end{table}
