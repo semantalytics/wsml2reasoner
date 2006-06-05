@@ -31,34 +31,35 @@ ground facts by a WSML ontology can be done by using queries that
 contain no variables, as expressed in the following equivalence.
 \begin{displaymath}
     O \models \phi \; \Leftrightarrow \; (P_O, \qury
-    \tau(\phi)) \not= \emptyset
+    \tau'(\phi')) \not= \emptyset
 \end{displaymath}
-The WSML ground fact $\phi \in \LE$ is transformed to Datalog with
-a transformation $\transdlog \circ \translt \circ \transnorm$,
-similar to the one that apply to the ontology, and is evaluated
-together with the Datalog program $P_O$. If the resulting set is
-non-empty then $\phi$ is entailed by the original ontology,
-otherwise it is not.
+From the WSML ground fact $\phi \in \LE$ we derive a non-ground
+formula $\phi' \in \LE$ by replacing the left-most occurrence of a
+constant by the variable $x$. $\phi'$ is then transformed to
+Datalog with a transformation $\tau' = \transdlog \circ \translt
+\circ \transnorm$, similar to the one that is applied to the
+ontology, and is evaluated together with the Datalog program
+$P_O$. If the resulting set is non-empty then $\phi$ is entailed
+by the original ontology, otherwise it is not.
 
 \paragraph{Retrieval} -- Similarly, instance retrieval can be
 performed by posing queries that contain variables to the Datalog
 program $P_O$, as expressed in the following equivalence.
 \begin{displaymath}
    % \{\vec{x} : O \models Q(\vec{x})\} \; \Leftrightarrow \; (P_O, \qury \tau(Q(\vec{x})))
-   retrieve_O(Q) \; = \; (P_O, \qury \tau(Q(\vec{x})))
+   retrieve_O(Q) \; = \; (P_O, \qury \tau'(Q(\vec{x})))
 \end{displaymath}
 The query $Q(\vec{x})$, formulated as a WSML logical expression
 with free variables $\vec{x}$, is transformed to Datalog and
 evaluated together with the program $P_O$. The resulting set
 contains all tuples $\vec{x}$ for which an instantiation of the
 query expression is entailed by the original ontology.
-
-To give an example, the query\\
+To give an example, the query $Q($\syn{?x}$)$ = \\
 \phantom{mmmmm} \syn{?x} \synkw{memberOf} \syn{BroadbandBundle}\\
-posed to the ontology from Section \ref{sec:wsml} yields the set
-$\{ (\textit{MyBundle}) \}$ that contains one unary tuple with the
-instance \textit{MyBundle}, which can be inferred to be a
-broadband bundle due to its high network bandwidth.
+posed to the ontology in Listing \ref{lst:wsml-ontology-example}
+yields the set $\{ (\textit{MyBundle}) \}$ that contains one unary
+tuple with the instance \textit{MyBundle}, which can be inferred
+to be a broadband bundle due to its high network bandwidth.
 
 %\begin{small}
 %\begin{tabular}{|l|l|}

@@ -20,7 +20,7 @@ for an attribute constrained by \synkw{ofType}, Axiom (4) would
 cause a constraint violation.
 
 To solve this problem, \pmo facts should be generated for all
-datatype constants that appear as values of attributes having \synkw{ofType} constraints in the ontology. 
+datatype constants that appear as values of attributes having \synkw{ofType} constraints in the ontology.
 I.e., for each such constant in the ontology,
 axioms of the following form should appear:
 \begin{displaymath}
@@ -47,13 +47,13 @@ full list of WSML datatypes can be found in the WSML specification
 \cite{wsml-spec}.}. For example, the definition of the
 \syn{SharePriceFeed\_requires\_bandwidth} axiom from the WSML
 ontology in Section~\ref{sec:wsml} uses a shortcut of the WSML
-\synkw{numericLessThan} predicate. Clearly, these special WSML
-predicates have to be translated to the corresponding built-in
-predicates supported by the underlying Datalog reasoner.
+\synkw{numericLessThan} predicate (denoted by $<$). Clearly, these
+special WSML predicates have to be translated to the corresponding
+built-in predicates supported by the underlying Datalog reasoner.
 Therefore, we introduce a new tool-specific transformation step
-\transdpred as a mapping $\P \mapsto \P$, which translates all
-predefined WSML predicates in the generic Datalog program to
-tool-specific built-in predicates. The transformation pipeline
+\transdpred as a mapping $\P \rightarrow \P$, which translates all
+predefined WSML datatype predicates in the generic Datalog program
+to tool-specific built-in predicates. The transformation pipeline
 $\tau$ is augmented by this additional step and is redefined as
 follows.
 \begin{displaymath}
