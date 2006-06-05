@@ -11,8 +11,7 @@ underlying datalog inference engine, a datalog program
 is built up that consists of the meta-level axioms together with
 the transformed ontology. The different WSML reasoning tasks are
 then realized by performing Datalog queries on $P_O$. Posing a
-query $Q(\vec{x}) \in \LE$ to a Datalog program $P \in \P$ is
-denoted by
+query $Q(\vec{x})$ to a Datalog program $P \in \P$ is denoted by
 $$(P,\qury Q(\vec{x}))$$ and yields a set of tuples that instantiate
 the vector $\vec{x}$ of variables in the query.
 
@@ -53,11 +52,12 @@ evaluated together with the program $P_O$. The resulting set
 contains all tuples $\vec{x}$ for which an instantiation of the
 query expression is entailed by the original ontology.
 
-To give an example, the query \syn{?x} \synkw{memberOf}
-\syn{BroadbandBundle} posed to the ontology from Section
-\ref{sec:wsml} yields the set $\{ (\textit{MyBundle}) \}$ that
-contains one tuple with the instance \textit{MyBundle}, which can
-be inferred to be a broadband bundle.
+To give an example, the query\\
+\phantom{mmmmm} \syn{?x} \synkw{memberOf} \syn{BroadbandBundle}\\
+posed to the ontology from Section \ref{sec:wsml} yields the set
+$\{ (\textit{MyBundle}) \}$ that contains one unary tuple with the
+instance \textit{MyBundle}, which can be inferred to be a
+broadband bundle due to its high network bandwidth.
 
 %\begin{small}
 %\begin{tabular}{|l|l|}
