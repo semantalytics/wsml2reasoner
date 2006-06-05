@@ -44,7 +44,8 @@ otherwise it is not.
 performed by posing queries that contain variables to the Datalog
 program $P_O$, as expressed in the following equivalence.
 \begin{displaymath}
-    \{\vec{x} : O \models Q(\vec{x})\} \; \Leftrightarrow \; (P_O, \qury \tau(Q(\vec{x})))
+   % \{\vec{x} : O \models Q(\vec{x})\} \; \Leftrightarrow \; (P_O, \qury \tau(Q(\vec{x})))
+   retrieve_O(Q) \; = \; (P_O, \qury \tau(Q(\vec{x})))
 \end{displaymath}
 The query $Q(\vec{x})$, formulated as a WSML logical expression
 with free variables $\vec{x}$, is transformed to Datalog and

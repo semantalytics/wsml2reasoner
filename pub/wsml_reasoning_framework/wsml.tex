@@ -10,11 +10,11 @@ The Web Service Modeling Language (WSML) is a language for the
 specification of various aspects of Semantic Web Services (SWS),
 such as what functionality is provided by a SWS or how to interact
 with the SWS. It provides a formal language for the Web Service
-Modeling Ontology (WSMO)~\cite{roman05:_web_servic_model_ontol} and is based on well-known logic-based
+Modeling Ontology\footnote{\tt http://www.wsmo.org} (WSMO)~\cite{roman05:_web_servic_model_ontol} and is based on well-known logic-based
 knowledge representation (KR) formalisms (i.e. Description
 Logics~\cite{Baader+CalvaneseETAL-DescLogiHand:03}
 and Logic Programming~\cite{lloyd-FoundationsOfLP}), specifying one coherent language framework
-for the semantic description of Web Services. The least expressive
+for the semantic description of Web Services. In fact, WSML is a family of representation languages: the least expressive
 core language represents conceptually the intersection of the two
 KR formalisms Datalog~\cite{datalog} and the Description Logic $\mathcal{SHIQ}(\mathbf{D)}$~\cite{Horrocks+Patel-SchneiderETAL-FromSHIQ:03}.
 This core language is extended in the directions of Description
@@ -27,7 +27,8 @@ layering.
 %expressive power of the language  for the expert user.
 Internationalized Resource Identifier (IRIs)~\cite{Duerst+Suignard-InteResoIden:05}
 play a central role
-in WSML as (global) identifiers. The concept of namespaces is used for
+in WSML as (global) identifiers for symbols such as class names,
+attribute names or individuals. The concept of namespaces is used for
 logically grouping symbols in a vocabulary. Furthermore, WSML
 defines XML and RDF serializations for inter-operation over the
 Semantic Web. Thus, WSML is a Web and Semantic Web compliant KR
@@ -385,3 +386,35 @@ In the following, we refer to the WSML-Core, WSML-Flight and
 WSML-Rule variants of WSML jointly as \emph{rule-based WSML}.
 
 \paragraph{\small Reasoning Tasks in WSML --}
+We refer to any form of symbolic computation based on explicitly
+represented domain knowledge (such as an ontology) which helps
+to explicate implicit information as a \emph{reasoning task}.
+In regard of WSML Ontologies, we consider the following
+ontology reasoning tasks as particularly useful and relevant to support SW and SWS applications and
+modelers:
+Let $O$ denote a WSML ontology and $\pi_{c-free}(O)$ denote the \emph{constraint-free projection} of $O$, i.e. the
+ontology which can be derived from $O$ by removing all constraining description
+elements (such as attribute type constraints, cardinality constraints, integrity constraints etc.).
+(1) {\bf Consistency checking} means checking whether $O$ is satisfiable. More precisely, it is about checking
+if the constraint-free projection $\pi_{c-free}(O)$ has a model $\mathcal{I}$.
+(2) {\bf Entailment} means given some formula $\phi$,
+to check if in all models $\mathcal{I}$ of $\pi_{c-free}(O)$ it holds that all ground instances
+$\iota \in ground(\phi)$ of $\phi$ in $O$ are satisfied. We denote
+this by $O \models \phi$.
+(3) {\bf Instance retrieval} means given an ontology $O$ and some formula $Q(\vec{x})$
+with free variables $\vec{x} = (x_1,\ldots,x_n)$ to find all suitable
+terms $\vec{t} = (t_1,\ldots,t_n)$ constructed from symbols in $O$ only,
+such that the statement $Q(\vec{t})$ is entailed by $O$.
+We call $\vec{t}$ an \emph{answer} to $Q(\vec{x})$ in $O$ and denote
+the set of answers by $retrieve_O(Q) = \{\vec{t} : \, \vec{t} = (t_1, \ldots, t_n), t_i \in Term(O), O \models
+Q(\vec{t})\}$. Rule-based WSML is based on the wellfounded-model
+semantics~\cite{Gelder+RossETAL-WellSemaGeneLogi:91}. Therefore, the term ,,model'' in the reasoning task definitions above stands for to the well-founded model of ontology
+$O$.
+%\footnote{More precisely, the well-founded model of the datalog representation of the constraint-free projection $\tau(\pi_{c-free}(O))$ of $O$,
+%since the semantics of rule-based WSML~\cite{wsml-spec} is defined via translation to Datalog}.
+
+
+
+We will demonstrate later, that our framework allows to implement
+these reasoning tasks almost completely based on existing
+implementations of efficient datalog reasoning engines.
