@@ -1,4 +1,5 @@
 % meta-variables.
+\def\mvexpr{\ensuremath{E}}
 \def\mvex{\ensuremath{E_x}}
 \def\mvey{\ensuremath{E_y}}
 \def\mvez{\ensuremath{E_z}}
@@ -165,8 +166,8 @@ transformations \cite{lloyd-topor}, as shown in Table
 \caption{Lloyd-Topor transformations.} \label{tab:lloyd-topor}
 \end{table}
 Again, the meta variables $E,H,B$ range over WSML logical
-expressions, while $H$ and $B$ match the form of valid head and
-body expressions, respectively, according to \cite{wsml-spec}.
+expressions, while $H$ and $B$ match the form of valid rule head
+and body expressions, respectively, according to \cite{wsml-spec}.
 
 After this step, the resulting WSML expressions have the form of
 proper Datalog rules with a single head and conjunctive (possibly
@@ -176,8 +177,10 @@ negated) body literals.
 transformation \transdlog is applied as a mapping $\powset{\LE}
 \mapsto \P$ from WSML logical expressions to the set of all
 Datalog programs, yielding generic Datalog rules that represent
-the content of the original WSML ontology. In this generic Datalog
-program, all remaining WSML-specific language constructs, such as
+the content of the original WSML ontology. Rule-style language
+constructs, such as rules, facts, constraints conjunction and
+(default) negation, are mapped to the respective Datalog elements.
+All remaining WSML-specific language constructs, such as
 \wsml{subConceptOf} or \wsml{ofType}, are replaced by special
 meta-level predicates for which the semantics of the respective
 language construct is encoded in meta-level axioms as described in
@@ -186,13 +189,14 @@ a further subsection.
 \begin{footnotesize}
 \begin{tabular}{|l|l|}
   \hline
-  \rule{0cm}{3.2mm} {\normalsize \emph{WSML}} & {\normalsize \emph{Datalog}} \\
+  \rule{0cm}{3.2mm} {\normalsize \emph{WSML}} & {\normalsize \emph{Generic Datalog}} \\
   \hline
   $\transdlog(\{\mve1, \dots , \mven\})$ & $\{\transdlog(\mve1), \dots , \transdlog(\mven)\}$ \\
   $\transdlog($ \wsml{\cstr} $B.)$ & $\dlogcstr \transdlog(B)$ \\
   $\transdlog(H.)$ & \dlogfact{\transdlog(H)} \\
   $\transdlog(H$ \wsml{\lprl} $B.)$ & $\transdlog(H) \dlogrule \transdlog(B)$ \\
   $\transdlog(\mvex$ \wsml{and} $\mvey.)$ & $\transdlog(\mvex) \dlogand \transdlog(\mvey)$ \\
+  $\transdlog($\wsml{naf} $\mvexpr.)$ & $\dlognot \transdlog(\mvexpr)$ \\
   $\transdlog(C_x$ \wsml{subConceptOf} $C_y.)$ & $\psco(C_x,C_y)$ \\
   $\transdlog(I$ \wsml{memberOf} $C.)$ & $\pmo(I,C)$ \\
   $\transdlog(I[a$ \wsml{hasValue} $V].)$ & $\phval(I,a,V)$ \\
@@ -204,8 +208,7 @@ a further subsection.
   \hline
 \end{tabular}
 \end{footnotesize}
-\caption{Transformation from logical expressions in rule-based
-WSML to Datalog including meta-level predicates.}
+\caption{Transformation WSML logical expressions to Datalog.}
 \label{tab:LE2datalog}
 \end{table}
 Table \ref{tab:LE2datalog} shows the mapping from WSML logical
@@ -213,18 +216,21 @@ expressions to Datalog including the meta-level predicates \psco,
 \pmo, \phval, \pitype and \potype that represent their respective
 WSML language constructs as can be seen from the mapping. The meta
 variables $E,H,B$ range over WSML logical expressions with a
-general, head or body form, while $C,I,a$ denote WSML concepts,
-instances and attributes. Variables $T$ can either assume a
-concept or a datatype and $V$ stands for either an instance or a
-data value, accordingly.
+general, a head or a body form, while $C,I,a$ denote WSML
+concepts, instances and attributes. Variables $T$ can either
+assume a concept or a datatype, and $V$ stands for either an
+instance or a data value, accordingly.
 
-The resulting Datalog rules are of the form $$H \lprl B_1 , \dots
-B_n$$ where $H$ and $B_i$ are literals for the head and the body
-of the rule, respectively. Body literals can be negated in the
-sense of negation-as-failure, which is denoted by $\dlognot B_i$.
-As ususal, rules with an empty body represent facts, and rules
-with an empty head represent constraints. The latter is denoted by
-the head being the empty clause $\square$.
+The resulting Datalog rules are of the form $$H \lprl B_1 \dlogand
+\dots \dlogand B_n$$ where $H$ and $B_i$ are literals for the head
+and the body of the rule, respectively. Body literals can be
+negated in the sense of negation-as-failure, which is denoted by
+$\dlognot B_i$. As usual, rules with an empty body represent
+facts, and rules with an empty head represent constraints. The
+latter is denoted by the head being the empty clause symbol
+$\square$.
+
+\medskip
 
 Ultimately, we define the basic\footnote{Later on, the
 transformation pipeline is further extended to support datatypes

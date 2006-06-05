@@ -25,7 +25,7 @@ instances related via attributes. The plain Datalog mechanisms
 employed in the reasoning framework according to Section
 \ref{sec:mapping} only allow for checking whether some constraint
 is violated, i.e.\ whether the empty clause is derived from $P_O$
-indicating that the original ontology $O$ contains errors. More
+indicating that the original ontology $O$ contains errors -- more
 detailed information about the problem is not reported. Experience
 shows that it is a very hard task to identify and correct errors
 in the ontology without such background information.
@@ -108,6 +108,17 @@ erroneous situation is dependent on the arbitrarily complex body
 $B$ and cannot be determined in advance. However, a generic
 framework can at least identify the violated constraint by
 reporting the identifier \axiomid of the axiom.
+
+To give an example, consider again the ontology from Section
+\ref{sec:wsml}. Replacing the network connection \syn{ArcorDSL} of
+\syn{MyBundle} by the slower \syn{MSNDialup} one results in the a
+violation of the user-defined constraint specified by the axiom
+named \syn{SharePriceFeed\_requires\_bandwidth}. This constraint
+requires a certain bandwidth for connections in bundles with share
+price feed online services, which is not met by \syn{MSNDialup},
+and thus the ontology engineer is reported the axiom name that
+identifies the violated constraint.
+
 
 \subsection{Debugging by Meta-Level Reasoning}
 %-- describe how these debugging features are realised via additional meta-level predicates an additional fixed set of rules \\
@@ -211,16 +222,17 @@ violated.
   \hline
   \rule{0cm}{3.2mm} {\normalsize \emph{Constraint}} & {\normalsize \emph{Rule}} \\
   \hline
+  $\transdebug(\{\mve1, \dots , \mven\})$ & $\{\transdebug(\mve1), \dots , \transdebug(\mven)\}$ \\
   $\transdebug($\wsml{\cstr}$B_{mincard}.)$ & $\pvmincard(a,I)$\wsml{\lprl}$B_{mincard}.$ \\
   $\transdebug($\wsml{\cstr}$B_{maxcard}.)$ & $\pvmaxcard(a,I)$\wsml{\lprl}$B_{maxcard}.$ \\
   $\transdebug($\wsml{\cstr}$B_{user}.)$ & $\pvuser(\axiomid)$\wsml{\lprl}$B_{user}.$ \\
-  $\transdebug(C[a$ \wsml{ofType} $T.)$ & $\pvotype(a,T,I,V)$\wsml{\lprl} \\
+  $\transdebug(C[a$ \wsml{ofType} $T].)$ & $\pvotype(a,T,I,V)$\wsml{\lprl} \\
   & $\;C[a$ \wsml{ofType} $T]$ \wsml{and} $I$ \wsml{memberOf} $C$ \\
   & $\;I[a$ \wsml{hasValue} $V]$ \wsml{and naf} $V$\wsml{memberOf} $T.$ \\
   \hline
 \end{tabular}
 \end{footnotesize}
-\caption{Replacing constraints by rules for debugging.}
+\caption{Replacing constraints by rules.}
 \end{table}
 
 \begin{table}[tb]\label{tab:debugging-axioms}\centering
@@ -235,6 +247,5 @@ violated.
   (4) & $\dlogcstr \pvuser(\axiomid)$ \\
  \hline
 \end{tabular}
-\end{small} \caption{Meta-level axioms for WSML semantics in
-datalog.}
+\end{small} \caption{Meta-level axioms for debugging.}
 \end{table}
