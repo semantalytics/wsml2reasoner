@@ -396,9 +396,9 @@ Let $O$ denote a WSML ontology and $\pi_{c-free}(O)$ denote the \emph{constraint
 ontology which can be derived from $O$ by removing all constraining description
 elements (such as attribute type constraints, cardinality constraints, integrity constraints etc.).
 (1) {\bf Consistency checking} means checking whether $O$ is satisfiable. More precisely, it is about checking
-if the constraint-free projection $\pi_{c-free}(O)$ has a model $\mathcal{I}$.
+if no constraint in $O$ is violated and if the constraint-free projection $\pi_{c-free}(O)$ has a model $\mathcal{I}$.
 (2) {\bf Entailment} means given some formula $\phi$,
-to check if in all models $\mathcal{I}$ of $\pi_{c-free}(O)$ it holds that all ground instances
+to check if no constraint in $O$ is violated and if in all models $\mathcal{I}$ of $\pi_{c-free}(O)$ it holds that all ground instances
 $\iota \in ground(\phi)$ of $\phi$ in $O$ are satisfied. We denote
 this by $O \models \phi$.
 (3) {\bf Instance retrieval} means given an ontology $O$ and some formula $Q(\vec{x})$
