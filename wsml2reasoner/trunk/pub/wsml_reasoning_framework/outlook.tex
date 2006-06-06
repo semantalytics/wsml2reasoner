@@ -2,7 +2,7 @@
 In this paper, we presented a transformational framework that
 enables us to perform important reasoning tasks for rule-based
 WSML. The key features of the framework are: (1) Reasoning via
-transformation to widely-used KR frameworks with numerous
+transformation to the widely used Datalog formalism with numerous
 implemented systems (2) Modular structure of the transformation
 allows for reuse of single well-defined transformation steps when
 adapting and extending the transformation for different scenarios
@@ -13,21 +13,21 @@ developers can choose to use their desired reasoning system
 providing the capabilities they need. If an application only uses
 a less expressive WSML variant, then a more specialized reasoning
 component tailored towards this language can be used. Such a
-decision can even be change during runtime (4) Support for
+decision can even be changed during runtime (4) Support for
 debugging of ontologies independent of the underlying reasoning
 system. This feature can be dynamically added and removed from the
 reasoning component.
 
  Eventually, the available implementation of the
-system based on datalog components such as KAON2 and MINS
-represent the first available reasoning systems for WSML. The
+system based on Datalog components such as KAON2 and MINS
+represent the first available reasoning system for WSML. The
 presented framework proved to be a flexible and effective way to
 build reasoners for WSML based on existing, well-designed and
 efficient systems in a short period of time.
 
 Currently, the framework as well as our implementation focuses on
-WSML Core, Flight and Rule, However efforts are ongoing to extend
-this into the direction of WSML DL and WSML Full.
+WSML Core, Flight and Rule. However, efforts are ongoing to extend
+it into the direction of WSML DL and WSML Full.
 %
 %The following extensions to the framework are desirable:
 %
