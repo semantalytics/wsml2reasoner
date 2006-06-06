@@ -4,19 +4,21 @@ enables us to perform important reasoning tasks for rule-based
 WSML. The key features of the framework are: (1) Reasoning via
 transformation to the widely used Datalog formalism with numerous
 implemented systems (2) Modular structure of the transformation
-allows for reuse of single well-defined transformation steps when
-adapting and extending the transformation for different scenarios
-(e.g. support for debugging of ontologies) (3) Simple integration
-and exchange of underlying reasoning components. This allows to
-customize the framework for specific applications: Application
-developers can choose to use their desired reasoning system
-providing the capabilities they need. If an application only uses
-a less expressive WSML variant, then a more specialized reasoning
-component tailored towards this language can be used. Such a
-decision can even be changed during runtime (4) Support for
-debugging of ontologies independent of the underlying reasoning
-system. This feature can be dynamically added and removed from the
-reasoning component.
+allows for adaptation and extension of the overall transformation.
+The single well-defined transformation steps can be reused across
+various adaptations for different scenarios (e.g. support for
+debugging of ontologies) (3) Simple integration and exchange of
+underlying reasoning components. This allows to customize the
+framework for specific applications: Application developers can
+choose to use their desired reasoning system providing the
+capabilities they need. If an application only uses a less
+expressive WSML variant, then a more specialized reasoning
+component tailored towards this language can be used, e.g. to
+ensure performance and scalability. Such a decision can even be
+change during runtime (4) Support for debugging of ontologies
+independent of the underlying reasoning system. This feature can
+be dynamically added and removed from \emph{any} reasoning
+component.
 
  Eventually, the available implementation of the
 system based on Datalog components such as KAON2 and MINS
@@ -27,26 +29,28 @@ efficient systems in a short period of time.
 
 Currently, the framework as well as our implementation focuses on
 WSML Core, Flight and Rule. However, efforts are ongoing to extend
-it into the direction of WSML DL and WSML Full.
-%
-%The following extensions to the framework are desirable:
-%
-%Another candidate for extension of language support is DLV
-%(disjunctive datalog with default negation (under stable model
-%semantics, which is fine for the stratified case), but poor in
-%datatypes) and KRHyper (disjunctive logic programs with default
-%negation in the stratified case). Hence DLV could be used for
-%supporting WSML-DL reasoning in the precense of WSML-Flight rules
-%whereas KRHyper could be used to reason with WSML-DL extended by
-%WSML-Rule rules in the stratified case.
-%
-%The generic and flexible architecture of the framework, allows.
-%
-%
-%-- \dots
-%
-%-- Nathalies stuff on DL
-
+this into the direction of WSML DL and WSML Full: we are working
+on extending the transformations to allow for transformations to
+disjunctive datalog and disjunctive logic programs (including
+default negation) too. The KAON2 natively system already supports
+disjunctive datalog with stratified default negation and thus can
+be used for reasoning with WSML DL ontologies, even if they are
+extended by WSML-Flight-like rules. The DLV
+system~\cite{citrigno97dlv} (implementing disjunctive datalog
+under the stable model semantics) can be used for reasoning the
+same purpose. Furthermore, we plan to integrate the KRHyper
+system~\cite{wernhard03system}, which allows reasoning with
+disjunctive logic programs with stratified default negation. This
+would then allow to reason with WSML DL, WSML Core, WSML Flight
+and WSML Rule (and combinations) in an integrate manner in the
+case of stratified negation and safe rules. This way, we expect to
+be able to support significant parts of WSML Full. An additional
+translation to widely used description logic (DL) system APIs
+(e.g. DIG~\cite{BechhoferMC03}) to support efficient reasoning
+with WSML-DL based on state-of-the-art DL systems like
+Racer~\cite{haarslev01racer}, Pellet\footnote{\tt
+http://www.mindswap.org/2003/pellet/} or Fact++\footnote{\tt
+http://owl.man.ac.uk/factplusplus/} is on the way.
 
 \paragraph{Acknowledgements.}
 This work is supported by the European Commision under the the DIP
