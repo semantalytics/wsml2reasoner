@@ -1,30 +1,55 @@
 \section{Conclusion \& Outlook\label{sec:outlook}}
 In this paper, we presented a transformational framework that
 enables us to perform important reasoning tasks for rule-based
-WSML. The key features of the framework are: (1) (2) ...
-Eventually, the available implementation of the system based on
-datalog components such as KAON2 and MINS represent the first
-available reasoning systems for WSML. The presented framework
-proved to be a flexible and effective way to build reasoners for
-WSML based on existing, well-designed and efficient systems in a
-short period of time.
+WSML. The key features of the framework are: (1) Reasoning via
+transformation to widely-used KR frameworks with numerous
+implemented systems (2) Modular structure of the transformation
+allows for reuse of single well-defined transformation steps when
+adapting and extending the transformation for different scenarios
+(e.g. support for debugging of ontologies) (3) Simple integration
+and exchange of underlying reasoning components. This allows to
+customize the framework for specific applications: Application
+developers can choose to use their desired reasoning system
+providing the capabilities they need. If an application only uses
+a less expressive WSML variant, then a more specialized reasoning
+component tailored towards this language can be used. Such a
+decision can even be change during runtime (4) Support for
+debugging of ontologies independent of the underlying reasoning
+system. This feature can be dynamically added and removed from the
+reasoning component.
+
+ Eventually, the available implementation of the
+system based on datalog components such as KAON2 and MINS
+represent the first available reasoning systems for WSML. The
+presented framework proved to be a flexible and effective way to
+build reasoners for WSML based on existing, well-designed and
+efficient systems in a short period of time.
 
 Currently, the framework as well as our implementation focuses on
 WSML Core, Flight and Rule, However efforts are ongoing to extend
 this into the direction of WSML DL and WSML Full.
+%
+%The following extensions to the framework are desirable:
+%
+%Another candidate for extension of language support is DLV
+%(disjunctive datalog with default negation (under stable model
+%semantics, which is fine for the stratified case), but poor in
+%datatypes) and KRHyper (disjunctive logic programs with default
+%negation in the stratified case). Hence DLV could be used for
+%supporting WSML-DL reasoning in the precense of WSML-Flight rules
+%whereas KRHyper could be used to reason with WSML-DL extended by
+%WSML-Rule rules in the stratified case.
+%
+%The generic and flexible architecture of the framework, allows.
+%
+%
+%-- \dots
+%
+%-- Nathalies stuff on DL
 
-The following extensions to the framework are desirable:
 
-Another candidate for extension of language support is DLV
-(disjunctive datalog with default negation (under stable model
-semantics, which is fine for the stratified case), but poor in
-datatypes) and KRHyper (disjunctive logic programs with default
-negation in the stratified case). Hence DLV could be used for
-supporting WSML-DL reasoning in the precense of WSML-Flight rules
-whereas KRHyper could be used to reason with WSML-DL extended by
-WSML-Rule rules in the stratified case.
-
-The generic and flexible architecture of the framework, allows.
-
->>>>>>> 1.3
--- \dots
+\paragraph{Acknowledgements.}
+This work is supported by the European Commision under the the DIP
+project (FP6-507483), and by the Austrian Federal Ministry for
+Transport, Innovation, and Technology under the project {\sffamily
+ {\bfseries R}W$^{\mathsf{2}}$} (FFG 809250).
