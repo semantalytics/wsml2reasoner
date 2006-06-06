@@ -1,4 +1,30 @@
-\section{Outlook\label{sec:outlook}}
+\section{Conclusion \& Outlook\label{sec:outlook}}
+In this paper, we presented a transformational framework that
+enables us to perform important reasoning tasks for rule-based
+WSML. The key features of the framework are: (1) (2) ...
+Eventually, the available implementation of the system based on
+datalog components such as KAON2 and MINS represent the first
+available reasoning systems for WSML. The presented framework
+proved to be a flexible and effective way to build reasoners for
+WSML based on existing, well-designed and efficient systems in a
+short period of time.
+
+ Currently, the framework as well as our
+implementation focuses on
+
+The following extensions to the framework are desirable:
+
 -- mention the planned use of KAON2's DL-capabilities for future extensions in the direction of WSML-DL \\
 -- mention further extensions towards WSML-Rule, which exceeds the expressive power of Datalog (because of function symbols)\\
+-- Another candidate for extension of language support is DLV
+(disjunctive datalog with default negation (under stable model
+semantics, which is fine for the stratified case), but poor in
+datatypes) and KRHyper (disjunctive logic programs with default
+negation in the stratified case). Hence DLV could be used for
+supporting WSML-DL reasoning in the precense of WSML-Flight rules
+whereas KRHyper could be used to reason with WSML-DL extended by
+WSML-Rule rules in the stratified case.
+
+The generic and flexible architecture of the framework, allows.
+
 -- \dots
