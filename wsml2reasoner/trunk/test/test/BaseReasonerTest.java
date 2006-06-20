@@ -62,6 +62,10 @@ public class BaseReasonerTest extends TestCase {
     //e.g. ReasonerCoreTest
     public static int evalMethod = 3;
 
+    	//0=allow imports
+    //1=do not allow imports
+    public static int allowImports = 0;
+    
     protected static WSMLReasoner wsmlReasoner = null;
 
     protected static Ontology o = null;
@@ -80,8 +84,9 @@ public class BaseReasonerTest extends TestCase {
         // Create reasoner
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,reasoner);
-        System.out.println("Eval Method: " + evalMethod);
+        //System.out.println("Eval Method: " + evalMethod);
         params.put(WSMLReasonerFactory.PARAM_EVAL_METHOD,evalMethod);
+        params.put(WSMLReasonerFactory.PARAM_ALLOW_IMPORTS,allowImports);
         // params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
         // WSMLReasonerFactory.BuiltInReasoner.MINS);
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
