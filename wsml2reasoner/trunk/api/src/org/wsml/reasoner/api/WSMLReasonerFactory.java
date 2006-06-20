@@ -48,6 +48,8 @@ public interface WSMLReasonerFactory {
      */
     public String PARAM_EVAL_METHOD = "Evaluation Method";
     
+    public String PARAM_ALLOW_IMPORTS = "Allow ontology imports";
+    
     public enum BuiltInReasoner {
         KAON2, MINS
     };

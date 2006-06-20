@@ -52,12 +52,16 @@ import org.omwg.ontology.SimpleDataType;
 import org.omwg.ontology.Type;
 import org.omwg.ontology.Value;
 import org.omwg.ontology.Variable;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.impl.DatalogBasedWSMLReasoner;
+import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.FixedModificationRules;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.UnnumberedAnonymousID;
 import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.common.exception.SynchronisationException;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -121,7 +125,25 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 e.printStackTrace();
             }
         }
-
+        
+        //change - handles imported onto
+        //boolean ontoEnabled = true;
+        //System.out.println(DatalogBasedWSMLReasoner.allowImports);
+        //0 = allow imports
+        //1 = do not allow imports
+        if(DatalogBasedWSMLReasoner.allowImports == 0){
+	        for(Ontology o: (Collection<Ontology>) ontology.listOntologies()){ 
+	        		Ontology tempOntology = normalize(o);
+	        		for (Axiom a: (Collection<Axiom>) tempOntology.listAxioms()){
+	        			try {
+							resultOntology.addAxiom(a);
+						} catch (InvalidModelException e) {
+							throw new RuntimeException(e);
+						}
+	        		}
+	        		
+	        }
+        }
         // process axioms:
         for (Axiom axiom : (Collection<Axiom>) ontology.listAxioms()) {
             Identifier newAxiomId;
