@@ -43,6 +43,7 @@ import org.omwg.ontology.Variable;
 import org.omwg.ontology.WsmlDataType;
 import org.wsml.reasoner.ConjunctiveQuery;
 import org.wsml.reasoner.DatalogException;
+import org.wsml.reasoner.DatalogReasonerFacade;
 import org.wsml.reasoner.ExternalToolException;
 import org.wsml.reasoner.Literal;
 import org.wsml.reasoner.Rule;
@@ -101,7 +102,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 
     protected WSMO4JManager wsmoManager;
     
-//    private boolean disableConsitencyCheck=false;
+    public static int allowImports = 0;
 
     public DatalogBasedWSMLReasoner(
             WSMLReasonerFactory.BuiltInReasoner builtInType,
@@ -131,6 +132,10 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             ((MinsFacade)builtInFacade).evaluationMethod=method;
         }
       }
+    
+	public void setAllowImports(int allowOntoImports){
+    		allowImports = allowOntoImports;
+    	}
 
     @SuppressWarnings("unchecked")
     protected Set<org.wsml.reasoner.Rule> convertOntology(Ontology o) {
