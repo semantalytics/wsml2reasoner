@@ -18,6 +18,7 @@
  */
 package org.wsml.reasoner.builtin.mins;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -44,8 +45,7 @@ import org.deri.mins.builtins.IsString;
 import org.deri.mins.terms.ConstTerm;
 import org.deri.mins.terms.NumTerm;
 import org.deri.mins.terms.StringTerm;
-import org.deri.mins.terms.concrete.BooleanTerm;
-import org.deri.mins.terms.concrete.IntegerTerm;
+import org.deri.mins.terms.concrete.*;
 import org.deri.wsmo4j.io.parser.wsml.TempVariable;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
@@ -374,13 +374,13 @@ public class MinsFacade implements DatalogReasonerFacade {
             int arity = val.getArity();
             if (type.equals(WsmlDataType.WSML_BOOLEAN)) {
                 minsTerm = new BooleanTerm((Boolean)val.getValue());
-//            } else if (type.equals(WsmlDataType.WSML_DATE)){
-//                IntegerTerm[] intTerm = new IntegerTerm[arirty];
-//                for (int i=0; i<arity;i++){
-//                    intTerm [i] = new IntegerTerm(
-//                            val.getArgumentValue((byte)i));
-//                }
-//                minsTerm = new DateTerm(); 
+            } else if (type.equals(WsmlDataType.WSML_DATE)){
+                //MINS ONLY support 3 ints, variables to be handled :(
+                int year = ((BigInteger)val.getArgumentValue((byte)0).getValue()).intValue();
+                int month = ((BigInteger)val.getArgumentValue((byte)1).getValue()).intValue();
+                int day = ((BigInteger)val.getArgumentValue((byte)2).getValue()).intValue(); 
+                minsTerm = new DateTerm(year, month, day);
+                
             } else {
                 throw new RuntimeException("No Complex data types yet:"
                         + wsmlTerm);

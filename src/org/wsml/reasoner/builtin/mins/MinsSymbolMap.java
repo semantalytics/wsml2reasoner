@@ -34,8 +34,7 @@ import org.deri.mins.builtins.NumericAdd;
 import org.deri.mins.builtins.NumericMult;
 import org.deri.mins.terms.StringTerm;
 import org.deri.mins.terms.Term;
-import org.deri.mins.terms.concrete.BooleanTerm;
-import org.deri.mins.terms.concrete.IntegerTerm;
+import org.deri.mins.terms.concrete.*;
 import org.omwg.logicalexpression.Constants;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.ConjunctiveQuery;
@@ -215,13 +214,17 @@ public class MinsSymbolMap {
                 return wsmoManager.getDataFactory().createWsmlInteger(
                         ((IntegerTerm)term).zahl+"");
             }
+            if (term instanceof DateTerm){
+                DateTerm date = (DateTerm) term;
+                return wsmoManager.getDataFactory().createWsmlDate(date.cal);
+            }
             org.deri.mins.terms.NumTerm numTerm = (org.deri.mins.terms.NumTerm)term;
             return wsmoManager.getDataFactory().createWsmlDecimal(term.toString());
         }else if (term instanceof BooleanTerm){
             boolean value = ((BooleanTerm)term).getValue();
             return wsmoManager.getDataFactory().createWsmlBoolean(
                     value);
-        }
+        }else 
         System.err.println("ERROR UNKOWN MINS TERM: "+term+" "+term.getClass());
         return wsmoManager.getDataFactory().createWsmlString("unkown");
         //throw new RuntimeException("Unknown Term Symbol:"+term);
