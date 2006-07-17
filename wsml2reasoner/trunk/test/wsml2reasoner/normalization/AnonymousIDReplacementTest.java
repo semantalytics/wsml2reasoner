@@ -94,8 +94,8 @@ System.out.println(normString);
     
     public void testLEEquality()
     {
-        LogicalExpression leftArg = leFactory.createMemberShipMolecule(wsmoFactory.createVariable("x"), wsmoFactory.createIRI("urn://Left"));
-        LogicalExpression rightArg = leFactory.createMemberShipMolecule(wsmoFactory.createVariable("x"), wsmoFactory.createIRI("urn://Right"));
+        LogicalExpression leftArg = leFactory.createMemberShipMolecule(leFactory.createVariable("x"), wsmoFactory.createIRI("urn://Left"));
+        LogicalExpression rightArg = leFactory.createMemberShipMolecule(leFactory.createVariable("x"), wsmoFactory.createIRI("urn://Right"));
         LogicalExpression correctExp = leFactory.createDisjunction(leftArg, rightArg);
         LogicalExpression wrongExp = leFactory.createDisjunction(rightArg, leftArg);
         assertTrue(correctExp.equals(wrongExp));

@@ -299,9 +299,9 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
     protected LogicalExpression createTransitivityConstraint(
             Identifier conceptID, Identifier attributeID) {
-        Variable xVariable = wsmoFactory.createVariable("x");
-        Variable yVariable = wsmoFactory.createVariable("y");
-        Variable zVariable = wsmoFactory.createVariable("z");
+        Variable xVariable = leFactory.createVariable("x");
+        Variable yVariable = leFactory.createVariable("y");
+        Variable zVariable = leFactory.createVariable("z");
         LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable,
                 conceptID);
         LogicalExpression moY = leFactory.createMemberShipMolecule(yVariable,
@@ -325,8 +325,8 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
     protected LogicalExpression createSymmetryConstraint(Identifier conceptID,
             Identifier attributeID) {
-        Variable xVariable = wsmoFactory.createVariable("x");
-        Variable yVariable = wsmoFactory.createVariable("y");
+        Variable xVariable = leFactory.createVariable("x");
+        Variable yVariable = leFactory.createVariable("y");
         LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable,
                 conceptID);
         LogicalExpression moY = leFactory.createMemberShipMolecule(yVariable,
@@ -347,7 +347,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
     protected LogicalExpression createReflexivityConstraint(
             Identifier conceptID, Identifier attributeID) {
-        Variable xVariable = wsmoFactory.createVariable("x");
+        Variable xVariable = leFactory.createVariable("x");
         LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable,
                 conceptID);
         LogicalExpression valXX = leFactory.createAttributeValue(xVariable,
@@ -363,8 +363,8 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 2);
 
         // build required LE elements:
-        Variable xVariable = wsmoFactory.createVariable("x");
-        Variable yVariable = wsmoFactory.createVariable("y");
+        Variable xVariable = leFactory.createVariable("x");
+        Variable yVariable = leFactory.createVariable("y");
         LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable,
                 conceptID);
         LogicalExpression moY = leFactory.createMemberShipMolecule(yVariable,
@@ -396,10 +396,10 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 2);
 
         // build required LE elements:
-        Variable xVariable = wsmoFactory.createVariable("x");
+        Variable xVariable = leFactory.createVariable("x");
         Variable[] yVariable = new Variable[cardinality];
         for (int i = 0; i < yVariable.length; i++) {
-            yVariable[i] = wsmoFactory
+            yVariable[i] = leFactory
                     .createVariable("y" + Integer.toString(i));
         }
         LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable,
@@ -451,10 +451,10 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         cardinality++;
 
         // build required LE elements:
-        Variable xVariable = wsmoFactory.createVariable("x");
+        Variable xVariable = leFactory.createVariable("x");
         Variable[] yVariable = new Variable[cardinality];
         for (int i = 0; i < yVariable.length; i++) {
-            yVariable[i] = wsmoFactory
+            yVariable[i] = leFactory
                     .createVariable("y" + Integer.toString(i));
         }
         LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable,
@@ -501,7 +501,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         List<Variable> variables = new ArrayList<Variable>(arity);
         for (int i = 0; i < arity; i++) {
             variables
-                    .add(wsmoFactory.createVariable("x" + Integer.toString(i)));
+                    .add(leFactory.createVariable("x" + Integer.toString(i)));
         }
         Atom relP = leFactory.createAtom(relationID, variables);
         for (Relation superRelation : (Collection<Relation>) relation

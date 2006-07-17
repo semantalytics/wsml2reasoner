@@ -60,10 +60,10 @@ public class DogsworldTest extends BaseReasonerTest {
         String query = "?x subConceptOf Mammal";
         Set<Map<Variable,Term>> expected = new HashSet<Map<Variable,Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Human"));
+        binding.put(leFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Human"));
         expected.add(binding);
         binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS + "DogOwner"));
+        binding.put(leFactory.createVariable("x"), wsmoFactory.createIRI(NS + "DogOwner"));
         expected.add(binding);
         performQuery(query, expected);
     }

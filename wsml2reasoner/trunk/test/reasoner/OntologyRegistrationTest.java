@@ -32,6 +32,8 @@ import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
+import test.BaseReasonerTest;
+
 public class OntologyRegistrationTest extends TestCase {
 
     private WsmoFactory wsmoFactory;
@@ -147,9 +149,7 @@ public class OntologyRegistrationTest extends TestCase {
      * run it enough time then you'll see it also fail on o13 and others.
      */
     public void testIntenseOntologyRegistration() throws Exception {
-        Map<String, Object> c = new HashMap<String, Object>();
-        c.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, BuiltInReasoner.MINS);
-        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLFlightReasoner(c); 		
+        wsmlReasoner = BaseReasonerTest.getReasoner(); 		
 		String path = "files" + File.separator;
 
 		parser.parse(new FileReader(path + "MoonOntology.wsml"));

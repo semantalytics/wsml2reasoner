@@ -81,9 +81,9 @@ public class Date extends TestCase {
         result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
         assertEquals(1,result.size());
         Map<Variable,Term> m =result.iterator().next();
-        System.out.println(m.get(wsmoFactory.createVariable("y")));
+        System.out.println(m.get(leFactory.createVariable("y")));
         assertEquals(dFactory.createWsmlBoolean(false),
-                m.get(wsmoFactory.createVariable("y")));
+                m.get(leFactory.createVariable("y")));
         
     }
     

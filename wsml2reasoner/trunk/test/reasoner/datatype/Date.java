@@ -82,7 +82,7 @@ public class Date extends TestCase {
         result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
         assertEquals(1,result.size());
         Map<Variable,Term> m =result.iterator().next();
-        System.out.println(m.get(wsmoFactory.createVariable("y")));
+        System.out.println(m.get(leFactory.createVariable("y")));
         assertEquals(dFactory.createDataValue(
                 (ComplexDataType)dFactory.createWsmlDataType(ComplexDataType.WSML_DATE), 
                 new SimpleDataValue[]{
@@ -90,15 +90,15 @@ public class Date extends TestCase {
                         dFactory.createWsmlInteger("12"),
                         dFactory.createWsmlInteger("11"),
                 }),
-                m.get(wsmoFactory.createVariable("y")));
+                m.get(leFactory.createVariable("y")));
         
         query = leFactory.createLogicalExpression("?a[birth hasValue ?y] and ?b[birth hasValue ?x] and ?y<?x", o);
         result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
         assertEquals(1,result.size());
         m =result.iterator().next();
-        System.out.println(m.get(wsmoFactory.createVariable("a")));
+        System.out.println(m.get(leFactory.createVariable("a")));
         assertEquals(wsmoFactory.createIRI(ns+"a"),
-                m.get(wsmoFactory.createVariable("a")));
+                m.get(leFactory.createVariable("a")));
     }
     
     

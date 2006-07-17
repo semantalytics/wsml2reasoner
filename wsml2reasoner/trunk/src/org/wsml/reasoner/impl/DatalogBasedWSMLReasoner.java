@@ -252,7 +252,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // build query:
         Term instanceID = wsmoFactory.createIRI(instance.getIdentifier()
                 .toString());
-        Term conceptVariable = wsmoFactory.createVariable("x");
+        Term conceptVariable = leFactory.createVariable("x");
         LogicalExpression query = leFactory.createMemberShipMolecule(
                 instanceID, conceptVariable);
 
@@ -269,7 +269,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // extract concepts from result:
         Set<Concept> concepts = new HashSet<Concept>();
         for (Map<Variable, Term> binding : bindings) {
-            IRI conceptID = (IRI) binding.get(wsmoFactory.createVariable("x"));
+            IRI conceptID = (IRI) binding.get(leFactory.createVariable("x"));
             concepts.add(wsmoFactory.getConcept(conceptID));
         }
         return concepts;
@@ -279,7 +279,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // build query:
         Term conceptID = wsmoFactory.createIRI(concept.getIdentifier()
                 .toString());
-        Term instanceVariable = wsmoFactory.createVariable("x");
+        Term instanceVariable = leFactory.createVariable("x");
         LogicalExpression query = leFactory.createMemberShipMolecule(
                 instanceVariable, conceptID);
 
@@ -296,7 +296,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // extract concepts from result:
         Set<Instance> instances = new HashSet<Instance>();
         for (Map<Variable, Term> binding : bindings) {
-            IRI instanceID = (IRI) binding.get(wsmoFactory.createVariable("x"));
+            IRI instanceID = (IRI) binding.get(leFactory.createVariable("x"));
             instances.add(wsmoFactory.getInstance(instanceID));
         }
 
@@ -307,7 +307,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // build query:
         Term conceptID = wsmoFactory.createIRI(concept.getIdentifier()
                 .toString());
-        Term conceptVariable = wsmoFactory.createVariable("x");
+        Term conceptVariable = leFactory.createVariable("x");
         LogicalExpression query = leFactory.createSubConceptMolecule(
                 conceptVariable, conceptID);
 
@@ -324,7 +324,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // extract concepts from result:
         Set<Concept> concepts = new HashSet<Concept>();
         for (Map<Variable, Term> binding : bindings) {
-            IRI subConceptID = (IRI) binding.get(wsmoFactory
+            IRI subConceptID = (IRI) binding.get(leFactory
                     .createVariable("x"));
             concepts.add(wsmoFactory.getConcept(subConceptID));
         }
@@ -335,7 +335,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // build query:
         Term conceptID = wsmoFactory.createIRI(concept.getIdentifier()
                 .toString());
-        Term conceptVariable = wsmoFactory.createVariable("x");
+        Term conceptVariable = leFactory.createVariable("x");
 
         LogicalExpression query = leFactory.createSubConceptMolecule(conceptID,
                 conceptVariable);
@@ -353,7 +353,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // extract concepts from result:
         Set<Concept> concepts = new HashSet<Concept>();
         for (Map<Variable, Term> binding : bindings) {
-            IRI superConceptID = (IRI) binding.get(wsmoFactory
+            IRI superConceptID = (IRI) binding.get(leFactory
                     .createVariable("x"));
             concepts.add(wsmoFactory.getConcept(superConceptID));
         }
@@ -437,11 +437,11 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             IRI ontologyId) throws InvalidModelException {
         // ATTR_OFTYPE(instance,value,concept, attribute,violated_type)
 
-        Variable i = wsmoFactory.createVariable("i");
-        Variable v = wsmoFactory.createVariable("v");
-        Variable c = wsmoFactory.createVariable("c");
-        Variable a = wsmoFactory.createVariable("a");
-        Variable t = wsmoFactory.createVariable("t");
+        Variable i = leFactory.createVariable("i");
+        Variable v = leFactory.createVariable("v");
+        Variable c = leFactory.createVariable("c");
+        Variable a = leFactory.createVariable("a");
+        Variable t = leFactory.createVariable("t");
 
         IRI atomId = wsmoFactory
                 .createIRI(ConstraintReplacementNormalizer.ATTR_OFTYPE_IRI);
@@ -487,9 +487,9 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             IRI ontologyId) throws InvalidModelException {
         // MIN_CARD(instance, concept, attribute)
 
-        Variable i = wsmoFactory.createVariable("i");
-        Variable c = wsmoFactory.createVariable("c");
-        Variable a = wsmoFactory.createVariable("a");
+        Variable i = leFactory.createVariable("i");
+        Variable c = leFactory.createVariable("c");
+        Variable a = leFactory.createVariable("a");
 
         IRI atomId = wsmoFactory
                 .createIRI(ConstraintReplacementNormalizer.MIN_CARD_IRI);
@@ -516,9 +516,9 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             IRI ontologyId) throws InvalidModelException {
         // MAX_CARD(instance, concept, attribute)
 
-        Variable i = wsmoFactory.createVariable("i");
-        Variable c = wsmoFactory.createVariable("c");
-        Variable a = wsmoFactory.createVariable("a");
+        Variable i = leFactory.createVariable("i");
+        Variable c = leFactory.createVariable("c");
+        Variable a = leFactory.createVariable("a");
 
         IRI atomId = wsmoFactory
                 .createIRI(ConstraintReplacementNormalizer.MAX_CARD_IRI);
@@ -545,7 +545,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             IRI ontologyId) throws InvalidModelException {
         // NAMED_USER(axiom)
 
-        Variable i = wsmoFactory.createVariable("i");
+        Variable i = leFactory.createVariable("i");
 
         IRI atomId = wsmoFactory
                 .createIRI(ConstraintReplacementNormalizer.NAMED_USER_IRI);
@@ -573,7 +573,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             IRI ontologyId) throws InvalidModelException {
         // UNNAMED_USER(axiom)
 
-        Variable i = wsmoFactory.createVariable("i");
+        Variable i = leFactory.createVariable("i");
 
         IRI atomId = wsmoFactory
                 .createIRI(ConstraintReplacementNormalizer.UNNAMED_USER_IRI);

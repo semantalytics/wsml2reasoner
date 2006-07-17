@@ -55,8 +55,7 @@ import org.wsml.reasoner.UnsupportedFeatureException;
 import org.wsml.reasoner.WSML2DatalogTransformer;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
-import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.WsmoFactory;
+import org.wsmo.factory.*;
 
 /**
  * Integrates the Kaon2 system into the WSML Core/Flight Reasoner framework for
@@ -80,12 +79,15 @@ public class Kaon2Facade implements DatalogReasonerFacade {
     private DataFactory df;
 
     private WsmoFactory wf;
+    
+    private LogicalExpressionFactory lef;
 
     private Set<String> registeredOntologies = new HashSet<String>();
 
     public Kaon2Facade(WSMO4JManager wsmoManager) {
         df = wsmoManager.getDataFactory();
         wf = wsmoManager.getWSMOFactory();
+        lef = wsmoManager.getLogicalExpressionFactory();
     }
 
     /**
@@ -136,7 +138,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                 Map<org.omwg.ontology.Variable, org.omwg.logicalexpression.terms.Term> newVarBinding = new HashMap<org.omwg.ontology.Variable, org.omwg.logicalexpression.terms.Term>();
 
                 for (int j = 0; j < varNames.size(); j++) {
-                    newVarBinding.put(wf.createVariable(varNames.get(j)),
+                    newVarBinding.put(lef.createVariable(varNames.get(j)),
                             tuple[j]);
                 }
 

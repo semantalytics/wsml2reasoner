@@ -64,27 +64,27 @@ public class SimpleGraph extends BaseReasonerTest {
         String query = "path(?n,f)";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
+        binding.put(leFactory.createVariable("n"), wsmoFactory.createIRI(NS
                 + "a"));
         expected.add(binding);
         binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
+        binding.put(leFactory.createVariable("n"), wsmoFactory.createIRI(NS
                 + "b"));
         expected.add(binding);
         binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
+        binding.put(leFactory.createVariable("n"), wsmoFactory.createIRI(NS
                 + "c"));
         expected.add(binding);
         binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
+        binding.put(leFactory.createVariable("n"), wsmoFactory.createIRI(NS
                 + "f"));
         expected.add(binding);
         binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
+        binding.put(leFactory.createVariable("n"), wsmoFactory.createIRI(NS
                 + "g"));
         expected.add(binding);
         binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
+        binding.put(leFactory.createVariable("n"), wsmoFactory.createIRI(NS
                 + "h"));
         expected.add(binding);
         performQuery(query, expected);
@@ -141,9 +141,9 @@ public class SimpleGraph extends BaseReasonerTest {
 
     private void addTwoVariableResult(Set<Map<Variable, Term>> expected, String v1value, String v2value) {
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("n1"), wsmoFactory.createIRI(NS
+        binding.put(leFactory.createVariable("n1"), wsmoFactory.createIRI(NS
                 + v1value));
-        binding.put(wsmoFactory.createVariable("n2"), wsmoFactory.createIRI(NS
+        binding.put(leFactory.createVariable("n2"), wsmoFactory.createIRI(NS
                 + v2value));
         expected.add(binding);
     }
@@ -153,15 +153,15 @@ public class SimpleGraph extends BaseReasonerTest {
         String query = "scElement(?n) and path(?n,f) and path(f,?n)";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
+        binding.put(leFactory.createVariable("n"), wsmoFactory.createIRI(NS
                 + "f"));
         expected.add(binding);
         binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
+        binding.put(leFactory.createVariable("n"), wsmoFactory.createIRI(NS
                 + "g"));
         expected.add(binding);
         binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
+        binding.put(leFactory.createVariable("n"), wsmoFactory.createIRI(NS
                 + "h"));
         expected.add(binding);
         performQuery(query, expected);
