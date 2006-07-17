@@ -46,27 +46,27 @@ public class MinsGraphBug extends BaseReasonerTest {
         String query = "path(?n,f)  ";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
+        binding.put(leFactory.createVariable("n"), wsmoFactory.createIRI(NS
                 + "a"));
         expected.add(binding);
         binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
+        binding.put(leFactory.createVariable("n"), wsmoFactory.createIRI(NS
                 + "b"));
         expected.add(binding);
         binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
+        binding.put(leFactory.createVariable("n"), wsmoFactory.createIRI(NS
                 + "c"));
         expected.add(binding);
         binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
+        binding.put(leFactory.createVariable("n"), wsmoFactory.createIRI(NS
                 + "f"));
         expected.add(binding);
         binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
+        binding.put(leFactory.createVariable("n"), wsmoFactory.createIRI(NS
                 + "g"));
         expected.add(binding);
         binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("n"), wsmoFactory.createIRI(NS
+        binding.put(leFactory.createVariable("n"), wsmoFactory.createIRI(NS
                 + "h"));
         expected.add(binding);
         performQuery(query, expected);

@@ -59,7 +59,7 @@ public class MaciejVTABug extends BaseReasonerTest {
         String query = "?x[sourceLocBool hasValue t]";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS
+        binding.put(leFactory.createVariable("x"), wsmoFactory.createIRI(NS
                 + "galway_station"));
         expected.add(binding);
         performQuery(query, expected);
@@ -70,11 +70,11 @@ public class MaciejVTABug extends BaseReasonerTest {
         String query = "?x memberOf station";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS
+        binding.put(leFactory.createVariable("x"), wsmoFactory.createIRI(NS
                 + "galway_station"));
         expected.add(binding);
         binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("x"), wsmoFactory.createIRI(NS
+        binding.put(leFactory.createVariable("x"), wsmoFactory.createIRI(NS
                 + "dublin_station"));
         expected.add(binding);
         performQuery(query, expected);

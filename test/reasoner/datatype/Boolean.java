@@ -82,25 +82,25 @@ public class Boolean extends TestCase {
         result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
         assertEquals(1,result.size());
         Map<Variable,Term> m =result.iterator().next();
-        System.out.println(m.get(wsmoFactory.createVariable("y")));
+        System.out.println(m.get(leFactory.createVariable("y")));
         assertEquals(dFactory.createWsmlBoolean(false),
-                m.get(wsmoFactory.createVariable("y")));
+                m.get(leFactory.createVariable("y")));
         
         query = leFactory.createLogicalExpression("a[t hasValue ?y]", o);
         result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
         assertEquals(1,result.size());
         m =result.iterator().next();
-        System.out.println(m.get(wsmoFactory.createVariable("y")));
+        System.out.println(m.get(leFactory.createVariable("y")));
         assertEquals(dFactory.createWsmlBoolean(true),
-                m.get(wsmoFactory.createVariable("y")));
+                m.get(leFactory.createVariable("y")));
         
         query = leFactory.createLogicalExpression("a(?y)", o);
         result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
         assertEquals(1,result.size());
         m =result.iterator().next();
-        System.out.println(m.get(wsmoFactory.createVariable("y")));
+        System.out.println(m.get(leFactory.createVariable("y")));
         assertEquals(wsmoFactory.createIRI(ns+"t"),
-                m.get(wsmoFactory.createVariable("y"))); 
+                m.get(leFactory.createVariable("y"))); 
     }
     
     

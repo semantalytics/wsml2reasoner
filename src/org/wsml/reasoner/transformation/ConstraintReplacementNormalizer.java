@@ -134,11 +134,11 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
 
         List<LogicalExpression> resultLEs = new LinkedList<LogicalExpression>();
 
-        Variable v1 = wsmoFactory.createVariable("v1");
-        Variable v2 = wsmoFactory.createVariable("v2");
-        Variable v3 = wsmoFactory.createVariable("v3");
-        Variable v4 = wsmoFactory.createVariable("v4");
-        Variable v5 = wsmoFactory.createVariable("v5");
+        Variable v1 = leFactory.createVariable("v1");
+        Variable v2 = leFactory.createVariable("v2");
+        Variable v3 = leFactory.createVariable("v3");
+        Variable v4 = leFactory.createVariable("v4");
+        Variable v5 = leFactory.createVariable("v5");
 
         Atom head = leFactory.createAtom(violationPredicateID,
                 Collections.EMPTY_LIST);
@@ -207,8 +207,8 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
         Identifier typeID = (Identifier) attrConstraint.getRightParameter();
 
         // create corresponding rule:
-        Variable xVariable = wsmoFactory.createVariable("x");
-        Variable yVariable = wsmoFactory.createVariable("y");
+        Variable xVariable = leFactory.createVariable("x");
+        Variable yVariable = leFactory.createVariable("y");
         MembershipMolecule xMOfC = leFactory.createMemberShipMolecule(
                 xVariable, conceptID);
         AttributeValueMolecule xPy = leFactory.createAttributeValue(xVariable,

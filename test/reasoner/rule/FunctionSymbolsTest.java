@@ -40,10 +40,10 @@ import test.BaseReasonerTest;
  * @author Adrian Mocan, Holger Lausen
  *
  * Created on 17-Feb-2006
- * Committed by $Author: graham $
+ * Committed by $Author: hlausen $
  * 
  * $Source: /home/richi/temp/w2r/wsml2reasoner/test/reasoner/rule/FunctionSymbolsTest.java,v $, 
- * @version $Revision: 1.7 $ $Date: 2006-05-16 09:45:47 $
+ * @version $Revision: 1.8 $ $Date: 2006-07-17 11:45:59 $
  */
 
 public class FunctionSymbolsTest extends BaseReasonerTest {
@@ -76,21 +76,21 @@ public class FunctionSymbolsTest extends BaseReasonerTest {
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
         List terms = new ArrayList();
         terms.add(wsmoFactory.createIRI(NS+"my_trainTicket1"));
-        binding.put(wsmoFactory.createVariable("x"), 
+        binding.put(leFactory.createVariable("x"), 
                 leFactory.createConstructedTerm(
                         wsmoFactory.createIRI(NS+ "f"),terms));
         expected.add(binding);
         binding = new HashMap<Variable, Term>();
         terms = new ArrayList();
         terms.add(wsmoFactory.createIRI(NS+"my_trainTicket2"));
-        binding.put(wsmoFactory.createVariable("x"), 
+        binding.put(leFactory.createVariable("x"), 
                 leFactory.createConstructedTerm(
                         wsmoFactory.createIRI(NS+ "f"),terms));
         expected.add(binding);
         binding = new HashMap<Variable, Term>();
         terms = new ArrayList();
         terms.add(wsmoFactory.createIRI(NS+"my_trainTicket3"));
-        binding.put(wsmoFactory.createVariable("x"), 
+        binding.put(leFactory.createVariable("x"), 
                 leFactory.createConstructedTerm(
                         wsmoFactory.createIRI(NS+ "f"),terms));
         expected.add(binding);
@@ -105,7 +105,7 @@ public class FunctionSymbolsTest extends BaseReasonerTest {
         List terms = new ArrayList();
         terms.add(wsmoFactory.createIRI(NS+"my_trainTicket1"));
         terms.add(wsmoFactory.createIRI(NS+"customer1"));
-        binding.put(wsmoFactory.createVariable("x"), 
+        binding.put(leFactory.createVariable("x"), 
                 leFactory.createConstructedTerm(
                         wsmoFactory.createIRI(NS+ "f"),terms));
         expected.add(binding);
@@ -113,7 +113,7 @@ public class FunctionSymbolsTest extends BaseReasonerTest {
         terms = new ArrayList();
         terms.add(wsmoFactory.createIRI(NS+"my_trainTicket2"));
         terms.add(wsmoFactory.createIRI(NS+"customer2"));
-        binding.put(wsmoFactory.createVariable("x"), 
+        binding.put(leFactory.createVariable("x"), 
                 leFactory.createConstructedTerm(
                         wsmoFactory.createIRI(NS+ "f"),terms));
         expected.add(binding);

@@ -47,6 +47,7 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.InfixOrderLogicalExpressionVisitor;
+import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
 /**
@@ -155,7 +156,7 @@ public class WSML2DatalogTransformer {
     public Set<Rule> generateAuxilliaryRules() {
         Set<Rule> result = new HashSet<Rule>();
 
-        WsmoFactory f = this.wsmoManager.getWSMOFactory();
+        LogicalExpressionFactory f = this.wsmoManager.getLogicalExpressionFactory();
 
         Variable vConcept = f.createVariable("concept");
         Variable vConcept2 = f.createVariable("concept2");

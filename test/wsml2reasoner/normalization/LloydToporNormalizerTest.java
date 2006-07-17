@@ -18,6 +18,7 @@
  */
 package wsml2reasoner.normalization;
 
+import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.LloydToporNormalizer;
@@ -52,6 +53,6 @@ public class LloydToporNormalizerTest extends WSMLNormalizationTest
         System.out.println("\n\n***\n"+ new LloydToporRules(new WSMO4JManager()).toString());
 
         // test whether produced ontology contains exactly 4 axioms:
-        assertTrue(normOnt.listAxioms().size() == 4);
+        assertTrue(((Axiom)normOnt.listAxioms().iterator().next()).listDefinitions().size() == 4);
     }
 }

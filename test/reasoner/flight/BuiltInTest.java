@@ -64,9 +64,9 @@ public class BuiltInTest extends BaseReasonerTest {
         String query = "?x[value hasValue ?y] memberOf Miles";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("x"), 
+        binding.put(leFactory.createVariable("x"), 
                 wsmoFactory.createIRI(NS+"miles"));
-        binding.put(wsmoFactory.createVariable("y"), 
+        binding.put(leFactory.createVariable("y"), 
                 dataFactory.createWsmlDecimal("10.0"));
         expected.add(binding);
         performQuery(query, expected);
@@ -85,7 +85,7 @@ public class BuiltInTest extends BaseReasonerTest {
         String query = "test2(?y)";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("x"), 
+        binding.put(leFactory.createVariable("x"), 
                 dataFactory.createWsmlInteger("2"));
         expected.add(binding);
         performQuery(query, expected);
@@ -98,9 +98,9 @@ public class BuiltInTest extends BaseReasonerTest {
         String query = "tuple1(?x,?y)";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("x"), 
+        binding.put(leFactory.createVariable("x"), 
                 dataFactory.createWsmlInteger("1"));
-        binding.put(wsmoFactory.createVariable("y"), 
+        binding.put(leFactory.createVariable("y"), 
                 dataFactory.createWsmlDecimal("1.0"));
         expected.add(binding);
         performQuery(query, expected);
@@ -116,7 +116,7 @@ public class BuiltInTest extends BaseReasonerTest {
         String query = "test2(?x,?y)";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
-        binding.put(wsmoFactory.createVariable("x"), 
+        binding.put(leFactory.createVariable("x"), 
                 dataFactory.createWsmlInteger("2"));
         expected.add(binding);
         performQuery(query, expected);
