@@ -408,10 +408,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
     
     /**
      * This test checks for transformation of wsml logical expression with forall 
-     * to owl definitions with someValuesFrom (as forall with implication is 
-     * transformed during the normalization to exists with inverse implication).
+     * to owl definitions with allValuesFrom.
      */
-    public void testSomeValuesFrom1() throws Exception {
+    public void testAllValuesFrom() throws Exception {
     	String s = "?x memberOf SmallDogOwner implies ?x memberOf Human and forall " +
     			"?x(?x[hasDog hasValue ?y] implies ?y memberOf SmallDog).";
     	LogicalExpression le = (LogicalExpression) leFactory.createLogicalExpression(
@@ -426,10 +425,10 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
     }
     
     /**
-     * This test checks for transformation of wsml logical expression with exists 
-     * to owl definitions with someValuesFrom.
+     * This test checks for transformation of wsml logical expression with forall 
+     * and exists to owl definitions with someValuesFrom.
      */
-    public void testSomeValuesFrom2() throws Exception {
+    public void testAllAndSomeValuesFrom() throws Exception {
     	String s = "?x memberOf Human implies exists ?y(?x[father hasValue ?y] " +
 				"and ?y memberOf Human) and forall ?y(?x[father hasValue ?y] " +
 				"implies ?y memberOf Human).";
@@ -448,7 +447,7 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
      * This test checks for transformation of wsml logical expression with exists 
      * to owl definitions with someValuesFrom.
      */
-    public void testSomeValuesFrom3() throws Exception {
+    public void testSomeValuesFrom() throws Exception {
     	String s = "?x memberOf Human implies exists ?y(?x[father hasValue ?y] " +
 				"and ?y memberOf Man).";
     	LogicalExpression le = (LogicalExpression) leFactory.createLogicalExpression(
