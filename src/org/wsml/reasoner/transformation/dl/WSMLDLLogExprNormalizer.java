@@ -32,7 +32,6 @@ import org.wsmo.common.Identifier;
 import org.wsmo.common.UnnumberedAnonymousID;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.common.exception.SynchronisationException;
-import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -50,7 +49,7 @@ import org.wsmo.factory.WsmoFactory;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.1 $ $Date: 2006-07-18 08:21:01 $
+ * @version $Revision: 1.2 $ $Date: 2006-07-18 08:45:22 $
  */
 public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
 	
@@ -59,8 +58,6 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
     protected WsmoFactory wsmoFactory;
     
     protected LogicalExpressionFactory leFactory;
-    
-    protected DataFactory dataFactory;
 
     protected AnonymousIdTranslator anonymousIdTranslator;
     
@@ -86,7 +83,6 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
                 postOrderRules, wsmoManager);
         wsmoFactory = wsmoManager.getWSMOFactory();
         leFactory = wsmoManager.getLogicalExpressionFactory();
-        dataFactory = wsmoManager.getDataFactory();
         anonymousIdTranslator = new AnonymousIdTranslator(wsmoFactory);
     }
     
@@ -319,5 +315,9 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.1  2006/07/18 08:21:01  nathalie
+ * adding wsml dl reasoner interface,
+ * transformation from wsml dl to owl-dl
+ *
  *
  */
