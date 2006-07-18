@@ -65,7 +65,7 @@ public class WSMLDLNormalizerTest extends WSMLNormalizationTest {
         // assuming first topentity in file is an ontology  
         ontology = (Ontology)wsmlParser.parse(new InputStreamReader(is))[0];  
         
-        System.out.println(serializeOntology(ontology)+"\n\n\n-------------\n\n\n");
+System.out.println(serializeOntology(ontology)+"\n\n\n-------------\n\n\n");
 
 		// validate the test ontology
 		WsmlDLValidator validator = new WsmlDLValidator(leFactory);
@@ -78,15 +78,17 @@ public class WSMLDLNormalizerTest extends WSMLNormalizationTest {
         // normalize ontology with the WSMLDLNormalizer:
 		Ontology normOnt = createOntology();
 		normOnt = relTransformer.normalize(ontology);
-		
+System.out.println(serializeOntology(normOnt)+"\n\n\n-------------\n\n\n"); 
+
 		normOnt = axiomTransformer.normalize(normOnt);	
 System.out.println(serializeOntology(normOnt)+"\n\n\n-------------\n\n\n"); 
+
 		normOnt = logExprTransformer.normalize(normOnt);	
 System.out.println(serializeOntology(normOnt)+"\n\n\n-------------\n\n\n");	       
     }
 	
     @SuppressWarnings("unchecked")
-	public void testAnonIds() throws Exception {
+	public void testAnonIdTransformationss() throws Exception {
     	// read test file and parse it 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(
                 "wsml2reasoner/normalization/anonIds.wsml");
@@ -95,7 +97,7 @@ System.out.println(serializeOntology(normOnt)+"\n\n\n-------------\n\n\n");
         // assuming first topentity in file is an ontology  
         ontology = (Ontology)wsmlParser.parse(new InputStreamReader(is))[0];  
         
-        System.out.println(serializeOntology(ontology)+"\n\n\n-------------\n\n\n");
+System.out.println(serializeOntology(ontology)+"\n\n\n-------------\n\n\n");
 
 		// validate the test ontology
 		WsmlDLValidator validator = new WsmlDLValidator(leFactory);
@@ -110,10 +112,9 @@ System.out.println(serializeOntology(normOnt)+"\n\n\n-------------\n\n\n");
 		normOnt = relTransformer.normalize(ontology);
 		normOnt = logExprTransformer.normalize(normOnt);
 		
-		System.out.println(serializeOntology(normOnt)+"\n\n\n-------------\n\n\n");
+System.out.println(serializeOntology(normOnt)+"\n\n\n-------------\n\n\n");
     }
     
-    @SuppressWarnings("unchecked")
 	public void testRelationTransformations() throws Exception {
     	// read test file and parse it 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(
@@ -123,7 +124,7 @@ System.out.println(serializeOntology(normOnt)+"\n\n\n-------------\n\n\n");
         // assuming first topentity in file is an ontology  
         ontology = (Ontology)wsmlParser.parse(new InputStreamReader(is))[0];  
         
-        System.out.println(serializeOntology(ontology)+"\n\n\n-------------\n\n\n");
+System.out.println(serializeOntology(ontology)+"\n\n\n-------------\n\n\n");
 
 		// validate the test ontology
 		WsmlDLValidator validator = new WsmlDLValidator(leFactory);
@@ -138,7 +139,34 @@ System.out.println(serializeOntology(normOnt)+"\n\n\n-------------\n\n\n");
 		normOnt = relTransformer.normalize(ontology);
 		normOnt = logExprTransformer.normalize(normOnt);
 		
-		System.out.println(serializeOntology(normOnt)+"\n\n\n-------------\n\n\n");
+System.out.println(serializeOntology(normOnt)+"\n\n\n-------------\n\n\n");
+    }
+    
+	public void testDecompositionTransformations() throws Exception {
+    	// read test file and parse it 
+        InputStream is = this.getClass().getClassLoader().getResourceAsStream(
+                "wsml2reasoner/normalization/decomposition.wsml");
+        assertNotNull(is);
+        Parser wsmlParser = Factory.createParser(null);
+        // assuming first topentity in file is an ontology  
+        ontology = (Ontology)wsmlParser.parse(new InputStreamReader(is))[0];  
+        
+System.out.println(serializeOntology(ontology)+"\n\n\n-------------\n\n\n");
+
+		// validate the test ontology
+		WsmlDLValidator validator = new WsmlDLValidator(leFactory);
+		List errors = new Vector();
+		boolean b = validator.isValid(ontology, errors, new Vector());
+        for (int i=0; i<errors.size(); i++) 
+        	System.out.println(errors.get(i));
+        assertTrue(b);
+		
+        // normalize ontology with the WSMLDLNormalizer:
+		Ontology normOnt = createOntology();
+		normOnt = relTransformer.normalize(ontology);
+		normOnt = logExprTransformer.normalize(normOnt);
+		
+System.out.println(serializeOntology(normOnt)+"\n\n\n-------------\n\n\n");
     }
 	
 }
