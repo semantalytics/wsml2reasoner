@@ -22,6 +22,7 @@ package org.wsml.reasoner.impl;
 import java.util.Map;
 
 import org.wsml.reasoner.api.WSMLCoreReasoner;
+import org.wsml.reasoner.api.WSMLDLReasoner;
 import org.wsml.reasoner.api.WSMLFlightReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsmo.factory.DataFactory;
@@ -87,6 +88,17 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         return createWSMLCoreReasoner(null);
     }
 
+    public WSMLDLReasoner createWSMLDLReasoner(Map<String, Object> params) 
+    		throws UnsupportedOperationException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public WSMLDLReasoner createWSMLDLReasoner() 
+			throws UnsupportedOperationException {
+		return createWSMLDLReasoner(null);
+	}
+    
     public WSMLFlightReasoner createWSMLFlightReasoner(Map<String, Object> params)
             throws UnsupportedOperationException {
         if (params == null) {

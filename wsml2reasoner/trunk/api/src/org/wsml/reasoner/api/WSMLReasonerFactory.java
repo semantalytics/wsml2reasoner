@@ -51,7 +51,7 @@ public interface WSMLReasonerFactory {
     public String PARAM_ALLOW_IMPORTS = "Allow ontology imports";
     
     public enum BuiltInReasoner {
-        KAON2, MINS
+        KAON2, MINS, PELLET
     };
 
     /**
@@ -90,6 +90,42 @@ public interface WSMLReasonerFactory {
     public WSMLCoreReasoner createWSMLCoreReasoner()
             throws UnsupportedOperationException;
 
+    /**
+     * Creates a WSML DL reasoner backed up by the chosen DL
+     * implementation
+     * 
+     * @param params
+     *            configuration parameters. The following parameters are
+     *            accepted at the moment:
+     *            <ul>
+     *            <li>PARAM_WSMO_FACTORY: The WsmoFactory implementation to use</li>
+     *            <li>PARAM_LE_FACTORY: The LogicalExpressionFactory
+     *            implementation to use</li>
+     *            <li>PARAM_DATA_FACTORY: The DataFactory implementation to use</li>
+     *            <li>PARAM_BUILT_IN_REASONER: The internal reasoner
+     *            implementation to use, see @link BuiltInReasoner</li>
+     *            <li>PARAM_EVAL_METHOD: Evaluation Method of underlying reasoner;</li>
+     *       </ul>
+     *       Meaningful defaults are used, if a specific parameter is not
+     *       defined. For the WSMO4J factories the factories with "null" as
+     *       parameter are used, and as the internal reasoner Pellet is used by
+     *       default.
+     * @return the reasoner
+     * @throws UnsupportedOperationException
+     */
+    public WSMLDLReasoner createWSMLDLReasoner(Map<String, Object> params)
+            throws UnsupportedOperationException;
+
+    /**
+     * Creates a WSML DL reasoner backed up by the default DL engine, and
+     * using the default WSMO4J factories.
+     * 
+     * @return the reasoner
+     * @throws UnsupportedOperationException
+     */
+    public WSMLDLReasoner createWSMLDLReasoner()
+            throws UnsupportedOperationException;
+    
     /**
      * Creates a WSML Flight reasoner backed up by the chosen Datalog
      * implementation

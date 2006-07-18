@@ -12,5 +12,10 @@
 	<classpathentry kind="lib" path="lib/ext/mins/mins-20060712.jar"/>
 	<classpathentry kind="lib" path="lib/ext/wsmo4j/wsmlparser-20060210.jar"/>
 	<classpathentry kind="lib" path="lib/ext/wsmo4j/wsmo4j-20060706.jar"/>
+	<classpathentry kind="lib" path="lib/ext/owl_api/owl-api.jar"/>
+	<classpathentry kind="lib" path="lib/ext/owl_api/owl-impl.jar"/>
+	<classpathentry kind="lib" path="lib/ext/owl_api/owl-io.jar"/>
+	<classpathentry kind="lib" path="lib/ext/owl_api/rdfparser.jar"/>
+	<classpathentry kind="lib" path="lib/ext/log4j/1.2.7/log4j.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
