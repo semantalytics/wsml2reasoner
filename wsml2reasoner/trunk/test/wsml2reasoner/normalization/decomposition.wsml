@@ -1,0 +1,20 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-dl"
+
+namespace { _"http://www.example.org/ontologies/example#",
+  dc  _"http://purl.org/dc/elements/1.1#"}
+  
+ontology _"http://www.example.org/ontologies/example"
+
+  concept Animal
+  
+  concept Human
+    hasParents impliesType {Man, Woman}
+    hasWeight ofType {_integer, _decimal}
+    
+  instance Mary memberOf {Woman, Human} 
+  	hasParents hasValue {Anne, Jim}
+  	
+  concept Man subConceptOf {Human, Animal}
+  
+  relation hasDog (impliesType Human, impliesType Human) subRelationOf {hasPet, hasAnimal}
+     

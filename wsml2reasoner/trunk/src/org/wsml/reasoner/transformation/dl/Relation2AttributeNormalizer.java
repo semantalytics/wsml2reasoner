@@ -57,7 +57,7 @@ import org.wsmo.wsml.ParserException;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.1 $ $Date: 2006-07-18 08:21:01 $
+ * @version $Revision: 1.2 $ $Date: 2006-07-18 09:32:16 $
  */
 public class Relation2AttributeNormalizer implements OntologyNormalizer {
 
@@ -146,13 +146,12 @@ public class Relation2AttributeNormalizer implements OntologyNormalizer {
 	 * Superrelations are replaced by implication logical expressions.
 	 */
 	private Axiom normalizeSuperRelations(Set<Relation> superRelations, Relation relation) {
-		Axiom axiom = null;
+		Axiom axiom = wsmoFactory.createAxiom((Identifier) anonymousIdTranslator.translate(
+				wsmoFactory.createAnonymousID())) ;
 		LogicalExpression logExpr = null;
 		Iterator<Relation> it = superRelations.iterator();
 		while (it.hasNext()) {
 			Relation superRelation = it.next();
-			axiom = wsmoFactory.createAxiom((Identifier) anonymousIdTranslator.translate(
-					wsmoFactory.createAnonymousID())) ;
 			String le = "?x[_\"" + relation.getIdentifier() + "\" hasValue ?y] implies " +
 					"?x[_\"" + superRelation.getIdentifier() + "\" hasValue ?y].";
 			try {
