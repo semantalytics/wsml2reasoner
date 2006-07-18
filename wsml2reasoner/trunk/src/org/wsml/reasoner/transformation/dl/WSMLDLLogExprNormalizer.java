@@ -5,9 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Attribute;
@@ -16,7 +14,6 @@ import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Type;
-import org.omwg.ontology.Value;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.AnonymousIdTranslator;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
@@ -26,7 +23,6 @@ import org.wsml.reasoner.transformation.le.LogicalExpressionNormalizer;
 import org.wsml.reasoner.transformation.le.MoleculeDecompositionRules;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
 import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
-import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.UnnumberedAnonymousID;
@@ -49,7 +45,7 @@ import org.wsmo.factory.WsmoFactory;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.2 $ $Date: 2006-07-18 08:45:22 $
+ * @version $Revision: 1.3 $ $Date: 2006-07-18 13:06:13 $
  */
 public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
 	
@@ -172,10 +168,10 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
 						Attribute attribute = it.next();
 						Attribute newAttribute = null;
 						newAttribute = newConcept.createAttribute(attribute.getIdentifier());
-						if (attribute.listNFPValues().size() > 0) {
-							Set<Entry> nfpsSet = attribute.listNFPValues().entrySet();
-							newAttribute = (Attribute) transferNFPs(nfpsSet, newAttribute);
-						}
+//						if (attribute.listNFPValues().size() > 0) {
+//							Set<Entry> nfpsSet = attribute.listNFPValues().entrySet();
+//							newAttribute = (Attribute) transferNFPs(nfpsSet, newAttribute);
+//						}
 						if (attribute.listTypes().size() > 0) {
 							Set<Type> types = attribute.listTypes();
 							Iterator<Type> it4 = types.iterator();
@@ -186,11 +182,11 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
 						}
 					}
 				}
-				if (concept.listNFPValues().size() > 0) {
-					Map nfps = concept.listNFPValues();
-					Set<Entry> nfpsSet = nfps.entrySet();
-					newConcept = (Concept) transferNFPs(nfpsSet, newConcept); 
-				}
+//				if (concept.listNFPValues().size() > 0) {
+//					Map nfps = concept.listNFPValues();
+//					Set<Entry> nfpsSet = nfps.entrySet();
+//					newConcept = (Concept) transferNFPs(nfpsSet, newConcept); 
+//				}
 				ontology.addConcept(newConcept);
 				ontology.removeConcept(concept);			
 			}
@@ -279,42 +275,45 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
         return resultExp;
 	}
 	
-	/*
-	 * Method to transfer non functional properties from one element to another.
-	 */
-	private Entity transferNFPs(Set<Entry> nfpsSet, Entity entity) 
-			throws SynchronisationException, InvalidModelException {
-		Iterator<Entry> itNfp = nfpsSet.iterator();
-		while (itNfp.hasNext()) {
-			Entry mapEntry = itNfp.next();
-			if (mapEntry.getValue() instanceof Identifier) {	
-				entity.addNFPValue((IRI) mapEntry.getKey(), 
-						(Identifier) mapEntry.getValue());
-			}
-			else if (mapEntry.getValue() instanceof Value) {
-				entity.addNFPValue((IRI) mapEntry.getKey(), 
-					(Value) mapEntry.getValue());
-			}
-			else if (mapEntry.getValue() instanceof Set) {
-				Set values = (Set) mapEntry.getValue();
-				Iterator itVal = values.iterator();
-				while (itVal.hasNext()) {
-					Object obj = itVal.next();
-					if (obj instanceof Value) {	
-						entity.addNFPValue((IRI) mapEntry.getKey(), (Value) obj);
-					}
-					else if (obj instanceof Identifier) {
-						entity.addNFPValue((IRI) mapEntry.getKey(), (Identifier) obj);
-					}
-				}
-			}
-		}
-		return entity;
-	}
+//	/*
+//	 * Method to transfer non functional properties from one element to another.
+//	 */
+//	private Entity transferNFPs(Set<Entry> nfpsSet, Entity entity) 
+//			throws SynchronisationException, InvalidModelException {
+//		Iterator<Entry> itNfp = nfpsSet.iterator();
+//		while (itNfp.hasNext()) {
+//			Entry mapEntry = itNfp.next();
+//			if (mapEntry.getValue() instanceof Identifier) {	
+//				entity.addNFPValue((IRI) mapEntry.getKey(), 
+//						(Identifier) mapEntry.getValue());
+//			}
+//			else if (mapEntry.getValue() instanceof Value) {
+//				entity.addNFPValue((IRI) mapEntry.getKey(), 
+//					(Value) mapEntry.getValue());
+//			}
+//			else if (mapEntry.getValue() instanceof Set) {
+//				Set values = (Set) mapEntry.getValue();
+//				Iterator itVal = values.iterator();
+//				while (itVal.hasNext()) {
+//					Object obj = itVal.next();
+//					if (obj instanceof Value) {	
+//						entity.addNFPValue((IRI) mapEntry.getKey(), (Value) obj);
+//					}
+//					else if (obj instanceof Identifier) {
+//						entity.addNFPValue((IRI) mapEntry.getKey(), (Identifier) obj);
+//					}
+//				}
+//			}
+//		}
+//		return entity;
+//	}
 	
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2006/07/18 08:45:22  nathalie
+ * removed unneeded dataFactory
+ *
  * Revision 1.1  2006/07/18 08:21:01  nathalie
  * adding wsml dl reasoner interface,
  * transformation from wsml dl to owl-dl
