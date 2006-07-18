@@ -41,7 +41,7 @@ import org.wsmo.common.Identifier;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.1 $ $Date: 2006-07-18 08:21:01 $
+ * @version $Revision: 1.2 $ $Date: 2006-07-18 10:52:28 $
  */
 public class WSMLDL2OWLTransformer implements Visitor{
 	
@@ -378,6 +378,10 @@ public class WSMLDL2OWLTransformer implements Visitor{
     			superClass = transformExistentialQuantification(
     					(ExistentialQuantification) left);
     		}
+    		else if (left instanceof UniversalQuantification) {
+    			superClass = transformUniversalQuantification(
+    					(UniversalQuantification) left);
+    		}
     		
     		// create a class from the right side of the inverse implication
     		if (right instanceof MembershipMolecule) {
@@ -400,6 +404,10 @@ public class WSMLDL2OWLTransformer implements Visitor{
     		else if (right instanceof ExistentialQuantification) {
     			subClass = transformExistentialQuantification(
     					(ExistentialQuantification) right);
+    		}
+    		else if (right instanceof UniversalQuantification) {
+    			subClass = transformUniversalQuantification(
+    					(UniversalQuantification) right);
     		}
     		
     		// fill list with resulting classes
@@ -493,6 +501,10 @@ public class WSMLDL2OWLTransformer implements Visitor{
     			clazz1 = transformExistentialQuantification(
     					(ExistentialQuantification) left);
     		}
+    		else if (left instanceof UniversalQuantification) {
+    			clazz1 = transformUniversalQuantification(
+    					(UniversalQuantification) left);
+    		}
     		
     		// create a class from the right side of the conjunction
     		if (right instanceof MembershipMolecule) {
@@ -515,6 +527,10 @@ public class WSMLDL2OWLTransformer implements Visitor{
     		else if (right instanceof ExistentialQuantification) {
     			clazz2 = transformExistentialQuantification(
     					(ExistentialQuantification) right);
+    		}
+    		else if (right instanceof UniversalQuantification) {
+    			clazz2 = transformUniversalQuantification(
+    					(UniversalQuantification) right);
     		}
 //    		if (property1 != null && clazz2 != null) {
 //    			return owlGenerator.createSomeValuesFromClass((OWLObjectProperty) 
@@ -561,6 +577,10 @@ public class WSMLDL2OWLTransformer implements Visitor{
     			clazz1 = transformExistentialQuantification(
     					(ExistentialQuantification) left);
     		}
+    		else if (left instanceof UniversalQuantification) {
+    			clazz1 = transformUniversalQuantification(
+    					(UniversalQuantification) left);
+    		}
     		
     		// create a class from the right side of the conjunction
     		if (right instanceof MembershipMolecule) {
@@ -583,6 +603,10 @@ public class WSMLDL2OWLTransformer implements Visitor{
     		else if (right instanceof ExistentialQuantification) {
     			clazz2 = transformExistentialQuantification(
     					(ExistentialQuantification) right);
+    		}
+    		else if (right instanceof UniversalQuantification) {
+    			clazz2 = transformUniversalQuantification(
+    					(UniversalQuantification) right);
     		}
 //    		if (property1 != null && clazz2 != null) {
 //    			return owlGenerator.createSomeValuesFromClass((OWLObjectProperty) 
@@ -625,95 +649,110 @@ public class WSMLDL2OWLTransformer implements Visitor{
     			clazz = transformExistentialQuantification(
     					(ExistentialQuantification) expr.getOperand());
     		}
+    		else if (expr.getOperand() instanceof UniversalQuantification) {
+    			clazz = transformUniversalQuantification(
+    					(UniversalQuantification) expr.getOperand());
+    		}
     		return owlGenerator.createComplementClass(clazz);
     	}
 
     	private OWLDescription transformExistentialQuantification(
     			ExistentialQuantification expr) {
 //System.out.println("ExistentialQuantification: " + expr.toString() + "\n");
-			OWLObjectSomeRestriction restriction = null;
     		OWLDescription filler = null;
 //    		OWLProperty fillerProperty = null;
     		OWLObjectProperty property = null;
 
-    		if (expr.getOperand() instanceof InverseImplication) {
-    			InverseImplication invImpl = (InverseImplication) expr.getOperand();
+    		Conjunction conjunction = (Conjunction) expr.getOperand();
+    		// get left part of conjunction
+    		AttributeValueMolecule attribute = (AttributeValueMolecule) 
+    				conjunction.getLeftOperand();
+    		property = owlGenerator.createObjectProperty(attribute.getAttribute()
+    				.toString());
     			
-    			// get right part of inverse implication
-    			AttributeValueMolecule attribute = (AttributeValueMolecule) 
-    					invImpl.getRightOperand();
-    			property = owlGenerator.createObjectProperty(attribute.getAttribute()
-    					.toString());
-    			
-    			// get left part of inverse implication
-    			if (invImpl.getLeftOperand() instanceof MembershipMolecule) {
-    				filler = transformMemberShipMolecule(
-        					(MembershipMolecule) invImpl.getLeftOperand());
-        		}
-//        		else if (invImpl.getLeftOperand() instanceof AttributeValueMolecule) {
-//        			fillerProperty = transformAttributeValueMolecule(
-//        					(AttributeValueMolecule) expr.getOperand());
-//        		}
-        		else if (invImpl.getLeftOperand() instanceof Conjunction) {
-        			filler = transformConjunction((Conjunction) invImpl.
-        					getLeftOperand());
-        		}
-        		else if (invImpl.getLeftOperand() instanceof Disjunction) {
-        			filler = transformDisjunction((Disjunction) invImpl.
-        					getLeftOperand());
-        		}
-        		else if (invImpl.getLeftOperand() instanceof Negation) {
-        			filler = transformNegation((Negation) invImpl.
-        					getLeftOperand());
-        		}
-        		else if (invImpl.getLeftOperand() instanceof 
-        				ExistentialQuantification) {
-        			filler = transformExistentialQuantification(
-        					(ExistentialQuantification) invImpl.
-        					getLeftOperand());
-        		}
-    			restriction = owlGenerator.createSomeValuesFromClass(property, 
-    					filler);
+    		// get left part of inverse implication
+    		if (conjunction.getRightOperand() instanceof MembershipMolecule) {
+    			filler = transformMemberShipMolecule(
+    					(MembershipMolecule) conjunction.getRightOperand());
     		}
-    		else if (expr.getOperand() instanceof Conjunction) {
-    			Conjunction conjunction = (Conjunction) expr.getOperand();
-    			// get left part of conjunction
-    			AttributeValueMolecule attribute = (AttributeValueMolecule) 
-    					conjunction.getLeftOperand();
-    			property = owlGenerator.createObjectProperty(attribute.getAttribute()
-    					.toString());
-    			
-    			// get left part of inverse implication
-    			if (conjunction.getRightOperand() instanceof MembershipMolecule) {
-    				filler = transformMemberShipMolecule(
-        					(MembershipMolecule) conjunction.getRightOperand());
-        		}
-//        		else if (invImpl.getLeftOperand() instanceof AttributeValueMolecule) {
-//        			fillerProperty = transformAttributeValueMolecule(
-//        					(AttributeValueMolecule) expr.getOperand());
-//        		}
-        		else if (conjunction.getRightOperand() instanceof Conjunction) {
-        			filler = transformConjunction((Conjunction) conjunction.
-        					getRightOperand());
-        		}
-        		else if (conjunction.getRightOperand() instanceof Disjunction) {
-        			filler = transformDisjunction((Disjunction) conjunction.
-        					getRightOperand());
-        		}
-        		else if (conjunction.getRightOperand() instanceof Negation) {
-        			filler = transformNegation((Negation) conjunction.
-        					getRightOperand());
-        		}
-        		else if (conjunction.getRightOperand() instanceof 
-        				ExistentialQuantification) {
-        			filler = transformExistentialQuantification(
-        					(ExistentialQuantification) conjunction.
-        					getRightOperand());
-        		}
-    			restriction = owlGenerator.createSomeValuesFromClass(property, 
-    					filler);
+//    		else if (invImpl.getLeftOperand() instanceof AttributeValueMolecule) {
+//    			fillerProperty = transformAttributeValueMolecule(
+//    					(AttributeValueMolecule) expr.getOperand());
+//    		}
+    		else if (conjunction.getRightOperand() instanceof Conjunction) {
+    			filler = transformConjunction((Conjunction) conjunction.
+    					getRightOperand());
     		}
-			return restriction;
+    		else if (conjunction.getRightOperand() instanceof Disjunction) {
+    			filler = transformDisjunction((Disjunction) conjunction.
+    					getRightOperand());
+    		}
+    		else if (conjunction.getRightOperand() instanceof Negation) {
+    			filler = transformNegation((Negation) conjunction.
+    					getRightOperand());
+    		}
+    		else if (conjunction.getRightOperand() instanceof 
+    				ExistentialQuantification) {
+    			filler = transformExistentialQuantification(
+    					(ExistentialQuantification) conjunction.getRightOperand());
+    		}
+    		else if (conjunction.getRightOperand() instanceof 
+    				UniversalQuantification) {
+    			filler = transformUniversalQuantification(
+    					(UniversalQuantification) conjunction.getRightOperand());
+    		}
+			return owlGenerator.createSomeValuesFromClass(property, 
+    				filler);
+    	}
+    	
+    	private OWLDescription transformUniversalQuantification(
+    			UniversalQuantification expr) {
+//System.out.println("Universal: " + expr.toString() + "\n");
+    		OWLDescription filler = null;
+//    		OWLProperty fillerProperty = null;
+    		OWLObjectProperty property = null;
+
+    		InverseImplication invImpl = (InverseImplication) expr.getOperand();
+    			
+    		// get right part of inverse implication
+    		AttributeValueMolecule attribute = (AttributeValueMolecule) 
+    				invImpl.getRightOperand();
+    		property = owlGenerator.createObjectProperty(attribute.getAttribute()
+    				.toString());
+    			
+    		// get left part of inverse implication
+    		if (invImpl.getLeftOperand() instanceof MembershipMolecule) {
+    			filler = transformMemberShipMolecule(
+    					(MembershipMolecule) invImpl.getLeftOperand());
+    		}
+//    		else if (invImpl.getLeftOperand() instanceof AttributeValueMolecule) {
+//    			fillerProperty = transformAttributeValueMolecule(
+//    					(AttributeValueMolecule) expr.getOperand());
+//    		}
+    		else if (invImpl.getLeftOperand() instanceof Conjunction) {
+    			filler = transformConjunction((Conjunction) invImpl.
+    					getLeftOperand());
+    		}
+    		else if (invImpl.getLeftOperand() instanceof Disjunction) {
+    			filler = transformDisjunction((Disjunction) invImpl.
+    					getLeftOperand());
+    		}
+    		else if (invImpl.getLeftOperand() instanceof Negation) {
+    			filler = transformNegation((Negation) invImpl.
+    					getLeftOperand());
+    		}
+    		else if (invImpl.getLeftOperand() instanceof 
+    				ExistentialQuantification) {
+    			filler = transformExistentialQuantification(
+    					(ExistentialQuantification) invImpl.getLeftOperand());
+    		}
+    		else if (invImpl.getLeftOperand() instanceof 
+    				UniversalQuantification) {
+    			filler = transformUniversalQuantification(
+    					(UniversalQuantification) invImpl.getLeftOperand());
+    		}
+			return owlGenerator.createAllValuesFromClass(property, 
+    				filler);
     	}
     	
     	/*
@@ -1064,6 +1103,19 @@ public class WSMLDL2OWLTransformer implements Visitor{
 				e.printStackTrace();
 			}
 			return or;
+    	}
+    	
+    	private OWLObjectAllRestriction createAllValuesFromClass(OWLObjectProperty property, 
+    			OWLDescription clazz) {
+    		OWLObjectAllRestriction restriction = null;
+    		try {
+    			restriction = owlDataFactory.getOWLObjectAllRestriction(
+    					property, clazz);
+			} catch (OWLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return restriction;
     	}
     	
     	private OWLObjectSomeRestriction createSomeValuesFromClass(OWLObjectProperty property, 
@@ -1448,5 +1500,9 @@ public class WSMLDL2OWLTransformer implements Visitor{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.1  2006/07/18 08:21:01  nathalie
+ * adding wsml dl reasoner interface,
+ * transformation from wsml dl to owl-dl
+ *
  *
  */
