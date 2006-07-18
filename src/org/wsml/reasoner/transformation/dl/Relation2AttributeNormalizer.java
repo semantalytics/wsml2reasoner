@@ -19,9 +19,7 @@
 package org.wsml.reasoner.transformation.dl;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Attribute;
@@ -37,8 +35,6 @@ import org.omwg.ontology.Value;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.AnonymousIdTranslator;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
-import org.wsmo.common.Entity;
-import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.common.exception.SynchronisationException;
@@ -57,7 +53,7 @@ import org.wsmo.wsml.ParserException;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.2 $ $Date: 2006-07-18 09:32:16 $
+ * @version $Revision: 1.3 $ $Date: 2006-07-18 13:06:13 $
  */
 public class Relation2AttributeNormalizer implements OntologyNormalizer {
 
@@ -123,11 +119,11 @@ public class Relation2AttributeNormalizer implements OntologyNormalizer {
 						attribute.setConstraining(true);
 					}
 				}
-				if (relation.listNFPValues().size() > 0) {
-					Map nfps = relation.listNFPValues();
-					Set<Entry> nfpsSet = nfps.entrySet();
-					attribute = (Attribute) transferNFPs(nfpsSet, attribute);
-				}
+//				if (relation.listNFPValues().size() > 0) {
+//					Map nfps = relation.listNFPValues();
+//					Set<Entry> nfpsSet = nfps.entrySet();
+//					attribute = (Attribute) transferNFPs(nfpsSet, attribute);
+//				}
 			}			
 			if (relation.listSuperRelations().size() > 0) {
 				Set<Relation> superRelations = relation.listSuperRelations();
@@ -191,48 +187,48 @@ public class Relation2AttributeNormalizer implements OntologyNormalizer {
 			else {
 				newInstance.addAttributeValue(relationInstance.getRelation().getIdentifier(), v2);
 			}
-			if (relationInstance.listNFPValues().size() > 0) {
-				Map nfps = relationInstance.listNFPValues();
-				Set<Entry> nfpsSet = nfps.entrySet();
-				newInstance = (Instance) transferNFPs(nfpsSet, newInstance);
-			}			
+//			if (relationInstance.listNFPValues().size() > 0) {
+//				Map nfps = relationInstance.listNFPValues();
+//				Set<Entry> nfpsSet = nfps.entrySet();
+//				newInstance = (Instance) transferNFPs(nfpsSet, newInstance);
+//			}			
 			ontology.removeRelationInstance(relationInstance);
 			ontology.addInstance(newInstance);
 		}
 		return ontology;
 	}
 
-	/*
-	 * Method to transfer non functional properties from one element to another.
-	 */
-	private Entity transferNFPs(Set<Entry> nfpsSet, Entity entity) 
-			throws SynchronisationException, InvalidModelException {
-		Iterator<Entry> itNfp = nfpsSet.iterator();
-		while (itNfp.hasNext()) {
-			Entry mapEntry = itNfp.next();
-			if (mapEntry.getValue() instanceof Identifier) {	
-				entity.addNFPValue((IRI) mapEntry.getKey(), 
-						(Identifier) mapEntry.getValue());
-			}
-			else if (mapEntry.getValue() instanceof Value) {
-				entity.addNFPValue((IRI) mapEntry.getKey(), 
-					(Value) mapEntry.getValue());
-			}
-			else if (mapEntry.getValue() instanceof Set) {
-				Set values = (Set) mapEntry.getValue();
-				Iterator itVal = values.iterator();
-				while (itVal.hasNext()) {
-					Object obj = itVal.next();
-					if (obj instanceof Value) {	
-						entity.addNFPValue((IRI) mapEntry.getKey(), (Value) obj);
-					}
-					else if (obj instanceof Identifier) {
-						entity.addNFPValue((IRI) mapEntry.getKey(), (Identifier) obj);
-					}
-				}
-			}
-		}
-		return entity;
-	}
+//	/*
+//	 * Method to transfer non functional properties from one element to another.
+//	 */
+//	private Entity transferNFPs(Set<Entry> nfpsSet, Entity entity) 
+//			throws SynchronisationException, InvalidModelException {
+//		Iterator<Entry> itNfp = nfpsSet.iterator();
+//		while (itNfp.hasNext()) {
+//			Entry mapEntry = itNfp.next();
+//			if (mapEntry.getValue() instanceof Identifier) {	
+//				entity.addNFPValue((IRI) mapEntry.getKey(), 
+//						(Identifier) mapEntry.getValue());
+//			}
+//			else if (mapEntry.getValue() instanceof Value) {
+//				entity.addNFPValue((IRI) mapEntry.getKey(), 
+//					(Value) mapEntry.getValue());
+//			}
+//			else if (mapEntry.getValue() instanceof Set) {
+//				Set values = (Set) mapEntry.getValue();
+//				Iterator itVal = values.iterator();
+//				while (itVal.hasNext()) {
+//					Object obj = itVal.next();
+//					if (obj instanceof Value) {	
+//						entity.addNFPValue((IRI) mapEntry.getKey(), (Value) obj);
+//					}
+//					else if (obj instanceof Identifier) {
+//						entity.addNFPValue((IRI) mapEntry.getKey(), (Identifier) obj);
+//					}
+//				}
+//			}
+//		}
+//		return entity;
+//	}
 	
 }
