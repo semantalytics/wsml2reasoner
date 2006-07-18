@@ -162,7 +162,7 @@ public class OnePassReplacementNormalizer implements
                     .listVariables(), arguments.get(0));
         } else if (compound instanceof UniversalQuantification) {
             UniversalQuantification exists = (UniversalQuantification) compound;
-            result = leFactory.createExistentialQuantification(exists
+            result = leFactory.createUniversalQuantification(exists
                     .listVariables(), arguments.get(0));
         } else if (compound instanceof Conjunction) {
             result = leFactory.createConjunction(arguments.get(0), arguments
