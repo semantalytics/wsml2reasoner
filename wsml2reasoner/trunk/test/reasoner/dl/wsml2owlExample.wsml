@@ -11,7 +11,7 @@ ontology _"http://www.example.org/ontologies/example"
     hasFather impliesType Man
     hasWeight ofType _decimal
     hasBirthday ofType _date    
-  
+  concept Person subConceptOf Human
   concept Woman subConceptOf{Human}
     nfp dc#relation hasValue "disjoint to Man" endnfp  
 
@@ -57,11 +57,15 @@ ontology _"http://www.example.org/ontologies/example"
       
       // subconcept definition
 	  Cat subConceptOf Animal.
-	  
+	  Human subConceptOf Animal.
+
+	  // Making the concept Machine insatisfiable
+	  Machine subConceptOf Human.
+
 	  // memberOf definition
 	  Anne memberOf Woman.
 	  Clare memberOf Woman.
-	  
+
 	  // Attribute data value definition
       Anna[hasWeight hasValue 60].
       Mary[ageOfHuman hasValue 33].
@@ -85,7 +89,11 @@ ontology _"http://www.example.org/ontologies/example"
       
       // SubAttribute relation
       ?x[hasDog hasValue ?y] implies ?x[hasPet hasValue ?y].
-      ?x[hasMother hasValue ?y] implies ?x[hasParent hasValue ?y].		
+      ?x[hasMother hasValue ?y] implies ?x[hasParent hasValue ?y].
+      
+      // Equivalent relations
+      ?x[isPetOf hasValue ?y] implies ?x[hasHolder hasValue ?y].
+      ?x[hasHolder hasValue ?y] implies ?x[hasPet hasValue ?y].		
       
       // Inverse Attribute/Relation
       ?x[hasHolder hasValue ?y] implies ?y[hasPet hasValue ?x].	

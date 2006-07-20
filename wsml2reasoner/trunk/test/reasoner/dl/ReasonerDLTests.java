@@ -1,11 +1,10 @@
-package wsml2reasoner.transformation;
-
+package reasoner.dl;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-public class TransformationTests {
-	
+public class ReasonerDLTests {
+
 	/**
 	 * @param args
 	 */
@@ -14,10 +13,9 @@ public class TransformationTests {
 	}
 
  	public static Test suite(){
-        TestSuite suite = new TestSuite("Test suite for the transformation");
+        TestSuite suite = new TestSuite("Test suite for the WSML-DL reasoner");
         //$JUnit-BEGIN$
-        suite.addTestSuite(AnonymousIdUtilsTest.class);
-        suite.addTestSuite(WSML2OWLTest.class);
+        suite.addTestSuite(SimpleInferenceTests.class);
         //$JUnit-END$
         return suite;
     }

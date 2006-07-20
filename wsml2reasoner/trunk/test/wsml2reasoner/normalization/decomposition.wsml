@@ -8,7 +8,7 @@ ontology _"http://www.example.org/ontologies/example"
   concept Animal
   
   concept Human
-    hasParents impliesType {Man, Woman}
+    hasParents impliesType {Human, Person}
     hasWeight ofType {_integer, _decimal}
     
   instance Mary memberOf {Woman, Human} 
