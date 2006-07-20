@@ -88,10 +88,20 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         return createWSMLCoreReasoner(null);
     }
 
-    public WSMLDLReasoner createWSMLDLReasoner(Map<String, Object> params) 
-    		throws UnsupportedOperationException {
-		// TODO Auto-generated method stub
-		return null;
+    public WSMLDLReasoner createWSMLDLReasoner(Map<String, Object> params) {
+		if (params == null) {
+			return new DLBasedWSMLReasoner(BuiltInReasoner.PELLET, 
+					new WSMO4JManager());
+		}
+		else {
+			WSMO4JManager wsmoManager = extractWsmoManager(params);
+            BuiltInReasoner builtin = params.containsKey(PARAM_BUILT_IN_REASONER) 
+            		? (BuiltInReasoner) params.get(PARAM_BUILT_IN_REASONER) 
+            		: BuiltInReasoner.PELLET;
+            DLBasedWSMLReasoner dlwsmlr = new DLBasedWSMLReasoner(builtin, 
+            		wsmoManager);
+            return dlwsmlr;
+		}
 	}
 
 	public WSMLDLReasoner createWSMLDLReasoner() 

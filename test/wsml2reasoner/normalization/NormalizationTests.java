@@ -1,6 +1,5 @@
 package wsml2reasoner.normalization;
 
-import test.BaseReasonerTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -19,6 +18,7 @@ public class NormalizationTests {
         suite.addTestSuite(AnonymousIDReplacementTest.class);
         suite.addTestSuite(ConstructReductionNormalizerTest.class);
         suite.addTestSuite(LloydToporNormalizerTest.class);
+        suite.addTestSuite(WSMLDLNormalizerTest.class);
         //$JUnit-END$
         return suite;
     }

@@ -30,14 +30,18 @@ ontology _"http://www.example.org/ontologies/example"
   		subRelationOf hasParent
 
   instance Mary memberOf {Woman}
-    hasChild hasValue "Jack"
-    hasName hasValue "Maria Smith"
+    hasChild hasValue Jack
     hasWeight hasValue 62.5
-    hasBirthdate hasValue _date(1976,08,16)  
+    hasName hasValue "Mary Jones"
+    hasBirthday hasValue _date(1976,08,16)  
     
   instance Jack memberOf{Human} 
 
-  instance Jim  
+  instance Jim  memberOf{Human}
+  
+  instance Anna memberOf{Woman}
+  
+  instance Jim memberOf{Man}
 
   relationInstance ageOfHuman(Anna, 31)
   
@@ -53,6 +57,10 @@ ontology _"http://www.example.org/ontologies/example"
       
       // subconcept definition
 	  Cat subConceptOf Animal.
+	  
+	  // memberOf definition
+	  Anne memberOf Woman.
+	  Clare memberOf Woman.
 	  
 	  // Attribute data value definition
       Anna[hasWeight hasValue 60].
@@ -90,12 +98,6 @@ ontology _"http://www.example.org/ontologies/example"
       // Transitive Attribute/Relation
       ?x[isRelatedTo hasValue ?y] and ?y[isRelatedTo hasValue ?z] implies 
       		?x[isRelatedTo hasValue ?z].		  		
-	  ?x[ageOfHuman hasValue ?y] impliedBy ?x[ageOfHuman hasValue ?z] and 
-      		?z[ageOfHuman hasValue ?y].
-      ?x[ageOfHuman hasValue ?y] impliedBy ageOfHuman(?x, ?w) and 
-      		ageOfHuman(?w, ?y).
-      ?v[ageOfHuman hasValue ?y] and ?y[ageOfHuman hasValue ?z] implies 
-      		?v[ageOfHuman hasValue ?z].
 
 	  // Negation
 	  neg(?x memberOf Human) impliedBy ?x memberOf Machine.

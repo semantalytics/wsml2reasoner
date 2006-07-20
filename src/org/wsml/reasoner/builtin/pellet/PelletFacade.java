@@ -18,15 +18,19 @@
  */
 package org.wsml.reasoner.builtin.pellet;
 
-import java.util.Map;
 import java.util.Set;
 
-import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Variable;
-import org.wsml.reasoner.ConjunctiveQuery;
+import org.mindswap.pellet.owlapi.Reasoner;
+import org.mindswap.pellet.query.QueryResults;
+import org.semanticweb.owl.model.OWLClass;
+import org.semanticweb.owl.model.OWLDescription;
+import org.semanticweb.owl.model.OWLEntity;
+import org.semanticweb.owl.model.OWLException;
+import org.semanticweb.owl.model.OWLIndividual;
+import org.semanticweb.owl.model.OWLOntology;
+import org.semanticweb.owl.model.OWLProperty;
 import org.wsml.reasoner.DLReasonerFacade;
 import org.wsml.reasoner.ExternalToolException;
-import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.impl.WSMO4JManager;
 
 /**
@@ -39,35 +43,154 @@ import org.wsml.reasoner.impl.WSMO4JManager;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.1 $ $Date: 2006-07-18 08:21:01 $
+ * @version $Revision: 1.2 $ $Date: 2006-07-20 17:50:23 $
  */
 public class PelletFacade implements DLReasonerFacade {
-
+	
+	protected Reasoner reasoner = null;
+	
 	/**
      * Creates a facade object that allows to invoke the PELLET system for
      * performing reasoning tasks.
      */
     public PelletFacade(WSMO4JManager wsmoManager) {
         super();
+        reasoner = new Reasoner();
     }
+
+    /**
+     * Registers the OWL ontology at the PELLET reasoner.
+     */
+	public void register(OWLOntology owlOntology) throws ExternalToolException {
+		try {
+			reasoner.getKB().clear();
+			reasoner.setOntology(owlOntology);
+		} catch (OWLException e) {
+			 e.printStackTrace();
+	         throw new ExternalToolException(
+	         		"PELLET ontology registration problem.");
+		}
+		reasoner.getKB().realize();
+	}
+
+	/**
+	 * The Knowledge base, that PELLET derived from this OWL 
+	 * ontology is cleared.
+	 */
+	public void deRegister(OWLOntology owlOntology) {
+		reasoner.getKB().clear();
+	}
+
+	public boolean isConsistent() {
+		return reasoner.isConsistent();
+	}
 	
-	public void register(String ontologyURI, Set<Rule> kb) throws ExternalToolException {
-		// TODO Auto-generated method stub
-		
+	public boolean isConsistent(OWLDescription clazz) 
+			throws OWLException {
+		return reasoner.isConsistent(clazz);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<OWLEntity> allClasses() {
+		return reasoner.getClasses();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<OWLEntity> allIndividuals() {
+		return reasoner.getIndividuals();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<OWLEntity> allProperties() {
+		return reasoner.getProperties();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<Set> descendantClassesOf(OWLDescription clazz) 
+			throws OWLException {
+		return reasoner.descendantClassesOf(clazz);
 	}
 
-	public void deregister(String ontologyURI) throws ExternalToolException {
-		// TODO Auto-generated method stub
-		
+	@SuppressWarnings("unchecked")
+	public Set<Set> ancestorClassesOf(OWLDescription clazz) 
+			throws OWLException {
+		return reasoner.ancestorClassesOf(clazz);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<OWLEntity> equivalentClassesOf(OWLDescription clazz) 
+			throws OWLException {
+		return reasoner.equivalentClassesOf(clazz);
+	}
+	
+	public boolean isEquivalentClass(OWLDescription clazz1, OWLDescription 
+			clazz2) throws OWLException {
+		return reasoner.isEquivalentClass(clazz1, clazz2);
+	}
+	
+	public boolean isSubClassOf(OWLDescription clazz1, OWLDescription clazz2) 
+			throws OWLException {
+		return reasoner.isSubClassOf(clazz1, clazz2);
 	}
 
-	public Set<Map<Variable, Term>> evaluate(ConjunctiveQuery q, String ontologyURI) throws ExternalToolException {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean isInstanceOf(OWLIndividual individual, OWLDescription clazz) 
+			throws OWLException {
+		return reasoner.isInstanceOf(individual, clazz);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<OWLEntity> allInstancesOf(OWLClass clazz) throws OWLException {
+		return reasoner.allInstancesOf(clazz);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<Set> allTypesOf(OWLIndividual individual) throws OWLException {
+		return reasoner.allTypesOf(individual);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<Set> descendantPropertiesOf(OWLProperty property) 
+			throws OWLException {
+		return reasoner.descendantPropertiesOf(property);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<Set> ancestorPropertiesOf(OWLProperty property) 
+			throws OWLException {
+		return reasoner.ancestorPropertiesOf(property);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<OWLEntity> equivalentPropertiesOf(OWLProperty property) 
+			throws OWLException {
+		return reasoner.equivalentPropertiesOf(property);
+	}
+	
+	public void printClassTree() {
+		reasoner.getKB().printClassTree();
+	}
+	
+	public String getInfo() {
+		return reasoner.getKB().getInfo();
+	}
+	
+	public QueryResults evaluate(String queryString) {
+		throw new UnsupportedOperationException();
+//		QueryResults results = null;
+//		Set set = reasoner.getKB().getObjectProperties();
+//		Iterator it = set.iterator();
+//		while (it.hasNext())
+//			System.out.println(it.next().toString());
+//		results = QueryEngine.execSPARQL(queryString, reasoner.getKB());
+//		return results;
 	}
 
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.1  2006/07/18 08:21:01  nathalie
+ * adding wsml dl reasoner interface,
+ * transformation from wsml dl to owl-dl
+ *
  *
  */

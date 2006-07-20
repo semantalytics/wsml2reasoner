@@ -24,7 +24,7 @@ ontology _"http://www.example.org/ontologies/example"
       dc#hasRights hasValue _"http://www.deri.org/privacy.htm"
     endnfp
   
-  relation hasChild(impliesType {Human}, impliesType {Child})
+  relation hasChild(impliesType {Woman, Man}, impliesType {Child})
   
   relation hasMother(impliesType {Child}, impliesType {Woman}) 
   		subRelationOf hasParent
@@ -75,6 +75,7 @@ ontology _"http://www.example.org/ontologies/example"
       ?x memberOf Human impliedBy ?x[isMarriedTo hasValue ?y].
       ?y memberOf Human impliedBy ?x[isMarriedTo hasValue ?y].
       ?x memberOf Animal impliedBy ?y[hasPet hasValue ?x].
+      ?x memberOf Cat impliedBy ?y[hasCat hasValue ?x].
       
       // Equivalent concepts
       ?x memberOf Human equivalent ?x memberOf Person.
@@ -101,7 +102,6 @@ ontology _"http://www.example.org/ontologies/example"
 
 	  // Negation
 	  neg(?x memberOf Human) impliedBy ?x memberOf Machine.
-	  ?x memberOf Man implies neg(?x memberOf Woman).
 	  
 	  // Conjunction
 	  ?x memberOf NiceAnimal and ?x memberOf DomesticAnimal impliedBy ?x memberOf Pet.
