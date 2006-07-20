@@ -41,7 +41,7 @@ import org.wsmo.common.Identifier;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.2 $ $Date: 2006-07-18 10:52:28 $
+ * @version $Revision: 1.3 $ $Date: 2006-07-20 17:48:34 $
  */
 public class WSMLDL2OWLTransformer implements Visitor{
 	
@@ -84,7 +84,7 @@ public class WSMLDL2OWLTransformer implements Visitor{
      */
     @SuppressWarnings("unchecked")
 	public OWLOntology transform(Ontology ontology) 
-			throws URISyntaxException, OWLException {
+			throws OWLException {
 
     	// Collect all logical expressions from all axioms into one Set
         Set<LogicalExpression> logExprs = new LinkedHashSet
@@ -1377,7 +1377,8 @@ public class WSMLDL2OWLTransformer implements Visitor{
     	
     	private OWLDataType createDataType(String value) {
     		OWLDataType dataType = null;
-    		String xsd = "xsd:";
+    		String xsd = "http://www.w3.org/2001/XMLSchema#";
+//    		String xsd = "xsd:";
     		URI uri = null;
     		try {
     			if (value.equals(WsmlDataType.WSML_STRING))
@@ -1434,8 +1435,8 @@ public class WSMLDL2OWLTransformer implements Visitor{
     	
     	private OWLDataValue createDataValue(DataValue value) {
     		OWLDataValue dataValue = null;
-//    		String xsd = "http://www.w3.org/2001/XMLSchema#";
-    		String xsd = "xsd:";
+    		String xsd = "http://www.w3.org/2001/XMLSchema#";
+//    		String xsd = "xsd:";
     		URI uri = null;
     		try {
     			if (value.getType().toString().equals(WsmlDataType.WSML_STRING))
@@ -1486,7 +1487,12 @@ public class WSMLDL2OWLTransformer implements Visitor{
     			int day = ((Calendar) value.getValue()).get(Calendar.DAY_OF_MONTH);
     			int month = ((Calendar) value.getValue()).get(Calendar.MONTH) + 1;
     			int year = ((Calendar) value.getValue()).get(Calendar.YEAR);
-    			val = year + "-" + month + "-" + day;
+    			if (month < 10) {
+    				val = year + "-0" + month + "-" + day; 
+    			}
+    			else {
+    				val = year + "-" + month + "-" + day;
+    			}
     		}
     		try {
     			dataValue = owlDataFactory.getOWLConcreteData(uri, null, val);
@@ -1500,6 +1506,9 @@ public class WSMLDL2OWLTransformer implements Visitor{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2006/07/18 10:52:28  nathalie
+ * added transformation from universal quantification
+ *
  * Revision 1.1  2006/07/18 08:21:01  nathalie
  * adding wsml dl reasoner interface,
  * transformation from wsml dl to owl-dl
