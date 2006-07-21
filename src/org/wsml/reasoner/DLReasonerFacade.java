@@ -18,14 +18,20 @@
  */
 package org.wsml.reasoner;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.mindswap.pellet.query.QueryResults;
+import org.semanticweb.owl.impl.model.OWLConcreteDataImpl;
+import org.semanticweb.owl.impl.model.OWLConcreteDataTypeImpl;
 import org.semanticweb.owl.model.OWLClass;
+import org.semanticweb.owl.model.OWLDataProperty;
+import org.semanticweb.owl.model.OWLDataValue;
 import org.semanticweb.owl.model.OWLDescription;
 import org.semanticweb.owl.model.OWLEntity;
 import org.semanticweb.owl.model.OWLException;
 import org.semanticweb.owl.model.OWLIndividual;
+import org.semanticweb.owl.model.OWLObjectProperty;
 import org.semanticweb.owl.model.OWLOntology;
 import org.semanticweb.owl.model.OWLProperty;
 
@@ -43,7 +49,7 @@ import org.semanticweb.owl.model.OWLProperty;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.2 $ $Date: 2006-07-20 17:50:23 $
+ * @version $Revision: 1.3 $ $Date: 2006-07-21 16:25:21 $
  */
 public interface DLReasonerFacade {
 
@@ -85,10 +91,20 @@ public interface DLReasonerFacade {
 	public Set<OWLEntity> allIndividuals();
 	
 	/**
-	 * @return a set containing all individuals from the loaded ontology
+	 * @return a set containing all properties from the loaded ontology
 	 */
 	public Set<OWLEntity> allProperties();
     
+	/**
+	 * @return a set containing all data properties from the loaded ontology
+	 */
+	public Set<OWLEntity> allDataProperties();
+	
+	/**
+	 * @return a set containing all object properties from the loaded ontology
+	 */
+	public Set<OWLEntity> allObjectProperties();
+	
 	/**
 	 * @return a set containing all subclasses of a given class
 	 */
@@ -153,6 +169,96 @@ public interface DLReasonerFacade {
 	public Set<OWLEntity> equivalentPropertiesOf(OWLProperty property) 
 			throws OWLException;
     
+	/**
+	 * @return a set containing all properties inverse to the given property
+	 */
+	public Set<OWLEntity> inversePropertiesOf(OWLObjectProperty property)
+			throws OWLException;
+	
+	/**
+	 * @return a set containing the domains of the given property
+	 */
+	public Set<OWLEntity> domainsOf(OWLProperty property) 
+			throws OWLException;
+	
+	/**
+	 * @return a set containing the ranges of the given property
+	 */
+	public Set<OWLEntity> rangesOf(OWLObjectProperty property)
+			throws OWLException;
+	
+	/**
+	 * @return a set containing the ranges of the given property
+	 */
+	public Set<OWLConcreteDataTypeImpl> rangesOf(OWLDataProperty property)
+			throws OWLException;
+	
+	/**
+	 * @return a map containing all data properties and for each a set containing
+	 * 			all its values
+	 */
+	public Map<OWLEntity, Set<OWLConcreteDataImpl>> getDataPropertyValues(
+			OWLIndividual individual) throws OWLException;
+	
+	/**
+	 * @return a map containing all object properties and for each a set containing
+	 * 			all its values
+	 */
+	public Map<OWLEntity, Set<OWLEntity>> getObjectPropertyValues(
+			OWLIndividual individual) throws OWLException;
+	
+	/**
+	 * @return a map containing all individuals who have values for a specified 
+	 * 			object property and for each a set containing all its values
+	 */
+	public Map<OWLEntity, Set<OWLEntity>> getPropertyValues(
+			OWLObjectProperty property) throws OWLException;
+	
+	/**
+	 * @return a map containing all individuals who have values for a specified 
+	 * 			data property and for each a set containing all its values
+	 */
+	public Map<OWLEntity, Set<OWLConcreteDataImpl>> getPropertyValues(
+			OWLDataProperty property) throws OWLException;
+	
+	/**
+	 * @return true if the given subject individual has the given object property 
+	 * 			with the given object individual as value
+	 */
+	public boolean hasPropertyValue(OWLIndividual subject,
+			OWLObjectProperty property, OWLIndividual object) throws OWLException;
+	
+	/**
+	 * @return true if the given subject individual has the given data property 
+	 * 			with the given data value as value
+	 */
+	public boolean hasPropertyValue(OWLIndividual subject,
+			OWLDataProperty property, OWLDataValue object) throws OWLException;
+	
+	/**
+	 * @return individual value of the given individual and object property
+	 */
+	public OWLIndividual getObjectPropertyValue(OWLIndividual subject, 
+			OWLObjectProperty property) throws OWLException;
+	
+	/**
+	 * @return data value of the given individual and data property
+	 */
+	public OWLDataValue getDataPropertyValue(OWLIndividual subject, 
+			OWLDataProperty property) throws OWLException;
+	
+	/**
+	 * @return set containing individual values of the given individual and object property
+	 */
+	public Set<OWLEntity> getObjectPropertyValues(OWLIndividual subject, 
+			OWLObjectProperty property) throws OWLException;
+	
+	/**
+	 * @return set containing data values of the given individual and data property
+	 */
+	public Set<OWLDataValue> getDataPropertyValues(OWLIndividual subject, 
+			OWLDataProperty property) throws OWLException;
+	
     /**
 	 * Prints a class tree from the registered ontology.
 	 */
@@ -178,5 +284,8 @@ public interface DLReasonerFacade {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2006/07/20 17:50:23  nathalie
+ * integration of the pellet reasoner
+ *
  *
  */

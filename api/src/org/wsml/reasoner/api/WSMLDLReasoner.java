@@ -18,12 +18,17 @@
  */
 package org.wsml.reasoner.api;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.mindswap.pellet.query.QueryResults;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Concept;
+import org.omwg.ontology.DataValue;
 import org.omwg.ontology.Instance;
+import org.omwg.ontology.Ontology;
+import org.semanticweb.owl.io.RendererException;
+import org.semanticweb.owl.model.OWLOntology;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 
@@ -36,7 +41,18 @@ import org.wsmo.common.Identifier;
 public interface WSMLDLReasoner extends WSMLReasoner{
 	
 	/**
+	 * The method supports the following logical expressions as they are 
+	 * allowed in formulae in WSML-DL:
+	 * - MembershipMolecule
+	 * - Conjunction
+	 * - Disjunction
+	 * - Negation
+	 * - UniversalQuantification
+	 * - ExistentialQuantification
+	 * 
 	 * @return true if the given expression is satisfiable, false otherwise
+	 * @throws InternalReasonerException if a logical expression different
+	 * 			than the ones mentionned above are given as input
 	 */
 	public boolean isConsistent(LogicalExpression logExpr);
 	
@@ -61,6 +77,16 @@ public interface WSMLDLReasoner extends WSMLReasoner{
 	public Set<IRI> getAllAttributes();
 	
 	/**
+	 * @return a set containing all constraining attributes from the registered ontology
+	 */
+	public Set<IRI> getAllConstraintAttributes();
+	
+	/**
+	 * @return a set containing all infering attributes from the registered ontology
+	 */
+	public Set<IRI> getAllInferenceAttributes();
+	
+	/**
 	 * @return a set containing all concepts equivalent to the given concept
 	 */
 	public Set<Concept> getEquivalentConcepts(Concept concept);
@@ -71,20 +97,109 @@ public interface WSMLDLReasoner extends WSMLReasoner{
 	public boolean isEquivalentConcept(Concept concept1, Concept concept2);
 	
 	/**
-	 * @return a set containing all subrelations of a given relation
+	 * @return a set containing all identifiers subrelations of a given relation
 	 */
 	public Set<IRI> getSubRelations(Identifier attributeId);
 	
 	/**
-	 * @return a set containing all superrelations of a given relation
+	 * @return a set containing all identifiers of superrelations of a given relation
 	 */
 	public Set<IRI> getSuperRelations(Identifier attributeId);
 	
 	/**
-	 * @return a set containing the identifiers of all attributes 
-	 * 			equivalent to the given attribute
+	 * @return a set containing the identifiers of all relations/attributes 
+	 * 			equivalent to the given relation/attribute
 	 */
-	public Set<IRI> getEquivalentAttributes(Identifier attributeId);
+	public Set<IRI> getEquivalentRelations(Identifier attributeId);
+	
+	/**
+	 * @return a set containing the identifiers of all relations/attributes 
+	 * 			inverse to the given relation/attribute
+	 */
+	public Set<IRI> getInverseRelations(Identifier attributeId);
+	
+	/**
+	 * @return a set containing the concepts of the given attribute
+	 */
+	public Set<Concept> getConceptsOf(Identifier attributeId);
+	
+	/**
+	 * @return a set containing the ranges of the given infering attribute
+	 */
+	public Set<IRI> getRangesOfInferingAttribute(Identifier attributeId);
+	
+	/**
+	 * @return a set containing the ranges of the given constraint attribute
+	 */
+	public Set<IRI> getRangesOfConstraintAttribute(Identifier attributeId);
+	
+	/**
+	 * @return a map containing all infering attributes of a specified instance 
+	 * 			and for each a set containing all its values
+	 */
+	public Map<IRI, Set<IRI>> getInferingAttributeValues(
+			Instance instance);
+	
+	/**
+	 * @return a map containing all constraint attributes of a specified instance 
+	 *			and for each a set containing all its values
+	 */
+	public Map<IRI, Set<IRI>> getConstraintAttributeValues(
+			Instance instance);
+	
+	/**
+	 * @return a map containing all instances who have values for a specified 
+	 * 			infering attribute and for each a set containing all its values
+	 */
+	public Map<Instance, Set<IRI>> getInferingAttributeInstances(
+			Identifier attributeId);
+	
+	/**
+	 * @return a map containing all instances who have values for a specified 
+	 * 			constraint attribute and for each a set containing all its values
+	 */
+	public Map<Instance, Set<IRI>> getConstraintAttributeInstances(
+			Identifier attributeId);
+	
+	/**
+	 * @return true if the given subject instance has an attribute value of the 
+	 * 			given infering attribute with the given object instance as value
+	 */
+	public boolean instanceHasInferingAttributeValue(Instance subject, 
+			Identifier attributeId, Instance object);
+	
+	/**
+	 * @return true if the given subject instance has an attribute value of the 
+	 * 			given constraint attribute with the given object data value as value
+	 */
+	public boolean instanceHasConstraintAttributeValue(Instance subject, 
+			Identifier attributeId, DataValue object);
+	
+	/**
+	 * @return instance value of the given instance and infering attribute
+	 */
+	public Instance getInferingAttributeValue(Instance subject, 
+			Identifier attributeId);
+	
+	/**
+	 * @return data value of the given instance and constraint attribute
+	 */
+	public String getConstraintAttributeValue(Instance subject, 
+			Identifier attributeId);
+	
+	/**
+	 * @return set containing instance values of the given instance and 
+	 * 			infering attribute
+	 */
+	public Set<Instance> getInferingAttributeValues(Instance subject, 
+			Identifier attributeId);
+	
+	/**
+	 * @return set containing data values of the given instance and 
+	 * 			constraint attribute
+	 */
+	public Set<String> getConstraintAttributeValues(Instance subject, 
+			Identifier attributeId);
 	
 	/**
 	 * Prints a class tree from the registered ontology.
@@ -109,8 +224,38 @@ public interface WSMLDLReasoner extends WSMLReasoner{
      */
 	public QueryResults executeQuery(String query);
 	
+	/**
+	 * Serializes a given OWL ontology to OWL abstract syntax.
+	 * 
+	 * @param owlOntology to be serialized
+	 * @return String version of OWL ontology
+	 */
+	public String serialize2OWLAbstractSyntax(OWLOntology owlOntology) 
+			throws RendererException;
+	
+	/**
+	 * Serializes a given OWL ontology to XML-RDF syntax.
+	 * 
+	 * @param owlOntology to be serialized
+	 * @return String version of OWL ontology
+	 */
+	public String serialize2OWLRDFSyntax(OWLOntology owlOntology);
+	
+	/**
+	 * This method allows to extract the OWL ontology as string, even if the OWL 
+	 * ontology is not valid owl dl. The serialized ontology could be validated at 
+	 * an online validator as e.g. "http://phoebus.cs.man.ac.uk:9999/OWL/Validator"
+	 * 
+	 * @param ontology WSML DL ontology to be transformed to owl
+	 * @return string version of transformed OWL ontology
+	 */
+	public String serializeWSML2OWL(Ontology ontology);
+	
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2006/07/20 17:50:23  nathalie
+ * integration of the pellet reasoner
+ *
  *
  */

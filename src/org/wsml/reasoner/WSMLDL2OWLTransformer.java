@@ -41,7 +41,7 @@ import org.wsmo.common.Identifier;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.3 $ $Date: 2006-07-20 17:48:34 $
+ * @version $Revision: 1.4 $ $Date: 2006-07-21 16:25:21 $
  */
 public class WSMLDL2OWLTransformer implements Visitor{
 	
@@ -101,6 +101,34 @@ public class WSMLDL2OWLTransformer implements Visitor{
     		logExpr.accept(this);
     	}
     	return owlOntology;
+    }
+    
+    public OWLDescription transform(LogicalExpression logExpr) 
+    		throws OWLException {
+    	OWLDescription owlDescription = null;
+    	// create a description from the logical expression
+		if (logExpr instanceof MembershipMolecule) {
+			owlDescription = helper.transformMemberShipMolecule(
+					(MembershipMolecule) logExpr);
+		}
+		else if (logExpr instanceof Conjunction) {
+			owlDescription = helper.transformConjunction((Conjunction) logExpr);
+		}
+		else if (logExpr instanceof Disjunction) {
+			owlDescription = helper.transformDisjunction((Disjunction) logExpr);
+		}
+		else if (logExpr instanceof Negation) {
+			owlDescription = helper.transformNegation((Negation) logExpr);
+		}
+		else if (logExpr instanceof ExistentialQuantification) {
+			owlDescription = helper.transformExistentialQuantification(
+					(ExistentialQuantification) logExpr);
+		}
+		else if (logExpr instanceof UniversalQuantification) {
+			owlDescription = helper.transformUniversalQuantification(
+					(UniversalQuantification) logExpr);
+		}
+    	return owlDescription;
     }
 
 	public void visitAtom(Atom expr) {
@@ -976,7 +1004,7 @@ public class WSMLDL2OWLTransformer implements Visitor{
     	}
     	
     	/*
-         * Gets an atom and transforms it into a value definition molecule
+         * Gets an atom and transforms it into a value definition molecule.
          */
         private Molecule atomToMolecule(Atom expr) {
             Molecule molecule = new WSMO4JManager().getLogicalExpressionFactory().
@@ -985,6 +1013,7 @@ public class WSMLDL2OWLTransformer implements Visitor{
                 
             return molecule;
         }	
+       
     }
     
     private class OWLGenerator {
@@ -1506,6 +1535,9 @@ public class WSMLDL2OWLTransformer implements Visitor{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.3  2006/07/20 17:48:34  nathalie
+ * fixed a problem with xsd datatypes
+ *
  * Revision 1.2  2006/07/18 10:52:28  nathalie
  * added transformation from universal quantification
  *
