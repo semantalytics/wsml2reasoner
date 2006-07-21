@@ -20,24 +20,21 @@ package example;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
-import org.semanticweb.owl.model.OWLClass;
-import org.semanticweb.owl.model.OWLException;
-import org.semanticweb.owl.util.OWLManager;
 import org.wsml.reasoner.api.WSMLDLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
+import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
+import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
 /**
@@ -51,10 +48,10 @@ import org.wsmo.wsml.Parser;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.1 $ $Date: 2006-07-20 17:50:23 $
+ * @version $Revision: 1.2 $ $Date: 2006-07-21 17:01:43 $
  */
 public class DLReasonerExample {
-
+	
 	/**
 	 * @param args
 	 */
@@ -72,7 +69,12 @@ public class DLReasonerExample {
      * loads an Ontology and performs sample query
      */
     public void doTestRun() throws Exception {
-        Ontology exampleOntology = loadOntology("example/wsml2owlExample.wsml");
+    	
+    	WsmoFactory wsmoFactory = new WSMO4JManager().getWSMOFactory();
+    	
+    	String ns = "http://www.example.org/ontologies/example#";
+        
+    	Ontology exampleOntology = loadOntology("example/wsml2owlExample.wsml");
         if (exampleOntology == null)
             return;
 
@@ -90,42 +92,47 @@ public class DLReasonerExample {
         		(IRI) exampleOntology.getIdentifier()));
         
         // print class hierarchy with individuals
+        System.out.println("\n----------------------\n");
         reasoner.printClassTree();
     	
-        OWLClass clazz = null;
-		try {
-			clazz = OWLManager.getOWLConnection().getDataFactory().getOWLClass(new URI(
-					"http://www.example.org/ontologies/example#Woman"));
-		} catch (OWLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-//		Set set = reasoner.getAllInstances(clazz);
-//
-//        Iterator it = reasoner.getAllInstances(clazz).iterator();
-//        while (it.hasNext()) {
-//        	System.out.println(it.next().toString());
-//        }
+        // get all instances of woman concept
+        System.out.println("\n----------------------\n");
+		Set<Instance> set = reasoner.getInstances(null, wsmoFactory.createConcept(
+				wsmoFactory.createIRI(ns + "Woman")));
+        for (Instance instance : set) 
+        	System.out.println(instance.getIdentifier().toString());
         
-//    	// get all instances of Woman class
-//        OWLClass Woman = OWLManager.getOWLConnection().getDataFactory().
-//        		getOWLClass(new URI("http://www.example.org/ontologies/example#Woman"));
-//    	Set individuals = reasoner.getInstances(null,Woman);
-//    	for(Iterator i = individuals.iterator(); i.hasNext(); ) {
-//    	    OWLIndividual ind = (OWLIndividual) i.next();
-//    	    
-//    	    // get the info about this specific individual
-//    	    String name = (String) reasoner.getPropertyValue(ind, foafName).getValue();
-//    	    OWLClass type = reasoner.typeOf(ind);
-//    	    OWLIndividual homepage = reasoner.getPropertyValue(ind, workHomepage);
+        // get one specific instance's age
+        System.out.println("\n----------------------\n");
+        String age = reasoner.getConstraintAttributeValue(
+        		wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Anna")),
+        		wsmoFactory.createIRI(ns + "ageOfHuman"));
+        System.out.println(age);
+        
+        // get all info about one specific instance
+        System.out.println("\n----------------------\n");
+        Set<Entry<IRI, Set<IRI>>> entrySet = reasoner.getInferingAttributeValues(
+				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Mary"))).entrySet();
+		for (Entry<IRI, Set<IRI>> entry : entrySet) {
+			System.out.println(entry.getKey().toString());
+			Set<IRI> IRIset = entry.getValue();
+			for (IRI value : IRIset) 
+				System.out.println("   value: " + value.toString());
+		}
+		entrySet = reasoner.getConstraintAttributeValues(
+				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Mary"))).entrySet();
+		for (Entry<IRI, Set<IRI>> entry : entrySet) {
+			System.out.println(entry.getKey().toString());
+			Set<IRI> IRIset = entry.getValue();
+			for (IRI value : IRIset) 
+				System.out.println("   value: " + value.toString());
+		}
 
-//        // execute SPARQL query
+//        // execute simple SPARQL query
+//		System.out.println("\n----------------------\n");
 //        QueryResults results = reasoner.executeQuery(
 //        		"BASE    <http://www.example.org/ontologies/> " +
-//        		"SELECT  $individual WHERE {?individual <example#hasChild> ?ind2}");
+//        		"SELECT  ?ind WHERE {?ind <example#hasChild> ?ind2}");
 //        TableData table = results.toTable();
 //        StringWriter writer = new StringWriter();
 //    	table.print(writer);
@@ -165,5 +172,8 @@ public class DLReasonerExample {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.1  2006/07/20 17:50:23  nathalie
+ * integration of the pellet reasoner
+ *
  *
  */
