@@ -34,6 +34,7 @@ import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
+import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
@@ -48,7 +49,7 @@ import org.wsmo.wsml.Parser;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.2 $ $Date: 2006-07-21 17:01:43 $
+ * @version $Revision: 1.3 $ $Date: 2006-07-21 21:07:03 $
  */
 public class DLReasonerExample {
 	
@@ -72,6 +73,8 @@ public class DLReasonerExample {
     	
     	WsmoFactory wsmoFactory = new WSMO4JManager().getWSMOFactory();
     	
+    	LogicalExpressionFactory leFactory = new WSMO4JManager().getLogicalExpressionFactory();
+    	
     	String ns = "http://www.example.org/ontologies/example#";
         
     	Ontology exampleOntology = loadOntology("example/wsml2owlExample.wsml");
@@ -87,14 +90,35 @@ public class DLReasonerExample {
         
         // Register ontology
         reasoner.registerOntologyNoVerification(exampleOntology);
-
-        System.out.println("Ontology is consistent: " + reasoner.isSatisfiable(
-        		(IRI) exampleOntology.getIdentifier()));
         
         // print class hierarchy with individuals
-        System.out.println("\n----------------------\n");
         reasoner.printClassTree();
-    	
+
+        // print out if the registered ontology is satisfiable
+        System.out.println("\n----------------------\n");
+        System.out.println("Ontology is consistent: " + reasoner.isSatisfiable(
+        		(IRI) exampleOntology.getIdentifier()));	
+        
+        // print out if a specified concept is satisfiable
+        System.out.println("\n----------------------\n");
+        System.out.println("Is concept \"Machine\" satisfiable? " + 
+        		reasoner.isConsistent(wsmoFactory.createConcept(
+        				wsmoFactory.createIRI(ns + "Machine"))));
+        
+        // print out if a specified logical expression is satisfiable
+        System.out.println("\n----------------------\n");
+        String le = "?x memberOf _\"http://www.example.org/ontologies/example#Pet\" " +
+		"\n and ?x memberOf _\"http://www.example.org/ontologies/example#DomesticAnimal\".";
+        System.out.println("Is the following logical expression satisfiable? \n\"" + le +
+        		"\" \n" + reasoner.isConsistent(leFactory.createLogicalExpression(le)));
+        
+        // print out if a specified logical expression is satisfiable
+        System.out.println("\n----------------------\n");
+        le = "?x memberOf _\"http://www.example.org/ontologies/example#Man\" " +
+				"\n and ?x memberOf _\"http://www.example.org/ontologies/example#Woman\"."; 
+        System.out.println("Is the following logical expression satisfiable? \n\"" + le +
+        		"\" \n" + reasoner.isConsistent(leFactory.createLogicalExpression(le)));
+        
         // get all instances of woman concept
         System.out.println("\n----------------------\n");
 		Set<Instance> set = reasoner.getInstances(null, wsmoFactory.createConcept(
@@ -172,6 +196,9 @@ public class DLReasonerExample {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2006/07/21 17:01:43  nathalie
+ * updated dl reasoner example
+ *
  * Revision 1.1  2006/07/20 17:50:23  nathalie
  * integration of the pellet reasoner
  *
