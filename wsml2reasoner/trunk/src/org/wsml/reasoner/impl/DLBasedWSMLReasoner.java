@@ -66,7 +66,7 @@ import uk.ac.man.cs.img.owl.validation.ValidatorLogger;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.3 $ $Date: 2006-07-21 16:25:21 $
+ * @version $Revision: 1.4 $ $Date: 2006-07-21 17:00:08 $
  */
 public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 
@@ -658,7 +658,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 				Set<IRI> IRISet = new HashSet<IRI>();
 				for (OWLConcreteDataImpl data : set) {
 					IRISet.add(wsmoFactory.createIRI(
-							ns + data.getURI().getFragment()));
+							ns + data.getValue().toString()));
 				}
 				elements.put(wsmoFactory.createIRI(
 						ns + entry.getKey().getURI().getFragment()), 
@@ -738,7 +738,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 				Set<IRI> IRISet = new HashSet<IRI>();
 				for (OWLConcreteDataImpl data : set) {
 					IRISet.add(wsmoFactory.createIRI(
-							ns + data.getURI().getFragment()));
+							ns + data.getValue().toString()));
 				}
 				elements.put(wsmoFactory.createInstance(wsmoFactory.createIRI(
 						ns + entry.getKey().getURI().getFragment())), IRISet);
@@ -968,6 +968,9 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.3  2006/07/21 16:25:21  nathalie
+ * completing the pellet reasoner integration
+ *
  * Revision 1.2  2006/07/20 17:50:23  nathalie
  * integration of the pellet reasoner
  *
