@@ -9,7 +9,7 @@ ontology _"http://www.example.org/ontologies/example"
   
   concept Human
     hasFather impliesType Man
-    hasWeight ofType _decimal
+    hasWeight ofType {_decimal, _integer}
     hasBirthday ofType _date    
   concept Person subConceptOf Human
   concept Woman subConceptOf{Human}
@@ -68,17 +68,23 @@ ontology _"http://www.example.org/ontologies/example"
 
 	  // Attribute data value definition
       Anna[hasWeight hasValue 60].
+      Mary[hasWeight hasValue 61.5].
       Mary[ageOfHuman hasValue 33].
       ageOfHuman(Jim, 31).
       
       // Attribute value definition
       hasDog(Anne, Isci).
  	  Clare[hasCat hasValue Mitzu].
+ 	  Clare[hasChild hasValue Anne].
+ 	  hasChild(Clare, Joe).
       
       // Object property domain and range definition
       ?x memberOf Human impliedBy ?x[isMarriedTo hasValue ?y].
       ?y memberOf Human impliedBy ?x[isMarriedTo hasValue ?y].
-      ?x memberOf Animal impliedBy ?y[hasPet hasValue ?x].
+      ?x memberOf Animal impliedBy ?y[hasPet hasValue ?x].    
+      ?x memberOf Man impliedBy ?x[isFatherOf hasValue ?y].
+      ?y memberOf Girl impliedBy ?x[isFatherOf hasValue ?y].
+      ?y memberOf Boy impliedBy ?x[isFatherOf hasValue ?y].
       
       // Equivalent concepts
       ?x memberOf Human equivalent ?x memberOf Person.

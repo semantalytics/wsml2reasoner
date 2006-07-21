@@ -34,6 +34,11 @@ import org.wsmo.wsml.Serializer;
 
 import test.BaseReasonerTest;
 
+/**
+ * 
+ * @author Nathalie Steinmetz, DERI Innsbruck
+ *
+ */
 public abstract class WSMLNormalizationTest extends TestCase
 {
     protected static int ontologyCount = 1;

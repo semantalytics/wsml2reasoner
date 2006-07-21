@@ -18,15 +18,21 @@
  */
 package org.wsml.reasoner.builtin.pellet;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.mindswap.pellet.owlapi.Reasoner;
 import org.mindswap.pellet.query.QueryResults;
+import org.semanticweb.owl.impl.model.OWLConcreteDataImpl;
+import org.semanticweb.owl.impl.model.OWLConcreteDataTypeImpl;
 import org.semanticweb.owl.model.OWLClass;
+import org.semanticweb.owl.model.OWLDataProperty;
+import org.semanticweb.owl.model.OWLDataValue;
 import org.semanticweb.owl.model.OWLDescription;
 import org.semanticweb.owl.model.OWLEntity;
 import org.semanticweb.owl.model.OWLException;
 import org.semanticweb.owl.model.OWLIndividual;
+import org.semanticweb.owl.model.OWLObjectProperty;
 import org.semanticweb.owl.model.OWLOntology;
 import org.semanticweb.owl.model.OWLProperty;
 import org.wsml.reasoner.DLReasonerFacade;
@@ -43,7 +49,7 @@ import org.wsml.reasoner.impl.WSMO4JManager;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.2 $ $Date: 2006-07-20 17:50:23 $
+ * @version $Revision: 1.3 $ $Date: 2006-07-21 16:25:21 $
  */
 public class PelletFacade implements DLReasonerFacade {
 	
@@ -106,6 +112,16 @@ public class PelletFacade implements DLReasonerFacade {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public Set<OWLEntity> allDataProperties() {
+		return reasoner.getDataProperties();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<OWLEntity> allObjectProperties() {
+		return reasoner.getObjectProperties();
+	}
+	
+	@SuppressWarnings("unchecked")
 	public Set<Set> descendantClassesOf(OWLDescription clazz) 
 			throws OWLException {
 		return reasoner.descendantClassesOf(clazz);
@@ -123,8 +139,8 @@ public class PelletFacade implements DLReasonerFacade {
 		return reasoner.equivalentClassesOf(clazz);
 	}
 	
-	public boolean isEquivalentClass(OWLDescription clazz1, OWLDescription 
-			clazz2) throws OWLException {
+	public boolean isEquivalentClass(OWLDescription clazz1, 
+			OWLDescription clazz2) throws OWLException {
 		return reasoner.isEquivalentClass(clazz1, clazz2);
 	}
 	
@@ -166,6 +182,88 @@ public class PelletFacade implements DLReasonerFacade {
 		return reasoner.equivalentPropertiesOf(property);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public Set<OWLEntity> inversePropertiesOf(OWLObjectProperty property)
+			throws OWLException {
+		return reasoner.inversePropertiesOf(property);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<OWLEntity> domainsOf(OWLProperty property) 
+			throws OWLException {
+		return reasoner.domainsOf(property);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<OWLEntity> rangesOf(OWLObjectProperty property)
+			throws OWLException {
+		return reasoner.rangesOf(property);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<OWLConcreteDataTypeImpl> rangesOf(OWLDataProperty property)
+			throws OWLException {
+		return reasoner.rangesOf(property);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<OWLEntity, Set<OWLConcreteDataImpl>> getDataPropertyValues(
+			OWLIndividual individual) throws OWLException {
+		return reasoner.getDataPropertyValues(individual);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<OWLEntity, Set<OWLEntity>> getObjectPropertyValues(
+			OWLIndividual individual) throws OWLException {
+		return reasoner.getObjectPropertyValues(individual);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<OWLEntity, Set<OWLEntity>> getPropertyValues(
+			OWLObjectProperty property) throws OWLException {
+		return reasoner.getPropertyValues(property);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<OWLEntity, Set<OWLConcreteDataImpl>> getPropertyValues(
+			OWLDataProperty property) throws OWLException {
+		return reasoner.getPropertyValues(property);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean hasPropertyValue(OWLIndividual subject,
+			OWLObjectProperty property, OWLIndividual object) throws OWLException {
+		return reasoner.hasPropertyValue(subject, property, object);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean hasPropertyValue(OWLIndividual subject,
+			OWLDataProperty property, OWLDataValue object) throws OWLException {
+		return reasoner.hasPropertyValue(subject, property, object);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<OWLEntity> getObjectPropertyValues(OWLIndividual subject, 
+			OWLObjectProperty property) throws OWLException {
+		return reasoner.getPropertyValues(subject, property);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<OWLDataValue> getDataPropertyValues(OWLIndividual subject, 
+			OWLDataProperty property) throws OWLException{
+		return reasoner.getPropertyValues(subject, property);
+	}
+	
+	public OWLIndividual getObjectPropertyValue(OWLIndividual subject, 
+			OWLObjectProperty property) throws OWLException {
+		return reasoner.getPropertyValue(subject, property);
+	}
+	
+	public OWLDataValue getDataPropertyValue(OWLIndividual subject, 
+			OWLDataProperty property) throws OWLException{
+		return reasoner.getPropertyValue(subject, property);
+	}
+	
 	public void printClassTree() {
 		reasoner.getKB().printClassTree();
 	}
@@ -188,6 +286,9 @@ public class PelletFacade implements DLReasonerFacade {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2006/07/20 17:50:23  nathalie
+ * integration of the pellet reasoner
+ *
  * Revision 1.1  2006/07/18 08:21:01  nathalie
  * adding wsml dl reasoner interface,
  * transformation from wsml dl to owl-dl
