@@ -66,7 +66,7 @@ import uk.ac.man.cs.img.owl.validation.ValidatorLogger;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.4 $ $Date: 2006-07-21 17:00:08 $
+ * @version $Revision: 1.5 $ $Date: 2006-07-23 15:22:45 $
  */
 public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 
@@ -152,7 +152,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		} catch (URISyntaxException e) {
 			throw new RuntimeException ("Difficulties in building the OWL ontology");
 		}
-		if (!valid) {
+		if (!(builtInFacade instanceof PelletFacade) && !valid) {
 			throw new RuntimeException("The transformed OWL DL ontology is not valid! Please use an " +
 					"OWL Validator to check why this is not OWL DL (e.g. " +
 					"http://phoebus.cs.man.ac.uk:9999/OWL/Validator");
@@ -968,6 +968,9 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.4  2006/07/21 17:00:08  nathalie
+ * fixed problem with wrong value output
+ *
  * Revision 1.3  2006/07/21 16:25:21  nathalie
  * completing the pellet reasoner integration
  *
