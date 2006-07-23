@@ -84,29 +84,6 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
 		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));    
 //		System.out.println(dlReasoner.serialize2OWLRDFSyntax(owlOntology));
     } 
-	
-    /**
-     * This test checks if an exception is thrown if a transformed owl 
-     * ontology is not valid owl dl.
-     */
-    public void testInvalidOWLDL() throws Exception {
-//    	 read test file and parse it 
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream(
-                "wsml2reasoner/transformation/invalidOWLDL.wsml");
-        assertNotNull(is);
-        Parser wsmlParser = Factory.createParser(null);
-        // assuming first topentity in file is an ontology  
-        ontology = (Ontology)wsmlParser.parse(new InputStreamReader(is))[0];  
-        
-//        System.out.println(serializeOntology(ontology)+"\n\n\n-------------\n\n\n");
-		    
-		try {
-			// transform ontology to OWL ontology
-			owlOntology = dlReasoner.convertOntology(ontology);
-            fail("Should fail because the ontology is not valid owl dl!");
-        } catch (RuntimeException e){e.getMessage();} 
-//        System.out.println(dlReasoner.serializeWSML2OWL(ontology));
-    }
     
     /**
      * This test checks for transformation of wsml subConceptOf to owl subClass.
@@ -511,6 +488,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.4  2006/07/21 16:25:21  nathalie
+ * completing the pellet reasoner integration
+ *
  *
  *
  */
