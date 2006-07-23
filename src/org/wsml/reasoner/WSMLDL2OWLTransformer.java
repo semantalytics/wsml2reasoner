@@ -41,7 +41,7 @@ import org.wsmo.common.Identifier;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.4 $ $Date: 2006-07-21 16:25:21 $
+ * @version $Revision: 1.5 $ $Date: 2006-07-23 15:21:36 $
  */
 public class WSMLDL2OWLTransformer implements Visitor{
 	
@@ -212,6 +212,8 @@ public class WSMLDL2OWLTransformer implements Visitor{
 				attrId.toString());
 		owlGenerator.createDataPropertyRange(dataType, dataProperty);
 		owlGenerator.createPropertyDomain(domain, dataProperty);
+		owlGenerator.createExplicitSubClass(domain, 
+				owlGenerator.createAllValuesFromDatatype(dataProperty, dataType));
 	}
 
 	public void visitAttributeInferenceMolecule(AttributeInferenceMolecule expr) {
@@ -224,6 +226,8 @@ public class WSMLDL2OWLTransformer implements Visitor{
 				attrId.toString());
 		owlGenerator.createObjectPropertyRange(range, objectProperty);
 		owlGenerator.createPropertyDomain(domain, objectProperty);
+		owlGenerator.createExplicitSubClass(domain, 
+				owlGenerator.createAllValuesFromClass(objectProperty, range));
 	}
 
 	public void visitNegation(Negation expr) {
@@ -1147,6 +1151,19 @@ public class WSMLDL2OWLTransformer implements Visitor{
 			return restriction;
     	}
     	
+    	private OWLDataAllRestriction createAllValuesFromDatatype(OWLDataProperty property, 
+    			OWLDataType datatype) {
+    		OWLDataAllRestriction restriction = null;
+    		try {
+    			restriction = owlDataFactory.getOWLDataAllRestriction(
+    					property, datatype);
+			} catch (OWLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return restriction;
+    	}
+    	
     	private OWLObjectSomeRestriction createSomeValuesFromClass(OWLObjectProperty property, 
     			OWLDescription clazz) {
     		OWLObjectSomeRestriction restriction = null;
@@ -1535,6 +1552,9 @@ public class WSMLDL2OWLTransformer implements Visitor{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.4  2006/07/21 16:25:21  nathalie
+ * completing the pellet reasoner integration
+ *
  * Revision 1.3  2006/07/20 17:48:34  nathalie
  * fixed a problem with xsd datatypes
  *
