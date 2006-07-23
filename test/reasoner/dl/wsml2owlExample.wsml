@@ -37,10 +37,10 @@ ontology _"http://www.example.org/ontologies/example"
     
   instance Jack memberOf{Human} 
 
-  instance Jim  memberOf{Human}
+  instance Jim memberOf{Human}
   
   instance Anna memberOf{Woman}
-  
+
   instance Jim memberOf{Man}
 
   relationInstance ageOfHuman(Anna, 31)
@@ -83,8 +83,8 @@ ontology _"http://www.example.org/ontologies/example"
       ?y memberOf Human impliedBy ?x[isMarriedTo hasValue ?y].
       ?x memberOf Animal impliedBy ?y[hasPet hasValue ?x].    
       ?x memberOf Man impliedBy ?x[isFatherOf hasValue ?y].
-      ?y memberOf Girl impliedBy ?x[isFatherOf hasValue ?y].
-      ?y memberOf Boy impliedBy ?x[isFatherOf hasValue ?y].
+      ?x memberOf Man impliedBy ?x[isFatherOf hasValue ?y].
+      ?x memberOf Child impliedBy ?y[isFatherOf hasValue ?x].
       
       // Equivalent concepts
       ?x memberOf Human equivalent ?x memberOf Person.

@@ -75,6 +75,8 @@ ontology _"http://www.example.org/ontologies/example"
       ?x memberOf Human impliedBy ?x[isMarriedTo hasValue ?y].
       ?y memberOf Human impliedBy ?x[isMarriedTo hasValue ?y].
       ?x memberOf Animal impliedBy ?y[hasPet hasValue ?x].
+      ?x memberOf Man impliedBy ?x[isFatherOf hasValue ?y].
+      ?x memberOf Child impliedBy ?y[isFatherOf hasValue ?x].
       
       // Equivalent concepts
       ?x memberOf Human equivalent ?x memberOf Person.

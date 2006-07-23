@@ -123,7 +123,7 @@ public class SimpleInferenceTests extends TestCase {
 		Set<Concept> set = wsmlReasoner.getAllConcepts();
 		for (Concept concept : set) 
 //			System.out.println(concept.getIdentifier().toString());
-		assertTrue(set.size() == 18);
+		assertTrue(set.size() == 17);
 		
 		// test getAllInstances
 		Set<Instance> set2 = wsmlReasoner.getAllInstances();
@@ -273,7 +273,7 @@ public class SimpleInferenceTests extends TestCase {
 				wsmoFactory.createIRI(ns + "isFatherOf"));
 		for (Identifier rangeId : set3)
 //			System.out.println(rangeId.toString());
-		assertTrue(set3.size() == 2);
+		assertTrue(set3.size() == 1);
 		
 		// test getRangesOfConstraintAttribute
 		set3.clear();
@@ -416,6 +416,9 @@ public class SimpleInferenceTests extends TestCase {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2006/07/21 16:25:21  nathalie
+ * completing the pellet reasoner integration
+ *
  *
  *
  */
