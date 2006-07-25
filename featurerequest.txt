@@ -42,4 +42,18 @@ updateInstance("uri#Dave[hasName hasValue \"Dave\"]").
 //deletes the instance with name Dave
 removeInstance("uri#Dave"); 
 
-This should not be that difficult I think because it does not changes the ontology. Of course checking with cardinalities, other rules, axioms must be performed to ensure successful insertion.
+This should not be that difficult I think because it does not changes the ontology. 
+Of course checking with cardinalities, other rules, axioms must be performed to ensure 
+successful insertion.
+
+#10
+Nathalie Steinmetz:
+Add query answering for wsml-dl reasoner.
+
+#11
+Nathalie Steinmetz:
+Handle ontology import at the transformation to OWL (WSML-DL reasoner).
+
+#12
+Nathalie Steinmetz:
+Transform qualified cardinality restrictions to OWL (WSML-DL reasoner).
