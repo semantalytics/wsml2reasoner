@@ -15,3 +15,9 @@ Nathalie:
 Add check to InverseImplicationRules (Normalizer Rule): only transforming conjunctions 
 on the left side and disjunctions on the right side if they have no dependencies in the 
 contained molecules (e.g. conjunction: ?x[att1 hasValue ?y] and ?y[att2 hasValue ?z]).
+
+#4
+Nathalie:
+Check NullPointerException when adding complex logical expression:
+?x memberOf Mother impliedBy ?x[hasHusband hasValue ?y] and ?y[hasChild hasValue ?z] and 
+?z memberOf Child.
