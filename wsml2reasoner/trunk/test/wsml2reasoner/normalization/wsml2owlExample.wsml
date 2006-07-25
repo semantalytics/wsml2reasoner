@@ -118,7 +118,7 @@ ontology _"http://www.example.org/ontologies/example"
 
   	  // Universal Quantification
       ?x memberOf SmallDogOwner implies ?x memberOf Human and forall 
-      		?x(?x[hasDog hasValue ?y] implies ?y memberOf SmallDog).
+      		?y(?x[hasDog hasValue ?y] implies ?y memberOf SmallDog).
       		
       // Existential Quantification
       ?x memberOf Human implies exists ?y(?x[father hasValue ?y] and ?y memberOf Man).

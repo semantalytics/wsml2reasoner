@@ -436,7 +436,7 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
      */
     public void testAllValuesFrom() throws Exception {
     	String s = "?x memberOf SmallDogOwner implies ?x memberOf Human and forall " +
-    			"?x(?x[hasDog hasValue ?y] implies ?y memberOf SmallDog).";
+    			"?y(?x[hasDog hasValue ?y] implies ?y memberOf SmallDog).";
     	LogicalExpression le = (LogicalExpression) leFactory.createLogicalExpression(
                 s, ontology); 
         axiom.addDefinition(le);
@@ -488,6 +488,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.5  2006/07/23 15:20:23  nathalie
+ * updated tests and testfiles
+ *
  * Revision 1.4  2006/07/21 16:25:21  nathalie
  * completing the pellet reasoner integration
  *
