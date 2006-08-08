@@ -21,7 +21,6 @@ package org.wsml.reasoner.transformation.le;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.deri.wsmo4j.logicalexpression.MemberShipMoleculeImpl;
 import org.omwg.logicalexpression.AttributeValueMolecule;
 import org.omwg.logicalexpression.Binary;
 import org.omwg.logicalexpression.Conjunction;
@@ -47,13 +46,13 @@ import org.wsml.reasoner.impl.WSMO4JManager;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.2 $ $Date: 2006-08-03 14:53:59 $
+ * @version $Revision: 1.3 $ $Date: 2006-08-08 12:47:54 $
  */
 public class InverseImplicationReductionRules extends FixedModificationRules {
 
-	private Set<Variable> leftVariables = new HashSet();
+	private Set<Variable> leftVariables = new HashSet<Variable>();
 	
-	private Set<Variable> rightVariables = new HashSet();
+	private Set<Variable> rightVariables = new HashSet<Variable>();
 	
 	public InverseImplicationReductionRules(WSMO4JManager wsmoManager) {
 		super(wsmoManager);
@@ -138,6 +137,9 @@ public class InverseImplicationReductionRules extends FixedModificationRules {
 		else if (left instanceof Disjunction) {
 			checkDisjunction((Disjunction) left);
 		}
+		else if (left instanceof Negation) {
+			checkNegation((Negation) left);
+		}
 		else if (left instanceof ExistentialQuantification) {
 			checkExistentialQuantification((ExistentialQuantification) left);
 		}
@@ -155,6 +157,9 @@ public class InverseImplicationReductionRules extends FixedModificationRules {
 		}
 		else if (right instanceof Disjunction) {
 			checkDisjunction((Disjunction) right);
+		}
+		else if (right instanceof Negation) {
+			checkNegation((Negation) right);
 		}
 		else if (right instanceof ExistentialQuantification) {
 			checkExistentialQuantification((ExistentialQuantification) right);
@@ -196,6 +201,9 @@ public class InverseImplicationReductionRules extends FixedModificationRules {
 		else if (left instanceof Disjunction) {
 			checkDisjunction((Disjunction) left);
 		}
+		else if (left instanceof Negation) {
+			checkNegation((Negation) left);
+		}
 		else if (left instanceof ExistentialQuantification) {
 			checkExistentialQuantification((ExistentialQuantification) left);
 		}
@@ -213,6 +221,9 @@ public class InverseImplicationReductionRules extends FixedModificationRules {
 		}
 		else if (right instanceof Disjunction) {
 			checkDisjunction((Disjunction) right);
+		}
+		else if (right instanceof Negation) {
+			checkNegation((Negation) right);
 		}
 		else if (right instanceof ExistentialQuantification) {
 			checkExistentialQuantification((ExistentialQuantification) right);
@@ -237,6 +248,9 @@ public class InverseImplicationReductionRules extends FixedModificationRules {
 		else if (left instanceof Disjunction) {
 			checkDisjunction((Disjunction) left);
 		}
+		else if (left instanceof Negation) {
+			checkNegation((Negation) left);
+		}
 		else if (left instanceof ExistentialQuantification) {
 			checkExistentialQuantification((ExistentialQuantification) left);
 		}
@@ -254,6 +268,9 @@ public class InverseImplicationReductionRules extends FixedModificationRules {
 		}
 		else if (right instanceof Disjunction) {
 			checkDisjunction((Disjunction) right);
+		}
+		else if (right instanceof Negation) {
+			checkNegation((Negation) right);
 		}
 		else if (right instanceof ExistentialQuantification) {
 			checkExistentialQuantification((ExistentialQuantification) right);
@@ -277,6 +294,9 @@ public class InverseImplicationReductionRules extends FixedModificationRules {
 		else if (logExpr instanceof Disjunction) {
 			checkDisjunction((Disjunction) logExpr);
 		}
+		else if (logExpr instanceof Negation) {
+			checkNegation((Negation) logExpr);
+		}
 		else if (logExpr instanceof ExistentialQuantification) {
 			checkExistentialQuantification((ExistentialQuantification) logExpr);
 		}
@@ -299,6 +319,9 @@ public class InverseImplicationReductionRules extends FixedModificationRules {
 		else if (logExpr instanceof Disjunction) {
 			checkDisjunction((Disjunction) logExpr);
 		}
+		else if (logExpr instanceof Negation) {
+			checkNegation((Negation) logExpr);
+		}
 		else if (logExpr instanceof ExistentialQuantification) {
 			checkExistentialQuantification((ExistentialQuantification) logExpr);
 		}
@@ -320,6 +343,9 @@ public class InverseImplicationReductionRules extends FixedModificationRules {
 		}
 		else if (logExpr instanceof Disjunction) {
 			checkDisjunction((Disjunction) logExpr);
+		}
+		else if (logExpr instanceof Negation) {
+			checkNegation((Negation) logExpr);
 		}
 		else if (logExpr instanceof ExistentialQuantification) {
 			checkExistentialQuantification((ExistentialQuantification) logExpr);
