@@ -49,7 +49,7 @@ import org.semanticweb.owl.model.OWLProperty;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.3 $ $Date: 2006-07-21 16:25:21 $
+ * @version $Revision: 1.4 $ $Date: 2006-08-08 10:14:28 $
  */
 public interface DLReasonerFacade {
 
@@ -59,7 +59,8 @@ public interface DLReasonerFacade {
      * @param owlOntology the OWL-DL ontology
      * @throws OWLException
      */
-    public void register(OWLOntology owlOntology) throws ExternalToolException;
+    public void register(OWLOntology owlOntology) 
+    		throws ExternalToolException;
     
     /**
      * Removes the ontology from the external reasoner.
@@ -67,151 +68,157 @@ public interface DLReasonerFacade {
      * @param ontologyURI the original logical ontology URI
      * @throws ExternalToolException if exception happens during ontology removal
      */
-    public void deRegister(OWLOntology owlOntology);
+    public void deRegister(String ontologyURI) 
+    		throws ExternalToolException;
 
     /** 
 	 * @return true if the given ontology is consistent, false otherwise.
 	 */
-    public boolean isConsistent();
+    public boolean isConsistent(String ontologyURI);
     
     /**
      * @return true if the given OWL Description is satisfiable, false otherwise.
      */
-    public boolean isConsistent(OWLDescription clazz) 
-			throws OWLException;
+    public boolean isConsistent(String ontologyURI, 
+    		OWLDescription clazz) throws OWLException;
     
     /**
      * @return a set containing all classes from the loaded ontology
      */
-	public Set<OWLEntity> allClasses();
+	public Set<OWLEntity> allClasses(String ontologyURI);
 	
 	/**
 	 * @return a set containing all individuals from the loaded ontology
 	 */
-	public Set<OWLEntity> allIndividuals();
+	public Set<OWLEntity> allIndividuals(String ontologyURI);
 	
 	/**
 	 * @return a set containing all properties from the loaded ontology
 	 */
-	public Set<OWLEntity> allProperties();
+	public Set<OWLEntity> allProperties(String ontologyURI);
     
 	/**
 	 * @return a set containing all data properties from the loaded ontology
 	 */
-	public Set<OWLEntity> allDataProperties();
+	public Set<OWLEntity> allDataProperties(String ontologyURI);
 	
 	/**
 	 * @return a set containing all object properties from the loaded ontology
 	 */
-	public Set<OWLEntity> allObjectProperties();
+	public Set<OWLEntity> allObjectProperties(String ontologyURI);
 	
 	/**
 	 * @return a set containing all subclasses of a given class
 	 */
-	public Set<Set> descendantClassesOf(OWLDescription clazz) 
-			throws OWLException;
+	public Set<Set> descendantClassesOf(String ontologyURI, 
+			OWLDescription clazz) throws OWLException;
 	
 	/**
 	 * @return a set containing all superclasses of a given class
 	 */
-	public Set<Set> ancestorClassesOf(OWLDescription clazz) 
-			throws OWLException;
+	public Set<Set> ancestorClassesOf(String ontologyURI, 
+			OWLDescription clazz) throws OWLException;
 	
 	/**
 	 * @return a set containing all classes equivalent to the given class
 	 */
-	public Set<OWLEntity> equivalentClassesOf(OWLDescription clazz) 
-			throws OWLException;
+	public Set<OWLEntity> equivalentClassesOf(String ontologyURI, 
+			OWLDescription clazz) throws OWLException;
 	
 	/**
 	 * @return true if the two given OWL descriptions are equivalent
 	 */
-	public boolean isEquivalentClass(OWLDescription clazz1, OWLDescription 
-			clazz2) throws OWLException;
+	public boolean isEquivalentClass(String ontologyURI, 
+			OWLDescription clazz1, OWLDescription clazz2) 
+			throws OWLException;
 	
     /**
      * @return true if the given clazz2 is a subClass of clazz1
      */
-    public boolean isSubClassOf(OWLDescription clazz1, OWLDescription clazz2) 
-    		throws OWLException;
+    public boolean isSubClassOf(String ontologyURI, OWLDescription clazz1, 
+    		OWLDescription clazz2) throws OWLException;
     
     /**
      * @return true if the given individual is an instance of clazz
      */
-    public boolean isInstanceOf(OWLIndividual individual, OWLDescription clazz) 
-    		throws OWLException;
+    public boolean isInstanceOf(String ontologyURI, OWLIndividual individual, 
+    		OWLDescription clazz) throws OWLException;
     
     /**
      * @return a set all instances of a given OWL class
      */
-    public Set<OWLEntity> allInstancesOf(OWLClass clazz) throws OWLException;
+    public Set<OWLEntity> allInstancesOf(String ontologyURI, OWLClass clazz) 
+    		throws OWLException;
     
     /**
      * @return a set with all (also indirect) concepts of a given OWL individual
      */
-    public Set<Set> allTypesOf(OWLIndividual individual) throws OWLException;
+    public Set<Set> allTypesOf(String ontologyURI, OWLIndividual individual) 
+    		throws OWLException;
     
     /**
      * @return a set containing all subproperties of a given OWL property
      */
-    public Set<Set> descendantPropertiesOf(OWLProperty property) 
-    		throws OWLException;
+    public Set<Set> descendantPropertiesOf(String ontologyURI, 
+    		OWLProperty property) throws OWLException;
     
     /**
      * @return a set containing all superproperties of a given OWL property
      */
-    public Set<Set> ancestorPropertiesOf(OWLProperty property) 
-    		throws OWLException; 
+    public Set<Set> ancestorPropertiesOf(String ontologyURI, 
+    		OWLProperty property) throws OWLException; 
     
     /**
      * @return a set containing all properties equivalent to the given property
      */
-	public Set<OWLEntity> equivalentPropertiesOf(OWLProperty property) 
-			throws OWLException;
+	public Set<OWLEntity> equivalentPropertiesOf(String ontologyURI, 
+			OWLProperty property) throws OWLException;
     
 	/**
 	 * @return a set containing all properties inverse to the given property
 	 */
-	public Set<OWLEntity> inversePropertiesOf(OWLObjectProperty property)
-			throws OWLException;
+	public Set<OWLEntity> inversePropertiesOf(String ontologyURI, 
+			OWLObjectProperty property) throws OWLException;
 	
 	/**
 	 * @return a set containing the domains of the given property
 	 */
-	public Set<OWLEntity> domainsOf(OWLProperty property) 
-			throws OWLException;
+	public Set<OWLEntity> domainsOf(String ontologyURI, 
+			OWLProperty property) throws OWLException;
 	
 	/**
 	 * @return a set containing the ranges of the given property
 	 */
-	public Set<OWLEntity> rangesOf(OWLObjectProperty property)
-			throws OWLException;
+	public Set<OWLEntity> rangesOf(String ontologyURI, 
+			OWLObjectProperty property) throws OWLException;
 	
 	/**
 	 * @return a set containing the ranges of the given property
 	 */
-	public Set<OWLConcreteDataTypeImpl> rangesOf(OWLDataProperty property)
-			throws OWLException;
+	public Set<OWLConcreteDataTypeImpl> rangesOf(String ontologyURI, 
+			OWLDataProperty property) throws OWLException;
 	
 	/**
 	 * @return a map containing all data properties and for each a set containing
 	 * 			all its values
 	 */
 	public Map<OWLEntity, Set<OWLConcreteDataImpl>> getDataPropertyValues(
-			OWLIndividual individual) throws OWLException;
+			String ontologyURI, OWLIndividual individual) 
+			throws OWLException;
 	
 	/**
 	 * @return a map containing all object properties and for each a set containing
 	 * 			all its values
 	 */
 	public Map<OWLEntity, Set<OWLEntity>> getObjectPropertyValues(
-			OWLIndividual individual) throws OWLException;
+			String ontologyURI, OWLIndividual individual) 
+			throws OWLException;
 	
 	/**
 	 * @return a map containing all individuals who have values for a specified 
 	 * 			object property and for each a set containing all its values
 	 */
-	public Map<OWLEntity, Set<OWLEntity>> getPropertyValues(
+	public Map<OWLEntity, Set<OWLEntity>> getPropertyValues(String ontologyURI, 
 			OWLObjectProperty property) throws OWLException;
 	
 	/**
@@ -219,50 +226,57 @@ public interface DLReasonerFacade {
 	 * 			data property and for each a set containing all its values
 	 */
 	public Map<OWLEntity, Set<OWLConcreteDataImpl>> getPropertyValues(
-			OWLDataProperty property) throws OWLException;
+			String ontologyURI, OWLDataProperty property) 
+			throws OWLException;
 	
 	/**
 	 * @return true if the given subject individual has the given object property 
 	 * 			with the given object individual as value
 	 */
-	public boolean hasPropertyValue(OWLIndividual subject,
-			OWLObjectProperty property, OWLIndividual object) throws OWLException;
+	public boolean hasPropertyValue(String ontologyURI, OWLIndividual subject,
+			OWLObjectProperty property, OWLIndividual object) 
+			throws OWLException;
 	
 	/**
 	 * @return true if the given subject individual has the given data property 
 	 * 			with the given data value as value
 	 */
-	public boolean hasPropertyValue(OWLIndividual subject,
-			OWLDataProperty property, OWLDataValue object) throws OWLException;
+	public boolean hasPropertyValue(String ontologyURI, OWLIndividual subject,
+			OWLDataProperty property, OWLDataValue object) 
+			throws OWLException;
 	
 	/**
 	 * @return individual value of the given individual and object property
 	 */
-	public OWLIndividual getObjectPropertyValue(OWLIndividual subject, 
-			OWLObjectProperty property) throws OWLException;
+	public OWLIndividual getObjectPropertyValue(String ontologyURI, 
+			OWLIndividual subject, OWLObjectProperty property) 
+			throws OWLException;
 	
 	/**
 	 * @return data value of the given individual and data property
 	 */
-	public OWLDataValue getDataPropertyValue(OWLIndividual subject, 
-			OWLDataProperty property) throws OWLException;
+	public OWLDataValue getDataPropertyValue(String ontologyURI, 
+			OWLIndividual subject, OWLDataProperty property) 
+			throws OWLException;
 	
 	/**
 	 * @return set containing individual values of the given individual and object property
 	 */
-	public Set<OWLEntity> getObjectPropertyValues(OWLIndividual subject, 
-			OWLObjectProperty property) throws OWLException;
+	public Set<OWLEntity> getObjectPropertyValues(String ontologyURI, 
+			OWLIndividual subject, OWLObjectProperty property) 
+			throws OWLException;
 	
 	/**
 	 * @return set containing data values of the given individual and data property
 	 */
-	public Set<OWLDataValue> getDataPropertyValues(OWLIndividual subject, 
-			OWLDataProperty property) throws OWLException;
+	public Set<OWLDataValue> getDataPropertyValues(String ontologyURI, 
+			OWLIndividual subject, OWLDataProperty property) 
+			throws OWLException;
 	
     /**
 	 * Prints a class tree from the registered ontology.
 	 */
-    public void printClassTree();
+    public void printClassTree(String ontologyURI);
     
     /**
      * Returns information about the registered ontology. Among these information 
@@ -271,7 +285,7 @@ public interface DLReasonerFacade {
      * 
      * @return String containing information about the registered ontology
      */
-    public String getInfo();
+    public String getInfo(String ontologyURI);
     
     /**
      * Evaluates a given query on a particular external tool.
@@ -279,11 +293,14 @@ public interface DLReasonerFacade {
      * @param query the query to be evaluated.
      * @return a set of Query Results
      */
-    public QueryResults evaluate(String query);
+    public QueryResults evaluate(String ontologyURI, String query);
 	
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.3  2006/07/21 16:25:21  nathalie
+ * completing the pellet reasoner integration
+ *
  * Revision 1.2  2006/07/20 17:50:23  nathalie
  * integration of the pellet reasoner
  *

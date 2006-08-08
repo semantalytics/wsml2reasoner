@@ -18,6 +18,7 @@
  */
 package org.wsml.reasoner.builtin.pellet;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,7 +38,6 @@ import org.semanticweb.owl.model.OWLOntology;
 import org.semanticweb.owl.model.OWLProperty;
 import org.wsml.reasoner.DLReasonerFacade;
 import org.wsml.reasoner.ExternalToolException;
-import org.wsml.reasoner.impl.WSMO4JManager;
 
 /**
  * Integrates the PELLET reasoner system into the WSML-DL reasoner framework.
@@ -49,231 +49,295 @@ import org.wsml.reasoner.impl.WSMO4JManager;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.3 $ $Date: 2006-07-21 16:25:21 $
+ * @version $Revision: 1.4 $ $Date: 2006-08-08 10:14:27 $
  */
 public class PelletFacade implements DLReasonerFacade {
 	
 	protected Reasoner reasoner = null;
 	
+	private Map<String, Reasoner> registeredOntologies = null;
+	
 	/**
      * Creates a facade object that allows to invoke the PELLET system for
      * performing reasoning tasks.
      */
-    public PelletFacade(WSMO4JManager wsmoManager) {
+    public PelletFacade() {
         super();
-        reasoner = new Reasoner();
+        registeredOntologies = new HashMap<String, Reasoner>();
     }
 
     /**
      * Registers the OWL ontology at the PELLET reasoner.
      */
-	public void register(OWLOntology owlOntology) throws ExternalToolException {
+	public void register(OWLOntology owlOntology) 
+			throws ExternalToolException {
+        reasoner = new Reasoner();
 		try {
-			reasoner.getKB().clear();
 			reasoner.setOntology(owlOntology);
+			registeredOntologies.put(owlOntology.getURI().toString(), 
+					reasoner);
 		} catch (OWLException e) {
 			 e.printStackTrace();
 	         throw new ExternalToolException(
 	         		"PELLET ontology registration problem.");
 		}
-		reasoner.getKB().realize();
 	}
 
 	/**
 	 * The Knowledge base, that PELLET derived from this OWL 
 	 * ontology is cleared.
+	 * @throws ExternalToolException 
 	 */
-	public void deRegister(OWLOntology owlOntology) {
+	public void deRegister(String ontologyURI) 
+			throws ExternalToolException {
+		reasoner = getReasoner(ontologyURI);
 		reasoner.getKB().clear();
+		registeredOntologies.remove(ontologyURI);
 	}
 
-	public boolean isConsistent() {
+	public boolean isConsistent(String ontologyURI) {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.isConsistent();
 	}
 	
-	public boolean isConsistent(OWLDescription clazz) 
+	public boolean isConsistent(String ontologyURI, OWLDescription clazz) 
 			throws OWLException {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.isConsistent(clazz);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Set<OWLEntity> allClasses() {
+	public Set<OWLEntity> allClasses(String ontologyURI) {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.getClasses();
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Set<OWLEntity> allIndividuals() {
+	public Set<OWLEntity> allIndividuals(String ontologyURI) {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.getIndividuals();
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Set<OWLEntity> allProperties() {
+	public Set<OWLEntity> allProperties(String ontologyURI) {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.getProperties();
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Set<OWLEntity> allDataProperties() {
+	public Set<OWLEntity> allDataProperties(String ontologyURI) {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.getDataProperties();
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Set<OWLEntity> allObjectProperties() {
+	public Set<OWLEntity> allObjectProperties(String ontologyURI) {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.getObjectProperties();
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Set<Set> descendantClassesOf(OWLDescription clazz) 
-			throws OWLException {
+	public Set<Set> descendantClassesOf(String ontologyURI, 
+			OWLDescription clazz) throws OWLException {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.descendantClassesOf(clazz);
 	}
 
 	@SuppressWarnings("unchecked")
-	public Set<Set> ancestorClassesOf(OWLDescription clazz) 
-			throws OWLException {
+	public Set<Set> ancestorClassesOf(String ontologyURI, 
+			OWLDescription clazz) throws OWLException {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.ancestorClassesOf(clazz);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Set<OWLEntity> equivalentClassesOf(OWLDescription clazz) 
-			throws OWLException {
+	public Set<OWLEntity> equivalentClassesOf(String ontologyURI, 
+			OWLDescription clazz) throws OWLException {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.equivalentClassesOf(clazz);
 	}
 	
-	public boolean isEquivalentClass(OWLDescription clazz1, 
+	public boolean isEquivalentClass(String ontologyURI, OWLDescription clazz1, 
 			OWLDescription clazz2) throws OWLException {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.isEquivalentClass(clazz1, clazz2);
 	}
 	
-	public boolean isSubClassOf(OWLDescription clazz1, OWLDescription clazz2) 
-			throws OWLException {
+	public boolean isSubClassOf(String ontologyURI, OWLDescription clazz1, 
+			OWLDescription clazz2) throws OWLException {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.isSubClassOf(clazz1, clazz2);
 	}
 
-	public boolean isInstanceOf(OWLIndividual individual, OWLDescription clazz) 
-			throws OWLException {
+	public boolean isInstanceOf(String ontologyURI, OWLIndividual individual, 
+			OWLDescription clazz) throws OWLException {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.isInstanceOf(individual, clazz);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Set<OWLEntity> allInstancesOf(OWLClass clazz) throws OWLException {
+	public Set<OWLEntity> allInstancesOf(String ontologyURI, OWLClass clazz) 
+			throws OWLException {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.allInstancesOf(clazz);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Set<Set> allTypesOf(OWLIndividual individual) throws OWLException {
+	public Set<Set> allTypesOf(String ontologyURI, OWLIndividual individual) 
+			throws OWLException {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.allTypesOf(individual);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Set<Set> descendantPropertiesOf(OWLProperty property) 
-			throws OWLException {
+	public Set<Set> descendantPropertiesOf(String ontologyURI, 
+			OWLProperty property) throws OWLException {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.descendantPropertiesOf(property);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Set<Set> ancestorPropertiesOf(OWLProperty property) 
-			throws OWLException {
+	public Set<Set> ancestorPropertiesOf(String ontologyURI, 
+			OWLProperty property) throws OWLException {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.ancestorPropertiesOf(property);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Set<OWLEntity> equivalentPropertiesOf(OWLProperty property) 
-			throws OWLException {
+	public Set<OWLEntity> equivalentPropertiesOf(String ontologyURI, 
+			OWLProperty property) throws OWLException {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.equivalentPropertiesOf(property);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Set<OWLEntity> inversePropertiesOf(OWLObjectProperty property)
-			throws OWLException {
+	public Set<OWLEntity> inversePropertiesOf(String ontologyURI, 
+			OWLObjectProperty property)	throws OWLException {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.inversePropertiesOf(property);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Set<OWLEntity> domainsOf(OWLProperty property) 
+	public Set<OWLEntity> domainsOf(String ontologyURI, OWLProperty property) 
 			throws OWLException {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.domainsOf(property);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Set<OWLEntity> rangesOf(OWLObjectProperty property)
-			throws OWLException {
+	public Set<OWLEntity> rangesOf(String ontologyURI, 
+			OWLObjectProperty property) throws OWLException {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.rangesOf(property);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Set<OWLConcreteDataTypeImpl> rangesOf(OWLDataProperty property)
-			throws OWLException {
+	public Set<OWLConcreteDataTypeImpl> rangesOf(String ontologyURI, 
+			OWLDataProperty property) throws OWLException {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.rangesOf(property);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public Map<OWLEntity, Set<OWLConcreteDataImpl>> getDataPropertyValues(
-			OWLIndividual individual) throws OWLException {
+			String ontologyURI, OWLIndividual individual) throws OWLException {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.getDataPropertyValues(individual);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public Map<OWLEntity, Set<OWLEntity>> getObjectPropertyValues(
-			OWLIndividual individual) throws OWLException {
+			String ontologyURI, OWLIndividual individual) throws OWLException {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.getObjectPropertyValues(individual);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Map<OWLEntity, Set<OWLEntity>> getPropertyValues(
+	public Map<OWLEntity, Set<OWLEntity>> getPropertyValues(String ontologyURI, 
 			OWLObjectProperty property) throws OWLException {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.getPropertyValues(property);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public Map<OWLEntity, Set<OWLConcreteDataImpl>> getPropertyValues(
-			OWLDataProperty property) throws OWLException {
+			String ontologyURI, OWLDataProperty property) throws OWLException {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.getPropertyValues(property);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public boolean hasPropertyValue(OWLIndividual subject,
-			OWLObjectProperty property, OWLIndividual object) throws OWLException {
+	public boolean hasPropertyValue(String ontologyURI, OWLIndividual subject,
+			OWLObjectProperty property, OWLIndividual object) 
+			throws OWLException {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.hasPropertyValue(subject, property, object);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public boolean hasPropertyValue(OWLIndividual subject,
-			OWLDataProperty property, OWLDataValue object) throws OWLException {
+	public boolean hasPropertyValue(String ontologyURI, OWLIndividual subject,
+			OWLDataProperty property, OWLDataValue object) 
+			throws OWLException {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.hasPropertyValue(subject, property, object);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Set<OWLEntity> getObjectPropertyValues(OWLIndividual subject, 
-			OWLObjectProperty property) throws OWLException {
+	public Set<OWLEntity> getObjectPropertyValues(String ontologyURI, 
+			OWLIndividual subject, OWLObjectProperty property) 
+			throws OWLException {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.getPropertyValues(subject, property);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Set<OWLDataValue> getDataPropertyValues(OWLIndividual subject, 
-			OWLDataProperty property) throws OWLException{
+	public Set<OWLDataValue> getDataPropertyValues(String ontologyURI, 
+			OWLIndividual subject, OWLDataProperty property) 
+			throws OWLException{
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.getPropertyValues(subject, property);
 	}
 	
-	public OWLIndividual getObjectPropertyValue(OWLIndividual subject, 
-			OWLObjectProperty property) throws OWLException {
+	public OWLIndividual getObjectPropertyValue(String ontologyURI, 
+			OWLIndividual subject, OWLObjectProperty property) 
+			throws OWLException {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.getPropertyValue(subject, property);
 	}
 	
-	public OWLDataValue getDataPropertyValue(OWLIndividual subject, 
-			OWLDataProperty property) throws OWLException{
+	public OWLDataValue getDataPropertyValue(String ontologyURI, 
+			OWLIndividual subject, OWLDataProperty property) 
+			throws OWLException{
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.getPropertyValue(subject, property);
 	}
 	
-	public void printClassTree() {
+	public void printClassTree(String ontologyURI) {
+		reasoner = getReasoner(ontologyURI);
 		reasoner.getKB().printClassTree();
 	}
 	
-	public String getInfo() {
+	public String getInfo(String ontologyURI) {
+		reasoner = getReasoner(ontologyURI);
 		return reasoner.getKB().getInfo();
 	}
 	
-	public QueryResults evaluate(String queryString) {
+	private Reasoner getReasoner(String ontologyURI) {
+		if (registeredOntologies.containsKey(ontologyURI)) {
+			return registeredOntologies.get(ontologyURI);
+		}
+		else {
+			try {
+				throw new ExternalToolException("Ontology is not registrated!");
+			} catch (ExternalToolException e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
+	
+	public QueryResults evaluate(String ontologyURI, String queryString) {
 		throw new UnsupportedOperationException();
+//		reasoner = registeredOntologies.get(ontologyURI);
 //		QueryResults results = null;
 //		Set set = reasoner.getKB().getObjectProperties();
 //		Iterator it = set.iterator();
@@ -286,6 +350,9 @@ public class PelletFacade implements DLReasonerFacade {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.3  2006/07/21 16:25:21  nathalie
+ * completing the pellet reasoner integration
+ *
  * Revision 1.2  2006/07/20 17:50:23  nathalie
  * integration of the pellet reasoner
  *

@@ -49,7 +49,7 @@ import org.wsmo.wsml.Parser;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.3 $ $Date: 2006-07-21 21:07:03 $
+ * @version $Revision: 1.4 $ $Date: 2006-08-08 10:14:28 $
  */
 public class DLReasonerExample {
 	
@@ -92,7 +92,7 @@ public class DLReasonerExample {
         reasoner.registerOntologyNoVerification(exampleOntology);
         
         // print class hierarchy with individuals
-        reasoner.printClassTree();
+        reasoner.printClassTree((IRI) exampleOntology.getIdentifier());
 
         // print out if the registered ontology is satisfiable
         System.out.println("\n----------------------\n");
@@ -102,7 +102,8 @@ public class DLReasonerExample {
         // print out if a specified concept is satisfiable
         System.out.println("\n----------------------\n");
         System.out.println("Is concept \"Machine\" satisfiable? " + 
-        		reasoner.isConsistent(wsmoFactory.createConcept(
+        		reasoner.isConsistent((IRI) exampleOntology.getIdentifier(), 
+        				wsmoFactory.createConcept(
         				wsmoFactory.createIRI(ns + "Machine"))));
         
         // print out if a specified logical expression is satisfiable
@@ -110,25 +111,28 @@ public class DLReasonerExample {
         String le = "?x memberOf _\"http://www.example.org/ontologies/example#Pet\" " +
 		"\n and ?x memberOf _\"http://www.example.org/ontologies/example#DomesticAnimal\".";
         System.out.println("Is the following logical expression satisfiable? \n\"" + le +
-        		"\" \n" + reasoner.isConsistent(leFactory.createLogicalExpression(le)));
+        		"\" \n" + reasoner.isConsistent((IRI) exampleOntology.getIdentifier(), 
+        				leFactory.createLogicalExpression(le)));
         
         // print out if a specified logical expression is satisfiable
         System.out.println("\n----------------------\n");
         le = "?x memberOf _\"http://www.example.org/ontologies/example#Man\" " +
 				"\n and ?x memberOf _\"http://www.example.org/ontologies/example#Woman\"."; 
         System.out.println("Is the following logical expression satisfiable? \n\"" + le +
-        		"\" \n" + reasoner.isConsistent(leFactory.createLogicalExpression(le)));
+        		"\" \n" + reasoner.isConsistent((IRI) exampleOntology.getIdentifier(), 
+        				leFactory.createLogicalExpression(le)));
         
         // get all instances of woman concept
         System.out.println("\n----------------------\n");
-		Set<Instance> set = reasoner.getInstances(null, wsmoFactory.createConcept(
+		Set<Instance> set = reasoner.getInstances((IRI) exampleOntology.getIdentifier(), 
+				wsmoFactory.createConcept(
 				wsmoFactory.createIRI(ns + "Woman")));
         for (Instance instance : set) 
         	System.out.println(instance.getIdentifier().toString());
         
         // get one specific instance's age
         System.out.println("\n----------------------\n");
-        String age = reasoner.getConstraintAttributeValue(
+        String age = reasoner.getConstraintAttributeValue((IRI) exampleOntology.getIdentifier(), 
         		wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Anna")),
         		wsmoFactory.createIRI(ns + "ageOfHuman"));
         System.out.println(age);
@@ -136,6 +140,7 @@ public class DLReasonerExample {
         // get all info about one specific instance
         System.out.println("\n----------------------\n");
         Set<Entry<IRI, Set<IRI>>> entrySet = reasoner.getInferingAttributeValues(
+        		(IRI) exampleOntology.getIdentifier(), 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Mary"))).entrySet();
 		for (Entry<IRI, Set<IRI>> entry : entrySet) {
 			System.out.println(entry.getKey().toString());
@@ -143,7 +148,7 @@ public class DLReasonerExample {
 			for (IRI value : IRIset) 
 				System.out.println("   value: " + value.toString());
 		}
-		entrySet = reasoner.getConstraintAttributeValues(
+		entrySet = reasoner.getConstraintAttributeValues((IRI) exampleOntology.getIdentifier(), 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Mary"))).entrySet();
 		for (Entry<IRI, Set<IRI>> entry : entrySet) {
 			System.out.println(entry.getKey().toString());
@@ -196,6 +201,9 @@ public class DLReasonerExample {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.3  2006/07/21 21:07:03  nathalie
+ * updated dl reasoner example
+ *
  * Revision 1.2  2006/07/21 17:01:43  nathalie
  * updated dl reasoner example
  *

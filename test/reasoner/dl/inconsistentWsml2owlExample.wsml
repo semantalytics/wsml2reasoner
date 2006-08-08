@@ -1,9 +1,9 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-dl"
 
-namespace { _"http://www.example.org/ontologies/example#",
+namespace { _"http://www.example.org/ontologies/inconsistentExample#",
   dc  _"http://purl.org/dc/elements/1.1#"}
 
-ontology _"http://www.example.org/ontologies/example"
+ontology _"http://www.example.org/ontologies/inconsistentExample"
   
   concept Human
   
