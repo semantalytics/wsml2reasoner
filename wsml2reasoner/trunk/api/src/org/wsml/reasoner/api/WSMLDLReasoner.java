@@ -54,97 +54,101 @@ public interface WSMLDLReasoner extends WSMLReasoner{
 	 * @throws InternalReasonerException if a logical expression different
 	 * 			than the ones mentionned above are given as input
 	 */
-	public boolean isConsistent(LogicalExpression logExpr);
+	public boolean isConsistent(IRI ontologyID, LogicalExpression logExpr);
 	
 	/**
 	 * @return true if the given concept is satisfiable, false otherwise
 	 */
-	public boolean isConsistent(Concept concept);
+	public boolean isConsistent(IRI ontologyID, Concept concept);
 	
 	/**
 	 * @return a set containing all instances from the registered ontology
 	 */
-	public Set<Concept> getAllConcepts();
+	public Set<Concept> getAllConcepts(IRI ontologyID);
 	
 	/**
 	 * @return a set containing all instances from the registered ontology
 	 */
-	public Set<Instance> getAllInstances();
+	public Set<Instance> getAllInstances(IRI ontologyID);
 	
 	/**
 	 * @return a set containing all attributes from the registered ontology
 	 */
-	public Set<IRI> getAllAttributes();
+	public Set<IRI> getAllAttributes(IRI ontologyID);
 	
 	/**
 	 * @return a set containing all constraining attributes from the registered ontology
 	 */
-	public Set<IRI> getAllConstraintAttributes();
+	public Set<IRI> getAllConstraintAttributes(IRI ontologyID);
 	
 	/**
 	 * @return a set containing all infering attributes from the registered ontology
 	 */
-	public Set<IRI> getAllInferenceAttributes();
+	public Set<IRI> getAllInferenceAttributes(IRI ontologyID);
 	
 	/**
 	 * @return a set containing all concepts equivalent to the given concept
 	 */
-	public Set<Concept> getEquivalentConcepts(Concept concept);
+	public Set<Concept> getEquivalentConcepts(IRI ontologyID, Concept concept);
 	
 	/**
 	 * @return true if the two given concepts are equivalent, false otherwise
 	 */
-	public boolean isEquivalentConcept(Concept concept1, Concept concept2);
+	public boolean isEquivalentConcept(IRI ontologyID, Concept concept1, 
+			Concept concept2);
 	
 	/**
 	 * @return a set containing all identifiers subrelations of a given relation
 	 */
-	public Set<IRI> getSubRelations(Identifier attributeId);
+	public Set<IRI> getSubRelations(IRI ontologyID, Identifier attributeId);
 	
 	/**
 	 * @return a set containing all identifiers of superrelations of a given relation
 	 */
-	public Set<IRI> getSuperRelations(Identifier attributeId);
+	public Set<IRI> getSuperRelations(IRI ontologyID, Identifier attributeId);
 	
 	/**
 	 * @return a set containing the identifiers of all relations/attributes 
 	 * 			equivalent to the given relation/attribute
 	 */
-	public Set<IRI> getEquivalentRelations(Identifier attributeId);
+	public Set<IRI> getEquivalentRelations(IRI ontologyID, 
+			Identifier attributeId);
 	
 	/**
 	 * @return a set containing the identifiers of all relations/attributes 
 	 * 			inverse to the given relation/attribute
 	 */
-	public Set<IRI> getInverseRelations(Identifier attributeId);
+	public Set<IRI> getInverseRelations(IRI ontologyID, Identifier attributeId);
 	
 	/**
 	 * @return a set containing the concepts of the given attribute
 	 */
-	public Set<Concept> getConceptsOf(Identifier attributeId);
+	public Set<Concept> getConceptsOf(IRI ontologyID, Identifier attributeId);
 	
 	/**
 	 * @return a set containing the ranges of the given infering attribute
 	 */
-	public Set<IRI> getRangesOfInferingAttribute(Identifier attributeId);
+	public Set<IRI> getRangesOfInferingAttribute(IRI ontologyID, 
+			Identifier attributeId);
 	
 	/**
 	 * @return a set containing the ranges of the given constraint attribute
 	 */
-	public Set<IRI> getRangesOfConstraintAttribute(Identifier attributeId);
+	public Set<IRI> getRangesOfConstraintAttribute(IRI ontologyID, 
+			Identifier attributeId);
 	
 	/**
 	 * @return a map containing all infering attributes of a specified instance 
 	 * 			and for each a set containing all its values
 	 */
-	public Map<IRI, Set<IRI>> getInferingAttributeValues(
+	public Map<IRI, Set<IRI>> getInferingAttributeValues(IRI ontologyID, 
 			Instance instance);
 	
 	/**
 	 * @return a map containing all constraint attributes of a specified instance 
 	 *			and for each a set containing all its values
 	 */
-	public Map<IRI, Set<IRI>> getConstraintAttributeValues(
+	public Map<IRI, Set<IRI>> getConstraintAttributeValues(IRI ontologyID, 
 			Instance instance);
 	
 	/**
@@ -152,59 +156,59 @@ public interface WSMLDLReasoner extends WSMLReasoner{
 	 * 			infering attribute and for each a set containing all its values
 	 */
 	public Map<Instance, Set<IRI>> getInferingAttributeInstances(
-			Identifier attributeId);
+			IRI ontologyID, Identifier attributeId);
 	
 	/**
 	 * @return a map containing all instances who have values for a specified 
 	 * 			constraint attribute and for each a set containing all its values
 	 */
 	public Map<Instance, Set<IRI>> getConstraintAttributeInstances(
-			Identifier attributeId);
+			IRI ontologyID, Identifier attributeId);
 	
 	/**
 	 * @return true if the given subject instance has an attribute value of the 
 	 * 			given infering attribute with the given object instance as value
 	 */
-	public boolean instanceHasInferingAttributeValue(Instance subject, 
-			Identifier attributeId, Instance object);
+	public boolean instanceHasInferingAttributeValue(IRI ontologyID, 
+			Instance subject, Identifier attributeId, Instance object);
 	
 	/**
 	 * @return true if the given subject instance has an attribute value of the 
 	 * 			given constraint attribute with the given object data value as value
 	 */
-	public boolean instanceHasConstraintAttributeValue(Instance subject, 
-			Identifier attributeId, DataValue object);
+	public boolean instanceHasConstraintAttributeValue(IRI ontologyID, 
+			Instance subject, Identifier attributeId, DataValue object);
 	
 	/**
 	 * @return instance value of the given instance and infering attribute
 	 */
-	public Instance getInferingAttributeValue(Instance subject, 
+	public Instance getInferingAttributeValue(IRI ontologyID, Instance subject, 
 			Identifier attributeId);
 	
 	/**
 	 * @return data value of the given instance and constraint attribute
 	 */
-	public String getConstraintAttributeValue(Instance subject, 
+	public String getConstraintAttributeValue(IRI ontologyID, Instance subject, 
 			Identifier attributeId);
 	
 	/**
 	 * @return set containing instance values of the given instance and 
 	 * 			infering attribute
 	 */
-	public Set<Instance> getInferingAttributeValues(Instance subject, 
-			Identifier attributeId);
+	public Set<Instance> getInferingAttributeValues(IRI ontologyID, 
+			Instance subject, Identifier attributeId);
 	
 	/**
 	 * @return set containing data values of the given instance and 
 	 * 			constraint attribute
 	 */
-	public Set<String> getConstraintAttributeValues(Instance subject, 
-			Identifier attributeId);
+	public Set<String> getConstraintAttributeValues(IRI ontologyID, 
+			Instance subject, Identifier attributeId);
 	
 	/**
 	 * Prints a class tree from the registered ontology.
 	 */
-	public void printClassTree();
+	public void printClassTree(IRI ontologyID);
 	
 	/**
      * Returns information about the registered ontology. Among these information 
@@ -212,7 +216,7 @@ public interface WSMLDLReasoner extends WSMLReasoner{
      * 
      * @return String containing information about the registered ontology
      */
-	public String getInfo();
+	public String getInfo(IRI ontologyID);
 	
 	/**
      * Evaluates a given query on a particular external tool. This method is not 
@@ -222,7 +226,7 @@ public interface WSMLDLReasoner extends WSMLReasoner{
      * @return a set of Query Results
      * @throws UnsupportedOperationException 
      */
-	public QueryResults executeQuery(String query);
+	public QueryResults executeQuery(IRI ontologyID, String query);
 	
 	/**
 	 * Serializes a given OWL ontology to OWL abstract syntax.
@@ -254,6 +258,9 @@ public interface WSMLDLReasoner extends WSMLReasoner{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.3  2006/07/21 16:25:21  nathalie
+ * completing the pellet reasoner integration
+ *
  * Revision 1.2  2006/07/20 17:50:23  nathalie
  * integration of the pellet reasoner
  *

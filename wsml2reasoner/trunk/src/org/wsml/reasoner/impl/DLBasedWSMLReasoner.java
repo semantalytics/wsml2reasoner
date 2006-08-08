@@ -66,7 +66,7 @@ import uk.ac.man.cs.img.owl.validation.ValidatorLogger;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.5 $ $Date: 2006-07-23 15:22:45 $
+ * @version $Revision: 1.6 $ $Date: 2006-08-08 10:14:28 $
  */
 public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 
@@ -101,7 +101,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		dataFactory = this.wsmoManager.getDataFactory();
 		switch (builtInType) {
 			case PELLET:
-				builtInFacade = new PelletFacade(wsmoManager);
+				builtInFacade = new PelletFacade();
 				break;
 			default:
 				throw new UnsupportedOperationException("Reasoning with "
@@ -129,8 +129,9 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 				ontology, "http://www.wsmo.org/wsml/wsml-syntax/wsml-dl", 
 				new Vector(), new Vector());
 		if (!valid) {
-			throw new RuntimeException ("The given WSML-DL ontology is not valid! Please " +
-					"use a WSML Validator to check why this is not valid WSML-DL (e.g. " +
+			throw new RuntimeException ("The given WSML-DL ontology is not " +
+					"valid! Please use a WSML Validator to check why this " +
+					"is not valid WSML-DL (e.g. " +
 					"http://tools.deri.org/wsml/validator/v1.2/");
 		}
 		ns = ontology.getDefaultNamespace().getIRI().toString();
@@ -143,18 +144,22 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 			owlOntology = transformOntology(ontology);
 			
 			// check if resulting OWL DL ontology is valid
-			owlValidator = new uk.ac.man.cs.img.owl.validation.SpeciesValidator();	
+			owlValidator = 
+				new uk.ac.man.cs.img.owl.validation.SpeciesValidator();	
 			SpeciesValidatorReporter reporter = new ValidatorLogger();
 			owlValidator.setReporter(reporter);
 			valid = owlValidator.isOWLDL(owlOntology);
 		} catch (OWLException e) {
-			throw new RuntimeException ("Difficulties in building the OWL ontology");
+			throw new RuntimeException ("Difficulties in building the OWL " +
+					"ontology");
 		} catch (URISyntaxException e) {
-			throw new RuntimeException ("Difficulties in building the OWL ontology");
+			throw new RuntimeException ("Difficulties in building the OWL " +
+					"ontology");
 		}
 		if (!(builtInFacade instanceof PelletFacade) && !valid) {
-			throw new RuntimeException("The transformed OWL DL ontology is not valid! Please use an " +
-					"OWL Validator to check why this is not OWL DL (e.g. " +
+			throw new RuntimeException("The transformed OWL DL ontology is " +
+					"not valid! Please use an OWL Validator to check why " +
+					"this is not OWL DL (e.g. " +
 					"http://phoebus.cs.man.ac.uk:9999/OWL/Validator");
 		}
         return owlOntology;
@@ -167,7 +172,8 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		Ontology normalizedOntology;
 			
 		// Replace relations, subRelations and relationinstances
-		OntologyNormalizer normalizer = new Relation2AttributeNormalizer(wsmoManager);
+		OntologyNormalizer normalizer = new Relation2AttributeNormalizer(
+				wsmoManager);
 		normalizedOntology = normalizer.normalize(ontology);
 //      System.out.println("\n-------\n Ontology after simplification:\n" +
 //      WSMLNormalizationTest.serializeOntology(normalizedOntology));
@@ -179,7 +185,8 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 //      System.out.println("\n-------\n Ontology after simplification:\n" +
 //      WSMLNormalizationTest.serializeOntology(normalizedOntology));
         
-        // Replace unnumbered anonymous identifiers and convert logical expressions
+        // Replace unnumbered anonymous identifiers and convert logical 
+        // expressions
         normalizer = new WSMLDLLogExprNormalizer(wsmoManager);
 		normalizedOntology = normalizer.normalize(normalizedOntology);
 //      System.out.println("\n-------\n Ontology after simplification:\n" +
@@ -210,18 +217,21 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 
 		owlOntology = owlConnection.createOntology(uri, uri);
 		
-		// Get a change visitor which will enact change events over the ontology
+		// Get a change visitor which will enact change events over the 
+		// ontology
 		changeVisitor = owlConnection.getChangeVisitor(owlOntology);
 
 		// Set up the transformer
-		transformer = new WSMLDL2OWLTransformer(owlOntology, owlDataFactory, changeVisitor);
+		transformer = new WSMLDL2OWLTransformer(owlOntology, owlDataFactory, 
+				changeVisitor);
 		owlOntology = transformer.transform(ontology);
 		
 		return owlOntology;
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected OWLDescription transformLogicalExpression(LogicalExpression logExpr) {
+	protected OWLDescription transformLogicalExpression(
+			LogicalExpression logExpr) {
 		// Set up the implementation class
 		Map parameters = new HashMap();
 		parameters.put(OWLManager.OWL_CONNECTION, 
@@ -238,52 +248,92 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		}
 	}
 	
-	public void registerOntology(Ontology ontology) {
-		owlOntology = convertOntology(ontology);
-		if (!isSatisfiable((IRI) ontology.getIdentifier())) {
-			throw new RuntimeException("Given ontology is not satisfiable");
+	public void registerOntologies(Set<Ontology> ontologies) {
+        boolean satisfiable = true;
+        Set<IRI> ids = new HashSet<IRI>();
+        
+        // register ontologies
+        registerOntologiesNoVerification(ontologies);
+        
+		// check satisfiability
+        for (Ontology ontology : ontologies) {
+        	ids.add((IRI) ontology.getIdentifier());
+        	// throw exception if the ontology is not satisfiable
+    		if (!isSatisfiable((IRI) ontology.getIdentifier())) {
+    			satisfiable = false;
+    		}
+        }
+        if (!satisfiable) {
+        	for (IRI id : ids) {
+	        	try {
+					builtInFacade.deRegister(id.toString());
+				} catch (ExternalToolException e) {
+					throw new RuntimeException("Given ontology is not " +
+							"satisfiable. The ontology could not be " +
+							"deregistered at the built-in reasoner", e);
+				}
+				throw new RuntimeException("Given ontology is not " +
+						"satisfiable");
+        	}
+        }
+	}
+
+	public void registerOntology(Ontology ontology) {	
+		Set<Ontology> ontologies = new HashSet<Ontology>();
+		ontologies.add(ontology);
+		registerOntologies(ontologies);
+	}
+	
+	public void registerOntologiesNoVerification(Set<Ontology> ontologies) {
+		for(Ontology ontology : ontologies) {
+			owlOntology = convertOntology(ontology);
+			
+			// Register the ontology at the built-in reasoner:
+			if (builtInFacade instanceof PelletFacade) {
+				try {
+					builtInFacade.register(owlOntology);
+				} catch (ExternalToolException e) {
+					e.printStackTrace();
+	                throw new IllegalArgumentException(
+	                        "This ontology could not be registered at the " +
+	                        "built-in reasoner", e);
+				}
+			} 
 		}
-		
-		// Register the ontology at the built-in reasoner:
-		if (builtInFacade instanceof PelletFacade) {
-			try {
-				builtInFacade.register(owlOntology);
-			} catch (ExternalToolException e) {
-				e.printStackTrace();
-                throw new IllegalArgumentException(
-                        "This ontology could not be registered at the built-in reasoner",
-                        e);
-			}
-		} 
 	}
 
 	public void registerOntologyNoVerification(Ontology ontology) {
-		owlOntology = convertOntology(ontology);
-		
-		// Register the ontology at the built-in reasoner:
-		if (builtInFacade instanceof PelletFacade) {
-			try {
-				builtInFacade.register(owlOntology);
-			} catch (ExternalToolException e) {
-				e.printStackTrace();
-                throw new IllegalArgumentException(
-                        "This ontology could not be registered at the built-in reasoner",
-                        e);
-			}
-		} 
+		Set<Ontology> ontologies = new HashSet<Ontology>();
+		ontologies.add(ontology);
+		registerOntologiesNoVerification(ontologies);
 	}
 
+	public void deRegisterOntology(Set<IRI> ontologyIDs) {
+		for (IRI ontologyID : ontologyIDs) {
+			try {
+				builtInFacade.deRegister(ontologyID.toString());
+			} catch (ExternalToolException e) {
+				e.printStackTrace();
+	            throw new IllegalArgumentException(
+	                    "This ontology could not be deregistered at the " +
+	                    "built-in reasoner", e);
+			}
+		}
+	}
+	
 	public void deRegisterOntology(IRI ontologyID) {
-		builtInFacade.deRegister(owlOntology);
+		Set<IRI> ontologyIDs = new HashSet<IRI>();
+		ontologyIDs.add(ontologyID);
+		deRegisterOntology(ontologyIDs);
 	}
 	
 	public boolean isSatisfiable(IRI ontologyID) {
-		return builtInFacade.isConsistent();
+		return builtInFacade.isConsistent(ontologyID.toString());
 	}
 	
-	public Set<Concept> getAllConcepts() {
+	public Set<Concept> getAllConcepts(IRI ontologyID) {
 		Set<Concept> elements = new HashSet<Concept>();
-		Set<OWLEntity> set = builtInFacade.allClasses();
+		Set<OWLEntity> set = builtInFacade.allClasses(ontologyID.toString());
 		for (OWLEntity entity : set) {
 			try {
 				elements.add(wsmoFactory.createConcept(wsmoFactory.createIRI(
@@ -295,22 +345,22 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
-	public boolean isConsistent(LogicalExpression logExpr) {
+	public boolean isConsistent(IRI ontologyID, LogicalExpression logExpr) {
 		OWLDescription des = transformLogicalExpression(logExpr);
 		try {
 			if (des != null) 
-				return builtInFacade.isConsistent(des);
+				return builtInFacade.isConsistent(ontologyID.toString(), des);
 			else 
-				throw new InternalReasonerException("This logical expression is " +
-						"not supported for consistency check!");
+				throw new InternalReasonerException("This logical expression" +
+						" is not supported for consistency check!");
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
 		} 
 	}
 
-	public boolean isConsistent(Concept concept) {
+	public boolean isConsistent(IRI ontologyID, Concept concept) {
 		try {
-			return builtInFacade.isConsistent(
+			return builtInFacade.isConsistent(ontologyID.toString(), 
 					owlDataFactory.getOWLClass(new URI(
 							concept.getIdentifier().toString())));
 		} catch (OWLException e) {
@@ -320,9 +370,10 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		}
 	}
 	
-	public Set<Instance> getAllInstances() {
+	public Set<Instance> getAllInstances(IRI ontologyID) {
 		Set<Instance> elements = new HashSet<Instance>();
-		Set<OWLEntity> set = builtInFacade.allIndividuals();
+		Set<OWLEntity> set = builtInFacade.allIndividuals(
+				ontologyID.toString());
 		for (OWLEntity entity : set) {
 			try {
 				elements.add(wsmoFactory.createInstance(wsmoFactory.createIRI(
@@ -334,9 +385,10 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 
-	public Set<IRI> getAllAttributes() {
+	public Set<IRI> getAllAttributes(IRI ontologyID) {
 		Set<IRI> elements = new HashSet<IRI>();
-		Set<OWLEntity> set = builtInFacade.allProperties();
+		Set<OWLEntity> set = builtInFacade.allProperties(
+				ontologyID.toString());
 		for (OWLEntity entity : set) {
 			try {
 				elements.add(wsmoFactory.createIRI(
@@ -348,9 +400,10 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
-	public Set<IRI> getAllConstraintAttributes() {
+	public Set<IRI> getAllConstraintAttributes(IRI ontologyID) {
 		Set<IRI> elements = new HashSet<IRI>();
-		Set<OWLEntity> set = builtInFacade.allDataProperties();
+		Set<OWLEntity> set = builtInFacade.allDataProperties(
+				ontologyID.toString());
 		for (OWLEntity entity : set) {
 			try {
 				elements.add(wsmoFactory.createIRI(
@@ -362,9 +415,10 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
-	public Set<IRI> getAllInferenceAttributes() {
+	public Set<IRI> getAllInferenceAttributes(IRI ontologyID) {
 		Set<IRI> elements = new HashSet<IRI>();
-		Set<OWLEntity> set = builtInFacade.allObjectProperties();
+		Set<OWLEntity> set = builtInFacade.allObjectProperties(
+				ontologyID.toString());
 		for (OWLEntity entity : set) {
 			try {
 				elements.add(wsmoFactory.createIRI(
@@ -380,12 +434,14 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		Set<Concept> elements = new HashSet<Concept>();
 		try {
 			Set<Set> set = builtInFacade.descendantClassesOf(
+					ontologyID.toString(), 
 					owlDataFactory.getOWLClass(new URI(
 							concept.getIdentifier().toString())));
 			for (Set<OWLEntity> set2 : set) {	
 				for (OWLEntity entity : set2) {
-					elements.add(wsmoFactory.createConcept(wsmoFactory.createIRI(
-							ns + entity.getURI().getFragment())));
+					elements.add(wsmoFactory.createConcept(
+							wsmoFactory.createIRI(ns + 
+									entity.getURI().getFragment())));
 				}
 			}
 		} catch (OWLException e) {
@@ -400,12 +456,13 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		Set<Concept> elements = new HashSet<Concept>();
 		try {
 			Set<Set> set = builtInFacade.ancestorClassesOf(
-					owlDataFactory.getOWLClass(new URI(
-							concept.getIdentifier().toString())));
+					ontologyID.toString(), owlDataFactory.getOWLClass(
+							new URI(concept.getIdentifier().toString())));
 			for (Set<OWLEntity> set2 : set) {	
 				for (OWLEntity entity : set2) {
-					elements.add(wsmoFactory.createConcept(wsmoFactory.createIRI(
-							ns + entity.getURI().getFragment())));
+					elements.add(wsmoFactory.createConcept(
+							wsmoFactory.createIRI(ns + 
+									entity.getURI().getFragment())));
 				}
 			}
 		} catch (OWLException e) {
@@ -416,15 +473,17 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
-	public Set<Concept> getEquivalentConcepts(Concept concept) {
+	public Set<Concept> getEquivalentConcepts(IRI ontologyID, 
+			Concept concept) {
 		Set<Concept> elements = new HashSet<Concept>();
 		try {
 			Set<OWLEntity> set = builtInFacade.equivalentClassesOf(
-					owlDataFactory.getOWLClass(new URI(
-							concept.getIdentifier().toString())));
+					ontologyID.toString(), owlDataFactory.getOWLClass(
+							new URI(concept.getIdentifier().toString())));
 			for (OWLEntity entity : set) {
-				elements.add(wsmoFactory.createConcept(wsmoFactory.createIRI(
-						ns + entity.getURI().getFragment())));
+				elements.add(wsmoFactory.createConcept(
+						wsmoFactory.createIRI(ns + 
+								entity.getURI().getFragment())));
 			}
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
@@ -434,11 +493,12 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
-	public boolean isEquivalentConcept(Concept concept1, Concept concept2) {
+	public boolean isEquivalentConcept(IRI ontologyID, Concept concept1, 
+			Concept concept2) {
 		try {
 			Set<OWLEntity> set = builtInFacade.equivalentClassesOf(
-					owlDataFactory.getOWLClass(new URI(
-							concept1.getIdentifier().toString())));
+					ontologyID.toString(), owlDataFactory.getOWLClass(
+							new URI(concept1.getIdentifier().toString())));
 			return set.contains(owlDataFactory.getOWLClass(new URI(
 					concept2.getIdentifier().toString())));
 		} catch (OWLException e) {
@@ -451,7 +511,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 	public boolean isSubConceptOf(IRI ontologyID, Concept subConcept, 
 			Concept superConcept) {
 		try {
-			return builtInFacade.isSubClassOf(
+			return builtInFacade.isSubClassOf(ontologyID.toString(), 
 					owlDataFactory.getOWLClass(new URI(
 							subConcept.getIdentifier().toString())), 
 					owlDataFactory.getOWLClass(new URI(
@@ -463,9 +523,10 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		}
 	}
 
-	public boolean isMemberOf(IRI ontologyID, Instance instance, Concept concept) {
+	public boolean isMemberOf(IRI ontologyID, Instance instance, 
+			Concept concept) {
 		try {
-			return builtInFacade.isInstanceOf(
+			return builtInFacade.isInstanceOf(ontologyID.toString(), 
 					owlDataFactory.getOWLIndividual(new URI(
 							instance.getIdentifier().toString())), 
 					owlDataFactory.getOWLClass(new URI(
@@ -481,11 +542,12 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		Set<Instance> elements = new HashSet<Instance>();
 		try {
 			Set<OWLEntity> set = builtInFacade.allInstancesOf(
-					owlDataFactory.getOWLClass(new URI(
-							concept.getIdentifier().toString())));
+					ontologyID.toString(), owlDataFactory.getOWLClass(
+							new URI(concept.getIdentifier().toString())));
 			for (OWLEntity entity : set) {
 				elements.add(wsmoFactory.createInstance(
-						wsmoFactory.createIRI(ns + entity.getURI().getFragment())));
+						wsmoFactory.createIRI(ns + 
+								entity.getURI().getFragment())));
 			}
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
@@ -498,13 +560,14 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 	public Set<Concept> getConcepts(IRI ontologyID, Instance instance) {
 		Set<Concept> elements = new HashSet<Concept>();
 		try {
-			Set<Set> set = builtInFacade.allTypesOf(
+			Set<Set> set = builtInFacade.allTypesOf(ontologyID.toString(), 
 					owlDataFactory.getOWLIndividual(new URI(
 							instance.getIdentifier().toString())));
 			for (Set<OWLEntity> set2 : set) { 
 				for (OWLEntity entity : set2) {
 					elements.add(wsmoFactory.createConcept(
-							wsmoFactory.createIRI(ns + entity.getURI().getFragment())));
+							wsmoFactory.createIRI(ns + 
+									entity.getURI().getFragment())));
 				}
 			}
 		} catch (OWLException e) {
@@ -515,12 +578,12 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 
-	public Set<IRI> getSubRelations(Identifier attributeId) {
+	public Set<IRI> getSubRelations(IRI ontologyID, Identifier attributeId) {
 		Set<IRI> elements = new HashSet<IRI>();
 		try {
 			Set<Set> set = builtInFacade.descendantPropertiesOf(
-					owlDataFactory.getOWLObjectProperty(new URI(
-							attributeId.toString())));
+					ontologyID.toString(), owlDataFactory.getOWLObjectProperty(
+							new URI(attributeId.toString())));
 			for (Set<OWLEntity> set2 : set) {	
 				for (OWLEntity entity : set2) {
 					elements.add(wsmoFactory.createIRI(
@@ -535,12 +598,12 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
-	public Set<IRI> getSuperRelations(Identifier attributeId) {
+	public Set<IRI> getSuperRelations(IRI ontologyID, Identifier attributeId) {
 		Set<IRI> elements = new HashSet<IRI>();
 		try {
 			Set<Set> set = builtInFacade.ancestorPropertiesOf(
-					owlDataFactory.getOWLObjectProperty(new URI(
-							attributeId.toString())));
+					ontologyID.toString(), owlDataFactory.getOWLObjectProperty(
+							new URI(attributeId.toString())));
 			for (Set<OWLEntity> set2 : set) {	
 				for (OWLEntity entity : set2) {
 					elements.add(wsmoFactory.createIRI(
@@ -555,12 +618,13 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
-	public Set<IRI> getEquivalentRelations(Identifier attributeId) {
+	public Set<IRI> getEquivalentRelations(IRI ontologyID, 
+			Identifier attributeId) {
 		Set<IRI> elements = new HashSet<IRI>();
 		try {
 			Set<OWLEntity> set = builtInFacade.equivalentPropertiesOf(
-					owlDataFactory.getOWLObjectProperty(new URI(
-							attributeId.toString())));
+					ontologyID.toString(), owlDataFactory.getOWLObjectProperty(
+							new URI(attributeId.toString())));
 			for (OWLEntity entity : set) {
 				elements.add(wsmoFactory.createIRI(
 						ns + entity.getURI().getFragment()));
@@ -573,12 +637,13 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
-	public Set<IRI> getInverseRelations(Identifier attributeId) {
+	public Set<IRI> getInverseRelations(IRI ontologyID, 
+			Identifier attributeId) {
 		Set<IRI> elements = new HashSet<IRI>();
 		try {
 			Set<OWLEntity> set = builtInFacade.inversePropertiesOf(
-					owlDataFactory.getOWLObjectProperty(new URI(
-							attributeId.toString())));
+					ontologyID.toString(), owlDataFactory.getOWLObjectProperty(
+							new URI(attributeId.toString())));
 			for (OWLEntity entity : set) {
 				elements.add(wsmoFactory.createIRI(
 						ns + entity.getURI().getFragment()));
@@ -591,10 +656,10 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
-	public Set<Concept> getConceptsOf(Identifier attributeId) {
+	public Set<Concept> getConceptsOf(IRI ontologyID, Identifier attributeId) {
 		Set<Concept> elements = new HashSet<Concept>();
 		try {
-			Set<OWLEntity> set = builtInFacade.domainsOf(
+			Set<OWLEntity> set = builtInFacade.domainsOf(ontologyID.toString(), 
 					owlDataFactory.getOWLObjectProperty(new URI(
 							attributeId.toString())));
 			for (OWLEntity entity : set) {
@@ -609,10 +674,11 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
-	public Set<IRI> getRangesOfInferingAttribute(Identifier attributeId) {
+	public Set<IRI> getRangesOfInferingAttribute(IRI ontologyID, 
+			Identifier attributeId) {
 		Set<IRI> elements = new HashSet<IRI>();
 		try {
-			Set<OWLEntity> set = builtInFacade.rangesOf(
+			Set<OWLEntity> set = builtInFacade.rangesOf(ontologyID.toString(), 
 					owlDataFactory.getOWLObjectProperty(new URI(
 							attributeId.toString())));
 			for (OWLEntity entity : set) {
@@ -627,12 +693,13 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
-	public Set<IRI> getRangesOfConstraintAttribute(Identifier attributeId) {
+	public Set<IRI> getRangesOfConstraintAttribute(IRI ontologyID, 
+			Identifier attributeId) {
 		Set<IRI> elements = new HashSet<IRI>();
 		try {
 			Set<OWLConcreteDataTypeImpl> set = builtInFacade.rangesOf(
-					owlDataFactory.getOWLDataProperty(new URI(
-							attributeId.toString())));
+					ontologyID.toString(), owlDataFactory.getOWLDataProperty(
+							new URI(attributeId.toString())));
 			for (OWLConcreteDataTypeImpl dataType : set) {
 				elements.add(wsmoFactory.createIRI(
 						ns + dataType.getURI().getFragment()));
@@ -645,14 +712,15 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
-	public Map<IRI, Set<IRI>> getConstraintAttributeValues(
+	public Map<IRI, Set<IRI>> getConstraintAttributeValues(IRI ontologyID, 
 			Instance instance) {
 		Map<IRI, Set<IRI>> elements = new HashMap<IRI, Set<IRI>>();
 		try {
 			Set<Entry<OWLEntity, Set<OWLConcreteDataImpl>>> entrySet = 
-				builtInFacade.getDataPropertyValues(owlDataFactory.
-						getOWLIndividual(new URI(instance.getIdentifier().
-								toString()))).entrySet();
+				builtInFacade.getDataPropertyValues(ontologyID.toString(), 
+						owlDataFactory.getOWLIndividual(
+								new URI(instance.getIdentifier().toString())))
+								.entrySet();
 			for (Entry<OWLEntity, Set<OWLConcreteDataImpl>> entry : entrySet) {
 				Set<OWLConcreteDataImpl> set = entry.getValue();
 				Set<IRI> IRISet = new HashSet<IRI>();
@@ -672,14 +740,15 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
-	public Map<IRI, Set<IRI>> getInferingAttributeValues(
+	public Map<IRI, Set<IRI>> getInferingAttributeValues(IRI ontologyID, 
 			Instance instance) {
 		Map<IRI, Set<IRI>> elements = new HashMap<IRI, Set<IRI>>();
 		try {
 			Set<Entry<OWLEntity, Set<OWLEntity>>> entrySet = 
-				builtInFacade.getObjectPropertyValues(owlDataFactory.
-						getOWLIndividual(new URI(instance.getIdentifier().
-								toString()))).entrySet();
+				builtInFacade.getObjectPropertyValues(ontologyID.toString(), 
+						owlDataFactory.getOWLIndividual(new URI(
+								instance.getIdentifier().toString()))).
+								entrySet();
 			for (Entry<OWLEntity, Set<OWLEntity>> entry : entrySet) {
 				Set<OWLEntity> set = entry.getValue();
 				Set<IRI> IRISet = new HashSet<IRI>();
@@ -700,13 +769,13 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 	}
 	
 	public Map<Instance, Set<IRI>> getInferingAttributeInstances(
-			Identifier attributeId) {
+			IRI ontologyID, Identifier attributeId) {
 		Map<Instance, Set<IRI>> elements = new HashMap<Instance, Set<IRI>>();
 		try {
 			Set<Entry<OWLEntity, Set<OWLEntity>>> entrySet = 
-				builtInFacade.getPropertyValues(owlDataFactory.
-						getOWLObjectProperty(new URI(attributeId.
-								toString()))).entrySet();
+				builtInFacade.getPropertyValues(ontologyID.toString(), 
+						owlDataFactory.getOWLObjectProperty(new URI(
+								attributeId.toString()))).entrySet();
 			for (Entry<OWLEntity, Set<OWLEntity>> entry : entrySet) {
 				Set<OWLEntity> set = entry.getValue();
 				Set<IRI> IRISet = new HashSet<IRI>();
@@ -726,13 +795,13 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 	}
 	
 	public Map<Instance, Set<IRI>> getConstraintAttributeInstances(
-			Identifier attributeId) {
+			IRI ontologyID, Identifier attributeId) {
 		Map<Instance, Set<IRI>> elements = new HashMap<Instance, Set<IRI>>();
 		try {
 			Set<Entry<OWLEntity, Set<OWLConcreteDataImpl>>> entrySet = 
-				builtInFacade.getPropertyValues(owlDataFactory.
-						getOWLDataProperty(new URI(attributeId.
-								toString()))).entrySet();
+				builtInFacade.getPropertyValues(ontologyID.toString(), 
+						owlDataFactory.getOWLDataProperty(new URI(
+								attributeId.toString()))).entrySet();
 			for (Entry<OWLEntity, Set<OWLConcreteDataImpl>> entry : entrySet) {
 				Set<OWLConcreteDataImpl> set = entry.getValue();
 				Set<IRI> IRISet = new HashSet<IRI>();
@@ -751,10 +820,10 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
-	public boolean instanceHasInferingAttributeValue(Instance subject, 
-			Identifier attributeId, Instance object) {		
+	public boolean instanceHasInferingAttributeValue(IRI ontologyID, 
+			Instance subject, Identifier attributeId, Instance object) {		
 		try {
-			return builtInFacade.hasPropertyValue(
+			return builtInFacade.hasPropertyValue(ontologyID.toString(), 
 					owlDataFactory.getOWLIndividual(new URI(
 							subject.getIdentifier().toString())), 
 					owlDataFactory.getOWLObjectProperty(new URI(
@@ -768,11 +837,11 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		}
 	}
 	
-	public boolean instanceHasConstraintAttributeValue(Instance subject, 
-			Identifier attributeId, DataValue object) {
+	public boolean instanceHasConstraintAttributeValue(IRI ontologyID, 
+			Instance subject, Identifier attributeId, DataValue object) {
 		String objStr = object.getType().toString();
 		try {
-			return builtInFacade.hasPropertyValue(
+			return builtInFacade.hasPropertyValue(ontologyID.toString(), 
 					owlDataFactory.getOWLIndividual(new URI(
 							subject.getIdentifier().toString())), 
 					owlDataFactory.getOWLDataProperty(new URI(
@@ -788,15 +857,16 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		}
 	}
 	
-	public Instance getInferingAttributeValue(Instance subject, 
+	public Instance getInferingAttributeValue(IRI ontologyID, Instance subject, 
 			Identifier attributeId) {
 		try {
 			return wsmoFactory.createInstance(wsmoFactory.createIRI( ns +
-					builtInFacade.getObjectPropertyValue(
+					builtInFacade.getObjectPropertyValue(ontologyID.toString(), 
 							owlDataFactory.getOWLIndividual(new URI(
 									subject.getIdentifier().toString())),
 							owlDataFactory.getOWLObjectProperty(new URI(
-									attributeId.toString()))).getURI().getFragment()));
+									attributeId.toString()))).getURI().
+									getFragment()));
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
@@ -807,14 +877,15 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 	/**
 	 * @return data value of the given instance and attribute
 	 */
-	public String getConstraintAttributeValue(Instance subject, 
+	public String getConstraintAttributeValue(IRI ontologyID, Instance subject, 
 			Identifier attributeId) {
 		try {
-			return(builtInFacade.getDataPropertyValue(
+			return(builtInFacade.getDataPropertyValue(ontologyID.toString(), 
 							owlDataFactory.getOWLIndividual(new URI(
 									subject.getIdentifier().toString())),
 							owlDataFactory.getOWLDataProperty(new URI(
-									attributeId.toString()))).getValue().toString());
+									attributeId.toString()))).getValue().
+									toString());
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
@@ -822,15 +893,15 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		}
 	}
 	
-	public Set<Instance> getInferingAttributeValues(Instance subject, 
-			Identifier attributeId) {
+	public Set<Instance> getInferingAttributeValues(IRI ontologyID, 
+			Instance subject, Identifier attributeId) {
 		Set<Instance> elements = new HashSet<Instance>();
 		try {
 			Set<OWLEntity> set = builtInFacade.getObjectPropertyValues(
-							owlDataFactory.getOWLIndividual(new URI(
-									subject.getIdentifier().toString())),
-							owlDataFactory.getOWLObjectProperty(new URI(
-									attributeId.toString())));
+					ontologyID.toString(), owlDataFactory.getOWLIndividual(
+							new URI(subject.getIdentifier().toString())),
+							owlDataFactory.getOWLObjectProperty(
+									new URI(attributeId.toString())));
 			for (OWLEntity entity : set)
 				elements.add(wsmoFactory.createInstance(wsmoFactory.createIRI(
 						ns + entity.getURI().getFragment())));
@@ -845,15 +916,15 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 	/**
 	 * @return data value of the given instance and attribute
 	 */
-	public Set<String> getConstraintAttributeValues(Instance subject, 
-			Identifier attributeId) {
+	public Set<String> getConstraintAttributeValues(IRI ontologyID, 
+			Instance subject, Identifier attributeId) {
 		Set<String> elements = new HashSet<String>();
 		try {
 			Set<OWLDataValue> set = builtInFacade.getDataPropertyValues(
-							owlDataFactory.getOWLIndividual(new URI(
-									subject.getIdentifier().toString())),
-							owlDataFactory.getOWLDataProperty(new URI(
-									attributeId.toString())));
+					ontologyID.toString(),owlDataFactory.getOWLIndividual(
+							new URI(subject.getIdentifier().toString())),
+							owlDataFactory.getOWLDataProperty(
+									new URI(attributeId.toString())));
 			for (OWLDataValue dataValue : set)
 				elements.add(dataValue.getValue().toString());
 		} catch (OWLException e) {
@@ -864,12 +935,12 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
-	public void printClassTree() {
-		builtInFacade.printClassTree();
+	public void printClassTree(IRI ontologyID) {
+		builtInFacade.printClassTree(ontologyID.toString());
 	}
 	
-	public String getInfo() {
-		return builtInFacade.getInfo();
+	public String getInfo(IRI ontologyID) {
+		return builtInFacade.getInfo(ontologyID.toString());
 	}
 
 	public String serialize2OWLAbstractSyntax(OWLOntology owlOntology) 
@@ -897,9 +968,11 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 	}
 	
 	/**
-	 * This method allows to extract the OWL ontology as string, even if the OWL 
-	 * ontology is not valid owl dl. The serialized ontology could be validated at 
-	 * an online validator as e.g. "http://phoebus.cs.man.ac.uk:9999/OWL/Validator"
+	 * This method allows to extract the OWL ontology as string, even if the 
+	 * OWL ontology is not valid owl dl. The serialized ontology could be 
+	 * validated at an online validator as e.g. 
+	 * "http://phoebus.cs.man.ac.uk:9999/OWL/Validator"
+	 * 
 	 * @param ontology WSML DL ontology to be transformed to owl
 	 * @return string version of transformed OWL ontology
 	 */
@@ -910,7 +983,8 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 				ontology, "http://www.wsmo.org/wsml/wsml-syntax/wsml-dl", 
 				new Vector(), new Vector());
 		if (!valid) {
-			throw new RuntimeException ("The given WSML-DL ontology is not valid!");
+			throw new RuntimeException ("The given WSML-DL ontology is not " +
+					"valid!");
 		}
 		// normalize ontology
         ontology = normalizeOntology(ontology);
@@ -918,38 +992,29 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		try {
 			owlOntology = transformOntology(ontology);
 		} catch (OWLException e) {
-			throw new RuntimeException ("Difficulties in building the OWL ontology");
+			throw new RuntimeException ("Difficulties in building the OWL " +
+					"ontology");
 		} catch (URISyntaxException e) {
-			throw new RuntimeException ("Difficulties in building the OWL ontology");
+			throw new RuntimeException ("Difficulties in building the OWL " +
+					"ontology");
 		}	
         return serialize2OWLRDFSyntax(owlOntology);
 	}
 	
-	public QueryResults executeQuery(String query) {
+	public QueryResults executeQuery(IRI ontologyID, String query) {
 		throw new UnsupportedOperationException();
 //		QueryResults results = null;
 //		results = builtInFacade.evaluate(query);
 //		return results;
 	}
 	
-	public void registerOntologies(Set<Ontology> ontologies) 
-			throws InconsistencyException {
+	public Set<Map<Variable, Term>> executeQuery(IRI ontologyID, 
+			LogicalExpression query) {
 		throw new UnsupportedOperationException();
 	}
 
-	public void registerOntologiesNoVerification(Set<Ontology> ontologies) {
-		throw new UnsupportedOperationException();
-	}
-	
-	public void deRegisterOntology(Set<IRI> ontologyIDs) {
-		throw new UnsupportedOperationException();
-	}
-	
-	public Set<Map<Variable, Term>> executeQuery(IRI ontologyID, LogicalExpression query) {
-		throw new UnsupportedOperationException();
-	}
-
-	public boolean executeGroundQuery(IRI ontologyID, LogicalExpression query) {
+	public boolean executeGroundQuery(IRI ontologyID, 
+			LogicalExpression query) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -957,7 +1022,8 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		throw new UnsupportedOperationException();
 	}
 
-	public boolean entails(IRI ontologyID, Set<LogicalExpression> expressions) {
+	public boolean entails(IRI ontologyID, 
+			Set<LogicalExpression> expressions) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -968,6 +1034,9 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.5  2006/07/23 15:22:45  nathalie
+ * changing treatment for non valid owl dl ontology
+ *
  * Revision 1.4  2006/07/21 17:00:08  nathalie
  * fixed problem with wrong value output
  *

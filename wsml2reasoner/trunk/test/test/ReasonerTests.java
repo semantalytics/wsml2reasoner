@@ -4,6 +4,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import reasoner.OntologyRegistrationTest;
 import reasoner.core.ReasonerCoreTests;
+import reasoner.dl.ReasonerDLTests;
 import reasoner.flight.ReasonerFlightTests;
 import reasoner.rule.ReasonerRuleTests;
 import wsml2reasoner.normalization.NormalizationTests;
@@ -26,6 +27,7 @@ public class ReasonerTests {
         suite.addTestSuite(OntologyRegistrationTest.class);
         suite.addTest(ReasonerCoreTests.suite());
         suite.addTest(ReasonerFlightTests.suite());
+        suite.addTest(ReasonerDLTests.suite());
         suite.addTest(NormalizationTests.suite());
         suite.addTest(TransformationTests.suite());
         // $JUnit-END$
