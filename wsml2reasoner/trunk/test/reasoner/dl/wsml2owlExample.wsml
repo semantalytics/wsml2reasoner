@@ -29,7 +29,7 @@ ontology _"http://www.example.org/ontologies/example"
   relation hasMother(impliesType {Child}, impliesType {Woman}) 
   		subRelationOf hasParent
 
-  instance Mary memberOf {Woman}
+  instance Mary memberOf {Woman, Mother}
     hasChild hasValue Jack
     hasWeight hasValue 62.5
     hasName hasValue "Mary Jones"

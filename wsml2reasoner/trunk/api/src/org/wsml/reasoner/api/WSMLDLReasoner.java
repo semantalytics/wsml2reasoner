@@ -98,6 +98,17 @@ public interface WSMLDLReasoner extends WSMLReasoner{
 			Concept concept2);
 	
 	/**
+     * @return the concept that a given instance is a direct member of. If 
+     * 			there is more than one such concept, the first one is returned.
+     */
+	public Concept getDirectConcept(IRI ontologyID, Instance instance);
+	
+	/**
+     * @return a set with all direct concepts of a given instance.
+     */
+	public Set<Concept> getDirectConcepts(IRI ontologyID, Instance instance);
+	
+	/**
 	 * @return a set containing all identifiers subrelations of a given relation
 	 */
 	public Set<IRI> getSubRelations(IRI ontologyID, Identifier attributeId);
@@ -258,6 +269,9 @@ public interface WSMLDLReasoner extends WSMLReasoner{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.4  2006/08/08 10:14:28  nathalie
+ * implemented support for registering multiple ontolgies at wsml-dl reasoner
+ *
  * Revision 1.3  2006/07/21 16:25:21  nathalie
  * completing the pellet reasoner integration
  *
