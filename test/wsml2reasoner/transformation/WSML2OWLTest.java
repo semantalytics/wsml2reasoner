@@ -71,7 +71,7 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
 	public void testWSML2OWL() throws Exception {
     	// read test file and parse it 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(
-                "wsml2reasoner/transformation/wsml2owlExample.wsml");
+                "wsml2reasoner/transformation/wsml2owlTransExample.wsml");
         assertNotNull(is);
         Parser wsmlParser = Factory.createParser(null);
         // assuming first topentity in file is an ontology  
@@ -84,6 +84,23 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
 		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));    
 //		System.out.println(dlReasoner.serialize2OWLRDFSyntax(owlOntology));
     } 
+    
+    public void test() throws Exception {
+    	String s = "?x memberOf Mother impliedBy ?x[hasHusband hasValue ?y] " +
+    			"and ?y[hasChild hasValue ?z] and ?z memberOf Child.";
+//    	String s = "?x[uncle hasValue ?z] impliedBy ?x[parent hasValue ?y] and " +
+//    			"?y[brother hasValue ?z].";
+//    	String s = "?x memberOf Mother impliedBy ?w[hasHusband hasValue ?y].";
+    	LogicalExpression le = (LogicalExpression) leFactory.createLogicalExpression(
+                s, ontology); 
+        axiom.addDefinition(le);
+        
+        // transform ontology to OWL ontology
+		owlOntology = dlReasoner.convertOntology(ontology);
+		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
+		
+        axiom.removeDefinition(le);
+    }
     
     /**
      * This test checks for transformation of wsml subConceptOf to owl subClass.
@@ -488,6 +505,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.6  2006/07/25 13:23:15  nathalie
+ * fixed examples
+ *
  * Revision 1.5  2006/07/23 15:20:23  nathalie
  * updated tests and testfiles
  *
