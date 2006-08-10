@@ -49,7 +49,7 @@ import org.wsml.reasoner.ExternalToolException;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.4 $ $Date: 2006-08-08 10:14:27 $
+ * @version $Revision: 1.5 $ $Date: 2006-08-10 08:30:59 $
  */
 public class PelletFacade implements DLReasonerFacade {
 	
@@ -180,6 +180,20 @@ public class PelletFacade implements DLReasonerFacade {
 			throws OWLException {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.allInstancesOf(clazz);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public OWLClass typeOf(String ontologyURI, OWLIndividual individual) 
+			throws OWLException {
+		reasoner = getReasoner(ontologyURI);
+		return reasoner.typeOf(individual);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<Set> typesOf(String ontologyURI, OWLIndividual individual) 
+			throws OWLException {
+		reasoner = getReasoner(ontologyURI);
+		return reasoner.typesOf(individual);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -350,6 +364,9 @@ public class PelletFacade implements DLReasonerFacade {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.4  2006/08/08 10:14:27  nathalie
+ * implemented support for registering multiple ontolgies at wsml-dl reasoner
+ *
  * Revision 1.3  2006/07/21 16:25:21  nathalie
  * completing the pellet reasoner integration
  *

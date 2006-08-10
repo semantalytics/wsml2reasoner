@@ -127,7 +127,7 @@ public class SimpleInferenceTests extends TestCase {
 		Set<Concept> set = wsmlReasoner.getAllConcepts((IRI) ontology.getIdentifier());
 		for (Concept concept : set) 
 //			System.out.println(concept.getIdentifier().toString());
-		assertTrue(set.size() == 17);
+		assertTrue(set.size() == 18);
 		
 		// test getAllInstances
 		Set<Instance> set2 = wsmlReasoner.getAllInstances((IRI) ontology.getIdentifier());
@@ -213,6 +213,23 @@ public class SimpleInferenceTests extends TestCase {
 				ontology.findInstance(wsmoFactory.createIRI(ns + "Mary")), 
 				ontology.findConcept(wsmoFactory.createIRI(ns + "Child"))));
 		
+		// test direct conceptOf
+		Concept c = wsmlReasoner.getDirectConcept(
+				(IRI) ontology.getIdentifier(), 
+				ontology.findInstance(wsmoFactory.createIRI(ns + "Mary")));
+//			System.out.println(c.getIdentifier().toString());
+		assertEquals(c.getIdentifier().toString(), 
+				"http://www.example.org/ontologies/example#Woman");
+		
+		// test direct conceptsOf
+		set.clear();
+		set = wsmlReasoner.getDirectConcepts(
+				(IRI) ontology.getIdentifier(), 
+				ontology.findInstance(wsmoFactory.createIRI(ns + "Mary")));
+		for(Concept concept : set)
+//			System.out.println(concept.getIdentifier().toString());
+		assertTrue(set.size() == 2);
+		
 		// test allConceptsOf
 		set.clear();
 		set = wsmlReasoner.getConcepts(
@@ -220,7 +237,7 @@ public class SimpleInferenceTests extends TestCase {
 				ontology.findInstance(wsmoFactory.createIRI(ns + "Mary")));
 		for(Concept concept : set)
 //			System.out.println(concept.getIdentifier().toString());
-		assertTrue(set.size() == 5);
+		assertTrue(set.size() == 6);
 		
 		// test allInstancesOf
 		set2.clear();
@@ -432,6 +449,9 @@ public class SimpleInferenceTests extends TestCase {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.4  2006/08/08 10:14:28  nathalie
+ * implemented support for registering multiple ontolgies at wsml-dl reasoner
+ *
  * Revision 1.3  2006/07/23 15:20:23  nathalie
  * updated tests and testfiles
  *

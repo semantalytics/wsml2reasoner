@@ -66,7 +66,7 @@ import uk.ac.man.cs.img.owl.validation.ValidatorLogger;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.6 $ $Date: 2006-08-08 10:14:28 $
+ * @version $Revision: 1.7 $ $Date: 2006-08-10 08:30:59 $
  */
 public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 
@@ -557,6 +557,43 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 
+	public Concept getDirectConcept(IRI ontologyID, Instance instance) {
+		Concept concept = null;
+		try {
+			OWLClass clazz = builtInFacade.typeOf(ontologyID.toString(), 
+					owlDataFactory.getOWLIndividual(new URI(
+							instance.getIdentifier().toString())));
+			concept = wsmoFactory.createConcept(wsmoFactory.createIRI(ns + 
+									clazz.getURI().getFragment()));
+		} catch (OWLException e) {
+			throw new InternalReasonerException(e);
+		} catch (URISyntaxException e) {
+			throw new InternalReasonerException(e);
+		}	
+		return concept;
+	}
+	
+	public Set<Concept> getDirectConcepts(IRI ontologyID, Instance instance) {
+		Set<Concept> elements = new HashSet<Concept>();
+		try {
+			Set<Set> set = builtInFacade.typesOf(ontologyID.toString(), 
+					owlDataFactory.getOWLIndividual(new URI(
+							instance.getIdentifier().toString())));
+			for (Set<OWLEntity> set2 : set) { 
+				for (OWLEntity entity : set2) {
+					elements.add(wsmoFactory.createConcept(
+							wsmoFactory.createIRI(ns + 
+									entity.getURI().getFragment())));
+				}
+			}
+		} catch (OWLException e) {
+			throw new InternalReasonerException(e);
+		} catch (URISyntaxException e) {
+			throw new InternalReasonerException(e);
+		}	
+		return elements;
+	}
+	
 	public Set<Concept> getConcepts(IRI ontologyID, Instance instance) {
 		Set<Concept> elements = new HashSet<Concept>();
 		try {
@@ -1034,6 +1071,9 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.6  2006/08/08 10:14:28  nathalie
+ * implemented support for registering multiple ontolgies at wsml-dl reasoner
+ *
  * Revision 1.5  2006/07/23 15:22:45  nathalie
  * changing treatment for non valid owl dl ontology
  *

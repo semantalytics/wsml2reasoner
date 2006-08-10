@@ -49,7 +49,7 @@ import org.semanticweb.owl.model.OWLProperty;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.4 $ $Date: 2006-08-08 10:14:28 $
+ * @version $Revision: 1.5 $ $Date: 2006-08-10 08:31:00 $
  */
 public interface DLReasonerFacade {
 
@@ -149,6 +149,19 @@ public interface DLReasonerFacade {
      */
     public Set<OWLEntity> allInstancesOf(String ontologyURI, OWLClass clazz) 
     		throws OWLException;
+    
+    /**
+     * @return the concept that a given OWL individual is a direct type of. If 
+     * 			there is more than one such concept, the first one is returned.
+     */
+	public OWLClass typeOf(String ontologyURI, OWLIndividual individual) 
+			throws OWLException;
+	
+	/**
+     * @return a set with all direct concepts of a given OWL individual
+     */
+	public Set<Set> typesOf(String ontologyURI, OWLIndividual individual) 
+			throws OWLException;
     
     /**
      * @return a set with all (also indirect) concepts of a given OWL individual
@@ -298,6 +311,9 @@ public interface DLReasonerFacade {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.4  2006/08/08 10:14:28  nathalie
+ * implemented support for registering multiple ontolgies at wsml-dl reasoner
+ *
  * Revision 1.3  2006/07/21 16:25:21  nathalie
  * completing the pellet reasoner integration
  *
