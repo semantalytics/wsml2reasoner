@@ -59,7 +59,7 @@ public class WSMLDLNormalizerTest extends WSMLNormalizationTest {
 	public void testPreProcessingSteps() throws Exception {
     	// read test file and parse it 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(
-                "wsml2reasoner/normalization/wsml2owlExample.wsml");
+                "wsml2reasoner/normalization/wsml2owlNormExample.wsml");
         assertNotNull(is);
         Parser wsmlParser = Factory.createParser(null);
         // assuming first topentity in file is an ontology  
