@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License along
  * with this library; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
  */
 
 package org.wsml.reasoner.builtin.kaon2;
@@ -43,11 +42,11 @@ import org.semanticweb.kaon2.api.OntologyChangeEvent;
 import org.semanticweb.kaon2.api.owl.elements.Individual;
 import org.semanticweb.kaon2.api.reasoner.Query;
 import org.semanticweb.kaon2.api.reasoner.Reasoner;
-import org.semanticweb.kaon2.api.rules.Literal;
-import org.semanticweb.kaon2.api.rules.NonOWLPredicate;
-import org.semanticweb.kaon2.api.rules.Rule;
-import org.semanticweb.kaon2.api.rules.Term;
-import org.semanticweb.kaon2.api.rules.Variable;
+import org.semanticweb.kaon2.api.logic.Literal;
+import org.semanticweb.kaon2.api.logic.Predicate;
+import org.semanticweb.kaon2.api.logic.Rule;
+import org.semanticweb.kaon2.api.logic.Term;
+import org.semanticweb.kaon2.api.logic.Variable;
 import org.wsml.reasoner.ConjunctiveQuery;
 import org.wsml.reasoner.DatalogReasonerFacade;
 import org.wsml.reasoner.ExternalToolException;
@@ -128,9 +127,9 @@ public class Kaon2Facade implements DatalogReasonerFacade {
             Ontology ontology = this.conn.openOntology(ontologyUri, EMPTY_MAP);
             Reasoner reasoner = ontology.createReasoner();
             Query query = translateQuery(q, reasoner, varNames);
-            for (Literal l : query.getQueryLiterals()) {
-                // System.out.println("Query literal: " + l);
-            }
+            /*for (Literal l : query.getConstructPattern()) {
+                System.out.println("Query literal: " + l);
+            }*/
             query.open();
             while (!query.afterLast()) {
                 org.omwg.logicalexpression.terms.Term[] tuple = convertQueryTuple(query
@@ -178,9 +177,9 @@ public class Kaon2Facade implements DatalogReasonerFacade {
         }
         // Add some static rules to infer membership statements for datatype
         // predicates
-        NonOWLPredicate mO = f.nonOWLPredicate(
+        Predicate mO = f. predicateSymbol(
                 WSML2DatalogTransformer.PRED_MEMBER_OF, 2);
-        NonOWLPredicate hasValue = f.nonOWLPredicate(
+        Predicate hasValue = f.predicateSymbol(
                 WSML2DatalogTransformer.PRED_HAS_VALUE, 3);
         Literal hV = f.literal(true, hasValue, f.variable("x"),
                 f.variable("a"), f.variable("v"));
@@ -272,7 +271,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
 
         // Handle constraints
         if (head == null)
-            rule = f.rule(new Literal[] {}, body.toArray(new Literal[body
+            rule = f.rule(new Literal[] {}, null, body.toArray(new Literal[body
                     .size()]));
         else
             rule = f.rule(head, body);
@@ -288,7 +287,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
         boolean isPositive = l.isPositive();
         try {
             String p = l.getPredicateUri();
-            NonOWLPredicate pred = null;
+            Predicate pred = null;
             List<Term> terms = new ArrayList<Term>();
             if (p.equals(Constants.EQUAL)) {
                 pred = f.equal();
@@ -434,18 +433,18 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                                         .toString())
                                 || WsmlDataType.WSML_BOOLEAN.equals(rangeIri
                                         .toString())) {
-                            pred = f.nonOWLPredicate(
+                            pred = f.predicateSymbol(
                                     WSML2DatalogTransformer.PRED_OF_TYPE, l
                                             .getTerms().length);
                             translateTerms(l, terms);
                             // System.out.println("Translated implies_type for
                             // oftype for " + rangeIri);
                         } else {
-                            pred = f.nonOWLPredicate(p, l.getTerms().length);
+                            pred = f.predicateSymbol(p, l.getTerms().length);
                             translateTerms(l, terms);
                         }
                     } else {
-                        pred = f.nonOWLPredicate(p, l.getTerms().length);
+                        pred = f.predicateSymbol(p, l.getTerms().length);
                         translateTerms(l, terms);
                     }
                 } else {
@@ -453,7 +452,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
                             "wsml-implies-type should have exactly three arguments!");
                 }
             } else {
-                pred = f.nonOWLPredicate(p, l.getTerms().length);
+                pred = f.predicateSymbol(p, l.getTerms().length);
                 translateTerms(l, terms);
             }
 
@@ -563,7 +562,7 @@ public class Kaon2Facade implements DatalogReasonerFacade {
         }
         // TODO Handle ontology imports
         DefaultOntologyResolver resolver = (DefaultOntologyResolver) conn
-                .getOntologyResovler();
+                .getOntologyResolver();
         resolver.registerReplacement(ontologyURI, "file:/C:/tmp/wsml.xml");
         try {
             Ontology o = conn.createOntology(ontologyURI, EMPTY_MAP);
