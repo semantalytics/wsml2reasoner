@@ -4,8 +4,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry sourcepath="ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.0.0/src/org.junit_3.8.1/junitsrc.zip" kind="var" path="JUNIT_HOME/junit.jar"/>
-	<classpathentry kind="lib" path="lib/ext/kaon2/kaon2-2005-12-08.jar"/>
+	<classpathentry kind="var" path="JUNIT_HOME/junit.jar"/>
 	<classpathentry kind="lib" path="lib/ext/mins/mins-20060712.jar"/>
 	<classpathentry kind="lib" path="lib/ext/wsmo4j/wsmlparser-20060210.jar"/>
 	<classpathentry kind="lib" path="lib/ext/wsmo4j/wsmo4j-20060706.jar"/>
@@ -22,5 +21,6 @@
 	<classpathentry kind="lib" path="lib/ext/xsdlib/xsdlib.jar"/>
 	<classpathentry kind="lib" path="lib/ext/log4j/1.2.7/log4j.jar"/>
 	<classpathentry kind="lib" path="lib/ext/KAON/1.2.9/rdfapi.jar"/>
+	<classpathentry kind="lib" path="lib/ext/kaon2/kaon2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
