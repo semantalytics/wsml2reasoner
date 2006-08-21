@@ -66,7 +66,7 @@ import uk.ac.man.cs.img.owl.validation.ValidatorLogger;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.7 $ $Date: 2006-08-10 08:30:59 $
+ * @version $Revision: 1.8 $ $Date: 2006-08-21 08:22:10 $
  */
 public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 
@@ -336,7 +336,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		Set<OWLEntity> set = builtInFacade.allClasses(ontologyID.toString());
 		for (OWLEntity entity : set) {
 			try {
-				elements.add(wsmoFactory.createConcept(wsmoFactory.createIRI(
+				elements.add(wsmoFactory.getConcept(wsmoFactory.createIRI(
 						ns + entity.getURI().getFragment())));
 			} catch (OWLException e) {
 				throw new InternalReasonerException(e);
@@ -376,7 +376,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 				ontologyID.toString());
 		for (OWLEntity entity : set) {
 			try {
-				elements.add(wsmoFactory.createInstance(wsmoFactory.createIRI(
+				elements.add(wsmoFactory.getInstance(wsmoFactory.createIRI(
 						ns + entity.getURI().getFragment())));
 			} catch (OWLException e) {
 				throw new InternalReasonerException(e);
@@ -439,7 +439,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 							concept.getIdentifier().toString())));
 			for (Set<OWLEntity> set2 : set) {	
 				for (OWLEntity entity : set2) {
-					elements.add(wsmoFactory.createConcept(
+					elements.add(wsmoFactory.getConcept(
 							wsmoFactory.createIRI(ns + 
 									entity.getURI().getFragment())));
 				}
@@ -460,7 +460,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 							new URI(concept.getIdentifier().toString())));
 			for (Set<OWLEntity> set2 : set) {	
 				for (OWLEntity entity : set2) {
-					elements.add(wsmoFactory.createConcept(
+					elements.add(wsmoFactory.getConcept(
 							wsmoFactory.createIRI(ns + 
 									entity.getURI().getFragment())));
 				}
@@ -481,7 +481,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 					ontologyID.toString(), owlDataFactory.getOWLClass(
 							new URI(concept.getIdentifier().toString())));
 			for (OWLEntity entity : set) {
-				elements.add(wsmoFactory.createConcept(
+				elements.add(wsmoFactory.getConcept(
 						wsmoFactory.createIRI(ns + 
 								entity.getURI().getFragment())));
 			}
@@ -545,7 +545,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 					ontologyID.toString(), owlDataFactory.getOWLClass(
 							new URI(concept.getIdentifier().toString())));
 			for (OWLEntity entity : set) {
-				elements.add(wsmoFactory.createInstance(
+				elements.add(wsmoFactory.getInstance(
 						wsmoFactory.createIRI(ns + 
 								entity.getURI().getFragment())));
 			}
@@ -563,7 +563,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 			OWLClass clazz = builtInFacade.typeOf(ontologyID.toString(), 
 					owlDataFactory.getOWLIndividual(new URI(
 							instance.getIdentifier().toString())));
-			concept = wsmoFactory.createConcept(wsmoFactory.createIRI(ns + 
+			concept = wsmoFactory.getConcept(wsmoFactory.createIRI(ns + 
 									clazz.getURI().getFragment()));
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
@@ -581,7 +581,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 							instance.getIdentifier().toString())));
 			for (Set<OWLEntity> set2 : set) { 
 				for (OWLEntity entity : set2) {
-					elements.add(wsmoFactory.createConcept(
+					elements.add(wsmoFactory.getConcept(
 							wsmoFactory.createIRI(ns + 
 									entity.getURI().getFragment())));
 				}
@@ -602,7 +602,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 							instance.getIdentifier().toString())));
 			for (Set<OWLEntity> set2 : set) { 
 				for (OWLEntity entity : set2) {
-					elements.add(wsmoFactory.createConcept(
+					elements.add(wsmoFactory.getConcept(
 							wsmoFactory.createIRI(ns + 
 									entity.getURI().getFragment())));
 				}
@@ -700,7 +700,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 					owlDataFactory.getOWLObjectProperty(new URI(
 							attributeId.toString())));
 			for (OWLEntity entity : set) {
-				elements.add(wsmoFactory.createConcept(wsmoFactory.createIRI(
+				elements.add(wsmoFactory.getConcept(wsmoFactory.createIRI(
 						ns + entity.getURI().getFragment())));
 			}
 		} catch (OWLException e) {
@@ -820,7 +820,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 					IRISet.add(wsmoFactory.createIRI(
 							ns + entity.getURI().getFragment()));
 				}
-				elements.put(wsmoFactory.createInstance(wsmoFactory.createIRI(
+				elements.put(wsmoFactory.getInstance(wsmoFactory.createIRI(
 						ns + entry.getKey().getURI().getFragment())), IRISet);
 			}
 		} catch (OWLException e) {
@@ -846,7 +846,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 					IRISet.add(wsmoFactory.createIRI(
 							ns + data.getValue().toString()));
 				}
-				elements.put(wsmoFactory.createInstance(wsmoFactory.createIRI(
+				elements.put(wsmoFactory.getInstance(wsmoFactory.createIRI(
 						ns + entry.getKey().getURI().getFragment())), IRISet);
 			}
 		} catch (OWLException e) {
@@ -897,7 +897,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 	public Instance getInferingAttributeValue(IRI ontologyID, Instance subject, 
 			Identifier attributeId) {
 		try {
-			return wsmoFactory.createInstance(wsmoFactory.createIRI( ns +
+			return wsmoFactory.getInstance(wsmoFactory.createIRI( ns +
 					builtInFacade.getObjectPropertyValue(ontologyID.toString(), 
 							owlDataFactory.getOWLIndividual(new URI(
 									subject.getIdentifier().toString())),
@@ -940,7 +940,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 							owlDataFactory.getOWLObjectProperty(
 									new URI(attributeId.toString())));
 			for (OWLEntity entity : set)
-				elements.add(wsmoFactory.createInstance(wsmoFactory.createIRI(
+				elements.add(wsmoFactory.getInstance(wsmoFactory.createIRI(
 						ns + entity.getURI().getFragment())));
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
@@ -1071,6 +1071,9 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.7  2006/08/10 08:30:59  nathalie
+ * added request for getting direct concept/concepts of an instance
+ *
  * Revision 1.6  2006/08/08 10:14:28  nathalie
  * implemented support for registering multiple ontolgies at wsml-dl reasoner
  *
