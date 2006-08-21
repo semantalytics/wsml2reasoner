@@ -49,7 +49,7 @@ import org.wsmo.wsml.Parser;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.4 $ $Date: 2006-08-08 10:14:28 $
+ * @version $Revision: 1.5 $ $Date: 2006-08-21 07:51:10 $
  */
 public class DLReasonerExample {
 	
@@ -89,7 +89,7 @@ public class DLReasonerExample {
                 .createWSMLDLReasoner(params);     
         
         // Register ontology
-        reasoner.registerOntologyNoVerification(exampleOntology);
+        reasoner.registerOntology(exampleOntology);
         
         // print class hierarchy with individuals
         reasoner.printClassTree((IRI) exampleOntology.getIdentifier());
@@ -201,6 +201,9 @@ public class DLReasonerExample {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.4  2006/08/08 10:14:28  nathalie
+ * implemented support for registering multiple ontolgies at wsml-dl reasoner
+ *
  * Revision 1.3  2006/07/21 21:07:03  nathalie
  * updated dl reasoner example
  *
