@@ -1,0 +1,32 @@
+/*
+Before running ImportOntologyTest (found in test.reasoner.core),
+copy the commented ontology found below onto your local disk
+and change the path name in importsOntology
+*/
+
+
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-rule"
+
+namespace { _"http://www.importexample.org#",
+      dc _"http://purl.org/dc/elements/1.1#"}
+
+ontology _"http://www.importexample.org"
+
+importsOntology {_"file:///Developer/andiamo/toBeImported.wsml"}
+		
+concept state
+instance wisconsin memberOf state
+
+
+/*
+Ontology to import:
+
+namespace {_"http://www.imported.com#",
+	 dc _"http://purl.org/dc/elements/1.1#",
+	 one _"http://www.importexample.org#"}
+
+ontology _"file:///Developer/andiamo/toBeImported.wsml"
+
+instance minnesota memberOf one#state
+
+*/

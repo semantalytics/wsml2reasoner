@@ -19,6 +19,8 @@
 package reasoner.core;
 
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -30,6 +32,7 @@ import junit.framework.TestSuite;
 
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
@@ -42,13 +45,14 @@ import org.wsmo.common.TopEntity;
 import org.wsmo.common.exception.SynchronisationException;
 import org.wsmo.factory.Factory;
 import org.wsmo.locator.Locator;
+import org.wsmo.locator.LocatorManager;
 import org.wsmo.wsml.Parser;
 
 import test.BaseReasonerTest;
 
 public class ImportOntologyTest extends BaseReasonerTest {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         junit.textui.TestRunner.run(ImportOntologyTest.suite());
     }
 
@@ -78,63 +82,60 @@ public class ImportOntologyTest extends BaseReasonerTest {
         
         Parser wsmlparserimpl = org.wsmo.factory.Factory.createParser(null);
         
-        Ontology o = (Ontology) wsmlparserimpl.parse(new StringBuffer(test))[0];
-
+        Ontology ontology = (Ontology) wsmlparserimpl.parse(new StringBuffer(test))[0];
+        
         LogicalExpression query = leFactory.createLogicalExpression(
-                "?x memberOf c", o);
+                "?x memberOf c", ontology);
         WSMLReasoner reasoner = BaseReasonerTest.getReasoner();
         Set<Map<Variable, Term>> result = null;
-        reasoner.registerOntology(o);
-        result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
+        reasoner.registerOntology(ontology);
+        result = reasoner.executeQuery((IRI) ontology.getIdentifier(), query);
         assertEquals(2, result.size());
-        reasoner.deRegisterOntology((IRI) o.getIdentifier());
+        reasoner.deRegisterOntology((IRI) ontology.getIdentifier());
         
         }
     
-   /* public void testImportOntologyTestWithLocator() throws Exception {
-        String ns = "http://www.example.org/example/";
-        String test = "namespace _\""+ns+"\" \n" +
-                "ontology o2 \n" +
-                "importsOntology _\"file:///Developer/andiamo/locations.wsml\" \n" +
-                "concept c \n" +
-                "instance i3 memberOf c \n ";
+    
+    /**
+     * *********BEFORE RUNNING TEST*********
+     * Change the importOntology path in "importOnotlogies.wsml"
+     * (currently found in test.reasoner.core) to point to
+     * the ontology you wish to import.
+     * 
+     * A sample ontology (that satisfies test) to copy to your local disk
+     * can be found commented out in importOnotologies.wsml
+     * 
+     * @throws Exception
+     */
+   public void testImportOntologyTestWithLocator() throws Exception {
 
-        Locator l = new Locator(){
-            @SuppressWarnings({"unchecked","unchecked"})
-			public Set lookup(Identifier arg0) throws SynchronisationException {
-                Set ret = new HashSet();
-                try{
-                    TopEntity[] te = Factory.createParser(null).parse(
-                            new FileReader(arg0.toString()));
-                    for (int i=0; 0<te.length; i++){
-                        if (te[i].getIdentifier().equals(arg0)){
-                            ret.add(te[i]);
-                        }
-                        if (te[i] instanceof Ontology){
-                            Set s = ((Ontology)te[i]).findEntity(arg0);
-                            if (s.size()>0){
-                                Iterator it = s.iterator();
-                                while(it.hasNext()){
-                                    ret.add(it.next());
-                                }
-                            }
-                        }
-                    }
-                    
-                    //ret.add();
-                }catch (Exception e){
-                    //who what now?
-                }
-                return ret;
-            }
-            
-            public Entity lookup(Identifier arg0, Class arg1) throws SynchronisationException {
-            		return null;
-            }
-        };
+
+	   Parser wsmlParser = org.wsmo.factory.Factory.createParser(null);
+	   
+        //Read test file and parses it 
+	    //Make sure that the path to the imported ontology
+	    //in importsOntology is correct
+        InputStream is = this.getClass().getClassLoader().getResourceAsStream(
+                "reasoner/core/importOntologies.wsml");
         
-        Factory.getLocatorManager().addLocator(l);
-        
+        //Assumes first Topentity in file is an ontology  
+        Ontology ontology = (Ontology)wsmlParser.parse(new InputStreamReader(is))[0]; 
+ 
+		HashMap prefs = new HashMap();
+		prefs.put(Factory.PROVIDER_CLASS, "org.deri.wsmo4j.locator.LocatorImpl");
+		
+		Locator locator = LocatorManager.createLocator(prefs);
+		
+		Set <Ontology> ontologies = new HashSet <Ontology>();
+		
+		for (Iterator it = ontology.listOntologies().iterator(); it.hasNext();){
+			Ontology o = (Ontology) it.next();		
+			Ontology ont = (Ontology) locator.lookup(o.getIdentifier(), null);
+			if (ont != null) {
+				ontologies.add(ont);
+			}
+		}
+		
         wsmoManager = new WSMO4JManager();
 
         leFactory = wsmoManager.getLogicalExpressionFactory();
@@ -143,16 +144,20 @@ public class ImportOntologyTest extends BaseReasonerTest {
 
         dataFactory = wsmoManager.getDataFactory();
         
-        Parser wsmlparserimpl = org.wsmo.factory.Factory.createParser(null);
-        
-        Ontology o = (Ontology) wsmlparserimpl.parse(new StringBuffer(test))[0];
-
         LogicalExpression query = leFactory.createLogicalExpression(
-                "?x memberOf c", o);
+                "?x memberOf state", ontology);
+        System.out.println("Query:\n" + query.toString());
         WSMLReasoner reasoner = BaseReasonerTest.getReasoner();
         Set<Map<Variable, Term>> result = null;
-        reasoner.registerOntology(o);
-        result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
+        reasoner.registerOntology(ontology);
+        result = reasoner.executeQuery((IRI) ontology.getIdentifier(), query);
+        System.out.println("Result:");
+        for (Map<Variable, Term> vt : result){
+        	for(Variable v : vt.keySet()){
+        			System.out.println(v + " : " + vt.get(v));
+        	}
+        }
         assertEquals(2, result.size());
-        }*/
+        reasoner.registerOntology(ontology);
+    }
 }
