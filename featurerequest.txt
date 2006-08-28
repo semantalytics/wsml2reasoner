@@ -57,3 +57,33 @@ Handle ontology import at the transformation to OWL (WSML-DL reasoner).
 #12
 Nathalie Steinmetz:
 Transform qualified cardinality restrictions to OWL (WSML-DL reasoner).
+
+#13
+Graham Hench:
+Fix importOnotology impl:
+
+reasoner.registerOntologies(getOntologiesNeededForReasoning(currOntology));
+
+
+private Set<Ontology> getOntologiesNeededForReasoning(Ontology theOntology) {
+        Set <Ontology> ontologiesNeededForReasoning = new HashSet <Ontology> ();
+ontologiesNeededForReasoning.addAll(getImportedOntologies(theOntology));
+        ontologiesNeededForReasoning.add(theOntology);
+        return ontologiesNeededForReasoning;
+    }
+
+    private Set <Ontology> getImportedOntologies(Ontology theOntology){
+        Set<Ontology> importedOntologies = new HashSet <Ontology> ();
+        getImportedOntologies(theOntology, importedOntologies);
+        return importedOntologies;
+    }
+
+    private void getImportedOntologies(Ontology theOntology, Set<Ontology> theImportedOntologies){
+        for (Ontology importedOntology : (Set<Ontology>) theOntology.listOntologies()) {
+            if (!theImportedOntologies.contains(importedOntology)) {
+                theImportedOntologies.add(importedOntology);
+                getImportedOntologies(importedOntology, theImportedOntologies);
+            }
+        }
+    }
+
