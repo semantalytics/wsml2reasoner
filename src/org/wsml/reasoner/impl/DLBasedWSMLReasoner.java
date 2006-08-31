@@ -18,9 +18,9 @@
  */
 package org.wsml.reasoner.impl;
 
-import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -28,15 +28,15 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.Map.Entry;
 
-import org.deri.wsmo4j.validator.WsmlValidatorImpl;
 import org.mindswap.pellet.query.QueryResults;
+import org.omwg.logicalexpression.AttributeValueMolecule;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.MembershipMolecule;
+import org.omwg.logicalexpression.SubConceptMolecule;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.*;
 import org.semanticweb.owl.impl.model.OWLConcreteDataImpl;
 import org.semanticweb.owl.impl.model.OWLConcreteDataTypeImpl;
-import org.semanticweb.owl.io.RendererException;
-import org.semanticweb.owl.io.abstract_syntax.Renderer;
 import org.semanticweb.owl.model.*;
 import org.semanticweb.owl.model.change.ChangeVisitor;
 import org.semanticweb.owl.util.*;
@@ -66,7 +66,7 @@ import uk.ac.man.cs.img.owl.validation.ValidatorLogger;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.8 $ $Date: 2006-08-21 08:22:10 $
+ * @version $Revision: 1.9 $ $Date: 2006-08-31 12:37:50 $
  */
 public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 
@@ -124,7 +124,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		SpeciesValidator owlValidator = null;
 		
 		// check if given WSML-DL ontology is valid
-		WsmlValidator validator = new WsmlValidatorImpl();		
+		WsmlValidator validator = Factory.createWsmlValidator(null);		
 		boolean valid = validator.isValid(
 				ontology, "http://www.wsmo.org/wsml/wsml-syntax/wsml-dl", 
 				new Vector(), new Vector());
@@ -134,7 +134,9 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 					"is not valid WSML-DL (e.g. " +
 					"http://tools.deri.org/wsml/validator/v1.2/");
 		}
-		ns = ontology.getDefaultNamespace().getIRI().toString();
+		if (ontology.getDefaultNamespace() != null) {
+			ns = ontology.getDefaultNamespace().getIRI().toString();
+		}
 
 		// normalize ontology
         ontology = normalizeOntology(ontology);
@@ -179,7 +181,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 //      WSMLNormalizationTest.serializeOntology(normalizedOntology));
 
 		
-//		 Convert conceptual syntax to logical expressions
+		// Convert conceptual syntax to logical expressions
 		normalizer = new AxiomatizationNormalizer(wsmoManager);
         normalizedOntology = normalizer.normalize(normalizedOntology);
 //      System.out.println("\n-------\n Ontology after simplification:\n" +
@@ -336,38 +338,19 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		Set<OWLEntity> set = builtInFacade.allClasses(ontologyID.toString());
 		for (OWLEntity entity : set) {
 			try {
-				elements.add(wsmoFactory.getConcept(wsmoFactory.createIRI(
-						ns + entity.getURI().getFragment())));
+				if (ns == null || !entity.getURI().toString().startsWith(ns)) {
+					elements.add(wsmoFactory.getConcept(wsmoFactory.createIRI(
+							entity.getURI().toString())));
+				} 
+				else {
+					elements.add(wsmoFactory.getConcept(wsmoFactory.createIRI(
+							ns + entity.getURI().getFragment())));
+				}
 			} catch (OWLException e) {
 				throw new InternalReasonerException(e);
 			}
 		}
 		return elements;
-	}
-	
-	public boolean isConsistent(IRI ontologyID, LogicalExpression logExpr) {
-		OWLDescription des = transformLogicalExpression(logExpr);
-		try {
-			if (des != null) 
-				return builtInFacade.isConsistent(ontologyID.toString(), des);
-			else 
-				throw new InternalReasonerException("This logical expression" +
-						" is not supported for consistency check!");
-		} catch (OWLException e) {
-			throw new InternalReasonerException(e);
-		} 
-	}
-
-	public boolean isConsistent(IRI ontologyID, Concept concept) {
-		try {
-			return builtInFacade.isConsistent(ontologyID.toString(), 
-					owlDataFactory.getOWLClass(new URI(
-							concept.getIdentifier().toString())));
-		} catch (OWLException e) {
-			throw new InternalReasonerException(e);
-		} catch (URISyntaxException e) {
-			throw new InternalReasonerException(e);
-		}
 	}
 	
 	public Set<Instance> getAllInstances(IRI ontologyID) {
@@ -376,8 +359,14 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 				ontologyID.toString());
 		for (OWLEntity entity : set) {
 			try {
-				elements.add(wsmoFactory.getInstance(wsmoFactory.createIRI(
-						ns + entity.getURI().getFragment())));
+				if (ns == null || !entity.getURI().toString().startsWith(ns)) {
+					elements.add(wsmoFactory.getInstance(wsmoFactory.createIRI(
+							entity.getURI().toString())));
+				} 
+				else {
+					elements.add(wsmoFactory.getInstance(wsmoFactory.createIRI(
+							ns + entity.getURI().getFragment())));
+				}
 			} catch (OWLException e) {
 				throw new InternalReasonerException(e);
 			}
@@ -391,8 +380,14 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 				ontologyID.toString());
 		for (OWLEntity entity : set) {
 			try {
-				elements.add(wsmoFactory.createIRI(
-						ns + entity.getURI().getFragment()));
+				if (ns == null || !entity.getURI().toString().startsWith(ns)) {
+					elements.add(wsmoFactory.createIRI(
+							entity.getURI().toString()));
+				} 
+				else {
+					elements.add(wsmoFactory.createIRI(
+							ns + entity.getURI().getFragment()));
+				}
 			} catch (OWLException e) {
 				throw new InternalReasonerException(e);
 			}
@@ -406,8 +401,14 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 				ontologyID.toString());
 		for (OWLEntity entity : set) {
 			try {
-				elements.add(wsmoFactory.createIRI(
-						ns + entity.getURI().getFragment()));
+				if (ns == null || !entity.getURI().toString().startsWith(ns)) {
+					elements.add(wsmoFactory.createIRI(
+							entity.getURI().toString()));
+				} 
+				else {
+					elements.add(wsmoFactory.createIRI(
+							ns + entity.getURI().getFragment()));
+				}
 			} catch (OWLException e) {
 				throw new InternalReasonerException(e);
 			}
@@ -421,8 +422,14 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 				ontologyID.toString());
 		for (OWLEntity entity : set) {
 			try {
-				elements.add(wsmoFactory.createIRI(
-						ns + entity.getURI().getFragment()));
+				if (ns == null || !entity.getURI().toString().startsWith(ns)) {
+					elements.add(wsmoFactory.createIRI(
+							entity.getURI().toString()));
+				} 
+				else {
+					elements.add(wsmoFactory.createIRI(
+							ns + entity.getURI().getFragment()));
+				}
 			} catch (OWLException e) {
 				throw new InternalReasonerException(e);
 			}
@@ -439,9 +446,16 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 							concept.getIdentifier().toString())));
 			for (Set<OWLEntity> set2 : set) {	
 				for (OWLEntity entity : set2) {
-					elements.add(wsmoFactory.getConcept(
-							wsmoFactory.createIRI(ns + 
-									entity.getURI().getFragment())));
+					if (ns == null || !entity.getURI().toString().startsWith(ns)) {
+						elements.add(wsmoFactory.getConcept(
+								wsmoFactory.createIRI(
+										entity.getURI().toString())));
+					} 
+					else {
+						elements.add(wsmoFactory.getConcept(
+								wsmoFactory.createIRI(ns + 
+										entity.getURI().getFragment())));
+					}
 				}
 			}
 		} catch (OWLException e) {
@@ -460,9 +474,16 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 							new URI(concept.getIdentifier().toString())));
 			for (Set<OWLEntity> set2 : set) {	
 				for (OWLEntity entity : set2) {
-					elements.add(wsmoFactory.getConcept(
-							wsmoFactory.createIRI(ns + 
-									entity.getURI().getFragment())));
+					if (ns == null || !entity.getURI().toString().startsWith(ns)) {
+						elements.add(wsmoFactory.getConcept(
+								wsmoFactory.createIRI(
+										entity.getURI().toString())));
+					} 
+					else {
+						elements.add(wsmoFactory.getConcept(
+								wsmoFactory.createIRI(ns + 
+										entity.getURI().getFragment())));
+					}
 				}
 			}
 		} catch (OWLException e) {
@@ -481,9 +502,16 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 					ontologyID.toString(), owlDataFactory.getOWLClass(
 							new URI(concept.getIdentifier().toString())));
 			for (OWLEntity entity : set) {
-				elements.add(wsmoFactory.getConcept(
-						wsmoFactory.createIRI(ns + 
-								entity.getURI().getFragment())));
+				if (ns == null || !entity.getURI().toString().startsWith(ns)) {
+					elements.add(wsmoFactory.getConcept(
+							wsmoFactory.createIRI(
+									entity.getURI().toString())));
+				} 
+				else {
+					elements.add(wsmoFactory.getConcept(
+							wsmoFactory.createIRI(ns + 
+									entity.getURI().getFragment())));
+				}
 			}
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
@@ -545,9 +573,16 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 					ontologyID.toString(), owlDataFactory.getOWLClass(
 							new URI(concept.getIdentifier().toString())));
 			for (OWLEntity entity : set) {
-				elements.add(wsmoFactory.getInstance(
-						wsmoFactory.createIRI(ns + 
-								entity.getURI().getFragment())));
+				if (ns == null || !entity.getURI().toString().startsWith(ns)) {
+					elements.add(wsmoFactory.getInstance(
+							wsmoFactory.createIRI(
+									entity.getURI().toString())));
+				} 
+				else {
+					elements.add(wsmoFactory.getInstance(
+							wsmoFactory.createIRI(ns + 
+									entity.getURI().getFragment())));
+				}
 			}
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
@@ -555,22 +590,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 			throw new InternalReasonerException(e);
 		}	
 		return elements;
-	}
-
-	public Concept getDirectConcept(IRI ontologyID, Instance instance) {
-		Concept concept = null;
-		try {
-			OWLClass clazz = builtInFacade.typeOf(ontologyID.toString(), 
-					owlDataFactory.getOWLIndividual(new URI(
-							instance.getIdentifier().toString())));
-			concept = wsmoFactory.getConcept(wsmoFactory.createIRI(ns + 
-									clazz.getURI().getFragment()));
-		} catch (OWLException e) {
-			throw new InternalReasonerException(e);
-		} catch (URISyntaxException e) {
-			throw new InternalReasonerException(e);
-		}	
-		return concept;
 	}
 	
 	public Set<Concept> getDirectConcepts(IRI ontologyID, Instance instance) {
@@ -581,9 +600,16 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 							instance.getIdentifier().toString())));
 			for (Set<OWLEntity> set2 : set) { 
 				for (OWLEntity entity : set2) {
-					elements.add(wsmoFactory.getConcept(
-							wsmoFactory.createIRI(ns + 
-									entity.getURI().getFragment())));
+					if (ns == null || !entity.getURI().toString().startsWith(ns)) {
+						elements.add(wsmoFactory.getConcept(
+								wsmoFactory.createIRI(
+										entity.getURI().toString())));
+					} 
+					else {
+						elements.add(wsmoFactory.getConcept(
+								wsmoFactory.createIRI(ns + 
+										entity.getURI().getFragment())));
+					}
 				}
 			}
 		} catch (OWLException e) {
@@ -602,9 +628,16 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 							instance.getIdentifier().toString())));
 			for (Set<OWLEntity> set2 : set) { 
 				for (OWLEntity entity : set2) {
-					elements.add(wsmoFactory.getConcept(
-							wsmoFactory.createIRI(ns + 
-									entity.getURI().getFragment())));
+					if (ns == null || !entity.getURI().toString().startsWith(ns)) {
+						elements.add(wsmoFactory.getConcept(
+								wsmoFactory.createIRI(
+										entity.getURI().toString())));
+					} 
+					else {
+						elements.add(wsmoFactory.getConcept(
+								wsmoFactory.createIRI(ns + 
+										entity.getURI().getFragment())));
+					}
 				}
 			}
 		} catch (OWLException e) {
@@ -623,8 +656,14 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 							new URI(attributeId.toString())));
 			for (Set<OWLEntity> set2 : set) {	
 				for (OWLEntity entity : set2) {
-					elements.add(wsmoFactory.createIRI(
-							ns + entity.getURI().getFragment()));
+					if (ns == null || !entity.getURI().toString().startsWith(ns)) {
+						elements.add(wsmoFactory.createIRI(
+								entity.getURI().toString()));
+					} 
+					else {
+						elements.add(wsmoFactory.createIRI(
+								ns + entity.getURI().getFragment()));
+					}
 				}
 			}
 		} catch (OWLException e) {
@@ -643,8 +682,14 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 							new URI(attributeId.toString())));
 			for (Set<OWLEntity> set2 : set) {	
 				for (OWLEntity entity : set2) {
-					elements.add(wsmoFactory.createIRI(
-							ns + entity.getURI().getFragment()));
+					if (ns == null || !entity.getURI().toString().startsWith(ns)) {
+						elements.add(wsmoFactory.createIRI(
+								entity.getURI().toString()));
+					} 
+					else {
+						elements.add(wsmoFactory.createIRI(
+								ns + entity.getURI().getFragment()));
+					}
 				}
 			}
 		} catch (OWLException e) {
@@ -663,8 +708,14 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 					ontologyID.toString(), owlDataFactory.getOWLObjectProperty(
 							new URI(attributeId.toString())));
 			for (OWLEntity entity : set) {
-				elements.add(wsmoFactory.createIRI(
-						ns + entity.getURI().getFragment()));
+				if (ns == null || !entity.getURI().toString().startsWith(ns)) {
+					elements.add(wsmoFactory.createIRI(
+							entity.getURI().toString()));
+				} 
+				else {
+					elements.add(wsmoFactory.createIRI(
+							ns + entity.getURI().getFragment()));
+				}
 			}
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
@@ -682,8 +733,14 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 					ontologyID.toString(), owlDataFactory.getOWLObjectProperty(
 							new URI(attributeId.toString())));
 			for (OWLEntity entity : set) {
-				elements.add(wsmoFactory.createIRI(
-						ns + entity.getURI().getFragment()));
+				if (ns == null || !entity.getURI().toString().startsWith(ns)) {
+					elements.add(wsmoFactory.createIRI(
+							entity.getURI().toString()));
+				} 
+				else {
+					elements.add(wsmoFactory.createIRI(
+							ns + entity.getURI().getFragment()));
+				}
 			}
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
@@ -700,8 +757,14 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 					owlDataFactory.getOWLObjectProperty(new URI(
 							attributeId.toString())));
 			for (OWLEntity entity : set) {
-				elements.add(wsmoFactory.getConcept(wsmoFactory.createIRI(
-						ns + entity.getURI().getFragment())));
+				if (ns == null || !entity.getURI().toString().startsWith(ns)) {
+					elements.add(wsmoFactory.getConcept(wsmoFactory.createIRI(
+							entity.getURI().toString())));
+				} 
+				else {
+					elements.add(wsmoFactory.getConcept(wsmoFactory.createIRI(
+							ns + entity.getURI().getFragment())));
+				}
 			}
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
@@ -719,8 +782,14 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 					owlDataFactory.getOWLObjectProperty(new URI(
 							attributeId.toString())));
 			for (OWLEntity entity : set) {
-				elements.add(wsmoFactory.createIRI(
-						ns + entity.getURI().getFragment()));
+				if (ns == null || !entity.getURI().toString().startsWith(ns)) {
+					elements.add(wsmoFactory.createIRI(
+							entity.getURI().toString()));
+				} 
+				else {
+					elements.add(wsmoFactory.createIRI(
+							ns + entity.getURI().getFragment()));
+				}
 			}
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
@@ -738,8 +807,14 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 					ontologyID.toString(), owlDataFactory.getOWLDataProperty(
 							new URI(attributeId.toString())));
 			for (OWLConcreteDataTypeImpl dataType : set) {
-				elements.add(wsmoFactory.createIRI(
-						ns + dataType.getURI().getFragment()));
+				if (ns == null || !dataType.getURI().toString().startsWith(ns)) {
+					elements.add(wsmoFactory.createIRI(
+							dataType.getURI().toString()));
+				} 
+				else {
+					elements.add(wsmoFactory.createIRI(
+							ns + dataType.getURI().getFragment()));
+				}
 			}
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
@@ -749,9 +824,9 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
-	public Map<IRI, Set<IRI>> getConstraintAttributeValues(IRI ontologyID, 
+	public Map<IRI, Set<Term>> getConstraintAttributeValues(IRI ontologyID, 
 			Instance instance) {
-		Map<IRI, Set<IRI>> elements = new HashMap<IRI, Set<IRI>>();
+		Map<IRI, Set<Term>> elements = new HashMap<IRI, Set<Term>>();
 		try {
 			Set<Entry<OWLEntity, Set<OWLConcreteDataImpl>>> entrySet = 
 				builtInFacade.getDataPropertyValues(ontologyID.toString(), 
@@ -760,14 +835,20 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 								.entrySet();
 			for (Entry<OWLEntity, Set<OWLConcreteDataImpl>> entry : entrySet) {
 				Set<OWLConcreteDataImpl> set = entry.getValue();
-				Set<IRI> IRISet = new HashSet<IRI>();
+				Set<Term> valueSet = new HashSet<Term>();
 				for (OWLConcreteDataImpl data : set) {
-					IRISet.add(wsmoFactory.createIRI(
-							ns + data.getValue().toString()));
+					valueSet.add(getDataValue(data.getValue().toString(), 
+							data.getURI().getFragment()));				
 				}
-				elements.put(wsmoFactory.createIRI(
-						ns + entry.getKey().getURI().getFragment()), 
-						IRISet);
+				if (ns == null || !entry.getKey().getURI().toString().startsWith(ns)) {
+					elements.put(wsmoFactory.createIRI(
+							entry.getKey().getURI().toString()), valueSet);
+				} 
+				else {
+					elements.put(wsmoFactory.createIRI(
+							ns + entry.getKey().getURI().getFragment()), 
+							valueSet);
+				}
 			}
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
@@ -790,12 +871,24 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 				Set<OWLEntity> set = entry.getValue();
 				Set<IRI> IRISet = new HashSet<IRI>();
 				for (OWLEntity entity : set) {
-					IRISet.add(wsmoFactory.createIRI(
-							ns + entity.getURI().getFragment()));
+					if (ns == null || !entity.getURI().toString().startsWith(ns)) {
+						IRISet.add(wsmoFactory.createIRI(
+								entity.getURI().toString()));
+					} 
+					else {
+						IRISet.add(wsmoFactory.createIRI(
+								ns + entity.getURI().getFragment()));
+					}
 				}
-				elements.put(wsmoFactory.createIRI(
-						ns + entry.getKey().getURI().getFragment()), 
-						IRISet);
+				if (ns == null || !entry.getKey().getURI().toString().startsWith(ns)) {
+					elements.put(wsmoFactory.createIRI(
+							entry.getKey().getURI().toString()), IRISet);
+				} 
+				else {
+					elements.put(wsmoFactory.createIRI(
+							ns + entry.getKey().getURI().getFragment()), 
+							IRISet);
+				}
 			}
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
@@ -817,11 +910,23 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 				Set<OWLEntity> set = entry.getValue();
 				Set<IRI> IRISet = new HashSet<IRI>();
 				for (OWLEntity entity : set) {
-					IRISet.add(wsmoFactory.createIRI(
-							ns + entity.getURI().getFragment()));
+					if (ns == null || !entity.getURI().toString().startsWith(ns)) {
+						IRISet.add(wsmoFactory.createIRI(
+								entity.getURI().toString()));
+					} 
+					else {
+						IRISet.add(wsmoFactory.createIRI(
+								ns + entity.getURI().getFragment()));
+					}
 				}
-				elements.put(wsmoFactory.getInstance(wsmoFactory.createIRI(
-						ns + entry.getKey().getURI().getFragment())), IRISet);
+				if (ns == null || !entry.getKey().getURI().toString().startsWith(ns)) {
+					elements.put(wsmoFactory.getInstance(wsmoFactory.createIRI(
+							entry.getKey().getURI().toString())), IRISet);
+				} 
+				else {
+					elements.put(wsmoFactory.getInstance(wsmoFactory.createIRI(
+							ns + entry.getKey().getURI().getFragment())), IRISet);
+				}
 			}
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
@@ -831,9 +936,9 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
-	public Map<Instance, Set<IRI>> getConstraintAttributeInstances(
+	public Map<Instance, Set<Term>> getConstraintAttributeInstances(
 			IRI ontologyID, Identifier attributeId) {
-		Map<Instance, Set<IRI>> elements = new HashMap<Instance, Set<IRI>>();
+		Map<Instance, Set<Term>> elements = new HashMap<Instance, Set<Term>>();
 		try {
 			Set<Entry<OWLEntity, Set<OWLConcreteDataImpl>>> entrySet = 
 				builtInFacade.getPropertyValues(ontologyID.toString(), 
@@ -841,13 +946,19 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 								attributeId.toString()))).entrySet();
 			for (Entry<OWLEntity, Set<OWLConcreteDataImpl>> entry : entrySet) {
 				Set<OWLConcreteDataImpl> set = entry.getValue();
-				Set<IRI> IRISet = new HashSet<IRI>();
-				for (OWLConcreteDataImpl data : set) {
-					IRISet.add(wsmoFactory.createIRI(
-							ns + data.getValue().toString()));
+				Set<Term> valueSet = new HashSet<Term>();
+				for (OWLConcreteDataImpl data : set) {					
+					valueSet.add(getDataValue(data.getValue().toString(), 
+								data.getURI().getFragment()));	
 				}
-				elements.put(wsmoFactory.getInstance(wsmoFactory.createIRI(
-						ns + entry.getKey().getURI().getFragment())), IRISet);
+				if (ns == null || !entry.getKey().getURI().toString().startsWith(ns)) {
+					elements.put(wsmoFactory.getInstance(wsmoFactory.createIRI(
+							entry.getKey().getURI().toString())), valueSet);
+				} 
+				else {
+					elements.put(wsmoFactory.getInstance(wsmoFactory.createIRI(
+							ns + entry.getKey().getURI().getFragment())), valueSet);
+				}
 			}
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
@@ -857,53 +968,15 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
-	public boolean instanceHasInferingAttributeValue(IRI ontologyID, 
-			Instance subject, Identifier attributeId, Instance object) {		
-		try {
-			return builtInFacade.hasPropertyValue(ontologyID.toString(), 
-					owlDataFactory.getOWLIndividual(new URI(
-							subject.getIdentifier().toString())), 
-					owlDataFactory.getOWLObjectProperty(new URI(
-							attributeId.toString())),
-					owlDataFactory.getOWLIndividual(new URI(
-							object.getIdentifier().toString())));
-		} catch (OWLException e) {
-			throw new InternalReasonerException(e);
-		} catch (URISyntaxException e) {
-			throw new InternalReasonerException(e);
-		}
-	}
-	
-	public boolean instanceHasConstraintAttributeValue(IRI ontologyID, 
-			Instance subject, Identifier attributeId, DataValue object) {
-		String objStr = object.getType().toString();
-		try {
-			return builtInFacade.hasPropertyValue(ontologyID.toString(), 
-					owlDataFactory.getOWLIndividual(new URI(
-							subject.getIdentifier().toString())), 
-					owlDataFactory.getOWLDataProperty(new URI(
-							attributeId.toString())),
-					owlDataFactory.getOWLConcreteData(new URI(
-							"http://www.w3.org/2001/XMLSchema" + 
-							objStr.substring(objStr.indexOf("#"))), 
-							null, object.getValue()));
-		} catch (OWLException e) {
-			throw new InternalReasonerException(e);
-		} catch (URISyntaxException e) {
-			throw new InternalReasonerException(e);
-		}
-	}
-	
 	public Instance getInferingAttributeValue(IRI ontologyID, Instance subject, 
 			Identifier attributeId) {
 		try {
-			return wsmoFactory.getInstance(wsmoFactory.createIRI( ns +
+			return wsmoFactory.getInstance(wsmoFactory.createIRI(
 					builtInFacade.getObjectPropertyValue(ontologyID.toString(), 
 							owlDataFactory.getOWLIndividual(new URI(
 									subject.getIdentifier().toString())),
-							owlDataFactory.getOWLObjectProperty(new URI(
-									attributeId.toString()))).getURI().
-									getFragment()));
+									owlDataFactory.getOWLObjectProperty(new URI(
+									attributeId.toString()))).getURI().toString()));
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
@@ -939,9 +1012,16 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 							new URI(subject.getIdentifier().toString())),
 							owlDataFactory.getOWLObjectProperty(
 									new URI(attributeId.toString())));
-			for (OWLEntity entity : set)
-				elements.add(wsmoFactory.getInstance(wsmoFactory.createIRI(
-						ns + entity.getURI().getFragment())));
+			for (OWLEntity entity : set) {
+				if (ns == null || !entity.getURI().toString().startsWith(ns)) {
+					elements.add(wsmoFactory.getInstance(wsmoFactory.createIRI(
+							entity.getURI().toString())));
+				} 
+				else {
+					elements.add(wsmoFactory.getInstance(wsmoFactory.createIRI(
+							ns + entity.getURI().getFragment())));
+				}
+			}
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
@@ -972,72 +1052,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
-	public void printClassTree(IRI ontologyID) {
-		builtInFacade.printClassTree(ontologyID.toString());
-	}
-	
-	public String getInfo(IRI ontologyID) {
-		return builtInFacade.getInfo(ontologyID.toString());
-	}
-
-	public String serialize2OWLAbstractSyntax(OWLOntology owlOntology) 
-			throws RendererException {
-		Renderer renderer = new Renderer();
-    	StringWriter writer = new StringWriter();
-    	try {
-			renderer.renderOntology(owlOntology, writer);
-		} catch (RendererException e) {
-			throw new RuntimeException("Problems at serializing owl ontology");
-		}
-        return writer.toString();
-	}
-	
-	public String serialize2OWLRDFSyntax(OWLOntology owlOntology) {
-		org.semanticweb.owl.io.owl_rdf.Renderer renderer = 
-			new org.semanticweb.owl.io.owl_rdf.Renderer();
-    	StringWriter writer = new StringWriter();
-    	try {
-			renderer.renderOntology(owlOntology, writer);
-		} catch (RendererException e) {
-			throw new RuntimeException("Problems at serializing owl ontology");
-		}
-        return writer.toString();
-	}
-	
-	/**
-	 * This method allows to extract the OWL ontology as string, even if the 
-	 * OWL ontology is not valid owl dl. The serialized ontology could be 
-	 * validated at an online validator as e.g. 
-	 * "http://phoebus.cs.man.ac.uk:9999/OWL/Validator"
-	 * 
-	 * @param ontology WSML DL ontology to be transformed to owl
-	 * @return string version of transformed OWL ontology
-	 */
-	public String serializeWSML2OWL(Ontology ontology) {
-		// check if given WSML-DL ontology is valid
-		WsmlValidator validator = new WsmlValidatorImpl();
-		boolean valid = validator.isValid(
-				ontology, "http://www.wsmo.org/wsml/wsml-syntax/wsml-dl", 
-				new Vector(), new Vector());
-		if (!valid) {
-			throw new RuntimeException ("The given WSML-DL ontology is not " +
-					"valid!");
-		}
-		// normalize ontology
-        ontology = normalizeOntology(ontology);
-        // transform ontology
-		try {
-			owlOntology = transformOntology(ontology);
-		} catch (OWLException e) {
-			throw new RuntimeException ("Difficulties in building the OWL " +
-					"ontology");
-		} catch (URISyntaxException e) {
-			throw new RuntimeException ("Difficulties in building the OWL " +
-					"ontology");
-		}	
-        return serialize2OWLRDFSyntax(owlOntology);
-	}
-	
 	public QueryResults executeQuery(IRI ontologyID, String query) {
 		throw new UnsupportedOperationException();
 //		QueryResults results = null;
@@ -1050,27 +1064,207 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * This method checks whether a given query (without variables) is true or 
+	 * false. E.g. check whether Mary[hasChild hasValue Jack] is true or not.
+	 * 
+	 * @return true or false
+	 */
 	public boolean executeGroundQuery(IRI ontologyID, 
 			LogicalExpression query) {
-		throw new UnsupportedOperationException();
+		if (query instanceof AttributeValueMolecule) {
+			AttributeValueMolecule attr = (AttributeValueMolecule) query;
+			if (attr.getRightParameter() instanceof DataValue) {
+				return instanceHasConstraintAttributeValue(ontologyID, 
+						wsmoFactory.createInstance((IRI) attr.getLeftParameter()), 
+						(Identifier) attr.getAttribute(), 
+						(DataValue) attr.getRightParameter());
+			}
+			else {
+				return instanceHasInferingAttributeValue(ontologyID, 
+						wsmoFactory.createInstance((IRI) attr.getLeftParameter()), 
+						(Identifier) attr.getAttribute(), 
+						wsmoFactory.createInstance((IRI) attr.getRightParameter()));
+			}
+		}
+		else if (query instanceof MembershipMolecule) {
+			MembershipMolecule attr = (MembershipMolecule) query;
+			return isMemberOf(ontologyID, wsmoFactory.createInstance(
+					(IRI) attr.getLeftParameter()), wsmoFactory.createConcept(
+							(IRI) attr.getRightParameter()));
+		}
+		else if (query instanceof SubConceptMolecule) {
+			SubConceptMolecule attr = (SubConceptMolecule) query;
+			return isSubConceptOf(ontologyID, wsmoFactory.createConcept(
+					(IRI) attr.getLeftParameter()), wsmoFactory.createConcept(
+							(IRI) attr.getRightParameter()));
+		}
+		else {
+			return entails(ontologyID, query);
+		}
 	}
 
+	/**
+	 * The method supports the following logical expressions as they are 
+	 * allowed in formulae in WSML-DL:
+	 * - Atom
+	 * - MembershipMolecule
+	 * - Conjunction
+	 * - Disjunction
+	 * - Negation
+	 * - UniversalQuantification
+	 * - ExistentialQuantification
+	 * 
+	 * @return true if the given expression is satisfiable, false otherwise
+	 * @throws InternalReasonerException if a logical expression different
+	 * 			than the ones mentionned above are given as input
+	 */
 	public boolean entails(IRI ontologyID, LogicalExpression expression) {
-		throw new UnsupportedOperationException();
+		OWLDescription des = transformLogicalExpression(expression);
+		try {
+			if (des != null) 
+				return builtInFacade.isConsistent(ontologyID.toString(), des);
+			else 
+				throw new InternalReasonerException("This logical expression" +
+						" is not supported for consistency check!");
+		} catch (OWLException e) {
+			throw new InternalReasonerException(e);
+		} 
 	}
 
 	public boolean entails(IRI ontologyID, 
 			Set<LogicalExpression> expressions) {
-		throw new UnsupportedOperationException();
+		for (LogicalExpression e : expressions) {
+			if (!entails(ontologyID, e))
+                return false;
+        }
+        return true;
 	}
 
 	public Set<ConsistencyViolation> checkConsistency(IRI ontologyId) {
 		throw new UnsupportedOperationException();
 	}
 	
+	/*
+	 * @return true if the given subject instance has an attribute value of the 
+	 * 			given infering attribute with the given object instance as value
+	 */
+	private boolean instanceHasInferingAttributeValue(IRI ontologyID, 
+			Instance subject, Identifier attributeId, Instance object) {		
+		try {
+			return builtInFacade.hasPropertyValue(ontologyID.toString(), 
+					owlDataFactory.getOWLIndividual(new URI(
+							subject.getIdentifier().toString())), 
+					owlDataFactory.getOWLObjectProperty(new URI(
+							attributeId.toString())),
+					owlDataFactory.getOWLIndividual(new URI(
+							object.getIdentifier().toString())));
+		} catch (OWLException e) {
+			throw new InternalReasonerException(e);
+		} catch (URISyntaxException e) {
+			throw new InternalReasonerException(e);
+		}
+	}
+	
+	/*
+	 * @return true if the given subject instance has an attribute value of the 
+	 * 			given constraint attribute with the given object data value as value
+	 */
+	private boolean instanceHasConstraintAttributeValue(IRI ontologyID, 
+			Instance subject, Identifier attributeId, DataValue object) {
+		String objStr = object.getType().toString();
+		try {
+			return builtInFacade.hasPropertyValue(ontologyID.toString(), 
+					owlDataFactory.getOWLIndividual(new URI(
+							subject.getIdentifier().toString())), 
+					owlDataFactory.getOWLDataProperty(new URI(
+							attributeId.toString())),
+					owlDataFactory.getOWLConcreteData(new URI(
+							"http://www.w3.org/2001/XMLSchema" + 
+							objStr.substring(objStr.indexOf("#"))), 
+							null, object.getValue()));
+		} catch (OWLException e) {
+			throw new InternalReasonerException(e);
+		} catch (URISyntaxException e) {
+			throw new InternalReasonerException(e);
+		}
+	}
+	
+	private Term getDataValue(String value, String type) {
+		Term val = null;
+		if (type.equals("string")) {
+			val = dataFactory.createWsmlString(value);
+		}
+		if (type.equals("integer")) {
+			val = dataFactory.createWsmlInteger(value);
+		}
+		if (type.equals("decimal")) {
+			val = dataFactory.createWsmlDecimal(value);
+		}
+		if (type.equals("float")) {
+			val = dataFactory.createWsmlFloat(value);
+		}
+		if (type.equals("double")) {
+			val = dataFactory.createWsmlDouble(value);
+		}
+//TODO: check transformation from anyURI, QName, duration, dateTime, time and so on to wsml datavalues!
+		if (type.equals("anyURI")) {
+			val = wsmoFactory.createIRI(value);
+		}
+		if (type.equals("QName")) {
+//			val = null;
+		}
+		if (type.equals("boolean")) {
+			val = dataFactory.createWsmlBoolean(value);
+		}
+		if (type.equals("duration")) {
+//			val = dataFactory.createWsmlDuration(value);
+		}
+		if (type.equals("dateTime")) {
+//			val = dataFactory.createWsmlDateTime(value);
+		}
+		if (type.equals("time")) {
+//			val = dataFactory.createWsmlTime(value);
+		}
+		if (type.equals("date")) {
+			int year = Integer.valueOf(value.substring(
+					0, value.indexOf("-"))).intValue();
+			int month = Integer.valueOf(value.substring(
+					value.indexOf("-")+1, value.lastIndexOf("-"))).intValue();
+			int day = Integer.valueOf(value.substring(
+					value.lastIndexOf("-")+1, value.length())).intValue();
+			val = dataFactory.createWsmlDate(new GregorianCalendar(year, month, day));
+		}
+		if (type.equals("gYearMonth")) {
+//			val = dataFactory.createWsmlGregorianYearMonth(value);
+		}
+		if (type.equals("gYear")) {
+			val = dataFactory.createWsmlGregorianYear(value);
+		}
+		if (type.equals("gMonthDay")) {
+//			val = dataFactory.createWsmlGregorianMonthDay(value);
+		}
+		if (type.equals("gDay")) {
+			val = dataFactory.createWsmlGregorianDay(value);
+		}
+		if (type.equals("gMonth")) {
+			val = dataFactory.createWsmlGregorianMonth(value);
+		}
+		if (type.equals("hexBinary")) {
+//			val = null;
+		}
+		if (type.equals("base64Binary")) {
+//			val = dataFactory.createWsmlBase64Binary(value);
+		}
+		return val;
+	}
+	
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.8  2006/08/21 08:22:10  nathalie
+ * changed create elements to get elements
+ *
  * Revision 1.7  2006/08/10 08:30:59  nathalie
  * added request for getting direct concept/concepts of an instance
  *
