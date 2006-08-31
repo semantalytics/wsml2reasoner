@@ -43,7 +43,6 @@ import org.omwg.ontology.Variable;
 import org.omwg.ontology.WsmlDataType;
 import org.wsml.reasoner.ConjunctiveQuery;
 import org.wsml.reasoner.DatalogException;
-import org.wsml.reasoner.DatalogReasonerFacade;
 import org.wsml.reasoner.ExternalToolException;
 import org.wsml.reasoner.Literal;
 import org.wsml.reasoner.Rule;
@@ -703,4 +702,119 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         ontologySingletonSet.add(ontology);
         registerOntologiesNoVerification(ontologySingletonSet);
     }
+
+	public Set<Concept> getAllConcepts(IRI ontologyID) {
+//		// build query:
+//        Term instanceVariable = leFactory.createVariable("y");
+//		Term conceptVariable = leFactory.createVariable("x");
+//        LogicalExpression query = leFactory.createMemberShipMolecule(
+//        		instanceVariable, conceptVariable);
+//
+//        // submit query to reasoner:
+//        Set<Map<Variable, Term>> bindings;
+//        try {
+//            bindings = internalExecuteQuery(ontologyID, query);
+//        } catch (DatalogException e) {
+//            throw new InternalReasonerException();
+//        } catch (ExternalToolException e) {
+//            throw new InternalReasonerException();
+//        }
+//
+//        // extract concepts from result:
+//        Set<Concept> concepts = new HashSet<Concept>();
+//        for (Map<Variable, Term> binding : bindings) {
+//            IRI conceptID = (IRI) binding.get(leFactory.createVariable("x"));
+//            concepts.add(wsmoFactory.getConcept(conceptID));
+//        }
+//        return concepts;
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public Set<Instance> getAllInstances(IRI ontologyID) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public Set<IRI> getAllAttributes(IRI ontologyID) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public Set<IRI> getAllConstraintAttributes(IRI ontologyID) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public Set<IRI> getAllInferenceAttributes(IRI ontologyID) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public Set<Concept> getEquivalentConcepts(IRI ontologyID, Concept concept) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public boolean isEquivalentConcept(IRI ontologyID, Concept concept1, Concept concept2) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public Set<Concept> getDirectConcepts(IRI ontologyID, Instance instance) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public Set<IRI> getSubRelations(IRI ontologyID, Identifier attributeId) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public Set<IRI> getSuperRelations(IRI ontologyID, Identifier attributeId) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public Set<IRI> getEquivalentRelations(IRI ontologyID, Identifier attributeId) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public Set<IRI> getInverseRelations(IRI ontologyID, Identifier attributeId) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public Set<Concept> getConceptsOf(IRI ontologyID, Identifier attributeId) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public Set<IRI> getRangesOfInferingAttribute(IRI ontologyID, Identifier attributeId) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public Set<IRI> getRangesOfConstraintAttribute(IRI ontologyID, Identifier attributeId) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public Map<IRI, Set<IRI>> getInferingAttributeValues(IRI ontologyID, Instance instance) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public Map<IRI, Set<Term>> getConstraintAttributeValues(IRI ontologyID, Instance instance) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public Map<Instance, Set<IRI>> getInferingAttributeInstances(IRI ontologyID, Identifier attributeId) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public Map<Instance, Set<Term>> getConstraintAttributeInstances(IRI ontologyID, Identifier attributeId) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public Instance getInferingAttributeValue(IRI ontologyID, Instance subject, Identifier attributeId) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public String getConstraintAttributeValue(IRI ontologyID, Instance subject, Identifier attributeId) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public Set<Instance> getInferingAttributeValues(IRI ontologyID, Instance subject, Identifier attributeId) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public Set<String> getConstraintAttributeValues(IRI ontologyID, Instance subject, Identifier attributeId) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
 }
