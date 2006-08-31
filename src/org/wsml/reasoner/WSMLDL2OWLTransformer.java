@@ -41,7 +41,7 @@ import org.wsmo.common.Identifier;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.5 $ $Date: 2006-07-23 15:21:36 $
+ * @version $Revision: 1.6 $ $Date: 2006-08-31 12:35:59 $
  */
 public class WSMLDL2OWLTransformer implements Visitor{
 	
@@ -107,7 +107,10 @@ public class WSMLDL2OWLTransformer implements Visitor{
     		throws OWLException {
     	OWLDescription owlDescription = null;
     	// create a description from the logical expression
-		if (logExpr instanceof MembershipMolecule) {
+    	if (logExpr instanceof Atom) {
+    		owlDescription = helper.transformAtom((Atom) logExpr);
+    	}
+    	if (logExpr instanceof MembershipMolecule) {
 			owlDescription = helper.transformMemberShipMolecule(
 					(MembershipMolecule) logExpr);
 		}
@@ -448,6 +451,14 @@ public class WSMLDL2OWLTransformer implements Visitor{
     		return list;
     	}
         
+    	private OWLClass transformAtom(Atom expr) {
+//    		System.out.println("Atom: " + expr.toString() + "\n"); 
+    		OWLClass clazz = null;
+    		if (expr.listParameters().size() == 0)
+    			clazz = owlGenerator.createClass(expr.getIdentifier().toString());
+    		return clazz;
+    	}
+    	
     	private OWLClass transformMemberShipMolecule(MembershipMolecule expr) {
 //    		System.out.println("MembershipMolecule: " + expr.toString() + "\n");
     		OWLIndividual individual = null;
@@ -1552,6 +1563,9 @@ public class WSMLDL2OWLTransformer implements Visitor{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.5  2006/07/23 15:21:36  nathalie
+ * updating translation to owl
+ *
  * Revision 1.4  2006/07/21 16:25:21  nathalie
  * completing the pellet reasoner integration
  *

@@ -49,11 +49,11 @@ import org.wsml.reasoner.ExternalToolException;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.5 $ $Date: 2006-08-10 08:30:59 $
+ * @version $Revision: 1.6 $ $Date: 2006-08-31 12:36:00 $
  */
 public class PelletFacade implements DLReasonerFacade {
 	
-	protected Reasoner reasoner = null;
+	private Reasoner reasoner = null;
 	
 	private Map<String, Reasoner> registeredOntologies = null;
 	
@@ -100,10 +100,10 @@ public class PelletFacade implements DLReasonerFacade {
 		return reasoner.isConsistent();
 	}
 	
-	public boolean isConsistent(String ontologyURI, OWLDescription clazz) 
+	public boolean isConsistent(String ontologyURI, OWLDescription description) 
 			throws OWLException {
 		reasoner = getReasoner(ontologyURI);
-		return reasoner.isConsistent(clazz);
+		return reasoner.isConsistent(description);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -180,13 +180,6 @@ public class PelletFacade implements DLReasonerFacade {
 			throws OWLException {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.allInstancesOf(clazz);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public OWLClass typeOf(String ontologyURI, OWLIndividual individual) 
-			throws OWLException {
-		reasoner = getReasoner(ontologyURI);
-		return reasoner.typeOf(individual);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -326,14 +319,38 @@ public class PelletFacade implements DLReasonerFacade {
 		return reasoner.getPropertyValue(subject, property);
 	}
 	
-	public void printClassTree(String ontologyURI) {
-		reasoner = getReasoner(ontologyURI);
-		reasoner.getKB().printClassTree();
+	/**
+	 * Prints a class tree from the registered ontology.
+	 */
+	public static void printClassTree(OWLOntology ontology) {
+		Reasoner reason = new Reasoner();
+		try {
+			reason.setOntology(ontology);
+		} catch (OWLException e) {
+			 e.printStackTrace();
+	         throw new RuntimeException(new ExternalToolException(
+	         		"PELLET ontology registration problem."));
+		}
+		reason.getKB().printClassTree();
 	}
 	
-	public String getInfo(String ontologyURI) {
-		reasoner = getReasoner(ontologyURI);
-		return reasoner.getKB().getInfo();
+	/**
+     * Returns information about the registered ontology. Among these information 
+     * are the expressivity, the number of classes, properties, individuals and 
+     * GCIs.
+     * 
+     * @return String containing information about the registered ontology
+     */
+	public static String getInfo(OWLOntology ontology) {
+		Reasoner reason = new Reasoner();
+		try {
+			reason.setOntology(ontology);
+		} catch (OWLException e) {
+			 e.printStackTrace();
+	         throw new RuntimeException(new ExternalToolException(
+	         		"PELLET ontology registration problem."));
+		}
+		return reason.getKB().getInfo();
 	}
 	
 	private Reasoner getReasoner(String ontologyURI) {
@@ -364,6 +381,9 @@ public class PelletFacade implements DLReasonerFacade {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.5  2006/08/10 08:30:59  nathalie
+ * added request for getting direct concept/concepts of an instance
+ *
  * Revision 1.4  2006/08/08 10:14:27  nathalie
  * implemented support for registering multiple ontolgies at wsml-dl reasoner
  *
