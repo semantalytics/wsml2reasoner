@@ -20,6 +20,8 @@ package wsml2reasoner.transformation;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.util.HashMap;
 
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
@@ -28,6 +30,8 @@ import org.semanticweb.owl.model.OWLOntology;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DLBasedWSMLReasoner;
 import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsml.reasoner.serializer.owl.OWLSerializer;
+import org.wsml.reasoner.serializer.owl.OWLSerializerImpl;
 import org.wsmo.factory.Factory;
 import org.wsmo.wsml.Parser;
 
@@ -41,6 +45,12 @@ import wsml2reasoner.normalization.WSMLNormalizationTest;
 public class WSML2OWLTest extends WSMLNormalizationTest {
 	
 	protected DLBasedWSMLReasoner dlReasoner;
+	
+	protected OWLSerializer serializer;
+	
+	protected HashMap<String, String> prefs; 
+	
+	protected StringWriter writer;
 	
 	protected Ontology ontology;
 	
@@ -58,6 +68,10 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         ontology.addAxiom(axiom);
         dlReasoner = new DLBasedWSMLReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET, 
         		new WSMO4JManager());
+        serializer = new OWLSerializerImpl();
+        writer = new StringWriter();
+        prefs = new HashMap<String, String>();
+        prefs.put(OWLSerializer.OWL_SERIALIZER, OWLSerializer.OWL_ABSTRACT);
     }
 
     protected void tearDown() throws Exception {
@@ -81,26 +95,29 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
 		
 		// transform ontology to OWL ontology
 		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));    
-//		System.out.println(dlReasoner.serialize2OWLRDFSyntax(owlOntology));
+		serializer.serialize(owlOntology, writer, prefs);
+//		serializer.serialize(owlOntology, writer);
+		System.out.println(writer.toString());
     } 
     
-    public void test() throws Exception {
-    	String s = "?x memberOf Mother impliedBy ?x[hasHusband hasValue ?y] " +
-    			"and ?y[hasChild hasValue ?z] and ?z memberOf Child.";
-//    	String s = "?x[uncle hasValue ?z] impliedBy ?x[parent hasValue ?y] and " +
-//    			"?y[brother hasValue ?z].";
+//    public void test() throws Exception {
+////    	String s = "?x memberOf Mother impliedBy ?x[hasHusband hasValue ?y] " +
+////    			"and ?y[hasChild hasValue ?z] and ?z memberOf Child.";
+////    	String s = "?x[uncle hasValue ?z] impliedBy ?x[parent hasValue ?y] and " +
+////    			"?y[brother hasValue ?z].";
 //    	String s = "?x memberOf Mother impliedBy ?w[hasHusband hasValue ?y].";
-    	LogicalExpression le = (LogicalExpression) leFactory.createLogicalExpression(
-                s, ontology); 
-        axiom.addDefinition(le);
-        
-        // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
-		
-        axiom.removeDefinition(le);
-    }
+//    	LogicalExpression le = (LogicalExpression) leFactory.createLogicalExpression(
+//                s, ontology); 
+//        axiom.addDefinition(le);
+//        
+//        // transform ontology to OWL ontology
+//		owlOntology = dlReasoner.convertOntology(ontology);
+//		serializer.serialize(owlOntology, writer, prefs);
+////		serializer.serialize(owlOntology, writer);
+//		System.out.println(writer.toString());
+//		
+//        axiom.removeDefinition(le);
+//    }
     
     /**
      * This test checks for transformation of wsml subConceptOf to owl subClass.
@@ -113,7 +130,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         
         // transform ontology to OWL ontology
 		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
+		serializer.serialize(owlOntology, writer, prefs);
+//		serializer.serialize(owlOntology, writer);
+		System.out.println(writer.toString());
 		
         axiom.removeDefinition(le);
     }
@@ -130,7 +149,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         
         // transform ontology to OWL ontology
 		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
+		serializer.serialize(owlOntology, writer, prefs);
+//		serializer.serialize(owlOntology, writer);
+		System.out.println(writer.toString());
 		
         axiom.removeDefinition(le);
     }
@@ -147,7 +168,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         
         // transform ontology to OWL ontology
 		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
+		serializer.serialize(owlOntology, writer, prefs);
+//		serializer.serialize(owlOntology, writer);
+		System.out.println(writer.toString());
 		
         axiom.removeDefinition(le);
     }
@@ -164,7 +187,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         
         // transform ontology to OWL ontology
 		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
+		serializer.serialize(owlOntology, writer, prefs);
+//		serializer.serialize(owlOntology, writer);
+		System.out.println(writer.toString());
 		
         axiom.removeDefinition(le);
     }
@@ -181,7 +206,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         
         // transform ontology to OWL ontology
 		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
+		serializer.serialize(owlOntology, writer, prefs);
+//		serializer.serialize(owlOntology, writer);
+		System.out.println(writer.toString());
 		
         axiom.removeDefinition(le);
     }
@@ -198,7 +225,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         
         // transform ontology to OWL ontology
 		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
+		serializer.serialize(owlOntology, writer, prefs);
+//		serializer.serialize(owlOntology, writer);
+		System.out.println(writer.toString());
 		
         axiom.removeDefinition(le);
     }
@@ -215,7 +244,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         
         // transform ontology to OWL ontology
 		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
+		serializer.serialize(owlOntology, writer, prefs);
+//		serializer.serialize(owlOntology, writer);
+		System.out.println(writer.toString());
 		
         axiom.removeDefinition(le);
     }
@@ -233,7 +264,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         
         // transform ontology to OWL ontology
 		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
+		serializer.serialize(owlOntology, writer, prefs);
+//		serializer.serialize(owlOntology, writer);
+		System.out.println(writer.toString());
 		
         axiom.removeDefinition(le);
     }
@@ -250,7 +283,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         
         // transform ontology to OWL ontology
 		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
+		serializer.serialize(owlOntology, writer, prefs);
+//		serializer.serialize(owlOntology, writer);
+		System.out.println(writer.toString());
 		
         axiom.removeDefinition(le);
     }
@@ -267,7 +302,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         
         // transform ontology to OWL ontology
 		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
+		serializer.serialize(owlOntology, writer, prefs);
+//		serializer.serialize(owlOntology, writer);
+		System.out.println(writer.toString());
 		
         axiom.removeDefinition(le);
     }
@@ -284,7 +321,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         
         // transform ontology to OWL ontology
 		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
+		serializer.serialize(owlOntology, writer, prefs);
+//		serializer.serialize(owlOntology, writer);
+		System.out.println(writer.toString());
 		
         axiom.removeDefinition(le);
     }
@@ -301,7 +340,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         
         // transform ontology to OWL ontology
 		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
+		serializer.serialize(owlOntology, writer, prefs);
+//		serializer.serialize(owlOntology, writer);
+		System.out.println(writer.toString());
 		
         axiom.removeDefinition(le);
     }
@@ -319,7 +360,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         
         // transform ontology to OWL ontology
 		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
+		serializer.serialize(owlOntology, writer, prefs);
+//		serializer.serialize(owlOntology, writer);
+		System.out.println(writer.toString());
 		
         axiom.removeDefinition(le);
     }
@@ -337,7 +380,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         
         // transform ontology to OWL ontology
 		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
+		serializer.serialize(owlOntology, writer, prefs);
+//		serializer.serialize(owlOntology, writer);
+		System.out.println(writer.toString());
 		
         axiom.removeDefinition(le);
     }
@@ -354,7 +399,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         
         // transform ontology to OWL ontology
 		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
+		serializer.serialize(owlOntology, writer, prefs);
+//		serializer.serialize(owlOntology, writer);
+		System.out.println(writer.toString());
 		
         axiom.removeDefinition(le);
     }
@@ -371,7 +418,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         
         // transform ontology to OWL ontology
 		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
+		serializer.serialize(owlOntology, writer, prefs);
+//		serializer.serialize(owlOntology, writer);
+		System.out.println(writer.toString());
 		
         axiom.removeDefinition(le);
     }
@@ -389,7 +438,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         
         // transform ontology to OWL ontology
 		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
+		serializer.serialize(owlOntology, writer, prefs);
+//		serializer.serialize(owlOntology, writer);
+		System.out.println(writer.toString());
 		
         axiom.removeDefinition(le);
     }
@@ -407,7 +458,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         
         // transform ontology to OWL ontology
 		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
+		serializer.serialize(owlOntology, writer, prefs);
+//		serializer.serialize(owlOntology, writer);
+		System.out.println(writer.toString());
 		
         axiom.removeDefinition(le);
     }
@@ -425,7 +478,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         
         // transform ontology to OWL ontology
 		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
+		serializer.serialize(owlOntology, writer, prefs);
+//		serializer.serialize(owlOntology, writer);
+		System.out.println(writer.toString());
 		
         axiom.removeDefinition(le);
     }
@@ -442,7 +497,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         
         // transform ontology to OWL ontology
 		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
+		serializer.serialize(owlOntology, writer, prefs);
+//		serializer.serialize(owlOntology, writer);
+		System.out.println(writer.toString());
 		
         axiom.removeDefinition(le);
     }
@@ -460,7 +517,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         
         // transform ontology to OWL ontology
 		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
+		serializer.serialize(owlOntology, writer, prefs);
+//		serializer.serialize(owlOntology, writer);
+		System.out.println(writer.toString());
 		
         axiom.removeDefinition(le);
     }
@@ -479,7 +538,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         
         // transform ontology to OWL ontology
 		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
+		serializer.serialize(owlOntology, writer, prefs);
+//		serializer.serialize(owlOntology, writer);
+		System.out.println(writer.toString());
 		
         axiom.removeDefinition(le);
     }
@@ -497,7 +558,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         
         // transform ontology to OWL ontology
 		owlOntology = dlReasoner.convertOntology(ontology);
-		System.out.println(dlReasoner.serialize2OWLAbstractSyntax(owlOntology));
+		serializer.serialize(owlOntology, writer, prefs);
+//		serializer.serialize(owlOntology, writer);
+		System.out.println(writer.toString());
 		
         axiom.removeDefinition(le); 
     }
@@ -505,6 +568,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.7  2006/08/10 08:26:48  nathalie
+ * renamed test files
+ *
  * Revision 1.6  2006/07/25 13:23:15  nathalie
  * fixed examples
  *
