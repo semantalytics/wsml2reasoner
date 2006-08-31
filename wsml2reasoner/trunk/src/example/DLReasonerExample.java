@@ -25,9 +25,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
-import org.wsml.reasoner.api.WSMLDLReasoner;
+import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
@@ -49,7 +50,7 @@ import org.wsmo.wsml.Parser;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.5 $ $Date: 2006-08-21 07:51:10 $
+ * @version $Revision: 1.6 $ $Date: 2006-08-31 12:36:00 $
  */
 public class DLReasonerExample {
 	
@@ -85,14 +86,11 @@ public class DLReasonerExample {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
                 WSMLReasonerFactory.BuiltInReasoner.PELLET);
-        WSMLDLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
+        WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
                 .createWSMLDLReasoner(params);     
         
         // Register ontology
         reasoner.registerOntology(exampleOntology);
-        
-        // print class hierarchy with individuals
-        reasoner.printClassTree((IRI) exampleOntology.getIdentifier());
 
         // print out if the registered ontology is satisfiable
         System.out.println("\n----------------------\n");
@@ -101,17 +99,17 @@ public class DLReasonerExample {
         
         // print out if a specified concept is satisfiable
         System.out.println("\n----------------------\n");
+        String le = "_\"http://www.example.org/ontologies/example#Machine\"";
         System.out.println("Is concept \"Machine\" satisfiable? " + 
-        		reasoner.isConsistent((IRI) exampleOntology.getIdentifier(), 
-        				wsmoFactory.createConcept(
-        				wsmoFactory.createIRI(ns + "Machine"))));
+        		reasoner.entails((IRI) exampleOntology.getIdentifier(), 
+        				leFactory.createLogicalExpression(le)));
         
         // print out if a specified logical expression is satisfiable
         System.out.println("\n----------------------\n");
-        String le = "?x memberOf _\"http://www.example.org/ontologies/example#Pet\" " +
+        le = "?x memberOf _\"http://www.example.org/ontologies/example#Pet\" " +
 		"\n and ?x memberOf _\"http://www.example.org/ontologies/example#DomesticAnimal\".";
         System.out.println("Is the following logical expression satisfiable? \n\"" + le +
-        		"\" \n" + reasoner.isConsistent((IRI) exampleOntology.getIdentifier(), 
+        		"\" \n" + reasoner.entails((IRI) exampleOntology.getIdentifier(), 
         				leFactory.createLogicalExpression(le)));
         
         // print out if a specified logical expression is satisfiable
@@ -119,7 +117,7 @@ public class DLReasonerExample {
         le = "?x memberOf _\"http://www.example.org/ontologies/example#Man\" " +
 				"\n and ?x memberOf _\"http://www.example.org/ontologies/example#Woman\"."; 
         System.out.println("Is the following logical expression satisfiable? \n\"" + le +
-        		"\" \n" + reasoner.isConsistent((IRI) exampleOntology.getIdentifier(), 
+        		"\" \n" + reasoner.entails((IRI) exampleOntology.getIdentifier(), 
         				leFactory.createLogicalExpression(le)));
         
         // get all instances of woman concept
@@ -148,12 +146,13 @@ public class DLReasonerExample {
 			for (IRI value : IRIset) 
 				System.out.println("   value: " + value.toString());
 		}
-		entrySet = reasoner.getConstraintAttributeValues((IRI) exampleOntology.getIdentifier(), 
+		Set<Entry<IRI, Set<Term>>> entrySetTerm = reasoner.getConstraintAttributeValues(
+				(IRI) exampleOntology.getIdentifier(), 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Mary"))).entrySet();
-		for (Entry<IRI, Set<IRI>> entry : entrySet) {
+		for (Entry<IRI, Set<Term>> entry : entrySetTerm) {
 			System.out.println(entry.getKey().toString());
-			Set<IRI> IRIset = entry.getValue();
-			for (IRI value : IRIset) 
+			Set<Term> termSet = entry.getValue();
+			for (Term value : termSet) 
 				System.out.println("   value: " + value.toString());
 		}
 
@@ -201,6 +200,9 @@ public class DLReasonerExample {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.5  2006/08/21 07:51:10  nathalie
+ * *** empty log message ***
+ *
  * Revision 1.4  2006/08/08 10:14:28  nathalie
  * implemented support for registering multiple ontolgies at wsml-dl reasoner
  *

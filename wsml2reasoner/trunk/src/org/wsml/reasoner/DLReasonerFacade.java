@@ -49,7 +49,7 @@ import org.semanticweb.owl.model.OWLProperty;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.5 $ $Date: 2006-08-10 08:31:00 $
+ * @version $Revision: 1.6 $ $Date: 2006-08-31 12:36:00 $
  */
 public interface DLReasonerFacade {
 
@@ -80,7 +80,7 @@ public interface DLReasonerFacade {
      * @return true if the given OWL Description is satisfiable, false otherwise.
      */
     public boolean isConsistent(String ontologyURI, 
-    		OWLDescription clazz) throws OWLException;
+    		OWLDescription description) throws OWLException;
     
     /**
      * @return a set containing all classes from the loaded ontology
@@ -149,13 +149,6 @@ public interface DLReasonerFacade {
      */
     public Set<OWLEntity> allInstancesOf(String ontologyURI, OWLClass clazz) 
     		throws OWLException;
-    
-    /**
-     * @return the concept that a given OWL individual is a direct type of. If 
-     * 			there is more than one such concept, the first one is returned.
-     */
-	public OWLClass typeOf(String ontologyURI, OWLIndividual individual) 
-			throws OWLException;
 	
 	/**
      * @return a set with all direct concepts of a given OWL individual
@@ -285,20 +278,6 @@ public interface DLReasonerFacade {
 	public Set<OWLDataValue> getDataPropertyValues(String ontologyURI, 
 			OWLIndividual subject, OWLDataProperty property) 
 			throws OWLException;
-	
-    /**
-	 * Prints a class tree from the registered ontology.
-	 */
-    public void printClassTree(String ontologyURI);
-    
-    /**
-     * Returns information about the registered ontology. Among these information 
-     * are the expressivity, the number of classes, properties, individuals and 
-     * GCIs.
-     * 
-     * @return String containing information about the registered ontology
-     */
-    public String getInfo(String ontologyURI);
     
     /**
      * Evaluates a given query on a particular external tool.
@@ -311,6 +290,9 @@ public interface DLReasonerFacade {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.5  2006/08/10 08:31:00  nathalie
+ * added request for getting direct concept/concepts of an instance
+ *
  * Revision 1.4  2006/08/08 10:14:28  nathalie
  * implemented support for registering multiple ontolgies at wsml-dl reasoner
  *
