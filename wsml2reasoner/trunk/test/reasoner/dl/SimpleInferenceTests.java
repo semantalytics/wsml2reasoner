@@ -28,7 +28,7 @@ import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.InternalReasonerException;
-import org.wsml.reasoner.api.WSMLDLReasoner;
+import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
@@ -47,7 +47,7 @@ public class SimpleInferenceTests extends TestCase {
 	
 	private LogicalExpressionFactory leFactory;
 
-    private WSMLDLReasoner wsmlReasoner;
+    private WSMLReasoner wsmlReasoner;
 
     private Parser parser;
     
@@ -459,6 +459,9 @@ public class SimpleInferenceTests extends TestCase {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.6  2006/08/31 12:36:00  nathalie
+ * removed methods from WSMLDLReasoner interface to the WSMLReasoner interface. Replaced some methods by entails() and groundQuery() methods.
+ *
  * Revision 1.5  2006/08/10 08:30:59  nathalie
  * added request for getting direct concept/concepts of an instance
  *
