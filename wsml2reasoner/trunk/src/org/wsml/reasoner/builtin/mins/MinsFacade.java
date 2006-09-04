@@ -483,7 +483,7 @@ public class MinsFacade implements DatalogReasonerFacade {
                                 new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(
                                         0) }, new IsNum()) }));
 
-        // ?x memberOf wsml#boolean :- isString(?x) , ?x = "_boolean("true") ;
+        // ?x memberOf wsml#boolean :- isString(?x) , ?x = "_boolean("true") REPLACED with ?x memberOf wsml#boolean :- ?x = org.deri.mins.terms.concrete.BooleanTerm[value=true]
         rs
                 .addRule(new Rule(
                         new Head[] { new Head(memberOfNo,
@@ -492,21 +492,16 @@ public class MinsFacade implements DatalogReasonerFacade {
                                         new ConstTerm(booleanNo) }) },
                         new Body[] {
                                 new BuiltinBody(
-                                        14,
-                                        false,
-                                        new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(
-                                                0) }, new IsString()),
-                                new BuiltinBody(
                                         6,
                                         false,
                                         new org.deri.mins.terms.Term[] {
                                                 new org.deri.mins.terms.Variable(
                                                         0),
-                                                new StringTerm(
-                                                        "_boolean(\"true\")") },
+                                                new BooleanTerm(//new StringTerm(
+                                                        "true") },//"_boolean(\"true\")") },
                                         new Equal()) }));
 
-        // ?x memberOf wsml#boolean :- isString(?x) , ?x = "_boolean("true") ;
+        // ?x memberOf wsml#boolean :- isString(?x) , ?x = "_boolean("false") REPLACED with ?x memberOf wsml#boolean :- ?x = org.deri.mins.terms.concrete.BooleanTerm[value=false]
         rs
                 .addRule(new Rule(
                         new Head[] { new Head(memberOfNo,
@@ -515,18 +510,13 @@ public class MinsFacade implements DatalogReasonerFacade {
                                         new ConstTerm(booleanNo) }) },
                         new Body[] {
                                 new BuiltinBody(
-                                        14,
-                                        false,
-                                        new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(
-                                                0) }, new IsString()),
-                                new BuiltinBody(
                                         6,
                                         false,
                                         new org.deri.mins.terms.Term[] {
                                                 new org.deri.mins.terms.Variable(
                                                         0),
-                                                new StringTerm(
-                                                        "_boolean(\"false\")") },
+                                                new BooleanTerm(//new StringTerm(
+                                                        "false") },//"_boolean(\"false\")") }
                                         new Equal()) }));
     }
 
