@@ -1,11 +1,14 @@
 package org.wsml.reasoner.api.inconsistency;
 
+import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.ontology.*;
 import org.wsmo.common.*;
 
 public class AttributeTypeViolation extends ConsistencyViolation {
     
     private Instance instance;
+    
+    private ConstructedTerm ctInstance;private Ontology ontology;
 
     private Value violatingValue;
 
@@ -36,13 +39,31 @@ public class AttributeTypeViolation extends ConsistencyViolation {
         this.attribute = attribute;
         this.expectedType = expectedType;
     }
+
+    public AttributeTypeViolation(Ontology ontology, ConstructedTerm ctInstance, Value violatingValue, Attribute attribute, Type expectedType) {
+        super((IRI)ontology.getIdentifier());
+        this.ctInstance = ctInstance;
+        this.violatingValue = violatingValue;
+        this.attribute = attribute;
+        this.expectedType = expectedType;
+    }
     
     public String toString(){
-        TopEntity te = instance.getOntology();
-        return "AttributeTypeViolation due to instance: " + 
-            toString(instance.getIdentifier(),te) +
-            " expected type: "+ toString(expectedType,te)+ 
-            " found value: " + toString(violatingValue,te) + 
-            " at attribute: " + toString(attribute.getIdentifier(),te);  
+    	if (instance!=null){
+    		TopEntity te = instance.getOntology();
+    		return "AttributeTypeViolation due to instance: " + 
+            	toString(instance.getIdentifier(),te) +
+            	" expected type: "+ toString(expectedType,te)+ 
+            	" found value: " + toString(violatingValue,te) + 
+            	" at attribute: " + toString(attribute.getIdentifier(),te);
+    	}
+    	else{
+    		TopEntity te = ontology;
+    		return "AttributeTypeViolation due to instance: " + 
+            	toString(ctInstance,te) +
+            	" expected type: "+ toString(expectedType,te)+ 
+            	" found value: " + toString(violatingValue,te) + 
+            	" at attribute: " + toString(attribute.getIdentifier(),te);    	
+    	}
     }
 }
