@@ -30,6 +30,7 @@ import java.util.Set;
 
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Axiom;
@@ -456,7 +457,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         Set<Map<Variable, Term>> violations = executeQuery(ontologyId, atom);
         for (Map<Variable, Term> violation : violations) {
             // Construct error object
-            Instance instance = wsmoFactory.getInstance((IRI) violation.get(i));
+            
             Term rawValue = violation.get(v);
             Value value;
             if (rawValue instanceof DataValue)
@@ -476,8 +477,14 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             else
                 type = wsmoFactory.getConcept(typeId);
 
-            errors.add(new AttributeTypeViolation(ontologyId, instance, value,
+            if (violation.get(i) instanceof Identifier){
+            	Instance instance = wsmoFactory.getInstance((IRI) violation.get(i));            
+            	errors.add(new AttributeTypeViolation(ontologyId, instance, value,
                     attribute, type));
+            }
+            if (violation.get(i) instanceof ConstructedTerm){
+            	errors.add(new AttributeTypeViolation(wsmoFactory.getOntology(ontologyId), (ConstructedTerm)violation.get(i), value, attribute, type));
+            }
         }
 
     }
