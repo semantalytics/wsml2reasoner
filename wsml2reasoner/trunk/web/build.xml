@@ -12,7 +12,7 @@ Note for Eclipse User: When using ant from eclipse you can get jsse.jar by using
   <!-- avoids pop ups if you create this file and set ssh.password and ssh.user
        on server also enables to reset src dir etc.-->
   <property file="pwd" />
-  <property name="cvs.user" value="hlausen"/>
+  <property name="cvs.user" value="graham"/>
   <property name="cvs.path" value=":pserver:${cvs.user}@cvs.deri.at:/usr/local/cvsroot" />
   <property name="cvs.module" value="wsml2reasoner"/>
   <property name="cvs.dir" location="${basedir}/src" />
@@ -23,8 +23,8 @@ Note for Eclipse User: When using ant from eclipse you can get jsse.jar by using
   <property name="dir.src" location="${basedir}/src" />
   <property name="dir.lib" location="${basedir}" />
   <property name="dir.build" location="${basedir}/build" />
-  <property name="dir.distribution" location="${basedir}/SnapShot" />
-  <property name="shell.host" value="dev1.deri.at" />
+  <property name="dir.distribution" location="${basedir}/Snapshot" />
+  <property name="shell.host" value="tools.deri.org" />
   <property name="lib.wrapper"
             location="${dir.distribution}/${cvs.module}-${DSTAMP}.jar" />
   <property name="lib.wrapper-src"
