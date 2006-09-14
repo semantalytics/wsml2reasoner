@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.mindswap.pellet.owlapi.Reasoner;
 import org.mindswap.pellet.query.QueryResults;
 import org.semanticweb.owl.impl.model.OWLConcreteDataImpl;
@@ -44,16 +46,17 @@ import org.wsml.reasoner.ExternalToolException;
  *
  * <pre>
  *  Created on July 3rd, 2006
- *  Committed by $Author: nathalie $
+ *  Committed by $Author: hlausen $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/builtin/pellet/PelletFacade.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.6 $ $Date: 2006-08-31 12:36:00 $
+ * @version $Revision: 1.7 $ $Date: 2006-09-14 18:37:06 $
  */
 public class PelletFacade implements DLReasonerFacade {
 	
 	private Reasoner reasoner = null;
+    private Logger log = Logger.getLogger(PelletFacade.class);
 	
 	private Map<String, Reasoner> registeredOntologies = null;
 	
@@ -76,6 +79,7 @@ public class PelletFacade implements DLReasonerFacade {
 			reasoner.setOntology(owlOntology);
 			registeredOntologies.put(owlOntology.getURI().toString(), 
 					reasoner);
+            if (log.isDebugEnabled()) printClassTree(owlOntology);
 		} catch (OWLException e) {
 			 e.printStackTrace();
 	         throw new ExternalToolException(
@@ -381,6 +385,9 @@ public class PelletFacade implements DLReasonerFacade {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.6  2006/08/31 12:36:00  nathalie
+ * removed methods from WSMLDLReasoner interface to the WSMLReasoner interface. Replaced some methods by entails() and groundQuery() methods.
+ *
  * Revision 1.5  2006/08/10 08:30:59  nathalie
  * added request for getting direct concept/concepts of an instance
  *
