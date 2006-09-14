@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.Map.Entry;
 
+import org.mindswap.pellet.exceptions.InconsistentOntologyException;
 import org.mindswap.pellet.query.QueryResults;
 import org.omwg.logicalexpression.AttributeValueMolecule;
 import org.omwg.logicalexpression.LogicalExpression;
@@ -61,12 +62,12 @@ import uk.ac.man.cs.img.owl.validation.ValidatorLogger;
  *
  * <pre>
  *  Created on July 3rd, 2006
- *  Committed by $Author: nathalie $
+ *  Committed by $Author: hlausen $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/impl/DLBasedWSMLReasoner.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.9 $ $Date: 2006-08-31 12:37:50 $
+ * @version $Revision: 1.10 $ $Date: 2006-09-14 18:37:05 $
  */
 public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 
@@ -250,12 +251,17 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		}
 	}
 	
-	public void registerOntologies(Set<Ontology> ontologies) {
+	public void registerOntologies(Set<Ontology> ontologies) throws InconsistencyException {
         boolean satisfiable = true;
         Set<IRI> ids = new HashSet<IRI>();
         
         // register ontologies
-        registerOntologiesNoVerification(ontologies);
+        try{
+            registerOntologiesNoVerification(ontologies);
+        }catch (InconsistentOntologyException e){
+            //@TODO do more clever!!!!
+            throw new InconsistencyException("Inconsistency detected");
+        }
         
 		// check satisfiability
         for (Ontology ontology : ontologies) {
@@ -280,7 +286,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
         }
 	}
 
-	public void registerOntology(Ontology ontology) {	
+	public void registerOntology(Ontology ontology) throws InconsistencyException{	
 		Set<Ontology> ontologies = new HashSet<Ontology>();
 		ontologies.add(ontology);
 		registerOntologies(ontologies);
@@ -1262,6 +1268,9 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.9  2006/08/31 12:37:50  nathalie
+ * removed methods from WSMLDLReasoner interface to the WSMLReasoner interface. Replaced some methods by entails() and groundQuery() methods. Also fixed a bug concerning a nullpointerexception caused by access on default namespace.
+ *
  * Revision 1.8  2006/08/21 08:22:10  nathalie
  * changed create elements to get elements
  *
