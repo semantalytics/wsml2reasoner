@@ -99,7 +99,7 @@ ontology _"http://www.example.org/ontologies/example"
       
       // Equivalent relations
       ?x[isPetOf hasValue ?y] implies ?x[hasHolder hasValue ?y].
-      ?x[hasHolder hasValue ?y] implies ?x[hasPet hasValue ?y].		
+      ?x[hasHolder hasValue ?y] implies ?x[isPetOf hasValue ?y].		
       
       // Inverse Attribute/Relation
       ?x[hasHolder hasValue ?y] implies ?y[hasPet hasValue ?x].	
