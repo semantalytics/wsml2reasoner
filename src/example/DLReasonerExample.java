@@ -25,11 +25,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.builtin.pellet.PelletFacade;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
@@ -50,7 +53,7 @@ import org.wsmo.wsml.Parser;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.6 $ $Date: 2006-08-31 12:36:00 $
+ * @version $Revision: 1.7 $ $Date: 2006-09-19 13:47:28 $
  */
 public class DLReasonerExample {
 	
@@ -61,6 +64,7 @@ public class DLReasonerExample {
 		DLReasonerExample ex = new DLReasonerExample();
         try {
             ex.doTestRun();
+            ex.debugOntology();
             System.exit(0);
         } catch (Throwable e) {
             e.printStackTrace();
@@ -168,6 +172,30 @@ public class DLReasonerExample {
     }
     
     /**
+     *  Loads an ontology and "debugs" the owl ontology that results after the 
+     *  transformation from WSML to OWL. Pellet prints the class tree of the 
+     *  OWL ontology.
+     */
+    public void debugOntology() throws Exception {
+        
+    	Ontology exampleOntology = loadOntology("example/wsml2owlExample.wsml");
+        if (exampleOntology == null)
+            return;
+
+        // get a reasoner
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
+                WSMLReasonerFactory.BuiltInReasoner.PELLET);
+        WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
+                .createWSMLDLReasoner(params);     
+    
+        // debug ontology - Pellet prints a class tree of the outcoming owl ontology
+		Logger log = Logger.getLogger(PelletFacade.class);
+		log.setLevel(Level.DEBUG);
+		reasoner.registerOntology(exampleOntology);
+    }
+    
+    /**
      * Utility Method to get the object model of a wsml ontology
      * 
      * @param file
@@ -200,6 +228,9 @@ public class DLReasonerExample {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.6  2006/08/31 12:36:00  nathalie
+ * removed methods from WSMLDLReasoner interface to the WSMLReasoner interface. Replaced some methods by entails() and groundQuery() methods.
+ *
  * Revision 1.5  2006/08/21 07:51:10  nathalie
  * *** empty log message ***
  *

@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.mindswap.pellet.owlapi.Reasoner;
 import org.mindswap.pellet.query.QueryResults;
@@ -46,12 +45,12 @@ import org.wsml.reasoner.ExternalToolException;
  *
  * <pre>
  *  Created on July 3rd, 2006
- *  Committed by $Author: hlausen $
+ *  Committed by $Author: nathalie $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/builtin/pellet/PelletFacade.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.7 $ $Date: 2006-09-14 18:37:06 $
+ * @version $Revision: 1.8 $ $Date: 2006-09-19 13:47:28 $
  */
 public class PelletFacade implements DLReasonerFacade {
 	
@@ -79,7 +78,9 @@ public class PelletFacade implements DLReasonerFacade {
 			reasoner.setOntology(owlOntology);
 			registeredOntologies.put(owlOntology.getURI().toString(), 
 					reasoner);
-            if (log.isDebugEnabled()) printClassTree(owlOntology);
+            if (log.isDebugEnabled()) {
+            	reasoner.getKB().printClassTree();
+            }
 		} catch (OWLException e) {
 			 e.printStackTrace();
 	         throw new ExternalToolException(
@@ -309,6 +310,19 @@ public class PelletFacade implements DLReasonerFacade {
 		return reasoner.getPropertyValues(subject, property);
 	}
 	
+	private Reasoner getReasoner(String ontologyURI) {
+		if (registeredOntologies.containsKey(ontologyURI)) {
+			return registeredOntologies.get(ontologyURI);
+		}
+		else {
+			try {
+				throw new ExternalToolException("Ontology is not registrated!");
+			} catch (ExternalToolException e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
+	
 	public OWLIndividual getObjectPropertyValue(String ontologyURI, 
 			OWLIndividual subject, OWLObjectProperty property) 
 			throws OWLException {
@@ -321,53 +335,6 @@ public class PelletFacade implements DLReasonerFacade {
 			throws OWLException{
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.getPropertyValue(subject, property);
-	}
-	
-	/**
-	 * Prints a class tree from the registered ontology.
-	 */
-	public static void printClassTree(OWLOntology ontology) {
-		Reasoner reason = new Reasoner();
-		try {
-			reason.setOntology(ontology);
-		} catch (OWLException e) {
-			 e.printStackTrace();
-	         throw new RuntimeException(new ExternalToolException(
-	         		"PELLET ontology registration problem."));
-		}
-		reason.getKB().printClassTree();
-	}
-	
-	/**
-     * Returns information about the registered ontology. Among these information 
-     * are the expressivity, the number of classes, properties, individuals and 
-     * GCIs.
-     * 
-     * @return String containing information about the registered ontology
-     */
-	public static String getInfo(OWLOntology ontology) {
-		Reasoner reason = new Reasoner();
-		try {
-			reason.setOntology(ontology);
-		} catch (OWLException e) {
-			 e.printStackTrace();
-	         throw new RuntimeException(new ExternalToolException(
-	         		"PELLET ontology registration problem."));
-		}
-		return reason.getKB().getInfo();
-	}
-	
-	private Reasoner getReasoner(String ontologyURI) {
-		if (registeredOntologies.containsKey(ontologyURI)) {
-			return registeredOntologies.get(ontologyURI);
-		}
-		else {
-			try {
-				throw new ExternalToolException("Ontology is not registrated!");
-			} catch (ExternalToolException e) {
-				throw new RuntimeException(e);
-			}
-		}
 	}
 	
 	public QueryResults evaluate(String ontologyURI, String queryString) {
@@ -385,6 +352,11 @@ public class PelletFacade implements DLReasonerFacade {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.7  2006/09/14 18:37:06  hlausen
+ * enabled the print of class tree if pellet facade logging is set to DEBUG
+ *
+ * when register inconsitent ontologies the method should not throw the pellete exception but the wsml2reasoner inconsistency exception, however the inconsistencyexception class still needs some fix
+ *
  * Revision 1.6  2006/08/31 12:36:00  nathalie
  * removed methods from WSMLDLReasoner interface to the WSMLReasoner interface. Replaced some methods by entails() and groundQuery() methods.
  *
