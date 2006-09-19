@@ -20,15 +20,21 @@
 package org.wsml.reasoner.impl;
 
 import java.util.Map;
+import java.util.Vector;
 
+import org.deri.wsmo4j.validator.WsmlValidatorImpl;
+import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.WSMLCoreReasoner;
 import org.wsml.reasoner.api.WSMLDLReasoner;
 import org.wsml.reasoner.api.WSMLFlightReasoner;
+import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsmo.common.WSML;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
+import org.wsmo.validator.WsmlValidator;
 
 /**
  * A default implementation of a factory that constructs WSML Reasoners.
@@ -67,6 +73,44 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         return new WSMO4JManager(wsmoFactory, leFactory, dataFactory);
     }
 
+    public WSMLReasoner createWSMLReasoner(Map<String, Object> params, Ontology ontology) {
+    	WsmlValidator validator = new WsmlValidatorImpl();
+    	String variant = validator.determineVariant(ontology, new Vector(), new Vector());
+    	if (variant == null) {
+    		throw new RuntimeException("Given ontology is not valid WSML-FULL!");
+    	}
+    	if (params == null) {
+			if (variant.equals(WSML.WSML_DL))
+				return new DLBasedWSMLReasoner(BuiltInReasoner.PELLET, 
+						new WSMO4JManager());
+			else if (variant.equals(WSML.WSML_CORE) || variant.equals(WSML.WSML_FLIGHT)) {
+				return new DatalogBasedWSMLReasoner(BuiltInReasoner.KAON2, 
+						new WSMO4JManager());
+			}
+		}
+		else {
+			WSMO4JManager wsmoManager = extractWsmoManager(params);
+			if (variant.equals(WSML.WSML_DL)) {
+				BuiltInReasoner builtin = params.containsKey(PARAM_BUILT_IN_REASONER) 
+        				? (BuiltInReasoner) params.get(PARAM_BUILT_IN_REASONER) 
+        						: BuiltInReasoner.PELLET;
+        		return new DLBasedWSMLReasoner(builtin, wsmoManager);
+			}
+			else if (variant.equals(WSML.WSML_CORE) || variant.equals(WSML.WSML_FLIGHT)
+					|| variant.equals(WSML.WSML_RULE)) {
+				BuiltInReasoner builtin = params.containsKey(PARAM_BUILT_IN_REASONER) 
+	            		? (BuiltInReasoner) params.get(PARAM_BUILT_IN_REASONER)
+	            				: BuiltInReasoner.KAON2;
+	            return new DatalogBasedWSMLReasoner(builtin, wsmoManager);
+			}	
+		}
+    	throw new RuntimeException("Reasoning is not yet supported for WSML-FULL!");
+    }
+
+    public WSMLReasoner createWSMLReasoner(Ontology ontology) {
+    	return createWSMLReasoner(null, ontology);
+    }
+    
     public WSMLCoreReasoner createWSMLCoreReasoner(Map<String, Object> params)
             throws UnsupportedOperationException {
         if (params == null) {
