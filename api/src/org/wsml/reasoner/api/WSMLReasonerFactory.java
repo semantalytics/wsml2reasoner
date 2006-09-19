@@ -21,6 +21,8 @@ package org.wsml.reasoner.api;
 
 import java.util.Map;
 
+import org.omwg.ontology.Ontology;
+
 /**
  * An interface for getting WSML Reasoners for the various variants of WSML.
  * 
@@ -28,11 +30,11 @@ import java.util.Map;
  */
 public interface WSMLReasonerFactory {
 
-    // public String PARAM_WSML_VARIANT = "WSML VARIANT";
-    //
-    // public enum WSMLVariant {
-    // WSML_CORE, WSML_FLIGHT, WSML_RULE, WSML_DL, WSML_FULL
-    // };
+//     public String PARAM_WSML_VARIANT = "WSML VARIANT";
+//    
+//     public enum WSMLVariant {
+//    	 WSML_CORE, WSML_FLIGHT, WSML_RULE, WSML_DL, WSML_FULL
+//     };
 
     public String PARAM_WSMO_FACTORY = "WSML FACTORY";
 
@@ -54,6 +56,41 @@ public interface WSMLReasonerFactory {
         KAON2, MINS, PELLET
     };
 
+    /**
+     * Checks the variant of the given ontology and creates a WSML Reasoner 
+     * backed up by the chosen Datalog or DL reasoning engine, using the 
+     * default WSMO4J factories. If the chosen reasoner is not appropriate for the 
+     * variant of the ontology, the corresponding default reasoner is used.
+     * 
+     * @param params
+     *            configuration parameters. The following parameters are
+     *            accepted at the moment:
+     *            <ul>
+     *            <li>PARAM_WSMO_FACTORY: The WsmoFactory implementation to use</li>
+     *            <li>PARAM_LE_FACTORY: The LogicalExpressionFactory
+     *            implementation to use</li>
+     *            <li>PARAM_DATA_FACTORY: The DataFactory implementation to use</li>
+     *            <li>PARAM_BUILT_IN_REASONER: The internal reasoner
+     *            implementation to use, see @link BuiltInReasoner</li>
+     *            <li>PARAM_EVAL_METHOD: Evaluation Method of underlying reasoner;</li>
+     *       </ul>
+     *       Meaningful defaults are used, if a specific parameter is not
+     *       defined. For the WSMO4J factories the factories with "null" as
+     *       parameter are used, as the internal datalog reasoner Kaon2 is used and 
+     *       as the internal dl reasoner Pellet is used by default.
+     * @return the resoner
+     */
+    public WSMLReasoner createWSMLReasoner(Map<String, Object> params, Ontology ontology);
+    
+    /**
+     * Checks the variant of the given ontology and creates a WSML Reasoner 
+     * backed up by the default Datalog or DL reasoning engine, using the 
+     * default WSMO4J factories.
+     * 
+     * @return the reasoner
+     */
+    public WSMLReasoner createWSMLReasoner(Ontology ontology);
+    
     /**
      * Creates a WSML Core reasoner backed up by the chosen Datalog
      * implementation
