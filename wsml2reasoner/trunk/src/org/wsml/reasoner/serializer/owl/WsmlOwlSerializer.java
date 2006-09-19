@@ -47,6 +47,17 @@ public class WsmlOwlSerializer implements Serializer {
 	OWLSerializer owlSerializer = new OWLSerializerImpl();
 	
 	/**
+     * This constructor should not be invoked directly.
+     *  Map properties = new HashMap();
+     *  properties.put(Factory.PROVIDER_CLASS, "org.wsml.reasoner.serializer.owl.WsmlOwlSerializer");
+     *  serializer = Factory.createSerializer(properties);
+     * @param map All parameters are ignored
+     */
+    public WsmlOwlSerializer(Map map) {
+    	
+    }
+	
+	/**
 	 * This method allows to serialize a WSML-DL ontology to OWL-RDF syntax. 
 	 * The resulting OWL ontology must not necessarily be valid OWL DL. 
 	 * The serialized ontology could be validated at an online validator as e.g. 
