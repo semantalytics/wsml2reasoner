@@ -42,7 +42,7 @@ import org.wsmo.wsml.*;
  * 
  * 
  * @see org.deri.wsml.reasoner.ontobroker.Reasoner
- * @author Jos de Bruijn $Author: hlausen $ $Date: 2006-04-19 08:30:16 $
+ * @author Jos de Bruijn $Author: graham $ $Date: 2006-09-27 17:44:31 $
  */
 public class ReasonerServlet extends HttpServlet {
     /**
@@ -50,7 +50,7 @@ public class ReasonerServlet extends HttpServlet {
      */
     private static final long serialVersionUID = 1L;
 
-    int evalmethod=1;
+    int evalmethod=2;
     WSMLReasonerFactory.BuiltInReasoner reasoner=WSMLReasonerFactory.BuiltInReasoner.MINS;
 
     private boolean debug = false;
