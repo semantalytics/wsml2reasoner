@@ -41,7 +41,7 @@ import org.wsmo.common.Identifier;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.6 $ $Date: 2006-08-31 12:35:59 $
+ * @version $Revision: 1.7 $ $Date: 2006-10-13 17:31:25 $
  */
 public class WSMLDL2OWLTransformer implements Visitor{
 	
@@ -260,7 +260,7 @@ public class WSMLDL2OWLTransformer implements Visitor{
 	}
 
 	public void visitInverseImplication(InverseImplication expr) {
-//System.out.println(expr.toString());
+//System.out.println("Inv.Impl: " + expr.toString());
 		// check on transitive attribute structure
 		String relation = helper.isTransitiveInvImpl(expr);
 		if (relation != null) {
@@ -345,7 +345,6 @@ public class WSMLDL2OWLTransformer implements Visitor{
 			inv.accept(this);
 			return;
 		}
-		
 		// check for classes resulting from nested expressions and build subClass relation 
 		// of them
 		List<OWLDescription> classList = helper.buildInverseImplications(expr);
@@ -444,7 +443,6 @@ public class WSMLDL2OWLTransformer implements Visitor{
     			subClass = transformUniversalQuantification(
     					(UniversalQuantification) right);
     		}
-    		
     		// fill list with resulting classes
     		list.add(0, subClass);
     		list.add(1, superClass);
@@ -586,6 +584,12 @@ public class WSMLDL2OWLTransformer implements Visitor{
     		HashSet<OWLDescription> set = new HashSet<OWLDescription>();
     		set.add(clazz1);
     		set.add(clazz2);
+    		if (clazz1 == null) {
+    			return clazz2;
+    		}
+    		else if (clazz2 == null) {
+    			return clazz1;
+    		}
     		return owlGenerator.createIntersectionClass(set);
     	}
     	
@@ -662,6 +666,12 @@ public class WSMLDL2OWLTransformer implements Visitor{
     		HashSet<OWLDescription> set = new HashSet<OWLDescription>();
     		set.add(clazz1);
     		set.add(clazz2);
+    		if (clazz1 == null) {
+    			return clazz2;
+    		}
+    		else if (clazz2 == null) {
+    			return clazz1;
+    		}
     		return owlGenerator.createUnionClass(set);
     	}
     	
@@ -695,6 +705,9 @@ public class WSMLDL2OWLTransformer implements Visitor{
     		else if (expr.getOperand() instanceof UniversalQuantification) {
     			clazz = transformUniversalQuantification(
     					(UniversalQuantification) expr.getOperand());
+    		}
+    		if (clazz == null) {
+    			return clazz;
     		}
     		return owlGenerator.createComplementClass(clazz);
     	}
@@ -1108,6 +1121,7 @@ public class WSMLDL2OWLTransformer implements Visitor{
 	    			// as superclass to another class
 	    	    	ontologyChange = new AddClassAxiom(owlOntology, subClassAxiom, null);
     			}
+    			
     	    	// Add the element to the ontology
     	    	ontologyChange.accept(changeVisitor);
     		} catch (OWLException e) {
@@ -1563,6 +1577,9 @@ public class WSMLDL2OWLTransformer implements Visitor{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.6  2006/08/31 12:35:59  nathalie
+ * removed methods from WSMLDLReasoner interface to the WSMLReasoner interface. Replaced some methods by entails() and groundQuery() methods.
+ *
  * Revision 1.5  2006/07/23 15:21:36  nathalie
  * updating translation to owl
  *
