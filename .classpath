@@ -5,8 +5,8 @@
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="JUNIT_HOME/junit.jar"/>
-	<classpathentry kind="lib" path="lib/ext/mins/mins-20060712.jar"/>
-	<classpathentry kind="lib" path="lib/ext/wsmo4j/wsmo4j-20060822.jar"/>
+	<classpathentry sourcepath="/mins" kind="lib" path="lib/ext/mins/mins-20060712.jar"/>
+	<classpathentry sourcepath="/mins" kind="lib" path="lib/ext/wsmo4j/wsmo4j-20060822.jar"/>
 	<classpathentry kind="lib" path="lib/ext/wsmo4j/wsmlparser-20060210.jar"/>
 	<classpathentry kind="lib" path="lib/ext/pellet/pellet.jar"/>
 	<classpathentry kind="lib" path="lib/ext/owl-api-econn/2006-04-27/api.jar"/>
@@ -22,5 +22,6 @@
 	<classpathentry kind="lib" path="lib/ext/log4j/1.2.7/log4j.jar"/>
 	<classpathentry kind="lib" path="lib/ext/KAON/1.2.9/rdfapi.jar"/>
 	<classpathentry kind="lib" path="lib/ext/kaon2/kaon2.jar"/>
+	<classpathentry kind="lib" path="lib/ext/interprolog.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
