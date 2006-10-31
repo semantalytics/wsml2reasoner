@@ -61,6 +61,7 @@ import org.wsml.reasoner.api.inconsistency.UnNamedUserConstraintViolation;
 import org.wsml.reasoner.api.inconsistency.UserConstraintViolation;
 import org.wsml.reasoner.builtin.kaon2.Kaon2Facade;
 import org.wsml.reasoner.builtin.mins.MinsFacade;
+import org.wsml.reasoner.builtin.xsb.XSBFacade;
 import org.wsml.reasoner.transformation.AnonymousIdUtils;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.ConstraintReplacementNormalizer;
@@ -114,6 +115,9 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             break;
         case MINS:
             builtInFacade = new MinsFacade(wsmoManager);
+            break;
+        case XSB:
+            builtInFacade = new XSBFacade(wsmoManager);
             break;
         default:
             throw new UnsupportedOperationException("Reasoning with "
