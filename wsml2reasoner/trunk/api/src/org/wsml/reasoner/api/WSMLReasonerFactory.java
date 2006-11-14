@@ -53,7 +53,7 @@ public interface WSMLReasonerFactory {
     public String PARAM_ALLOW_IMPORTS = "Allow ontology imports";
     
     public enum BuiltInReasoner {
-        KAON2, MINS, PELLET
+        KAON2, MINS, PELLET, XSB
     };
 
     /**
