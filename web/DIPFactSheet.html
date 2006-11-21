@@ -1,0 +1,344 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>DIP D1.10: DIP Reasoner</title>
+    <link href="dip.css" type="text/cs rel=" />
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  </head>
+  <body>
+    <p><a href="http://dip.semanticweb.org/"><img alt="logo" src="DIPlogo.gif"
+    border="0" /></a></p>
+    <h1>DIP D1.10: DIP Reasoner</h1>
+    <h2>Prototype Fact Sheet, 21 Nov 2006</h2>
+    <dl>
+      <dt>Latest version:</dt>
+      <dd><a
+      href="http://tools.deri.org/wsml2reasoner/DIPFactSheet.html">http://tools.deri.org/wsml2reasoner/DIPFactSheet.html</a></dd>
+    </dl>
+    <br />
+    <dl>
+      <dt>Authors:</dt>
+      <dd>Holger Lausen, DERI Innsbruck</dd>
+      <dd>Nathalie Steinmetz, DERI Innsbruck</dd>
+    </dl>
+    <dl>
+      <dt>Reviewers:</dt>
+      <dd>Stephan Grimm, FZI &nbsp; &nbsp;</dd>
+      <dd>@@TODO</dd>
+    </dl>
+    <p>Copyright 2006 by <a href="http://dip.semanticweb.org/">DIP</a>. All Rights
+    Reserved. <a href="http://dip.semanticweb.org/">DIP</a> liability, trademark,
+    document use, and software licensing rules apply.</p>
+    <hr />
+    <h2>Document Information</h2>
+    <table width="650" border="1" cellspacing="0,5" cellpadding="0,5">
+      <tr>
+        <td><strong>IST Project Number</strong></td>
+        <td>FP6 - 507483</td>
+        <td><strong>Acronym</strong></td>
+        <td>DIP</td>
+      </tr>
+      <tr>
+        <td><strong>Full Title</strong></td>
+        <td colspan="3">@@TODO</td>
+      </tr>
+      <tr>
+        <td><strong>Project URL</strong></td>
+        <td colspan="3"><a
+        href="http://dip.semanticweb.org">http://dip.semanticweb.org</a></td>
+      </tr>
+      <tr>
+        <td><strong>Document URL</strong></td>
+        <td colspan="3"><a
+        href="http://tools.deri.org/wsml2reasoner/DIPFactSheet.html">http://tools.deri.org/wsml2reasoner/DIPFactSheet.html</a></td>
+      </tr>
+      <tr>
+        <td><strong>EU Project Officer</strong></td>
+        <td colspan="3">Kai Tullius</td>
+      </tr>
+    </table>
+    <table width="650" border="1" cellspacing="0,5" cellpadding="0,5">
+      <tr>
+        <td><strong>Deliverable Number</strong></td>
+        <td>1.10</td>
+        <td><strong>Title</strong></td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td><strong>Work package Number</strong></td>
+        <td>1</td>
+        <td><strong>Title</strong></td>
+        <td>Reasoning</td>
+      </tr>
+    </table>
+    <p>&nbsp;</p>
+    <table width="650" border="1" cellspacing="0,5" cellpadding="0,5">
+      <tr>
+        <td><strong>Date of Delivery</strong></td>
+        <td><strong>contractual</strong></td>
+        <td>M36</td>
+        <td><strong>actual</strong></td>
+        <td>20-December-2006</td>
+      </tr>
+      <tr>
+        <td><strong>Status</strong></td>
+        <td><strong>version</strong></td>
+        <td>0.1</td>
+        <td colspan="2">draft</td>
+      </tr>
+      <tr>
+        <td><strong>Nature</strong></td>
+        <td colspan="4">
+          <form name="form3" id="form1" method="post" action="">
+            Prototype <input type="radio" name="radiobutton" value="radiobutton" 
+            checked="checked" /> Report <input type="radio" name="radiobutton"
+            value="radiobutton" /> Dissemination <input type="radio" name="radiobutton"
+            value="radiobutton" /> Ontology <input type="radio" name="radiobutton"
+            value="radiobutton" />
+          </form>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Dissemination Level</strong></td>
+        <td colspan="4">
+          <form name="form1" id="form1" method="post" action="">
+            Public <input type="radio" name="radiobutton" value="radiobutton" 
+            checked="checked" /> Consortium <input type="radio" name="radiobutton"
+            value="radiobutton" />
+          </form>
+        </td>
+      </tr>
+    </table>
+    <table width="650" border="1" cellspacing="0,5" cellpadding="0,5">
+      <tr>
+        <td width="100"><strong>Authors</strong></td>
+        <td>Nathalie Steinmatz, Holger Lausen</td>
+      </tr>
+      <tr>
+        <td><strong>Responsible Author</strong></td>
+        <td>
+          <table width="550" border="1" cellspacing="0,5" cellpadding="0,5">
+            <tr>
+              <td colspan="2">Nathalie Steinmatz</td>
+              <td><strong>Email</strong></td>
+              <td>Nathalie.Steinmatz@deri.org</td>
+            </tr>
+            <tr>
+              <td><strong>Partner</strong></td>
+              <td>DERI Innsbruck</td>
+              <td><strong>Phone</strong></td>
+              <td>&nbsp;</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+    <table width="650" border="1" cellspacing="0,5" cellpadding="0,5">
+      <tr>
+        <td colspan="4"><strong>Version Log</strong></td>
+      </tr>
+      <tr>
+        <td><strong>issue date (dd-mm-yy)</strong></td>
+        <td><strong>revision no.</strong></td>
+        <td><strong>author</strong></td>
+        <td><strong>change</strong></td>
+      </tr>
+      <tr>
+        <td>26-11-21</td>
+        <td>001</td>
+        <td>Holger Lausen</td>
+        <td>first internal version (version 1.0)</td>
+      </tr>
+    </table>
+    <table width="650" border="1" cellspacing="0,5" cellpadding="0,5">
+      <tr>
+        <td colspan="2"><strong>Reviewer Information</strong></td>
+      </tr>
+      <tr>
+        <td width="30">1</td>
+        <td>
+          <table width="620" border="1" cellspacing="0,5" cellpadding="0,5">
+            <tr>
+              <td colspan="2">Stephan Grimm</td>
+              <td><strong>Email</strong></td>
+              <td>Grimm@fzi.de</td>
+            </tr>
+            <tr>
+              <td width="120"><strong>Partner</strong></td>
+              <td width="110">FZI</td>
+              <td width="100"><strong>Phone</strong></td>
+              <td>+49 (0)721 9654 816</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>
+          <table width="620" border="1" cellspacing="0,5" cellpadding="0,5">
+            <tr>
+              <td colspan="2">@@TODO SECOND REVIEWER</td>
+              <td><strong>Email</strong></td>
+              <td>
+              </td>
+            </tr>
+            <tr>
+              <td width="120"><strong>Partner</strong></td>
+              <td width="110">
+              </td>
+              <td width="100"><strong>Phone</strong></td>
+              <td>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+    <p>&nbsp;</p>
+    <hr />
+    <p>&nbsp;</p>
+    <h2>Table of contents</h2>
+    <!-- todo update TOC, especially conclusions, acknowledgements section numbers etc. -->
+    <dl>
+      <dt><a href="#availability">1. Availability and Contacts</a></dt>
+      <dt><a href="#purpose">2. Purpose and Functionality</a></dt>
+      <dd><a href="#arch">2.1. Architecture overview</a></dd>
+      <dd><a href="#wsmo4jAndOORDI">2.2. wsmo4j and ORDI</a></dd>
+      <dd><a href="#synt">2.3. Related Syntaxes</a></dd>
+      <dd><a href="#datamodel">2.4. Related Data-models and Representations</a></dd>
+      <dd><a href="#vers">2.5. The Current Version</a></dd>
+      <dt><a href="#requ">3. Requirements</a></dt>
+      <dt><a href="#license">4. Licensing</a></dt>
+      <dd><a href="#lagr">4.1. ORDI License Agreement</a></dd>
+      <dd><a href="#thirdrdla">4.2. Licensing of Third Party Libraries</a></dd>
+      <dt><a href="#i_and_use">5. Installation and Usage</a></dt>
+      <dd><a href="#install">5.1. Installation of ORDI</a></dd>
+      <dd><a href="#usage">5.2. Usage Examples</a></dd>
+      <dt><a href="#plans">6. Future Plans</a></dt>
+      <dt><a href="#references">References</a></dt>
+      <!-- dt><a href="#appendix">Appendix A.</a></dt -->
+    </dl>
+    <hr />
+    <h1><a id="availability">1 Availability and Contacts</a></h1>
+    <p><b>Version:</b> 0.2, 25 September 2006.</p>
+    <p><b>Download:</b> <a
+    href="http://tools.deri.org/wsml2reasoner/releases/v0_2/wsml2reasoner-dl-v0_2/">http://tools.deri.org/wsml2reasoner/releases/v0_2/wsml2reasoner-dl-v0_2/</a></p>
+    <p><b>Source control:</b> Available from CVS of the <a
+    href="http://cvs.deri.at/cgi-bin/viewcvs.cgi/wsml2reasoner/">DERI CVS</a>.</p>
+    <h1><a id="purpose">2 Purpose and Functionality</a></h1>
+    wsml2reasoner blah 
+    <h2><a id="arch">2.1. Architecture overview</a></h2>
+    wsml2reasoner component img 
+    <h1><a id="requ">3 Requirements</a></h1>
+    <p><b>Nature:</b> A Java library without user interface.</p>
+    <p><b>Interfaces (API, Web Services):</b> a Java API.</p>
+    <p><b>Platform:</b> JDK 1.5.</p>
+    <p class="c1">Supported standards:</p>
+    <ul>
+      <li>WSML DL <a href="#wsml0.2">[wsml0.2]</a> as knowledge representation
+      language.</li>
+    </ul>
+    <p class="c1">Required Libraries:</p>
+    <ul>
+      <li><a id="wsmo4j" name="wsmo4j" href="http://wsmo4j.sourceforge.org">wsmo4j</a> is
+      an API and a reference implementation for building Semantic Web Services
+      applications compliant with the Web Service Modeling Ontology (<a
+      href="http://www.wsmo.org">WSMO</a>). @@version</li>
+      <li>OWL API - Madatory</li>
+      <li>Sample Reasoner - Peller</li>
+    </ul>
+    <h1><a id="license">4 Licensing</a></h1>
+    <h2><a id="wsml2reasonerlicense">4.2 Licensing of WSML2Reasoner</a></h2>
+    <p>This library is free software; you can redistribute it and/or modify it under the
+    terms of the <a href="http://www.opensource.org/licenses/lgpl-license.php"
+    target="new">GNU Lesser General Public License</a> as published by the Free Software
+    Foundation; either version 2.1 of the License, or (at your option) any later version.
+    This library is distributed in the hope that it will be useful, but WITHOUT ANY
+    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+    PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. You
+    should have received a copy of the GNU Lesser General Public License along with this
+    library; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite
+    330, Boston, MA 02111-1307 USA.</p>
+    <h2><a id="thirdrdla">4.2 Licensing of Third Party Libraries</a></h2>
+    <p>Licensing of third party libraries and components required for ORDI:</p>
+    <ul>
+      <li><a href="http://wsmo4j.sourceforge.org">wsmo4j</a> - (c) Copyright Ontotext
+      Lab, Sirma and University of Innsbruck. It is an open-source library, available
+      under the same <a href="http://www.opensource.org/licenses/lgpl-license.php"
+      target="new">LGPL</a> conditions.</li>
+      <li>@@TODO update</li>
+    </ul>
+    <h1><a id="i_and_use">5 Installation and Usage</a></h1>
+    <h2><a id="install">5.1 Installation of ORDI</a></h2>
+    WSML2Reasoner is distributed as a ZIP archive, which should be extracted in a
+    separate folder. The archive file is originally named .... @@TODO update and has the
+    following contents: 
+    <ul>
+      <li><code>FactSheet.html</code> - this document;</li>
+      <li><code>doc</code> folder - contains Javadoc documentation;</li>
+      <li><code>ext</code> folder - contains all the required libraries (jar files);</li>
+      <li><code>sparql-lib</code> folder - contains the libraries for the SPARQL
+      support;</li>
+      <li><code>src</code> folder - contains all source files;</li>
+      <li><code>conf</code> folder - contains all necessary configuration files (at
+      present only the one for Sesame, which is used for the implementation of the
+      default TripleStore);</li>
+      <li><code>test</code> folder - contains sample data, at present few ontologies in
+      WSML-HR and OWL format;</li>
+      <li><code>lib/ordiapi-0.4.jar</code> - the ORDI API provided as a Java library. It
+      extends the the WSMO API which is part of wsmo4j.</li>
+      <li><code>lib/ordiimpl-0.4.jar</code> - the ORDI default implementation provided as
+      a Java library. It includes WSMO-RDF parser, a Sesame-based default Repository
+      (implementation of the WSMO API WsmoRepository interface).</li>
+    </ul>
+    To use ORDI as a library (e.g. in embedded mode) from a Java program, one needs the
+    two ORDI jars ( <code>ordiapi-0.4.jar</code> and <code>ordiimpl-0.4.jar</code> ) plus
+    the ones in the <code>ext</code> folder to be included in the CLASSPATH. 
+    <h2><a id="usage">5.2 Usage Examples</a></h2>
+    Several simple scenarios are provided as an illustration of the functionality of
+    ORDI. Those are available as Java sources in the <code>src\ordiexamples</code>
+    folder. 
+    <ul>
+      <li><code>StoreOntologyExample</code> - parsing a WSML-HR ontology and storing it
+      in the default repository. In addition it looks up a concept by IRI, which
+      indirectly loads the concept definition from the repository, because it has
+      registered itself as a locator. The concept is stored in the repository again,
+      without a change, to demonstrate that the basic store/load operation of the
+      repository is definition preserving, although the definition is getting transformed
+      from WSMO-in-memory to WSMO-Triples and back.</li>
+      <li><code>ModifyConceptExample</code> - loads a concept definition from the default
+      repository, than modifies it and stores it back; finally it loads the concept again
+      to demonstrate that the definition had changed.</li>
+      <li><code>ExportToWSMORDFExample</code> - loads an ontology from the repository and
+      exports (serializes) it into WSMO-RDF format.</li>
+      <li><code>ParseWSMORDFExample</code> - parses a previously exported into WSMLRDF
+      ontology. It constructs an in-memory object model. This allows for manipulation and
+      storing the contents of the ontology into an ORDI repository.</li>
+      <li><code>SparqlQueryExample</code> - initializes a repository and executes a
+      SPARQL query which is used to explore and/or retrieve specific parts of an
+      ontology, stored previously into the repository. The example shows the results of
+      two SPARQL queries. The first one retrieves all subconcepts of concept
+      <code>Human</code> and all the instances of those concepts. The second query
+      retrieves the IDs of all entities that have <code>dc:description</code> property
+      with some value and the respective values.</li>
+    </ul>
+    A pre-condition for the second, third and fifth examples is that the
+    <code>http://www.example.org/ontologies/example</code> ontology is already stored in
+    the default ORDI repository (which is the effect of the first example:
+    <code>StoreOntologyExample</code> ). 
+    <h1><a id="references">References</a></h1>
+    <!-- EXAMPLE -->
+    <p><strong><a id="ref_owl">[OWL]</a></strong> McGuinness, D. et al. (2004). <em>OWL
+    Web Ontology Language.</em> W3C Recommendation, <a
+    href="http://www.w3.org/TR/owl-features/">http://www.w3.org/TR/owl-features/</a></p>
+    <p><strong><a id="WSML0.2" name="WSML0.2"><b>[WSML0.2]</b></a></strong> J. de Bruijn,
+    H. Lausen , R. Krummenacher, A. Polleres, L. Predoiu, M. Kifer, D Fensel: <i>The Web
+    Service Modeling Language WSML</i>. Deliverable d16.1v0.2, WSML, 2005. <a
+    href="http://www.wsmo.org/TR/d16/d16.1/v0.2/">http://www.wsmo.org/TR/d16/d16.1/v0.2/</a></p>
+    <p><a href="http://validator.w3.org/check?uri=referer"><img
+    src="http://www.w3.org/Icons/valid-xhtml11" alt="Valid XHTML 1.1!" height="31"
+    width="88" /></a></p>
+    <p>$Date: 2006-11-21 16:01:39 $</p>
+  </body>
+</html>
