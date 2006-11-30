@@ -50,7 +50,7 @@ import org.wsml.reasoner.ExternalToolException;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.8 $ $Date: 2006-09-19 13:47:28 $
+ * @version $Revision: 1.9 $ $Date: 2006-11-30 16:54:57 $
  */
 public class PelletFacade implements DLReasonerFacade {
 	
@@ -147,12 +147,26 @@ public class PelletFacade implements DLReasonerFacade {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.descendantClassesOf(clazz);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<Set> subClassesOf(String ontologyURI,
+			OWLDescription clazz) throws OWLException {
+		reasoner = getReasoner(ontologyURI);
+		return reasoner.subClassesOf(clazz);
+	}
 
 	@SuppressWarnings("unchecked")
 	public Set<Set> ancestorClassesOf(String ontologyURI, 
 			OWLDescription clazz) throws OWLException {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.ancestorClassesOf(clazz);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<Set> superClassesOf(String ontologyURI, 
+			OWLDescription clazz) throws OWLException {
+		reasoner = getReasoner(ontologyURI);
+		return reasoner.superClassesOf(clazz);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -209,10 +223,24 @@ public class PelletFacade implements DLReasonerFacade {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public Set<Set> subPropertiesOf(String ontologyURI, 
+			OWLProperty property) throws OWLException {
+		reasoner = getReasoner(ontologyURI);
+		return reasoner.subPropertiesOf(property);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public Set<Set> ancestorPropertiesOf(String ontologyURI, 
 			OWLProperty property) throws OWLException {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.ancestorPropertiesOf(property);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<Set> superPropertiesOf(String ontologyURI, 
+			OWLProperty property) throws OWLException {
+		reasoner = getReasoner(ontologyURI);
+		return reasoner.superPropertiesOf(property);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -352,6 +380,9 @@ public class PelletFacade implements DLReasonerFacade {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.8  2006/09/19 13:47:28  nathalie
+ * added example for using Pellet Logger printClassTree function
+ *
  * Revision 1.7  2006/09/14 18:37:06  hlausen
  * enabled the print of class tree if pellet facade logging is set to DEBUG
  *

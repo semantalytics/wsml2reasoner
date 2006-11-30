@@ -84,23 +84,50 @@ public interface WSMLReasoner {
     public boolean isSatisfiable(IRI ontologyID);
 
     /**
-     * @param ontologyID
      * @return a set of violation objects, or an empty set, if the ontology is
      *         consistent (satisfiable)
      */
     public Set<ConsistencyViolation> checkConsistency(IRI ontologyID);
 
+    /**
+     * @return true if 'subConcept' is a subconcept of 'superConcept', false otherwise
+     */
     public boolean isSubConceptOf(IRI ontologyID, Concept subConcept,
             Concept superConcept);
 
+    /**
+     * @return true if 'instance' is a member of 'concept', false otherwise
+     */
     public boolean isMemberOf(IRI ontologyID, Instance instance, Concept concept);
 
+    /**
+     * @return a set containing all subconcepts of the given concept
+     */
     public Set<Concept> getSubConcepts(IRI ontologyID, Concept concept);
+    
+    /**
+     * @return a set containing all direct subconcepts of the given concept
+     */
+    public Set<Concept> getDirectSubConcepts(IRI ontologyID, Concept concept);
 
+    /**
+     * @return a set containing all superconcepts of the given concept
+     */
     public Set<Concept> getSuperConcepts(IRI ontologyID, Concept concept);
+    
+    /**
+     * @return a set containing all direct superconcepts of the given concept
+     */
+    public Set<Concept> getDirectSuperConcepts(IRI ontologyID, Concept concept);
 
+    /**
+     * @return a set containing all instances of a given concept
+     */
     public Set<Instance> getInstances(IRI ontologyID, Concept concept);
 
+    /**
+     * @return a set containing all concepts of a given instance
+     */
     public Set<Concept> getConcepts(IRI ontologyID, Instance instance);
     
     /**
@@ -145,14 +172,24 @@ public interface WSMLReasoner {
 	public Set<Concept> getDirectConcepts(IRI ontologyID, Instance instance);
 	
 	/**
-	 * @return a set containing all identifiers subrelations of a given relation
+	 * @return a set containing all identifiers of subrelations of a given relation
 	 */
 	public Set<IRI> getSubRelations(IRI ontologyID, Identifier attributeId);
+	
+	/**
+	 * @return a set containing all identifiers of direct subrelations of a given relation
+	 */
+	public Set<IRI> getDirectSubRelations(IRI ontologyID, Identifier attributeId);
 	
 	/**
 	 * @return a set containing all identifiers of superrelations of a given relation
 	 */
 	public Set<IRI> getSuperRelations(IRI ontologyID, Identifier attributeId);
+	
+	/**
+	 * @return a set containing all identifiers of direct superrelations of a given relation
+	 */
+	public Set<IRI> getDirectSuperRelations(IRI ontologyID, Identifier attributeId);
 	
 	/**
 	 * @return a set containing the identifiers of all relations/attributes 

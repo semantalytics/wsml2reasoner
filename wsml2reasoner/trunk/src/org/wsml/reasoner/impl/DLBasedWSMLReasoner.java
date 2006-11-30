@@ -62,12 +62,12 @@ import uk.ac.man.cs.img.owl.validation.ValidatorLogger;
  *
  * <pre>
  *  Created on July 3rd, 2006
- *  Committed by $Author: hlausen $
+ *  Committed by $Author: nathalie $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/impl/DLBasedWSMLReasoner.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.10 $ $Date: 2006-09-14 18:37:05 $
+ * @version $Revision: 1.11 $ $Date: 2006-11-30 16:54:57 $
  */
 public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 
@@ -472,10 +472,67 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 
+	public Set<Concept> getDirectSubConcepts(IRI ontologyID, Concept concept) {
+		Set<Concept> elements = new HashSet<Concept>();
+		try {
+			Set<Set> set = builtInFacade.subClassesOf(
+					ontologyID.toString(), 
+					owlDataFactory.getOWLClass(new URI(
+							concept.getIdentifier().toString())));
+			for (Set<OWLEntity> set2 : set) {	
+				for (OWLEntity entity : set2) {
+					if (ns == null || !entity.getURI().toString().startsWith(ns)) {
+						elements.add(wsmoFactory.getConcept(
+								wsmoFactory.createIRI(
+										entity.getURI().toString())));
+					} 
+					else {
+						elements.add(wsmoFactory.getConcept(
+								wsmoFactory.createIRI(ns + 
+										entity.getURI().getFragment())));
+					}
+				}
+			}
+		} catch (OWLException e) {
+			throw new InternalReasonerException(e);
+		} catch (URISyntaxException e) {
+			throw new InternalReasonerException(e);
+		}
+		return elements;
+	}
+	
 	public Set<Concept> getSuperConcepts(IRI ontologyID, Concept concept) {
 		Set<Concept> elements = new HashSet<Concept>();
 		try {
 			Set<Set> set = builtInFacade.ancestorClassesOf(
+					ontologyID.toString(), owlDataFactory.getOWLClass(
+							new URI(concept.getIdentifier().toString())));
+			for (Set<OWLEntity> set2 : set) {	
+				for (OWLEntity entity : set2) {
+					if (ns == null || !entity.getURI().toString().startsWith(ns)) {
+						elements.add(wsmoFactory.getConcept(
+								wsmoFactory.createIRI(
+										entity.getURI().toString())));
+					} 
+					else {
+						elements.add(wsmoFactory.getConcept(
+								wsmoFactory.createIRI(ns + 
+										entity.getURI().getFragment())));
+					}
+				}
+			}
+		} catch (OWLException e) {
+			throw new InternalReasonerException(e);
+		} catch (URISyntaxException e) {
+			throw new InternalReasonerException(e);
+		}
+		return elements;
+	}
+	
+	public Set<Concept> getDirectSuperConcepts(IRI ontologyID, Concept concept) {
+		Set<Concept> elements = new HashSet<Concept>();
+		try {
+			Set<Set> set = builtInFacade.superClassesOf(
 					ontologyID.toString(), owlDataFactory.getOWLClass(
 							new URI(concept.getIdentifier().toString())));
 			for (Set<OWLEntity> set2 : set) {	
@@ -680,10 +737,62 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
+	public Set<IRI> getDirectSubRelations(IRI ontologyID, Identifier attributeId) {
+		Set<IRI> elements = new HashSet<IRI>();
+		try {
+			Set<Set> set = builtInFacade.subPropertiesOf(
+					ontologyID.toString(), owlDataFactory.getOWLObjectProperty(
+							new URI(attributeId.toString())));
+			for (Set<OWLEntity> set2 : set) {	
+				for (OWLEntity entity : set2) {
+					if (ns == null || !entity.getURI().toString().startsWith(ns)) {
+						elements.add(wsmoFactory.createIRI(
+								entity.getURI().toString()));
+					} 
+					else {
+						elements.add(wsmoFactory.createIRI(
+								ns + entity.getURI().getFragment()));
+					}
+				}
+			}
+		} catch (OWLException e) {
+			throw new InternalReasonerException(e);
+		} catch (URISyntaxException e) {
+			throw new InternalReasonerException(e);
+		}
+		return elements;
+	}
+	
 	public Set<IRI> getSuperRelations(IRI ontologyID, Identifier attributeId) {
 		Set<IRI> elements = new HashSet<IRI>();
 		try {
 			Set<Set> set = builtInFacade.ancestorPropertiesOf(
+					ontologyID.toString(), owlDataFactory.getOWLObjectProperty(
+							new URI(attributeId.toString())));
+			for (Set<OWLEntity> set2 : set) {	
+				for (OWLEntity entity : set2) {
+					if (ns == null || !entity.getURI().toString().startsWith(ns)) {
+						elements.add(wsmoFactory.createIRI(
+								entity.getURI().toString()));
+					} 
+					else {
+						elements.add(wsmoFactory.createIRI(
+								ns + entity.getURI().getFragment()));
+					}
+				}
+			}
+		} catch (OWLException e) {
+			throw new InternalReasonerException(e);
+		} catch (URISyntaxException e) {
+			throw new InternalReasonerException(e);
+		}
+		return elements;
+	}
+	
+	public Set<IRI> getDirectSuperRelations(IRI ontologyID, Identifier attributeId) {
+		Set<IRI> elements = new HashSet<IRI>();
+		try {
+			Set<Set> set = builtInFacade.superPropertiesOf(
 					ontologyID.toString(), owlDataFactory.getOWLObjectProperty(
 							new URI(attributeId.toString())));
 			for (Set<OWLEntity> set2 : set) {	
@@ -1268,6 +1377,11 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.10  2006/09/14 18:37:05  hlausen
+ * enabled the print of class tree if pellet facade logging is set to DEBUG
+ *
+ * when register inconsitent ontologies the method should not throw the pellete exception but the wsml2reasoner inconsistency exception, however the inconsistencyexception class still needs some fix
+ *
  * Revision 1.9  2006/08/31 12:37:50  nathalie
  * removed methods from WSMLDLReasoner interface to the WSMLReasoner interface. Replaced some methods by entails() and groundQuery() methods. Also fixed a bug concerning a nullpointerexception caused by access on default namespace.
  *
