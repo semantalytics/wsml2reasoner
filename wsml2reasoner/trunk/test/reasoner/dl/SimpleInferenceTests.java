@@ -29,6 +29,7 @@ import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.InternalReasonerException;
 import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
@@ -451,7 +452,7 @@ public class SimpleInferenceTests extends TestCase {
 			// register ontology at the wsml reasoner
 			wsmlReasoner.registerOntology(ontology);
 			fail("Should fail because the given ontology is inconsistent");
-		} catch (RuntimeException e) {
+		} catch (InconsistencyException e) {
 			e.getMessage();		
 		}
 	}
@@ -459,6 +460,9 @@ public class SimpleInferenceTests extends TestCase {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.7  2006/09/01 12:06:48  nathalie
+ * *** empty log message ***
+ *
  * Revision 1.6  2006/08/31 12:36:00  nathalie
  * removed methods from WSMLDLReasoner interface to the WSMLReasoner interface. Replaced some methods by entails() and groundQuery() methods.
  *
