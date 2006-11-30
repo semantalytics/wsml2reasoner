@@ -49,7 +49,7 @@ import org.semanticweb.owl.model.OWLProperty;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.6 $ $Date: 2006-08-31 12:36:00 $
+ * @version $Revision: 1.7 $ $Date: 2006-11-30 16:54:57 $
  */
 public interface DLReasonerFacade {
 
@@ -114,9 +114,21 @@ public interface DLReasonerFacade {
 			OWLDescription clazz) throws OWLException;
 	
 	/**
+	 * @return a set containing all direct subclasses of a given class
+	 */
+	public Set<Set> subClassesOf(String ontologyURI, 
+			OWLDescription clazz) throws OWLException;
+	
+	/**
 	 * @return a set containing all superclasses of a given class
 	 */
 	public Set<Set> ancestorClassesOf(String ontologyURI, 
+			OWLDescription clazz) throws OWLException;
+	
+	/**
+	 * @return a set containing all direct superclasses of a given class
+	 */
+	public Set<Set> superClassesOf(String ontologyURI, 
 			OWLDescription clazz) throws OWLException;
 	
 	/**
@@ -169,9 +181,23 @@ public interface DLReasonerFacade {
     		OWLProperty property) throws OWLException;
     
     /**
+     * @return a set containing all direct subproperties of a given OWL 
+     * 			property
+     */
+    public Set<Set> subPropertiesOf(String ontologyURI, 
+    		OWLProperty property) throws OWLException;
+    
+    /**
      * @return a set containing all superproperties of a given OWL property
      */
     public Set<Set> ancestorPropertiesOf(String ontologyURI, 
+    		OWLProperty property) throws OWLException; 
+    
+    /**
+     * @return a set containing all direct superproperties of a given OWL 
+     * 			property
+     */
+    public Set<Set> superPropertiesOf(String ontologyURI, 
     		OWLProperty property) throws OWLException; 
     
     /**
@@ -290,6 +316,9 @@ public interface DLReasonerFacade {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.6  2006/08/31 12:36:00  nathalie
+ * removed methods from WSMLDLReasoner interface to the WSMLReasoner interface. Replaced some methods by entails() and groundQuery() methods.
+ *
  * Revision 1.5  2006/08/10 08:31:00  nathalie
  * added request for getting direct concept/concepts of an instance
  *

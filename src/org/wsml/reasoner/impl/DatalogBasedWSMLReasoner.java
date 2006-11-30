@@ -828,4 +828,20 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 	public Set<String> getConstraintAttributeValues(IRI ontologyID, Instance subject, Identifier attributeId) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
+
+	public Set<Concept> getDirectSubConcepts(IRI ontologyID, Concept concept) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public Set<Concept> getDirectSuperConcepts(IRI ontologyID, Concept concept) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public Set<IRI> getDirectSubRelations(IRI ontologyID, Identifier attributeId) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
+
+	public Set<IRI> getDirectSuperRelations(IRI ontologyID, Identifier attributeId) {
+		throw new UnsupportedOperationException("This method is not yet implemented");
+	}
 }
