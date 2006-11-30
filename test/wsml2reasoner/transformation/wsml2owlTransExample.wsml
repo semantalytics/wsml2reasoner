@@ -110,7 +110,7 @@ ontology _"http://www.example.org/ontologies/example"
 	  ?x memberOf NiceAnimal impliedBy ?x memberOf Pet and ?x memberOf DomesticAnimal.
 	  
 	  // Conjunction - Object property domain and range definition
-	  ?x memberOf Pet and ?y memberOf Human impliedBy ?x[hasHolder hasValue ?y].
+//	  ?x memberOf Pet and ?y memberOf Human impliedBy ?x[hasHolder hasValue ?y].
 	  
 	  // Conjunction - Equivalent concepts
       ?x memberOf Girl equivalent ?x memberOf Child and ?x memberOf Woman.
