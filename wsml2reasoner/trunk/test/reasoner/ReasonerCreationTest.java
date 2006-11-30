@@ -88,12 +88,12 @@ public class ReasonerCreationTest extends TestCase {
         wsmlReasoner.registerOntology(ontology);       
         
         System.out.println("\n--------------------------------------------------------------------");
-        System.out.println("Datalog Reasoning: instances ");
+        System.out.println("Datalog Reasoning: registered ");
         System.out.println("--------------------------------------------------------------------");
-        set = wsmlReasoner.getAllInstances((IRI) ontology.getIdentifier());
-        for (Instance instance : set) {
-        	System.out.println(instance.getIdentifier().toString());
-        }
+//        set = wsmlReasoner.getAllInstances((IRI) ontology.getIdentifier());
+//        for (Instance instance : set) {
+//        	System.out.println(instance.getIdentifier().toString());
+//        }
 	}
 	
 }
