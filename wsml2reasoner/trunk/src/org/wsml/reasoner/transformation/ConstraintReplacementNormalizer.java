@@ -117,6 +117,7 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
                         }
                     } 
                     else if (definition instanceof AttributeConstraintMolecule) {// oftype statement
+                        tempHolder.add(definition);
                         tempHolder.add(
                                 replaceAttrOfTypeConstraint(
                                         (AttributeConstraintMolecule)definition));
@@ -245,6 +246,10 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
         params.add(attributeID);
         params.add(typeID);
         Atom head = leFactory.createAtom(attributeOfTypePredicateID, params);
+        
+        //add the signature as fact
+        
+        
         
         return leFactory.createLogicProgrammingRule(head, body);
         
