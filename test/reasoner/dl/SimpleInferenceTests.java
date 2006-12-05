@@ -65,6 +65,18 @@ public class SimpleInferenceTests extends TestCase {
 		parser = Factory.createParser(null);
 	}
 	
+	/**
+     * @see TestCase#tearDown()
+     */
+    protected void tearDown(){
+        leFactory=null;
+        wsmoFactory=null;
+        wsmlReasoner=null;
+        parser=null;
+        ontology=null;
+        System.gc();
+    }
+	
 	public void testAll() throws Exception {
 		// read test file and parse it 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(
@@ -82,55 +94,45 @@ public class SimpleInferenceTests extends TestCase {
 		
 		// test logicalExpressionIsNotConsistent with a concept
 		assertFalse(wsmlReasoner.entails((IRI) ontology.getIdentifier(),
-				leFactory.createLogicalExpression(
-						"_\"http://www.example.org/ontologies/example#Machine\".")));
+				leFactory.createLogicalExpression("Machine.", ontology)));
 		
 		// test logicalExpressionIsConsistent with a concept
 		assertTrue(wsmlReasoner.entails((IRI) ontology.getIdentifier(),
-				leFactory.createLogicalExpression(
-						"_\"http://www.example.org/ontologies/example#Woman\".")));
+				leFactory.createLogicalExpression("Woman.", ontology)));
 		
 		// test logicalExpressionIsNotConsistent with a MembershipMolecule
 		assertFalse(wsmlReasoner.entails((IRI) ontology.getIdentifier(), 
-				leFactory.createLogicalExpression(
-				"?x memberOf _\"http://www.example.org/ontologies/example#Machine\".")));
+				leFactory.createLogicalExpression("?x memberOf Machine.", 
+						ontology)));
 		
 		// test logicalExpressionIsConsistent with a MembershipMolecule
 		assertTrue(wsmlReasoner.entails((IRI) ontology.getIdentifier(), 
-				leFactory.createLogicalExpression(
-				"?x memberOf _\"http://www.example.org/ontologies/example#Woman\".")));
+				leFactory.createLogicalExpression("?x memberOf Woman.", 
+						ontology)));
 		
 		// test logicalExpressionIsConsistent with a Conjunction
 		assertTrue(wsmlReasoner.entails((IRI) ontology.getIdentifier(), 
-				leFactory.createLogicalExpression(
-				"?x memberOf _\"http://www.example.org/ontologies/example#Pet\" " +
-				"and ?x memberOf _\"http://www.example.org/ontologies/example#DomesticAnimal\".")));
+				leFactory.createLogicalExpression("?x memberOf Pet " +
+						"and ?x memberOf DomesticAnimal.", ontology)));
 		assertTrue(wsmlReasoner.entails((IRI) ontology.getIdentifier(), 
-				leFactory.createLogicalExpression(
-				"_\"http://www.example.org/ontologies/example#Mary\" memberOf " +
-				"_\"http://www.example.org/ontologies/example#Woman\" " +
-				"and _\"http://www.example.org/ontologies/example#Jack\" " +
-				"memberOf _\"http://www.example.org/ontologies/example#Child\".")));
+				leFactory.createLogicalExpression("Mary memberOf " +
+						"Woman and Jack memberOf Child.", ontology)));
 		assertTrue(wsmlReasoner.executeGroundQuery((IRI) ontology.getIdentifier(), 
-				leFactory.createLogicalExpression(
-				"_\"http://www.example.org/ontologies/example#Mary\" memberOf " +
-				"_\"http://www.example.org/ontologies/example#Woman\" " +
-				"and _\"http://www.example.org/ontologies/example#Jack\" " +
-				"memberOf _\"http://www.example.org/ontologies/example#Child\".")));
+				leFactory.createLogicalExpression("Mary memberOf " +
+						"Woman and Jack memberOf Child.", ontology)));
 		
 		// test logicalExpressionIsNotConsistent with a Conjunction
 		assertFalse(wsmlReasoner.entails((IRI) ontology.getIdentifier(), 
-				leFactory.createLogicalExpression(
-				"?x memberOf _\"http://www.example.org/ontologies/example#Man\" " +
-				"and ?x memberOf _\"http://www.example.org/ontologies/example#Woman\".")));
+				leFactory.createLogicalExpression("?x memberOf Man " +
+				"and ?x memberOf Woman.", ontology)));
 		
 		// test logicalExpression not supported for consistency check
 		try {
 			wsmlReasoner.entails((IRI) ontology.getIdentifier(), 
 					leFactory.createLogicalExpression(
-					"?x[_\"http://www.example.org/ontologies/example#hasAge\" hasValue 33]."));
-			fail("Should fail because this logical expression is not supported for the " +
-					"consistency check");
+							"?x[hasAge hasValue 33].", ontology));
+			fail("Should fail because this logical expression is not " +
+					"supported for the consistency check");
 		} catch (InternalReasonerException e) {
 			e.getMessage();
 		};
@@ -138,7 +140,7 @@ public class SimpleInferenceTests extends TestCase {
 		// test getAllConcepts
 		Set<Concept> set = wsmlReasoner.getAllConcepts((IRI) ontology.getIdentifier());
 		for (Concept concept : set) 
-//			System.out.println(concept.getIdentifier().toString());
+			System.out.println(concept.getIdentifier().toString());
 		assertTrue(set.size() == 18);
 		
 		// test getAllInstances
@@ -207,9 +209,8 @@ public class SimpleInferenceTests extends TestCase {
 				ontology.findConcept(wsmoFactory.createIRI(ns + "Woman")), 
 				ontology.findConcept(wsmoFactory.createIRI(ns + "Human"))));
 		assertTrue(wsmlReasoner.executeGroundQuery((IRI) ontology.getIdentifier(),
-				leFactory.createLogicalExpression(
-						"_\"http://www.example.org/ontologies/example#Woman\" " +
-						"subConceptOf _\"http://www.example.org/ontologies/example#Human\"")));
+				leFactory.createLogicalExpression("Woman subConceptOf Human.", 
+						ontology)));
 		
 		// test isNotSubConceptOf
 		assertFalse(wsmlReasoner.isSubConceptOf(
@@ -223,9 +224,8 @@ public class SimpleInferenceTests extends TestCase {
 				ontology.findInstance(wsmoFactory.createIRI(ns + "Mary")), 
 				ontology.findConcept(wsmoFactory.createIRI(ns + "Woman"))));
 		assertTrue(wsmlReasoner.executeGroundQuery((IRI) ontology.getIdentifier(),
-				leFactory.createLogicalExpression(
-						"_\"http://www.example.org/ontologies/example#Mary\" " +
-						"memberOf _\"http://www.example.org/ontologies/example#Woman\"")));
+				leFactory.createLogicalExpression("Mary memberOf Woman.", 
+						ontology)));
 		
 		// test isNotMemberOf
 		assertFalse(wsmlReasoner.isMemberOf(
@@ -366,31 +366,23 @@ public class SimpleInferenceTests extends TestCase {
 		
 		// test isInstanceHavingInferingAttributeValue
 		assertTrue(wsmlReasoner.executeGroundQuery((IRI) ontology.getIdentifier(),
-				leFactory.createLogicalExpression(
-						"_\"http://www.example.org/ontologies/example#Mary\"[" +
-						"_\"http://www.example.org/ontologies/example#hasChild\" hasValue " +
-						"_\"http://www.example.org/ontologies/example#Jack\"].")));
+				leFactory.createLogicalExpression("Mary [hasChild hasValue Jack].", 
+						ontology)));
 		
 		// test isInstanceNotHavingInferingAttributeValue
 		assertFalse(wsmlReasoner.executeGroundQuery((IRI) ontology.getIdentifier(), 
-				leFactory.createLogicalExpression(
-						"_\"http://www.example.org/ontologies/example#Mary\"[" +
-						"_\"http://www.example.org/ontologies/example#hasChild\" hasValue " +
-						"_\"http://www.example.org/ontologies/example#Bob\"].")));
+				leFactory.createLogicalExpression("Mary [hasChild hasValue Bob].", 
+						ontology)));
 		
 		// test isInstanceHavingConstraintAttributeValue
 		assertTrue(wsmlReasoner.executeGroundQuery((IRI) ontology.getIdentifier(), 
-				leFactory.createLogicalExpression(
-				"_\"http://www.example.org/ontologies/example#Mary\"[" +
-				"_\"http://www.example.org/ontologies/example#hasName\" hasValue " +
-				"\"Mary Jones\"].")));
+				leFactory.createLogicalExpression("Mary [hasName hasValue " +
+						"\"Mary Jones\"].", ontology)));
 		
 		// test isInstanceNotHavingConstraintAttributeValue
 		assertFalse(wsmlReasoner.executeGroundQuery((IRI) ontology.getIdentifier(), 
-				leFactory.createLogicalExpression(
-				"_\"http://www.example.org/ontologies/example#Mary\"[" +
-				"_\"http://www.example.org/ontologies/example#hasWeight\" hasValue " +
-				"60].")));
+				leFactory.createLogicalExpression("Mary [hasWeight hasValue 60].", 
+						ontology)));
 		
 		// test getInferingAttributeValue
 		assertTrue(wsmlReasoner.getInferingAttributeValue(
@@ -460,6 +452,9 @@ public class SimpleInferenceTests extends TestCase {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.8  2006/11/30 15:50:54  nathalie
+ * *** empty log message ***
+ *
  * Revision 1.7  2006/09/01 12:06:48  nathalie
  * *** empty log message ***
  *
