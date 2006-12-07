@@ -15,7 +15,7 @@
 
 \subsection{Ontology Transformations}
 The transformation of a WSML ontology to Datalog rules forms a
-pipeline of single transformation steps which are subsequently
+pipeline of single transformation steps that are subsequently
 applied, starting from the original ontology.
 
 \paragraph{Axiomatization.} In a first step, the transformation
@@ -27,153 +27,120 @@ such as concept and attribute definitions or cardinality and type
 constraints, are converted into appropriate axioms specified by
 logical expressions. Table \ref{tab:axiomatization} shows the
 details of some of the conversions performed by \transax, based on
-\cite{wsml-spec}. During the transformation, for each expression
-$e$ in the WSML Ontology $O \in \mathcal{O}$ that matches a
-pattern on the left-hand side of Table \ref{tab:axiomatization},
-the formulae $\transax(e)$ are created and added to the resulting
-theory $\transax(O)$.
+\cite{wsml-spec}. The WSML conceptual syntax constructs on the
+left-hand side are converted to the respective WSML logical
+expressions on the right-hand side. The meta variables $C,C_i$
+range over identifiers of WSML concepts, $R_i,A_i$ over
+identifiers of WSML relations and attributes, $T$ over identifiers
+of WSML concepts or datatypes and $V$ over identifiers of WSML
+instances or data values.
 
+
+%\renewcommand{\vec}[1]{\ensuremath{\overrightarrow{#1}}}
+\renewcommand{\baselinestretch}{1}
 \begin{table}[tbp]
 \centering
-\begin{footnotesize}
+\begin{scriptsize}
 \begin{tabular}{|l|l|}
   \hline
-  \rule{0cm}{3.2mm}{\normalsize \emph{conceptual syntax}} & {\normalsize \emph{logical expression(s)}} \\
+  \rule{0cm}{3.2mm}{\small \emph{conceptual syntax}} & {\small \emph{logical expression(s)}} \\
   \hline
-    $\transax($\wsml{concept} $C_1$ \wsml{subConceptOf} $C_2$ $)$ & $C_1$ \wsml{subConceptOf} $C_2.$ \\
+    $\transax($\twsml{concept} $C_1$ \twsml{subConceptOf} $C_2$ $)$ & $C_1$ \twsml{subConceptOf} $C_2.$ \\
   \hline
-      $\transax($\wsml{concept} $C_1$ $A$ \wsml{ofType} $(0,1)$ $T$ $)$ & $C_1$[A \wsml{ofType} $T$]. \\ \ &
-      !- ?x \wsml{memberOf} $C_1$ \wsml{and} \\ \ &
-      ?x[A \wsml{hasValue} ?y, A \wsml{hasValue} ?z] \\ \ & \wsml{and} ?y != ?z.
-      \\
+      $\transax($\twsml{concept} $C$ $A$ \twsml{ofType} $(0,1)$ $T$ $)$ & $C$[A \twsml{ofType} $T$]. \\[-0.5ex]  &
+      !- ?x \twsml{memberOf} $C$ \twsml{and} ?x[A \twsml{hasValue} ?y, A \twsml{hasValue} ?z] \twsml{and} ?y != ?z. \\
   \hline
-      $\transax($\wsml{concept} $C$ & $C_1$[A \wsml{impliesType} $T$].
-      \\ A$_1$ \wsml{inverseOf} A$_2$ \wsml{impliesType} $T$ $)$ &
-      ?x \wsml{memberOf} $C$ \wsml{and}
-      \\ \ & ?v \wsml{memberOf} $T$ \wsml{implies}
-      \\ \ & ?x[A$_1$ \wsml{hasValue} ?v] \\ \ &
-      \wsml{equivalent} ?v[A$_2$ \wsml{hasValue} ?x].
-      \\
+      $\transax($\twsml{concept} $C$ A$_1$ \twsml{inverseOf} A$_2$ \twsml{impliesType} $T$ $)$ & $C$[A \twsml{impliesType} $T$]. \\[-0.5ex]
+      & ?x \twsml{memberOf} $C$ \twsml{and} ?v \twsml{memberOf} $T$ \twsml{implies} \\[-0.5ex]
+      & \enspace ( ?x[A$_1$ \twsml{hasValue} ?v] \twsml{equivalent} ?v[A$_2$ \twsml{hasValue} ?x] ). \\
   \hline
-      $\transax($\wsml{relation} $R_1$/$n$
-      & $R_1(\vec{x})$ \wsml{implies} $R_2(\vec{x})$. \\
-      \wsml{subRelationOf} $R_2$ $)$ &
-      where $\vec{x}$ = (x$_1$,...,x$_n$) \\
+      $\transax($\twsml{relation} $R_1$/$n$ \twsml{subRelationOf} $R_2)$ & $R_1(\vec{x})$ \twsml{implies} $R_2(\vec{x})$.  \begin{scriptsize}where\end{scriptsize} $\vec{x}$ = (x$_1$,...,x$_n$) \\
   \hline
-      $\transax($\wsml{instance} $I$ \wsml{memberOf} $C$
-      & $I$ \wsml{memberOf} $C$.\\
-      A \wsml{hasValue} $V$ $)$ &
-      I[A \wsml{hasValue} $V$]. \\
+      $\transax($\twsml{instance} $I$ \twsml{memberOf} $C$ A \twsml{hasValue} $V)$ & $I$ \twsml{memberOf} $C$. I[A \twsml{hasValue} $V$]. \\
 \hline
-
 \end{tabular}
-\end{footnotesize}
+\end{scriptsize}
 \caption{Examples for axiomatizing conceptual ontology modeling
 elements.} \label{tab:axiomatization}
 \end{table}
-The meta variables $C,C_i$ range over identifiers of WSML
-concepts, $R_i,A_i$ over identifiers of WSML relations and
-attributes, $T$ over identifiers of WSML concepts or datatypes and
-$V$ over identifiers of WSML instances or datatype values.
+\renewcommand{\baselinestretch}{0.95}
 
-
-%To give an example, the WSML fragment
-%\begin{lstlisting}[style=wsml]
-%concept C subConceptOf D
-%    r ofType (0 2) T
-%instance a memberOf C
-%    r hasValue b,c
-%\end{lstlisting}
-%is translated by \transax to the following logical expressions.
-%\begin{lstlisting}[style=wsml]
-%C subConceptOf D. C[r ofType T]. !- ?x memberOf C and ?x[r
-%hasValue?y1, r hasValue ?y2] and ?y1 != ?y2. a memberOf C.  a
-%hasValue b,c.
-%\end{lstlisting}
-
+\vspace{-2mm}
 \paragraph{Normalization.} The transformation \transnorm is
 applied as a mapping $\powset{\LE} \rightarrow \powset{\LE}$ to
 normalize WSML logical expressions. This normalization step
-reduces the complexity of WSML logical expressions according to
-\cite[Section 8.2]{wsml-spec}, to bring the expressions closer to
-the simple syntactic form of literals in Datalog rules. The
-reduction includes conversion to negation and disjunctive normal
-forms as well as decomposition of complex WSML molecules. Table
-\ref{tab:normalization} shows how the various logical expressions
-are normalized in detail. The meta variables $E_i$ range over
-logical expressions in rule-based WSML, while $X,Y_i$ range over
-parts of WSML molecules. After \transnorm has been applied, the
-resulting WSML logical expressions have the form of logic
+reduces the complexity of formulae according to \cite[Section
+8.2]{wsml-spec}, to bring expressions closer to the simple
+syntactic form of literals in Datalog rules. The reduction
+includes conversion to negation and disjunctive normal forms as
+well as decomposition of complex WSML molecules. The left part of
+Table \ref{tab:normalization} shows how the various logical
+expressions are normalized in detail. The meta variables $E_i$
+range over logical expressions in rule-based WSML, while $X,Y_i$
+range over parts of WSML molecules. After \transnorm has been
+applied, the resulting expressions have the form of logic
 programming rules with no deep nesting of logical connectives.
 
+
+\def\smalldots{\begin{tiny}\dots\end{tiny}}
+\renewcommand{\baselinestretch}{1}
 \begin{table}[tbp]\centering
-\begin{footnotesize}
-\begin{tabular}{|l|l|}
+\begin{scriptsize}
+\begin{tabular}{|l|l|||l|l|}
   \hline
-  \rule{0cm}{3.2mm}{\normalsize \emph{original expression}} & {\normalsize \emph{normalized expression}} \\
+  \rule{0cm}{3.2mm}{\small \emph{original expression}} & {\small \emph{normalized expression}} & {\small \emph{original expression}} & {\small \emph{simplified rule(s)}}  \\
   \hline
-    $\transnorm(\{\mve1 , \dots , \mven\})$ & $\{\transnorm(\mve1) , \dots , \transnorm(\mven)\}$ \\
-    $\transnorm(\mvex$ \wsml{and} $\mvey.)$ & $\transnorm(\mvex)$ \wsml{and} $\transnorm(\mvey)$ \\
-    $\transnorm(\mvex$ \wsml{or} $\mvey.)$ & $\transnorm(\mvex)$ \wsml{or} $\transnorm(\mvey)$ \\
-    $\transnorm(\mvex$ \wsml{and} $(\mvey$ \wsml{or} $\mvez).)$ & $\transnorm(\transnorm(\mvex)$ \wsml{and} $\transnorm(\mvey)$ \wsml{or} \\
-    & $\phantom{\transnorm(}\transnorm(\mvex)$ \wsml{and} $\transnorm(\mvez).)$ \\
-    $\transnorm((\mvex$ \wsml{or} $\mvey)$ \wsml{and} $\mvez).)$ & $\transnorm(\transnorm(\mvex)$ \wsml{and} $\transnorm(\mvez)$ \wsml{or} \\
-    & $\phantom{\transnorm(}\transnorm(\mvey)$ \wsml{and} $\transnorm(\mvez).)$ \\
-    $\transnorm($ \wsml{naf} $ (\mvex$ \wsml{and} $\mvey).)$ & $$ \wsml{naf} $ \transnorm(\mvex)$ \wsml{or} $$ \wsml{naf} $ \transnorm(\mvey).$ \\
-    $\transnorm($ \wsml{naf} $ (\mvex$ \wsml{or} $\mvey).)$ & $$ \wsml{naf} $ \transnorm(\mvex)$ \wsml{and} $$ \wsml{naf} $ \transnorm(\mvey).$ \\
-    $\transnorm($ \wsml{naf} $ ($ \wsml{naf} $ \mvex).)$ & $\transnorm(\mvex)$ \\
-    $\transnorm(\mvex$ \wsml{implies} $\mvey.)$ & $\transnorm(\mvey)$\wsml{\lprl}$\transnorm(\mvex).$ \\
-    $\transnorm(\mvex$ \wsml{impliedBy} $\mvey.)$ & $\transnorm(\mvex)$\wsml{\lprl}$\transnorm(\mvey).$ \\
-    $\transnorm(X[Y_1 , \dots , Y_n].)$ & $X[Y_1]$ \wsml{and} $\dots$ \wsml{and} $X[Y_n].$ \\
+    $\transnorm(\{\mve1 , \smalldots , \mven\})$ & $\{\transnorm(\mve1) , \smalldots , \transnorm(\mven)\}$ & $\transdlog(\{\mve1, \smalldots , \mven\})$ & $\{\transdlog(\mve1), \smalldots , \transdlog(\mven)\}$ \\
+    $\transnorm(\mvex$ \twsml{and} $\mvey.)$ & $\transnorm(\mvex)$ \twsml{and} $\transnorm(\mvey)$ & $\transdlog($ \twsml{\cstr} $B.)$ & $\dlogcstr \transdlog(B)$ \\
+    $\transnorm(\mvex$ \twsml{or} $\mvey.)$ & $\transnorm(\mvex)$ \twsml{or} $\transnorm(\mvey)$ & $\transdlog(H.)$ & \dlogfact{\transdlog(H)} \\
+    $\transnorm(\mvex$ \twsml{and} $(\mvey$ \twsml{or} $\mvez).)$ & $\transnorm(\transnorm(\mvex)$ \twsml{and} $\transnorm(\mvey)$ \twsml{or} & $\transdlog(H$ \twsml{\lprl} $B.)$ & $\transdlog(H) \dlogrule \transdlog(B)$ \\
+    & $\phantom{\transnorm(}\transnorm(\mvex)$ \twsml{and} $\transnorm(\mvez).)$ & $\transdlog(\mvex$ \twsml{and} $\mvey.)$ & $\transdlog(\mvex) \dlogand \transdlog(\mvey)$ \\
+    $\transnorm((\mvex$ \twsml{or} $\mvey)$ \twsml{and} $\mvez).)$ & $\transnorm(\transnorm(\mvex)$ \twsml{and} $\transnorm(\mvez)$ \twsml{or} & $\transdlog($\twsml{naf} $\mvexpr.)$ & $\dlognot \transdlog(\mvexpr)$ \\
+    & $\phantom{\transnorm(}\transnorm(\mvey)$ \twsml{and} $\transnorm(\mvez).)$ & $\transdlog(C_x$ \twsml{subConceptOf} $C_y.)$ & $\psco(C_x,C_y)$ \\
+    $\transnorm($ \twsml{naf} $ (\mvex$ \twsml{and} $\mvey).)$ & $$ \twsml{naf} $ \transnorm(\mvex)$ \twsml{or} $$ \twsml{naf} $ \transnorm(\mvey).$ & $\transdlog(I$ \twsml{memberOf} $C.)$ & $\pmo(I,C)$ \\
+    $\transnorm($ \twsml{naf} $ (\mvex$ \twsml{or} $\mvey).)$ & $$ \twsml{naf} $ \transnorm(\mvex)$ \twsml{and} $$ \twsml{naf} $ \transnorm(\mvey).$ & $\transdlog(I[a$ \twsml{hasValue} $V].)$ & $\phval(I,a,V)$ \\
+    $\transnorm($ \twsml{naf} $ ($ \twsml{naf} $ \mvex).)$ & $\transnorm(\mvex)$ & $\transdlog(C[a$ \twsml{impliesType} $T].)$ & $\pitype(C,a,T)$ \\
+    $\transnorm(\mvex$ \twsml{implies} $\mvey.)$ & $\transnorm(\mvey)$\twsml{\lprl}$\transnorm(\mvex).$ & $\transdlog(C[a$ \twsml{ofType} $T].)$ & $\potype(C,a,T)$ \\
+    $\transnorm(\mvex$ \twsml{impliedBy} $\mvey.)$ & $\transnorm(\mvex)$\twsml{\lprl}$\transnorm(\mvey).$ & $\transdlog($\twsml{r}$(X_1, \smalldots , X_n).)$ & $r(X_1, \smalldots , X_n)$ \\
+    $\transnorm(X[Y_1 , \smalldots , Y_n].)$ & $X[Y_1]$ \twsml{and} $\smalldots$ \twsml{and} $X[Y_n].$ & $\transdlog(X$ \twsml{=} $Y.)$ & $X = Y$ \\
+    & & $\transdlog(X$ \twsml{!=} $Y.)$ & $X \neq Y$ \\
+%  \hline
+%  \hline
+%  \rule{0cm}{3.2mm}{\small \emph{original expression}} & {\small \emph{simplified rule(s)}} & {\small \emph{original expression}} & {\small \emph{simplified rule(s)}} \\
+%  \hline
+%  $\translt( \{ \mve1 , \smalldots , \mven \})$ & $\{ \translt(\mve1) , \smalldots , \translt(\mven) \}$ & $\translt(H_1$ \twsml{and} $\smalldots$ \twsml{and} $H_n$\twsml{\lprl}$B.)$ & $\translt(H_1$\twsml{\lprl}$B.)$ , \smalldots , $\translt(H_n$\twsml{\lprl}$B.)$ \\
+%  $\translt(H_1$\twsml{\lprl}$H_2$\twsml{\lprl}$B.)$ & $\translt(H_1$\twsml{\lprl}$H_2$ \twsml{and} $B.)$ & $\translt(H$\twsml{\lprl} $B_1$ \twsml{or} , $\smalldots$ , \twsml{or} $B_n.)$ & $\translt(H$\twsml{\lprl}$B_1.)$ , \smalldots , $\translt(H$\twsml{\lprl}$B_n.)$ \\
   \hline
 \end{tabular}
-\end{footnotesize}
+\begin{tabular}{|l|l||l|l|}
+  \hline
+  \rule{0cm}{3.2mm}{\small \emph{original expr.}} & {\small \emph{simplified rule(s)}} & {\small \emph{original expression}} & {\small \emph{simplified rule(s)}} \\
+  \hline
+  $\translt( \{ \mve1 , \smalldots , \mven \})$ & $\{ \translt(\mve1) , \smalldots , \translt(\mven) \}$ & $\translt(H_1$ \twsml{and} $\textrm{\dots}$ \twsml{and} $H_n$\twsml{\lprl}$B.)$ & $\translt(H_1$\twsml{\lprl}$B.)\!$ , \smalldots , $\translt(H_n$\twsml{\lprl}$B.)$ \\
+  $\translt(H_1$\twsml{\lprl}$H_2$\twsml{\lprl}$B.)$ & $\translt(H_1$\twsml{\lprl}$H_2$ \twsml{and} $B.)$ & $\translt(H$\twsml{\lprl} $B_1$ \twsml{or} , \smalldots , \twsml{or} $B_n.)$ & $\translt(H$\twsml{\lprl}$B_1.)\!$ , \smalldots , $\translt(H$\twsml{\lprl}$B_n.)$ \\
+  \hline
+\end{tabular}
+\end{scriptsize}
 \caption{Normalization of WSML logical expressions.}
 \label{tab:normalization}
 \end{table}
+\renewcommand{\baselinestretch}{0.95}
 
+\vspace{-2mm}
 \paragraph{Lloyd-Topor Transformation.} The transformation
 \translt is applied as a mapping $\powset{\LE} \rightarrow
 \powset{\LE}$ to flatten the complex WSML logical expressions,
 producing simple rules according to the Lloyd-Topor
-transformations \cite{lloyd-topor}, as shown in Table
-\ref{tab:lloyd-topor}.
-\begin{table}[tb]
-\centering
-\begin{footnotesize}
-\begin{tabular}{|l|l|}
-  \hline
-  \rule{0cm}{3.2mm}{\normalsize \emph{original expression}} & {\normalsize \emph{simplified rule(s)}} \\
-  \hline
-  $\translt( \{ \mve1 , \dots , \mven \})$ & $\{ \translt(\mve1) , \dots , \translt(\mven) \}$ \\
-  $\translt(H_1$ \wsml{and} $\dots$ \wsml{and} $H_n$\wsml{\lprl}$B.)$ & $\translt(H_1$\wsml{\lprl}$B.)$ , \dots , $\translt(H_n$\wsml{\lprl}$B.)$ \\
-  $\translt(H_1$\wsml{\lprl}$H_2$\wsml{\lprl}$B.)$ & $\translt(H_1$\wsml{\lprl}$H_2$ \wsml{and} $B.)$ \\
-  $\translt(H$\wsml{\lprl} $B_1$ \wsml{or} , $\dots$ , \wsml{or} $B_n.)$ & $\translt(H$\wsml{\lprl}$B_1.)$ , \dots , $\translt(H$\wsml{\lprl}$B_n.)$ \\
-  \hline
-\end{tabular}
-% --old tabel with Lloyd-Topor trasnformations
-%\begin{tabular}{|c|c|}
-%  \hline
-%  % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
-%  \emph{original expression} & \emph{simplified rule(s)} \\
-%  \hline
-%  $H_1 \wedge \dots \wedge H_n \leftarrow B$ & $H_1 \leftarrow B , \dots , H_n \leftarrow B$ \\
-%  $H_1 \leftarrow H_2 \leftarrow B$ & $H_1 \leftarrow H_2 \wedge B$ \\
-%  $H \leftarrow B_1 \vee \dots \vee B_n$ & $H \leftarrow B_1 , \dots , H \leftarrow B_n$ \\
-%  \hline
-%\end{tabular}
-\end{footnotesize}
-\caption{Lloyd-Topor transformations.} \label{tab:lloyd-topor}
-\end{table}
-Again, the meta variables $E_i,H_i,B_i$ range over WSML logical
-expressions, while $H_i$ and $B_i$ match the form of valid rule
-head and body expressions, respectively, according to
-\cite{wsml-spec}.
+transformations \cite{lloyd-topor}, as shown in the lower part of
+Table~\ref{tab:normalization}. Again, the meta variables
+$E_i,H_i,B_i$ range over WSML logical expressions, while $H_i$ and
+$B_i$ match the form of valid rule head and body expressions,
+respectively, according to \cite{wsml-spec}. After this step, the
+resulting WSML expressions have the form of proper Datalog rules
+with a single head and conjunctive (possibly negated) body
+literals.
 
-After this step, the resulting WSML expressions have the form of
-proper Datalog rules with a single head and conjunctive (possibly
-negated) body literals.
-
+\vspace{-2mm}
 \paragraph{Datalog Rule Generation.} In a final step, the
 transformation \transdlog is applied as a mapping $\powset{\LE}
 \rightarrow \P$ from WSML logical expressions to the set of all
@@ -185,35 +152,8 @@ All remaining WSML-specific language constructs, such as
 \wsml{subConceptOf} or \wsml{ofType}, are replaced by special
 meta-level predicates for which the semantics of the respective
 language construct is encoded in meta-level axioms as described in
-Section~\ref{sec:meta}.
-%
-\begin{table}[tbp] \centering
-\begin{footnotesize}
-\begin{tabular}{|l|l|}
-  \hline
-  \rule{0cm}{3.2mm} {\normalsize \emph{WSML}} & {\normalsize \emph{Generic Datalog}} \\
-  \hline
-  $\transdlog(\{\mve1, \dots , \mven\})$ & $\{\transdlog(\mve1), \dots , \transdlog(\mven)\}$ \\
-  $\transdlog($ \wsml{\cstr} $B.)$ & $\dlogcstr \transdlog(B)$ \\
-  $\transdlog(H.)$ & \dlogfact{\transdlog(H)} \\
-  $\transdlog(H$ \wsml{\lprl} $B.)$ & $\transdlog(H) \dlogrule \transdlog(B)$ \\
-  $\transdlog(\mvex$ \wsml{and} $\mvey.)$ & $\transdlog(\mvex) \dlogand \transdlog(\mvey)$ \\
-  $\transdlog($\wsml{naf} $\mvexpr.)$ & $\dlognot \transdlog(\mvexpr)$ \\
-  $\transdlog(C_x$ \wsml{subConceptOf} $C_y.)$ & $\psco(C_x,C_y)$ \\
-  $\transdlog(I$ \wsml{memberOf} $C.)$ & $\pmo(I,C)$ \\
-  $\transdlog(I[a$ \wsml{hasValue} $V].)$ & $\phval(I,a,V)$ \\
-  $\transdlog(C[a$ \wsml{impliesType} $T].)$ & $\pitype(C,a,T)$ \\
-  $\transdlog(C[a$ \wsml{ofType} $T].)$ & $\potype(C,a,T)$ \\
-  $\transdlog($\wsml{r}$(X_1, \dots , X_n).)$ & $r(X_1, \dots , X_n)$ \\
-  $\transdlog(X$ \wsml{=} $Y.)$ & $X = Y$ \\
-  $\transdlog(X$ \wsml{!=} $Y.)$ & $X \neq Y$ \\
-  \hline
-\end{tabular}
-\end{footnotesize}
-\caption{Transformation WSML logical expressions to Datalog.}
-\label{tab:LE2datalog}
-\end{table}
-Table \ref{tab:LE2datalog} shows the mapping from WSML logical
+Section~\ref{sec:meta}. The right-hand part of Table
+\ref{tab:normalization} shows the mapping from WSML logical
 expressions to Datalog including the meta-level predicates \psco,
 \pmo, \phval, \pitype and \potype that represent their respective
 WSML language constructs as can be seen from the mapping. The meta
@@ -223,8 +163,8 @@ concepts, instances and attributes. Variables $T$ can either
 assume a concept or a datatype, and $V$ stands for either an
 instance or a data value, accordingly.
 
-The resulting Datalog rules are of the form $$H \lprl B_1 \dlogand
-\dots \dlogand B_n$$ where $H$ and $B_i$ are literals for the head
+The resulting Datalog rules are of the form $H \lprl B_1 \dlogand
+\dots \dlogand B_n$, where $H$ and $B_i$ are literals for the head
 and the body of the rule, respectively. Body literals can be
 negated in the sense of negation-as-failure, which is denoted by
 $\dlognot B_i$. As usual, rules with an empty body represent
@@ -236,11 +176,10 @@ $\square$.
 
 Ultimately, we define the basic\footnote{Later on, the
 transformation pipeline is further extended to support datatypes
-and debugging features.} transformation $\tau$ for converting a
-rule-based WSML ontology into a Datalog program based on the the
-single transformation steps introduced before by $ \tau =
-\transdlog \circ \translt \circ \transnorm \circ \transax$.
-
+and debugging.} transformation $\tau$ for converting a rule-based
+WSML ontology into a Datalog program based on the the single
+transformation steps introduced before by $ \tau = \transdlog
+\circ \translt \circ \transnorm \circ \transax$.
 %\begin{displaymath}
 %    \tau = \transdlog \circ \translt \circ \transnorm \circ \transax
 %\end{displaymath}

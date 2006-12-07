@@ -1,17 +1,31 @@
-\documentclass[runningheads]{llncs}
+\documentclass[runningheads,orivec]{llncs}
+%\usepackage{latex8}
+\usepackage{times}
 \usepackage{graphicx}
 \usepackage{epsfig}
 \usepackage{xspace}
 \usepackage{amssymb}
 \usepackage{listings}
+\usepackage{url}
 
 \newcommand{\sgr}[1]{\textbf{sgr: {#1}}}
 \newcommand{\wsml}[1]{\begin{scriptsize}{\sf {\bf #1}}\end{scriptsize}}
+\newcommand{\twsml}[1]{\begin{tiny}{\sf {\bf #1}}\end{tiny}}
+\newcommand{\wsmlname}[1]{\begin{scriptsize}{\sf {#1}}\end{scriptsize}}
 
-% WSML language keywords; and general syntax (for inline usage)
-\newcommand{\synkw}[1]{\textsf{\small \textbf{#1}}}
-\newcommand{\syn}[1]{\textsf{\small #1}}
+\renewcommand{\subparagraph}[1]{\textit{{#1}.}}
 
+
+\special{! /pdfmark where
+             {pop} {userdict /pdfmark /cleartomark load put} ifelse
+             [ /Author (Stephan Grimm, Uwe Keller, Holger Lausen, Gabor Nagypal)
+               /Title (A Reasoning Framework for Rule-Based WSML)
+               /Keywords (Semantic Web Services, Automated Reasoning, Ontologies)
+               /DOCINFO pdfmark}
+
+
+\renewcommand{\baselinestretch}{0.95}
+\def\compress{\vspace{-2mm}}
 
 \begin{document}
 
@@ -19,18 +33,20 @@
 
 \title{A Reasoning Framework for Rule-Based WSML}
 
-\author{Stephan Grimm\inst{1} \and Uwe Keller\inst{2} \and Holger Lausen\inst{2} \and G\'abor Nagyp\'al\inst{1}\newline\textbf{order of authors is currently alphabetic}}
+\author{Stephan Grimm\inst{1} \and Uwe Keller\inst{2} \and Holger Lausen\inst{2} \and G\'abor Nagyp\'al\inst{1}\newline}
 \institute{
-    FZI Research Center for Information Technologies at the University of Karlsruhe\\
+    FZI Research Center for Information Technologies at the University of
     Karlsruhe, Germany\\
     \email{$\{$grimm,nagypal$\}$@fzi.de}\\
 \and
-    Digital Enterprise Research Institute\\
-    Innsbruck, Austria\\
+    Digital Enterprise Research Institute (DERI), University of Innsbruck, Austria\\
     \email{$\{$keller,lausen$\}$@deri.org}\\
-}
+}\maketitle
 
-\maketitle
+%\author{Stephan Grimm \inst{1}, Uwe Keller \inst{2}, Holger Lausen \inst{1}, G\'abor Nagyp\'al\inst{1}}
+%\institute{FZI Research Center for Information Technologies, University of Karlsruhe, Germany\\
+%\url{{grimm,nagypal}@fzi.de} \and Digital Enterprise Research Institute (DERI), University of Innsbruck, Austria\\
+%\url{{keller,lausen}@deri.org}} \maketitle
 
 \begin{abstract}
 \input{abstract}
@@ -41,7 +57,7 @@
 \input{mapping}
 \input{debugging}
 \input{framework}
-\input{usecase}
+%\input{usecase}
 \input{outlook}
 
 \bibliographystyle{plain}

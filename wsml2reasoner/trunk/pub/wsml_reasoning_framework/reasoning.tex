@@ -1,65 +1,67 @@
 \subsection{WSML Reasoning by Datalog Queries}
-%-- describe how to realise WSML satisfiability and entailment through datalog querying \\
-%-- -- characterize the KB (datalog program) on which reasoning is performed with the different facts and rules  \\
-%-- -- show how the WSML reasoning tasks are mapped to datalog queries (KB sat., entailment and conjunctive query answering) \\
+%-- describe how to realise WSML satisfiability and entailment through Datalog querying \\
+%-- -- characterize the KB (Datalog program) on which reasoning is performed with the different facts and rules  \\
+%-- -- show how the WSML reasoning tasks are mapped to Datalog queries (KB sat., entailment and conjunctive query answering) \\
 
 To perform reasoning over the original WSML ontology $O$ with an
-underlying datalog inference engine, a datalog program
+underlying Datalog inference engine, a Datalog program \compress
 \begin{displaymath}
-    P_O = \mlaxioms \cup \tau(O)
+    P_O = \mlaxioms \cup \tau(O) \compress
 \end{displaymath}
 is built up that consists of the meta-level axioms together with
 the transformed ontology. The different WSML reasoning tasks are
 then realized by performing Datalog queries on $P_O$. Posing a
 query $Q(\vec{x})$ to a Datalog program $P \in \P$ is denoted by
-$$(P,\qury Q(\vec{x}))$$ and yields a set of tuples that instantiate
-the vector $\vec{x}$ of variables in the query.
+$\,(P,\qury Q(\vec{x}))\,$ and yields a set of tuples that
+instantiate the vector $\vec{x}$ of variables in the query.
 
 \paragraph{Ontology Consistency} -- The task of checking a WMSL
 ontology for consistency is done by querying for the empty clause,
-as expressed by the following equivalence.
+as expressed by the following equivalence. \compress
 \begin{displaymath}
     O \; \textrm{\footnotesize{is satisfiable}} \; \Leftrightarrow \; (P_O , \qury \square) =
-    \emptyset
+    \emptyset \compress
 \end{displaymath}
 If the resulting set is empty then the empty clause could not be
 derived from the program and the original ontology is satisfiable,
 otherwise it is not.
 
-\paragraph{Entailment} -- The reasoning task of entailment of
-ground facts by a WSML ontology can be done by using queries that
+\paragraph{Entailment} -- The reasoning task of ground entailment by a WSML ontology is done by using queries that
 contain no variables, as expressed in the following equivalence.
+\compress
 \begin{displaymath}
-    O \models \phi \; \Leftrightarrow \; (P_O, \qury
-    \tau'(\phi')) \not= \emptyset
+    O \models \phi_g \; \Leftrightarrow \; (P_O, \qury
+    \tau'(\phi_g)) \not= \emptyset \compress
 \end{displaymath}
-From the WSML ground fact $\phi \in \LE$ we derive a non-ground
-formula $\phi' \in \LE$ by replacing the left-most occurrence of a
-constant by the variable $x$. $\phi'$ is then transformed to
-Datalog with a transformation $\tau' = \transdlog \circ \translt
-\circ \transnorm$, similar to the one that is applied to the
-ontology, and is evaluated together with the Datalog program
-$P_O$. If the resulting set is non-empty then $\phi$ is entailed
-by the original ontology, otherwise it is not.
+The WSML ground fact $\phi_g \in \LE$ is transformed to Datalog
+with a transformation $\tau' = \transdlog \circ \translt \circ
+\transnorm$, similar to the one that is applied to the ontology,
+and is evaluated together with the Datalog program $P_O$. If the
+resulting set is non-empty then $\phi_g$ is entailed by the
+original ontology, otherwise it is not.
 
 \paragraph{Retrieval} -- Similarly, instance retrieval can be
-performed by posing queries that contain variables to the Datalog
-program $P_O$, as expressed in the following equivalence.
+performed by posing a WSML query $Q(\vec{x})$ with free variables
+$\vec{x}$ to the Datalog program $P_O$, which yields the following
+set. \compress
 \begin{displaymath}
-   % \{\vec{x} : O \models Q(\vec{x})\} \; \Leftrightarrow \; (P_O, \qury \tau(Q(\vec{x})))
-   retrieve_O(Q) \; = \; (P_O, \qury \tau'(Q(\vec{x})))
+   \{\vec{o} : O \models Q(\vec{o})\} \; = \; (P_O, \qury
+   \tau'(Q(\vec{x}))) \compress
+%   retrieve_O(Q) \; = \; (P_O, \qury \tau'(Q(\vec{x})))
 \end{displaymath}
-The query $Q(\vec{x})$, formulated as a WSML logical expression
-with free variables $\vec{x}$, is transformed to Datalog and
+The query $Q(\vec{x})$ is transformed to Datalog by $\tau'$ and
 evaluated together with the program $P_O$. The resulting set
-contains all tuples $\vec{x}$ for which an instantiation of the
-query expression is entailed by the original ontology.
-To give an example, the query $Q($\syn{?x}$)$ = \\
-\phantom{mmmmm} \syn{?x} \synkw{memberOf} \syn{BroadbandBundle}\\
-posed to the ontology in Listing \ref{lst:wsml-ontology-example}
-yields the set $\{ (\textit{MyBundle}) \}$ that contains one unary
-tuple with the instance \textit{MyBundle}, which can be inferred
-to be a broadband bundle due to its high network bandwidth.
+contains all object tuples $\vec{o}$ for which an instantiation of
+the query expression is entailed by the original ontology, while
+the objects in $\vec{o}$ can be identifiable WSML entities or data
+values. To give an
+example, the query \thinspace $Q($\wsmlname{?x}$)$ = %\phantom{mmmmm}
+\wsmlname{?x} \wsml{memberOf} \wsmlname{BroadbandBundle}
+\thinspace posed to the ontology in Listing
+\ref{lst:wsml-ontology-example} yields the set $\{
+(\textit{MyBundle}) \}$ that contains one unary tuple with the
+instance \textit{MyBundle}, which can be inferred to be a
+broadband bundle due to its high network bandwidth.
 
 %\begin{small}
 %\begin{tabular}{|l|l|}
