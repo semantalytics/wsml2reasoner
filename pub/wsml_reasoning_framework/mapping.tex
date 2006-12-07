@@ -4,9 +4,9 @@
 \newcommand{\trans}[1]{\ensuremath{\tau_{#1}}\xspace}
 \newcommand{\transtxt}[1]{\trans{\smtxtit{#1}}}
 \def\transax{\transtxt{axioms}}
-\def\transnorm{\transtxt{norm}}
+\def\transnorm{\transtxt{n}}
 \def\translt{\transtxt{lt}}
-\def\transdlog{\transtxt{datalog}}
+\def\transdlog{\transtxt{dlog}}
 
 \def\LE{\ensuremath{\mathcal{L\!E}}\xspace}
 \def\O{\ensuremath{\mathcal{O}}\xspace}
@@ -35,7 +35,7 @@
 
 \def\bla{\textbf{{\sf bla}}\xspace}
 
-\section{Mapping WSML to Datalog\label{sec:mapping}}
+\section{Mapping WSML to Datalog\vspace{-1.5mm}\label{sec:mapping}}
 %-- briefly sketch the idea of reasoning via rule based inferencing \\
 
 The semantics of rule-based WSML is defined via a mapping to
@@ -43,11 +43,10 @@ Datalog~\cite{datalog} with (in)equality and integrity
 constraints, as described in \cite{wsml-spec}. To make use of
 existing rule engines, the reasoning framework performs various
 syntactical transformations to convert an original ontology in
-WSML syntax into a semantically equivalent Datalog program. The
-WSML reasoning tasks of knowledge base satisfiability and instance
-retrieval are then realized by means of Datalog querying via calls
-to an underlying Datalog inference engine that is fed with the
-rules contained in this program.
+WSML syntax into a semantically equivalent Datalog program. WSML
+reasoning tasks are then realized by means of Datalog querying via
+calls to an underlying Datalog inference engine fed with the rules
+contained in this program.
 
 \input{transformation}
 \input{metalevel}

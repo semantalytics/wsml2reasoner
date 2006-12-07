@@ -5,26 +5,26 @@
 \label{sec:datatype_reasoning} Although most of the generic
 Datalog rules are understood by practically any Datalog
 implementation, realizing datatype reasoning has some intricate
-challenges.
-
-The main challenge in implementing datatype reasoning is related
-to Axiom (4) in Table~\ref{tab:meta-level}, which checks attribute
-type constraints. The crucial part of the axiom is the literal
+challenges. The main challenge is related to Axiom (4) in
+Figure~\ref{tab:meta-level}, which checks attribute type
+constraints. The crucial part of the axiom is the literal
 \[\dlognot \pmo(V,C_2)\] because for datatype values no explicit
 membership facts are included in the ontology that could
 instantiate this literal. Consider, for example, the instance
-\syn{MSNDialup} from the WSML ontology in Section~\ref{sec:wsml}
--- there is no fact $\pmo(10,\syn{\_integer})$ for the value of
-the \syn{providesBandwidth} attribute. Whenever a value is defined
-for an attribute constrained by \synkw{ofType}, Axiom (4) would
-cause a constraint violation.
+\wsmlname{MSNDialup} from the WSML ontology in
+Section~\ref{sec:wsml} -- there is no fact
+$\pmo(10,\wsmlname{\_integer})$ for the value of the
+\wsmlname{providesBandwidth} attribute. Whenever a value is
+defined for an attribute constrained by \wsml{ofType}, Axiom (4)
+would cause a constraint violation.
 
 To solve this problem, \pmo facts should be generated for all
-datatype constants that appear as values of attributes having \synkw{ofType} constraints in the ontology.
-I.e., for each such constant in the ontology,
-axioms of the following form should appear:
+datatype constants that appear as values of attributes having
+\wsml{ofType} constraints in the ontology. I.e., for each such
+constant in the ontology, axioms of the following form should
+appear: \compress
 \begin{displaymath}
-    \pmo(V,D) \lprl \typeof(V, D_T)
+    \pmo(V,D) \lprl \typeof(V, D_T) \compress
 \end{displaymath}
 where $D$ denotes the WSML datatype, $D_T$ denotes a datatype
 supported by the underlying Datalog implementation, which is
@@ -35,8 +35,8 @@ constant value belongs to the specified datatype.
 These additional meta-level axioms result in a new set of Datalog
 rules, denoted by \dataaxioms, which are no longer in generic
 Datalog but use tool-specific built-in predicates of the
-underlying inference engine. The Datalog program $P_O$ is extended
-with this new set of rules as follows.
+underlying inference engine. The program $P_O$ is extended by
+these rules as follows. \compress
 \begin{displaymath}
     P_O = \mlaxioms \cup \dataaxioms \cup \tau(O)
 \end{displaymath}
@@ -44,29 +44,27 @@ with this new set of rules as follows.
 In addition to datatypes, WSML also supports some predefined
 predicates on datatypes, such as numeric comparison\footnote{A
 full list of WSML datatypes can be found in the WSML specification
-\cite{wsml-spec}.}. For example, the definition of the
-\syn{SharePriceFeed\_requires\_bandwidth} axiom from the WSML
-ontology in Section~\ref{sec:wsml} uses a shortcut of the WSML
-\synkw{numericLessThan} predicate (denoted by $<$). Clearly, these
-special WSML predicates have to be translated to the corresponding
-built-in predicates supported by the underlying Datalog reasoner.
-Therefore, we introduce a new tool-specific transformation step
-\transdpred as a mapping $\P \rightarrow \P$, which translates all
-predefined WSML datatype predicates in the generic Datalog program
-to tool-specific built-in predicates. The transformation pipeline
-$\tau$ is augmented by this additional step and is redefined as
-follows.
+\cite{wsml-spec}.}. The definition of the axiom
+\wsmlname{SharePriceFeed\_requires\_bandwidth} from the WSML
+ontology in Section~\ref{sec:wsml}, for example, uses a shortcut
+of the WSML \wsml{numericLessThan} predicate (denoted by $<$). For
+translation of these special predicates to the corresponding
+tool-specific built-in predicates supported by the underlying
+Datalog reasoner, we introduce a new tool-specific transformation
+step \transdpred as a mapping $\P \rightarrow \P$. This affects
+the transformation pipeline $\tau$ as follows. \compress
 \begin{displaymath}
-    \tau = \transdpred \circ \transdlog \circ \translt \circ \transnorm \circ \transax
+    \tau = \transdpred \circ \transdlog \circ \translt \circ \transnorm \circ
+    \transax \compress
 \end{displaymath}
 
-To summarize the discussion, the underlying Datalog implementation
-must fulfill the following requirements to support WSML datatype
-reasoning: (i) It should provide built-in datatypes that
-correspond to WSML datatypes. (ii) It should provide a predicate
-(or predicates) for checking whether a datatype covers a constant
-and (iii) It should provide built-in predicates that correspond to
-datatype-related predefined predicates in WSML.
+In summary, the underlying Datalog implementation must fulfill the
+following requirements to support WSML datatype reasoning: (i) It
+should provide built-in datatypes that correspond to WSML
+datatypes. (ii) It should provide a predicate (or predicates) for
+checking whether a datatype covers a constant and (iii) It should
+provide built-in predicates that correspond to datatype-related
+predefined predicates in WSML.
 
 %\begin{itemize}
 %    \item It should provide built-in datatypes that correspond to WSML datatypes.
