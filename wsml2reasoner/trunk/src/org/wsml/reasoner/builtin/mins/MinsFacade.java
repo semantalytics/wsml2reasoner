@@ -36,12 +36,7 @@ import org.deri.mins.Rule;
 import org.deri.mins.RuleSet;
 import org.deri.mins.Substitution;
 import org.deri.mins.api.DBInterface;
-import org.deri.mins.builtins.BuiltinBody;
-import org.deri.mins.builtins.BuiltinConfig;
-import org.deri.mins.builtins.Equal;
-import org.deri.mins.builtins.IsInteger;
-import org.deri.mins.builtins.IsNum;
-import org.deri.mins.builtins.IsString;
+import org.deri.mins.builtins.*;
 import org.deri.mins.terms.ConstTerm;
 import org.deri.mins.terms.NumTerm;
 import org.deri.mins.terms.StringTerm;
@@ -439,6 +434,8 @@ public class MinsFacade implements DatalogReasonerFacade {
                 WSML2DatalogTransformer.PRED_MEMBER_OF, new Term[2]));
         int integerNo = symbTransfomer.convertToTool(f
                 .createIRI(WsmlDataType.WSML_INTEGER));
+        int iriNo = symbTransfomer.convertToTool(f
+                .createIRI(WsmlDataType.WSML_IRI));
         int stringNo = symbTransfomer.convertToTool(f
                 .createIRI(WsmlDataType.WSML_STRING));
         int decimalNo = symbTransfomer.convertToTool(f
@@ -447,8 +444,7 @@ public class MinsFacade implements DatalogReasonerFacade {
                 .createIRI(WsmlDataType.WSML_BOOLEAN));
 
         // ?x memberOf _integer :- isInteger(?x)
-        rs
-                .addRule(new Rule(
+        rs.addRule(new Rule(
                         new Head[] { new Head(memberOfNo,
                                 new org.deri.mins.terms.Term[] {
                                         new org.deri.mins.terms.Variable(0),
@@ -458,9 +454,9 @@ public class MinsFacade implements DatalogReasonerFacade {
                                 false,
                                 new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(
                                         0) }, new IsInteger()) }));
+        
         // ?x memberOf _String :- isString(?x)
-        rs
-                .addRule(new Rule(
+        rs.addRule(new Rule(
                         new Head[] { new Head(memberOfNo,
                                 new org.deri.mins.terms.Term[] {
                                         new org.deri.mins.terms.Variable(0),
@@ -470,9 +466,9 @@ public class MinsFacade implements DatalogReasonerFacade {
                                 false,
                                 new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(
                                         0) }, new IsString()) }));
+        
         // ?x memberOf _decimal :- isNum(?x)
-        rs
-                .addRule(new Rule(
+        rs.addRule(new Rule(
                         new Head[] { new Head(memberOfNo,
                                 new org.deri.mins.terms.Term[] {
                                         new org.deri.mins.terms.Variable(0),
@@ -484,8 +480,7 @@ public class MinsFacade implements DatalogReasonerFacade {
                                         0) }, new IsNum()) }));
 
         // ?x memberOf wsml#boolean :- isString(?x) , ?x = "_boolean("true") REPLACED with ?x memberOf wsml#boolean :- ?x = org.deri.mins.terms.concrete.BooleanTerm[value=true]
-        rs
-                .addRule(new Rule(
+        rs.addRule(new Rule(
                         new Head[] { new Head(memberOfNo,
                                 new org.deri.mins.terms.Term[] {
                                         new org.deri.mins.terms.Variable(0),
@@ -502,8 +497,7 @@ public class MinsFacade implements DatalogReasonerFacade {
                                         new Equal()) }));
 
         // ?x memberOf wsml#boolean :- isString(?x) , ?x = "_boolean("false") REPLACED with ?x memberOf wsml#boolean :- ?x = org.deri.mins.terms.concrete.BooleanTerm[value=false]
-        rs
-                .addRule(new Rule(
+        rs.addRule(new Rule(
                         new Head[] { new Head(memberOfNo,
                                 new org.deri.mins.terms.Term[] {
                                         new org.deri.mins.terms.Variable(0),
@@ -518,6 +512,18 @@ public class MinsFacade implements DatalogReasonerFacade {
                                                 new BooleanTerm(//new StringTerm(
                                                         "false") },//"_boolean(\"false\")") }
                                         new Equal()) }));
+        
+        // ?x memberOf _integer :- isConst(?x)
+        rs.addRule(new Rule(
+                new Head[] { new Head(memberOfNo,
+                    new org.deri.mins.terms.Term[] {
+                            new org.deri.mins.terms.Variable(0),
+                            new ConstTerm(iriNo) }) },
+                new Body[] { new BuiltinBody(
+                    15,
+                    false,
+                    new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(
+                            0) }, new IsConst()) }));
     }
 
 }
