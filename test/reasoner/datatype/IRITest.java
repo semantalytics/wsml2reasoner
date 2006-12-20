@@ -18,33 +18,39 @@
  */
 package reasoner.datatype;
 
-import java.util.*;
-import java.util.Map.Entry;
+import java.util.Map;
+import java.util.Set;
 
-import junit.framework.*;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
-import org.omwg.logicalexpression.*;
-import org.omwg.logicalexpression.terms.*;
-import org.omwg.ontology.*;
-import org.wsml.reasoner.api.*;
-import org.wsmo.common.*;
-import org.wsmo.factory.*;
-import org.wsmo.wsml.*;
+import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.Ontology;
+import org.omwg.ontology.Variable;
+import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsmo.common.IRI;
+import org.wsmo.factory.DataFactory;
+import org.wsmo.factory.Factory;
+import org.wsmo.factory.LogicalExpressionFactory;
+import org.wsmo.factory.WsmoFactory;
+import org.wsmo.wsml.Parser;
 
-import test.*;
+import test.BaseReasonerTest;
 
 /**
  * Interface or class description
  * 
  * <pre>
  *   Created on 20.04.2006
- *   Committed by $Author: hlausen $
+ *   Committed by $Author: graham $
  *   $Source: /home/richi/temp/w2r/wsml2reasoner/test/reasoner/datatype/IRITest.java,v $,
  * </pre>
  * 
  * @author Holger lausen
  * 
- * @version $Revision: 1.1 $ $Date: 2006-12-11 13:06:09 $
+ * @version $Revision: 1.2 $ $Date: 2006-12-20 14:06:03 $
  */
 public class IRITest extends TestCase {
     Parser parser;

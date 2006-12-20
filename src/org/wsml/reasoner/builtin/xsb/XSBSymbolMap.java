@@ -18,7 +18,9 @@
  */
 package org.wsml.reasoner.builtin.xsb;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
@@ -33,7 +35,7 @@ import com.declarativa.interprolog.TermModel;
  * Package: package org.wsml.reasoner.datalog.wrapper.mins;
 
  * Author: Holger Lausen, DERI Innsbruck
- * Date: $Date: 2006-10-31 13:14:10 $
+ * Date: $Date: 2006-12-20 14:06:01 $
  */
 
 public class XSBSymbolMap {

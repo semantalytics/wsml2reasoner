@@ -18,7 +18,6 @@
  */
 package reasoner.core;
 
-import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -32,17 +31,11 @@ import junit.framework.TestSuite;
 
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Concept;
-import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
-import org.wsmo.common.Identifier;
-import org.wsmo.common.TopEntity;
-import org.wsmo.common.exception.SynchronisationException;
 import org.wsmo.factory.Factory;
 import org.wsmo.locator.Locator;
 import org.wsmo.locator.LocatorManager;

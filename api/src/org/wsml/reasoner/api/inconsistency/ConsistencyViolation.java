@@ -1,9 +1,14 @@
 package org.wsml.reasoner.api.inconsistency;
 
-import org.deri.wsmo4j.io.serializer.wsml.*;
-import org.omwg.logicalexpression.terms.*;
-import org.omwg.ontology.*;
-import org.wsmo.common.*;
+import org.deri.wsmo4j.io.serializer.wsml.VisitorSerializeWSMLTerms;
+import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.Concept;
+import org.omwg.ontology.Instance;
+import org.omwg.ontology.Type;
+import org.omwg.ontology.Value;
+import org.omwg.ontology.WsmlDataType;
+import org.wsmo.common.IRI;
+import org.wsmo.common.TopEntity;
 
 public class ConsistencyViolation {
     

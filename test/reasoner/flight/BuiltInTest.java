@@ -18,24 +18,18 @@
  */
 package reasoner.flight;
 
-import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import junit.framework.*;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
-import org.omwg.logicalexpression.*;
-import org.omwg.logicalexpression.terms.*;
-import org.omwg.ontology.*;
-import org.wsml.reasoner.api.*;
-import org.wsml.reasoner.api.inconsistency.*;
-import org.wsml.reasoner.impl.*;
-import org.wsmo.common.*;
-import org.wsmo.common.exception.*;
-import org.wsmo.factory.*;
-import org.wsmo.wsml.*;
+import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.Variable;
 
-import reasoner.core.*;
-import test.*;
+import test.BaseReasonerTest;
 
 public class BuiltInTest extends BaseReasonerTest {
     private static final String NS = "http://www.example.org#datatypes/";

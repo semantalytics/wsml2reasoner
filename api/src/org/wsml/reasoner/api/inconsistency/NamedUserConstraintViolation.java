@@ -1,7 +1,8 @@
 package org.wsml.reasoner.api.inconsistency;
 
 import org.omwg.ontology.Axiom;
-import org.wsmo.common.*;
+import org.wsmo.common.IRI;
+import org.wsmo.common.TopEntity;
 
 public class NamedUserConstraintViolation extends UserConstraintViolation {
 

@@ -1,6 +1,5 @@
 package reasoner.flight;
 
-import test.BaseReasonerTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 

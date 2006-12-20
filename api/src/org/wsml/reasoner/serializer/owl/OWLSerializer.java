@@ -18,6 +18,7 @@
  */
 package org.wsml.reasoner.serializer.owl;
 
+import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 

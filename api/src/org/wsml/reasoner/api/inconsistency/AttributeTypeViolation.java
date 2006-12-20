@@ -1,8 +1,13 @@
 package org.wsml.reasoner.api.inconsistency;
 
 import org.omwg.logicalexpression.terms.ConstructedTerm;
-import org.omwg.ontology.*;
-import org.wsmo.common.*;
+import org.omwg.ontology.Attribute;
+import org.omwg.ontology.Instance;
+import org.omwg.ontology.Ontology;
+import org.omwg.ontology.Type;
+import org.omwg.ontology.Value;
+import org.wsmo.common.IRI;
+import org.wsmo.common.TopEntity;
 
 public class AttributeTypeViolation extends ConsistencyViolation {
     

@@ -7,13 +7,22 @@
  */
 package org.wsml.reasoner.builtin.xsb;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.declarativa.interprolog.*;
-import com.xsb.interprolog.*;
+import com.declarativa.interprolog.PrologEngine;
+import com.declarativa.interprolog.TermModel;
+import com.xsb.interprolog.NativeEngine;
 
 public class HelloWorld {
     public final static String ROOT ="C:/xsb271" + File.separator + "config" + File.separator;

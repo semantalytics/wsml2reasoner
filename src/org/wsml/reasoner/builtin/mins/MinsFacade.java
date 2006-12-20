@@ -36,11 +36,19 @@ import org.deri.mins.Rule;
 import org.deri.mins.RuleSet;
 import org.deri.mins.Substitution;
 import org.deri.mins.api.DBInterface;
-import org.deri.mins.builtins.*;
+import org.deri.mins.builtins.BuiltinBody;
+import org.deri.mins.builtins.BuiltinConfig;
+import org.deri.mins.builtins.Equal;
+import org.deri.mins.builtins.IsConst;
+import org.deri.mins.builtins.IsInteger;
+import org.deri.mins.builtins.IsNum;
+import org.deri.mins.builtins.IsString;
 import org.deri.mins.terms.ConstTerm;
 import org.deri.mins.terms.NumTerm;
 import org.deri.mins.terms.StringTerm;
-import org.deri.mins.terms.concrete.*;
+import org.deri.mins.terms.concrete.BooleanTerm;
+import org.deri.mins.terms.concrete.DateTerm;
+import org.deri.mins.terms.concrete.IntegerTerm;
 import org.deri.wsmo4j.io.parser.wsml.TempVariable;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
@@ -90,7 +98,7 @@ public class MinsFacade implements DatalogReasonerFacade {
      * 3: Wellfounded Evaluation (juergen says probably buggy!)
      * 
      * 3 IS the only one that works! Probably the numbers are 
-     * mixed up or Jürgen does not like us
+     * mixed up or Jrgen does not like us
      */
     public int evaluationMethod = 3;
 

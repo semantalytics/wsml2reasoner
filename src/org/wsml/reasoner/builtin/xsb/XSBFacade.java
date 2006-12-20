@@ -18,12 +18,19 @@
  */
 package org.wsml.reasoner.builtin.xsb;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.*;
+import org.wsml.reasoner.ConjunctiveQuery;
+import org.wsml.reasoner.DatalogReasonerFacade;
+import org.wsml.reasoner.ExternalToolException;
+import org.wsml.reasoner.Literal;
+import org.wsml.reasoner.UnsupportedFeatureException;
 import org.wsml.reasoner.api.InternalReasonerException;
 import org.wsml.reasoner.impl.WSMO4JManager;
 
@@ -32,7 +39,7 @@ import com.declarativa.interprolog.TermModel;
 /**
  * Package: package org.wsml.reasoner.datalog.wrapper.mins;
  * 
- * Author: Holger Lausen, DERI Innsbruck $Date: 2006-10-31 13:14:10 $
+ * Author: Holger Lausen, DERI Innsbruck $Date: 2006-12-20 14:06:01 $
  */
 public class XSBFacade implements DatalogReasonerFacade {
     private Logger logger = Logger.getLogger("org.wsml.reasoner.builtin.xsb.XSBFacade");

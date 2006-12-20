@@ -39,14 +39,14 @@ import org.semanticweb.kaon2.api.KAON2Factory;
 import org.semanticweb.kaon2.api.KAON2Manager;
 import org.semanticweb.kaon2.api.Ontology;
 import org.semanticweb.kaon2.api.OntologyChangeEvent;
-import org.semanticweb.kaon2.api.owl.elements.Individual;
-import org.semanticweb.kaon2.api.reasoner.Query;
-import org.semanticweb.kaon2.api.reasoner.Reasoner;
 import org.semanticweb.kaon2.api.logic.Literal;
 import org.semanticweb.kaon2.api.logic.Predicate;
 import org.semanticweb.kaon2.api.logic.Rule;
 import org.semanticweb.kaon2.api.logic.Term;
 import org.semanticweb.kaon2.api.logic.Variable;
+import org.semanticweb.kaon2.api.owl.elements.Individual;
+import org.semanticweb.kaon2.api.reasoner.Query;
+import org.semanticweb.kaon2.api.reasoner.Reasoner;
 import org.wsml.reasoner.ConjunctiveQuery;
 import org.wsml.reasoner.DatalogReasonerFacade;
 import org.wsml.reasoner.ExternalToolException;
@@ -54,7 +54,9 @@ import org.wsml.reasoner.UnsupportedFeatureException;
 import org.wsml.reasoner.WSML2DatalogTransformer;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
-import org.wsmo.factory.*;
+import org.wsmo.factory.DataFactory;
+import org.wsmo.factory.LogicalExpressionFactory;
+import org.wsmo.factory.WsmoFactory;
 
 /**
  * Integrates the Kaon2 system into the WSML Core/Flight Reasoner framework for
