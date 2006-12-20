@@ -22,6 +22,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Set;
 
+import junit.framework.TestCase;
+
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.WSMLReasoner;
@@ -29,8 +31,6 @@ import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.Factory;
 import org.wsmo.wsml.Parser;
-
-import junit.framework.TestCase;
 
 /**
  * This test shows the use of the DefaultWSMLReasonerFactory method 

@@ -1,6 +1,6 @@
 package org.wsml.reasoner.api.inconsistency;
 
-import org.wsmo.common.*;
+import org.wsmo.common.IRI;
 
 public class UnNamedUserConstraintViolation extends UserConstraintViolation {
 

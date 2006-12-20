@@ -52,16 +52,13 @@ import org.omwg.ontology.SimpleDataType;
 import org.omwg.ontology.Type;
 import org.omwg.ontology.Value;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DatalogBasedWSMLReasoner;
-import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.FixedModificationRules;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.UnnumberedAnonymousID;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.common.exception.SynchronisationException;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 

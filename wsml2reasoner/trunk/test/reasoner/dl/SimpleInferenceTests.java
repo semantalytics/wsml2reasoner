@@ -23,6 +23,8 @@ import java.io.InputStreamReader;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
@@ -38,8 +40,6 @@ import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
-
-import junit.framework.TestCase;
 
 
 public class SimpleInferenceTests extends TestCase {
@@ -452,6 +452,9 @@ public class SimpleInferenceTests extends TestCase {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.9  2006/12/05 16:49:25  nathalie
+ * ameliorized readability of tests
+ *
  * Revision 1.8  2006/11/30 15:50:54  nathalie
  * *** empty log message ***
  *

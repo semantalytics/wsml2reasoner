@@ -1,6 +1,7 @@
 package reasoner.core;
 
-import junit.framework.*;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 public class ReasonerCoreTests {
 	

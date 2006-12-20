@@ -18,9 +18,6 @@
  */
 package reasoner.rule;
 
-import java.io.FileReader;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,12 +26,10 @@ import junit.framework.TestSuite;
 
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
-import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
@@ -42,8 +37,6 @@ import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
-import reasoner.core.RegisterMultipleTimes;
-import reasoner.core.SimpleGraph;
 import test.BaseReasonerTest;
 
 public class Martin extends BaseReasonerTest {

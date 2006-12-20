@@ -35,24 +35,42 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.MembershipMolecule;
 import org.omwg.logicalexpression.SubConceptMolecule;
 import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.*;
+import org.omwg.ontology.Concept;
+import org.omwg.ontology.DataValue;
+import org.omwg.ontology.Instance;
+import org.omwg.ontology.Ontology;
+import org.omwg.ontology.Variable;
 import org.semanticweb.owl.impl.model.OWLConcreteDataImpl;
 import org.semanticweb.owl.impl.model.OWLConcreteDataTypeImpl;
-import org.semanticweb.owl.model.*;
+import org.semanticweb.owl.model.OWLDataFactory;
+import org.semanticweb.owl.model.OWLDataValue;
+import org.semanticweb.owl.model.OWLDescription;
+import org.semanticweb.owl.model.OWLEntity;
+import org.semanticweb.owl.model.OWLException;
+import org.semanticweb.owl.model.OWLOntology;
 import org.semanticweb.owl.model.change.ChangeVisitor;
-import org.semanticweb.owl.util.*;
+import org.semanticweb.owl.util.OWLConnection;
+import org.semanticweb.owl.util.OWLManager;
 import org.semanticweb.owl.validation.SpeciesValidator;
 import org.semanticweb.owl.validation.SpeciesValidatorReporter;
 import org.wsml.reasoner.ExternalToolException;
 import org.wsml.reasoner.WSMLDL2OWLTransformer;
-import org.wsml.reasoner.api.*;
-import org.wsml.reasoner.api.inconsistency.*;
+import org.wsml.reasoner.api.InternalReasonerException;
+import org.wsml.reasoner.api.WSMLDLReasoner;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
+import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.builtin.pellet.PelletFacade;
-import org.wsml.reasoner.transformation.*;
-import org.wsml.reasoner.transformation.dl.*;
+import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
+import org.wsml.reasoner.transformation.OntologyNormalizer;
+import org.wsml.reasoner.transformation.dl.Relation2AttributeNormalizer;
+import org.wsml.reasoner.transformation.dl.WSMLDLLogExprNormalizer;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
-import org.wsmo.factory.*;
+import org.wsmo.factory.DataFactory;
+import org.wsmo.factory.Factory;
+import org.wsmo.factory.LogicalExpressionFactory;
+import org.wsmo.factory.WsmoFactory;
 import org.wsmo.validator.WsmlValidator;
 
 import uk.ac.man.cs.img.owl.validation.ValidatorLogger;
@@ -62,12 +80,12 @@ import uk.ac.man.cs.img.owl.validation.ValidatorLogger;
  *
  * <pre>
  *  Created on July 3rd, 2006
- *  Committed by $Author: nathalie $
+ *  Committed by $Author: graham $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/impl/DLBasedWSMLReasoner.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.11 $ $Date: 2006-11-30 16:54:57 $
+ * @version $Revision: 1.12 $ $Date: 2006-12-20 14:06:06 $
  */
 public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 
@@ -1377,6 +1395,9 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.11  2006/11/30 16:54:57  nathalie
+ * added methods to get direct super-/sub-concepts and direct super-/sub-relations
+ *
  * Revision 1.10  2006/09/14 18:37:05  hlausen
  * enabled the print of class tree if pellet facade logging is set to DEBUG
  *

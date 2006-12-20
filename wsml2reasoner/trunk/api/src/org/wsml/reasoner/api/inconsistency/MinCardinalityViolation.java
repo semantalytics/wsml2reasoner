@@ -2,7 +2,8 @@ package org.wsml.reasoner.api.inconsistency;
 
 import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Instance;
-import org.wsmo.common.*;
+import org.wsmo.common.IRI;
+import org.wsmo.common.TopEntity;
 
 
 public class MinCardinalityViolation extends CardinalityViolation {

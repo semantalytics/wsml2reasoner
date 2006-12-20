@@ -5,7 +5,6 @@ import junit.framework.TestSuite;
 import wsml2reasoner.normalization.AnonymousIDReplacementTest;
 import wsml2reasoner.normalization.ConstructReductionNormalizerTest;
 import wsml2reasoner.normalization.LloydToporNormalizerTest;
-import wsml2reasoner.normalization.WSMLNormalizationTest;
 import wsml2reasoner.transformation.AnonymousIdUtilsTest;
 
 /**

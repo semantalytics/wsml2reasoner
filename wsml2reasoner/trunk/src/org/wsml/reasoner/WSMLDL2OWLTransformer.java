@@ -20,14 +20,78 @@ package org.wsml.reasoner;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
-
-import org.omwg.logicalexpression.*;
+import org.omwg.logicalexpression.Atom;
+import org.omwg.logicalexpression.AttributeConstraintMolecule;
+import org.omwg.logicalexpression.AttributeInferenceMolecule;
+import org.omwg.logicalexpression.AttributeValueMolecule;
+import org.omwg.logicalexpression.CompoundMolecule;
+import org.omwg.logicalexpression.Conjunction;
+import org.omwg.logicalexpression.Constraint;
+import org.omwg.logicalexpression.Disjunction;
+import org.omwg.logicalexpression.Equivalence;
+import org.omwg.logicalexpression.ExistentialQuantification;
+import org.omwg.logicalexpression.Implication;
+import org.omwg.logicalexpression.InverseImplication;
+import org.omwg.logicalexpression.LogicProgrammingRule;
+import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.MembershipMolecule;
+import org.omwg.logicalexpression.Molecule;
+import org.omwg.logicalexpression.Negation;
+import org.omwg.logicalexpression.NegationAsFailure;
+import org.omwg.logicalexpression.SubConceptMolecule;
+import org.omwg.logicalexpression.UniversalQuantification;
+import org.omwg.logicalexpression.Visitor;
 import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.*;
-import org.semanticweb.owl.model.*;
-import org.semanticweb.owl.model.change.*;
+import org.omwg.ontology.Axiom;
+import org.omwg.ontology.DataValue;
+import org.omwg.ontology.Ontology;
+import org.omwg.ontology.Variable;
+import org.omwg.ontology.WsmlDataType;
+import org.semanticweb.owl.model.OWLAnd;
+import org.semanticweb.owl.model.OWLClass;
+import org.semanticweb.owl.model.OWLClassAxiom;
+import org.semanticweb.owl.model.OWLDataAllRestriction;
+import org.semanticweb.owl.model.OWLDataFactory;
+import org.semanticweb.owl.model.OWLDataProperty;
+import org.semanticweb.owl.model.OWLDataType;
+import org.semanticweb.owl.model.OWLDataValue;
+import org.semanticweb.owl.model.OWLDescription;
+import org.semanticweb.owl.model.OWLEquivalentClassesAxiom;
+import org.semanticweb.owl.model.OWLException;
+import org.semanticweb.owl.model.OWLIndividual;
+import org.semanticweb.owl.model.OWLNot;
+import org.semanticweb.owl.model.OWLObjectAllRestriction;
+import org.semanticweb.owl.model.OWLObjectProperty;
+import org.semanticweb.owl.model.OWLObjectSomeRestriction;
+import org.semanticweb.owl.model.OWLOntology;
+import org.semanticweb.owl.model.OWLOr;
+import org.semanticweb.owl.model.OWLProperty;
+import org.semanticweb.owl.model.OWLSubClassAxiom;
+import org.semanticweb.owl.model.OWLSubPropertyAxiom;
+import org.semanticweb.owl.model.change.AddClassAxiom;
+import org.semanticweb.owl.model.change.AddDataPropertyInstance;
+import org.semanticweb.owl.model.change.AddDataPropertyRange;
+import org.semanticweb.owl.model.change.AddDomain;
+import org.semanticweb.owl.model.change.AddEntity;
+import org.semanticweb.owl.model.change.AddIndividualClass;
+import org.semanticweb.owl.model.change.AddInverse;
+import org.semanticweb.owl.model.change.AddObjectPropertyInstance;
+import org.semanticweb.owl.model.change.AddObjectPropertyRange;
+import org.semanticweb.owl.model.change.AddPropertyAxiom;
+import org.semanticweb.owl.model.change.AddSuperClass;
+import org.semanticweb.owl.model.change.ChangeVisitor;
+import org.semanticweb.owl.model.change.OntologyChange;
+import org.semanticweb.owl.model.change.RemoveClassAxiom;
+import org.semanticweb.owl.model.change.SetSymmetric;
+import org.semanticweb.owl.model.change.SetTransitive;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.Identifier;
 
@@ -36,12 +100,12 @@ import org.wsmo.common.Identifier;
  *
  * <pre>
  *  Created on July 3rd, 2006
- *  Committed by $Author: nathalie $
+ *  Committed by $Author: graham $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/WSMLDL2OWLTransformer.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.7 $ $Date: 2006-10-13 17:31:25 $
+ * @version $Revision: 1.8 $ $Date: 2006-12-20 14:06:00 $
  */
 public class WSMLDL2OWLTransformer implements Visitor{
 	
@@ -1577,6 +1641,9 @@ public class WSMLDL2OWLTransformer implements Visitor{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.7  2006/10/13 17:31:25  nathalie
+ * fixed nullpointerexception bug
+ *
  * Revision 1.6  2006/08/31 12:35:59  nathalie
  * removed methods from WSMLDLReasoner interface to the WSMLReasoner interface. Replaced some methods by entails() and groundQuery() methods.
  *

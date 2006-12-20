@@ -21,14 +21,14 @@ package reasoner.dl;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import junit.framework.TestCase;
+
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.Factory;
 import org.wsmo.wsml.Parser;
-
-import junit.framework.TestCase;
 
 
 public class OntologyRegistrationTest extends TestCase {
