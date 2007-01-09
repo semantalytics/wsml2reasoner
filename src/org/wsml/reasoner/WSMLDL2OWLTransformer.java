@@ -87,6 +87,7 @@ import org.semanticweb.owl.model.change.AddObjectPropertyInstance;
 import org.semanticweb.owl.model.change.AddObjectPropertyRange;
 import org.semanticweb.owl.model.change.AddPropertyAxiom;
 import org.semanticweb.owl.model.change.AddSuperClass;
+import org.semanticweb.owl.model.change.AddSuperProperty;
 import org.semanticweb.owl.model.change.ChangeVisitor;
 import org.semanticweb.owl.model.change.OntologyChange;
 import org.semanticweb.owl.model.change.RemoveClassAxiom;
@@ -100,12 +101,12 @@ import org.wsmo.common.Identifier;
  *
  * <pre>
  *  Created on July 3rd, 2006
- *  Committed by $Author: graham $
+ *  Committed by $Author: nathalie $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/WSMLDL2OWLTransformer.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.8 $ $Date: 2006-12-20 14:06:00 $
+ * @version $Revision: 1.9 $ $Date: 2007-01-09 10:56:26 $
  */
 public class WSMLDL2OWLTransformer implements Visitor{
 	
@@ -1416,10 +1417,8 @@ public class WSMLDL2OWLTransformer implements Visitor{
     					getOWLSubPropertyAxiom(subProperty, superProperty);
     			// Get a change object representing the addition of an OWL subProperty  
     			// to the ontology
-//    			ontologyChange = new AddSuperProperty(owlOntology, subProperty, 
-//    						superProperty, null);
-    	    	ontologyChange = new AddPropertyAxiom(owlOntology, subPropertyAxiom, 
-    	    			null);
+    			ontologyChange = new AddSuperProperty(owlOntology, subProperty, 
+    					superProperty, null);
     	    	// Add the element to the ontology
     	    	ontologyChange.accept(changeVisitor);
     		} catch (OWLException e) {
@@ -1641,6 +1640,9 @@ public class WSMLDL2OWLTransformer implements Visitor{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.8  2006/12/20 14:06:00  graham
+ * organized imports
+ *
  * Revision 1.7  2006/10/13 17:31:25  nathalie
  * fixed nullpointerexception bug
  *
