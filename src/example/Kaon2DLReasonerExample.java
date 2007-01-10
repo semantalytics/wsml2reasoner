@@ -25,14 +25,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
-import org.wsml.reasoner.builtin.pellet.PelletFacade;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
@@ -49,22 +46,21 @@ import org.wsmo.wsml.Parser;
  * <pre>
  *  Created on July 19rd, 2006
  *  Committed by $Author: nathalie $
- *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/example/DLReasonerExample.java,v $,
+ *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/example/Kaon2DLReasonerExample.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.7 $ $Date: 2006-09-19 13:47:28 $
+ * @version $Revision: 1.1 $ $Date: 2007-01-10 16:08:28 $
  */
-public class DLReasonerExample {
+public class Kaon2DLReasonerExample {
 	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		DLReasonerExample ex = new DLReasonerExample();
+		Kaon2DLReasonerExample ex = new Kaon2DLReasonerExample();
         try {
             ex.doTestRun();
-            ex.debugOntology();
             System.exit(0);
         } catch (Throwable e) {
             e.printStackTrace();
@@ -89,11 +85,11 @@ public class DLReasonerExample {
         // get a reasoner
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
-                WSMLReasonerFactory.BuiltInReasoner.PELLET);
+                WSMLReasonerFactory.BuiltInReasoner.KAON2);
         WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
                 .createWSMLDLReasoner(params);     
         
-        // Register ontology
+//      Register ontology
         reasoner.registerOntology(exampleOntology);
 
         // print out if the registered ontology is satisfiable
@@ -103,29 +99,28 @@ public class DLReasonerExample {
         
         // print out if a specified concept is satisfiable
         System.out.println("\n----------------------\n");
-        String le = "_\"http://www.example.org/ontologies/example#Machine\"";
+        String le = "";
         System.out.println("Is concept \"Machine\" satisfiable? " + 
         		reasoner.entails((IRI) exampleOntology.getIdentifier(), 
-        				leFactory.createLogicalExpression(le)));
+        				leFactory.createLogicalExpression("Machine", exampleOntology)));
         
         // print out if a specified logical expression is satisfiable
         System.out.println("\n----------------------\n");
-        le = "?x memberOf _\"http://www.example.org/ontologies/example#Pet\" " +
-		"\n and ?x memberOf _\"http://www.example.org/ontologies/example#DomesticAnimal\".";
+        le = "?x memberOf Pet and ?x memberOf DomesticAnimal.";
         System.out.println("Is the following logical expression satisfiable? \n\"" + le +
         		"\" \n" + reasoner.entails((IRI) exampleOntology.getIdentifier(), 
-        				leFactory.createLogicalExpression(le)));
+        				leFactory.createLogicalExpression(le, exampleOntology)));
         
         // print out if a specified logical expression is satisfiable
         System.out.println("\n----------------------\n");
-        le = "?x memberOf _\"http://www.example.org/ontologies/example#Man\" " +
-				"\n and ?x memberOf _\"http://www.example.org/ontologies/example#Woman\"."; 
+        le = "?x memberOf Man and ?x memberOf Woman."; 
         System.out.println("Is the following logical expression satisfiable? \n\"" + le +
         		"\" \n" + reasoner.entails((IRI) exampleOntology.getIdentifier(), 
-        				leFactory.createLogicalExpression(le)));
+        				leFactory.createLogicalExpression(le, exampleOntology)));
         
         // get all instances of woman concept
         System.out.println("\n----------------------\n");
+        System.out.println("Get all instances of concept Woman:");
 		Set<Instance> set = reasoner.getInstances((IRI) exampleOntology.getIdentifier(), 
 				wsmoFactory.createConcept(
 				wsmoFactory.createIRI(ns + "Woman")));
@@ -134,6 +129,7 @@ public class DLReasonerExample {
         
         // get one specific instance's age
         System.out.println("\n----------------------\n");
+        System.out.println("Get age of instance Anna: ");
         String age = reasoner.getConstraintAttributeValue((IRI) exampleOntology.getIdentifier(), 
         		wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Anna")),
         		wsmoFactory.createIRI(ns + "ageOfHuman"));
@@ -141,20 +137,21 @@ public class DLReasonerExample {
         
         // get all info about one specific instance
         System.out.println("\n----------------------\n");
+        System.out.println("All information about instance Mary:");
         Set<Entry<IRI, Set<IRI>>> entrySet = reasoner.getInferingAttributeValues(
         		(IRI) exampleOntology.getIdentifier(), 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Mary"))).entrySet();
 		for (Entry<IRI, Set<IRI>> entry : entrySet) {
-			System.out.println(entry.getKey().toString());
+			System.out.println(entry.getKey().getLocalName().toString());
 			Set<IRI> IRIset = entry.getValue();
 			for (IRI value : IRIset) 
-				System.out.println("   value: " + value.toString());
+				System.out.println("   value: " + value.getLocalName().toString());
 		}
 		Set<Entry<IRI, Set<Term>>> entrySetTerm = reasoner.getConstraintAttributeValues(
 				(IRI) exampleOntology.getIdentifier(), 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Mary"))).entrySet();
 		for (Entry<IRI, Set<Term>> entry : entrySetTerm) {
-			System.out.println(entry.getKey().toString());
+			System.out.println(entry.getKey().getLocalName().toString());
 			Set<Term> termSet = entry.getValue();
 			for (Term value : termSet) 
 				System.out.println("   value: " + value.toString());
@@ -169,30 +166,6 @@ public class DLReasonerExample {
 //        StringWriter writer = new StringWriter();
 //    	table.print(writer);
 //    	System.out.println(writer.toString());
-    }
-    
-    /**
-     *  Loads an ontology and "debugs" the owl ontology that results after the 
-     *  transformation from WSML to OWL. Pellet prints the class tree of the 
-     *  OWL ontology.
-     */
-    public void debugOntology() throws Exception {
-        
-    	Ontology exampleOntology = loadOntology("example/wsml2owlExample.wsml");
-        if (exampleOntology == null)
-            return;
-
-        // get a reasoner
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
-                WSMLReasonerFactory.BuiltInReasoner.PELLET);
-        WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
-                .createWSMLDLReasoner(params);     
-    
-        // debug ontology - Pellet prints a class tree of the outcoming owl ontology
-		Logger log = Logger.getLogger(PelletFacade.class);
-		log.setLevel(Level.DEBUG);
-		reasoner.registerOntology(exampleOntology);
     }
     
     /**
@@ -228,23 +201,5 @@ public class DLReasonerExample {
 }
 /*
  * $Log: not supported by cvs2svn $
- * Revision 1.6  2006/08/31 12:36:00  nathalie
- * removed methods from WSMLDLReasoner interface to the WSMLReasoner interface. Replaced some methods by entails() and groundQuery() methods.
- *
- * Revision 1.5  2006/08/21 07:51:10  nathalie
- * *** empty log message ***
- *
- * Revision 1.4  2006/08/08 10:14:28  nathalie
- * implemented support for registering multiple ontolgies at wsml-dl reasoner
- *
- * Revision 1.3  2006/07/21 21:07:03  nathalie
- * updated dl reasoner example
- *
- * Revision 1.2  2006/07/21 17:01:43  nathalie
- * updated dl reasoner example
- *
- * Revision 1.1  2006/07/20 17:50:23  nathalie
- * integration of the pellet reasoner
- *
  *
  */
