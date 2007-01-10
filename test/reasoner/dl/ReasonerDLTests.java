@@ -38,7 +38,8 @@ public class ReasonerDLTests {
  	public static Test suite(){
         TestSuite suite = new TestSuite("Test suite for the WSML-DL reasoner");
         //$JUnit-BEGIN$
-        suite.addTestSuite(SimpleInferenceTests.class);
+        suite.addTestSuite(PelletSimpleInferenceTests.class);
+        suite.addTestSuite(Kaon2SimpleInferenceTests.class);
         suite.addTestSuite(OntologyRegistrationTest.class);
         //$JUnit-END$
         return suite;

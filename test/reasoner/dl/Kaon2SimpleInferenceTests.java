@@ -20,6 +20,8 @@ package reasoner.dl;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
@@ -31,6 +33,7 @@ import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.InternalReasonerException;
 import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
@@ -41,8 +44,12 @@ import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
-
-public class SimpleInferenceTests extends TestCase {
+/**
+ * 
+ * @author Nathalie Steinmetz, DERI Innsbruck
+ *
+ */
+public class Kaon2SimpleInferenceTests extends TestCase {
 
 	private WsmoFactory wsmoFactory;
 	
@@ -54,6 +61,8 @@ public class SimpleInferenceTests extends TestCase {
     
     private Ontology ontology;
     
+    private Map<String, Object> params;
+    
     private String ns;
     
 	protected void setUp() throws Exception {
@@ -61,7 +70,9 @@ public class SimpleInferenceTests extends TestCase {
 		WSMO4JManager wsmoManager = new WSMO4JManager();
         wsmoFactory = wsmoManager.getWSMOFactory();
         leFactory = wsmoManager.getLogicalExpressionFactory();
-        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLDLReasoner();
+        wsmlReasoner = null;
+        params = new HashMap<String, Object>();
+        params.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, BuiltInReasoner.KAON2);
 		parser = Factory.createParser(null);
 	}
 	
@@ -80,10 +91,11 @@ public class SimpleInferenceTests extends TestCase {
 	public void testAll() throws Exception {
 		// read test file and parse it 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(
-                "reasoner/dl/wsml2owlExample.wsml");
+                "reasoner/dl/kaon2Wsml2owlExample.wsml");
         assertNotNull(is);
         // assuming first topentity in file is an ontology  
         ontology = (Ontology)parser.parse(new InputStreamReader(is))[0]; 
+        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLDLReasoner(params);
         ns = ontology.getDefaultNamespace().getIRI().toString();
 		
         // register ontology at the wsml reasoner
@@ -140,7 +152,7 @@ public class SimpleInferenceTests extends TestCase {
 		// test getAllConcepts
 		Set<Concept> set = wsmlReasoner.getAllConcepts((IRI) ontology.getIdentifier());
 		for (Concept concept : set) 
-			System.out.println(concept.getIdentifier().toString());
+//			System.out.println(concept.getIdentifier().toString());
 		assertTrue(set.size() == 18);
 		
 		// test getAllInstances
@@ -151,9 +163,9 @@ public class SimpleInferenceTests extends TestCase {
 		
 		// test getAllAttributes
 		Set<IRI> set3 = wsmlReasoner.getAllAttributes((IRI) ontology.getIdentifier());
-		for (IRI attributeId : set3) 
+//		for (IRI attributeId : set3) 
 //			System.out.println(attributeId.toString());
-		assertTrue(set3.size() == 19);
+		assertTrue(set3.size() == 20);
 		
 		// test getAllConstraintAttributes
 		set3.clear();
@@ -167,23 +179,39 @@ public class SimpleInferenceTests extends TestCase {
 		set3 = wsmlReasoner.getAllInferenceAttributes((IRI) ontology.getIdentifier());
 		for (IRI attributeId : set3) 
 //			System.out.println(attributeId.toString());
-		assertTrue(set3.size() == 15);
+		assertTrue(set3.size() == 16);
 		
 		// test getSubConcepts
 		set.clear();
 		set = wsmlReasoner.getSubConcepts((IRI) ontology.getIdentifier(),  
-				ontology.findConcept(wsmoFactory.createIRI(ns + "Human")));
+				ontology.findConcept(wsmoFactory.createIRI(ns + "Animal")));
 		for (Concept concept : set)
 //			System.out.println(concept.getIdentifier().toString());
-		assertTrue(set.size() == 6);
+		assertTrue(set.size() == 10);
+		
+//		 test getDirectSubConcepts
+		set.clear();
+		set = wsmlReasoner.getDirectSubConcepts((IRI) ontology.getIdentifier(),  
+				ontology.findConcept(wsmoFactory.createIRI(ns + "Animal")));
+		for (Concept concept : set)
+//			System.out.println(concept.getIdentifier().toString());
+		assertTrue(set.size() == 4);
 		
 		// test getSuperConcepts
 		set.clear();
 		set = wsmlReasoner.getSuperConcepts((IRI) ontology.getIdentifier(), 
-				ontology.findConcept(wsmoFactory.createIRI(ns + "Human")));
+				ontology.findConcept(wsmoFactory.createIRI(ns + "Child")));
 		for (Concept concept : set)
 //			System.out.println(concept.getIdentifier().toString());
-		assertTrue(set.size() == 2);
+		assertTrue(set.size() == 3);
+		
+		// test getDirectSuperConcepts
+		set.clear();
+		set = wsmlReasoner.getDirectSuperConcepts((IRI) ontology.getIdentifier(), 
+				ontology.findConcept(wsmoFactory.createIRI(ns + "Child")));
+		for (Concept concept : set)
+//			System.out.println(concept.getIdentifier().toString());
+		assertTrue(set.size() == 1);
 		
 		// test getEquivalentConcepts
 		set.clear();
@@ -249,7 +277,7 @@ public class SimpleInferenceTests extends TestCase {
 				ontology.findInstance(wsmoFactory.createIRI(ns + "Mary")));
 		for(Concept concept : set)
 //			System.out.println(concept.getIdentifier().toString());
-		assertTrue(set.size() == 6);
+		assertTrue(set.size() == 5);
 		
 		// test allInstancesOf
 		set2.clear();
@@ -263,7 +291,15 @@ public class SimpleInferenceTests extends TestCase {
 		// test getSubRelationOf
 		set3.clear();
 		set3 = wsmlReasoner.getSubRelations((IRI) ontology.getIdentifier(), 
-				wsmoFactory.createIRI(ns + "hasParent"));
+				wsmoFactory.createIRI(ns + "hasRelative"));
+		for (IRI attributeId : set3)
+//			System.out.println(attributeId.toString());
+		assertTrue(set3.size() == 2);
+		
+		// test getDirectSubRelationOf
+		set3.clear();
+		set3 = wsmlReasoner.getDirectSubRelations((IRI) ontology.getIdentifier(), 
+				wsmoFactory.createIRI(ns + "hasRelative"));
 		for (IRI attributeId : set3)
 //			System.out.println(attributeId.toString());
 		assertTrue(set3.size() == 1);
@@ -271,6 +307,14 @@ public class SimpleInferenceTests extends TestCase {
 		// test getSuperRelationOf
 		set3.clear();
 		set3 = wsmlReasoner.getSuperRelations((IRI) ontology.getIdentifier(), 
+				wsmoFactory.createIRI(ns + "hasMother"));
+		for (IRI attributeId : set3)
+//			System.out.println(attributeId.toString());
+		assertTrue(set3.size() == 2);
+		
+		// test getDirectSuperRelationOf
+		set3.clear();
+		set3 = wsmlReasoner.getDirectSuperRelations((IRI) ontology.getIdentifier(), 
 				wsmoFactory.createIRI(ns + "hasMother"));
 		for (IRI attributeId : set3)
 //			System.out.println(attributeId.toString());
@@ -324,7 +368,7 @@ public class SimpleInferenceTests extends TestCase {
 //			System.out.println(entry.getKey().toString());
 			Set<IRI> IRIset = entry.getValue();
 //			for (IRI value : IRIset) 
-//				System.out.println("value: " + value.toString());
+//				System.out.println("  value: " + value.toString());
 		}
 		assertTrue(entrySet.size() == 2);
 		
@@ -336,9 +380,9 @@ public class SimpleInferenceTests extends TestCase {
 //			System.out.println(entry.getKey().toString());
 			Set<Term> termSet = entry.getValue();
 //			for (Term value : termSet) 
-//				System.out.println("value: " + value.toString());
+//				System.out.println("  value: " + value.toString());
 		}
-		assertTrue(entrySetTerm.size() == 4);
+		assertTrue(entrySetTerm.size() == 2);
 		
 		// test get instances and values of a specified infering attribute
 		Set<Entry<Instance, Set<IRI>>> entrySet2 = wsmlReasoner.
@@ -348,7 +392,7 @@ public class SimpleInferenceTests extends TestCase {
 //			System.out.println(entry.getKey().getIdentifier().toString());
 			Set<IRI> IRIset = entry.getValue();
 //			for (IRI value : IRIset) 
-//				System.out.println("value: " + value.toString());
+//				System.out.println("  value: " + value.toString());
 		}
 		assertTrue(entrySet2.size() == 3);
 		
@@ -423,11 +467,11 @@ public class SimpleInferenceTests extends TestCase {
 		// test getConstraintAttributeValues
 		Set<String> set4 = wsmlReasoner.getConstraintAttributeValues(
 				(IRI) ontology.getIdentifier(), 
-				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Mary")),
+				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Anna")),
 				wsmoFactory.createIRI(ns + "hasWeight"));
 		for(String dataValue : set4)
 //			System.out.println(dataValue);
-		assertTrue(set4.size() == 2);
+		assertTrue(set4.size() == 1);
 		
 		wsmlReasoner.deRegisterOntology((IRI) ontology.getIdentifier());
 	}
@@ -440,42 +484,18 @@ public class SimpleInferenceTests extends TestCase {
         assertNotNull(is);
         // assuming first topentity in file is an ontology  
         ontology = (Ontology)parser.parse(new InputStreamReader(is))[0]; 
+        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLDLReasoner(params);
 		try {
 			// register ontology at the wsml reasoner
 			wsmlReasoner.registerOntology(ontology);
 			fail("Should fail because the given ontology is inconsistent");
 		} catch (InconsistencyException e) {
 			e.getMessage();		
-		}
+		}	
 	}
 	
 }
 /*
  * $Log: not supported by cvs2svn $
- * Revision 1.9  2006/12/05 16:49:25  nathalie
- * ameliorized readability of tests
- *
- * Revision 1.8  2006/11/30 15:50:54  nathalie
- * *** empty log message ***
- *
- * Revision 1.7  2006/09/01 12:06:48  nathalie
- * *** empty log message ***
- *
- * Revision 1.6  2006/08/31 12:36:00  nathalie
- * removed methods from WSMLDLReasoner interface to the WSMLReasoner interface. Replaced some methods by entails() and groundQuery() methods.
- *
- * Revision 1.5  2006/08/10 08:30:59  nathalie
- * added request for getting direct concept/concepts of an instance
- *
- * Revision 1.4  2006/08/08 10:14:28  nathalie
- * implemented support for registering multiple ontolgies at wsml-dl reasoner
- *
- * Revision 1.3  2006/07/23 15:20:23  nathalie
- * updated tests and testfiles
- *
- * Revision 1.2  2006/07/21 16:25:21  nathalie
- * completing the pellet reasoner integration
- *
- *
  *
  */
