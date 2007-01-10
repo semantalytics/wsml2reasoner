@@ -85,7 +85,6 @@ import org.semanticweb.owl.model.change.AddIndividualClass;
 import org.semanticweb.owl.model.change.AddInverse;
 import org.semanticweb.owl.model.change.AddObjectPropertyInstance;
 import org.semanticweb.owl.model.change.AddObjectPropertyRange;
-import org.semanticweb.owl.model.change.AddPropertyAxiom;
 import org.semanticweb.owl.model.change.AddSuperClass;
 import org.semanticweb.owl.model.change.AddSuperProperty;
 import org.semanticweb.owl.model.change.ChangeVisitor;
@@ -106,7 +105,7 @@ import org.wsmo.common.Identifier;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.9 $ $Date: 2007-01-09 10:56:26 $
+ * @version $Revision: 1.10 $ $Date: 2007-01-10 11:50:39 $
  */
 public class WSMLDL2OWLTransformer implements Visitor{
 	
