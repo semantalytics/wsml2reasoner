@@ -347,25 +347,25 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         axiom.removeDefinition(le);
     }
     
-    /**
-     * This test checks for transformation of wsml logical expression to owl object 
-     * property domain and reange definition.
-     */
-    public void testImplicationWithLeftConjunction() throws Exception {
-    	String s = "?x memberOf Pet and ?y memberOf Human impliedBy " +
-    			"?x[hasHolder hasValue ?y].";
-    	LogicalExpression le = (LogicalExpression) leFactory.createLogicalExpression(
-                s, ontology); 
-        axiom.addDefinition(le);
-        
-        // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
-		serializer.serialize(owlOntology, writer, prefs);
-//		serializer.serialize(owlOntology, writer);
-		System.out.println(writer.toString());
-		
-        axiom.removeDefinition(le);
-    }
+//    /**
+//     * This test checks for transformation of wsml logical expression to owl object 
+//     * property domain and reange definition.
+//     */
+//    public void testImplicationWithLeftConjunction() throws Exception {
+//    	String s = "?x memberOf Pet and ?y memberOf Human impliedBy " +
+//    			"?x[hasHolder hasValue ?y].";
+//    	LogicalExpression le = (LogicalExpression) leFactory.createLogicalExpression(
+//                s, ontology); 
+//        axiom.addDefinition(le);
+//        
+//        // transform ontology to OWL ontology
+//		owlOntology = dlReasoner.convertOntology(ontology);
+//		serializer.serialize(owlOntology, writer, prefs);
+////		serializer.serialize(owlOntology, writer);
+//		System.out.println(writer.toString());
+//		
+//        axiom.removeDefinition(le);
+//    }
     
     /**
      * This test checks for transformation of wsml logical expression to owl object 
@@ -568,6 +568,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.8  2006/08/31 12:33:09  nathalie
+ * removed serializing methods from dl reasoner interface and implementation and put them into specific serializer interfaces and classes
+ *
  * Revision 1.7  2006/08/10 08:26:48  nathalie
  * renamed test files
  *
