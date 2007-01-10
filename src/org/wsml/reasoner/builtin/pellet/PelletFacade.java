@@ -50,7 +50,7 @@ import org.wsml.reasoner.ExternalToolException;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.9 $ $Date: 2006-11-30 16:54:57 $
+ * @version $Revision: 1.10 $ $Date: 2007-01-10 11:26:39 $
  */
 public class PelletFacade implements DLReasonerFacade {
 	
@@ -179,7 +179,7 @@ public class PelletFacade implements DLReasonerFacade {
 	public boolean isEquivalentClass(String ontologyURI, OWLDescription clazz1, 
 			OWLDescription clazz2) throws OWLException {
 		reasoner = getReasoner(ontologyURI);
-		return reasoner.isEquivalentClass(clazz1, clazz2);
+		return equivalentClassesOf(ontologyURI, clazz1).contains(clazz2);
 	}
 	
 	public boolean isSubClassOf(String ontologyURI, OWLDescription clazz1, 
@@ -380,6 +380,9 @@ public class PelletFacade implements DLReasonerFacade {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.9  2006/11/30 16:54:57  nathalie
+ * added methods to get direct super-/sub-concepts and direct super-/sub-relations
+ *
  * Revision 1.8  2006/09/19 13:47:28  nathalie
  * added example for using Pellet Logger printClassTree function
  *
