@@ -18,10 +18,12 @@
  */
 package org.wsml.reasoner;
 
+import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Set;
 
 import org.mindswap.pellet.query.QueryResults;
+import org.semanticweb.kaon2.api.KAON2Exception;
 import org.semanticweb.owl.impl.model.OWLConcreteDataImpl;
 import org.semanticweb.owl.impl.model.OWLConcreteDataTypeImpl;
 import org.semanticweb.owl.model.OWLClass;
@@ -49,7 +51,7 @@ import org.semanticweb.owl.model.OWLProperty;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.7 $ $Date: 2006-11-30 16:54:57 $
+ * @version $Revision: 1.8 $ $Date: 2007-01-10 11:50:39 $
  */
 public interface DLReasonerFacade {
 
@@ -78,232 +80,327 @@ public interface DLReasonerFacade {
     
     /**
      * @return true if the given OWL Description is satisfiable, false otherwise.
+     * @throws InterruptedException 
+     * @throws KAON2Exception 
      */
     public boolean isConsistent(String ontologyURI, 
-    		OWLDescription description) throws OWLException;
+    		OWLDescription description) throws OWLException, KAON2Exception, InterruptedException;
     
     /**
      * @return a set containing all classes from the loaded ontology
+     * @throws KAON2Exception 
+     * @throws OWLException 
+     * @throws URISyntaxException 
      */
-	public Set<OWLEntity> allClasses(String ontologyURI);
+	public Set<OWLEntity> allClasses(String ontologyURI) 
+			throws KAON2Exception, OWLException, URISyntaxException;
 	
 	/**
 	 * @return a set containing all individuals from the loaded ontology
+	 * @throws KAON2Exception 
+	 * @throws URISyntaxException 
+	 * @throws OWLException 
 	 */
-	public Set<OWLEntity> allIndividuals(String ontologyURI);
+	public Set<OWLEntity> allIndividuals(String ontologyURI) 
+			throws KAON2Exception, OWLException, URISyntaxException;
 	
 	/**
 	 * @return a set containing all properties from the loaded ontology
+	 * @throws KAON2Exception 
+	 * @throws URISyntaxException 
+	 * @throws OWLException 
 	 */
-	public Set<OWLEntity> allProperties(String ontologyURI);
+	public Set<OWLEntity> allProperties(String ontologyURI) 
+			throws KAON2Exception, OWLException, URISyntaxException;
     
 	/**
 	 * @return a set containing all data properties from the loaded ontology
+	 * @throws KAON2Exception 
+	 * @throws URISyntaxException 
+	 * @throws OWLException 
 	 */
-	public Set<OWLEntity> allDataProperties(String ontologyURI);
+	public Set<OWLEntity> allDataProperties(String ontologyURI) 
+			throws KAON2Exception, OWLException, URISyntaxException;
 	
 	/**
 	 * @return a set containing all object properties from the loaded ontology
+	 * @throws KAON2Exception 
+	 * @throws URISyntaxException 
+	 * @throws OWLException 
 	 */
-	public Set<OWLEntity> allObjectProperties(String ontologyURI);
+	public Set<OWLEntity> allObjectProperties(String ontologyURI) 
+			throws KAON2Exception, OWLException, URISyntaxException;
 	
 	/**
 	 * @return a set containing all subclasses of a given class
+	 * @throws KAON2Exception 
+	 * @throws URISyntaxException 
 	 */
-	public Set<Set> descendantClassesOf(String ontologyURI, 
-			OWLDescription clazz) throws OWLException;
+	public Set<Set> descendantClassesOf(String ontologyURI, OWLDescription clazz) 
+			throws OWLException, KAON2Exception, URISyntaxException;
 	
 	/**
 	 * @return a set containing all direct subclasses of a given class
+	 * @throws URISyntaxException 
+	 * @throws KAON2Exception 
 	 */
 	public Set<Set> subClassesOf(String ontologyURI, 
-			OWLDescription clazz) throws OWLException;
+			OWLDescription clazz) throws OWLException, KAON2Exception, URISyntaxException;
 	
 	/**
 	 * @return a set containing all superclasses of a given class
+	 * @throws KAON2Exception 
+	 * @throws URISyntaxException 
 	 */
-	public Set<Set> ancestorClassesOf(String ontologyURI, 
-			OWLDescription clazz) throws OWLException;
+	public Set<Set> ancestorClassesOf(String ontologyURI, OWLDescription clazz) 
+			throws OWLException, KAON2Exception, URISyntaxException;
 	
 	/**
 	 * @return a set containing all direct superclasses of a given class
+	 * @throws URISyntaxException 
+	 * @throws KAON2Exception 
 	 */
 	public Set<Set> superClassesOf(String ontologyURI, 
-			OWLDescription clazz) throws OWLException;
+			OWLDescription clazz) throws OWLException, KAON2Exception, URISyntaxException;
 	
 	/**
 	 * @return a set containing all classes equivalent to the given class
+	 * @throws KAON2Exception 
+	 * @throws URISyntaxException 
 	 */
-	public Set<OWLEntity> equivalentClassesOf(String ontologyURI, 
-			OWLDescription clazz) throws OWLException;
+	public Set<OWLEntity> equivalentClassesOf(String ontologyURI, OWLDescription clazz) 
+			throws OWLException, KAON2Exception, URISyntaxException;
 	
 	/**
 	 * @return true if the two given OWL descriptions are equivalent
+	 * @throws URISyntaxException 
+	 * @throws KAON2Exception 
 	 */
 	public boolean isEquivalentClass(String ontologyURI, 
 			OWLDescription clazz1, OWLDescription clazz2) 
-			throws OWLException;
+			throws OWLException, KAON2Exception, URISyntaxException;
 	
     /**
      * @return true if the given clazz2 is a subClass of clazz1
+     * @throws KAON2Exception 
+     * @throws URISyntaxException 
      */
     public boolean isSubClassOf(String ontologyURI, OWLDescription clazz1, 
-    		OWLDescription clazz2) throws OWLException;
+    		OWLDescription clazz2) 
+    		throws OWLException, KAON2Exception, URISyntaxException;
     
     /**
      * @return true if the given individual is an instance of clazz
+     * @throws KAON2Exception 
+     * @throws URISyntaxException 
      */
     public boolean isInstanceOf(String ontologyURI, OWLIndividual individual, 
-    		OWLDescription clazz) throws OWLException;
+    		OWLDescription clazz) 
+    		throws OWLException, KAON2Exception, URISyntaxException;
     
     /**
      * @return a set all instances of a given OWL class
+     * @throws KAON2Exception 
+     * @throws URISyntaxException 
      */
     public Set<OWLEntity> allInstancesOf(String ontologyURI, OWLClass clazz) 
-    		throws OWLException;
+    		throws OWLException, KAON2Exception, URISyntaxException;
 	
 	/**
      * @return a set with all direct concepts of a given OWL individual
+	 * @throws KAON2Exception 
+	 * @throws URISyntaxException 
      */
 	public Set<Set> typesOf(String ontologyURI, OWLIndividual individual) 
-			throws OWLException;
+			throws OWLException, KAON2Exception, URISyntaxException;
     
     /**
      * @return a set with all (also indirect) concepts of a given OWL individual
+     * @throws KAON2Exception 
+     * @throws URISyntaxException 
      */
     public Set<Set> allTypesOf(String ontologyURI, OWLIndividual individual) 
-    		throws OWLException;
+    		throws OWLException, KAON2Exception, URISyntaxException;
     
     /**
      * @return a set containing all subproperties of a given OWL property
+     * @throws KAON2Exception 
+     * @throws URISyntaxException 
      */
     public Set<Set> descendantPropertiesOf(String ontologyURI, 
-    		OWLProperty property) throws OWLException;
+    		OWLProperty property) 
+    		throws OWLException, KAON2Exception, URISyntaxException;
     
     /**
      * @return a set containing all direct subproperties of a given OWL 
      * 			property
+     * @throws URISyntaxException 
+     * @throws KAON2Exception 
      */
     public Set<Set> subPropertiesOf(String ontologyURI, 
-    		OWLProperty property) throws OWLException;
+    		OWLProperty property) throws OWLException, KAON2Exception, URISyntaxException;
     
     /**
      * @return a set containing all superproperties of a given OWL property
+     * @throws KAON2Exception 
+     * @throws URISyntaxException 
      */
     public Set<Set> ancestorPropertiesOf(String ontologyURI, 
-    		OWLProperty property) throws OWLException; 
+    		OWLProperty property) 
+    		throws OWLException, KAON2Exception, URISyntaxException; 
     
     /**
      * @return a set containing all direct superproperties of a given OWL 
      * 			property
+     * @throws URISyntaxException 
+     * @throws KAON2Exception 
      */
     public Set<Set> superPropertiesOf(String ontologyURI, 
-    		OWLProperty property) throws OWLException; 
+    		OWLProperty property) throws OWLException, KAON2Exception, URISyntaxException; 
     
     /**
      * @return a set containing all properties equivalent to the given property
+     * @throws KAON2Exception 
+     * @throws URISyntaxException 
      */
 	public Set<OWLEntity> equivalentPropertiesOf(String ontologyURI, 
-			OWLProperty property) throws OWLException;
+			OWLProperty property) 
+			throws OWLException, KAON2Exception, URISyntaxException;
     
 	/**
 	 * @return a set containing all properties inverse to the given property
+	 * @throws KAON2Exception 
+	 * @throws URISyntaxException 
 	 */
 	public Set<OWLEntity> inversePropertiesOf(String ontologyURI, 
-			OWLObjectProperty property) throws OWLException;
+			OWLObjectProperty property) 
+			throws OWLException, KAON2Exception, URISyntaxException;
 	
 	/**
 	 * @return a set containing the domains of the given property
+	 * @throws KAON2Exception 
 	 */
 	public Set<OWLEntity> domainsOf(String ontologyURI, 
-			OWLProperty property) throws OWLException;
+			OWLProperty property) 
+			throws OWLException, KAON2Exception, URISyntaxException;
 	
 	/**
 	 * @return a set containing the ranges of the given property
+	 * @throws URISyntaxException 
+	 * @throws KAON2Exception 
 	 */
 	public Set<OWLEntity> rangesOf(String ontologyURI, 
-			OWLObjectProperty property) throws OWLException;
+			OWLObjectProperty property) 
+			throws OWLException, KAON2Exception, URISyntaxException;
 	
 	/**
 	 * @return a set containing the ranges of the given property
+	 * @throws URISyntaxException 
+	 * @throws KAON2Exception 
 	 */
 	public Set<OWLConcreteDataTypeImpl> rangesOf(String ontologyURI, 
-			OWLDataProperty property) throws OWLException;
+			OWLDataProperty property) 
+			throws OWLException, KAON2Exception, URISyntaxException;
 	
 	/**
 	 * @return a map containing all data properties and for each a set containing
 	 * 			all its values
+	 * @throws URISyntaxException 
+	 * @throws KAON2Exception 
 	 */
 	public Map<OWLEntity, Set<OWLConcreteDataImpl>> getDataPropertyValues(
 			String ontologyURI, OWLIndividual individual) 
-			throws OWLException;
+			throws OWLException, KAON2Exception, URISyntaxException;
 	
 	/**
 	 * @return a map containing all object properties and for each a set containing
 	 * 			all its values
+	 * @throws KAON2Exception 
+	 * @throws URISyntaxException 
 	 */
 	public Map<OWLEntity, Set<OWLEntity>> getObjectPropertyValues(
 			String ontologyURI, OWLIndividual individual) 
-			throws OWLException;
+			throws OWLException, KAON2Exception, URISyntaxException;
 	
 	/**
 	 * @return a map containing all individuals who have values for a specified 
 	 * 			object property and for each a set containing all its values
+	 * @throws URISyntaxException 
+	 * @throws KAON2Exception 
 	 */
 	public Map<OWLEntity, Set<OWLEntity>> getPropertyValues(String ontologyURI, 
-			OWLObjectProperty property) throws OWLException;
+			OWLObjectProperty property) 
+			throws OWLException, KAON2Exception, URISyntaxException;
 	
 	/**
 	 * @return a map containing all individuals who have values for a specified 
 	 * 			data property and for each a set containing all its values
+	 * @throws URISyntaxException 
+	 * @throws KAON2Exception 
 	 */
 	public Map<OWLEntity, Set<OWLConcreteDataImpl>> getPropertyValues(
 			String ontologyURI, OWLDataProperty property) 
-			throws OWLException;
+			throws OWLException, KAON2Exception, URISyntaxException;
 	
 	/**
 	 * @return true if the given subject individual has the given object property 
 	 * 			with the given object individual as value
+	 * @throws KAON2Exception 
+	 * @throws InterruptedException 
 	 */
 	public boolean hasPropertyValue(String ontologyURI, OWLIndividual subject,
 			OWLObjectProperty property, OWLIndividual object) 
-			throws OWLException;
+			throws OWLException, KAON2Exception, InterruptedException;
 	
 	/**
 	 * @return true if the given subject individual has the given data property 
 	 * 			with the given data value as value
+	 * @throws InterruptedException 
+	 * @throws KAON2Exception 
 	 */
 	public boolean hasPropertyValue(String ontologyURI, OWLIndividual subject,
 			OWLDataProperty property, OWLDataValue object) 
-			throws OWLException;
+			throws OWLException, KAON2Exception, InterruptedException;
 	
 	/**
 	 * @return individual value of the given individual and object property
+	 * @throws InterruptedException 
+	 * @throws KAON2Exception 
+	 * @throws URISyntaxException 
 	 */
 	public OWLIndividual getObjectPropertyValue(String ontologyURI, 
 			OWLIndividual subject, OWLObjectProperty property) 
-			throws OWLException;
+			throws OWLException, KAON2Exception, InterruptedException, URISyntaxException;
 	
 	/**
 	 * @return data value of the given individual and data property
+	 * @throws URISyntaxException 
+	 * @throws InterruptedException 
+	 * @throws KAON2Exception 
 	 */
 	public OWLDataValue getDataPropertyValue(String ontologyURI, 
 			OWLIndividual subject, OWLDataProperty property) 
-			throws OWLException;
+			throws OWLException, KAON2Exception, InterruptedException, URISyntaxException;
 	
 	/**
 	 * @return set containing individual values of the given individual and object property
+	 * @throws InterruptedException 
+	 * @throws KAON2Exception 
+	 * @throws URISyntaxException 
 	 */
 	public Set<OWLEntity> getObjectPropertyValues(String ontologyURI, 
 			OWLIndividual subject, OWLObjectProperty property) 
-			throws OWLException;
+			throws OWLException, KAON2Exception, InterruptedException, URISyntaxException;
 	
 	/**
 	 * @return set containing data values of the given individual and data property
+	 * @throws InterruptedException 
+	 * @throws KAON2Exception 
+	 * @throws URISyntaxException 
 	 */
 	public Set<OWLDataValue> getDataPropertyValues(String ontologyURI, 
 			OWLIndividual subject, OWLDataProperty property) 
-			throws OWLException;
+			throws OWLException, KAON2Exception, InterruptedException, URISyntaxException;
     
     /**
      * Evaluates a given query on a particular external tool.
@@ -316,6 +413,9 @@ public interface DLReasonerFacade {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.7  2006/11/30 16:54:57  nathalie
+ * added methods to get direct super-/sub-concepts and direct super-/sub-relations
+ *
  * Revision 1.6  2006/08/31 12:36:00  nathalie
  * removed methods from WSMLDLReasoner interface to the WSMLReasoner interface. Replaced some methods by entails() and groundQuery() methods.
  *

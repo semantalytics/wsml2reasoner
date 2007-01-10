@@ -23,14 +23,12 @@ import java.util.*;
 
 import org.semanticweb.kaon2.api.*;
 import org.semanticweb.kaon2.api.logic.*;
-import org.semanticweb.kaon2.api.owl.axioms.ClassMember;
 import org.semanticweb.kaon2.api.owl.elements.*;
 import org.semanticweb.kaon2.api.reasoner.*;
 import org.semanticweb.kaon2.api.reasoner.SubsumptionHierarchy.Node;
 import org.wsml.reasoner.serializer.owl.WsmlOwlSerializer;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
-import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.Serializer;
 
@@ -39,14 +37,14 @@ import org.wsmo.wsml.Serializer;
  *
  * <pre>
  *    Created on 22.12.2006
- *    Committed by $Author: hlausen $
+ *    Committed by $Author: nathalie $
  *    $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/builtin/kaon2/Test.java,v $,
  * </pre>
  *
  * @author AuthorFirstName AuthorLastName
  * @author ContributorFirstName ContributorLastName
  * @author ContributorFirstName ContributorLastName
- * @version $Revision: 1.1 $ $Date: 2007-01-02 11:30:50 $
+ * @version $Revision: 1.2 $ $Date: 2007-01-10 11:50:38 $
  */
 public class Test {
 
@@ -54,54 +52,81 @@ public class Test {
      * @param args
      */
     public static void main(String[] args) throws Exception {
-        WsmoFactory f = Factory.createWsmoFactory(null);
-        Parser p = Factory.createParser(null);
-        org.omwg.ontology.Ontology o = (org.omwg.ontology.Ontology) p
-                .parse(new StringBuffer(
-                        "namespace _\"urn:foo/\" ontology o concept c subConceptOf b "))[0];
+        Parser parser = Factory.createParser(null);
+        org.omwg.ontology.Ontology wsmlOnt = 
+        	(org.omwg.ontology.Ontology) parser.parse(new StringBuffer(
+        			"namespace _\"urn:foo/\" ontology o " +
+        				"concept c subConceptOf b " +
+        				"  hasChild impliesType bc "))[0];
 
-        Serializer s = new WsmlOwlSerializer(null);
+        Serializer serializer = new WsmlOwlSerializer(null);
         StringBuffer buf = new StringBuffer();
-        s.serialize(new TopEntity[] { o }, buf);
+        serializer.serialize(new TopEntity[] {wsmlOnt}, buf);
 
         System.out.println(buf);
         InputStream in = new ByteArrayInputStream(buf.toString().getBytes());
 
         KAON2Connection connection = KAON2Manager.newConnection();
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put(KAON2Connection.LOAD_FROM_INPUT_STREAM, in);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put(KAON2Connection.LOAD_FROM_INPUT_STREAM, in);
+        
         Ontology ontology = connection.openOntology(
-                "http://example.com/a",m);
+        		"http://example.com/a", map);
         Reasoner reasoner = ontology.createReasoner();
-
-        SubsumptionHierarchy ss = reasoner.getSubsumptionHierarchy();
-        for (Node n : ss){
+        
+//System.out.println(ontology.getOntologyURI().toString());
+        SubsumptionHierarchy hierarchy = reasoner.getSubsumptionHierarchy();
+        for (Node n : hierarchy){
             System.out.println(n);
             for (OWLClass c : n.getOWLClasses()){
-                System.out.println("-"+c.getURI());
+                System.out.println("-" + c.getURI());
+            }
+            for (Node n2 : n.getDescendantNodes()){
+            	for (OWLClass c : n2.getOWLClasses()) {
+            		 System.out.println("--" + c.getURI());
+            	}
             }
         }
+        
+        OWLClass classB = KAON2Manager.factory().owlClass("urn:foo/b");
+        Set<Description> subDescriptions = classB.getSubDescriptions(ontology);
+        System.out.println("The subclasses of '" + classB.getURI() + "' are:");
+        for (Description subDescription : subDescriptions)
+            if (subDescription instanceof OWLClass) {
+                OWLClass subClass=(OWLClass)subDescription;
+                System.out.println("    "+subClass.getURI());
+            }
+        System.out.println();
 
         Variable X = KAON2Manager.factory().variable("X");
         Variable Y = KAON2Manager.factory().variable("Y");
-        OWLClass c = KAON2Manager.factory().owlClass("urn:foo/c");
-
-        // We now create the query object. A query consists of the following things:
-        //
-        // - a list of literals definint the query (they are created as usual)
-        // - a list of distinguished variables, i.e. the variables that will be returned
-        ObjectProperty sub = KAON2Manager.factory().objectProperty(Namespaces.OWL_NS+"subClassOf");
-
-        System.out.println("sub--"+sub);
-        Query subClassAll=reasoner.createQuery(new Literal[] {
-            KAON2Manager.factory().literal(true,sub,new Term[] {X,Y})
-        },new Variable[] { X,Y});
-
-        subClassAll=reasoner.createQuery(sub);
-
-
-
-        System.out.println("QUERY--"+subClassAll);
+        
+        ObjectProperty hasChild = KAON2Manager.factory().objectProperty("urn:foo/hasChild");
+        System.out.println("hasChild: " + hasChild);
+        Query subClassAll = reasoner.createQuery(new Literal[] {
+                KAON2Manager.factory().literal(true, hasChild ,new Term[] {X,Y})
+            },new Variable[] {X,Y});
+        
+        subClassAll = reasoner.createQuery(Namespaces.INSTANCE, "SELECT ?x WHERE { ?x rdfs:subClassOf <urn:foo/b> }");
+        
+//        ObjectProperty sub = KAON2Manager.factory().objectProperty(Namespaces.OWL_NS + "subClassOf");
+//        System.out.println("sub--" + sub);
+//        
+//        // We now create the query object. A query consists of the following things:
+//        //
+//        // - a list of literals defining the query (they are created as usual)
+//        // - a list of distinguished variables, i.e. the variables that will be returned
+//        
+//        Query subClassAll=reasoner.createQuery(new Literal[] {
+//            KAON2Manager.factory().literal(true,sub,new Term[] {X,Y})
+//        },new Variable[] {X,Y});
+        
+        System.out.println("QUERY--" + subClassAll.getQueryFormula().toString());
+        
+//        subClassAll=reasoner.createQuery(sub);
+        
+        System.out.println("QUERY--" + subClassAll.getQueryFormula().toString());
+        System.out.println("QUERY--" + subClassAll);
 
 
         // Creating the query has the effect of compiling it. A single query can be executed then several times.
@@ -112,7 +137,9 @@ public class Test {
 
         subClassAll.open();
         // We now iterate over the query results.
+        System.out.println(subClassAll.getNumberOfTuples());
         while (!subClassAll.afterLast()) {
+        	System.out.println("hi");
             // A query result is a set of tuples. The values in each tuple correspond to the distinguished variables.
             // In the above example, the distinguished variables are [X,Y]; this means that the first object in
             // the tuple is the value for the X variable, and the second one is the value for the Y variable.
@@ -139,3 +166,4 @@ public class Test {
 
     }
 }
+

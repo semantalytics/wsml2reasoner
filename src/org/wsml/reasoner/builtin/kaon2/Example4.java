@@ -205,7 +205,7 @@ public class Example4 {
 
             Predicate sub = KAON2Manager.factory().predicateSymbol("http://www.w3.org/1999/02/22-rdf-syntax-ns#type",2);
 
-        //sub = KAON2Manager.factory().subClassOf(student,person).;
+//        sub = KAON2Manager.factory().subClassOf(student,person).;
 
         whatDoPeopleKnowAbout=reasoner.createQuery(new Literal[] {
 
@@ -214,7 +214,8 @@ public class Example4 {
 
         whatDoPeopleKnowAbout=reasoner.createQuery(sub);
 
-        whatDoPeopleKnowAbout=reasoner.createQuery(Namespaces.INSTANCE,"SELECT ?x ?y WHERE { ?x rdfs:subClassOf <http://kaon2.semanticweb.org/example4#person> }");
+        whatDoPeopleKnowAbout=reasoner.createQuery(Namespaces.INSTANCE,"SELECT ?x ?y WHERE " +
+        		"{ ?x <http://kaon2.semanticweb.org/example4#worksOn> ?y }");
 
 
         // Creating the query has the effect of compiling it. A single query can be executed then several times.
@@ -274,4 +275,5 @@ public class Example4 {
         connection.close();
     }
 }
+
 
