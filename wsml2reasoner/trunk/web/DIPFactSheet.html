@@ -10,7 +10,7 @@
     <p><a href="http://dip.semanticweb.org/"><img alt="logo" src="DIPlogo.gif"
     border="0" /></a></p>
     <h1>DIP D1.10: WSML-DL Reasoner</h1>
-    <h2>Prototype Fact Sheet, 16 Dec 2006</h2>
+    <h2>Prototype Fact Sheet, 10 Jan 2007</h2>
     <dl>
       <dt>Latest version:</dt>
       <dd><a
@@ -151,10 +151,16 @@
         <td>first internal version (version 0.1)</td>
       </tr>
       <tr>
-        <td>16-12-16</td>
+        <td>16-12-06</td>
         <td>002</td>
         <td>Nathalie Steinmetz</td>
         <td>second internal version (version 0.2)</td>
+      </tr>
+      <tr>
+        <td>10-01-07</td>
+        <td>003</td>
+        <td>Nathalie Steinmetz</td>
+        <td>final version after 1st review (v 0.3)</td>
       </tr>
     </table>
     <table width="650" border="1" cellspacing="0,5" cellpadding="0,5">
@@ -184,18 +190,15 @@
         <td>
           <table width="620" border="1" cellspacing="0,5" cellpadding="0,5">
             <tr>
-              <td colspan="2">@@TODO SECOND REVIEWER</td>
+              <td colspan="2">Damyan Ognyanoff</td>
               <td><strong>Email</strong></td>
-              <td>
-              </td>
+              <td>damyan@sirma.bg</td>
             </tr>
             <tr>
               <td width="120"><strong>Partner</strong></td>
-              <td width="110">
-              </td>
+              <td width="110">Ontotext Lab.</td>
               <td width="100"><strong>Phone</strong></td>
-              <td>
-              </td>
+              <td></td>
             </tr>
           </table>
         </td>
@@ -226,7 +229,7 @@
     <hr />
     
     <h1><a id="availability">1. Availability and Contacts</a></h1>
-    <p><b>Version:</b> 0.2, 20 December 2006.</p>
+    <p><b>Version:</b> 0.3, 10 January 2007.</p>
     <p><b>Download:</b> <a
     href="http://tools.deri.org/wsml2reasoner/releases/v0_2/wsml2reasoner-dl-v0_2/">http://tools.deri.org/wsml2reasoner/releases/v0_2/wsml2reasoner-dl-v0_2/</a></p>
     <p><b>Source control:</b> Available from CVS of the <a
@@ -235,7 +238,7 @@
     <h1><a id="purpose">2. Purpose and Functionality</a></h1>
     <p>
     The Web Service Modeling Language (WSML) is a family of formal Web languages.
-	Its Semantic is based on Description Logics, Logic Programming and First-order 
+	Its semantics is based on Description Logics, Logic Programming and First-order 
 	Logic, with influences from F-Logic and frame-based representation systems.
 	Conforming to the different influences, there exist five variants of WSML:
 	WSML-Core, WSML-DL, WSML-Flight, WSML-Rule and WSML-Full.
@@ -245,7 +248,9 @@
     captures the expressive Description Logic SHIQ(D). Using this prototype we can, 
     among others, perform the reasoning tasks of checking ontology consistency, 
     entailment and instance retrieval. It also validates WSML-DL ontologies and 
-    allows to serialize the latter to OWL DL ontologies.
+    allows to serialize the latter to OWL DL ontologies. However the serialization 
+    to OWL DL is not complete; for details about the restrictions see <a 
+    href="#restrictions">Restrictions</a>).
     </p>
     
     <h2><a id="architecture">2.1. Architecture overview</a></h2>
@@ -268,25 +273,37 @@
     <a href="http://owl.man.ac.uk/api.shtml">Wonderweb OWL API</a> to translate WSML-DL to OWL DL.
     </p>
 	<p> 
- 	So far, we have embedded the OWL DL reasoner <a href="http://pellet.owldl.com/">Pellet</a> 
- 	as first reasoning engine in the WSML2Reasoner framework infrastructure. It is wrapped by 
- 	a Pellet reasoner facade, which mediates between the OWL DL ontology produced by the 
- 	transformation and the Pellet-specific internal representation. For each new DL reasoner 
- 	that is integrated into the framework, such an adapter facade has to be written.
+ 	So far, we have embedded the OWL DL reasoners <a href="http://pellet.owldl.com/">Pellet</a> 
+ 	and <a href="http://kaon2.semanticweb.org/">KAON2</a> as first reasoning engines in the 
+ 	WSML2Reasoner framework infrastructure: 
+ 	</p>
+ 	<p>
+ 	  <ul>
+ 	    <li> <b>Pellet</b> - Pellet is wrapped by a Pellet reasoner fa&ccedil;ade, which mediates 
+ 	    between the OWL DL ontology produced by the transformation and the Pellet-specific internal 
+ 	    representation.</li><br /><br />
+ 	    <li> <b>KAON2</b> - KAON2 is wrapped by a KAON2 reasoner fa&ccedil;ade, which mediates 
+ 	    between the OWL DL ontology produced by the transformation and the KAON2 API used for 
+ 	    interacting with the KAON2 reasoner.</li>
+ 	  </ul>
+ 	</p>
+ 	<p> 
+ 	For each new DL reasoner that is integrated into the framework, such an adapter fa&ccedil;ade 
+ 	has to be written.
  	</p>
 
     <h2><a id="transformation">2.2. Ontology Transformation</a></h2>
 	<p>
 	The transformation of a WSML-DL ontology to an OWL DL ontology is done in a line of 
 	single transformation steps that are applied subsequently.
-	<br />
+	<br /><br />
 	<b>Relations to Attributes.</b><br />
 	Replace relations, subrelations and relation instances by attributes and axioms, according 
 	to the preprocessing steps described in <a href="#ReasWSMLDL">[ReasWSMLDL]</a>. <br /><br />
 	<b>Axiomatization.</b><br />
-	All conceptual elements (except relations) are converted into appropriate axioms specified 
-	by logical expressions. The resulting set of logical expressions is equivalent to the 
-	original WSML ontology. <br /><br />
+	All conceptual elements are converted into appropriate axioms specified 
+	by logical expressions. The resulting set of logical expressions is semantically equivalent 
+	to the original WSML ontology. <br /><br />
 	<b>Implication Reduction Rules.</b><br />
 	Replace equivalences and right-implications in logical expressions by left-implications. 
 	<br /><br />
@@ -294,7 +311,12 @@
 	Replace conjunctions on the left side and disjunctions on the right side of an inverse 
 	implication by left implications. <br /><br />
 	<b>Molecule Decomposition Rules.</b><br />
-	Replace complex molecules inside a logical expression by conjunctions of simple ones.
+	Replace complex molecules inside a logical expression by conjunctions of simple ones.<br /><br />
+	<b>OWL API Transformation.</b><br />
+	All logical expressions that are resulting from the transformation and normalization steps 
+	described above, are processed one by one. Each logical expression is translated into the 
+	corresponding OWL Description, using the <a href="http://owl.man.ac.uk/api.shtml">
+	Wonderweb OWL API</a>.
 	</p>
 	<p>
 	<a href="#fig:transformation">Figure 2</a> shows a detailed perspective on the 
@@ -302,10 +324,26 @@
 	architecture of the WSML-DL compononent of the WSML2Reasoner framework.
 	</p>
 	<p style="text-align: center;">
-    <img src="figures/layering.png" alt="Internal framework architecture">
+    <img src="figures/layering_dl.png" alt="Internal framework architecture">
     <br/>
 	<strong>Figure <a id="fig:transformation">2</a>. Internal framework architecture</strong>
     </p>
+    <h3><a id="restrictions">Restrictions to the transformation</a></h3>
+	<p>
+	The transformation from WSML-DL to OWL DL is not complete. The restrictions are mainly due 
+	to the differences of the Description Logics underlying WSML-DL (SHIQ(D)) and OWL DL 
+	(SHOIN(D)). OWL DL does not support the following features:
+	<ul>
+	  <li><b>Datatype predicates</b> - Datatype predicates are lost during the transformation.</li>
+	  <br /><br />
+	  <li><b>Qualified Number Restrictions</b> - Qualified Number Restrictions (QNRs) are lost 
+	  during the transformation. In <a href="#ReasWSMLDL">[ReasWSMLDL]</a> we mention a possible 
+	  workaround and a non-endorsed OWL extension, that both would allow to translate QNRs into 
+	  OWL DL (only approximated with the workaround). We have planned to implement the workaround 
+	  as a next step and, in the long run, intend to extend the OWL API for support of the 
+	  non-endorsed OWL extension. </li>
+	</ul>
+	</p>
 
     <h2><a id="reasoning">2.3. Reasoning with WSML-DL Ontologies</a></h2>
     <p>
@@ -324,11 +362,11 @@
     </p>
     <p>
     In <a href="#ReasWSMLDL">[ReasWSMLDL]</a> and <a href="#DLHandBook">[DLHandBook]</a> 
-    you will find an descriptions of the main standard reasoning tasks as described above, as 
+    you will find descriptions of the main standard reasoning tasks as described above, as 
     well as of some main non-standard inference tasks.
 	</p>
 	<p>
-	The following are the reasoning tasks that are supported by the WSML-DL Reasoner prototype:
+	The following is the functionality that is supported by the WSML-DL Reasoner prototype:
 	</p>
 	<ul>
 	  <li>Check Ontology, Concept or Logical Expression consistency.</li>
@@ -383,6 +421,9 @@
       used in the current version of the WSML2Reasoner framework is 1.4.3.</li>
       <li><a href="http://pellet.owldl.com/">Pellet</a> - Sample Reasoner. The version 
       used in the current version of the WSML2Reasoner framework is 1.3.</li>
+      <li><a href="http://kaon2.semanticweb.org/">KAON2</a> - Sample Reasoner. The KAON2 
+      reasoning engine is not shipped in the WSML2Reasoner release, but wrappers for it 
+      are implemented and tested.</li>
     </ul>
     The Pellet reasoner requires the following libraries:
     <ul>  
@@ -461,7 +502,7 @@
       <li><code>lib</code> folder - contains all the required libraries (jar files);</li>
       <li><code>wsml2reasoner-dl-src-v0_2.zip</code> - contains all source files;</li>
     </ul>
-    In the lib folder are all the required libraries. Please note that that Pellet uses an 
+    In the lib folder are all the required libraries. Please note that Pellet uses an 
     extended version of the OWL API. Therefore you need the <code>api.jar</code> and 
     <code>impl.jar</code> from the owl-api-econn folder (within the lib and then the 
     owl-api folder).
@@ -473,14 +514,13 @@
     <ul>
       <li><code><a href="http://cvs.deri.org/cgi-bin/viewcvs.cgi/wsml2reasoner/src/example/DLReasonerExample.java?view=markup">DLReasonerExample</a></code> - parsing an WSML-DL ontology, validating it 
       and transforming it into an OWL DL ontology. This OWL DL ontology is registered 
-      at the Pellet reasoner facade and is used for executing different reasoning tasks.</li>
+      at the Pellet reasoner fa&ccedil;ade and is used for executing different reasoning tasks.</li>
     </ul>
     
     <h1><a id="future">Future Plans</a></h1>
     
     In the future more reasoners will be added to the framework, e.g. 
-    <a href="http://owl.man.ac.uk/factplusplus/">FaCT++</a>, 
-    <a href="http://kaon2.semanticweb.org/">KAON2</a>, 
+    <a href="http://owl.man.ac.uk/factplusplus/">FaCT++</a> and 
     <a href="http://www.racer-systems.com/products/racerpro/index.phtml">RACER</a>.
   	To be able to add reasoners that do not support the OWL API interface, we will add an 
   	export from OWL DL to the Description Logic Interface 
@@ -511,6 +551,6 @@
     src="http://www.w3.org/Icons/valid-xhtml11" alt="Valid XHTML 1.1!" height="31"
     width="88" /></a></p>
     
-    <p>$Date: 2006-12-18 14:08:38 $</p>
+    <p>$Date: 2007-01-10 15:52:49 $</p>
   </body>
 </html>
