@@ -410,34 +410,46 @@
     </ul>
     <p><b>Required Libraries:</b></p>
     <ul>
-      <li><a id="wsmo4j" name="wsmo4j" href="http://wsmo4j.sourceforge.net">wsmo4j</a> is
-      an API and a reference implementation for building Semantic Web Services
-      applications compliant with the Web Service Modeling Ontology (<a
-      href="http://www.wsmo.org">WSMO</a>). The version used in the current version of 
-      the WSML2Reasoner framework is 0.5.2 from 28-Mar-2006, or newer.</li>
-      <li><a href="http://owl.man.ac.uk/api.shtml">OWL API</a> - Mandatory. The OWL 
-      API provides a programmatic interface for accessing, manipulating and reasoning over 
-      OWL ontologies. It comes along with a simple reference implementation. The version 
-      used in the current version of the WSML2Reasoner framework is 1.4.3.</li>
-      <li><a href="http://pellet.owldl.com/">Pellet</a> - Sample Reasoner. The version 
-      used in the current version of the WSML2Reasoner framework is 1.3.</li>
-      <li><a href="http://kaon2.semanticweb.org/">KAON2</a> - Sample Reasoner. The KAON2 
-      reasoning engine is not shipped in the WSML2Reasoner release, but wrappers for it 
-      are implemented and tested.</li>
-    </ul>
-    The Pellet reasoner requires the following libraries:
-    <ul>  
-      <li><a href="http://svn.mindswap.org/binaries/jars/econn-owlapi/2006-04-27/">econn 
-      OWL API</a> (Mindswap)</li>
-  	  <li>xsdlib (Sun Microsystems)</li>
-  	  <li><a href="https://sourceforge.net/projects/relaxng/">relaxngDatatype</a> (Sun Microsystems)</li>
-  	  <li>commons-logging 1.1 (Apache)</li>
-  	  <li>log4j (Apache)</li>
-  	  <li><a href="http://sourceforge.net/projects/kaon">rdfapi</a> (KAON)</li>
-  	  <li><a href="http://www.cwi.nl/htbin/sen1/twiki/bin/view/SEN1/ATermLibrary">aterm
-  	  </a> (Centrum voor Wiskunde en Informatica (CWI))</li>
-    </ul>
-    
+      <li> <b>Core Libraries:</b><br /><br />
+        <ul>
+          <li><a id="wsmo4j" name="wsmo4j" href="http://wsmo4j.sourceforge.net">wsmo4j</a> is
+          an API and a reference implementation for building Semantic Web Services
+          applications compliant with the Web Service Modeling Ontology (<a
+          href="http://www.wsmo.org">WSMO</a>). The version used in the current version of 
+          the WSML2Reasoner framework is 0.5.2 from 28-Mar-2006, or newer.</li>
+          <li><a href="http://owl.man.ac.uk/api.shtml">OWL API</a> - Mandatory. The OWL 
+          API provides a programmatic interface for accessing, manipulating and reasoning over 
+          OWL ontologies. It comes along with a simple reference implementation. The version 
+          used in the current version of the WSML2Reasoner framework is 1.4.3.</li>
+        </ul>
+      </li><br />
+      <li> <b>Libraries needed for reasoning with Pellet:</b><br /><br />
+        <ul>
+          <li><a href="http://pellet.owldl.com/">Pellet</a> - Sample Reasoner. The version 
+          used in the current version of the WSML2Reasoner framework is 1.3.</li>
+        </ul><br />
+        The Pellet reasoner furthermore requires the following libraries:<br /><br />
+        <ul>  
+          <li><a href="http://svn.mindswap.org/binaries/jars/econn-owlapi/2006-04-27/">econn 
+          OWL API</a> (Mindswap)</li>
+  	      <li>xsdlib (Sun Microsystems)</li>
+  	      <li><a href="https://sourceforge.net/projects/relaxng/">relaxngDatatype</a> (Sun Microsystems)</li>
+  	      <li>commons-logging 1.1 (Apache)</li>
+  	      <li>log4j (Apache)</li>
+  	      <li><a href="http://sourceforge.net/projects/kaon">rdfapi</a> (KAON)</li>
+  	      <li><a href="http://www.cwi.nl/htbin/sen1/twiki/bin/view/SEN1/ATermLibrary">aterm
+  	      </a> (Centrum voor Wiskunde en Informatica (CWI))</li>
+        </ul>
+      </li><br />
+      <li> <b>Libraries needed for reasoning with Kaon2:</b><br /><br />
+        <ul>
+ 		  <li><a href="http://kaon2.semanticweb.org/">KAON2</a> - Sample Reasoner. The KAON2 
+          reasoning engine is not shipped in the WSML2Reasoner release, but wrappers for it 
+          are implemented and tested.</li>
+        </ul>
+      </li>
+    </ul>  
+
     <h1><a id="license">4. Licensing</a></h1>
     <h2><a id="wsml2reasonerlicense">4.1. Licensing of WSML2Reasoner</a></h2>
     <p>This library is free software; you can redistribute it and/or modify it under the
@@ -489,11 +501,17 @@
   	  </a> (c) Copyright Centrum voor Wiskunde en Informatica (CWI). This library is 
   	  available under the <a href="http://www.opensource.org/licenses/lgpl-license.php"
       target="new">LGPL</a> conditions.</li>
+      <li><a href="http://kaon2.semanticweb.org/">KAON2</a> - (c) Copyright Ontoprise GmbH. 
+      KAON2 is available as a precompiled binary distribution and is free of charge for 
+      research and academic purposes. To use KAON2 in a commercial setting, please contact 
+      <a href="http://www.ontoprise.de/">Ontoprise GmbH</a>.</li>
     </ul>
     <h1><a id="i_and_use">5. Installation and Usage</a></h1>
     <h2><a id="installation">5.1. Installation of WSML2Reasoner</a></h2>
     WSML2Reasoner is distributed as a ZIP archive, which should be extracted in a
-    separate folder. The archive file is originally named 
+    separate folder.
+    <h4>Generic WSML2Reasoner DL Release</h4>
+    The archive file is originally named
     <a href="http://tools.deri.org/wsml2reasoner/releases/v0_2/wsml2reasoner-dl-v0_2/wsml2reasoner-dl-v0_2.zip">
     wsml2reasoner-dl-v0_2.zip</a> and has the following contents: 
     <ul>
@@ -501,6 +519,19 @@
       as a Java library.</li> 
       <li><code>lib</code> folder - contains all the required libraries (jar files);</li>
       <li><code>wsml2reasoner-dl-src-v0_2.zip</code> - contains all source files;</li>
+    </ul>
+    In the lib folder are all the required libraries. Please note that in this release 
+    contains no reasoning engines. For reasoning with KAON2 please download the libraries 
+    at <a href="http://kaon2.semanticweb.org/#download">http://kaon2.semanticweb.org/#download</a>.
+    <h4>Pellet WSML2Reasoner DL Release</h4>
+    The archive file is originally named 
+    <a href="http://tools.deri.org/wsml2reasoner/releases/v0_2/wsml2reasoner-dl-v0_2/wsml2reasoner-dl-v0_2-pellet.zip">
+    wsml2reasoner-dl-v0_2-pellet.zip</a> and has the following contents: 
+    <ul>
+      <li><code>wsml2reasoner-dl-v0_2-pellet.jar</code> - the WSML2Reasoner framework provided 
+      as a Java library.</li> 
+      <li><code>lib</code> folder - contains all the required libraries (jar files);</li>
+      <li><code>wsml2reasoner-dl-src-v0_2-pellet.zip</code> - contains all source files;</li>
     </ul>
     In the lib folder are all the required libraries. Please note that Pellet uses an 
     extended version of the OWL API. Therefore you need the <code>api.jar</code> and 
@@ -556,6 +587,6 @@
     src="http://www.w3.org/Icons/valid-xhtml11" alt="Valid XHTML 1.1!" height="31"
     width="88" /></a></p>
     
-    <p>$Date: 2007-01-10 16:10:58 $</p>
+    <p>$Date: 2007-01-11 11:33:03 $</p>
   </body>
 </html>
