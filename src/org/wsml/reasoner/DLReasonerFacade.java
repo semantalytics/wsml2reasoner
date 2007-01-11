@@ -22,7 +22,6 @@ import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Set;
 
-import org.mindswap.pellet.query.QueryResults;
 import org.semanticweb.kaon2.api.KAON2Exception;
 import org.semanticweb.owl.impl.model.OWLConcreteDataImpl;
 import org.semanticweb.owl.impl.model.OWLConcreteDataTypeImpl;
@@ -51,7 +50,7 @@ import org.semanticweb.owl.model.OWLProperty;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.8 $ $Date: 2007-01-10 11:50:39 $
+ * @version $Revision: 1.9 $ $Date: 2007-01-11 13:04:46 $
  */
 public interface DLReasonerFacade {
 
@@ -402,17 +401,20 @@ public interface DLReasonerFacade {
 			OWLIndividual subject, OWLDataProperty property) 
 			throws OWLException, KAON2Exception, InterruptedException, URISyntaxException;
     
-    /**
-     * Evaluates a given query on a particular external tool.
-     * 
-     * @param query the query to be evaluated.
-     * @return a set of Query Results
-     */
-    public QueryResults evaluate(String ontologyURI, String query);
+//    /**
+//     * Evaluates a given query on a particular external tool.
+//     * 
+//     * @param query the query to be evaluated.
+//     * @return a set of Query Results
+//     */
+//    public QueryResults evaluate(String ontologyURI, String query);
 	
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.8  2007/01/10 11:50:39  nathalie
+ * completed kaon2DLFacade
+ *
  * Revision 1.7  2006/11/30 16:54:57  nathalie
  * added methods to get direct super-/sub-concepts and direct super-/sub-relations
  *

@@ -28,8 +28,6 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.Map.Entry;
 
-import org.mindswap.pellet.exceptions.InconsistentOntologyException;
-import org.mindswap.pellet.query.QueryResults;
 import org.omwg.logicalexpression.AttributeValueMolecule;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.MembershipMolecule;
@@ -87,7 +85,7 @@ import uk.ac.man.cs.img.owl.validation.ValidatorLogger;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.13 $ $Date: 2007-01-10 11:50:39 $
+ * @version $Revision: 1.14 $ $Date: 2007-01-11 13:04:47 $
  */
 public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 
@@ -285,7 +283,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
         // register ontologies
         try{
             registerOntologiesNoVerification(ontologies);
-        }catch (InconsistentOntologyException e){
+        }catch (Exception e){
             //@TODO do more clever!!!!
             throw new InconsistencyException("Inconsistency detected");
         }
@@ -1304,12 +1302,12 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
-	public QueryResults executeQuery(IRI ontologyID, String query) {
-		throw new UnsupportedOperationException();
+//	public QueryResults executeQuery(IRI ontologyID, String query) {
+//		throw new UnsupportedOperationException();
 //		QueryResults results = null;
 //		results = builtInFacade.evaluate(query);
 //		return results;
-	}
+//  }
 	
 	public Set<Map<Variable, Term>> executeQuery(IRI ontologyID, 
 			LogicalExpression query) {
@@ -1526,6 +1524,9 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.13  2007/01/10 11:50:39  nathalie
+ * completed kaon2DLFacade
+ *
  * Revision 1.12  2006/12/20 14:06:06  graham
  * organized imports
  *
