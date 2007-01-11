@@ -24,7 +24,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.mindswap.pellet.owlapi.Reasoner;
-import org.mindswap.pellet.query.QueryResults;
 import org.semanticweb.owl.impl.model.OWLConcreteDataImpl;
 import org.semanticweb.owl.impl.model.OWLConcreteDataTypeImpl;
 import org.semanticweb.owl.model.OWLClass;
@@ -50,7 +49,7 @@ import org.wsml.reasoner.ExternalToolException;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.10 $ $Date: 2007-01-10 11:26:39 $
+ * @version $Revision: 1.11 $ $Date: 2007-01-11 13:04:46 $
  */
 public class PelletFacade implements DLReasonerFacade {
 	
@@ -365,8 +364,8 @@ public class PelletFacade implements DLReasonerFacade {
 		return reasoner.getPropertyValue(subject, property);
 	}
 	
-	public QueryResults evaluate(String ontologyURI, String queryString) {
-		throw new UnsupportedOperationException();
+//	public QueryResults evaluate(String ontologyURI, String queryString) {
+//		throw new UnsupportedOperationException();
 //		reasoner = registeredOntologies.get(ontologyURI);
 //		QueryResults results = null;
 //		Set set = reasoner.getKB().getObjectProperties();
@@ -375,11 +374,14 @@ public class PelletFacade implements DLReasonerFacade {
 //			System.out.println(it.next().toString());
 //		results = QueryEngine.execSPARQL(queryString, reasoner.getKB());
 //		return results;
-	}
+//	}
 
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.10  2007/01/10 11:26:39  nathalie
+ * fixed problem with equivalent classes
+ *
  * Revision 1.9  2006/11/30 16:54:57  nathalie
  * added methods to get direct super-/sub-concepts and direct super-/sub-relations
  *

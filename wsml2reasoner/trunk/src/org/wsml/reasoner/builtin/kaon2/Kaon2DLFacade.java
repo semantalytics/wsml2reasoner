@@ -27,7 +27,6 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
-import org.mindswap.pellet.query.QueryResults;
 import org.semanticweb.kaon2.api.*;
 import org.semanticweb.kaon2.api.owl.axioms.ClassMember;
 import org.semanticweb.kaon2.api.owl.axioms.DataPropertyMember;
@@ -69,7 +68,7 @@ import org.wsml.reasoner.serializer.owl.OWLSerializerImpl;
  *
  * @author Nathalie Steinmetz, DERI Innsbruck;
  * 		   Holger Lausen, DERI Innsbruck
- * @version $Revision: 1.1 $ $Date: 2007-01-10 11:50:39 $
+ * @version $Revision: 1.2 $ $Date: 2007-01-11 13:04:47 $
  */
 public class Kaon2DLFacade implements DLReasonerFacade {
 
@@ -1084,8 +1083,8 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		return dataValue;
 	}
 
-	public QueryResults evaluate(String ontologyURI, String queryString) {
-		throw new UnsupportedOperationException("not yet");
+//	public QueryResults evaluate(String ontologyURI, String queryString) {
+//		throw new UnsupportedOperationException("not yet");
 //		reasoner = registeredOntologies.get(ontologyURI);
 //		QueryResults results = null;
 //		Set set = reasoner.getKB().getObjectProperties();
@@ -1094,7 +1093,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 //			System.out.println(it.next().toString());
 //		results = QueryEngine.execSPARQL(queryString, reasoner.getKB());
 //		return results;
-	}
+//	}
 	
 	@SuppressWarnings("unchecked")
 	private Set<OWLEntity> addSubConcepts(String ontologyURI, OWLEntity entity, 
@@ -1176,6 +1175,9 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.1  2007/01/10 11:50:39  nathalie
+ * completed kaon2DLFacade
+ *
  * Revision 1.1  2007/01/02 11:30:50  hlausen
  * some testing...
  */
