@@ -68,7 +68,7 @@ import org.wsml.reasoner.serializer.owl.OWLSerializerImpl;
  *
  * @author Nathalie Steinmetz, DERI Innsbruck;
  * 		   Holger Lausen, DERI Innsbruck
- * @version $Revision: 1.2 $ $Date: 2007-01-11 13:04:47 $
+ * @version $Revision: 1.3 $ $Date: 2007-01-30 13:49:05 $
  */
 public class Kaon2DLFacade implements DLReasonerFacade {
 
@@ -115,15 +115,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
         Map<String, Object> m = new HashMap<String, Object>();
         m.put(KAON2Connection.LOAD_FROM_INPUT_STREAM, in);
         try {
-        	ontology = connection.openOntology(owlOntology.getURI().toString(), m);
-        	
-//            Vector<Description> list = new Vector<Description>();
-//            list.add(KAON2Manager.factory().owlClass("http://www.example.org/ontologies/example#Person"));
-//            list.add(KAON2Manager.factory().owlClass("http://www.example.org/ontologies/example#Human"));
-//            List<OntologyChangeEvent> changes=new ArrayList<OntologyChangeEvent>();
-//            changes.add(new OntologyChangeEvent(KAON2Manager.factory().equivalentClasses(list),OntologyChangeEvent.ChangeType.ADD));
-//            ontology.applyChanges(changes);
-        	
+        	ontology = connection.openOntology(owlOntology.getURI().toString(), m);    	
 			Reasoner reasoner = ontology.createReasoner();
 			registeredOntologies.put(owlOntology.getURI().toString(),
 					reasoner);
@@ -161,7 +153,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		Description des = null;
 		if (description.getClass().getName().toString().equals("org.semanticweb.owl.impl.model.OWLClassImpl")) {
 			des = KAON2Manager.factory().description(description.toString().
-					substring(description.toString().indexOf("http://")), Namespaces.INSTANCE);
+					substring(description.toString().indexOf("]")+2), Namespaces.INSTANCE);
 		}
 		else if (description.getClass().getName().toString().equals("org.semanticweb.owl.impl.model.OWLAndImpl")){
 			Iterator<OWLDescription> it = ((OWLAnd) description).getOperands().iterator();
@@ -170,9 +162,9 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 				list.add(it.next());
 			}
 			Description arg1 = KAON2Manager.factory().description(list.elementAt(0).toString()
-					.substring(list.elementAt(0).toString().indexOf("http://")), Namespaces.INSTANCE);
+					.substring(list.elementAt(0).toString().indexOf("]")+2), Namespaces.INSTANCE);
 			Description arg2 = KAON2Manager.factory().description(list.elementAt(1).toString()
-					.substring(list.elementAt(1).toString().indexOf("http://")), Namespaces.INSTANCE);
+					.substring(list.elementAt(1).toString().indexOf("]")+2), Namespaces.INSTANCE);
 			des = KAON2Manager.factory().objectAnd(arg1, arg2);
 		}
 		return reasoner.isSatisfiable(des);
@@ -182,13 +174,6 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 	public Set<OWLEntity> allClasses(String ontologyURI) 
 			throws KAON2Exception, OWLException, URISyntaxException {
 		reasoner = getReasoner(ontologyURI);
-		
-//		Request<Axiom> axiomRequest=ontology.createAxiomRequest();
-//		Set<Axiom> axioms = axiomRequest.getAll();
-//        System.out.println("Listing all axioms on all ontologies:");
-//        for (Axiom axiom : axioms)
-//            System.out.println("    "+axiom.toString());
-//        System.out.println();
 		
 		Set<OWLEntity> resultSet = new HashSet<OWLEntity>();
         Request<OWLClass> entityRequest = ontology.createEntityRequest(OWLClass.class);
@@ -260,7 +245,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		
 		Request<SubClassOf> subClassOfRequest = ontology.createAxiomRequest(SubClassOf.class);
 		OWLClass owlClass = KAON2Manager.factory().owlClass(clazz.toString().substring(
-				clazz.toString().indexOf("http://")));
+				clazz.toString().indexOf("]")+2));
         subClassOfRequest.setCondition("superDescription", owlClass);
 		Set<SubClassOf> subClassOfAxioms = subClassOfRequest.get();
 		for (SubClassOf axiom : subClassOfAxioms) {
@@ -286,7 +271,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();		
 		Request<SubClassOf> subClassOfRequest = ontology.createAxiomRequest(SubClassOf.class);
 		OWLClass owlClass = KAON2Manager.factory().owlClass(clazz.toString().substring(
-				clazz.toString().indexOf("http://")));
+				clazz.toString().indexOf("]")+2));
         subClassOfRequest.setCondition("superDescription", owlClass);
 		Set<SubClassOf> subClassOfAxioms = subClassOfRequest.get();
 		for (SubClassOf axiom : subClassOfAxioms) {
@@ -309,7 +294,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		
 		Request<SubClassOf> subClassOfRequest = ontology.createAxiomRequest(SubClassOf.class);
 		OWLClass owlClass = KAON2Manager.factory().owlClass(clazz.toString().substring(
-				clazz.toString().indexOf("http://")));
+				clazz.toString().indexOf("]")+2));
         subClassOfRequest.setCondition("subDescription", owlClass);
 		Set<SubClassOf> subClassOfAxioms = subClassOfRequest.get();
 		OWLEntity entity = null;
@@ -337,7 +322,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		
 		Request<SubClassOf> subClassOfRequest = ontology.createAxiomRequest(SubClassOf.class);
 		OWLClass owlClass = KAON2Manager.factory().owlClass(clazz.toString().substring(
-				clazz.toString().indexOf("http://")));
+				clazz.toString().indexOf("]")+2));
         subClassOfRequest.setCondition("subDescription", owlClass);
 		Set<SubClassOf> subClassOfAxioms = subClassOfRequest.get();
 		for (SubClassOf axiom : subClassOfAxioms) {
@@ -383,7 +368,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 			for (OWLEntity entity : set2) {
 				Set<Set> set3 = subClassesOf(ontologyURI, 
 						owlDataFactory.getOWLClass(new URI(entity.toString().substring(
-								entity.toString().indexOf("http://")))));
+								entity.toString().indexOf("]")+2))));
 				for (Set<OWLEntity> set4 : set3) {
 					if (set4.contains(clazz)) {
 						resultSet.add(entity);
@@ -408,10 +393,10 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
 		Request<SubClassOf> subClassOfRequest = ontology.createAxiomRequest(SubClassOf.class);
 		OWLClass owlClass1 = KAON2Manager.factory().owlClass(clazz1.toString().substring(
-				clazz1.toString().indexOf("http://")));
+				clazz1.toString().indexOf("]")+2));
         subClassOfRequest.setCondition("subDescription", owlClass1);
         OWLClass owlClass2 = KAON2Manager.factory().owlClass(clazz2.toString().substring(
-				clazz2.toString().indexOf("http://")));
+				clazz2.toString().indexOf("]")+2));
         subClassOfRequest.setCondition("superDescription", owlClass2);
 		Set<SubClassOf> subClassOfAxioms = subClassOfRequest.get();
 		for (SubClassOf axiom : subClassOfAxioms) {
@@ -435,10 +420,10 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();	
 		Request<ClassMember> memberOfRequest = ontology.createAxiomRequest(ClassMember.class);
 		OWLClass owlClass = KAON2Manager.factory().owlClass(clazz.toString().substring(
-				clazz.toString().indexOf("http://")));
+				clazz.toString().indexOf("]")+2));
 		memberOfRequest.setCondition("description", owlClass);
 		Individual owlIndividual = KAON2Manager.factory().individual(
-				individual.toString().substring(individual.toString().indexOf("http://")));
+				individual.toString().substring(individual.toString().indexOf("]")+2));
 		memberOfRequest.setCondition("individual", owlIndividual);
 		Set<ClassMember> memberOfAxioms = memberOfRequest.get();
 		for (ClassMember axiom : memberOfAxioms) {
@@ -461,7 +446,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();	
 		Request<ClassMember> memberOfRequest = ontology.createAxiomRequest(ClassMember.class);
 		OWLClass owlClass = KAON2Manager.factory().owlClass(clazz.toString().substring(
-				clazz.toString().indexOf("http://")));
+				clazz.toString().indexOf("]")+2));
 		memberOfRequest.setCondition("description", owlClass);
 		Set<ClassMember> memberOfAxioms = memberOfRequest.get();
 		for (ClassMember axiom : memberOfAxioms) {
@@ -480,7 +465,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();	
 		Request<ClassMember> memberOfRequest = ontology.createAxiomRequest(ClassMember.class);
 		Individual owlIndividual = KAON2Manager.factory().individual(
-				individual.toString().substring(individual.toString().indexOf("http://")));
+				individual.toString().substring(individual.toString().indexOf("]")+2));
 		memberOfRequest.setCondition("individual", owlIndividual);
 		Set<ClassMember> memberOfAxioms = memberOfRequest.get();
 		for (ClassMember axiom : memberOfAxioms) {
@@ -500,7 +485,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();	
 		Request<ClassMember> memberOfRequest = ontology.createAxiomRequest(ClassMember.class);
 		Individual owlIndividual = KAON2Manager.factory().individual(
-				individual.toString().substring(individual.toString().indexOf("http://")));
+				individual.toString().substring(individual.toString().indexOf("]")+2));
 		memberOfRequest.setCondition("individual", owlIndividual);
 		Set<ClassMember> memberOfAxioms = memberOfRequest.get();
 		for (ClassMember axiom : memberOfAxioms) {
@@ -524,7 +509,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		Request<SubObjectPropertyOf> subObjectPropertyOfRequest = 
 			ontology.createAxiomRequest(SubObjectPropertyOf.class);
 		ObjectProperty owlObjectProperty = KAON2Manager.factory().objectProperty(
-				property.toString().substring(property.toString().indexOf("http://")));
+				property.toString().substring(property.toString().indexOf("]")+2));
 //		subObjectPropertyOfRequest.setCondition("superObjectProperty", owlObjectProperty);
 		Set<SubObjectPropertyOf> subObjectPropertyOfAxioms = subObjectPropertyOfRequest.get();
 		for (SubObjectPropertyOf axiom : subObjectPropertyOfAxioms) {
@@ -539,7 +524,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		Request<SubDataPropertyOf> subDataPropertyOfRequest = 
 			ontology.createAxiomRequest(SubDataPropertyOf.class);
 		DataProperty owlDataProperty = KAON2Manager.factory().dataProperty(
-				property.toString().substring(property.toString().indexOf("http://")));
+				property.toString().substring(property.toString().indexOf("]")+2));
 //		subDataPropertyOfRequest.setCondition("superDataProperty", owlDataProperty);
 		Set<SubDataPropertyOf> subDataPropertyOfAxioms = subDataPropertyOfRequest.get();
 		for (SubDataPropertyOf axiom : subDataPropertyOfAxioms) {
@@ -570,7 +555,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		Request<SubObjectPropertyOf> subObjectPropertyOfRequest = 
 			ontology.createAxiomRequest(SubObjectPropertyOf.class);
 		ObjectProperty owlObjectProperty = KAON2Manager.factory().objectProperty(
-				property.toString().substring(property.toString().indexOf("http://")));
+				property.toString().substring(property.toString().indexOf("]")+2));
 //		subObjectPropertyOfRequest.setCondition("superObjectProperty", owlObjectProperty);
 		Set<SubObjectPropertyOf> subObjectPropertyOfAxioms = subObjectPropertyOfRequest.get();
 		for (SubObjectPropertyOf axiom : subObjectPropertyOfAxioms) {
@@ -584,7 +569,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		Request<SubDataPropertyOf> subDataPropertyOfRequest = 
 			ontology.createAxiomRequest(SubDataPropertyOf.class);
 		DataProperty owlDataProperty = KAON2Manager.factory().dataProperty(
-				property.toString().substring(property.toString().indexOf("http://")));
+				property.toString().substring(property.toString().indexOf("]")+2));
 //		subDataPropertyOfRequest.setCondition("superDataProperty", owlDataProperty);
 		Set<SubDataPropertyOf> subDataPropertyOfAxioms = subDataPropertyOfRequest.get();
 		for (SubDataPropertyOf axiom : subDataPropertyOfAxioms) {
@@ -611,7 +596,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		Request<SubObjectPropertyOf> subObjectPropertyOfRequest = 
 			ontology.createAxiomRequest(SubObjectPropertyOf.class);
 		ObjectProperty owlObjectProperty = KAON2Manager.factory().objectProperty(
-				property.toString().substring(property.toString().indexOf("http://")));
+				property.toString().substring(property.toString().indexOf("]")+2));
 //		subObjectPropertyOfRequest.setCondition("subObjectProperty", owlObjectProperty);
 		Set<SubObjectPropertyOf> subObjectPropertyOfAxioms = subObjectPropertyOfRequest.get();
 		for (SubObjectPropertyOf axiom : subObjectPropertyOfAxioms) {
@@ -626,7 +611,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		Request<SubDataPropertyOf> subDataPropertyOfRequest = 
 			ontology.createAxiomRequest(SubDataPropertyOf.class);
 		DataProperty owlDataProperty = KAON2Manager.factory().dataProperty(
-				property.toString().substring(property.toString().indexOf("http://")));
+				property.toString().substring(property.toString().indexOf("]")+2));
 //		subDataPropertyOfRequest.setCondition("subDataProperty", owlDataProperty);
 		Set<SubDataPropertyOf> subDataPropertyOfAxioms = subDataPropertyOfRequest.get();
 		for (SubDataPropertyOf axiom : subDataPropertyOfAxioms) {
@@ -656,7 +641,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		Request<SubObjectPropertyOf> subObjectPropertyOfRequest = 
 			ontology.createAxiomRequest(SubObjectPropertyOf.class);
 		ObjectProperty owlObjectProperty = KAON2Manager.factory().objectProperty(
-				property.toString().substring(property.toString().indexOf("http://")));
+				property.toString().substring(property.toString().indexOf("]")+2));
 //		subObjectPropertyOfRequest.setCondition("subObjectProperty", owlObjectProperty);
 		Set<SubObjectPropertyOf> subObjectPropertyOfAxioms = subObjectPropertyOfRequest.get();
 		for (SubObjectPropertyOf axiom : subObjectPropertyOfAxioms) {
@@ -670,7 +655,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		Request<SubDataPropertyOf> subDataPropertyOfRequest = 
 			ontology.createAxiomRequest(SubDataPropertyOf.class);
 		DataProperty owlDataProperty = KAON2Manager.factory().dataProperty(
-				property.toString().substring(property.toString().indexOf("http://")));
+				property.toString().substring(property.toString().indexOf("]")+2));
 //		subDataPropertyOfRequest.setCondition("subDataProperty", owlDataProperty);
 		Set<SubDataPropertyOf> subDataPropertyOfAxioms = subDataPropertyOfRequest.get();
 		for (SubDataPropertyOf axiom : subDataPropertyOfAxioms) {
@@ -739,7 +724,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 			for (OWLEntity entity : set2) {
 				Set<Set> set3 = descendantPropertiesOf(ontologyURI, 
 						owlDataFactory.getOWLObjectProperty(new URI(entity.toString().substring(
-								entity.toString().indexOf("http://")))));
+								entity.toString().indexOf("]")+2))));
 				for (Set<OWLEntity> set4 : set3) {
 					if (set4.contains(property)) {
 						resultSet.add(entity);
@@ -759,7 +744,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		Request<InverseObjectProperties> inverseObjectPropertiesRequest = 
 			ontology.createAxiomRequest(InverseObjectProperties.class);
 		ObjectProperty owlObjectProperty = KAON2Manager.factory().objectProperty(
-				property.toString().substring(property.toString().indexOf("http://")));
+				property.toString().substring(property.toString().indexOf("]")+2));
 		inverseObjectPropertiesRequest.setCondition("first", owlObjectProperty);
 		Set<InverseObjectProperties> inverseObjectPropertiesAxiom = 
 			inverseObjectPropertiesRequest.get();
@@ -788,7 +773,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 			ontology.createAxiomRequest(ObjectPropertyDomain.class);
 		ObjectProperty owlObjectProperty = KAON2Manager.factory().
 				objectProperty(property.toString().substring(
-						property.toString().indexOf("http://")));
+						property.toString().indexOf("]")+2));
 		attributeRequest.setCondition("objectProperty", owlObjectProperty);
 		Set<ObjectPropertyDomain> objectPropertyDomainAxiom = attributeRequest.get();
 		for (ObjectPropertyDomain axiom : objectPropertyDomainAxiom) {
@@ -807,7 +792,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 			ontology.createAxiomRequest(ObjectPropertyRange.class);
 		ObjectProperty owlObjectProperty = KAON2Manager.factory().
 				objectProperty(property.toString().substring(
-						property.toString().indexOf("http://")));
+						property.toString().indexOf("]")+2));
 		attributeRequest.setCondition("objectProperty", owlObjectProperty);
 		Set<ObjectPropertyRange> objectPropertyRangeAxiom = attributeRequest.get();
 		for (ObjectPropertyRange axiom : objectPropertyRangeAxiom) {
@@ -828,7 +813,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 			ontology.createAxiomRequest(DataPropertyRange.class);
 		DataProperty owlDataProperty = KAON2Manager.factory().
 				dataProperty(property.toString().substring(
-						property.toString().indexOf("http://")));
+						property.toString().indexOf("]")+2));
 		attributeRequest.setCondition("dataProperty", owlDataProperty);
 		Set<DataPropertyRange> dataPropertyRangeAxiom = attributeRequest.get();
 		for (DataPropertyRange axiom : dataPropertyRangeAxiom) {
@@ -849,7 +834,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
         	new HashMap<OWLEntity, Set<OWLEntity>>();
 		Individual owlIndividual = KAON2Manager.factory().individual(
 				individual.toString().substring(
-						individual.toString().indexOf("http://")));
+						individual.toString().indexOf("]")+2));
 		Set<Entry<ObjectProperty, Set<Individual>>> entrySet = 
 			owlIndividual.getObjectPropertyValues(ontology).entrySet();
 		for (Entry<ObjectProperty, Set<Individual>> entry : entrySet) {
@@ -875,7 +860,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
         	new HashMap<OWLEntity, Set<OWLConcreteDataImpl>>();
 		Individual owlIndividual = KAON2Manager.factory().individual(
 				individual.toString().substring(
-						individual.toString().indexOf("http://")));
+						individual.toString().indexOf("]")+2));
 		Set<Entry<DataProperty, Set<Object>>> entrySet = 
 			owlIndividual.getDataPropertyValues(ontology).entrySet();
 		for (Entry<DataProperty, Set<Object>> entry : entrySet) {
@@ -911,7 +896,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
         	new HashMap<OWLEntity, Set<OWLEntity>>();
 		ObjectProperty owlObjectProperty = KAON2Manager.factory().objectProperty(
 				property.toString().substring(
-						property.toString().indexOf("http://")));
+						property.toString().indexOf("]")+2));
 		Set<ObjectPropertyMember> individuals = 
 			owlObjectProperty.getObjectPropertyMembers(ontology);
 		for (ObjectPropertyMember member : individuals) {
@@ -934,7 +919,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
         	new HashMap<OWLEntity, Set<OWLConcreteDataImpl>>();
 		DataProperty owlDataProperty = KAON2Manager.factory().dataProperty(
 				property.toString().substring(
-						property.toString().indexOf("http://")));
+						property.toString().indexOf("]")+2));
 		Set<DataPropertyMember> individuals = 
 			owlDataProperty.getDataPropertyMembers(ontology);
 		for (DataPropertyMember member : individuals) {
@@ -963,9 +948,9 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 			throws OWLException, KAON2Exception, InterruptedException {
 		reasoner = getReasoner(ontologyURI);
 		Query query = reasoner.createQuery(Namespaces.INSTANCE, "ASK " +
-				"{ <" + subject.toString().substring(subject.toString().indexOf("http://")) + 
-				"> <" + property.toString().substring(property.toString().indexOf("http://")) + 
-				"> <" + object.toString().substring(object.toString().indexOf("http://")) + "> }");
+				"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
+				"> <" + property.toString().substring(property.toString().indexOf("]")+2) + 
+				"> <" + object.toString().substring(object.toString().indexOf("]")+2) + "> }");
 		query.open();
 		int size = query.getNumberOfTuples();
 		query.close();
@@ -980,15 +965,15 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		Query query = null;
 		if (object.getValue() instanceof String) {
 			query = reasoner.createQuery(Namespaces.INSTANCE, "ASK " +
-					"{ <" + subject.toString().substring(subject.toString().indexOf("http://")) + 
-					"> <" + property.toString().substring(property.toString().indexOf("http://")) + 
+					"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
+					"> <" + property.toString().substring(property.toString().indexOf("]")+2) + 
 					"> \"" + object.getValue().toString() + "\" }");
 		}
 		else if (object.getValue() instanceof Integer || 
 				object.getValue() instanceof BigInteger) {
 			query = reasoner.createQuery(Namespaces.INSTANCE, "ASK " +
-					"{ <" + subject.toString().substring(subject.toString().indexOf("http://")) + 
-					"> <" + property.toString().substring(property.toString().indexOf("http://")) + 
+					"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
+					"> <" + property.toString().substring(property.toString().indexOf("]")+2) + 
 					"> " + object.getValue().toString() + " }");
 		}
 		query.open();
@@ -1004,8 +989,8 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		reasoner = getReasoner(ontologyURI);
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
 		Query query = reasoner.createQuery(Namespaces.INSTANCE, "Select ?x WHERE " +
-				"{ <" + subject.toString().substring(subject.toString().indexOf("http://")) + 
-				"> <" + property.toString().substring(property.toString().indexOf("http://")) + 
+				"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
+				"> <" + property.toString().substring(property.toString().indexOf("]")+2) + 
 				"> ?x }");
 		query.open();
 		while (!query.afterLast()) {
@@ -1024,8 +1009,8 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		reasoner = getReasoner(ontologyURI);
 		Set<OWLDataValue> dataValueSet = new HashSet<OWLDataValue>();
 		Query query = reasoner.createQuery(Namespaces.INSTANCE, "Select ?x WHERE " +
-				"{ <" + subject.toString().substring(subject.toString().indexOf("http://")) + 
-				"> <" + property.toString().substring(property.toString().indexOf("http://")) + 
+				"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
+				"> <" + property.toString().substring(property.toString().indexOf("]")+2) + 
 				"> ?x }");
 		query.open();
 		while (!query.afterLast()) {
@@ -1050,8 +1035,8 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 			throws OWLException, KAON2Exception, InterruptedException, URISyntaxException {
 		reasoner = getReasoner(ontologyURI);
 		Query query = reasoner.createQuery(Namespaces.INSTANCE, "Select ?x WHERE " +
-				"{ <" + subject.toString().substring(subject.toString().indexOf("http://")) + 
-				"> <" + property.toString().substring(property.toString().indexOf("http://")) + 
+				"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
+				"> <" + property.toString().substring(property.toString().indexOf("]")+2) + 
 				"> ?x }");
 		query.open();
 		Object[] tupleBuffer = query.tupleBuffer();
@@ -1064,8 +1049,8 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 			throws OWLException, KAON2Exception, InterruptedException, URISyntaxException {
 		reasoner = getReasoner(ontologyURI);
 		Query query = reasoner.createQuery(Namespaces.INSTANCE, "Select ?x WHERE " +
-				"{ <" + subject.toString().substring(subject.toString().indexOf("http://")) + 
-				"> <" + property.toString().substring(property.toString().indexOf("http://")) + 
+				"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
+				"> <" + property.toString().substring(property.toString().indexOf("]")+2) + 
 				"> ?x }");
 		query.open();
 		Object[] tupleBuffer = query.tupleBuffer();
@@ -1175,6 +1160,9 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2007/01/11 13:04:47  nathalie
+ * removed unnecessary dependencies from pellet library
+ *
  * Revision 1.1  2007/01/10 11:50:39  nathalie
  * completed kaon2DLFacade
  *
