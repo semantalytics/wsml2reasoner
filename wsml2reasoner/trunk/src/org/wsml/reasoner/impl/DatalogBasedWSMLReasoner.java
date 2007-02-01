@@ -59,6 +59,7 @@ import org.wsml.reasoner.api.inconsistency.MinCardinalityViolation;
 import org.wsml.reasoner.api.inconsistency.NamedUserConstraintViolation;
 import org.wsml.reasoner.api.inconsistency.UnNamedUserConstraintViolation;
 import org.wsml.reasoner.api.inconsistency.UserConstraintViolation;
+import org.wsml.reasoner.builtin.iris.IrisFacade;
 import org.wsml.reasoner.builtin.kaon2.Kaon2Facade;
 import org.wsml.reasoner.builtin.mins.MinsFacade;
 import org.wsml.reasoner.builtin.xsb.XSBFacade;
@@ -119,6 +120,9 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         case XSB:
             builtInFacade = new XSBFacade(wsmoManager);
             break;
+        case IRIS:
+        	builtInFacade = new IrisFacade(wsmoManager);
+        	break;
         default:
             throw new UnsupportedOperationException("Reasoning with "
                     + builtInType.toString() + " is not supported yet!");
