@@ -84,7 +84,10 @@ public class WSML2DatalogTransformer {
     public final static String PRED_MEMBER_OF = "wsml-member-of";
 
     public final static String PRED_HAS_VALUE = "wsml-has-value";
+    
+    public final static String PRED_DECLARED_IRI = "http://www.wsmo.org/wsml/wsml-syntax/extensions#wsml_is_declared_iri";
 
+    
     WSMO4JManager wsmoManager;
 
     /**
@@ -151,7 +154,7 @@ public class WSML2DatalogTransformer {
         rules.add(rule);
         return transform(rules);
     }
-
+    
     public Set<Rule> generateAuxilliaryRules() {
         Set<Rule> result = new HashSet<Rule>();
 
@@ -183,6 +186,16 @@ public class WSML2DatalogTransformer {
         body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept2));
         result.add(new Rule(head, body));
 
+        // reflexivity: sco(?c,?c) :- ?c is an IRI that explicitly occures in the ontology
+        // (i.e. concepts, relations, attr, instances, 
+        // but does not denote a datatype or datatype value)
+        
+        body = new LinkedList<Literal>();
+        head = new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept);
+        body.add(new Literal(true, PRED_DECLARED_IRI, vConcept));
+        result.add(new Rule(head, body));
+
+        
         // Inference of attr value types: mo(v,c2) <- itype(c1, att,
         // c2), mo(o,c1), hval(o,att, v)
         // mo(v1,v2) <- itype(v3, v4, v2), mo(v5,v3), hval(v5,v4, v1)
@@ -194,6 +207,8 @@ public class WSML2DatalogTransformer {
         body.add(new Literal(true, PRED_HAS_VALUE, vInstance, vAttribute,
                 vInstance2));
         result.add(new Rule(head, body));
+        
+        // TODO: subRelationOf not covered yet
 
         // Semantics of C1[att => C2] (oftype constraint)
         // !- oftype(c1, att, c2), mo(i,c1), hval(i, att, v), NAF mo(v,c2)
