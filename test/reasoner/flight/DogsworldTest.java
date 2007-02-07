@@ -65,6 +65,9 @@ public class DogsworldTest extends BaseReasonerTest {
         binding = new HashMap<Variable, Term>();
         binding.put(leFactory.createVariable("x"), wsmoFactory.createIRI(NS + "DogOwner"));
         expected.add(binding);
+        binding = new HashMap<Variable, Term>();
+        binding.put(leFactory.createVariable("x"), wsmoFactory.createIRI(NS + "Mammal"));
+        expected.add(binding);
         performQuery(query, expected);
     }
     
