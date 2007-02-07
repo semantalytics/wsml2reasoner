@@ -62,6 +62,8 @@ import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
+import com.ontotext.wsmo4j.common.IRIImpl;
+
 /**
  * A normalization step of an ontology that transforms the conceptual syntax
  * part to logical expressions. Hence, it transforms a WSML ontology to a set of
@@ -94,12 +96,18 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
     private LogicalExpressionFactory leFactory;
     private FixedModificationRules fixedRules;
     private Map<LogicalExpression,String> axiomIDs;
+    
+    private Set<Identifier> mentionedIRIs;
+    
 
     public AxiomatizationNormalizer(WSMO4JManager wsmoManager) {
         leFactory = wsmoManager.getLogicalExpressionFactory();
         wsmoFactory = wsmoManager.getWSMOFactory();
         fixedRules = new FixedModificationRules(wsmoManager);
         axiomIDs = new HashMap<LogicalExpression, String>();
+        
+        mentionedIRIs = new HashSet<Identifier>();
+        
     }
 
     /**
@@ -179,6 +187,16 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 .listInstances()) {
             addAsAxioms(resultOntology, normalizeInstance(instance));
         }
+        
+       // The following is needed to ensure certain meta-level inferences
+        // such as reflexivity of subClassOf for all mentioned classes
+        
+       // Handle explicitly mentioned identifiers: 
+       // insert a meta-level atom (in WSML) that specifies that the term
+       // is an IRI that occurs in the program
+       addAsAxioms(resultOntology, explicateIRIDeclaration(mentionedIRIs));
+       
+        
 
 //        repealAxiomIDs();
         return resultOntology;
@@ -211,12 +229,16 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
     protected Set<LogicalExpression> normalizeConcept(Concept concept) {
         Identifier conceptID = concept.getIdentifier();
         Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
+        
+        mentionedIRIs.add(conceptID);
 
         // process superconcepts:
         for (Concept superconcept : (Set<Concept>) concept.listSuperConcepts()) {
             Identifier superconceptID = superconcept.getIdentifier();
             resultExpressions.add(leFactory.createSubConceptMolecule(conceptID,
                     superconceptID));
+            
+            mentionedIRIs.add(superconceptID);
         }
 
         // process attributes:
@@ -232,6 +254,9 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
     protected Set<LogicalExpression> normalizeConceptAttribute(
             Identifier conceptID, Attribute attribute) {
         Identifier attributeID = attribute.getIdentifier();
+        
+        mentionedIRIs.add(attributeID);
+        
         Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
 
         // process range types:
@@ -240,6 +265,9 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
             Identifier typeID;
             if (type instanceof Concept) {
                 typeID = ((Concept) type).getIdentifier();
+                
+                mentionedIRIs.add(typeID);
+                
             } else if (type instanceof SimpleDataType) {
                 typeID = ((SimpleDataType) type).getIRI();
             } else {
@@ -491,6 +519,9 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
     @SuppressWarnings("unchecked")
     protected Set<LogicalExpression> normalizeRelation(Relation relation) {
         Identifier relationID = relation.getIdentifier();
+        
+        mentionedIRIs.add(relationID);
+        
         Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
 
         // process super relations:
@@ -506,6 +537,9 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
             Atom superRelP = leFactory.createAtom(
                     superRelation.getIdentifier(), variables);
             resultExpressions.add(leFactory.createImplication(relP, superRelP));
+            
+            mentionedIRIs.add(superRelation.getIdentifier());
+            
         }
 
         // process relation parameters:
@@ -555,6 +589,9 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 if (value instanceof Instance) {
                     Identifier val = ((Instance) value).getIdentifier();
                     args.add(val);
+                    
+                    mentionedIRIs.add(val);
+                    
                 } else if (value instanceof DataValue) {
                     DataValue dataValue = (DataValue) value;
                     // args.add(convertDataValue(dataValue));
@@ -578,25 +615,37 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
     @SuppressWarnings("unchecked")
     protected Set<LogicalExpression> normalizeInstance(Instance instance) {
         Identifier instanceID = instance.getIdentifier();
+        
+        mentionedIRIs.add(instanceID);
+        
         Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
 
         // process concepts:
         for (Concept concept : (Collection<Concept>) instance.listConcepts()) {
             resultExpressions.add(leFactory.createMemberShipMolecule(
                     instanceID, concept.getIdentifier()));
+            
+            mentionedIRIs.add(concept.getIdentifier());
         }
 
         // process attribute values:
         Map<Identifier, Set<Value>> attributeValues = (Map<Identifier, Set<Value>>) instance
                 .listAttributeValues();
         for (Identifier attribute : attributeValues.keySet()) {
+            
+            mentionedIRIs.add(attribute);
+            
             Set<Value> values = attributeValues.get(attribute);
             List<AttributeValueMolecule> molecules = new ArrayList<AttributeValueMolecule>(
                     values.size());
             for (Value value : values) {
                 Term valueTerm = null;
                 if (value instanceof Instance) {
-                    valueTerm = ((Instance) value).getIdentifier();
+                    Instance i = ((Instance) value);
+                    valueTerm = i.getIdentifier();
+                                        
+                    mentionedIRIs.add(i.getIdentifier());
+                    
                 } else if (value instanceof DataValue) {
                     // valueTerm = convertDataValue((DataValue)value);
                     valueTerm = ((DataValue) value);
@@ -615,4 +664,21 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         return resultExpressions;
     }
 
+    private Set<LogicalExpression> explicateIRIDeclaration(Collection<Identifier> mentionedIRIs){
+        Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
+    
+        Identifier pred_declared_iri_symbol = 
+            wsmoFactory.createIRI(org.wsml.reasoner.WSML2DatalogTransformer.PRED_DECLARED_IRI);
+             
+        for (Identifier cid : mentionedIRIs){
+            List params = new LinkedList();
+            params.add(cid);
+            resultExpressions.add(leFactory.createAtom(pred_declared_iri_symbol, params));
+        }
+        
+        // System.err.println("Explicated IRI Declarations ( total count = "+mentionedIRIs.size()+" ): \n" + mentionedIRIs);
+        
+        return resultExpressions;
+    }
+    
 }
