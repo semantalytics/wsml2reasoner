@@ -24,10 +24,7 @@ import java.util.Set;
 
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Concept;
-import org.omwg.ontology.Instance;
-import org.omwg.ontology.Ontology;
-import org.omwg.ontology.Variable;
+import org.omwg.ontology.*;
 import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsmo.common.IRI;
