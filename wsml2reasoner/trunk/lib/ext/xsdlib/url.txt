@@ -1,1 +1,5 @@
 http://72.5.124.55/webservices/docs/1.6/ReleaseNotes.html#RedistributableComponents
+
+or
+
+-http://www.ibiblio.org/maven/xsdlib/licenses/license.txt
