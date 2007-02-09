@@ -94,18 +94,19 @@ import org.semanticweb.owl.model.change.SetSymmetric;
 import org.semanticweb.owl.model.change.SetTransitive;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.Identifier;
+import org.wsmo.factory.LogicalExpressionFactory;
 
 /**
  * A class for transforming WSML-DL to OWL DL.
  *
  * <pre>
  *  Created on July 3rd, 2006
- *  Committed by $Author: nathalie $
+ *  Committed by $Author: hlausen $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/WSMLDL2OWLTransformer.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.10 $ $Date: 2007-01-10 11:50:39 $
+ * @version $Revision: 1.11 $ $Date: 2007-02-09 08:39:57 $
  */
 public class WSMLDL2OWLTransformer implements Visitor{
 	
@@ -130,6 +131,9 @@ public class WSMLDL2OWLTransformer implements Visitor{
 	private OWLGenerator owlGenerator = new OWLGenerator();
 	
 	private TransformationHelper helper = new TransformationHelper();
+    
+    //FIXME should be configured
+    private LogicalExpressionFactory leFactory =  new WSMO4JManager().getLogicalExpressionFactory();
 	
     public WSMLDL2OWLTransformer(OWLOntology owlOntology, OWLDataFactory 
     		owlDataFactory, ChangeVisitor changeVisitor) {   
@@ -199,6 +203,11 @@ public class WSMLDL2OWLTransformer implements Visitor{
     }
 
 	public void visitAtom(Atom expr) {
+        //ignore
+        if (expr.getIdentifier().toString().equals(WSML2DatalogTransformer.PRED_DECLARED_IRI)){
+            return;
+        }
+
 		Molecule molecule = helper.atomToMolecule(expr);
 		molecule.accept(this);
 	}
@@ -1096,11 +1105,15 @@ public class WSMLDL2OWLTransformer implements Visitor{
     	}
     	
     	/*
-         * Gets an atom and transforms it into a value definition molecule.
+         * Gets an atom and transforms it into a value
+         * definition molecule.
          */
         private Molecule atomToMolecule(Atom expr) {
-            Molecule molecule = new WSMO4JManager().getLogicalExpressionFactory().
-            		createAttributeValue(expr.getParameter(0), expr.getIdentifier(), 
+            if (expr.getArity()!=2){
+                throw new RuntimeException("Unexpexted arity of atom: "+expr.getArity()+" -"+expr);
+            }
+            Molecule molecule = leFactory.createAttributeValue(
+                    expr.getParameter(0), expr.getIdentifier(), 
             				expr.getParameter(1));
                 
             return molecule;
@@ -1639,6 +1652,9 @@ public class WSMLDL2OWLTransformer implements Visitor{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.10  2007/01/10 11:50:39  nathalie
+ * completed kaon2DLFacade
+ *
  * Revision 1.8  2006/12/20 14:06:00  graham
  * organized imports
  *
