@@ -20,33 +20,15 @@ package org.wsml.reasoner.impl;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
+import java.util.*;
 import java.util.Map.Entry;
 
-import org.omwg.logicalexpression.AttributeValueMolecule;
-import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.logicalexpression.MembershipMolecule;
-import org.omwg.logicalexpression.SubConceptMolecule;
+import org.omwg.logicalexpression.*;
 import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Concept;
-import org.omwg.ontology.DataValue;
-import org.omwg.ontology.Instance;
-import org.omwg.ontology.Ontology;
-import org.omwg.ontology.Variable;
-import org.semanticweb.kaon2.api.KAON2Exception;
+import org.omwg.ontology.*;
 import org.semanticweb.owl.impl.model.OWLConcreteDataImpl;
 import org.semanticweb.owl.impl.model.OWLConcreteDataTypeImpl;
-import org.semanticweb.owl.model.OWLDataFactory;
-import org.semanticweb.owl.model.OWLDataValue;
-import org.semanticweb.owl.model.OWLDescription;
-import org.semanticweb.owl.model.OWLEntity;
-import org.semanticweb.owl.model.OWLException;
-import org.semanticweb.owl.model.OWLOntology;
+import org.semanticweb.owl.model.*;
 import org.semanticweb.owl.model.change.ChangeVisitor;
 import org.semanticweb.owl.util.OWLConnection;
 import org.semanticweb.owl.util.OWLManager;
@@ -54,9 +36,7 @@ import org.semanticweb.owl.validation.SpeciesValidator;
 import org.semanticweb.owl.validation.SpeciesValidatorReporter;
 import org.wsml.reasoner.ExternalToolException;
 import org.wsml.reasoner.WSMLDL2OWLTransformer;
-import org.wsml.reasoner.api.InternalReasonerException;
-import org.wsml.reasoner.api.WSMLDLReasoner;
-import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.*;
 import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.builtin.kaon2.Kaon2DLFacade;
@@ -67,10 +47,7 @@ import org.wsml.reasoner.transformation.dl.Relation2AttributeNormalizer;
 import org.wsml.reasoner.transformation.dl.WSMLDLLogExprNormalizer;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
-import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.Factory;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
+import org.wsmo.factory.*;
 import org.wsmo.validator.WsmlValidator;
 
 import uk.ac.man.cs.img.owl.validation.ValidatorLogger;
@@ -80,12 +57,12 @@ import uk.ac.man.cs.img.owl.validation.ValidatorLogger;
  *
  * <pre>
  *  Created on July 3rd, 2006
- *  Committed by $Author: nathalie $
+ *  Committed by $Author: hlausen $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/impl/DLBasedWSMLReasoner.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.14 $ $Date: 2007-01-11 13:04:47 $
+ * @version $Revision: 1.15 $ $Date: 2007-02-09 08:40:53 $
  */
 public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 
@@ -285,6 +262,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
             registerOntologiesNoVerification(ontologies);
         }catch (Exception e){
             //@TODO do more clever!!!!
+            e.printStackTrace();
             throw new InconsistencyException("Inconsistency detected");
         }
         
@@ -322,16 +300,14 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 			owlOntology = convertOntology(ontology);
 			
 			// Register the ontology at the built-in reasoner:
-			if (builtInFacade instanceof PelletFacade || 
-					builtInFacade instanceof Kaon2DLFacade) {
-				try {
-					builtInFacade.register(owlOntology);
-				} catch (ExternalToolException e) {
-					e.printStackTrace();
-	                throw new IllegalArgumentException(
-	                        "This ontology could not be registered at the " +
-	                        "built-in reasoner", e);
-				}
+			try {
+				builtInFacade.register(owlOntology);
+			} catch (ExternalToolException e) {
+				e.printStackTrace();
+                throw new IllegalArgumentException(
+                        "This ontology could not be registered at the " +
+                        "built-in reasoner", e);
+				
 			}
 		}
 	}
@@ -370,8 +346,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		Set<OWLEntity> set;
 		try {
 			set = builtInFacade.allClasses(ontologyID.toString());
-		} catch (KAON2Exception e) {
-			throw new InternalReasonerException(e);
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
@@ -400,8 +374,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		try {
 			set = builtInFacade.allIndividuals(
 					ontologyID.toString());
-		} catch (KAON2Exception e) {
-			throw new InternalReasonerException(e);
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
@@ -430,8 +402,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		try {
 			set = builtInFacade.allProperties(
 					ontologyID.toString());
-		} catch (KAON2Exception e) {
-			throw new InternalReasonerException(e);
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
@@ -460,8 +430,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		try {
 			set = builtInFacade.allDataProperties(
 					ontologyID.toString());
-		} catch (KAON2Exception e) {
-			throw new InternalReasonerException(e);
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
@@ -490,8 +458,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		try {
 			set = builtInFacade.allObjectProperties(
 					ontologyID.toString());
-		} catch (KAON2Exception e) {
-			throw new InternalReasonerException(e);
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
@@ -539,9 +505,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
 			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
-			throw new InternalReasonerException(e);
-		}
+		} 
 		return elements;
 	}
 
@@ -570,9 +534,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
 			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
-			throw new InternalReasonerException(e);
-		}
+		} 
 		return elements;
 	}
 	
@@ -600,9 +562,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
 			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
-			throw new InternalReasonerException(e);
-		}
+		} 
 		return elements;
 	}
 	
@@ -629,8 +589,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
-			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
 			throw new InternalReasonerException(e);
 		}
 		return elements;
@@ -659,8 +617,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
 			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
-			throw new InternalReasonerException(e);
 		}
 		return elements;
 	}
@@ -677,8 +633,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
 			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
-			throw new InternalReasonerException(e);
 		}
 	}
 	
@@ -694,8 +648,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
 			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
-			throw new InternalReasonerException(e);
 		}
 	}
 
@@ -710,8 +662,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
-			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
 			throw new InternalReasonerException(e);
 		}
 	}
@@ -737,8 +687,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
-			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
 			throw new InternalReasonerException(e);
 		}	
 		return elements;
@@ -768,8 +716,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
 			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
-			throw new InternalReasonerException(e);
 		}	
 		return elements;
 	}
@@ -798,8 +744,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
 			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
-			throw new InternalReasonerException(e);
 		}	
 		return elements;
 	}
@@ -825,8 +769,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
-			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
 			throw new InternalReasonerException(e);
 		}
 		return elements;
@@ -854,8 +796,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
 			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
-			throw new InternalReasonerException(e);
 		}
 		return elements;
 	}
@@ -881,8 +821,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
-			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
 			throw new InternalReasonerException(e);
 		}
 		return elements;
@@ -910,8 +848,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
 			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
-			throw new InternalReasonerException(e);
 		}
 		return elements;
 	}
@@ -936,8 +872,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
-			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
 			throw new InternalReasonerException(e);
 		}
 		return elements;
@@ -964,8 +898,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
 			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
-			throw new InternalReasonerException(e);
 		}
 		return elements;
 	}
@@ -989,8 +921,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
-			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
 			throw new InternalReasonerException(e);
 		}
 		return elements;
@@ -1017,8 +947,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
 			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
-			throw new InternalReasonerException(e);
 		}
 		return elements;
 	}
@@ -1043,8 +971,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
-			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
 			throw new InternalReasonerException(e);
 		}
 		return elements;
@@ -1079,8 +1005,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
-			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
 			throw new InternalReasonerException(e);
 		}
 		return elements;
@@ -1122,8 +1046,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
 			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
-			throw new InternalReasonerException(e);
 		}
 		return elements;
 	}
@@ -1162,8 +1084,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
 			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
-			throw new InternalReasonerException(e);
 		}
 		return elements;
 	}
@@ -1196,8 +1116,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
 			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
-			throw new InternalReasonerException(e);
 		}
 		return elements;
 	}
@@ -1214,8 +1132,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
-			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
 			throw new InternalReasonerException(e);
 		} catch (InterruptedException e) {
 			throw new InternalReasonerException(e);
@@ -1237,8 +1153,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
-			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
 			throw new InternalReasonerException(e);
 		} catch (InterruptedException e) {
 			throw new InternalReasonerException(e);
@@ -1268,8 +1182,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
 			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
-			throw new InternalReasonerException(e);
 		} catch (InterruptedException e) {
 			throw new InternalReasonerException(e);
 		}
@@ -1293,8 +1205,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
-			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
 			throw new InternalReasonerException(e);
 		} catch (InterruptedException e) {
 			throw new InternalReasonerException(e);
@@ -1379,8 +1289,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 						" is not supported for consistency check!");
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
-			throw new InternalReasonerException(e);
 		} catch (InterruptedException e) {
 			throw new InternalReasonerException(e);
 		} 
@@ -1417,8 +1325,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
 			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
-			throw new InternalReasonerException(e);
 		} catch (InterruptedException e) {
 			throw new InternalReasonerException(e);
 		}
@@ -1444,8 +1350,6 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		} catch (OWLException e) {
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
-			throw new InternalReasonerException(e);
-		} catch (KAON2Exception e) {
 			throw new InternalReasonerException(e);
 		} catch (InterruptedException e) {
 			throw new InternalReasonerException(e);
@@ -1524,6 +1428,9 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.14  2007/01/11 13:04:47  nathalie
+ * removed unnecessary dependencies from pellet library
+ *
  * Revision 1.13  2007/01/10 11:50:39  nathalie
  * completed kaon2DLFacade
  *

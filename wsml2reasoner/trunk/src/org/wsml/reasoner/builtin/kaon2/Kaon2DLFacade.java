@@ -62,13 +62,13 @@ import org.wsml.reasoner.serializer.owl.OWLSerializerImpl;
  *
  * <pre>
  *  Created on July 3rd, 2006
- *  Committed by $Author: nathalie $
+ *  Committed by $Author: hlausen $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/builtin/kaon2/Kaon2DLFacade.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck;
  * 		   Holger Lausen, DERI Innsbruck
- * @version $Revision: 1.3 $ $Date: 2007-01-30 13:49:05 $
+ * @version $Revision: 1.4 $ $Date: 2007-02-09 08:40:53 $
  */
 public class Kaon2DLFacade implements DLReasonerFacade {
 
@@ -147,13 +147,14 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	@SuppressWarnings("unchecked")
 	public boolean isConsistent(String ontologyURI, OWLDescription description)
-			throws OWLException, KAON2Exception, InterruptedException {
+			throws OWLException, InterruptedException {
+        try {
 		reasoner = getReasoner(ontologyURI);
 //System.out.println(description.getClass().getName());
 		Description des = null;
 		if (description.getClass().getName().toString().equals("org.semanticweb.owl.impl.model.OWLClassImpl")) {
-			des = KAON2Manager.factory().description(description.toString().
-					substring(description.toString().indexOf("]")+2), Namespaces.INSTANCE);
+                des = KAON2Manager.factory().description(description.toString().
+                		substring(description.toString().indexOf("]")+2), Namespaces.INSTANCE);
 		}
 		else if (description.getClass().getName().toString().equals("org.semanticweb.owl.impl.model.OWLAndImpl")){
 			Iterator<OWLDescription> it = ((OWLAnd) description).getOperands().iterator();
@@ -168,11 +169,15 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 			des = KAON2Manager.factory().objectAnd(arg1, arg2);
 		}
 		return reasoner.isSatisfiable(des);
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
 	}
 
 	@SuppressWarnings("unchecked")
 	public Set<OWLEntity> allClasses(String ontologyURI) 
-			throws KAON2Exception, OWLException, URISyntaxException {
+			throws  OWLException, URISyntaxException {
+        try{
 		reasoner = getReasoner(ontologyURI);
 		
 		Set<OWLEntity> resultSet = new HashSet<OWLEntity>();
@@ -183,10 +188,15 @@ public class Kaon2DLFacade implements DLReasonerFacade {
         	resultSet.add(entity);
         }
 		return resultSet;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Set<OWLEntity> allIndividuals(String ontologyURI) throws KAON2Exception, OWLException, URISyntaxException {
+	public Set<OWLEntity> allIndividuals(String ontologyURI) throws  OWLException, URISyntaxException {
+        try{
 		reasoner = getReasoner(ontologyURI);
 		Set<OWLEntity> resultSet = new HashSet<OWLEntity>();
         Request<Individual> entityRequest = ontology.createEntityRequest(Individual.class);
@@ -196,11 +206,15 @@ public class Kaon2DLFacade implements DLReasonerFacade {
         	resultSet.add(entity);
         }
 		return resultSet;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public Set<OWLEntity> allProperties(String ontologyURI) 
-			throws KAON2Exception, OWLException, URISyntaxException {
+			throws  OWLException, URISyntaxException {
 		reasoner = getReasoner(ontologyURI);
 		Set<OWLEntity> resultSet = new HashSet<OWLEntity>();
         resultSet = allDataProperties(ontologyURI);
@@ -210,8 +224,9 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	@SuppressWarnings("unchecked")
 	public Set<OWLEntity> allDataProperties(String ontologyURI) 
-			throws KAON2Exception, OWLException, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws  OWLException, URISyntaxException {
+        try{
+        reasoner = getReasoner(ontologyURI);
 		Set<OWLEntity> resultSet = new HashSet<OWLEntity>();
         Request<DataProperty> entityRequest = ontology.createEntityRequest(DataProperty.class);
         Set<DataProperty> dataPropertyAxioms = entityRequest.get();
@@ -220,12 +235,18 @@ public class Kaon2DLFacade implements DLReasonerFacade {
         	resultSet.add(entity);
         }
 		return resultSet;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public Set<OWLEntity> allObjectProperties(String ontologyURI) 
-			throws KAON2Exception, OWLException, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws  OWLException, URISyntaxException {
+		
+        try{
+        reasoner = getReasoner(ontologyURI);
 		Set<OWLEntity> resultSet = new HashSet<OWLEntity>();
         Request<ObjectProperty> entityRequest = ontology.createEntityRequest(ObjectProperty.class);
         Set<ObjectProperty> objectPropertyAxioms = entityRequest.get();
@@ -234,12 +255,17 @@ public class Kaon2DLFacade implements DLReasonerFacade {
         	resultSet.add(entity);
         }
 		return resultSet;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public Set<Set> descendantClassesOf(String ontologyURI, OWLDescription clazz) 
-			throws OWLException, KAON2Exception, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  URISyntaxException {
+        try{
+            reasoner = getReasoner(ontologyURI);
 		Set<Set> resultSet = new HashSet<Set>();
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
 		
@@ -261,12 +287,17 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		}
 		resultSet.add(entitySet);
 		return resultSet;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 	
 	@SuppressWarnings("unchecked")
 	public Set<Set> subClassesOf(String ontologyURI, OWLDescription clazz) 
-			throws OWLException, KAON2Exception, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  URISyntaxException {
+        try{
+reasoner = getReasoner(ontologyURI);
 		Set<Set> resultSet = new HashSet<Set>();
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();		
 		Request<SubClassOf> subClassOfRequest = ontology.createAxiomRequest(SubClassOf.class);
@@ -283,12 +314,18 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		}
 		resultSet.add(entitySet);
 		return resultSet;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public Set<Set> ancestorClassesOf(String ontologyURI, OWLDescription clazz) 
-			throws OWLException, KAON2Exception, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  URISyntaxException {
+        try{
+
+            reasoner = getReasoner(ontologyURI);
 		Set<Set> resultSet = new HashSet<Set>();
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
 		
@@ -311,12 +348,17 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		}
 		resultSet.add(entitySet);
 		return resultSet;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public Set<Set> superClassesOf(String ontologyURI, OWLDescription clazz) 
-			throws OWLException, KAON2Exception, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  URISyntaxException {
+        try{
+reasoner = getReasoner(ontologyURI);
 		Set<Set> resultSet = new HashSet<Set>();
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
 		
@@ -334,12 +376,17 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		}
 		resultSet.add(entitySet);
 		return resultSet;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public Set<OWLEntity> equivalentClassesOf(String ontologyURI, OWLDescription clazz) 
-			throws OWLException, KAON2Exception, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  URISyntaxException {
+        try{
+            reasoner = getReasoner(ontologyURI);
 		Set<OWLEntity> resultSet = new HashSet<OWLEntity>();	
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
 		Request<EquivalentClasses> equivClassesRequest = ontology.createAxiomRequest(EquivalentClasses.class);
@@ -378,18 +425,23 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		}
 		
 		return resultSet;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	public boolean isEquivalentClass(String ontologyURI, OWLDescription clazz1,
 			OWLDescription clazz2) 
-			throws OWLException, KAON2Exception, URISyntaxException {
+			throws OWLException,  URISyntaxException {
 		reasoner = getReasoner(ontologyURI);
         return equivalentClassesOf(ontologyURI, clazz1).contains(clazz2);
 	}
 
 	public boolean isSubClassOf(String ontologyURI, OWLDescription clazz1,
-			OWLDescription clazz2) throws OWLException, KAON2Exception, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			OWLDescription clazz2) throws OWLException,  URISyntaxException {
+        try{
+reasoner = getReasoner(ontologyURI);
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
 		Request<SubClassOf> subClassOfRequest = ontology.createAxiomRequest(SubClassOf.class);
 		OWLClass owlClass1 = KAON2Manager.factory().owlClass(clazz1.toString().substring(
@@ -412,11 +464,16 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		else {
 			return false;
 		}
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	public boolean isInstanceOf(String ontologyURI, OWLIndividual individual,
-			OWLDescription clazz) throws OWLException, KAON2Exception, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			OWLDescription clazz) throws OWLException,  URISyntaxException {
+        try{
+reasoner = getReasoner(ontologyURI);
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();	
 		Request<ClassMember> memberOfRequest = ontology.createAxiomRequest(ClassMember.class);
 		OWLClass owlClass = KAON2Manager.factory().owlClass(clazz.toString().substring(
@@ -437,12 +494,17 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		else {
 			return false;
 		}
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public Set<OWLEntity> allInstancesOf(String ontologyURI, org.semanticweb.owl.model.OWLClass clazz)
-			throws OWLException, KAON2Exception, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  URISyntaxException {
+        try{
+        reasoner = getReasoner(ontologyURI);
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();	
 		Request<ClassMember> memberOfRequest = ontology.createAxiomRequest(ClassMember.class);
 		OWLClass owlClass = KAON2Manager.factory().owlClass(clazz.toString().substring(
@@ -455,12 +517,17 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 			entitySet.add(entity);
 		}
 		return entitySet;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public Set<Set> typesOf(String ontologyURI, OWLIndividual individual)
-			throws OWLException, KAON2Exception, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  URISyntaxException {
+        try{
+reasoner = getReasoner(ontologyURI);
 		Set<Set> resultSet = new HashSet<Set>();
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();	
 		Request<ClassMember> memberOfRequest = ontology.createAxiomRequest(ClassMember.class);
@@ -475,12 +542,17 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		}
 		resultSet.add(entitySet);
 		return resultSet;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public Set<Set> allTypesOf(String ontologyURI, OWLIndividual individual)
-			throws OWLException, KAON2Exception, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  URISyntaxException {
+        try{
+            reasoner = getReasoner(ontologyURI);
 		Set<Set> resultSet = new HashSet<Set>();
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();	
 		Request<ClassMember> memberOfRequest = ontology.createAxiomRequest(ClassMember.class);
@@ -496,13 +568,18 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		}
 		resultSet.add(entitySet);
 		return resultSet;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public Set<Set> descendantPropertiesOf(String ontologyURI,
 			OWLProperty property) 
-			throws OWLException, KAON2Exception, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  URISyntaxException {
+        try{
+            reasoner = getReasoner(ontologyURI);
 		Set<Set> resultSet = new HashSet<Set>();
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
 		
@@ -541,13 +618,18 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		}
 		resultSet.add(entitySet);
 		return resultSet;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public Set<Set> subPropertiesOf(String ontologyURI,
 			OWLProperty property) 
-			throws OWLException, KAON2Exception, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  URISyntaxException {
+        try{
+reasoner = getReasoner(ontologyURI);
 		reasoner = getReasoner(ontologyURI);
 		Set<Set> resultSet = new HashSet<Set>();
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
@@ -583,13 +665,18 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		
 		resultSet.add(entitySet);
 		return resultSet;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public Set<Set> ancestorPropertiesOf(String ontologyURI,
 			OWLProperty property) 
-			throws OWLException, KAON2Exception, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  URISyntaxException {
+        try{
+            reasoner = getReasoner(ontologyURI);
 		Set<Set> resultSet = new HashSet<Set>();
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
 		
@@ -628,13 +715,18 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		}
 		resultSet.add(entitySet);
 		return resultSet;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public Set<Set> superPropertiesOf(String ontologyURI,
 			OWLProperty property) 
-			throws OWLException, KAON2Exception, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  URISyntaxException {
+        try{
+reasoner = getReasoner(ontologyURI);
 		Set<Set> resultSet = new HashSet<Set>();
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
 		
@@ -668,12 +760,17 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		}
 		resultSet.add(entitySet);
 		return resultSet;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public Set<OWLEntity> equivalentPropertiesOf(String ontologyURI,
-			OWLProperty property) throws OWLException, KAON2Exception, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			OWLProperty property) throws OWLException,  URISyntaxException {
+        try{
+                reasoner = getReasoner(ontologyURI);
 		Set<OWLEntity> resultSet = new HashSet<OWLEntity>();	
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
 		Request<EquivalentObjectProperties> equivObjectPropertiesRequest = 
@@ -734,12 +831,17 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		}
 		
 		return resultSet;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public Set<OWLEntity> inversePropertiesOf(String ontologyURI,
-			OWLObjectProperty property)	throws OWLException, KAON2Exception, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);	
+			OWLObjectProperty property)	throws OWLException,  URISyntaxException {
+        try{
+reasoner = getReasoner(ontologyURI);	
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
 		Request<InverseObjectProperties> inverseObjectPropertiesRequest = 
 			ontology.createAxiomRequest(InverseObjectProperties.class);
@@ -762,12 +864,17 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 					new URI(axiom.getSecond().toString())));
 		}
 		return entitySet;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public Set<OWLEntity> domainsOf(String ontologyURI, OWLProperty property)
-			throws OWLException, KAON2Exception, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  URISyntaxException {
+        try{
+            reasoner = getReasoner(ontologyURI);
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
 		Request<ObjectPropertyDomain> attributeRequest = 
 			ontology.createAxiomRequest(ObjectPropertyDomain.class);
@@ -781,12 +888,17 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 					axiom.getDomain().toString())));
 		}
 		return entitySet;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public Set<OWLEntity> rangesOf(String ontologyURI, OWLObjectProperty property) 
-			throws OWLException, KAON2Exception, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  URISyntaxException {
+        try{
+reasoner = getReasoner(ontologyURI);
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
 		Request<ObjectPropertyRange> attributeRequest = 
 			ontology.createAxiomRequest(ObjectPropertyRange.class);
@@ -800,13 +912,18 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 					axiom.getRange().toString())));
 		}
 		return entitySet;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public Set<OWLConcreteDataTypeImpl> rangesOf(String ontologyURI, 
 			OWLDataProperty property) 
-			throws OWLException, KAON2Exception, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  URISyntaxException {
+        try{
+reasoner = getReasoner(ontologyURI);
 		Set<OWLConcreteDataTypeImpl> dataTypeSet = 
 			new HashSet<OWLConcreteDataTypeImpl>();
 		Request<DataPropertyRange> attributeRequest = 
@@ -823,13 +940,18 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 			dataTypeSet.add((OWLConcreteDataTypeImpl) dataType);
 		}
 		return dataTypeSet;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public Map<OWLEntity, Set<OWLEntity>> getObjectPropertyValues(
 			String ontologyURI, OWLIndividual individual) 
-			throws OWLException, KAON2Exception, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  URISyntaxException {
+        try{
+reasoner = getReasoner(ontologyURI);
         Map<OWLEntity, Set<OWLEntity>> resultMap = 
         	new HashMap<OWLEntity, Set<OWLEntity>>();
 		Individual owlIndividual = KAON2Manager.factory().individual(
@@ -849,13 +971,18 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 			}
 		}
 		return resultMap;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 	
 	@SuppressWarnings("unchecked")
 	public Map<OWLEntity, Set<OWLConcreteDataImpl>> getDataPropertyValues(
 			String ontologyURI, OWLIndividual individual) 
-			throws OWLException, KAON2Exception, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  URISyntaxException {
+        try{
+reasoner = getReasoner(ontologyURI);
 		Map<OWLEntity, Set<OWLConcreteDataImpl>> resultMap = 
         	new HashMap<OWLEntity, Set<OWLConcreteDataImpl>>();
 		Individual owlIndividual = KAON2Manager.factory().individual(
@@ -885,13 +1012,17 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 			}
 		}
 		return resultMap;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
 	}
 
 	@SuppressWarnings("unchecked")
 	public Map<OWLEntity, Set<OWLEntity>> getPropertyValues(
 			String ontologyURI,	OWLObjectProperty property) 
-			throws OWLException, KAON2Exception, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  URISyntaxException {
+        try{
+reasoner = getReasoner(ontologyURI);
 		Map<OWLEntity, Set<OWLEntity>> resultMap = 
         	new HashMap<OWLEntity, Set<OWLEntity>>();
 		ObjectProperty owlObjectProperty = KAON2Manager.factory().objectProperty(
@@ -907,14 +1038,18 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 					new URI(member.getSourceIndividual().toString())), 
 					entitySet);
 		}
-		return resultMap;
+		return resultMap;        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public Map<OWLEntity, Set<OWLConcreteDataImpl>> getPropertyValues(
 			String ontologyURI, OWLDataProperty property) 
-			throws OWLException, KAON2Exception, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  URISyntaxException {
+        try{
+reasoner = getReasoner(ontologyURI);
 		Map<OWLEntity, Set<OWLConcreteDataImpl>> resultMap = 
         	new HashMap<OWLEntity, Set<OWLConcreteDataImpl>>();
 		DataProperty owlDataProperty = KAON2Manager.factory().dataProperty(
@@ -940,13 +1075,18 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 					dataTypeSet);
 		}
 		return resultMap;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public boolean hasPropertyValue(String ontologyURI, OWLIndividual subject,
 			OWLObjectProperty property, OWLIndividual object)
-			throws OWLException, KAON2Exception, InterruptedException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  InterruptedException {
+        try{
+reasoner = getReasoner(ontologyURI);
 		Query query = reasoner.createQuery(Namespaces.INSTANCE, "ASK " +
 				"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
 				"> <" + property.toString().substring(property.toString().indexOf("]")+2) + 
@@ -955,13 +1095,18 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		int size = query.getNumberOfTuples();
 		query.close();
 		return size > 0;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public boolean hasPropertyValue(String ontologyURI, OWLIndividual subject,
 			OWLDataProperty property, OWLDataValue object)
-			throws OWLException, KAON2Exception, InterruptedException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  InterruptedException {
+        try{
+reasoner = getReasoner(ontologyURI);
 		Query query = null;
 		if (object.getValue() instanceof String) {
 			query = reasoner.createQuery(Namespaces.INSTANCE, "ASK " +
@@ -980,13 +1125,18 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		int size = query.getNumberOfTuples();
 		query.close();
 		return size > 0;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public Set<OWLEntity> getObjectPropertyValues(String ontologyURI,
 			OWLIndividual subject, OWLObjectProperty property)
-			throws OWLException, KAON2Exception, InterruptedException, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  InterruptedException, URISyntaxException {
+        try{
+reasoner = getReasoner(ontologyURI);
 		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
 		Query query = reasoner.createQuery(Namespaces.INSTANCE, "Select ?x WHERE " +
 				"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
@@ -999,14 +1149,18 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 			query.next();
 		}
 		query.close();
-		return entitySet;
+		return entitySet;        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public Set<OWLDataValue> getDataPropertyValues(String ontologyURI,
 			OWLIndividual subject, OWLDataProperty property)
-			throws OWLException, KAON2Exception, InterruptedException, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  InterruptedException, URISyntaxException {
+        try{
+reasoner = getReasoner(ontologyURI);
 		Set<OWLDataValue> dataValueSet = new HashSet<OWLDataValue>();
 		Query query = reasoner.createQuery(Namespaces.INSTANCE, "Select ?x WHERE " +
 				"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
@@ -1028,12 +1182,17 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		}
 		query.close();
 		return dataValueSet;
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	public OWLIndividual getObjectPropertyValue(String ontologyURI,
 			OWLIndividual subject, OWLObjectProperty property)
-			throws OWLException, KAON2Exception, InterruptedException, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  InterruptedException, URISyntaxException {
+        try{
+reasoner = getReasoner(ontologyURI);
 		Query query = reasoner.createQuery(Namespaces.INSTANCE, "Select ?x WHERE " +
 				"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
 				"> <" + property.toString().substring(property.toString().indexOf("]")+2) + 
@@ -1042,12 +1201,17 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		Object[] tupleBuffer = query.tupleBuffer();
 		query.close();
 		return owlDataFactory.getOWLIndividual(new URI(tupleBuffer[0].toString()));
+        } catch (KAON2Exception e) {
+            throw new OWLException("KAON2ERROR",e);
+        }
+
 	}
 
 	public OWLDataValue getDataPropertyValue(String ontologyURI,
 			OWLIndividual subject, OWLDataProperty property)
-			throws OWLException, KAON2Exception, InterruptedException, URISyntaxException {
-		reasoner = getReasoner(ontologyURI);
+			throws OWLException,  InterruptedException, URISyntaxException {
+            try{
+reasoner = getReasoner(ontologyURI);
 		Query query = reasoner.createQuery(Namespaces.INSTANCE, "Select ?x WHERE " +
 				"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
 				"> <" + property.toString().substring(property.toString().indexOf("]")+2) + 
@@ -1066,6 +1230,11 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 					Namespaces.XSD_NS + "integer"), null, tupleBuffer[0]);
 		}
 		return dataValue;
+            } catch (KAON2Exception e) {
+                throw new OWLException("KAON2ERROR",e);
+            }
+        
+
 	}
 
 //	public QueryResults evaluate(String ontologyURI, String queryString) {
@@ -1083,7 +1252,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 	@SuppressWarnings("unchecked")
 	private Set<OWLEntity> addSubConcepts(String ontologyURI, OWLEntity entity, 
 			Set<OWLEntity> entitySet) 
-			throws OWLException, KAON2Exception, URISyntaxException {
+			throws OWLException,  URISyntaxException {
 		Set<Set> set = subClassesOf(ontologyURI, 
 				(org.semanticweb.owl.model.OWLClass) entity);
 		Set<OWLEntity> set2 = set.iterator().next();
@@ -1099,7 +1268,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 	@SuppressWarnings("unchecked")
 	private Set<OWLEntity> addSuperConcepts(String ontologyURI, OWLEntity entity, 
 			Set<OWLEntity> entitySet) 
-			throws OWLException, KAON2Exception, URISyntaxException {
+			throws OWLException,  URISyntaxException {
 		Set<Set> set = superClassesOf(ontologyURI, 
 				(org.semanticweb.owl.model.OWLClass) entity);
 		Set<OWLEntity> set2 = set.iterator().next();
@@ -1115,7 +1284,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 	@SuppressWarnings("unchecked")
 	private Set<OWLEntity> addSubProperties(String ontologyURI, OWLEntity entity, 
 			Set<OWLEntity> entitySet) 
-			throws OWLException, KAON2Exception, URISyntaxException {
+			throws OWLException,  URISyntaxException {
 		Set<Set> set = subPropertiesOf(ontologyURI, 
 				(org.semanticweb.owl.model.OWLProperty) entity);
 		Set<OWLEntity> set2 = set.iterator().next();
@@ -1131,7 +1300,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 	@SuppressWarnings("unchecked")
 	private Set<OWLEntity> addSuperProperties(String ontologyURI, OWLEntity entity, 
 			Set<OWLEntity> entitySet) 
-			throws OWLException, KAON2Exception, URISyntaxException {
+			throws OWLException,  URISyntaxException {
 		Set<Set> set = superPropertiesOf(ontologyURI, 
 				(org.semanticweb.owl.model.OWLProperty) entity);
 		Set<OWLEntity> set2 = set.iterator().next();
@@ -1160,6 +1329,9 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.3  2007/01/30 13:49:05  nathalie
+ * fixed hack with iri as substring containing http://
+ *
  * Revision 1.2  2007/01/11 13:04:47  nathalie
  * removed unnecessary dependencies from pellet library
  *
