@@ -467,11 +467,11 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             // Construct error object
             
             Term rawValue = violation.get(v);
-            Value value;
-            if (rawValue instanceof DataValue)
-                value = (DataValue) rawValue;
-            else
-                value = wsmoFactory.createInstance((IRI) rawValue);
+            //Value value;
+            //if (rawValue instanceof DataValue)
+            //    value = (DataValue) rawValue;
+            //else
+            //    value = wsmoFactory.createInstance((IRI) rawValue);
             Concept concept = wsmoFactory.getConcept((IRI) violation.get(c));
             Attribute attribute = (Attribute) concept.findAttributes(
                     (IRI) violation.get(a)).iterator().next();
@@ -487,11 +487,11 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 
             if (violation.get(i) instanceof Identifier){
             	Instance instance = wsmoFactory.getInstance((IRI) violation.get(i));            
-            	errors.add(new AttributeTypeViolation(ontologyId, instance, value,
+            	errors.add(new AttributeTypeViolation(ontologyId, instance, rawValue,
                     attribute, type));
             }
             if (violation.get(i) instanceof ConstructedTerm){
-            	errors.add(new AttributeTypeViolation(wsmoFactory.getOntology(ontologyId), (ConstructedTerm)violation.get(i), value, attribute, type));
+            	errors.add(new AttributeTypeViolation(wsmoFactory.getOntology(ontologyId), (ConstructedTerm)violation.get(i), rawValue, attribute, type));
             }
         }
 
@@ -517,12 +517,12 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         Set<Map<Variable, Term>> violations = executeQuery(ontologyId, atom);
         for (Map<Variable, Term> violation : violations) {
             // Construct error object
-            Instance instance = wsmoFactory.getInstance((Identifier) violation.get(i));
+            //Instance instance = wsmoFactory.getInstance((Identifier) violation.get(i));
             Concept concept = wsmoFactory.getConcept((Identifier) violation.get(c));
             Attribute attribute = (Attribute) concept.findAttributes(
                     (Identifier) violation.get(a)).iterator().next();
-            errors.add(new MinCardinalityViolation(ontologyId, instance,
-                    attribute));
+            errors.add(new MinCardinalityViolation(ontologyId, violation.get(i),
+                    attribute, wsmoFactory.getOntology(ontologyId)));
         }
     }
 
@@ -546,12 +546,12 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         Set<Map<Variable, Term>> violations = executeQuery(ontologyId, atom);
         for (Map<Variable, Term> violation : violations) {
             // Construct error object
-            Instance instance = wsmoFactory.getInstance((IRI) violation.get(i));
+            //Instance instance = wsmoFactory.getInstance((IRI) violation.get(i));
             Concept concept = wsmoFactory.getConcept((IRI) violation.get(c));
             Attribute attribute = (Attribute) concept.findAttributes(
                     (IRI) violation.get(a)).iterator().next();
-            errors.add(new MaxCardinalityViolation(ontologyId, instance,
-                    attribute));
+            errors.add(new MaxCardinalityViolation(ontologyId, violation.get(i),
+                    attribute, wsmoFactory.getOntology(ontologyId)));
         }
     }
 
