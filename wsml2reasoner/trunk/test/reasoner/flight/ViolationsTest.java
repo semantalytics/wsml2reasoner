@@ -130,7 +130,7 @@ public class ViolationsTest extends BaseReasonerTest {
                     MinCardinalityViolation v = (MinCardinalityViolation) violation;
                     String attributeId = v.getAttribute().getIdentifier()
                             .toString();
-                    String instanceId = v.getInstance().getIdentifier()
+                    String instanceId = v.getTerm()//.getIdentifier()
                             .toString();
                     if ("urn:bad#iC".equals(instanceId)
                             && "urn:bad#amin".equals(attributeId))
@@ -139,7 +139,7 @@ public class ViolationsTest extends BaseReasonerTest {
                     MaxCardinalityViolation v = (MaxCardinalityViolation) violation;
                     String attributeId = v.getAttribute().getIdentifier()
                             .toString();
-                    String instanceId = v.getInstance().getIdentifier()
+                    String instanceId = v.getTerm()//.getIdentifier()
                             .toString();
                     if ("urn:bad#iC".equals(instanceId)
                             && "urn:bad#amax".equals(attributeId))

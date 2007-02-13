@@ -1,6 +1,7 @@
 package org.wsml.reasoner.api.inconsistency;
 
 import org.omwg.logicalexpression.terms.ConstructedTerm;
+import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
@@ -15,7 +16,7 @@ public class AttributeTypeViolation extends ConsistencyViolation {
     
     private ConstructedTerm ctInstance;private Ontology ontology;
 
-    private Value violatingValue;
+    private Term violatingValue;
 
     private Attribute attribute;
 
@@ -33,11 +34,11 @@ public class AttributeTypeViolation extends ConsistencyViolation {
         return instance;
     }
    
-    public Value getViolatingValue() {
+    public Term getViolatingValue() {
         return violatingValue;
     }
 
-    public AttributeTypeViolation(IRI ontologyIri, Instance instance, Value violatingValue, Attribute attribute, Type expectedType) {
+    public AttributeTypeViolation(IRI ontologyIri, Instance instance, Term violatingValue, Attribute attribute, Type expectedType) {
         super(ontologyIri);
         this.instance = instance;
         this.violatingValue = violatingValue;
@@ -45,7 +46,7 @@ public class AttributeTypeViolation extends ConsistencyViolation {
         this.expectedType = expectedType;
     }
 
-    public AttributeTypeViolation(Ontology ontology, ConstructedTerm ctInstance, Value violatingValue, Attribute attribute, Type expectedType) {
+    public AttributeTypeViolation(Ontology ontology, ConstructedTerm ctInstance, Term violatingValue, Attribute attribute, Type expectedType) {
         super((IRI)ontology.getIdentifier());
         this.ctInstance = ctInstance;
         this.violatingValue = violatingValue;

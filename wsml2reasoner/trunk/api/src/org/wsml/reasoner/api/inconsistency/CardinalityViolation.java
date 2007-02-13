@@ -1,12 +1,13 @@
 package org.wsml.reasoner.api.inconsistency;
 
+import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Instance;
 import org.wsmo.common.IRI;
 
 public abstract class CardinalityViolation extends ConsistencyViolation {
 
-    private Instance instance;
+    private Term term;
 
     private Attribute attribute;
 
@@ -14,19 +15,19 @@ public abstract class CardinalityViolation extends ConsistencyViolation {
         return attribute;
     }
 
-    public Instance getInstance() {
-        return instance;
+    public Term getTerm() {
+        return term;
     }
 
-    public CardinalityViolation(IRI ontologyIri, Instance instance, Attribute attribute) {
+    public CardinalityViolation(IRI ontologyIri, Term term, Attribute attribute) {
         super(ontologyIri);
-        this.instance = instance;
+        this.term = term;
         this.attribute = attribute;
     }
     
     public String toString(){
-        return "Cardinality violation on attribute: " + attribute.getIdentifier() +
-            " violating instance " + instance.getIdentifier();  
+    	return "Cardinality violation on attribute: " + attribute.getIdentifier() +
+            " violating instance " + term.toString();  
     }
     
 }
