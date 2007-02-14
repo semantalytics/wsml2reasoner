@@ -1,0 +1,10 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
+namespace { _"http://simple#"
+}
+
+ontology simpson
+
+concept Human
+
+instance Marge memberOf Human
+
