@@ -94,11 +94,11 @@ import org.wsmo.factory.WsmoFactory;
  * The wsmo4j interface for the iris reasoner.
  * </p>
  * <p>
- * $Id: IrisFacade.java,v 1.1 2007-02-01 12:21:27 richardpoettler Exp $
+ * $Id: IrisFacade.java,v 1.2 2007-02-15 08:08:32 richardpoettler Exp $
  * </p>
  * 
  * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class IrisFacade implements DatalogReasonerFacade {
 
@@ -623,8 +623,8 @@ public class IrisFacade implements DatalogReasonerFacade {
 
 		int pos = 0;
 		for (final ILiteral l : q.getQueryLiterals()) {
+			int tPos = 0;
 			for (final ITerm t : l.getTuple().getTerms()) {
-				int tPos = 0;
 				if (t instanceof IConstructedTerm) {
 					final int[] res = searchConstructForVar(
 							(IConstructedTerm) t, v);
