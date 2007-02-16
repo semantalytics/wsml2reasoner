@@ -1,0 +1,146 @@
+	
+<project name="WSML2Reasoner Framework" default="create-wsml2reasoner" basedir="." >
+
+	<!-- =================================================================== -->
+	<!-- Initialization                                                -->
+	<!-- =================================================================== -->
+	<target name="init">
+		<tstamp />
+		<property name="target.vm" value="1.5" />
+
+		<property name="src.dir" value="${basedir}/src" />
+		<property name="api-src.dir" value="${basedir}/api/src/" />
+		<property name="test-src.dir" value="${basedir}/test/" />
+		<property name="lib.dir" value="${basedir}/lib" />
+		<property name="example.dir" value="${src.dir}/example/" />
+
+		<property name="build.root" value="${basedir}/build" />
+		<property name="build.src" value="${build.root}/src" />
+		<property name="build.lib" value="${build.root}/lib" />
+		<property name="build.class" value="${build.root}/class" />
+		<property name="dist" value="${basedir}/dist" />
+    	<property name="dist.complete" value="${dist}/complete" />
+		<property name="dist.complete.src" value="${dist.complete}/src" />
+		<property name="dist.complete.lib" value="${dist.complete}/lib" />
+		<property name="dist.complete.test" value="${dist.complete}/test" />
+		<property name="dist.complete.example" value="${dist.complete}/example" />
+		<property name="deploy.version" value="0_3" />
+	
+		<property name="javadoc.dir" location="${basedir}/javadoc" />
+		
+		<!-- For checking out project -->
+		<property name="cvs.user" value="graham"/>
+		<property name="cvs.path" value=":pserver:${cvs.user}@cvs.deri.at:/usr/local/cvsroot" />
+		
+		<!-- For updating remote snapshot -->
+		<property file="pwd" />
+		<property name="shell.host" value="tools.deri.org" />
+		<property name="remote.snapshot.path" value="../snapshot/" />
+	</target>
+	
+	<!-- =================================================================== -->
+	<!-- Targets                                                       		 -->
+	<!-- =================================================================== -->
+
+	<patternset id="source-files">
+		<exclude name="CVS/*" />
+		<exclude name="*.DS_Store" />
+		<exclude name="build/*" />
+		<include name="**/*.*" />
+	</patternset>
+		
+	<patternset id="jars">
+		<exclude name="CVS/*" />
+		<exclude name="*.DS_Store" />
+		<exclude name="build/*" />
+		<include name="**/*.*" />
+	</patternset>
+		
+	<patternset id="no-kaon2-jars">
+		<exclude name="CVS/*" />
+		<exclude name="*.DS_Store" />
+		<exclude name="build/*" />
+		<exclude name="ext/kaon2/*" />
+		<include name="**/*.*" />
+	</patternset>
+	
+	<target name="clean-build-dirs" depends="init" description="Cleans the build directories">
+		<delete dir="${build.src}" />
+		<delete dir="${build.lib}" />
+		<delete dir="${build.class}" />
+	</target>
+	
+	<target name="real-clean" depends="clean-build-dirs" description="Cleans everything">
+		<delete dir="${build.root}" />
+	</target>
+	
+	<target name="create-dirs" depends="init" description="Creates the build directories">
+		<mkdir dir="${build.root}" />
+		<mkdir dir="${build.src}" />
+		<mkdir dir="${build.lib}" />
+		<mkdir dir="${build.class}" />
+		<mkdir dir="${dist}" />
+		<mkdir dir="${dist.complete}" />		
+		<mkdir dir="${dist.complete.lib}" />
+	</target>
+	
+	<target name="checkout-project" 
+		depends= "real-clean, create-dirs"
+		description="Checkout most recent version from cvs">
+		<cvs compression="true"
+        cvsRoot="${cvs.path}"
+		package="wsml2reasoner"
+        failonerror="true"/>
+	</target>
+	
+	<target name="compile" depends="checkout-project" 
+		description="Compiles wsml2reasoner framework">
+		<copy todir="${build.src}" preservelastmodified="yes" includeEmptyDirs="no">
+			<fileset dir="${src.dir}">
+				<patternset refid="source-files" />
+			</fileset>
+			<fileset dir="${api-src.dir}">
+				<patternset refid="source-files" />
+			</fileset>
+		</copy>
+		<copy todir="${build.lib}" preservelastmodified="yes" includeEmptyDirs="no">
+			<fileset dir="${lib.dir}/">
+				<patternset refid="jars" />
+			</fileset>
+		</copy>
+		<javac srcdir="${build.src}" destdir="${build.class}" 
+				debug="on" optimize="off" deprecation="off" target="1.5" nowarn="on">
+			<classpath>
+				<fileset dir="${build.lib}" />
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="create-jar" depends="compile" description="Creates wsml2reasoner jar - basic">
+		<mkdir dir="${dist.complete}" />
+		<jar jarfile="${dist.complete}/wsml2reasoner-${DSTAMP}.jar">
+			<fileset dir="${build.src}" />
+			<fileset dir="${build.class}" />
+		</jar>
+		<copy file="${dist.complete}/wsml2reasoner-${DSTAMP}.jar" todir="${remote.snapshot.path}" 
+			preservelastmodified="yes" includeEmptyDirs="no"/>
+	</target>
+	
+	<target name="create-wsml2reasoner" depends="create-jar" 
+		description="Creates wsml2reasoner src (including jar) - basic">
+		<copy file="${basedir}/license.txt" todir="${dist.complete}"/>
+		<mkdir dir="${dist.complete.src}" />
+		<copy todir="${dist.complete.src}" preservelastmodified="yes" includeEmptyDirs="no">
+			<fileset dir="${build.src}" />
+		</copy>
+		<copy todir="${dist.complete.lib}" preservelastmodified="yes" includeEmptyDirs="no">
+			<fileset dir="${build.lib}" >
+				<patternset refid="no-kaon2-jars" />
+			</fileset>
+		</copy>
+		<zip destfile="${remote.snapshot.path}/wsml2reasoner-${DSTAMP}.zip">
+			<fileset dir="${dist.complete}"/>
+		</zip>
+		<delete dir="${dist.complete}"/>
+	</target>
+</project>
