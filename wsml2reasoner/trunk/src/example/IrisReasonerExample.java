@@ -46,7 +46,7 @@ import org.wsmo.wsml.Serializer;
  * 
  * @author Holger Lausen, DERI Innsbruck
  */
-public class IRISReasonerExample {
+public class IrisReasonerExample {
     
     int evalmethod = 2;
 
@@ -55,7 +55,7 @@ public class IRISReasonerExample {
      *            none expected
      */
     public static void main(String[] args) {
-        IRISReasonerExample ex = new IRISReasonerExample();
+        IrisReasonerExample ex = new IrisReasonerExample();
         try {
             ex.doTestRun();
             System.exit(0);

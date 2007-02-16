@@ -8,3 +8,4 @@ concept Human
 
 instance Marge memberOf Human
 
+instance Graham memberOf Man
