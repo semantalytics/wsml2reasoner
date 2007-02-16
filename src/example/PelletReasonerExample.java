@@ -48,20 +48,20 @@ import org.wsmo.wsml.Parser;
  *
  * <pre>
  *  Created on July 19rd, 2006
- *  Committed by $Author: nathalie $
- *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/example/PelletDLReasonerExample.java,v $,
+ *  Committed by $Author: graham $
+ *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/example/PelletReasonerExample.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.1 $ $Date: 2007-01-10 16:08:28 $
+ * @version $Revision: 1.1 $ $Date: 2007-02-16 19:18:36 $
  */
-public class PelletDLReasonerExample {
+public class PelletReasonerExample {
 	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		PelletDLReasonerExample ex = new PelletDLReasonerExample();
+		PelletReasonerExample ex = new PelletReasonerExample();
         try {
             ex.doTestRun();
             ex.debugOntology();
@@ -229,6 +229,9 @@ public class PelletDLReasonerExample {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.1  2007/01/10 16:08:28  nathalie
+ * added example for kaon2 dl reasoning
+ *
  * Revision 1.7  2006/09/19 13:47:28  nathalie
  * added example for using Pellet Logger printClassTree function
  *

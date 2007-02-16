@@ -46,7 +46,7 @@ import org.wsmo.wsml.Serializer;
  * 
  * @author Holger Lausen, DERI Innsbruck
  */
-public class ReasonerExample {
+public class Kaon2ReasonerExample {
     
     int evalmethod = 2;
 
@@ -55,33 +55,20 @@ public class ReasonerExample {
      *            none expected
      */
     public static void main(String[] args) {
-    	if(args == null || args.length == 0){
-    		System.out.println("Must specify a reasoner");
-    		System.out.println ("Options are:" );
-    		System.out.println ("IRIS");
-        	System.out.println ("MINS");
-        	System.out.println ("KAON2");
-        	System.out.println ("PELLET");
-        	System.out.println ("TPTP");
-        	System.out.println ("XSB");
-    	}
-    	else {
-	        ReasonerExample ex = new ReasonerExample();
-	        try {
-	            ex.doTestRun(args[0]);
-	            System.exit(0);
-	        } catch (Throwable e) {
-	            e.printStackTrace();
-	        }
-	    	
-    	}
+        Kaon2ReasonerExample ex = new Kaon2ReasonerExample();
+        try {
+            ex.doTestRun();
+            System.exit(0);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * loads an Ontology and performs sample query
      */
-    public void doTestRun(String reasoningEngine) throws Exception {
-        Ontology exampleOntology = loadOntology("example/humanOntology.wsml");
+    public void doTestRun() throws Exception {
+        Ontology exampleOntology = loadOntology("example/simpleOntology.wsml");
         if (exampleOntology == null)
             return;
         LogicalExpressionFactory leFactory = new WSMO4JManager()
@@ -94,40 +81,8 @@ public class ReasonerExample {
 
         // get A reasoner
         Map<String, Object> params = new HashMap<String, Object>();
-        if (reasoningEngine.equals("iris") || reasoningEngine.equals("IRIS")) {
-        	params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
-        			WSMLReasonerFactory.BuiltInReasoner.IRIS);
-        }
-        else if (reasoningEngine.equals("mins") || reasoningEngine.equals("MINS")) {
-        	params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
-        			WSMLReasonerFactory.BuiltInReasoner.MINS);
-        }
-        else if (reasoningEngine.equals("kaon2") || reasoningEngine.equals("KAON2")) {
-        	params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
-        			WSMLReasonerFactory.BuiltInReasoner.KAON2);
-        }
-        else if (reasoningEngine.equals("pellet") || reasoningEngine.equals("PELLET")) {
-        	params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
-        			WSMLReasonerFactory.BuiltInReasoner.PELLET);
-        }
-        else if (reasoningEngine.equals("tptp") || reasoningEngine.equals("TPTP")) {
-        	params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
-        			WSMLReasonerFactory.BuiltInReasoner.TPTP);
-        }
-        else if (reasoningEngine.equals("xsb") || reasoningEngine.equals("XSB")) {
-        	params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
-        			WSMLReasonerFactory.BuiltInReasoner.XSB);
-        }
-        else {
-        	System.out.println ("Unrecognized reasoner\nOptions are:" );
-        	System.out.println ("MINS");
-        	System.out.println ("KAON2");
-        	System.out.println ("PELLET");
-        	System.out.println ("TPTP");
-        	System.out.println ("XSB");
-        	return;
-        }
-        
+        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
+                WSMLReasonerFactory.BuiltInReasoner.KAON2);
         params.put(WSMLReasonerFactory.PARAM_EVAL_METHOD,
                 new Integer(evalmethod));
         WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
