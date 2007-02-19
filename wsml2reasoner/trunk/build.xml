@@ -237,7 +237,7 @@
 	
 	<target name="create-wsml2reasoner" depends="create-jar" 
 		description="Creates wsml2reasoner src (including jar) - basic">
-		<copy file="${basedir}/license.txt" todir="${dist.complete}"/>
+		<copy file="${basedir}/license-gpl.txt" todir="${dist.complete}"/>
 		<mkdir dir="${dist.complete.src}" />
 		<copy todir="${dist.complete.src}" preservelastmodified="yes" includeEmptyDirs="no">
 			<fileset dir="${build.src}" />
@@ -254,7 +254,7 @@
 	
 	<target name="create-wsml2reasoner-sdk" depends="real-clean, create-dirs" 
 		description="Creates complete wsml2reasoner (including tests) for developers">
-		<copy file="${basedir}/license.txt" todir="${dist.complete}"/>
+		<copy file="${basedir}/" todir="${dist.complete}"/>
 		<echo file="${dist.complete}/version.txt">${deploy.version}</echo>
 		<copy todir="${dist.complete}" preservelastmodified="yes" includeEmptyDirs="no">
 			<fileset dir="${basedir}">
@@ -414,7 +414,7 @@
 		</zip>
 		<delete dir="${dist.complete}"/>
 	</target>
-	
+		
 	<target name="create-wsml2reasoner-datalog-src" depends="create-wsml2reasoner-datalog-jar+libs" 
 		description="Creates/zips wsml2reasoner src with datalog jars)">
 		<mkdir dir="${dist.complete.src}" />
@@ -426,7 +426,6 @@
 		<zip destfile="${dist}/wsml2reasoner-datalog-src-${deploy.version}.zip">
 			<fileset dir="${dist.complete}"/>
 		</zip>
-		
 	</target>
 	
 	<target name="create-wsml2reasoner-datalog-iris-jar+libs" depends="compile" 
@@ -478,7 +477,7 @@
 			<fileset dir="${build.src}" />
 			<fileset dir="${build.class}" />
 		</jar>
-		<copy file="${basedir}/license.txt" todir="${dist.complete}"/>
+		<copy file="${basedir}/license-gpl.txt" todir="${dist.complete}"/>
 		<echo file="${dist.complete}/version.txt">${deploy.version}</echo>
 		<copy todir="${dist.complete.lib}" preservelastmodified="yes" includeEmptyDirs="no">
 			<fileset dir="${build.lib}">
@@ -513,12 +512,12 @@
 		<delete dir="${dist.complete}"/>
 	</target>
 	
-	<target name="create-wsml2reasoner-releases-bins" depends="create-wsml2reasoner-datalog-mins-jar+libs+example, 
+	<target name="create-wsml2reasoner-releases-bins" depends="create-jar, create-wsml2reasoner-datalog-mins-jar+libs+example, 
 		create-wsml2reasoner-datalog-iris-jar+libs+example, create-wsml2reasoner-datalog-jar+libs+example, create-wsml2reasoner-dl-jar+libs+example,
 		create-wsml2reasoner-dl-pellet-jar+libs+example, create-wsml2reasoner-wsmo-jar+libs+example" description="Creates/zips wsml2reasoner bins)">
 	</target>
 	
-	<target name="create-wsml2reasoner-releases-srcs" depends="create-wsml2reasoner-datalog-mins-src, 
+	<target name="create-wsml2reasoner-releases-srcs" depends="create-wsml2reasoner, create-wsml2reasoner-datalog-mins-src, 
 		create-wsml2reasoner-datalog-iris-src, create-wsml2reasoner-datalog-src, create-wsml2reasoner-dl-src,
 		create-wsml2reasoner-dl-pellet-src, create-wsml2reasoner-wsmo-src" description="Creates/zips wsml2reasoner srcs)">
 	</target>
@@ -582,10 +581,12 @@
 		<scp file="${dist}/wsml2reasoner-${DSTAMP}.zip"
          	trust="yes"
          	todir="${ssh.user}:${ssh.password}@${shell.host}:${remote.snapshot.path}" />
-
+		
+		<!--
 		<scp file="${basedir}/license.txt"
          	trust="yes"
          	todir="${ssh.user}:${ssh.password}@${shell.host}:${remote.snapshot.path}" />
+         -->
 	</target>
 
 
