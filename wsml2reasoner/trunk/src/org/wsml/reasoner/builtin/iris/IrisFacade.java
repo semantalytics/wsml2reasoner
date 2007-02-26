@@ -29,7 +29,6 @@ import static org.deri.iris.factory.Factory.TERM;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -94,11 +93,11 @@ import org.wsmo.factory.WsmoFactory;
  * The wsmo4j interface for the iris reasoner.
  * </p>
  * <p>
- * $Id: IrisFacade.java,v 1.2 2007-02-15 08:08:32 richardpoettler Exp $
+ * $Id: IrisFacade.java,v 1.3 2007-02-26 18:37:42 graham Exp $
  * </p>
  * 
  * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class IrisFacade implements DatalogReasonerFacade {
 
@@ -204,7 +203,33 @@ public class IrisFacade implements DatalogReasonerFacade {
 
 		final Set<Map<Variable, Term>> res = new HashSet<Map<Variable, Term>>();
 		final List<IVariable> qVars = query.getQueryVariables();
-		for (final IVariable v : qVars) {
+		for (final ITuple t : result) {
+			final Map<Variable, Term> prep = new HashMap<Variable, Term>();
+			for (final IVariable v : qVars) {
+				// convert the var to an wsml one
+				final Variable wsmlVar = (Variable) irisTermConverter(v);
+
+				// searching for the index of the term to extract from the tuple
+				final int[] idx = searchQueryForVar(query, v);
+				if (idx.length < 2) { // if the variable couldn't be found ->
+					// exception
+					throw new IllegalArgumentException(
+							"Couldn't find the variable (" + v + ") in query (" + q
+									+ ").");
+				}
+				prep.put(wsmlVar,irisTermConverter(getTermForTuple(t, idx)));
+			}	
+			res.add(prep);
+		}
+		
+			// translating and adding the terms to the result set
+			/*for (final ITuple t : result) {
+				res.add(Collections.singletonMap(wsmlVar,
+						irisTermConverter(getTermForTuple(t, idx))));
+			}
+			*/
+		
+		/*for (final IVariable v : qVars) {
 			// convert the var to an wsml one
 			final Variable wsmlVar = (Variable) irisTermConverter(v);
 
@@ -221,7 +246,12 @@ public class IrisFacade implements DatalogReasonerFacade {
 				res.add(Collections.singletonMap(wsmlVar,
 						irisTermConverter(getTermForTuple(t, idx))));
 			}
-		}
+			
+			for (final ITuple t : result){
+				res.add(Collections.singletonMap(wsmlVar,
+						irisTermConverter(getTermForTuple(t, i))));
+				}
+		}*/
 
 		// BEHAVIOR IMITATIED FROM THE KAON FACADE
 		// if there are no variables in the query, fill it with as many empty
