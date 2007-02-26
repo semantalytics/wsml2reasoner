@@ -31,14 +31,12 @@ import org.semanticweb.kaon2.api.*;
 import org.semanticweb.kaon2.api.owl.axioms.ClassMember;
 import org.semanticweb.kaon2.api.owl.axioms.DataPropertyMember;
 import org.semanticweb.kaon2.api.owl.axioms.DataPropertyRange;
-import org.semanticweb.kaon2.api.owl.axioms.EquivalentClasses;
 import org.semanticweb.kaon2.api.owl.axioms.EquivalentDataProperties;
 import org.semanticweb.kaon2.api.owl.axioms.EquivalentObjectProperties;
 import org.semanticweb.kaon2.api.owl.axioms.InverseObjectProperties;
 import org.semanticweb.kaon2.api.owl.axioms.ObjectPropertyDomain;
 import org.semanticweb.kaon2.api.owl.axioms.ObjectPropertyMember;
 import org.semanticweb.kaon2.api.owl.axioms.ObjectPropertyRange;
-import org.semanticweb.kaon2.api.owl.axioms.SubClassOf;
 import org.semanticweb.kaon2.api.owl.axioms.SubDataPropertyOf;
 import org.semanticweb.kaon2.api.owl.axioms.SubObjectPropertyOf;
 import org.semanticweb.kaon2.api.owl.elements.DataProperty;
@@ -48,6 +46,8 @@ import org.semanticweb.kaon2.api.owl.elements.OWLClass;
 import org.semanticweb.kaon2.api.owl.elements.ObjectProperty;
 import org.semanticweb.kaon2.api.reasoner.Query;
 import org.semanticweb.kaon2.api.reasoner.Reasoner;
+import org.semanticweb.kaon2.api.reasoner.SubsumptionHierarchy;
+import org.semanticweb.kaon2.api.reasoner.SubsumptionHierarchy.Node;
 import org.semanticweb.owl.impl.model.OWLConcreteDataImpl;
 import org.semanticweb.owl.impl.model.OWLConcreteDataTypeImpl;
 import org.semanticweb.owl.io.RendererException;
@@ -62,13 +62,13 @@ import org.wsml.reasoner.serializer.owl.OWLSerializerImpl;
  *
  * <pre>
  *  Created on July 3rd, 2006
- *  Committed by $Author: hlausen $
+ *  Committed by $Author: nathalie $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/builtin/kaon2/Kaon2DLFacade.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck;
  * 		   Holger Lausen, DERI Innsbruck
- * @version $Revision: 1.4 $ $Date: 2007-02-09 08:40:53 $
+ * @version $Revision: 1.5 $ $Date: 2007-02-26 16:23:18 $
  */
 public class Kaon2DLFacade implements DLReasonerFacade {
 
@@ -81,6 +81,8 @@ public class Kaon2DLFacade implements DLReasonerFacade {
     private Map<String, Reasoner> registeredOntologies = null;
     
     private OWLDataFactory owlDataFactory = null;
+    
+    private boolean equivalentPropertiesCheck = false;
 
 	/**
      * Creates a facade object that allows to invoke the KAON2 system for
@@ -149,26 +151,26 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 	public boolean isConsistent(String ontologyURI, OWLDescription description)
 			throws OWLException, InterruptedException {
         try {
-		reasoner = getReasoner(ontologyURI);
-//System.out.println(description.getClass().getName());
-		Description des = null;
-		if (description.getClass().getName().toString().equals("org.semanticweb.owl.impl.model.OWLClassImpl")) {
-                des = KAON2Manager.factory().description(description.toString().
-                		substring(description.toString().indexOf("]")+2), Namespaces.INSTANCE);
-		}
-		else if (description.getClass().getName().toString().equals("org.semanticweb.owl.impl.model.OWLAndImpl")){
-			Iterator<OWLDescription> it = ((OWLAnd) description).getOperands().iterator();
-			Vector<OWLDescription> list = new Vector<OWLDescription>();
-			while (it.hasNext()) {
-				list.add(it.next());
+			reasoner = getReasoner(ontologyURI);
+	//System.out.println(description.getClass().getName());
+			Description des = null;
+			if (description.getClass().getName().toString().equals("org.semanticweb.owl.impl.model.OWLClassImpl")) {
+	                des = KAON2Manager.factory().description(description.toString().
+	                		substring(description.toString().indexOf("]")+2), Namespaces.INSTANCE);
 			}
-			Description arg1 = KAON2Manager.factory().description(list.elementAt(0).toString()
-					.substring(list.elementAt(0).toString().indexOf("]")+2), Namespaces.INSTANCE);
-			Description arg2 = KAON2Manager.factory().description(list.elementAt(1).toString()
-					.substring(list.elementAt(1).toString().indexOf("]")+2), Namespaces.INSTANCE);
-			des = KAON2Manager.factory().objectAnd(arg1, arg2);
-		}
-		return reasoner.isSatisfiable(des);
+			else if (description.getClass().getName().toString().equals("org.semanticweb.owl.impl.model.OWLAndImpl")){
+				Iterator<OWLDescription> it = ((OWLAnd) description).getOperands().iterator();
+				Vector<OWLDescription> list = new Vector<OWLDescription>();
+				while (it.hasNext()) {
+					list.add(it.next());
+				}
+				Description arg1 = KAON2Manager.factory().description(list.elementAt(0).toString()
+						.substring(list.elementAt(0).toString().indexOf("]")+2), Namespaces.INSTANCE);
+				Description arg2 = KAON2Manager.factory().description(list.elementAt(1).toString()
+						.substring(list.elementAt(1).toString().indexOf("]")+2), Namespaces.INSTANCE);
+				des = KAON2Manager.factory().objectAnd(arg1, arg2);
+			}
+			return reasoner.isSatisfiable(des);
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
@@ -178,34 +180,41 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 	public Set<OWLEntity> allClasses(String ontologyURI) 
 			throws  OWLException, URISyntaxException {
         try{
-		reasoner = getReasoner(ontologyURI);
-		
-		Set<OWLEntity> resultSet = new HashSet<OWLEntity>();
-        Request<OWLClass> entityRequest = ontology.createEntityRequest(OWLClass.class);
-        Set<OWLClass> classAxioms = entityRequest.get();
-        for (OWLClass axiom : classAxioms) {
-        	OWLEntity entity = owlDataFactory.getOWLClass(new URI(axiom.toString()));
-        	resultSet.add(entity);
-        }
-		return resultSet;
+			reasoner = getReasoner(ontologyURI);
+			Set<OWLEntity> resultSet = new HashSet<OWLEntity>();
+			
+			SubsumptionHierarchy hierarchy = reasoner.getSubsumptionHierarchy();
+			Iterator<Node> it = hierarchy.iterator();
+			while (it.hasNext()) {
+				Node n = it.next();
+				Set<OWLClass> classSet = n.getOWLClasses();
+				for (OWLClass c : classSet) {
+					OWLEntity entity = owlDataFactory.getOWLClass(
+							new URI(c.getURI()));
+					resultSet.add(entity);
+				}
+			}
+			return resultSet;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
-        }
+        } catch (InterruptedException e) {
+        	throw new OWLException("KAON2ERROR",e);
+		}
 
 	}
 	
 	@SuppressWarnings("unchecked")
 	public Set<OWLEntity> allIndividuals(String ontologyURI) throws  OWLException, URISyntaxException {
         try{
-		reasoner = getReasoner(ontologyURI);
-		Set<OWLEntity> resultSet = new HashSet<OWLEntity>();
-        Request<Individual> entityRequest = ontology.createEntityRequest(Individual.class);
-        Set<Individual> individualsAxioms = entityRequest.get();
-        for (Individual axiom : individualsAxioms) {
-        	OWLEntity entity = owlDataFactory.getOWLIndividual(new URI(axiom.toString()));
-        	resultSet.add(entity);
-        }
-		return resultSet;
+			reasoner = getReasoner(ontologyURI);
+			Set<OWLEntity> resultSet = new HashSet<OWLEntity>();
+	        Request<Individual> entityRequest = ontology.createEntityRequest(Individual.class);
+	        Set<Individual> individualsAxioms = entityRequest.get();
+	        for (Individual axiom : individualsAxioms) {
+	        	OWLEntity entity = owlDataFactory.getOWLIndividual(new URI(axiom.toString()));
+	        	resultSet.add(entity);
+	        }
+			return resultSet;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
@@ -226,15 +235,15 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 	public Set<OWLEntity> allDataProperties(String ontologyURI) 
 			throws  OWLException, URISyntaxException {
         try{
-        reasoner = getReasoner(ontologyURI);
-		Set<OWLEntity> resultSet = new HashSet<OWLEntity>();
-        Request<DataProperty> entityRequest = ontology.createEntityRequest(DataProperty.class);
-        Set<DataProperty> dataPropertyAxioms = entityRequest.get();
-        for (DataProperty axiom : dataPropertyAxioms) {
-        	OWLEntity entity = owlDataFactory.getOWLDataProperty(new URI(axiom.toString()));
-        	resultSet.add(entity);
-        }
-		return resultSet;
+	        reasoner = getReasoner(ontologyURI);
+			Set<OWLEntity> resultSet = new HashSet<OWLEntity>();
+	        Request<DataProperty> entityRequest = ontology.createEntityRequest(DataProperty.class);
+	        Set<DataProperty> dataPropertyAxioms = entityRequest.get();
+	        for (DataProperty axiom : dataPropertyAxioms) {
+	        	OWLEntity entity = owlDataFactory.getOWLDataProperty(new URI(axiom.toString()));
+	        	resultSet.add(entity);
+	        }
+			return resultSet;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
@@ -246,15 +255,15 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 			throws  OWLException, URISyntaxException {
 		
         try{
-        reasoner = getReasoner(ontologyURI);
-		Set<OWLEntity> resultSet = new HashSet<OWLEntity>();
-        Request<ObjectProperty> entityRequest = ontology.createEntityRequest(ObjectProperty.class);
-        Set<ObjectProperty> objectPropertyAxioms = entityRequest.get();
-        for (ObjectProperty axiom : objectPropertyAxioms) {
-        	OWLEntity entity = owlDataFactory.getOWLObjectProperty(new URI(axiom.toString()));
-        	resultSet.add(entity);
-        }
-		return resultSet;
+	        reasoner = getReasoner(ontologyURI);
+			Set<OWLEntity> resultSet = new HashSet<OWLEntity>();
+	        Request<ObjectProperty> entityRequest = ontology.createEntityRequest(ObjectProperty.class);
+	        Set<ObjectProperty> objectPropertyAxioms = entityRequest.get();
+	        for (ObjectProperty axiom : objectPropertyAxioms) {
+	        	OWLEntity entity = owlDataFactory.getOWLObjectProperty(new URI(axiom.toString()));
+	        	resultSet.add(entity);
+	        }
+			return resultSet;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
@@ -266,30 +275,29 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 			throws OWLException,  URISyntaxException {
         try{
             reasoner = getReasoner(ontologyURI);
-		Set<Set> resultSet = new HashSet<Set>();
-		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
-		
-		Request<SubClassOf> subClassOfRequest = ontology.createAxiomRequest(SubClassOf.class);
-		OWLClass owlClass = KAON2Manager.factory().owlClass(clazz.toString().substring(
-				clazz.toString().indexOf("]")+2));
-        subClassOfRequest.setCondition("superDescription", owlClass);
-		Set<SubClassOf> subClassOfAxioms = subClassOfRequest.get();
-		for (SubClassOf axiom : subClassOfAxioms) {
-			if (axiom.getSubDescription() instanceof OWLClass) {
-				OWLEntity entity = owlDataFactory.getOWLClass(
-						new URI(axiom.getSubDescription().toString()));
-				entitySet.add(entity);
-				addSubConcepts(ontologyURI, entity, entitySet);
+			Set<Set> resultSet = new HashSet<Set>();
+			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
+			
+			SubsumptionHierarchy hierarchy = reasoner.getSubsumptionHierarchy();
+			OWLClass owlClass = KAON2Manager.factory().owlClass(clazz.toString().substring(
+					clazz.toString().indexOf("]")+2));
+			Node node = hierarchy.getNodeFor(owlClass);
+			Set<Node> nodeSet = node.getDescendantNodes();
+			for (Node n : nodeSet) {
+				Set<OWLClass> classSet = n.getOWLClasses();
+				for (OWLClass c : classSet) {
+					OWLEntity entity = owlDataFactory.getOWLClass(
+							new URI(c.getURI()));
+					entitySet.add(entity);
+				}
 			}
-		}
-		if (entitySet.contains(clazz)) {
-			entitySet.remove(clazz);
-		}
-		resultSet.add(entitySet);
-		return resultSet;
+			resultSet.add(entitySet);
+			return resultSet;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
-        }
+        } catch (InterruptedException e) {
+        	throw new OWLException("KAON2ERROR",e);
+		}
 
 	}
 	
@@ -297,26 +305,29 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 	public Set<Set> subClassesOf(String ontologyURI, OWLDescription clazz) 
 			throws OWLException,  URISyntaxException {
         try{
-reasoner = getReasoner(ontologyURI);
-		Set<Set> resultSet = new HashSet<Set>();
-		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();		
-		Request<SubClassOf> subClassOfRequest = ontology.createAxiomRequest(SubClassOf.class);
-		OWLClass owlClass = KAON2Manager.factory().owlClass(clazz.toString().substring(
-				clazz.toString().indexOf("]")+2));
-        subClassOfRequest.setCondition("superDescription", owlClass);
-		Set<SubClassOf> subClassOfAxioms = subClassOfRequest.get();
-		for (SubClassOf axiom : subClassOfAxioms) {
-			if (axiom.getSubDescription() instanceof OWLClass) {
-				OWLEntity entity = owlDataFactory.getOWLClass(
-						new URI(axiom.getSubDescription().toString()));
-				entitySet.add(entity);
+        	reasoner = getReasoner(ontologyURI);
+			Set<Set> resultSet = new HashSet<Set>();
+			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();	
+			SubsumptionHierarchy hierarchy = reasoner.getSubsumptionHierarchy();
+			OWLClass owlClass = KAON2Manager.factory().owlClass(clazz.toString().substring(
+					clazz.toString().indexOf("]")+2));
+			Node node = hierarchy.getNodeFor(owlClass);
+			Set<Node> nodeSet = node.getChildNodes();
+			for (Node n : nodeSet) {
+				Set<OWLClass> classSet = n.getOWLClasses();
+				for (OWLClass c : classSet) {
+					OWLEntity entity = owlDataFactory.getOWLClass(
+							new URI(c.getURI()));
+					entitySet.add(entity);
+				}
 			}
-		}
-		resultSet.add(entitySet);
-		return resultSet;
+			resultSet.add(entitySet);
+			return resultSet;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
-        }
+        } catch (InterruptedException e) {
+        	throw new OWLException("KAON2ERROR",e);
+		}
 
 	}
 
@@ -324,33 +335,30 @@ reasoner = getReasoner(ontologyURI);
 	public Set<Set> ancestorClassesOf(String ontologyURI, OWLDescription clazz) 
 			throws OWLException,  URISyntaxException {
         try{
-
             reasoner = getReasoner(ontologyURI);
-		Set<Set> resultSet = new HashSet<Set>();
-		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
-		
-		Request<SubClassOf> subClassOfRequest = ontology.createAxiomRequest(SubClassOf.class);
-		OWLClass owlClass = KAON2Manager.factory().owlClass(clazz.toString().substring(
-				clazz.toString().indexOf("]")+2));
-        subClassOfRequest.setCondition("subDescription", owlClass);
-		Set<SubClassOf> subClassOfAxioms = subClassOfRequest.get();
-		OWLEntity entity = null;
-		for (SubClassOf axiom : subClassOfAxioms) {
-			if (axiom.getSuperDescription() instanceof OWLClass) {
-				entity = owlDataFactory.getOWLClass(
-						new URI(axiom.getSuperDescription().toString()));
-				entitySet.add(entity);
-				addSuperConcepts(ontologyURI, entity, entitySet);
+			Set<Set> resultSet = new HashSet<Set>();
+			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
+			
+			SubsumptionHierarchy hierarchy = reasoner.getSubsumptionHierarchy();
+			OWLClass owlClass = KAON2Manager.factory().owlClass(clazz.toString().substring(
+					clazz.toString().indexOf("]")+2));
+			Node node = hierarchy.getNodeFor(owlClass);
+			Set<Node> nodeSet = node.getAncestorNodes();
+			for (Node n : nodeSet) {
+				Set<OWLClass> classSet = n.getOWLClasses();
+				for (OWLClass c : classSet) {
+					OWLEntity entity = owlDataFactory.getOWLClass(
+							new URI(c.getURI()));
+					entitySet.add(entity);
+				}
 			}
-		}
-		if (entitySet.contains(clazz)) {
-			entitySet.remove(clazz);
-		}
-		resultSet.add(entitySet);
-		return resultSet;
+			resultSet.add(entitySet);
+			return resultSet;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
-        }
+        } catch (InterruptedException e) {
+        	throw new OWLException("KAON2ERROR",e);
+		}
 
 	}
 
@@ -358,27 +366,30 @@ reasoner = getReasoner(ontologyURI);
 	public Set<Set> superClassesOf(String ontologyURI, OWLDescription clazz) 
 			throws OWLException,  URISyntaxException {
         try{
-reasoner = getReasoner(ontologyURI);
-		Set<Set> resultSet = new HashSet<Set>();
-		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
-		
-		Request<SubClassOf> subClassOfRequest = ontology.createAxiomRequest(SubClassOf.class);
-		OWLClass owlClass = KAON2Manager.factory().owlClass(clazz.toString().substring(
-				clazz.toString().indexOf("]")+2));
-        subClassOfRequest.setCondition("subDescription", owlClass);
-		Set<SubClassOf> subClassOfAxioms = subClassOfRequest.get();
-		for (SubClassOf axiom : subClassOfAxioms) {
-			if (axiom.getSuperDescription() instanceof OWLClass) {
-				OWLEntity entity = owlDataFactory.getOWLClass(
-						new URI(axiom.getSuperDescription().toString()));
-				entitySet.add(entity);
+        	reasoner = getReasoner(ontologyURI);
+			Set<Set> resultSet = new HashSet<Set>();
+			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
+			
+			SubsumptionHierarchy hierarchy = reasoner.getSubsumptionHierarchy();
+			OWLClass owlClass = KAON2Manager.factory().owlClass(clazz.toString().substring(
+					clazz.toString().indexOf("]")+2));
+			Node node = hierarchy.getNodeFor(owlClass);
+			Set<Node> nodeSet = node.getParentNodes();
+			for (Node n : nodeSet) {
+				Set<OWLClass> classSet = n.getOWLClasses();
+				for (OWLClass c : classSet) {
+					OWLEntity entity = owlDataFactory.getOWLClass(
+							new URI(c.getURI()));
+					entitySet.add(entity);
+				}
 			}
-		}
-		resultSet.add(entitySet);
-		return resultSet;
+			resultSet.add(entitySet);
+			return resultSet;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
-        }
+        } catch (InterruptedException e) {
+        	throw new OWLException("KAON2ERROR",e);
+		}
 
 	}
 
@@ -387,47 +398,27 @@ reasoner = getReasoner(ontologyURI);
 			throws OWLException,  URISyntaxException {
         try{
             reasoner = getReasoner(ontologyURI);
-		Set<OWLEntity> resultSet = new HashSet<OWLEntity>();	
-		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
-		Request<EquivalentClasses> equivClassesRequest = ontology.createAxiomRequest(EquivalentClasses.class);
-		Set<EquivalentClasses> equivClassesAxiom = equivClassesRequest.get();
-		for (EquivalentClasses axiom : equivClassesAxiom) {
-			Set<Description> descriptionSet = axiom.getDescriptions();
-			Iterator<Description> it = descriptionSet.iterator();
-			while (it.hasNext()) {
+			Set<OWLEntity> resultSet = new HashSet<OWLEntity>();	
+			
+			SubsumptionHierarchy hierarchy = reasoner.getSubsumptionHierarchy();
+			OWLClass owlClass = KAON2Manager.factory().owlClass(clazz.toString().substring(
+					clazz.toString().indexOf("]")+2));
+			Node node = hierarchy.getNodeFor(owlClass);
+			Set<OWLClass> classSet = node.getOWLClasses();
+			for (OWLClass c : classSet) {
 				OWLEntity entity = owlDataFactory.getOWLClass(
-						new URI(it.next().toString()));
-				entitySet.add(entity);
+						new URI(c.getURI()));
+				resultSet.add(entity);
 			}
-			if (entitySet.contains(clazz)) {
-				Iterator<OWLEntity> it2 = entitySet.iterator();
-				while (it2.hasNext()) {
-					OWLEntity next = it2.next();
-					if (! next.equals(clazz))
-						resultSet.add(next);
-				}
+			if (resultSet.contains(clazz)) {
+				resultSet.remove(clazz);
 			}
-			entitySet.clear();
-		}
-		
-		Set<Set> set = subClassesOf(ontologyURI, clazz);
-		for (Set<OWLEntity> set2 : set) {	
-			for (OWLEntity entity : set2) {
-				Set<Set> set3 = subClassesOf(ontologyURI, 
-						owlDataFactory.getOWLClass(new URI(entity.toString().substring(
-								entity.toString().indexOf("]")+2))));
-				for (Set<OWLEntity> set4 : set3) {
-					if (set4.contains(clazz)) {
-						resultSet.add(entity);
-					}
-				}
-			}
-		}
-		
-		return resultSet;
+			return resultSet;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
-        }
+        } catch (InterruptedException e) {
+        	throw new OWLException("KAON2ERROR",e);
+		}
 
 	}
 
@@ -441,59 +432,46 @@ reasoner = getReasoner(ontologyURI);
 	public boolean isSubClassOf(String ontologyURI, OWLDescription clazz1,
 			OWLDescription clazz2) throws OWLException,  URISyntaxException {
         try{
-reasoner = getReasoner(ontologyURI);
-		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
-		Request<SubClassOf> subClassOfRequest = ontology.createAxiomRequest(SubClassOf.class);
-		OWLClass owlClass1 = KAON2Manager.factory().owlClass(clazz1.toString().substring(
-				clazz1.toString().indexOf("]")+2));
-        subClassOfRequest.setCondition("subDescription", owlClass1);
-        OWLClass owlClass2 = KAON2Manager.factory().owlClass(clazz2.toString().substring(
-				clazz2.toString().indexOf("]")+2));
-        subClassOfRequest.setCondition("superDescription", owlClass2);
-		Set<SubClassOf> subClassOfAxioms = subClassOfRequest.get();
-		for (SubClassOf axiom : subClassOfAxioms) {
-			if (axiom.getSubDescription() instanceof OWLClass) {
-				OWLEntity entity = owlDataFactory.getOWLClass(
-						new URI(axiom.getSubDescription().toString()));
-				entitySet.add(entity);
-			}
-		}
-		if (entitySet.size() > 0) {
-			return true;
-		}
-		else {
-			return false;
-		}
+        	reasoner = getReasoner(ontologyURI);
+			
+			OWLClass owlClass1 = KAON2Manager.factory().owlClass(clazz1.toString().substring(
+					clazz1.toString().indexOf("]")+2));
+			OWLClass owlClass2 = KAON2Manager.factory().owlClass(clazz2.toString().substring(
+					clazz2.toString().indexOf("]")+2));			
+			return reasoner.subsumedBy(owlClass1, owlClass2);
+			
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
-        }
+        } catch (InterruptedException e) {
+        	 throw new OWLException("KAON2ERROR",e);
+		}
 
 	}
 
 	public boolean isInstanceOf(String ontologyURI, OWLIndividual individual,
 			OWLDescription clazz) throws OWLException,  URISyntaxException {
         try{
-reasoner = getReasoner(ontologyURI);
-		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();	
-		Request<ClassMember> memberOfRequest = ontology.createAxiomRequest(ClassMember.class);
-		OWLClass owlClass = KAON2Manager.factory().owlClass(clazz.toString().substring(
-				clazz.toString().indexOf("]")+2));
-		memberOfRequest.setCondition("description", owlClass);
-		Individual owlIndividual = KAON2Manager.factory().individual(
-				individual.toString().substring(individual.toString().indexOf("]")+2));
-		memberOfRequest.setCondition("individual", owlIndividual);
-		Set<ClassMember> memberOfAxioms = memberOfRequest.get();
-		for (ClassMember axiom : memberOfAxioms) {
-			OWLEntity entity = owlDataFactory.getOWLClass(
-					new URI(axiom.getIndividual().toString()));
-			entitySet.add(entity);
-		}
-		if (entitySet.size() > 0) {
-			return true;
-		}
-		else {
-			return false;
-		}
+        	reasoner = getReasoner(ontologyURI);
+			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();	
+			Request<ClassMember> memberOfRequest = ontology.createAxiomRequest(ClassMember.class);
+			OWLClass owlClass = KAON2Manager.factory().owlClass(clazz.toString().substring(
+					clazz.toString().indexOf("]")+2));
+			memberOfRequest.setCondition("description", owlClass);
+			Individual owlIndividual = KAON2Manager.factory().individual(
+					individual.toString().substring(individual.toString().indexOf("]")+2));
+			memberOfRequest.setCondition("individual", owlIndividual);
+			Set<ClassMember> memberOfAxioms = memberOfRequest.get();
+			for (ClassMember axiom : memberOfAxioms) {
+				OWLEntity entity = owlDataFactory.getOWLClass(
+						new URI(axiom.getIndividual().toString()));
+				entitySet.add(entity);
+			}
+			if (entitySet.size() > 0) {
+				return true;
+			}
+			else {
+				return false;
+			}
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
@@ -504,19 +482,19 @@ reasoner = getReasoner(ontologyURI);
 	public Set<OWLEntity> allInstancesOf(String ontologyURI, org.semanticweb.owl.model.OWLClass clazz)
 			throws OWLException,  URISyntaxException {
         try{
-        reasoner = getReasoner(ontologyURI);
-		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();	
-		Request<ClassMember> memberOfRequest = ontology.createAxiomRequest(ClassMember.class);
-		OWLClass owlClass = KAON2Manager.factory().owlClass(clazz.toString().substring(
-				clazz.toString().indexOf("]")+2));
-		memberOfRequest.setCondition("description", owlClass);
-		Set<ClassMember> memberOfAxioms = memberOfRequest.get();
-		for (ClassMember axiom : memberOfAxioms) {
-			OWLEntity entity = owlDataFactory.getOWLClass(
-					new URI(axiom.getIndividual().toString()));
-			entitySet.add(entity);
-		}
-		return entitySet;
+	        reasoner = getReasoner(ontologyURI);
+			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();	
+			Request<ClassMember> memberOfRequest = ontology.createAxiomRequest(ClassMember.class);
+			OWLClass owlClass = KAON2Manager.factory().owlClass(clazz.toString().substring(
+					clazz.toString().indexOf("]")+2));
+			memberOfRequest.setCondition("description", owlClass);
+			Set<ClassMember> memberOfAxioms = memberOfRequest.get();
+			for (ClassMember axiom : memberOfAxioms) {
+				OWLEntity entity = owlDataFactory.getOWLClass(
+						new URI(axiom.getIndividual().toString()));
+				entitySet.add(entity);
+			}
+			return entitySet;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
@@ -527,21 +505,21 @@ reasoner = getReasoner(ontologyURI);
 	public Set<Set> typesOf(String ontologyURI, OWLIndividual individual)
 			throws OWLException,  URISyntaxException {
         try{
-reasoner = getReasoner(ontologyURI);
-		Set<Set> resultSet = new HashSet<Set>();
-		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();	
-		Request<ClassMember> memberOfRequest = ontology.createAxiomRequest(ClassMember.class);
-		Individual owlIndividual = KAON2Manager.factory().individual(
-				individual.toString().substring(individual.toString().indexOf("]")+2));
-		memberOfRequest.setCondition("individual", owlIndividual);
-		Set<ClassMember> memberOfAxioms = memberOfRequest.get();
-		for (ClassMember axiom : memberOfAxioms) {
-			OWLEntity entity = owlDataFactory.getOWLClass(
-					new URI(axiom.getDescription().toString()));
-			entitySet.add(entity);
-		}
-		resultSet.add(entitySet);
-		return resultSet;
+        	reasoner = getReasoner(ontologyURI);
+			Set<Set> resultSet = new HashSet<Set>();
+			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();	
+			Request<ClassMember> memberOfRequest = ontology.createAxiomRequest(ClassMember.class);
+			Individual owlIndividual = KAON2Manager.factory().individual(
+					individual.toString().substring(individual.toString().indexOf("]")+2));
+			memberOfRequest.setCondition("individual", owlIndividual);
+			Set<ClassMember> memberOfAxioms = memberOfRequest.get();
+			for (ClassMember axiom : memberOfAxioms) {
+				OWLEntity entity = owlDataFactory.getOWLClass(
+						new URI(axiom.getDescription().toString()));
+				entitySet.add(entity);
+			}
+			resultSet.add(entitySet);
+			return resultSet;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
@@ -553,21 +531,21 @@ reasoner = getReasoner(ontologyURI);
 			throws OWLException,  URISyntaxException {
         try{
             reasoner = getReasoner(ontologyURI);
-		Set<Set> resultSet = new HashSet<Set>();
-		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();	
-		Request<ClassMember> memberOfRequest = ontology.createAxiomRequest(ClassMember.class);
-		Individual owlIndividual = KAON2Manager.factory().individual(
-				individual.toString().substring(individual.toString().indexOf("]")+2));
-		memberOfRequest.setCondition("individual", owlIndividual);
-		Set<ClassMember> memberOfAxioms = memberOfRequest.get();
-		for (ClassMember axiom : memberOfAxioms) {
-			OWLEntity entity = owlDataFactory.getOWLClass(
-					new URI(axiom.getDescription().toString()));
-			entitySet.add(entity);
-			addSuperConcepts(ontologyURI, entity, entitySet);
-		}
-		resultSet.add(entitySet);
-		return resultSet;
+			Set<Set> resultSet = new HashSet<Set>();
+			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();	
+			Request<ClassMember> memberOfRequest = ontology.createAxiomRequest(ClassMember.class);
+			Individual owlIndividual = KAON2Manager.factory().individual(
+					individual.toString().substring(individual.toString().indexOf("]")+2));
+			memberOfRequest.setCondition("individual", owlIndividual);
+			Set<ClassMember> memberOfAxioms = memberOfRequest.get();
+			for (ClassMember axiom : memberOfAxioms) {
+				OWLEntity entity = owlDataFactory.getOWLClass(
+						new URI(axiom.getDescription().toString()));
+				entitySet.add(entity);
+				addSuperConcepts(ontologyURI, entity, entitySet);
+			}
+			resultSet.add(entitySet);
+			return resultSet;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
@@ -580,44 +558,76 @@ reasoner = getReasoner(ontologyURI);
 			throws OWLException,  URISyntaxException {
         try{
             reasoner = getReasoner(ontologyURI);
-		Set<Set> resultSet = new HashSet<Set>();
-		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
-		
-		Request<SubObjectPropertyOf> subObjectPropertyOfRequest = 
-			ontology.createAxiomRequest(SubObjectPropertyOf.class);
-		ObjectProperty owlObjectProperty = KAON2Manager.factory().objectProperty(
-				property.toString().substring(property.toString().indexOf("]")+2));
-//		subObjectPropertyOfRequest.setCondition("superObjectProperty", owlObjectProperty);
-		Set<SubObjectPropertyOf> subObjectPropertyOfAxioms = subObjectPropertyOfRequest.get();
-		for (SubObjectPropertyOf axiom : subObjectPropertyOfAxioms) {
-			if (axiom.getSuperObjectProperty().equals(owlObjectProperty) && 
-					axiom.getSubObjectProperty() instanceof ObjectProperty) {
-				OWLEntity entity = owlDataFactory.getOWLObjectProperty(
-						new URI(axiom.getSubObjectProperty().toString()));
-				entitySet.add(entity);
-				addSubProperties(ontologyURI, entity, entitySet);
+			Set<Set> resultSet = new HashSet<Set>();
+			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
+			Set<OWLEntity> equivSet = new HashSet<OWLEntity>();
+			
+			Request<SubObjectPropertyOf> subObjectPropertyOfRequest = 
+				ontology.createAxiomRequest(SubObjectPropertyOf.class);
+			ObjectProperty owlObjectProperty = KAON2Manager.factory().objectProperty(
+					property.toString().substring(property.toString().indexOf("]")+2));
+			Set<SubObjectPropertyOf> subObjectPropertyOfAxioms = subObjectPropertyOfRequest.get();
+			for (SubObjectPropertyOf axiom : subObjectPropertyOfAxioms) {
+				if (axiom.getSuperObjectProperty().equals(owlObjectProperty) && 
+						axiom.getSubObjectProperty() instanceof ObjectProperty) {
+					ObjectProperty subObjectProperty = axiom.getSubObjectProperty();
+					OWLEntity entity = owlDataFactory.getOWLObjectProperty(
+							new URI(subObjectProperty.toString()));
+					entitySet.add(entity);
+					addSubProperties(ontologyURI, entity, entitySet);
+					Request<SubObjectPropertyOf> superObjectPropertyOfRequest = 
+						ontology.createAxiomRequest(SubObjectPropertyOf.class);
+					Set<SubObjectPropertyOf> superObjectPropertyOfAxioms = 
+						superObjectPropertyOfRequest.get();
+					for (SubObjectPropertyOf ax : superObjectPropertyOfAxioms) {
+						if (ax.getSuperObjectProperty().equals(subObjectProperty) && 
+								ax.getSubObjectProperty() instanceof ObjectProperty) {
+							if (ax.getSubObjectProperty().equals(owlObjectProperty)) {
+								entity = owlDataFactory.getOWLObjectProperty(
+										new URI(subObjectProperty.toString()));
+								equivSet.add(entity);
+							}
+						}
+					}
+				}
 			}
-		}
-		Request<SubDataPropertyOf> subDataPropertyOfRequest = 
-			ontology.createAxiomRequest(SubDataPropertyOf.class);
-		DataProperty owlDataProperty = KAON2Manager.factory().dataProperty(
-				property.toString().substring(property.toString().indexOf("]")+2));
-//		subDataPropertyOfRequest.setCondition("superDataProperty", owlDataProperty);
-		Set<SubDataPropertyOf> subDataPropertyOfAxioms = subDataPropertyOfRequest.get();
-		for (SubDataPropertyOf axiom : subDataPropertyOfAxioms) {
-			if (axiom.getSuperDataProperty().equals(owlDataProperty) && 
-					axiom.getSubDataProperty() instanceof DataProperty) {
-				OWLEntity entity = owlDataFactory.getOWLDataProperty(
-						new URI(axiom.getSubDataProperty().toString()));
-				entitySet.add(entity);
-				addSubProperties(ontologyURI, entity, entitySet);
+			Request<SubDataPropertyOf> subDataPropertyOfRequest = 
+				ontology.createAxiomRequest(SubDataPropertyOf.class);
+			DataProperty owlDataProperty = KAON2Manager.factory().dataProperty(
+					property.toString().substring(property.toString().indexOf("]")+2));
+			Set<SubDataPropertyOf> subDataPropertyOfAxioms = subDataPropertyOfRequest.get();
+			for (SubDataPropertyOf axiom : subDataPropertyOfAxioms) {
+				if (axiom.getSuperDataProperty().equals(owlDataProperty) && 
+						axiom.getSubDataProperty() instanceof DataProperty) {
+					DataProperty subDataProperty = axiom.getSubDataProperty();			
+					OWLEntity entity = owlDataFactory.getOWLDataProperty(
+							new URI(axiom.getSubDataProperty().toString()));
+					entitySet.add(entity);
+					addSubProperties(ontologyURI, entity, entitySet);
+					Request<SubDataPropertyOf> superDataPropertyOfRequest = 
+						ontology.createAxiomRequest(SubDataPropertyOf.class);
+					Set<SubDataPropertyOf> superDataPropertyOfAxioms = 
+						superDataPropertyOfRequest.get();
+					for (SubDataPropertyOf ax : superDataPropertyOfAxioms) {
+						if (ax.getSuperDataProperty().equals(subDataProperty) && 
+								ax.getSubDataProperty() instanceof DataProperty) {
+							if (ax.getSubDataProperty().equals(owlDataProperty)) {
+								entity = owlDataFactory.getOWLDataProperty(
+										new URI(subDataProperty.toString()));
+								equivSet.add(entity);
+							}
+						}
+					}
+				}
 			}
-		}
-		if (entitySet.contains(property)) {
-			entitySet.remove(property);
-		}
-		resultSet.add(entitySet);
-		return resultSet;
+			if (entitySet.contains(property)) {
+				entitySet.remove(property);
+			}
+			if (! equivalentPropertiesCheck) {
+				entitySet.removeAll(equivSet);
+			}
+			resultSet.add(entitySet);
+			return resultSet;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
@@ -629,42 +639,71 @@ reasoner = getReasoner(ontologyURI);
 			OWLProperty property) 
 			throws OWLException,  URISyntaxException {
         try{
-reasoner = getReasoner(ontologyURI);
-		reasoner = getReasoner(ontologyURI);
-		Set<Set> resultSet = new HashSet<Set>();
-		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
-		
-		Request<SubObjectPropertyOf> subObjectPropertyOfRequest = 
-			ontology.createAxiomRequest(SubObjectPropertyOf.class);
-		ObjectProperty owlObjectProperty = KAON2Manager.factory().objectProperty(
-				property.toString().substring(property.toString().indexOf("]")+2));
-//		subObjectPropertyOfRequest.setCondition("superObjectProperty", owlObjectProperty);
-		Set<SubObjectPropertyOf> subObjectPropertyOfAxioms = subObjectPropertyOfRequest.get();
-		for (SubObjectPropertyOf axiom : subObjectPropertyOfAxioms) {
-			if (axiom.getSuperObjectProperty().equals(owlObjectProperty) && 
-					axiom.getSubObjectProperty() instanceof ObjectProperty) {
-				OWLEntity entity = owlDataFactory.getOWLObjectProperty(
-						new URI(axiom.getSubObjectProperty().toString()));
-				entitySet.add(entity);
+        	reasoner = getReasoner(ontologyURI);
+			reasoner = getReasoner(ontologyURI);
+			Set<Set> resultSet = new HashSet<Set>();
+			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
+			Set<OWLEntity> equivSet = new HashSet<OWLEntity>();
+			
+			Request<SubObjectPropertyOf> subObjectPropertyOfRequest = 
+				ontology.createAxiomRequest(SubObjectPropertyOf.class);
+			ObjectProperty owlObjectProperty = KAON2Manager.factory().objectProperty(
+					property.toString().substring(property.toString().indexOf("]")+2));
+			Set<SubObjectPropertyOf> subObjectPropertyOfAxioms = subObjectPropertyOfRequest.get();
+			for (SubObjectPropertyOf axiom : subObjectPropertyOfAxioms) {
+				if (axiom.getSuperObjectProperty().equals(owlObjectProperty) && 
+						axiom.getSubObjectProperty() instanceof ObjectProperty) {
+					ObjectProperty subObjectProperty = axiom.getSubObjectProperty();
+					OWLEntity entity = owlDataFactory.getOWLObjectProperty(
+							new URI(axiom.getSubObjectProperty().toString()));
+					entitySet.add(entity);
+					Request<SubObjectPropertyOf> superObjectPropertyOfRequest = 
+						ontology.createAxiomRequest(SubObjectPropertyOf.class);
+					Set<SubObjectPropertyOf> superObjectPropertyOfAxioms = 
+						superObjectPropertyOfRequest.get();
+					for (SubObjectPropertyOf ax : superObjectPropertyOfAxioms) {
+						if (ax.getSuperObjectProperty().equals(subObjectProperty) && 
+								ax.getSubObjectProperty() instanceof ObjectProperty) {
+							if (ax.getSubObjectProperty().equals(owlObjectProperty)) {
+								entity = owlDataFactory.getOWLObjectProperty(
+										new URI(subObjectProperty.toString()));
+								equivSet.add(entity);
+							}
+						}
+					}
+				}
 			}
-		}
-		Request<SubDataPropertyOf> subDataPropertyOfRequest = 
-			ontology.createAxiomRequest(SubDataPropertyOf.class);
-		DataProperty owlDataProperty = KAON2Manager.factory().dataProperty(
-				property.toString().substring(property.toString().indexOf("]")+2));
-//		subDataPropertyOfRequest.setCondition("superDataProperty", owlDataProperty);
-		Set<SubDataPropertyOf> subDataPropertyOfAxioms = subDataPropertyOfRequest.get();
-		for (SubDataPropertyOf axiom : subDataPropertyOfAxioms) {
-			if (axiom.getSuperDataProperty().equals(owlDataProperty) && 
-					axiom.getSubDataProperty() instanceof DataProperty) {
-				OWLEntity entity = owlDataFactory.getOWLDataProperty(
-						new URI(axiom.getSubDataProperty().toString()));
-				entitySet.add(entity);
+			Request<SubDataPropertyOf> subDataPropertyOfRequest = 
+				ontology.createAxiomRequest(SubDataPropertyOf.class);
+			DataProperty owlDataProperty = KAON2Manager.factory().dataProperty(
+					property.toString().substring(property.toString().indexOf("]")+2));
+			Set<SubDataPropertyOf> subDataPropertyOfAxioms = subDataPropertyOfRequest.get();
+			for (SubDataPropertyOf axiom : subDataPropertyOfAxioms) {
+				if (axiom.getSuperDataProperty().equals(owlDataProperty) && 
+						axiom.getSubDataProperty() instanceof DataProperty) {
+					DataProperty subDataProperty = axiom.getSubDataProperty();		
+					OWLEntity entity = owlDataFactory.getOWLDataProperty(
+							new URI(subDataProperty.toString()));
+					entitySet.add(entity);
+					Request<SubDataPropertyOf> superDataPropertyOfRequest = 
+						ontology.createAxiomRequest(SubDataPropertyOf.class);
+					Set<SubDataPropertyOf> superDataPropertyOfAxioms = 
+						superDataPropertyOfRequest.get();
+					for (SubDataPropertyOf ax : superDataPropertyOfAxioms) {
+						if (ax.getSuperDataProperty().equals(subDataProperty) && 
+								ax.getSubDataProperty() instanceof DataProperty) {
+							if (ax.getSubDataProperty().equals(owlDataProperty)) {
+								entity = owlDataFactory.getOWLDataProperty(
+										new URI(subDataProperty.toString()));
+								equivSet.add(entity);
+							}
+						}
+					}
+				}
 			}
-		}
-		
-		resultSet.add(entitySet);
-		return resultSet;
+			entitySet.removeAll(equivSet);
+			resultSet.add(entitySet);
+			return resultSet;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
@@ -677,44 +716,74 @@ reasoner = getReasoner(ontologyURI);
 			throws OWLException,  URISyntaxException {
         try{
             reasoner = getReasoner(ontologyURI);
-		Set<Set> resultSet = new HashSet<Set>();
-		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
-		
-		Request<SubObjectPropertyOf> subObjectPropertyOfRequest = 
-			ontology.createAxiomRequest(SubObjectPropertyOf.class);
-		ObjectProperty owlObjectProperty = KAON2Manager.factory().objectProperty(
-				property.toString().substring(property.toString().indexOf("]")+2));
-//		subObjectPropertyOfRequest.setCondition("subObjectProperty", owlObjectProperty);
-		Set<SubObjectPropertyOf> subObjectPropertyOfAxioms = subObjectPropertyOfRequest.get();
-		for (SubObjectPropertyOf axiom : subObjectPropertyOfAxioms) {
-			if (axiom.getSubObjectProperty().equals(owlObjectProperty) && 
-					axiom.getSuperObjectProperty() instanceof ObjectProperty) {
-				OWLEntity entity = owlDataFactory.getOWLObjectProperty(
-						new URI(axiom.getSuperObjectProperty().toString()));
-				entitySet.add(entity);
-				addSuperProperties(ontologyURI, entity, entitySet);
+			Set<Set> resultSet = new HashSet<Set>();
+			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
+			Set<OWLEntity> equivSet = new HashSet<OWLEntity>();
+			
+			Request<SubObjectPropertyOf> subObjectPropertyOfRequest = 
+				ontology.createAxiomRequest(SubObjectPropertyOf.class);
+			ObjectProperty owlObjectProperty = KAON2Manager.factory().objectProperty(
+					property.toString().substring(property.toString().indexOf("]")+2));
+			Set<SubObjectPropertyOf> subObjectPropertyOfAxioms = subObjectPropertyOfRequest.get();
+			for (SubObjectPropertyOf axiom : subObjectPropertyOfAxioms) {
+				if (axiom.getSubObjectProperty().equals(owlObjectProperty) && 
+						axiom.getSuperObjectProperty() instanceof ObjectProperty) {
+					ObjectProperty superObjectProperty = axiom.getSuperObjectProperty();
+					OWLEntity entity = owlDataFactory.getOWLObjectProperty(
+							new URI(superObjectProperty.toString()));
+					entitySet.add(entity);
+					addSuperProperties(ontologyURI, entity, entitySet);
+					Request<SubObjectPropertyOf> superObjectPropertyOfRequest = 
+						ontology.createAxiomRequest(SubObjectPropertyOf.class);
+					Set<SubObjectPropertyOf> superObjectPropertyOfAxioms = 
+						superObjectPropertyOfRequest.get();
+					for (SubObjectPropertyOf ax : superObjectPropertyOfAxioms) {
+						if (ax.getSubObjectProperty().equals(superObjectProperty) && 
+								ax.getSuperObjectProperty() instanceof ObjectProperty) {
+							if (ax.getSuperObjectProperty().equals(owlObjectProperty)) {
+								entity = owlDataFactory.getOWLObjectProperty(
+										new URI(superObjectProperty.toString()));
+								equivSet.add(entity);
+							}
+						}
+					}
+				}
+			}		
+			Request<SubDataPropertyOf> subDataPropertyOfRequest = 
+				ontology.createAxiomRequest(SubDataPropertyOf.class);
+			DataProperty owlDataProperty = KAON2Manager.factory().dataProperty(
+					property.toString().substring(property.toString().indexOf("]")+2));
+			Set<SubDataPropertyOf> subDataPropertyOfAxioms = subDataPropertyOfRequest.get();
+			for (SubDataPropertyOf axiom : subDataPropertyOfAxioms) {
+				if (axiom.getSubDataProperty().equals(owlDataProperty) && 
+						axiom.getSuperDataProperty() instanceof DataProperty) {
+					DataProperty superDataProperty = axiom.getSuperDataProperty();			
+					OWLEntity entity = owlDataFactory.getOWLDataProperty(
+							new URI(superDataProperty.toString()));
+					entitySet.add(entity);
+					addSuperProperties(ontologyURI, entity, entitySet);
+					Request<SubDataPropertyOf> superDataPropertyOfRequest = 
+						ontology.createAxiomRequest(SubDataPropertyOf.class);
+					Set<SubDataPropertyOf> superDataPropertyOfAxioms = 
+						superDataPropertyOfRequest.get();
+					for (SubDataPropertyOf ax : superDataPropertyOfAxioms) {
+						if (ax.getSubDataProperty().equals(superDataProperty) && 
+								ax.getSuperDataProperty() instanceof DataProperty) {
+							if (ax.getSuperDataProperty().equals(owlDataProperty)) {
+								entity = owlDataFactory.getOWLDataProperty(
+										new URI(superDataProperty.toString()));
+								equivSet.add(entity);
+							}
+						}
+					}		
+				}
 			}
-		}
-		Request<SubDataPropertyOf> subDataPropertyOfRequest = 
-			ontology.createAxiomRequest(SubDataPropertyOf.class);
-		DataProperty owlDataProperty = KAON2Manager.factory().dataProperty(
-				property.toString().substring(property.toString().indexOf("]")+2));
-//		subDataPropertyOfRequest.setCondition("subDataProperty", owlDataProperty);
-		Set<SubDataPropertyOf> subDataPropertyOfAxioms = subDataPropertyOfRequest.get();
-		for (SubDataPropertyOf axiom : subDataPropertyOfAxioms) {
-			if (axiom.getSubDataProperty().equals(owlDataProperty) && 
-					axiom.getSuperDataProperty() instanceof DataProperty) {
-				OWLEntity entity = owlDataFactory.getOWLDataProperty(
-						new URI(axiom.getSuperDataProperty().toString()));
-				entitySet.add(entity);
-				addSuperProperties(ontologyURI, entity, entitySet);
+			if (entitySet.contains(property)) {
+				entitySet.remove(property);
 			}
-		}
-		if (entitySet.contains(property)) {
-			entitySet.remove(property);
-		}
-		resultSet.add(entitySet);
-		return resultSet;
+			entitySet.removeAll(equivSet);
+			resultSet.add(entitySet);
+			return resultSet;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
@@ -726,40 +795,70 @@ reasoner = getReasoner(ontologyURI);
 			OWLProperty property) 
 			throws OWLException,  URISyntaxException {
         try{
-reasoner = getReasoner(ontologyURI);
-		Set<Set> resultSet = new HashSet<Set>();
-		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
-		
-		Request<SubObjectPropertyOf> subObjectPropertyOfRequest = 
-			ontology.createAxiomRequest(SubObjectPropertyOf.class);
-		ObjectProperty owlObjectProperty = KAON2Manager.factory().objectProperty(
-				property.toString().substring(property.toString().indexOf("]")+2));
-//		subObjectPropertyOfRequest.setCondition("subObjectProperty", owlObjectProperty);
-		Set<SubObjectPropertyOf> subObjectPropertyOfAxioms = subObjectPropertyOfRequest.get();
-		for (SubObjectPropertyOf axiom : subObjectPropertyOfAxioms) {
-			if (axiom.getSubObjectProperty().equals(owlObjectProperty) && 
-					axiom.getSuperObjectProperty() instanceof ObjectProperty) {
-				OWLEntity entity = owlDataFactory.getOWLObjectProperty(
-						new URI(axiom.getSuperObjectProperty().toString()));
-				entitySet.add(entity);
+        	reasoner = getReasoner(ontologyURI);
+			Set<Set> resultSet = new HashSet<Set>();
+			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
+			Set<OWLEntity> equivSet = new HashSet<OWLEntity>();
+			
+			Request<SubObjectPropertyOf> subObjectPropertyOfRequest = 
+				ontology.createAxiomRequest(SubObjectPropertyOf.class);
+			ObjectProperty owlObjectProperty = KAON2Manager.factory().objectProperty(
+					property.toString().substring(property.toString().indexOf("]")+2));
+			Set<SubObjectPropertyOf> subObjectPropertyOfAxioms = subObjectPropertyOfRequest.get();
+			for (SubObjectPropertyOf axiom : subObjectPropertyOfAxioms) {
+				if (axiom.getSubObjectProperty().equals(owlObjectProperty) && 
+						axiom.getSuperObjectProperty() instanceof ObjectProperty) {
+					ObjectProperty superObjectProperty = axiom.getSuperObjectProperty();
+					OWLEntity entity = owlDataFactory.getOWLObjectProperty(
+							new URI(superObjectProperty.toString()));
+					entitySet.add(entity);
+					Request<SubObjectPropertyOf> superObjectPropertyOfRequest = 
+						ontology.createAxiomRequest(SubObjectPropertyOf.class);
+					Set<SubObjectPropertyOf> superObjectPropertyOfAxioms = 
+						superObjectPropertyOfRequest.get();
+					for (SubObjectPropertyOf ax : superObjectPropertyOfAxioms) {
+						if (ax.getSubObjectProperty().equals(superObjectProperty) && 
+								ax.getSuperObjectProperty() instanceof ObjectProperty) {
+							if (ax.getSuperObjectProperty().equals(owlObjectProperty)) {
+								entity = owlDataFactory.getOWLObjectProperty(
+										new URI(superObjectProperty.toString()));
+								equivSet.add(entity);
+							}
+						}
+					}
+				}
 			}
-		}
-		Request<SubDataPropertyOf> subDataPropertyOfRequest = 
-			ontology.createAxiomRequest(SubDataPropertyOf.class);
-		DataProperty owlDataProperty = KAON2Manager.factory().dataProperty(
-				property.toString().substring(property.toString().indexOf("]")+2));
-//		subDataPropertyOfRequest.setCondition("subDataProperty", owlDataProperty);
-		Set<SubDataPropertyOf> subDataPropertyOfAxioms = subDataPropertyOfRequest.get();
-		for (SubDataPropertyOf axiom : subDataPropertyOfAxioms) {
-			if (axiom.getSubDataProperty().equals(owlDataProperty) && 
-					axiom.getSuperDataProperty() instanceof DataProperty) {
-				OWLEntity entity = owlDataFactory.getOWLDataProperty(
-						new URI(axiom.getSuperDataProperty().toString()));
-				entitySet.add(entity);
+			Request<SubDataPropertyOf> subDataPropertyOfRequest = 
+				ontology.createAxiomRequest(SubDataPropertyOf.class);
+			DataProperty owlDataProperty = KAON2Manager.factory().dataProperty(
+					property.toString().substring(property.toString().indexOf("]")+2));
+			Set<SubDataPropertyOf> subDataPropertyOfAxioms = subDataPropertyOfRequest.get();
+			for (SubDataPropertyOf axiom : subDataPropertyOfAxioms) {
+				if (axiom.getSubDataProperty().equals(owlDataProperty) && 
+						axiom.getSuperDataProperty() instanceof DataProperty) {
+					DataProperty superDataProperty = axiom.getSuperDataProperty();			
+					OWLEntity entity = owlDataFactory.getOWLDataProperty(
+							new URI(superDataProperty.toString()));
+					entitySet.add(entity);
+					Request<SubDataPropertyOf> superDataPropertyOfRequest = 
+						ontology.createAxiomRequest(SubDataPropertyOf.class);
+					Set<SubDataPropertyOf> superDataPropertyOfAxioms = 
+						superDataPropertyOfRequest.get();
+					for (SubDataPropertyOf ax : superDataPropertyOfAxioms) {
+						if (ax.getSubDataProperty().equals(superDataProperty) && 
+								ax.getSuperDataProperty() instanceof DataProperty) {
+							if (ax.getSuperDataProperty().equals(owlDataProperty)) {
+								entity = owlDataFactory.getOWLDataProperty(
+										new URI(superDataProperty.toString()));
+								equivSet.add(entity);
+							}
+						}
+					}		
+				}
 			}
-		}
-		resultSet.add(entitySet);
-		return resultSet;
+			entitySet.removeAll(equivSet);
+			resultSet.add(entitySet);
+			return resultSet;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
@@ -769,68 +868,69 @@ reasoner = getReasoner(ontologyURI);
 	@SuppressWarnings("unchecked")
 	public Set<OWLEntity> equivalentPropertiesOf(String ontologyURI,
 			OWLProperty property) throws OWLException,  URISyntaxException {
+		equivalentPropertiesCheck = true;
         try{
-                reasoner = getReasoner(ontologyURI);
-		Set<OWLEntity> resultSet = new HashSet<OWLEntity>();	
-		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
-		Request<EquivalentObjectProperties> equivObjectPropertiesRequest = 
-			ontology.createAxiomRequest(EquivalentObjectProperties.class);
-		Set<EquivalentObjectProperties> equivObjectPropertiesAxiom = equivObjectPropertiesRequest.get();
-		for (EquivalentObjectProperties axiom : equivObjectPropertiesAxiom) {
-			Set<ObjectProperty> objectPropertySet = axiom.getObjectProperties();
-			Iterator<ObjectProperty> it = objectPropertySet.iterator();
-			while (it.hasNext()) {
-				OWLEntity entity = owlDataFactory.getOWLObjectProperty(
-						new URI(it.next().toString()));
-				entitySet.add(entity);
-			}
-			if (entitySet.contains(property)) {
-				Iterator<OWLEntity> it2 = entitySet.iterator();
-				while (it2.hasNext()) {
-					OWLEntity next = it2.next();
-					if (! next.equals(property))
-						resultSet.add(next);
+        	reasoner = getReasoner(ontologyURI);
+			Set<OWLEntity> resultSet = new HashSet<OWLEntity>();	
+			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
+			Request<EquivalentObjectProperties> equivObjectPropertiesRequest = 
+				ontology.createAxiomRequest(EquivalentObjectProperties.class);
+			Set<EquivalentObjectProperties> equivObjectPropertiesAxiom = equivObjectPropertiesRequest.get();
+			for (EquivalentObjectProperties axiom : equivObjectPropertiesAxiom) {
+				Set<ObjectProperty> objectPropertySet = axiom.getObjectProperties();
+				Iterator<ObjectProperty> it = objectPropertySet.iterator();
+				while (it.hasNext()) {
+					OWLEntity entity = owlDataFactory.getOWLObjectProperty(
+							new URI(it.next().toString()));
+					entitySet.add(entity);
 				}
-			}
-			entitySet.clear();
-		}
-		Request<EquivalentDataProperties> equivDataPropertiesRequest = 
-			ontology.createAxiomRequest(EquivalentDataProperties.class);
-		Set<EquivalentDataProperties> equivDataPropertiesAxiom = equivDataPropertiesRequest.get();
-		for (EquivalentDataProperties axiom : equivDataPropertiesAxiom) {
-			Set<DataProperty> dataPropertySet = axiom.getDataProperties();
-			Iterator<DataProperty> it = dataPropertySet.iterator();
-			while (it.hasNext()) {
-				OWLEntity entity = owlDataFactory.getOWLDataProperty(
-						new URI(it.next().toString()));
-				entitySet.add(entity);
-			}
-			if (entitySet.contains(property)) {
-				Iterator<OWLEntity> it2 = entitySet.iterator();
-				while (it2.hasNext()) {
-					OWLEntity next = it2.next();
-					if (! next.equals(property))
-						resultSet.add(next);
+				if (entitySet.contains(property)) {
+					Iterator<OWLEntity> it2 = entitySet.iterator();
+					while (it2.hasNext()) {
+						OWLEntity next = it2.next();
+						if (! next.equals(property))
+							resultSet.add(next);
+					}
 				}
+				entitySet.clear();
 			}
-			entitySet.clear();
-		}
-		
-		Set<Set> set = descendantPropertiesOf(ontologyURI, property);
-		for (Set<OWLEntity> set2 : set) {	
-			for (OWLEntity entity : set2) {
-				Set<Set> set3 = descendantPropertiesOf(ontologyURI, 
-						owlDataFactory.getOWLObjectProperty(new URI(entity.toString().substring(
-								entity.toString().indexOf("]")+2))));
-				for (Set<OWLEntity> set4 : set3) {
-					if (set4.contains(property)) {
-						resultSet.add(entity);
+			Request<EquivalentDataProperties> equivDataPropertiesRequest = 
+				ontology.createAxiomRequest(EquivalentDataProperties.class);
+			Set<EquivalentDataProperties> equivDataPropertiesAxiom = equivDataPropertiesRequest.get();
+			for (EquivalentDataProperties axiom : equivDataPropertiesAxiom) {
+				Set<DataProperty> dataPropertySet = axiom.getDataProperties();
+				Iterator<DataProperty> it = dataPropertySet.iterator();
+				while (it.hasNext()) {
+					OWLEntity entity = owlDataFactory.getOWLDataProperty(
+							new URI(it.next().toString()));
+					entitySet.add(entity);
+				}
+				if (entitySet.contains(property)) {
+					Iterator<OWLEntity> it2 = entitySet.iterator();
+					while (it2.hasNext()) {
+						OWLEntity next = it2.next();
+						if (! next.equals(property))
+							resultSet.add(next);
+					}
+				}
+				entitySet.clear();
+			}
+			
+			Set<Set> set = descendantPropertiesOf(ontologyURI, property);
+			for (Set<OWLEntity> set2 : set) {	
+				for (OWLEntity entity : set2) {
+					Set<Set> set3 = descendantPropertiesOf(ontologyURI, 
+							owlDataFactory.getOWLObjectProperty(new URI(entity.toString().substring(
+									entity.toString().indexOf("]")+2))));
+					for (Set<OWLEntity> set4 : set3) {
+						if (set4.contains(property)) {
+							resultSet.add(entity);
+						}
 					}
 				}
 			}
-		}
-		
-		return resultSet;
+			
+			return resultSet;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
@@ -841,29 +941,29 @@ reasoner = getReasoner(ontologyURI);
 	public Set<OWLEntity> inversePropertiesOf(String ontologyURI,
 			OWLObjectProperty property)	throws OWLException,  URISyntaxException {
         try{
-reasoner = getReasoner(ontologyURI);	
-		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
-		Request<InverseObjectProperties> inverseObjectPropertiesRequest = 
-			ontology.createAxiomRequest(InverseObjectProperties.class);
-		ObjectProperty owlObjectProperty = KAON2Manager.factory().objectProperty(
-				property.toString().substring(property.toString().indexOf("]")+2));
-		inverseObjectPropertiesRequest.setCondition("first", owlObjectProperty);
-		Set<InverseObjectProperties> inverseObjectPropertiesAxiom = 
-			inverseObjectPropertiesRequest.get();
-		for (InverseObjectProperties axiom : inverseObjectPropertiesAxiom) {
-			entitySet.add(owlDataFactory.getOWLObjectProperty(
-					new URI(axiom.getSecond().toString())));
-		}
-		Request<InverseObjectProperties> inverseObjectPropertiesRequest2 = 
-			ontology.createAxiomRequest(InverseObjectProperties.class);
-		inverseObjectPropertiesRequest2.setCondition("second", owlObjectProperty);
-		Set<InverseObjectProperties> inverseObjectPropertiesAxiom2 = 
-			inverseObjectPropertiesRequest2.get();
-		for (InverseObjectProperties axiom : inverseObjectPropertiesAxiom2) {
-			entitySet.add(owlDataFactory.getOWLObjectProperty(
-					new URI(axiom.getSecond().toString())));
-		}
-		return entitySet;
+        	reasoner = getReasoner(ontologyURI);	
+			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
+			Request<InverseObjectProperties> inverseObjectPropertiesRequest = 
+				ontology.createAxiomRequest(InverseObjectProperties.class);
+			ObjectProperty owlObjectProperty = KAON2Manager.factory().objectProperty(
+					property.toString().substring(property.toString().indexOf("]")+2));
+			inverseObjectPropertiesRequest.setCondition("first", owlObjectProperty);
+			Set<InverseObjectProperties> inverseObjectPropertiesAxiom = 
+				inverseObjectPropertiesRequest.get();
+			for (InverseObjectProperties axiom : inverseObjectPropertiesAxiom) {
+				entitySet.add(owlDataFactory.getOWLObjectProperty(
+						new URI(axiom.getSecond().toString())));
+			}
+			Request<InverseObjectProperties> inverseObjectPropertiesRequest2 = 
+				ontology.createAxiomRequest(InverseObjectProperties.class);
+			inverseObjectPropertiesRequest2.setCondition("second", owlObjectProperty);
+			Set<InverseObjectProperties> inverseObjectPropertiesAxiom2 = 
+				inverseObjectPropertiesRequest2.get();
+			for (InverseObjectProperties axiom : inverseObjectPropertiesAxiom2) {
+				entitySet.add(owlDataFactory.getOWLObjectProperty(
+						new URI(axiom.getFirst().toString())));
+			}
+			return entitySet;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
@@ -875,19 +975,19 @@ reasoner = getReasoner(ontologyURI);
 			throws OWLException,  URISyntaxException {
         try{
             reasoner = getReasoner(ontologyURI);
-		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
-		Request<ObjectPropertyDomain> attributeRequest = 
-			ontology.createAxiomRequest(ObjectPropertyDomain.class);
-		ObjectProperty owlObjectProperty = KAON2Manager.factory().
-				objectProperty(property.toString().substring(
-						property.toString().indexOf("]")+2));
-		attributeRequest.setCondition("objectProperty", owlObjectProperty);
-		Set<ObjectPropertyDomain> objectPropertyDomainAxiom = attributeRequest.get();
-		for (ObjectPropertyDomain axiom : objectPropertyDomainAxiom) {
-			entitySet.add(owlDataFactory.getOWLClass(new URI(
-					axiom.getDomain().toString())));
-		}
-		return entitySet;
+			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
+			Request<ObjectPropertyDomain> attributeRequest = 
+				ontology.createAxiomRequest(ObjectPropertyDomain.class);
+			ObjectProperty owlObjectProperty = KAON2Manager.factory().
+					objectProperty(property.toString().substring(
+							property.toString().indexOf("]")+2));
+			attributeRequest.setCondition("objectProperty", owlObjectProperty);
+			Set<ObjectPropertyDomain> objectPropertyDomainAxiom = attributeRequest.get();
+			for (ObjectPropertyDomain axiom : objectPropertyDomainAxiom) {
+				entitySet.add(owlDataFactory.getOWLClass(new URI(
+						axiom.getDomain().toString())));
+			}
+			return entitySet;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
@@ -898,20 +998,20 @@ reasoner = getReasoner(ontologyURI);
 	public Set<OWLEntity> rangesOf(String ontologyURI, OWLObjectProperty property) 
 			throws OWLException,  URISyntaxException {
         try{
-reasoner = getReasoner(ontologyURI);
-		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
-		Request<ObjectPropertyRange> attributeRequest = 
-			ontology.createAxiomRequest(ObjectPropertyRange.class);
-		ObjectProperty owlObjectProperty = KAON2Manager.factory().
-				objectProperty(property.toString().substring(
-						property.toString().indexOf("]")+2));
-		attributeRequest.setCondition("objectProperty", owlObjectProperty);
-		Set<ObjectPropertyRange> objectPropertyRangeAxiom = attributeRequest.get();
-		for (ObjectPropertyRange axiom : objectPropertyRangeAxiom) {
-			entitySet.add(owlDataFactory.getOWLClass(new URI(
-					axiom.getRange().toString())));
-		}
-		return entitySet;
+        	reasoner = getReasoner(ontologyURI);
+			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
+			Request<ObjectPropertyRange> attributeRequest = 
+				ontology.createAxiomRequest(ObjectPropertyRange.class);
+			ObjectProperty owlObjectProperty = KAON2Manager.factory().
+					objectProperty(property.toString().substring(
+							property.toString().indexOf("]")+2));
+			attributeRequest.setCondition("objectProperty", owlObjectProperty);
+			Set<ObjectPropertyRange> objectPropertyRangeAxiom = attributeRequest.get();
+			for (ObjectPropertyRange axiom : objectPropertyRangeAxiom) {
+				entitySet.add(owlDataFactory.getOWLClass(new URI(
+						axiom.getRange().toString())));
+			}
+			return entitySet;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
@@ -923,23 +1023,23 @@ reasoner = getReasoner(ontologyURI);
 			OWLDataProperty property) 
 			throws OWLException,  URISyntaxException {
         try{
-reasoner = getReasoner(ontologyURI);
-		Set<OWLConcreteDataTypeImpl> dataTypeSet = 
-			new HashSet<OWLConcreteDataTypeImpl>();
-		Request<DataPropertyRange> attributeRequest = 
-			ontology.createAxiomRequest(DataPropertyRange.class);
-		DataProperty owlDataProperty = KAON2Manager.factory().
-				dataProperty(property.toString().substring(
-						property.toString().indexOf("]")+2));
-		attributeRequest.setCondition("dataProperty", owlDataProperty);
-		Set<DataPropertyRange> dataPropertyRangeAxiom = attributeRequest.get();
-		for (DataPropertyRange axiom : dataPropertyRangeAxiom) {
-			OWLDataType dataType = owlDataFactory.getOWLConcreteDataType(
-					new URI(Namespaces.XSD_NS + axiom.getRange().toString().
-							substring(axiom.getRange().toString().indexOf(":")+1)));
-			dataTypeSet.add((OWLConcreteDataTypeImpl) dataType);
-		}
-		return dataTypeSet;
+        	reasoner = getReasoner(ontologyURI);
+			Set<OWLConcreteDataTypeImpl> dataTypeSet = 
+				new HashSet<OWLConcreteDataTypeImpl>();
+			Request<DataPropertyRange> attributeRequest = 
+				ontology.createAxiomRequest(DataPropertyRange.class);
+			DataProperty owlDataProperty = KAON2Manager.factory().
+					dataProperty(property.toString().substring(
+							property.toString().indexOf("]")+2));
+			attributeRequest.setCondition("dataProperty", owlDataProperty);
+			Set<DataPropertyRange> dataPropertyRangeAxiom = attributeRequest.get();
+			for (DataPropertyRange axiom : dataPropertyRangeAxiom) {
+				OWLDataType dataType = owlDataFactory.getOWLConcreteDataType(
+						new URI(Namespaces.XSD_NS + axiom.getRange().toString().
+								substring(axiom.getRange().toString().indexOf(":")+1)));
+				dataTypeSet.add((OWLConcreteDataTypeImpl) dataType);
+			}
+			return dataTypeSet;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
@@ -951,26 +1051,26 @@ reasoner = getReasoner(ontologyURI);
 			String ontologyURI, OWLIndividual individual) 
 			throws OWLException,  URISyntaxException {
         try{
-reasoner = getReasoner(ontologyURI);
-        Map<OWLEntity, Set<OWLEntity>> resultMap = 
-        	new HashMap<OWLEntity, Set<OWLEntity>>();
-		Individual owlIndividual = KAON2Manager.factory().individual(
-				individual.toString().substring(
-						individual.toString().indexOf("]")+2));
-		Set<Entry<ObjectProperty, Set<Individual>>> entrySet = 
-			owlIndividual.getObjectPropertyValues(ontology).entrySet();
-		for (Entry<ObjectProperty, Set<Individual>> entry : entrySet) {
-			ObjectProperty property = entry.getKey();
-			Set<Individual> set = entry.getValue();
-			for (Individual ind : set) {
-				Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
-				entitySet.add(owlDataFactory.getOWLIndividual(
-						new URI(ind.toString())));
-				resultMap.put(owlDataFactory.getOWLObjectProperty(
-						new URI(property.toString())), entitySet);
+        	reasoner = getReasoner(ontologyURI);
+	        Map<OWLEntity, Set<OWLEntity>> resultMap = 
+	        	new HashMap<OWLEntity, Set<OWLEntity>>();
+			Individual owlIndividual = KAON2Manager.factory().individual(
+					individual.toString().substring(
+							individual.toString().indexOf("]")+2));
+			Set<Entry<ObjectProperty, Set<Individual>>> entrySet = 
+				owlIndividual.getObjectPropertyValues(ontology).entrySet();
+			for (Entry<ObjectProperty, Set<Individual>> entry : entrySet) {
+				ObjectProperty property = entry.getKey();
+				Set<Individual> set = entry.getValue();
+				for (Individual ind : set) {
+					Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
+					entitySet.add(owlDataFactory.getOWLIndividual(
+							new URI(ind.toString())));
+					resultMap.put(owlDataFactory.getOWLObjectProperty(
+							new URI(property.toString())), entitySet);
+				}
 			}
-		}
-		return resultMap;
+			return resultMap;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
@@ -982,36 +1082,36 @@ reasoner = getReasoner(ontologyURI);
 			String ontologyURI, OWLIndividual individual) 
 			throws OWLException,  URISyntaxException {
         try{
-reasoner = getReasoner(ontologyURI);
-		Map<OWLEntity, Set<OWLConcreteDataImpl>> resultMap = 
-        	new HashMap<OWLEntity, Set<OWLConcreteDataImpl>>();
-		Individual owlIndividual = KAON2Manager.factory().individual(
-				individual.toString().substring(
-						individual.toString().indexOf("]")+2));
-		Set<Entry<DataProperty, Set<Object>>> entrySet = 
-			owlIndividual.getDataPropertyValues(ontology).entrySet();
-		for (Entry<DataProperty, Set<Object>> entry : entrySet) {
-			DataProperty property = entry.getKey();
-			Set<Object> set = entry.getValue();
-			for (Object obj : set) {
-				Set<OWLConcreteDataImpl> dataTypeSet = new HashSet<OWLConcreteDataImpl>();
-				OWLDataValue dataValue = null;
-				if (obj instanceof String) {
-					dataValue = owlDataFactory.getOWLConcreteData(
-							new URI(Namespaces.XSD_NS + "string"), 
-							null, obj);
+        	reasoner = getReasoner(ontologyURI);
+			Map<OWLEntity, Set<OWLConcreteDataImpl>> resultMap = 
+	        	new HashMap<OWLEntity, Set<OWLConcreteDataImpl>>();
+			Individual owlIndividual = KAON2Manager.factory().individual(
+					individual.toString().substring(
+							individual.toString().indexOf("]")+2));
+			Set<Entry<DataProperty, Set<Object>>> entrySet = 
+				owlIndividual.getDataPropertyValues(ontology).entrySet();
+			for (Entry<DataProperty, Set<Object>> entry : entrySet) {
+				DataProperty property = entry.getKey();
+				Set<Object> set = entry.getValue();
+				for (Object obj : set) {
+					Set<OWLConcreteDataImpl> dataTypeSet = new HashSet<OWLConcreteDataImpl>();
+					OWLDataValue dataValue = null;
+					if (obj instanceof String) {
+						dataValue = owlDataFactory.getOWLConcreteData(
+								new URI(Namespaces.XSD_NS + "string"), 
+								null, obj);
+					}
+					else if (obj instanceof Integer) {
+						dataValue = owlDataFactory.getOWLConcreteData(
+								new URI(Namespaces.XSD_NS + "integer"), 
+								null, obj);	
+					}
+					dataTypeSet.add((OWLConcreteDataImpl) dataValue);
+					resultMap.put(owlDataFactory.getOWLDataProperty(
+							new URI(property.toString())), dataTypeSet);
 				}
-				else if (obj instanceof Integer) {
-					dataValue = owlDataFactory.getOWLConcreteData(
-							new URI(Namespaces.XSD_NS + "integer"), 
-							null, obj);	
-				}
-				dataTypeSet.add((OWLConcreteDataImpl) dataValue);
-				resultMap.put(owlDataFactory.getOWLDataProperty(
-						new URI(property.toString())), dataTypeSet);
 			}
-		}
-		return resultMap;
+			return resultMap;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
@@ -1022,23 +1122,24 @@ reasoner = getReasoner(ontologyURI);
 			String ontologyURI,	OWLObjectProperty property) 
 			throws OWLException,  URISyntaxException {
         try{
-reasoner = getReasoner(ontologyURI);
-		Map<OWLEntity, Set<OWLEntity>> resultMap = 
-        	new HashMap<OWLEntity, Set<OWLEntity>>();
-		ObjectProperty owlObjectProperty = KAON2Manager.factory().objectProperty(
-				property.toString().substring(
-						property.toString().indexOf("]")+2));
-		Set<ObjectPropertyMember> individuals = 
-			owlObjectProperty.getObjectPropertyMembers(ontology);
-		for (ObjectPropertyMember member : individuals) {
-			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
-			entitySet.add(owlDataFactory.getOWLIndividual(
-					new URI(member.getTargetIndividual().toString())));
-			resultMap.put(owlDataFactory.getOWLIndividual(
-					new URI(member.getSourceIndividual().toString())), 
-					entitySet);
-		}
-		return resultMap;        } catch (KAON2Exception e) {
+        	reasoner = getReasoner(ontologyURI);
+			Map<OWLEntity, Set<OWLEntity>> resultMap = 
+	        	new HashMap<OWLEntity, Set<OWLEntity>>();
+			ObjectProperty owlObjectProperty = KAON2Manager.factory().objectProperty(
+					property.toString().substring(
+							property.toString().indexOf("]")+2));
+			Set<ObjectPropertyMember> individuals = 
+				owlObjectProperty.getObjectPropertyMembers(ontology);
+			for (ObjectPropertyMember member : individuals) {
+				Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
+				entitySet.add(owlDataFactory.getOWLIndividual(
+						new URI(member.getTargetIndividual().toString())));
+				resultMap.put(owlDataFactory.getOWLIndividual(
+						new URI(member.getSourceIndividual().toString())), 
+						entitySet);
+			}
+			return resultMap;        
+        } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
 
@@ -1049,32 +1150,32 @@ reasoner = getReasoner(ontologyURI);
 			String ontologyURI, OWLDataProperty property) 
 			throws OWLException,  URISyntaxException {
         try{
-reasoner = getReasoner(ontologyURI);
-		Map<OWLEntity, Set<OWLConcreteDataImpl>> resultMap = 
-        	new HashMap<OWLEntity, Set<OWLConcreteDataImpl>>();
-		DataProperty owlDataProperty = KAON2Manager.factory().dataProperty(
-				property.toString().substring(
-						property.toString().indexOf("]")+2));
-		Set<DataPropertyMember> individuals = 
-			owlDataProperty.getDataPropertyMembers(ontology);
-		for (DataPropertyMember member : individuals) {
-			Set<OWLConcreteDataImpl> dataTypeSet = 
-				new HashSet<OWLConcreteDataImpl>();
-			if (member.getTargetValue() instanceof String) {
-				dataTypeSet.add((OWLConcreteDataImpl) owlDataFactory.
-						getOWLConcreteData(new URI(Namespaces.XSD_NS + "string"), 
-								null, member.getTargetValue()));
+        	reasoner = getReasoner(ontologyURI);
+			Map<OWLEntity, Set<OWLConcreteDataImpl>> resultMap = 
+	        	new HashMap<OWLEntity, Set<OWLConcreteDataImpl>>();
+			DataProperty owlDataProperty = KAON2Manager.factory().dataProperty(
+					property.toString().substring(
+							property.toString().indexOf("]")+2));
+			Set<DataPropertyMember> individuals = 
+				owlDataProperty.getDataPropertyMembers(ontology);
+			for (DataPropertyMember member : individuals) {
+				Set<OWLConcreteDataImpl> dataTypeSet = 
+					new HashSet<OWLConcreteDataImpl>();
+				if (member.getTargetValue() instanceof String) {
+					dataTypeSet.add((OWLConcreteDataImpl) owlDataFactory.
+							getOWLConcreteData(new URI(Namespaces.XSD_NS + "string"), 
+									null, member.getTargetValue()));
+				}
+				else if (member.getTargetValue() instanceof Integer) {
+					dataTypeSet.add((OWLConcreteDataImpl) owlDataFactory.
+							getOWLConcreteData(new URI(Namespaces.XSD_NS + "integer"), 
+									null, member.getTargetValue()));
+				}
+				resultMap.put(owlDataFactory.getOWLIndividual(
+						new URI(member.getSourceIndividual().toString())), 
+						dataTypeSet);
 			}
-			else if (member.getTargetValue() instanceof Integer) {
-				dataTypeSet.add((OWLConcreteDataImpl) owlDataFactory.
-						getOWLConcreteData(new URI(Namespaces.XSD_NS + "integer"), 
-								null, member.getTargetValue()));
-			}
-			resultMap.put(owlDataFactory.getOWLIndividual(
-					new URI(member.getSourceIndividual().toString())), 
-					dataTypeSet);
-		}
-		return resultMap;
+			return resultMap;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
@@ -1086,15 +1187,15 @@ reasoner = getReasoner(ontologyURI);
 			OWLObjectProperty property, OWLIndividual object)
 			throws OWLException,  InterruptedException {
         try{
-reasoner = getReasoner(ontologyURI);
-		Query query = reasoner.createQuery(Namespaces.INSTANCE, "ASK " +
-				"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
-				"> <" + property.toString().substring(property.toString().indexOf("]")+2) + 
-				"> <" + object.toString().substring(object.toString().indexOf("]")+2) + "> }");
-		query.open();
-		int size = query.getNumberOfTuples();
-		query.close();
-		return size > 0;
+        	reasoner = getReasoner(ontologyURI);
+			Query query = reasoner.createQuery(Namespaces.INSTANCE, "ASK " +
+					"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
+					"> <" + property.toString().substring(property.toString().indexOf("]")+2) + 
+					"> <" + object.toString().substring(object.toString().indexOf("]")+2) + "> }");
+			query.open();
+			int size = query.getNumberOfTuples();
+			query.close();
+			return size > 0;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
@@ -1106,25 +1207,25 @@ reasoner = getReasoner(ontologyURI);
 			OWLDataProperty property, OWLDataValue object)
 			throws OWLException,  InterruptedException {
         try{
-reasoner = getReasoner(ontologyURI);
-		Query query = null;
-		if (object.getValue() instanceof String) {
-			query = reasoner.createQuery(Namespaces.INSTANCE, "ASK " +
-					"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
-					"> <" + property.toString().substring(property.toString().indexOf("]")+2) + 
-					"> \"" + object.getValue().toString() + "\" }");
-		}
-		else if (object.getValue() instanceof Integer || 
-				object.getValue() instanceof BigInteger) {
-			query = reasoner.createQuery(Namespaces.INSTANCE, "ASK " +
-					"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
-					"> <" + property.toString().substring(property.toString().indexOf("]")+2) + 
-					"> " + object.getValue().toString() + " }");
-		}
-		query.open();
-		int size = query.getNumberOfTuples();
-		query.close();
-		return size > 0;
+        	reasoner = getReasoner(ontologyURI);
+			Query query = null;
+			if (object.getValue() instanceof String) {
+				query = reasoner.createQuery(Namespaces.INSTANCE, "ASK " +
+						"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
+						"> <" + property.toString().substring(property.toString().indexOf("]")+2) + 
+						"> \"" + object.getValue().toString() + "\" }");
+			}
+			else if (object.getValue() instanceof Integer || 
+					object.getValue() instanceof BigInteger) {
+				query = reasoner.createQuery(Namespaces.INSTANCE, "ASK " +
+						"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
+						"> <" + property.toString().substring(property.toString().indexOf("]")+2) + 
+						"> " + object.getValue().toString() + " }");
+			}
+			query.open();
+			int size = query.getNumberOfTuples();
+			query.close();
+			return size > 0;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
@@ -1136,20 +1237,21 @@ reasoner = getReasoner(ontologyURI);
 			OWLIndividual subject, OWLObjectProperty property)
 			throws OWLException,  InterruptedException, URISyntaxException {
         try{
-reasoner = getReasoner(ontologyURI);
-		Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
-		Query query = reasoner.createQuery(Namespaces.INSTANCE, "Select ?x WHERE " +
-				"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
-				"> <" + property.toString().substring(property.toString().indexOf("]")+2) + 
-				"> ?x }");
-		query.open();
-		while (!query.afterLast()) {
-			Object[] tupleBuffer = query.tupleBuffer();
-			entitySet.add(owlDataFactory.getOWLIndividual(new URI(tupleBuffer[0].toString())));
-			query.next();
-		}
-		query.close();
-		return entitySet;        } catch (KAON2Exception e) {
+        	reasoner = getReasoner(ontologyURI);
+			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
+			Query query = reasoner.createQuery(Namespaces.INSTANCE, "Select ?x WHERE " +
+					"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
+					"> <" + property.toString().substring(property.toString().indexOf("]")+2) + 
+					"> ?x }");
+			query.open();
+			while (!query.afterLast()) {
+				Object[] tupleBuffer = query.tupleBuffer();
+				entitySet.add(owlDataFactory.getOWLIndividual(new URI(tupleBuffer[0].toString())));
+				query.next();
+			}
+			query.close();
+			return entitySet;       
+		} catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
 
@@ -1160,28 +1262,28 @@ reasoner = getReasoner(ontologyURI);
 			OWLIndividual subject, OWLDataProperty property)
 			throws OWLException,  InterruptedException, URISyntaxException {
         try{
-reasoner = getReasoner(ontologyURI);
-		Set<OWLDataValue> dataValueSet = new HashSet<OWLDataValue>();
-		Query query = reasoner.createQuery(Namespaces.INSTANCE, "Select ?x WHERE " +
-				"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
-				"> <" + property.toString().substring(property.toString().indexOf("]")+2) + 
-				"> ?x }");
-		query.open();
-		while (!query.afterLast()) {
-			Object[] tupleBuffer = query.tupleBuffer();
-			if (tupleBuffer[0] instanceof String) {
-				dataValueSet.add(owlDataFactory.getOWLConcreteData(new URI(
-						Namespaces.XSD_NS + "string"), null, tupleBuffer[0]));
+        	reasoner = getReasoner(ontologyURI);
+			Set<OWLDataValue> dataValueSet = new HashSet<OWLDataValue>();
+			Query query = reasoner.createQuery(Namespaces.INSTANCE, "Select ?x WHERE " +
+					"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
+					"> <" + property.toString().substring(property.toString().indexOf("]")+2) + 
+					"> ?x }");
+			query.open();
+			while (!query.afterLast()) {
+				Object[] tupleBuffer = query.tupleBuffer();
+				if (tupleBuffer[0] instanceof String) {
+					dataValueSet.add(owlDataFactory.getOWLConcreteData(new URI(
+							Namespaces.XSD_NS + "string"), null, tupleBuffer[0]));
+				}
+				else if (tupleBuffer[0] instanceof Integer || 
+						tupleBuffer[0] instanceof BigInteger) {
+					dataValueSet.add(owlDataFactory.getOWLConcreteData(new URI(
+							Namespaces.XSD_NS + "integer"), null, tupleBuffer[0]));
+				}
+				query.next();
 			}
-			else if (tupleBuffer[0] instanceof Integer || 
-					tupleBuffer[0] instanceof BigInteger) {
-				dataValueSet.add(owlDataFactory.getOWLConcreteData(new URI(
-						Namespaces.XSD_NS + "integer"), null, tupleBuffer[0]));
-			}
-			query.next();
-		}
-		query.close();
-		return dataValueSet;
+			query.close();
+			return dataValueSet;
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
@@ -1192,15 +1294,15 @@ reasoner = getReasoner(ontologyURI);
 			OWLIndividual subject, OWLObjectProperty property)
 			throws OWLException,  InterruptedException, URISyntaxException {
         try{
-reasoner = getReasoner(ontologyURI);
-		Query query = reasoner.createQuery(Namespaces.INSTANCE, "Select ?x WHERE " +
-				"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
-				"> <" + property.toString().substring(property.toString().indexOf("]")+2) + 
-				"> ?x }");
-		query.open();
-		Object[] tupleBuffer = query.tupleBuffer();
-		query.close();
-		return owlDataFactory.getOWLIndividual(new URI(tupleBuffer[0].toString()));
+        	reasoner = getReasoner(ontologyURI);
+			Query query = reasoner.createQuery(Namespaces.INSTANCE, "Select ?x WHERE " +
+					"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
+					"> <" + property.toString().substring(property.toString().indexOf("]")+2) + 
+					"> ?x }");
+			query.open();
+			Object[] tupleBuffer = query.tupleBuffer();
+			query.close();
+			return owlDataFactory.getOWLIndividual(new URI(tupleBuffer[0].toString()));
         } catch (KAON2Exception e) {
             throw new OWLException("KAON2ERROR",e);
         }
@@ -1210,31 +1312,29 @@ reasoner = getReasoner(ontologyURI);
 	public OWLDataValue getDataPropertyValue(String ontologyURI,
 			OWLIndividual subject, OWLDataProperty property)
 			throws OWLException,  InterruptedException, URISyntaxException {
-            try{
-reasoner = getReasoner(ontologyURI);
-		Query query = reasoner.createQuery(Namespaces.INSTANCE, "Select ?x WHERE " +
-				"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
-				"> <" + property.toString().substring(property.toString().indexOf("]")+2) + 
-				"> ?x }");
-		query.open();
-		Object[] tupleBuffer = query.tupleBuffer();
-		query.close();
-		OWLDataValue dataValue = null;
-		if (tupleBuffer[0] instanceof String) {
-			dataValue = owlDataFactory.getOWLConcreteData(new URI(
-					Namespaces.XSD_NS + "string"), null, tupleBuffer[0]);
-		}
-		else if (tupleBuffer[0] instanceof Integer ||
-				tupleBuffer[0] instanceof BigInteger) {
-			dataValue = owlDataFactory.getOWLConcreteData(new URI(
-					Namespaces.XSD_NS + "integer"), null, tupleBuffer[0]);
-		}
-		return dataValue;
-            } catch (KAON2Exception e) {
-                throw new OWLException("KAON2ERROR",e);
-            }
-        
-
+		try{
+			reasoner = getReasoner(ontologyURI);
+			Query query = reasoner.createQuery(Namespaces.INSTANCE, "Select ?x WHERE " +
+					"{ <" + subject.toString().substring(subject.toString().indexOf("]")+2) + 
+					"> <" + property.toString().substring(property.toString().indexOf("]")+2) + 
+					"> ?x }");
+			query.open();
+			Object[] tupleBuffer = query.tupleBuffer();
+			query.close();
+			OWLDataValue dataValue = null;
+			if (tupleBuffer[0] instanceof String) {
+				dataValue = owlDataFactory.getOWLConcreteData(new URI(
+						Namespaces.XSD_NS + "string"), null, tupleBuffer[0]);
+			}
+			else if (tupleBuffer[0] instanceof Integer ||
+					tupleBuffer[0] instanceof BigInteger) {
+				dataValue = owlDataFactory.getOWLConcreteData(new URI(
+						Namespaces.XSD_NS + "integer"), null, tupleBuffer[0]);
+			}
+			return dataValue;
+		} catch (KAON2Exception e) {
+			throw new OWLException("KAON2ERROR",e);
+		}      
 	}
 
 //	public QueryResults evaluate(String ontologyURI, String queryString) {
@@ -1250,23 +1350,7 @@ reasoner = getReasoner(ontologyURI);
 //	}
 	
 	@SuppressWarnings("unchecked")
-	private Set<OWLEntity> addSubConcepts(String ontologyURI, OWLEntity entity, 
-			Set<OWLEntity> entitySet) 
-			throws OWLException,  URISyntaxException {
-		Set<Set> set = subClassesOf(ontologyURI, 
-				(org.semanticweb.owl.model.OWLClass) entity);
-		Set<OWLEntity> set2 = set.iterator().next();
-		for (OWLEntity ent : set2) {
-			if (! entitySet.contains(ent)) {
-				entitySet.addAll(set.iterator().next());
-				addSubConcepts(ontologyURI, ent, entitySet);
-			}
-		}
-		return entitySet;
-	}
-	
-	@SuppressWarnings("unchecked")
-	private Set<OWLEntity> addSuperConcepts(String ontologyURI, OWLEntity entity, 
+	private void addSuperConcepts(String ontologyURI, OWLEntity entity, 
 			Set<OWLEntity> entitySet) 
 			throws OWLException,  URISyntaxException {
 		Set<Set> set = superClassesOf(ontologyURI, 
@@ -1278,15 +1362,14 @@ reasoner = getReasoner(ontologyURI);
 				addSuperConcepts(ontologyURI, ent, entitySet);
 			}
 		}
-		return entitySet;
 	}
 	
 	@SuppressWarnings("unchecked")
-	private Set<OWLEntity> addSubProperties(String ontologyURI, OWLEntity entity, 
+	private void addSubProperties(String ontologyURI, OWLEntity entity, 
 			Set<OWLEntity> entitySet) 
-			throws OWLException,  URISyntaxException {
+			throws OWLException,  URISyntaxException, KAON2Exception {
 		Set<Set> set = subPropertiesOf(ontologyURI, 
-				(org.semanticweb.owl.model.OWLProperty) entity);
+				(org.semanticweb.owl.model.OWLProperty) entity);	
 		Set<OWLEntity> set2 = set.iterator().next();
 		for (OWLEntity ent : set2) {
 			if (! entitySet.contains(ent)) {
@@ -1294,11 +1377,10 @@ reasoner = getReasoner(ontologyURI);
 				addSubProperties(ontologyURI, ent, entitySet);
 			}
 		}
-		return entitySet;
 	}
 	
 	@SuppressWarnings("unchecked")
-	private Set<OWLEntity> addSuperProperties(String ontologyURI, OWLEntity entity, 
+	private void addSuperProperties(String ontologyURI, OWLEntity entity, 
 			Set<OWLEntity> entitySet) 
 			throws OWLException,  URISyntaxException {
 		Set<Set> set = superPropertiesOf(ontologyURI, 
@@ -1310,7 +1392,6 @@ reasoner = getReasoner(ontologyURI);
 				addSuperProperties(ontologyURI, ent, entitySet);
 			}
 		}
-		return entitySet;
 	}
 	
 	private Reasoner getReasoner(String ontologyURI) {
@@ -1329,6 +1410,9 @@ reasoner = getReasoner(ontologyURI);
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.4  2007/02/09 08:40:53  hlausen
+ * DLFacade should be independent of libs of specific reasoner!!!!
+ *
  * Revision 1.3  2007/01/30 13:49:05  nathalie
  * fixed hack with iri as substring containing http://
  *
