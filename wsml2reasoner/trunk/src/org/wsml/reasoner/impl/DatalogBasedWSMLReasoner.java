@@ -21,6 +21,7 @@ package org.wsml.reasoner.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -35,11 +36,9 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
-import org.omwg.ontology.DataValue;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Type;
-import org.omwg.ontology.Value;
 import org.omwg.ontology.Variable;
 import org.omwg.ontology.WsmlDataType;
 import org.wsml.reasoner.ConjunctiveQuery;
@@ -81,6 +80,7 @@ import org.wsmo.common.Identifier;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
+import org.wsmo.wsml.ParserException;
 
 /**
  * A prototypical implementation of a reasoner for WSML Core and WSML Flight.
@@ -93,7 +93,8 @@ import org.wsmo.factory.WsmoFactory;
  */
 public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         WSMLCoreReasoner {
-    protected final static String WSML_RESULT_PREDICATE = "http://www.wsmo.org/reasoner/"
+    
+	protected final static String WSML_RESULT_PREDICATE = "http://www.wsmo.org/reasoner/"
             + "wsml_query_result";
 
     protected org.wsml.reasoner.DatalogReasonerFacade builtInFacade = null;
@@ -257,7 +258,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     }
 
     public Set<Concept> getConcepts(IRI ontologyID, Instance instance) {
-        // build query:
+        // build membership query:
         Term instanceID = wsmoFactory.createIRI(instance.getIdentifier()
                 .toString());
         Term conceptVariable = leFactory.createVariable("x");
@@ -336,15 +337,49 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
                     .createVariable("x"));
             concepts.add(wsmoFactory.getConcept(subConceptID));
         }
+        if (concepts.contains(concept)) {
+        	concepts.remove(concept);
+        }
         return concepts;
     }
 
+    public Set<Concept> getDirectSubConcepts(IRI ontologyID, Concept concept) {	
+    	// build query:
+        Term conceptID = concept.getIdentifier();
+        LogicalExpression query = null;
+        Set<Map<Variable, Term>> bindings;
+		try {
+			query = leFactory.createLogicalExpression("_\"" + 
+					org.wsml.reasoner.WSML2DatalogTransformer.PRED_DIRECT_SUBCONCEPT + 
+					"\"(?x, _\"" + conceptID.toString() + "\")");
+			// submit query to reasoner:
+            bindings = internalExecuteQuery(ontologyID, query);
+        } catch (DatalogException e) {
+            throw new InternalReasonerException();
+        } catch (ExternalToolException e) {
+            throw new InternalReasonerException();
+        } catch (ParserException e) {
+        	throw new InternalReasonerException();
+		}
+
+        // extract concepts from result:
+        Set<Concept> concepts = new HashSet<Concept>();
+        for (Map<Variable, Term> binding : bindings) {
+            IRI subConceptID = (IRI) binding.get(leFactory
+                    .createVariable("x"));
+            concepts.add(wsmoFactory.getConcept(subConceptID));
+        }
+    	if (concepts.contains(concept)) {
+    		concepts.remove(concept);
+    	}
+        return concepts;
+	}
+    
     public Set<Concept> getSuperConcepts(IRI ontologyID, Concept concept) {
         // build query:
         Term conceptID = wsmoFactory.createIRI(concept.getIdentifier()
                 .toString());
         Term conceptVariable = leFactory.createVariable("x");
-
         LogicalExpression query = leFactory.createSubConceptMolecule(conceptID,
                 conceptVariable);
 
@@ -365,9 +400,45 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
                     .createVariable("x"));
             concepts.add(wsmoFactory.getConcept(superConceptID));
         }
+        if (concepts.contains(concept)) {
+        	concepts.remove(concept);
+        }
         return concepts;
     }
 
+    public Set<Concept> getDirectSuperConcepts(IRI ontologyID, Concept concept) {
+    	// build query:
+        Term conceptID = concept.getIdentifier();
+        LogicalExpression query = null;
+        Set<Map<Variable, Term>> bindings;
+		try {
+			query = leFactory.createLogicalExpression("_\"" + 
+					org.wsml.reasoner.WSML2DatalogTransformer.PRED_DIRECT_SUBCONCEPT + 
+					"\"(_\"" + conceptID.toString() + "\", ?x)");
+			
+			// submit query to reasoner:
+            bindings = internalExecuteQuery(ontologyID, query);
+        } catch (DatalogException e) {
+            throw new InternalReasonerException();
+        } catch (ExternalToolException e) {
+            throw new InternalReasonerException();
+        } catch (ParserException e) {
+        	throw new InternalReasonerException();
+		}
+
+        // extract concepts from result:
+        Set<Concept> concepts = new HashSet<Concept>();
+        for (Map<Variable, Term> binding : bindings) {
+            IRI subConceptID = (IRI) binding.get(leFactory
+                    .createVariable("x"));
+            concepts.add(wsmoFactory.getConcept(subConceptID));
+        }
+    	if (concepts.contains(concept)) {
+    		concepts.remove(concept);
+    	}
+        return concepts;
+	}
+    
     public boolean isMemberOf(IRI ontologyID, Instance instance, Concept concept) {
         // build query:
         Term conceptID = wsmoFactory.createIRI(concept.getIdentifier()
@@ -610,6 +681,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     protected Set<Map<Variable, Term>> internalExecuteQuery(IRI ontologyID,
             LogicalExpression query) throws DatalogException,
             org.wsml.reasoner.ExternalToolException {
+//    	System.out.println("query: " + query);
         Set<org.wsml.reasoner.ConjunctiveQuery> datalogQueries = convertQuery(query);
         Set<Map<Variable, Term>> result = new HashSet<Map<Variable, Term>>();
         for (ConjunctiveQuery datalogQuery : datalogQueries) {
@@ -619,7 +691,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return result;
     }
 
-    protected Set<org.wsml.reasoner.ConjunctiveQuery> convertQuery(
+	protected Set<org.wsml.reasoner.ConjunctiveQuery> convertQuery(
             org.omwg.logicalexpression.LogicalExpression q) {
         org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
                 wsmoManager);
@@ -719,133 +791,717 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     }
 
 	public Set<Concept> getAllConcepts(IRI ontologyID) {
-//		// build query:
-//        Term instanceVariable = leFactory.createVariable("y");
-//		Term conceptVariable = leFactory.createVariable("x");
-//        LogicalExpression query = leFactory.createMemberShipMolecule(
-//        		instanceVariable, conceptVariable);
-//
-//        // submit query to reasoner:
-//        Set<Map<Variable, Term>> bindings;
-//        try {
-//            bindings = internalExecuteQuery(ontologyID, query);
-//        } catch (DatalogException e) {
-//            throw new InternalReasonerException();
-//        } catch (ExternalToolException e) {
-//            throw new InternalReasonerException();
-//        }
-//
-//        // extract concepts from result:
-//        Set<Concept> concepts = new HashSet<Concept>();
-//        for (Map<Variable, Term> binding : bindings) {
-//            IRI conceptID = (IRI) binding.get(leFactory.createVariable("x"));
-//            concepts.add(wsmoFactory.getConcept(conceptID));
-//        }
-//        return concepts;
-		throw new UnsupportedOperationException("This method is not yet implemented");
+		// build membership query:
+        Term instanceVariable = leFactory.createVariable("z");
+		Term conceptVariable1 = leFactory.createVariable("x");
+		Term conceptVariable2 = leFactory.createVariable("y");
+        LogicalExpression query = leFactory.createMemberShipMolecule(
+        		instanceVariable, conceptVariable1);
+
+        // submit query to reasoner:
+        Set<Map<Variable, Term>> bindings;
+        try {
+            bindings = internalExecuteQuery(ontologyID, query);
+        } catch (DatalogException e) {
+            throw new InternalReasonerException();
+        } catch (ExternalToolException e) {
+            throw new InternalReasonerException();
+        }
+
+        // extract concepts from result:
+        Set<Concept> concepts = new HashSet<Concept>();
+        for (Map<Variable, Term> binding : bindings) {
+        	IRI conceptID = (IRI) binding.get(leFactory.createVariable("x"));
+        	if (!conceptID.getNamespace().toString().startsWith(
+        			"http://www.wsmo.org/wsml/wsml-syntax")) {
+        		concepts.add(wsmoFactory.getConcept(conceptID));
+        	}
+        }
+        
+        // build new subconcept query:
+        query = leFactory.createSubConceptMolecule(
+        		conceptVariable1, conceptVariable2);
+        
+        // submit query to reasoner:
+        try {
+            bindings = internalExecuteQuery(ontologyID, query);
+        } catch (DatalogException e) {
+            throw new InternalReasonerException();
+        } catch (ExternalToolException e) {
+            throw new InternalReasonerException();
+        }
+        
+        // extract concepts from result:
+        for (Map<Variable, Term> binding : bindings) {
+            IRI conceptID1 = (IRI) binding.get(leFactory.createVariable("x"));
+            if (!conceptID1.getNamespace().toString().startsWith(
+            		"http://www.wsmo.org/wsml/wsml-syntax")) {
+        		concepts.add(wsmoFactory.getConcept(conceptID1));
+        	}
+            IRI conceptID2 = (IRI) binding.get(leFactory.createVariable("y"));
+            if (!conceptID2.getNamespace().toString().startsWith(
+            		"http://www.wsmo.org/wsml/wsml-syntax")) {
+        		concepts.add(wsmoFactory.getConcept(conceptID2));
+        	}
+            if (conceptID1.equals(conceptID2)) {
+            	concepts.remove(wsmoFactory.getConcept(conceptID1));
+            }
+        }
+
+        // build new constraint attributes query:
+        query = leFactory.createAttributeConstraint(
+        		conceptVariable1, instanceVariable, conceptVariable2);
+        
+        // submit query to reasoner:
+        try {
+            bindings = internalExecuteQuery(ontologyID, query);
+        } catch (DatalogException e) {
+            throw new InternalReasonerException();
+        } catch (ExternalToolException e) {
+            throw new InternalReasonerException();
+        }
+        
+        // extract concepts from result:
+        for (Map<Variable, Term> binding : bindings) {
+            IRI conceptID = (IRI) binding.get(leFactory.createVariable("x"));
+            if (!conceptID.getNamespace().toString().startsWith(
+            		"http://www.wsmo.org/wsml/wsml-syntax")) {
+        		concepts.add(wsmoFactory.getConcept(conceptID));
+        	}
+            if (binding.get(leFactory.createVariable("y")) instanceof IRI) {
+            	conceptID = (IRI) binding.get(leFactory.createVariable("y"));
+            	if (!conceptID.getNamespace().toString().startsWith(
+            			"http://www.wsmo.org/wsml/wsml-syntax")) {
+            		concepts.add(wsmoFactory.getConcept(conceptID));
+            	}
+            }
+        }
+
+        // build new inference attributes query:
+        query = leFactory.createAttributeInference(
+        		conceptVariable1, instanceVariable, conceptVariable2);
+        
+        // submit query to reasoner:
+        try {
+            bindings = internalExecuteQuery(ontologyID, query);
+        } catch (DatalogException e) {
+            throw new InternalReasonerException();
+        } catch (ExternalToolException e) {
+            throw new InternalReasonerException();
+        }
+        
+        // extract concepts from result:
+        for (Map<Variable, Term> binding : bindings) {
+            IRI conceptID = (IRI) binding.get(leFactory.createVariable("x"));
+            if (!conceptID.getNamespace().toString().startsWith(
+            		"http://www.wsmo.org/wsml/wsml-syntax")) {
+        		concepts.add(wsmoFactory.getConcept(conceptID));
+        	}
+            if (binding.get(leFactory.createVariable("y")) instanceof IRI) {
+            	conceptID = (IRI) binding.get(leFactory.createVariable("y"));
+            	if (!conceptID.getNamespace().toString().startsWith(
+            			"http://www.wsmo.org/wsml/wsml-syntax")) {
+            		concepts.add(wsmoFactory.getConcept(conceptID));
+            	}
+            }
+        }
+        
+        return concepts;
 	}
 
 	public Set<Instance> getAllInstances(IRI ontologyID) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
+		// build membership query:
+		Term instanceVariable = leFactory.createVariable("x");
+		Term variable = leFactory.createVariable("y");
+		Term attributeVariable = leFactory.createVariable("z");
+		LogicalExpression query = leFactory.createMemberShipMolecule(
+				instanceVariable, variable);
+		
+		// submit query to reasoner:
+		Set<Map<Variable, Term>> bindings;
+		try {
+			bindings = internalExecuteQuery(ontologyID, query);
+		} catch (DatalogException e) {
+			throw new InternalReasonerException();
+		} catch (ExternalToolException e) {
+			throw new InternalReasonerException();
+		}
+		
+		// extract instances from result:
+		Set<Instance> instances = new HashSet<Instance>();
+		for (Map<Variable, Term> binding : bindings) {
+			if (binding.get(leFactory.createVariable("x")) instanceof IRI) {
+				IRI instanceID = (IRI) binding.get(leFactory.createVariable("x"));
+				instances.add(wsmoFactory.getInstance(instanceID));
+			}
+		}
+		
+		// build new attribute value query:
+        query = leFactory.createAttributeValue(
+        		instanceVariable, attributeVariable, variable);
+        
+        // submit query to reasoner:
+        try {
+            bindings = internalExecuteQuery(ontologyID, query);
+        } catch (DatalogException e) {
+            throw new InternalReasonerException();
+        } catch (ExternalToolException e) {
+            throw new InternalReasonerException();
+        }
+        
+        // extract instances from result:
+        for (Map<Variable, Term> binding : bindings) {
+            IRI instanceID = (IRI) binding.get(leFactory.createVariable("x"));
+            if (!instanceID.getNamespace().toString().startsWith(
+            		"http://www.wsmo.org/wsml/wsml-syntax")) {
+            	instances.add(wsmoFactory.getInstance(instanceID));
+        	}
+            if (binding.get(leFactory.createVariable("y")) instanceof IRI) {
+            	instanceID = (IRI) binding.get(leFactory.createVariable("y"));
+            	if (!instanceID.getNamespace().toString().startsWith(
+            			"http://www.wsmo.org/wsml/wsml-syntax")) {
+            		instances.add(wsmoFactory.getInstance(instanceID));
+            	}
+            }
+        }
+		
+		return instances;
 	}
 
 	public Set<IRI> getAllAttributes(IRI ontologyID) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
+		// build query for extracting constraining attributes:
+		Term instanceVariable = leFactory.createVariable("x");
+		Term attributeVariable = leFactory.createVariable("y");
+		Term conceptVariable = leFactory.createVariable("z");
+		LogicalExpression query = leFactory.createAttributeConstraint(
+				instanceVariable, attributeVariable, conceptVariable);
+		
+		// submit query to reasoner:
+		Set<Map<Variable, Term>> bindings;
+		try {
+			bindings = internalExecuteQuery(ontologyID, query);
+		} catch (DatalogException e) {
+			throw new InternalReasonerException();
+		} catch (ExternalToolException e) {
+			throw new InternalReasonerException();
+		}
+		
+		// extract instances from result:
+		Set<IRI> attributes = new HashSet<IRI>();
+		for (Map<Variable, Term> binding : bindings) {
+			IRI attributeID = (IRI) binding.get(leFactory.createVariable("y"));
+			attributes.add(attributeID);
+		}
+		
+		// build new query for infering attributes:
+		query = leFactory.createAttributeInference(
+				instanceVariable, attributeVariable, conceptVariable);
+		
+		// submit query to reasoner:
+		try {
+			bindings = internalExecuteQuery(ontologyID, query);
+		} catch (DatalogException e) {
+			throw new InternalReasonerException();
+		} catch (ExternalToolException e) {
+			throw new InternalReasonerException();
+		}
+		
+		// extract instances from result:
+		for (Map<Variable, Term> binding : bindings) {
+			IRI attributeID = (IRI) binding.get(leFactory.createVariable("y"));
+			attributes.add(attributeID);
+		}
+		
+		// build new query for attribute which have attribute values:
+		query = leFactory.createAttributeValue(
+				instanceVariable, attributeVariable, conceptVariable);
+		
+		// submit query to reasoner:
+		try {
+			bindings = internalExecuteQuery(ontologyID, query);
+		} catch (DatalogException e) {
+			throw new InternalReasonerException();
+		} catch (ExternalToolException e) {
+			throw new InternalReasonerException();
+		}
+		
+		// extract instances from result:
+		for (Map<Variable, Term> binding : bindings) {
+			IRI attributeID = (IRI) binding.get(leFactory.createVariable("y"));
+			attributes.add(attributeID);
+		}
+		return attributes;
 	}
 
 	public Set<IRI> getAllConstraintAttributes(IRI ontologyID) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
+		// build query:
+		Term instanceVariable = leFactory.createVariable("x");
+		Term attributeVariable = leFactory.createVariable("y");
+		Term conceptVariable = leFactory.createVariable("z");
+		LogicalExpression query = leFactory.createAttributeConstraint(
+				instanceVariable, attributeVariable, conceptVariable);
+		
+		// submit query to reasoner:
+		Set<Map<Variable, Term>> bindings;
+		try {
+			bindings = internalExecuteQuery(ontologyID, query);
+		} catch (DatalogException e) {
+			throw new InternalReasonerException();
+		} catch (ExternalToolException e) {
+			throw new InternalReasonerException();
+		}
+		
+		// extract instances from result:
+		Set<IRI> attributes = new HashSet<IRI>();
+		for (Map<Variable, Term> binding : bindings) {
+			IRI attributeID = (IRI) binding.get(leFactory.createVariable("y"));
+			attributes.add(attributeID);
+		}
+		return attributes;
 	}
 
 	public Set<IRI> getAllInferenceAttributes(IRI ontologyID) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
+		// build query:
+		Term instanceVariable = leFactory.createVariable("x");
+		Term attributeVariable = leFactory.createVariable("y");
+		Term conceptVariable = leFactory.createVariable("z");
+		LogicalExpression query = leFactory.createAttributeInference(
+				instanceVariable, attributeVariable, conceptVariable);
+		
+		// submit query to reasoner:
+		Set<Map<Variable, Term>> bindings;
+		try {
+			bindings = internalExecuteQuery(ontologyID, query);
+		} catch (DatalogException e) {
+			throw new InternalReasonerException();
+		} catch (ExternalToolException e) {
+			throw new InternalReasonerException();
+		}
+		
+		// extract instances from result:
+		Set<IRI> attributes = new HashSet<IRI>();
+		for (Map<Variable, Term> binding : bindings) {
+			IRI attributeID = (IRI) binding.get(leFactory.createVariable("y"));
+			attributes.add(attributeID);
+		}
+		return attributes;
 	}
 
 	public Set<Concept> getEquivalentConcepts(IRI ontologyID, Concept concept) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
+		throw new UnsupportedOperationException(
+				"Equivalence queries are not supported in Datalog");
 	}
 
-	public boolean isEquivalentConcept(IRI ontologyID, Concept concept1, Concept concept2) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
+	public boolean isEquivalentConcept(IRI ontologyID, Concept concept1, 
+			Concept concept2) {
+		throw new UnsupportedOperationException(
+				"Equivalence queries are not supported in Datalog");
 	}
 
 	public Set<Concept> getDirectConcepts(IRI ontologyID, Instance instance) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
-	}
+        // build query:
+        Term instanceID = instance.getIdentifier();
+        LogicalExpression query = null;
+        Set<Map<Variable, Term>> bindings;
+		try {
+			query = leFactory.createLogicalExpression("_\"" + 
+					org.wsml.reasoner.WSML2DatalogTransformer.PRED_DIRECT_CONCEPT + 
+					"\"(_\"" + instanceID.toString() + "\", ?x)");
+			// submit query to reasoner:
+            bindings = internalExecuteQuery(ontologyID, query);
+        } catch (DatalogException e) {
+            throw new InternalReasonerException();
+        } catch (ExternalToolException e) {
+            throw new InternalReasonerException();
+        } catch (ParserException e) {
+        	throw new InternalReasonerException();
+		}
 
-	public Set<IRI> getSubRelations(IRI ontologyID, Identifier attributeId) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
-	}
-
-	public Set<IRI> getSuperRelations(IRI ontologyID, Identifier attributeId) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
-	}
-
-	public Set<IRI> getEquivalentRelations(IRI ontologyID, Identifier attributeId) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
-	}
-
-	public Set<IRI> getInverseRelations(IRI ontologyID, Identifier attributeId) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
+        // extract concepts from result:
+        Set<Concept> concepts = new HashSet<Concept>();
+        for (Map<Variable, Term> binding : bindings) {
+            IRI conceptID = (IRI) binding.get(leFactory.createVariable("x"));
+            concepts.add(wsmoFactory.getConcept(conceptID));
+        }
+        return concepts;
 	}
 
 	public Set<Concept> getConceptsOf(IRI ontologyID, Identifier attributeId) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
+        // build query:
+		Term instanceVariable = leFactory.createVariable("x");
+		Term valueVariable = leFactory.createVariable("y");
+        Term conceptVariable = leFactory.createVariable("z");
+        LogicalExpression queryPart1 = leFactory.createAttributeValue(
+        		instanceVariable, attributeId, valueVariable);
+        LogicalExpression queryPart2 = leFactory.createMemberShipMolecule(
+        		instanceVariable, conceptVariable);
+        LogicalExpression query = leFactory.createConjunction(queryPart1, 
+        		queryPart2);
+        
+        // submit query to reasoner:
+        Set<Map<Variable, Term>> bindings;
+        try {
+            bindings = internalExecuteQuery(ontologyID, query);
+        } catch (DatalogException e) {
+            throw new InternalReasonerException();
+        } catch (ExternalToolException e) {
+            throw new InternalReasonerException();
+        }
+
+        // extract concepts from result:
+        Set<Concept> concepts = new HashSet<Concept>();
+        for (Map<Variable, Term> binding : bindings) {
+            IRI conceptID = (IRI) binding.get(leFactory.createVariable("z"));
+            concepts.add(wsmoFactory.getConcept(conceptID));
+        }
+        return concepts;
 	}
 
-	public Set<IRI> getRangesOfInferingAttribute(IRI ontologyID, Identifier attributeId) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
+	@SuppressWarnings("unchecked")
+	public Set<IRI> getSubRelations(IRI ontologyID, Identifier attributeId) {
+		throw new UnsupportedOperationException(
+		"This method is not implemented for Datalog");
 	}
-
-	public Set<IRI> getRangesOfConstraintAttribute(IRI ontologyID, Identifier attributeId) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
-	}
-
-	public Map<IRI, Set<IRI>> getInferingAttributeValues(IRI ontologyID, Instance instance) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
-	}
-
-	public Map<IRI, Set<Term>> getConstraintAttributeValues(IRI ontologyID, Instance instance) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
-	}
-
-	public Map<Instance, Set<IRI>> getInferingAttributeInstances(IRI ontologyID, Identifier attributeId) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
-	}
-
-	public Map<Instance, Set<Term>> getConstraintAttributeInstances(IRI ontologyID, Identifier attributeId) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
-	}
-
-	public Instance getInferingAttributeValue(IRI ontologyID, Instance subject, Identifier attributeId) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
-	}
-
-	public String getConstraintAttributeValue(IRI ontologyID, Instance subject, Identifier attributeId) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
-	}
-
-	public Set<Instance> getInferingAttributeValues(IRI ontologyID, Instance subject, Identifier attributeId) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
-	}
-
-	public Set<String> getConstraintAttributeValues(IRI ontologyID, Instance subject, Identifier attributeId) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
-	}
-
-	public Set<Concept> getDirectSubConcepts(IRI ontologyID, Concept concept) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
-	}
-
-	public Set<Concept> getDirectSuperConcepts(IRI ontologyID, Concept concept) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
-	}
-
+	
 	public Set<IRI> getDirectSubRelations(IRI ontologyID, Identifier attributeId) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
+		throw new UnsupportedOperationException(
+				"This method is not implemented for Datalog");
 	}
 
-	public Set<IRI> getDirectSuperRelations(IRI ontologyID, Identifier attributeId) {
-		throw new UnsupportedOperationException("This method is not yet implemented");
+	@SuppressWarnings("unchecked")
+	public Set<IRI> getSuperRelations(IRI ontologyID, Identifier attributeId) {
+		throw new UnsupportedOperationException(
+				"This method is not implemented for Datalog");
 	}
+	
+	public Set<IRI> getDirectSuperRelations(IRI ontologyID, Identifier attributeId) {
+		throw new UnsupportedOperationException(
+				"This method is not implemented for Datalog");
+	}
+
+	public Set<IRI> getEquivalentRelations(IRI ontologyID, Identifier attributeId) {
+		throw new UnsupportedOperationException(
+				"Equivalence queries are not supported in Datalog");
+	}
+
+	public Set<IRI> getInverseRelations(IRI ontologyID, Identifier attributeId) {
+		throw new UnsupportedOperationException(
+		"Queries for inverse relations are not supported in Datalog");
+	}
+	
+	public Set<IRI> getRangesOfInferingAttribute(IRI ontologyID, Identifier attributeId) {
+        // build query:
+		Term instanceVariable = leFactory.createVariable("x");
+		Term valueVariable = leFactory.createVariable("y");
+        LogicalExpression query = leFactory.createAttributeInference(
+        		instanceVariable, attributeId, valueVariable);
+
+        // submit query to reasoner:
+        Set<Map<Variable, Term>> bindings;
+        try {
+            bindings = internalExecuteQuery(ontologyID, query);
+        } catch (DatalogException e) {
+            throw new InternalReasonerException();
+        } catch (ExternalToolException e) {
+            throw new InternalReasonerException();
+        }
+
+        // extract iris from result:
+        Set<IRI> iris = new HashSet<IRI>();
+        for (Map<Variable, Term> binding : bindings) {
+            IRI id = (IRI) binding.get(leFactory.createVariable("y"));
+            iris.add(id);
+        }
+        return iris;
+	}
+
+	public Set<IRI> getRangesOfConstraintAttribute(IRI ontologyID, 
+			Identifier attributeId) {
+        // build query:
+		Term instanceVariable = leFactory.createVariable("x");
+		Term valueVariable = leFactory.createVariable("y");
+        LogicalExpression query = leFactory.createAttributeConstraint(
+        		instanceVariable, attributeId, valueVariable);
+
+        // submit query to reasoner:
+        Set<Map<Variable, Term>> bindings;
+        try {
+            bindings = internalExecuteQuery(ontologyID, query);
+        } catch (DatalogException e) {
+            throw new InternalReasonerException();
+        } catch (ExternalToolException e) {
+            throw new InternalReasonerException();
+        }
+
+        // extract iris from result:
+        Set<IRI> iris = new HashSet<IRI>();
+        for (Map<Variable, Term> binding : bindings) {
+            IRI id = (IRI) binding.get(leFactory.createVariable("y"));
+            iris.add(id);
+        }
+        return iris;
+	}
+
+	public Map<IRI, Set<Term>> getInferingAttributeValues(IRI ontologyID, 
+			Instance instance) {
+        // build query:
+		Term attributeVariable = leFactory.createVariable("x");
+		Term valueVariable = leFactory.createVariable("y");
+		Term valueVariable2 = leFactory.createVariable("w");
+		Term instanceVariable = leFactory.createVariable("z");
+        LogicalExpression queryPart1 = leFactory.createAttributeValue(
+        		instance.getIdentifier(), attributeVariable, valueVariable);
+        LogicalExpression queryPart2 = leFactory.createAttributeInference(
+        		instanceVariable, attributeVariable, valueVariable2);
+        LogicalExpression query = leFactory.createConjunction(queryPart1, 
+        		queryPart2);
+
+        // submit query to reasoner:
+        Set<Map<Variable, Term>> bindings;
+        try {
+            bindings = internalExecuteQuery(ontologyID, query);
+        } catch (DatalogException e) {
+            throw new InternalReasonerException();
+        } catch (ExternalToolException e) {
+            throw new InternalReasonerException();
+        }
+
+        // extract results:
+        Map<IRI, Set<Term>> results = new HashMap<IRI, Set<Term>>();
+        for (Map<Variable, Term> binding : bindings) {
+        	IRI attributeId = (IRI) binding.get(leFactory.createVariable("x"));
+        	if (results.containsKey(attributeId)) {
+        		Set<Term> temp = new HashSet<Term>();
+        		Term value = (Term) binding.get(leFactory.createVariable("y"));
+        		temp = results.get(attributeId);
+        		temp.add(value);
+        		results.put(attributeId, temp);
+        	}
+        	else {
+        		Set<Term> temp = new HashSet<Term>();
+        		Term value = (Term) binding.get(leFactory.createVariable("y"));
+        		temp.add(value);
+	        	results.put(attributeId, temp);
+        	}
+        }         
+        return results;
+	}
+
+	public Map<IRI, Set<Term>> getConstraintAttributeValues(IRI ontologyID, 
+			Instance instance) {
+        // build query:
+		Term attributeVariable = leFactory.createVariable("x");
+		Term valueVariable = leFactory.createVariable("y");
+		Term valueVariable2 = leFactory.createVariable("w");
+		Term instanceVariable = leFactory.createVariable("z");
+        LogicalExpression queryPart1 = leFactory.createAttributeValue(
+        		instance.getIdentifier(), attributeVariable, valueVariable);
+        LogicalExpression queryPart2 = leFactory.createAttributeConstraint(
+        		instanceVariable, attributeVariable, valueVariable2);
+        LogicalExpression query = leFactory.createConjunction(queryPart1, 
+        		queryPart2);
+        
+        // submit query to reasoner:
+        Set<Map<Variable, Term>> bindings;
+        try {
+            bindings = internalExecuteQuery(ontologyID, query);
+        } catch (DatalogException e) {
+            throw new InternalReasonerException();
+        } catch (ExternalToolException e) {
+            throw new InternalReasonerException();
+        }
+
+        // extract results:
+        Map<IRI, Set<Term>> results = new HashMap<IRI, Set<Term>>();
+        for (Map<Variable, Term> binding : bindings) {
+        	IRI attributeId = (IRI) binding.get(leFactory.createVariable("x"));
+        	if (results.containsKey(attributeId)) {
+        		Set<Term> temp = new HashSet<Term>();
+        		Term value = (Term) binding.get(leFactory.createVariable("y"));
+        		temp = results.get(attributeId);
+        		temp.add(value);
+        		results.put(attributeId, temp);
+        	}
+        	else {
+        		Set<Term> temp = new HashSet<Term>();
+        		Term value = (Term) binding.get(leFactory.createVariable("y"));
+        		temp.add(value);
+	        	results.put(attributeId, temp);
+        	}
+        }             
+        return results;
+	}
+
+	public Map<Instance, Set<Term>> getInferingAttributeInstances(IRI ontologyID, 
+			Identifier attributeId) {
+        // build query:
+		Term valueVariable = leFactory.createVariable("x");
+		Term valueVariable2 = leFactory.createVariable("z");
+		Term instanceVariable = leFactory.createVariable("y");
+		Term instanceVariable2 = leFactory.createVariable("w");
+        LogicalExpression queryPart1 = leFactory.createAttributeValue(
+        		instanceVariable, attributeId, valueVariable);
+        LogicalExpression queryPart2 = leFactory.createAttributeInference(
+        		instanceVariable2, attributeId, valueVariable2);
+        LogicalExpression query = leFactory.createConjunction(queryPart1, 
+        		queryPart2);
+        
+        // submit query to reasoner:
+        Set<Map<Variable, Term>> bindings;
+        try {
+            bindings = internalExecuteQuery(ontologyID, query);
+        } catch (DatalogException e) {
+            throw new InternalReasonerException();
+        } catch (ExternalToolException e) {
+            throw new InternalReasonerException();
+        }
+
+        // extract results:
+        Map<Instance, Set<Term>> results = new HashMap<Instance, Set<Term>>();
+        for (Map<Variable, Term> binding : bindings) {
+        	Instance instance = wsmoFactory.getInstance((IRI) binding.get(
+        			leFactory.createVariable("y")));
+        	if (results.containsKey(instance)) {
+        		Set<Term> temp = new HashSet<Term>();
+        		Term value = (Term) binding.get(leFactory.createVariable("x"));
+        		temp = results.get(instance);
+        		temp.add(value);
+        		results.put(instance, temp);
+        	}
+        	else {
+        		Set<Term> temp = new HashSet<Term>();
+        		Term value = (Term) binding.get(leFactory.createVariable("x"));
+        		temp.add(value);
+	        	results.put(instance, temp);
+        	}
+        }         
+        
+        return results;
+	}
+
+	public Map<Instance, Set<Term>> getConstraintAttributeInstances(
+			IRI ontologyID, Identifier attributeId) {
+        // build query:
+		Term valueVariable = leFactory.createVariable("x");
+		Term valueVariable2 = leFactory.createVariable("z");
+		Term instanceVariable = leFactory.createVariable("y");
+		Term instanceVariable2 = leFactory.createVariable("w");
+        LogicalExpression queryPart1 = leFactory.createAttributeValue(
+        		instanceVariable, attributeId, valueVariable);
+        LogicalExpression queryPart2 = leFactory.createAttributeConstraint(
+        		instanceVariable2, attributeId, valueVariable2);
+        LogicalExpression query = leFactory.createConjunction(queryPart1, 
+        		queryPart2);
+        
+        // submit query to reasoner:
+        Set<Map<Variable, Term>> bindings;
+        try {
+            bindings = internalExecuteQuery(ontologyID, query);
+        } catch (DatalogException e) {
+            throw new InternalReasonerException();
+        } catch (ExternalToolException e) {
+            throw new InternalReasonerException();
+        }
+
+        // extract results:
+        Map<Instance, Set<Term>> results = new HashMap<Instance, Set<Term>>();
+        for (Map<Variable, Term> binding : bindings) {
+        	Instance instance = wsmoFactory.getInstance((IRI) binding.get(
+        			leFactory.createVariable("y")));
+        	if (results.containsKey(instance)) {
+        		Set<Term> temp = new HashSet<Term>();
+        		Term value = (Term) binding.get(leFactory.createVariable("x"));
+        		temp = results.get(instance);
+        		temp.add(value);
+        		results.put(instance, temp);
+        	}
+        	else {
+        		Set<Term> temp = new HashSet<Term>();
+        		Term value = (Term) binding.get(leFactory.createVariable("x"));
+        		temp.add(value);
+	        	results.put(instance, temp);
+        	}
+        }         
+        
+        return results;
+	}
+
+	public Set getInferingAttributeValues(IRI ontologyID, 
+			Instance subject, Identifier attributeId) {
+        // build query:
+		Term instanceId = wsmoFactory.createIRI(subject.getIdentifier()
+                .toString());
+		Term valueVariable = leFactory.createVariable("x");
+		Term valueVariable2 = leFactory.createVariable("y");
+		Term instanceVariable = leFactory.createVariable("z");
+        LogicalExpression queryPart1 = leFactory.createAttributeValue(
+        		instanceId, attributeId, valueVariable);
+        LogicalExpression queryPart2 = leFactory.createAttributeInference(
+        		instanceVariable, attributeId, valueVariable2);
+        LogicalExpression query = leFactory.createConjunction(queryPart1, 
+        		queryPart2);
+
+        // submit query to reasoner:
+        Set<Map<Variable, Term>> bindings;
+        try {
+            bindings = internalExecuteQuery(ontologyID, query);
+        } catch (DatalogException e) {
+            throw new InternalReasonerException();
+        } catch (ExternalToolException e) {
+            throw new InternalReasonerException();
+        }
+
+        // extract instances from result:
+        Set values = new HashSet();
+        for (Map<Variable, Term> binding : bindings) {
+        	if (binding.get(leFactory.createVariable("x")) instanceof IRI) {
+	            IRI iri = (IRI) binding.get(leFactory.createVariable("x"));
+	            values.add(iri);
+        	}
+        	else {
+        		values.add(binding.get(leFactory.createVariable("x")).toString());
+        	}
+        }
+        return values;
+	}
+
+	public Set<String> getConstraintAttributeValues(IRI ontologyID, 
+			Instance subject, Identifier attributeId) {
+        // build query:
+		Term instanceId = wsmoFactory.createIRI(subject.getIdentifier()
+                .toString());
+		Term valueVariable = leFactory.createVariable("x");
+		Term valueVariable2 = leFactory.createVariable("y");
+		Term instanceVariable = leFactory.createVariable("z");
+        LogicalExpression queryPart1 = leFactory.createAttributeValue(
+        		instanceId, attributeId, valueVariable);
+        LogicalExpression queryPart2 = leFactory.createAttributeConstraint(
+        		instanceVariable, attributeId, valueVariable2);
+        LogicalExpression query = leFactory.createConjunction(queryPart1, 
+        		queryPart2);
+
+        // submit query to reasoner:
+        Set<Map<Variable, Term>> bindings;
+        try {
+            bindings = internalExecuteQuery(ontologyID, query);
+        } catch (DatalogException e) {
+            throw new InternalReasonerException();
+        } catch (ExternalToolException e) {
+            throw new InternalReasonerException();
+        }
+
+        // extract instances from result:
+        Set values = new HashSet();
+        for (Map<Variable, Term> binding : bindings) {
+        	if (binding.get(leFactory.createVariable("x")) instanceof IRI) {
+	            IRI iri = (IRI) binding.get(leFactory.createVariable("x"));
+	            values.add(iri);
+        	}
+        	else {
+        		values.add(binding.get(leFactory.createVariable("x")).toString());
+        	}
+        }
+        return values;
+	}
+
 }
