@@ -44,12 +44,12 @@ import org.semanticweb.owl.model.OWLProperty;
  *
  * <pre>
  *  Created on July 3rd, 2006
- *  Committed by $Author: hlausen $
+ *  Committed by $Author: nathalie $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/DLReasonerFacade.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.10 $ $Date: 2007-02-09 08:40:54 $
+ * @version $Revision: 1.11 $ $Date: 2007-03-01 11:33:06 $
  */
 public interface DLReasonerFacade {
 
@@ -79,14 +79,13 @@ public interface DLReasonerFacade {
     /**
      * @return true if the given OWL Description is satisfiable, false otherwise.
      * @throws InterruptedException 
-     * @throws KAON2Exception 
+     * @throws OWLException 
      */
     public boolean isConsistent(String ontologyURI, 
     		OWLDescription description) throws OWLException, InterruptedException;
     
     /**
      * @return a set containing all classes from the loaded ontology
-     * @throws KAON2Exception 
      * @throws OWLException 
      * @throws URISyntaxException 
      */
@@ -95,7 +94,6 @@ public interface DLReasonerFacade {
 	
 	/**
 	 * @return a set containing all individuals from the loaded ontology
-	 * @throws KAON2Exception 
 	 * @throws URISyntaxException 
 	 * @throws OWLException 
 	 */
@@ -104,7 +102,6 @@ public interface DLReasonerFacade {
 	
 	/**
 	 * @return a set containing all properties from the loaded ontology
-	 * @throws KAON2Exception 
 	 * @throws URISyntaxException 
 	 * @throws OWLException 
 	 */
@@ -113,7 +110,6 @@ public interface DLReasonerFacade {
     
 	/**
 	 * @return a set containing all data properties from the loaded ontology
-	 * @throws KAON2Exception 
 	 * @throws URISyntaxException 
 	 * @throws OWLException 
 	 */
@@ -122,7 +118,6 @@ public interface DLReasonerFacade {
 	
 	/**
 	 * @return a set containing all object properties from the loaded ontology
-	 * @throws KAON2Exception 
 	 * @throws URISyntaxException 
 	 * @throws OWLException 
 	 */
@@ -131,7 +126,7 @@ public interface DLReasonerFacade {
 	
 	/**
 	 * @return a set containing all subclasses of a given class
-	 * @throws KAON2Exception 
+	 * @throws OWLException 
 	 * @throws URISyntaxException 
 	 */
 	public Set<Set> descendantClassesOf(String ontologyURI, OWLDescription clazz) 
@@ -140,14 +135,14 @@ public interface DLReasonerFacade {
 	/**
 	 * @return a set containing all direct subclasses of a given class
 	 * @throws URISyntaxException 
-	 * @throws KAON2Exception 
+	 * @throws OWLException 
 	 */
 	public Set<Set> subClassesOf(String ontologyURI, 
 			OWLDescription clazz) throws OWLException,  URISyntaxException;
 	
 	/**
 	 * @return a set containing all superclasses of a given class
-	 * @throws KAON2Exception 
+	 * @throws OWLException 
 	 * @throws URISyntaxException 
 	 */
 	public Set<Set> ancestorClassesOf(String ontologyURI, OWLDescription clazz) 
@@ -156,14 +151,14 @@ public interface DLReasonerFacade {
 	/**
 	 * @return a set containing all direct superclasses of a given class
 	 * @throws URISyntaxException 
-	 * @throws KAON2Exception 
+	 * @throws OWLException 
 	 */
 	public Set<Set> superClassesOf(String ontologyURI, 
 			OWLDescription clazz) throws OWLException,  URISyntaxException;
 	
 	/**
 	 * @return a set containing all classes equivalent to the given class
-	 * @throws KAON2Exception 
+	 * @throws OWLException 
 	 * @throws URISyntaxException 
 	 */
 	public Set<OWLEntity> equivalentClassesOf(String ontologyURI, OWLDescription clazz) 
@@ -172,7 +167,7 @@ public interface DLReasonerFacade {
 	/**
 	 * @return true if the two given OWL descriptions are equivalent
 	 * @throws URISyntaxException 
-	 * @throws KAON2Exception 
+	 * @throws OWLException 
 	 */
 	public boolean isEquivalentClass(String ontologyURI, 
 			OWLDescription clazz1, OWLDescription clazz2) 
@@ -180,7 +175,7 @@ public interface DLReasonerFacade {
 	
     /**
      * @return true if the given clazz2 is a subClass of clazz1
-     * @throws KAON2Exception 
+     * @throws OWLException 
      * @throws URISyntaxException 
      */
     public boolean isSubClassOf(String ontologyURI, OWLDescription clazz1, 
@@ -189,7 +184,7 @@ public interface DLReasonerFacade {
     
     /**
      * @return true if the given individual is an instance of clazz
-     * @throws KAON2Exception 
+     * @throws OWLException 
      * @throws URISyntaxException 
      */
     public boolean isInstanceOf(String ontologyURI, OWLIndividual individual, 
@@ -198,7 +193,7 @@ public interface DLReasonerFacade {
     
     /**
      * @return a set all instances of a given OWL class
-     * @throws KAON2Exception 
+     * @throws OWLException 
      * @throws URISyntaxException 
      */
     public Set<OWLEntity> allInstancesOf(String ontologyURI, OWLClass clazz) 
@@ -206,7 +201,7 @@ public interface DLReasonerFacade {
 	
 	/**
      * @return a set with all direct concepts of a given OWL individual
-	 * @throws KAON2Exception 
+	 * @throws OWLException 
 	 * @throws URISyntaxException 
      */
 	public Set<Set> typesOf(String ontologyURI, OWLIndividual individual) 
@@ -214,7 +209,7 @@ public interface DLReasonerFacade {
     
     /**
      * @return a set with all (also indirect) concepts of a given OWL individual
-     * @throws KAON2Exception 
+     * @throws OWLException 
      * @throws URISyntaxException 
      */
     public Set<Set> allTypesOf(String ontologyURI, OWLIndividual individual) 
@@ -222,7 +217,7 @@ public interface DLReasonerFacade {
     
     /**
      * @return a set containing all subproperties of a given OWL property
-     * @throws KAON2Exception 
+     * @throws OWLException 
      * @throws URISyntaxException 
      */
     public Set<Set> descendantPropertiesOf(String ontologyURI, 
@@ -233,14 +228,14 @@ public interface DLReasonerFacade {
      * @return a set containing all direct subproperties of a given OWL 
      * 			property
      * @throws URISyntaxException 
-     * @throws KAON2Exception 
+     * @throws OWLException 
      */
     public Set<Set> subPropertiesOf(String ontologyURI, 
     		OWLProperty property) throws OWLException,  URISyntaxException;
     
     /**
      * @return a set containing all superproperties of a given OWL property
-     * @throws KAON2Exception 
+     * @throws OWLException 
      * @throws URISyntaxException 
      */
     public Set<Set> ancestorPropertiesOf(String ontologyURI, 
@@ -251,14 +246,14 @@ public interface DLReasonerFacade {
      * @return a set containing all direct superproperties of a given OWL 
      * 			property
      * @throws URISyntaxException 
-     * @throws KAON2Exception 
+     * @throws OWLException 
      */
     public Set<Set> superPropertiesOf(String ontologyURI, 
     		OWLProperty property) throws OWLException,  URISyntaxException; 
     
     /**
      * @return a set containing all properties equivalent to the given property
-     * @throws KAON2Exception 
+     * @throws OWLException 
      * @throws URISyntaxException 
      */
 	public Set<OWLEntity> equivalentPropertiesOf(String ontologyURI, 
@@ -267,7 +262,7 @@ public interface DLReasonerFacade {
     
 	/**
 	 * @return a set containing all properties inverse to the given property
-	 * @throws KAON2Exception 
+	 * @throws OWLException 
 	 * @throws URISyntaxException 
 	 */
 	public Set<OWLEntity> inversePropertiesOf(String ontologyURI, 
@@ -276,7 +271,8 @@ public interface DLReasonerFacade {
 	
 	/**
 	 * @return a set containing the domains of the given property
-	 * @throws KAON2Exception 
+	 * @throws OWLException
+	 * @throws URISyntaxException 
 	 */
 	public Set<OWLEntity> domainsOf(String ontologyURI, 
 			OWLProperty property) 
@@ -285,7 +281,7 @@ public interface DLReasonerFacade {
 	/**
 	 * @return a set containing the ranges of the given property
 	 * @throws URISyntaxException 
-	 * @throws KAON2Exception 
+	 * @throws OWLException 
 	 */
 	public Set<OWLEntity> rangesOf(String ontologyURI, 
 			OWLObjectProperty property) 
@@ -294,7 +290,7 @@ public interface DLReasonerFacade {
 	/**
 	 * @return a set containing the ranges of the given property
 	 * @throws URISyntaxException 
-	 * @throws KAON2Exception 
+	 * @throws OWLException 
 	 */
 	public Set<OWLConcreteDataTypeImpl> rangesOf(String ontologyURI, 
 			OWLDataProperty property) 
@@ -304,7 +300,7 @@ public interface DLReasonerFacade {
 	 * @return a map containing all data properties and for each a set containing
 	 * 			all its values
 	 * @throws URISyntaxException 
-	 * @throws KAON2Exception 
+	 * @throws OWLException 
 	 */
 	public Map<OWLEntity, Set<OWLConcreteDataImpl>> getDataPropertyValues(
 			String ontologyURI, OWLIndividual individual) 
@@ -313,7 +309,7 @@ public interface DLReasonerFacade {
 	/**
 	 * @return a map containing all object properties and for each a set containing
 	 * 			all its values
-	 * @throws KAON2Exception 
+	 * @throws OWLException 
 	 * @throws URISyntaxException 
 	 */
 	public Map<OWLEntity, Set<OWLEntity>> getObjectPropertyValues(
@@ -324,7 +320,7 @@ public interface DLReasonerFacade {
 	 * @return a map containing all individuals who have values for a specified 
 	 * 			object property and for each a set containing all its values
 	 * @throws URISyntaxException 
-	 * @throws KAON2Exception 
+	 * @throws OWLException 
 	 */
 	public Map<OWLEntity, Set<OWLEntity>> getPropertyValues(String ontologyURI, 
 			OWLObjectProperty property) 
@@ -334,7 +330,7 @@ public interface DLReasonerFacade {
 	 * @return a map containing all individuals who have values for a specified 
 	 * 			data property and for each a set containing all its values
 	 * @throws URISyntaxException 
-	 * @throws KAON2Exception 
+	 * @throws OWLException 
 	 */
 	public Map<OWLEntity, Set<OWLConcreteDataImpl>> getPropertyValues(
 			String ontologyURI, OWLDataProperty property) 
@@ -343,7 +339,7 @@ public interface DLReasonerFacade {
 	/**
 	 * @return true if the given subject individual has the given object property 
 	 * 			with the given object individual as value
-	 * @throws KAON2Exception 
+	 * @throws OWLException 
 	 * @throws InterruptedException 
 	 */
 	public boolean hasPropertyValue(String ontologyURI, OWLIndividual subject,
@@ -354,7 +350,7 @@ public interface DLReasonerFacade {
 	 * @return true if the given subject individual has the given data property 
 	 * 			with the given data value as value
 	 * @throws InterruptedException 
-	 * @throws KAON2Exception 
+	 * @throws OWLException 
 	 */
 	public boolean hasPropertyValue(String ontologyURI, OWLIndividual subject,
 			OWLDataProperty property, OWLDataValue object) 
@@ -363,7 +359,7 @@ public interface DLReasonerFacade {
 	/**
 	 * @return individual value of the given individual and object property
 	 * @throws InterruptedException 
-	 * @throws KAON2Exception 
+	 * @throws OWLException 
 	 * @throws URISyntaxException 
 	 */
 	public OWLIndividual getObjectPropertyValue(String ontologyURI, 
@@ -374,7 +370,7 @@ public interface DLReasonerFacade {
 	 * @return data value of the given individual and data property
 	 * @throws URISyntaxException 
 	 * @throws InterruptedException 
-	 * @throws KAON2Exception 
+	 * @throws OWLException 
 	 */
 	public OWLDataValue getDataPropertyValue(String ontologyURI, 
 			OWLIndividual subject, OWLDataProperty property) 
@@ -383,7 +379,7 @@ public interface DLReasonerFacade {
 	/**
 	 * @return set containing individual values of the given individual and object property
 	 * @throws InterruptedException 
-	 * @throws KAON2Exception 
+	 * @throws OWLException 
 	 * @throws URISyntaxException 
 	 */
 	public Set<OWLEntity> getObjectPropertyValues(String ontologyURI, 
@@ -393,7 +389,7 @@ public interface DLReasonerFacade {
 	/**
 	 * @return set containing data values of the given individual and data property
 	 * @throws InterruptedException 
-	 * @throws KAON2Exception 
+	 * @throws OWLException 
 	 * @throws URISyntaxException 
 	 */
 	public Set<OWLDataValue> getDataPropertyValues(String ontologyURI, 
@@ -411,6 +407,9 @@ public interface DLReasonerFacade {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.10  2007/02/09 08:40:54  hlausen
+ * DLFacade should be independent of libs of specific reasoner!!!!
+ *
  * Revision 1.9  2007/01/11 13:04:46  nathalie
  * removed unnecessary dependencies from pellet library
  *
