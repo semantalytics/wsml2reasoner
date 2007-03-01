@@ -304,7 +304,7 @@ public class FOLBasedWSMLReasoner implements WSMLFOLReasoner {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Map<IRI, Set<IRI>> getInferingAttributeValues(IRI ontologyID, Instance instance) {
+	public Map<IRI, Set<Term>> getInferingAttributeValues(IRI ontologyID, Instance instance) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
@@ -312,7 +312,7 @@ public class FOLBasedWSMLReasoner implements WSMLFOLReasoner {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Map<Instance, Set<IRI>> getInferingAttributeInstances(IRI ontologyID, Identifier attributeId) {
+	public Map<Instance, Set<Term>> getInferingAttributeInstances(IRI ontologyID, Identifier attributeId) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
