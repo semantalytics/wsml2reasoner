@@ -50,7 +50,7 @@ import org.wsmo.wsml.Parser;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.1 $ $Date: 2007-01-10 16:08:28 $
+ * @version $Revision: 1.2 $ $Date: 2007-03-01 11:37:02 $
  */
 public class Kaon2DLReasonerExample {
 	
@@ -125,27 +125,19 @@ public class Kaon2DLReasonerExample {
 				wsmoFactory.createConcept(
 				wsmoFactory.createIRI(ns + "Woman")));
         for (Instance instance : set) 
-        	System.out.println(instance.getIdentifier().toString());
+        	System.out.println(((IRI) instance.getIdentifier()).getLocalName().toString());
         
         // get one specific instance's age
         System.out.println("\n----------------------\n");
-        System.out.println("Get age of instance Anna: ");
-        String age = reasoner.getConstraintAttributeValue((IRI) exampleOntology.getIdentifier(), 
-        		wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Anna")),
-        		wsmoFactory.createIRI(ns + "ageOfHuman"));
-        System.out.println(age);
-        
-        // get all info about one specific instance
-        System.out.println("\n----------------------\n");
         System.out.println("All information about instance Mary:");
-        Set<Entry<IRI, Set<IRI>>> entrySet = reasoner.getInferingAttributeValues(
+        Set<Entry<IRI, Set<Term>>> entrySet = reasoner.getInferingAttributeValues(
         		(IRI) exampleOntology.getIdentifier(), 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Mary"))).entrySet();
-		for (Entry<IRI, Set<IRI>> entry : entrySet) {
+		for (Entry<IRI, Set<Term>> entry : entrySet) {
 			System.out.println(entry.getKey().getLocalName().toString());
-			Set<IRI> IRIset = entry.getValue();
-			for (IRI value : IRIset) 
-				System.out.println("   value: " + value.getLocalName().toString());
+			Set<Term> IRIset = entry.getValue();
+			for (Term value : IRIset) 
+				System.out.println("   value: " + ((IRI) value).getLocalName().toString());
 		}
 		Set<Entry<IRI, Set<Term>>> entrySetTerm = reasoner.getConstraintAttributeValues(
 				(IRI) exampleOntology.getIdentifier(), 
@@ -201,5 +193,8 @@ public class Kaon2DLReasonerExample {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.1  2007/01/10 16:08:28  nathalie
+ * added example for kaon2 dl reasoning
+ *
  *
  */
