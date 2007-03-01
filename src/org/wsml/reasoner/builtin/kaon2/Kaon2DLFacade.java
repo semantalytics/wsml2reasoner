@@ -68,7 +68,7 @@ import org.wsml.reasoner.serializer.owl.OWLSerializerImpl;
  *
  * @author Nathalie Steinmetz, DERI Innsbruck;
  * 		   Holger Lausen, DERI Innsbruck
- * @version $Revision: 1.5 $ $Date: 2007-02-26 16:23:18 $
+ * @version $Revision: 1.6 $ $Date: 2007-03-01 11:34:21 $
  */
 public class Kaon2DLFacade implements DLReasonerFacade {
 
@@ -518,6 +518,19 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 						new URI(axiom.getDescription().toString()));
 				entitySet.add(entity);
 			}
+			// check for direct concepts that are equivalent to indirect concepts
+			Set<Set> allConcepts = allTypesOf(ontologyURI, individual);
+			for (Set<OWLEntity> allEntities : allConcepts) {
+				allEntities.removeAll(entitySet);
+				for (OWLEntity entity : allEntities) {
+					for (OWLEntity ent : entitySet) {
+						if(isEquivalentClass(ontologyURI, (OWLDescription)entity, (OWLDescription)ent) ) {
+							entitySet.remove(ent);
+						}
+					}
+				}
+			}
+			
 			resultSet.add(entitySet);
 			return resultSet;
         } catch (KAON2Exception e) {
@@ -1410,6 +1423,9 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.5  2007/02/26 16:23:18  nathalie
+ * fixed Kaon2 dl facade: 1. changing some requests into subsumption hierarchy queries and 2. fixing sub-, super-, equivalent and inverse relations queries
+ *
  * Revision 1.4  2007/02/09 08:40:53  hlausen
  * DLFacade should be independent of libs of specific reasoner!!!!
  *
