@@ -19,6 +19,7 @@
 package reasoner.dl;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
@@ -26,8 +27,8 @@ import junit.framework.TestSuite;
  * @author Nathalie Steinmetz, DERI Innsbruck
  *
  */
-public class ReasonerDLTests {
-
+public class ReasonerDLTests extends TestCase {
+	
 	/**
 	 * @param args
 	 */
@@ -38,9 +39,9 @@ public class ReasonerDLTests {
  	public static Test suite(){
         TestSuite suite = new TestSuite("Test suite for the WSML-DL reasoner");
         //$JUnit-BEGIN$
-        suite.addTestSuite(PelletSimpleInferenceTests.class);
-        suite.addTestSuite(Kaon2SimpleInferenceTests.class);
+        suite.addTestSuite(SimpleInferenceTests.class);
         suite.addTestSuite(OntologyRegistrationTest.class);
+        suite.addTestSuite(CycleTests.class);
         //$JUnit-END$
         return suite;
     }
