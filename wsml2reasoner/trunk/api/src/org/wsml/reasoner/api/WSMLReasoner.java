@@ -98,21 +98,57 @@ public interface WSMLReasoner {
     public boolean isMemberOf(IRI ontologyID, Instance instance, Concept concept);
 
     /**
+     * Please note that the results of this query differ depending on whether 
+     * a Datalog or a DL reasoner is used: 
+     * - Datalog: the method returns all subconcepts, including equivalent 
+     * 			  concepts!
+     * - DL: the method returns all subconcepts, except the equivalent 
+     * 		 concepts!
+     * 
      * @return a set containing all subconcepts of the given concept
      */
     public Set<Concept> getSubConcepts(IRI ontologyID, Concept concept);
     
     /**
+     * Please note that the results of this query differ depending on whether 
+     * a Datalog or a DL reasoner is used: 
+     * - Datalog: because Datalog does not support equivalence queries, the 
+     * 			  method returns an empty set in case there is a cycle like 
+     * 			  e.g. the following:
+     * 			  - school subConceptOf place
+     * 			  - university subConceptOf school
+     * 			  - place subConceptOf university
+     * - DL: the method returns all direct subconcepts, except the equivalent 
+     * 		 concepts!
+     * 
      * @return a set containing all direct subconcepts of the given concept
      */
     public Set<Concept> getDirectSubConcepts(IRI ontologyID, Concept concept);
 
     /**
+     * Please note that the results of this query differ depending on whether 
+     * a Datalog or a DL reasoner is used: 
+     * - Datalog: the method returns all superconcepts, including equivalent 
+     * 			  concepts!
+     * - DL: the method returns all superconcepts, except the equivalent 
+     * 		 concepts!
+     * 
      * @return a set containing all superconcepts of the given concept
      */
     public Set<Concept> getSuperConcepts(IRI ontologyID, Concept concept);
     
     /**
+     * Please note that the results of this query differ depending on whether 
+     * a Datalog or a DL reasoner is used: 
+     * - Datalog: because Datalog does not support equivalence queries, the 
+     * 			  method returns an empty set in case there is a cycle like 
+     * 			  e.g. the following:
+     * 			  - school subConceptOf place
+     * 			  - university subConceptOf school
+     * 			  - place subConceptOf university
+     * - DL: the method returns all direct superconcepts, except the equivalent 
+     * 		 concepts!
+     * 
      * @return a set containing all direct superconcepts of the given concept
      */
     public Set<Concept> getDirectSuperConcepts(IRI ontologyID, Concept concept);
@@ -138,6 +174,13 @@ public interface WSMLReasoner {
 	public Set<Instance> getAllInstances(IRI ontologyID);
 	
 	/**
+	 * Please note that this method returns in Datalog only attributes that:
+	 * - are explicitly defined as inferring or constraining attributes
+	 * - have been assigned a value
+	 * 
+	 * The DL reasoner also returns attributes that have not been defined 
+	 * explicitly and that have no values assigned to.
+	 * 
 	 * @return a set containing all attributes from the registered ontology
 	 */
 	public Set<IRI> getAllAttributes(IRI ontologyID);
@@ -153,42 +196,60 @@ public interface WSMLReasoner {
 	public Set<IRI> getAllInferenceAttributes(IRI ontologyID);
 
 	/**
+	 * This method is not supported at the Datalog Reasoners!
+	 * 
 	 * @return a set containing all concepts equivalent to the given concept
 	 */
 	public Set<Concept> getEquivalentConcepts(IRI ontologyID, Concept concept);
 	
 	/**
+	 * This method is not supported at the Datalog Reasoners!
+	 * 
 	 * @return true if the two given concepts are equivalent, false otherwise
 	 */
 	public boolean isEquivalentConcept(IRI ontologyID, Concept concept1, 
 			Concept concept2);
 	
 	/**
+	 * Please note that this method returns all direct concepts of a given 
+	 * instance, except for direct concepts that are equivalent to indirect 
+	 * concepts.
+	 * 
      * @return a set with all direct concepts of a given instance.
      */
 	public Set<Concept> getDirectConcepts(IRI ontologyID, Instance instance);
 	
 	/**
+	 * This method is not supported at the Datalog Reasoners!
+	 * 
 	 * @return a set containing all identifiers of subrelations of a given relation
 	 */
 	public Set<IRI> getSubRelations(IRI ontologyID, Identifier attributeId);
 	
 	/**
+	 * This method is not supported at the Datalog Reasoners!
+	 * 
 	 * @return a set containing all identifiers of direct subrelations of a given relation
 	 */
 	public Set<IRI> getDirectSubRelations(IRI ontologyID, Identifier attributeId);
 	
 	/**
+	 * This method is not supported at the Datalog Reasoners!
+	 * 
 	 * @return a set containing all identifiers of superrelations of a given relation
 	 */
 	public Set<IRI> getSuperRelations(IRI ontologyID, Identifier attributeId);
 	
 	/**
+	 * This method is not supported at the Datalog Reasoners!
+	 * 
 	 * @return a set containing all identifiers of direct superrelations of a given relation
 	 */
 	public Set<IRI> getDirectSuperRelations(IRI ontologyID, Identifier attributeId);
 	
 	/**
+	 * This method is not supported at the Datalog Reasoners!
+	 * 
 	 * @return a set containing the identifiers of all relations/attributes 
 	 * 			equivalent to the given relation/attribute
 	 */
@@ -196,6 +257,8 @@ public interface WSMLReasoner {
 			Identifier attributeId);
 	
 	/**
+	 * This method is not supported at the Datalog Reasoners!
+	 * 
 	 * @return a set containing the identifiers of all relations/attributes 
 	 * 			inverse to the given relation/attribute
 	 */
@@ -222,7 +285,7 @@ public interface WSMLReasoner {
 	 * @return a map containing all infering attributes of a specified instance 
 	 * 			and for each a set containing all its values
 	 */
-	public Map<IRI, Set<IRI>> getInferingAttributeValues(IRI ontologyID, 
+	public Map<IRI, Set<Term>> getInferingAttributeValues(IRI ontologyID, 
 			Instance instance);
 	
 	/**
@@ -236,7 +299,7 @@ public interface WSMLReasoner {
 	 * @return a map containing all instances who have values for a specified 
 	 * 			infering attribute and for each a set containing all its values
 	 */
-	public Map<Instance, Set<IRI>> getInferingAttributeInstances(
+	public Map<Instance, Set<Term>> getInferingAttributeInstances(
 			IRI ontologyID, Identifier attributeId);
 	
 	/**
@@ -247,29 +310,17 @@ public interface WSMLReasoner {
 			IRI ontologyID, Identifier attributeId);
 	
 	/**
-	 * @return instance value of the given instance and infering attribute
-	 */
-	public Instance getInferingAttributeValue(IRI ontologyID, Instance subject, 
-			Identifier attributeId);
-	
-	/**
-	 * @return data value of the given instance and constraint attribute
-	 */
-	public String getConstraintAttributeValue(IRI ontologyID, Instance subject, 
-			Identifier attributeId);
-	
-	/**
 	 * @return set containing instance values of the given instance and 
 	 * 			infering attribute
 	 */
-	public Set<Instance> getInferingAttributeValues(IRI ontologyID, 
+	public Set getInferingAttributeValues(IRI ontologyID, 
 			Instance subject, Identifier attributeId);
 	
 	/**
 	 * @return set containing data values of the given instance and 
 	 * 			constraint attribute
 	 */
-	public Set<String> getConstraintAttributeValues(IRI ontologyID, 
+	public Set getConstraintAttributeValues(IRI ontologyID, 
 			Instance subject, Identifier attributeId);
 
 }
