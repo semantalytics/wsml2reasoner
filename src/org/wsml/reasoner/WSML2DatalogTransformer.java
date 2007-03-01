@@ -30,6 +30,7 @@ import org.omwg.logicalexpression.AtomicExpression;
 import org.omwg.logicalexpression.AttributeConstraintMolecule;
 import org.omwg.logicalexpression.AttributeInferenceMolecule;
 import org.omwg.logicalexpression.AttributeValueMolecule;
+import org.omwg.logicalexpression.Constants;
 import org.omwg.logicalexpression.Constraint;
 import org.omwg.logicalexpression.Disjunction;
 import org.omwg.logicalexpression.Equivalence;
@@ -87,6 +88,13 @@ public class WSML2DatalogTransformer {
     
     public final static String PRED_DECLARED_IRI = "http://www.wsmo.org/wsml/wsml-syntax/extensions#wsml_is_declared_iri";
 
+    public final static String PRED_DIRECT_SUBCONCEPT = "http://temp/direct/subConceptOf";
+    
+    public final static String PRED_INDIRECT_SUBCONCEPT = "http://temp/indirect/subConceptOf";
+    
+    public final static String PRED_DIRECT_CONCEPT = "http://temp/direct/memberOf";
+    
+    public final static String PRED_INDIRECT_CONCEPT = "http://temp/indirect/memberOf";
     
     WSMO4JManager wsmoManager;
 
@@ -121,6 +129,7 @@ public class WSML2DatalogTransformer {
         DatalogVisitor datalogVisitor = new DatalogVisitor();
 
         for (LogicalExpression r : rules) {
+//        	System.out.println(r.toString());
             r.accept(datalogVisitor);
             Rule translation = (Rule) datalogVisitor.getSerializedObject();
             if (translation != null) {
@@ -150,6 +159,7 @@ public class WSML2DatalogTransformer {
      */
     public Set<Rule> transform(LogicalExpression rule)
             throws IllegalArgumentException {
+//    	System.out.println(rule.toString());
         Set<LogicalExpression> rules = new HashSet<LogicalExpression>();
         rules.add(rule);
         return transform(rules);
@@ -188,13 +198,11 @@ public class WSML2DatalogTransformer {
 
         // reflexivity: sco(?c,?c) :- ?c is an IRI that explicitly occures in the ontology
         // (i.e. concepts, relations, attr, instances, 
-        // but does not denote a datatype or datatype value)
-        
+        // but does not denote a datatype or datatype value)    
         body = new LinkedList<Literal>();
         head = new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept);
         body.add(new Literal(true, PRED_DECLARED_IRI, vConcept));
         result.add(new Rule(head, body));
-
         
         // Inference of attr value types: mo(v,c2) <- itype(c1, att,
         // c2), mo(o,c1), hval(o,att, v)
@@ -207,27 +215,66 @@ public class WSML2DatalogTransformer {
         body.add(new Literal(true, PRED_HAS_VALUE, vInstance, vAttribute,
                 vInstance2));
         result.add(new Rule(head, body));
+
+        /*
+         *  Rules for: 
+         *  - getting all direct subConcepts of a specific concepts 
+         *  - getting all direct concepts a specific instance is member of
+         */
+        // Indirect concepts: indirect(?x,?z) :- ?x subConceptOf ?y and 
+        //                    ?y subConceptOf ?z and ?x != ?y and ?y != ?z.
+        body = new LinkedList<Literal>();
+        head = new Literal(true, PRED_INDIRECT_SUBCONCEPT , vConcept, vConcept2);
+        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept3));
+        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept3, vConcept2));
+        body.add(new Literal(true, Constants.INEQUAL, vConcept, vConcept3));
+        body.add(new Literal(true, Constants.INEQUAL, vConcept3, vConcept2));
+        result.add(new Rule(head, body));       
+        // Direct concepts: direct(?x,?y) :- ?x subConceptOf ?y and  
+        //                  naf(indirect(?x,?y)).
+        body = new LinkedList<Literal>();
+        head = new Literal(true, PRED_DIRECT_SUBCONCEPT, vConcept, vConcept3);
+        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept3));
+        body.add(new Literal(false, PRED_INDIRECT_SUBCONCEPT, vConcept, vConcept3));
+        result.add(new Rule(head, body));        
+        // Indirect concepts of: indirectOf(?x,?y) :- ?x memberOf ?y and 
+        // 						 ?x memberOf ?z and ?z subConceptOf ?y and ?z != ?y.
+        body = new LinkedList<Literal>();
+        head = new Literal(true, PRED_INDIRECT_CONCEPT , vInstance, vConcept);
+        body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept));
+        body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept2));
+        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept2, vConcept));
+        body.add(new Literal(true, Constants.INEQUAL, vConcept2, vConcept));
+        result.add(new Rule(head, body));       
+        // Direct concepts of: directOf(?x,?y) :- ?x memberOf ?y and  
+        //                     naf(indirectOf(?x,?y)).
+        body = new LinkedList<Literal>();
+        head = new Literal(true, PRED_DIRECT_CONCEPT, vInstance, vConcept);
+        body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept));
+        body.add(new Literal(false, PRED_INDIRECT_CONCEPT, vInstance, vConcept));
+        result.add(new Rule(head, body));        
         
         // TODO: subRelationOf not covered yet
-
+        
+        /*
         // Semantics of C1[att => C2] (oftype constraint)
         // !- oftype(c1, att, c2), mo(i,c1), hval(i, att, v), NAF mo(v,c2)
         // With variables: oftype(v1, v2, v3), mo(v4,v1), hval(v4, v2, v5), NAF
         // mo(v5,v3)
-
+         
         // Commented out, because it is handled by
-        /*
-
-         body = new LinkedList<Literal>();
-         body.add(new Literal(true, PRED_OF_TYPE, vConcept, vAttribute,
-         vRange));
-         body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept));
-         body.add(new Literal(true, PRED_HAS_VALUE, vInstance, vAttribute,
-         vAttributeValue));
-         body.add(new Literal(false, PRED_MEMBER_OF, vAttributeValue,
-         vRange));
-         result.add(new Rule(null, body));
-         */
+        
+        body = new LinkedList<Literal>();
+        body.add(new Literal(true, PRED_OF_TYPE, vConcept, vAttribute,
+        vRange));
+        body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept));
+        body.add(new Literal(true, PRED_HAS_VALUE, vInstance, vAttribute,
+        vAttributeValue));
+        body.add(new Literal(false, PRED_MEMBER_OF, vAttributeValue,
+        vRange));
+        result.add(new Rule(null, body));
+        */
+        
         return result;
     }
 
