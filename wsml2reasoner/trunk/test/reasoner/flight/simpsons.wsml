@@ -30,6 +30,21 @@ axiom spouses_are_in_love
 implies
 ?x[inLoveWith hasValue ?y]. 
 
+//axiom definedBy
+//  _"http://temp/indirect/indirectRelation"(?x,?y) :- 
+//		?z[?x hasValue ?w] implies ?z[?y hasValue ?w].
+//  _"http://temp/indirect/directRelation"(?x,?w) :- 
+//  		_"http://temp/indirect/temp3"(?x,?w) and naf(_"http://temp/indirect/indirectRelation"(?x,?w)).
+//  _"http://temp/indirect/indirectRelation"(?x,?y) :- 
+//  		_"http://temp/indirect/temp"(?x,?z) and _"http://temp/indirect/temp2"(?z,?y).
+//  _"http://temp/indirect/directRelation"(?x,?w) :- 
+//  		_"http://temp/indirect/temp3"(?x,?w) and naf(_"http://temp/indirect/indirectRelation"(?x,?w)).
+//  _"http://temp/indirect/subConceptOf"(?x,?y,?z) :- 
+//		?x subConceptOf ?y and ?y subConceptOf ?z and ?x != ?y and ?y != ?z.
+//  _"http://temp/direct/subConceptOf"(?x,?y) :- 
+//		?x subConceptOf ?y and  naf(_"http://temp/indirect/subConceptOf"(?x,?y)).
+//  place subConceptOf university.
+
 concept gender
 
 concept actor
@@ -53,6 +68,8 @@ concept workplace subConceptOf place
 concept school subConceptOf place
      hasPrinciple ofType character
      hasLocation ofType town
+     
+concept university subConceptOf school			// test
 
 concept church subConceptOf place
      hasReverant ofType character
@@ -61,7 +78,7 @@ concept church subConceptOf place
 concept character
      hasName ofType _string
      hasGender ofType gender
-     hasActor impliesType actor			// changed to impliesType for test reasons
+     hasActor ofType actor
      hasSpouse ofType character
      hasChild ofType character
      hasParent ofType character
@@ -79,6 +96,8 @@ concept character
      mayorOf ofType town
      policeChiefOf ofType town
      reverantOf ofType church
+     testAttribute impliesType actor			// test
+     secondTestAttribute impliesType _string	// test
 
 instance male memberOf gender
 
@@ -220,7 +239,7 @@ instance police_station memberOf workplace
      hasName hasValue "Springfield Police Station"
      hasLocation hasValue springfield
 
-instance springfield_elementary memberOf { school, workplace} 
+instance springfield_elementary memberOf {school, workplace} 
      hasName hasValue "Springfield Elementary"
      hasPrinciple hasValue seymour_skinner
      hasLocation hasValue springfield
@@ -245,8 +264,10 @@ instance homer_simpson memberOf character
      hasCatchPhrase hasValue "D'oh"
      isCustomerOf hasValue {kwik_e_mart, moes_tavern }
      hasWorkingPlace hasValue nuclear_plant
-     worshipsAt hasValue springfield_church
-
+     worshipsAt hasValue springfield_church				
+	 testAttribute hasValue dan_castellanata			// test
+	 secondTestAttribute hasValue "test"				// test
+	 
 instance marge_simpson memberOf character
      nonFunctionalProperties
           dc#title hasValue "Marge Simpson"
@@ -683,7 +704,8 @@ instance ralph_wiggum memberOf character
 /* Relations added to the original simpson ontology for testing purposes */
 /* --------------------------------------------------------------------- */
 
-relation hasParent(ofType character, ofType character)
+relation hasRelative(ofType character, ofType character)
+relation hasParent(ofType character, ofType character) subRelationOf hasRelative
 relation hasMother(ofType character, ofType woman) subRelationOf hasParent
 concept boy
     hasFather ofType father
@@ -706,7 +728,7 @@ axiom definedBy
 	!- character = simpson_member.
 	simpson_real_member[newAttribute hasValue "new"].
 	actor[speaksCharacter ofType character].
-	
+
 	// inverse relations
     ?x[hasHolder hasValue ?y] implies ?y[hasPet hasValue ?x].	
     
