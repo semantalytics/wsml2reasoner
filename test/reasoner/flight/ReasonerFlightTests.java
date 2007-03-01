@@ -21,6 +21,7 @@ public class ReasonerFlightTests {
         suite.addTest(MaciejVTABug.suite());
         suite.addTest(MaciejVTABug2.suite());
         suite.addTestSuite(ViolationsTest.class);
+        suite.addTestSuite(SimpleInferenceTests.class);
         //$JUnit-END$
         return suite;
     }
