@@ -21,8 +21,8 @@ ontology _"http://www.example.org/ontologies/decompositionExample"
   axiom definedBy
     // this conjunction should not be decomposed, as there is a dependency between the 
     // molecules on the right side of the implication.
-    ?x memberOf C implies ?x[attr1 hasValue ?y] and ?y[attr1 hasValue ?z].
+    ?x memberOf Woman implies ?x[attr1 hasValue ?y] and ?y[attr1 hasValue ?z].
     
     // this conjunction should be decomposed
-    ?x memberOf C implies ?x[attr1 hasValue ?y] and ?x[attr2 hasValue ?w].  
+    ?x memberOf Woman implies ?x[attr1 hasValue ?y] and ?x[attr2 hasValue ?w].  
      

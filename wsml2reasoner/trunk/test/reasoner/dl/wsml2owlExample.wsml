@@ -29,11 +29,13 @@ ontology _"http://www.example.org/ontologies/example"
   relation hasMother(impliesType {Child}, impliesType {Woman}) 
   		subRelationOf hasParent
 
+  relation hasParent(impliesType Child, impliesType Person)
+  		subRelationOf hasRelative
+  
   instance Mary memberOf {Woman, Mother}
     hasChild hasValue Jack
-    hasWeight hasValue 62.5
+    hasWeight hasValue 62
     hasName hasValue "Mary Jones"
-    hasBirthday hasValue _date(1976,08,16)  
     
   instance Jack memberOf{Human} 
 
@@ -68,7 +70,6 @@ ontology _"http://www.example.org/ontologies/example"
 
 	  // Attribute data value definition
       Anna[hasWeight hasValue 60].
-      Mary[hasWeight hasValue 61.5].
       Mary[ageOfHuman hasValue 33].
       ageOfHuman(Jim, 31).
       
