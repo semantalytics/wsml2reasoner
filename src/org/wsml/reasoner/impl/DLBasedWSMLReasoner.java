@@ -57,12 +57,12 @@ import uk.ac.man.cs.img.owl.validation.ValidatorLogger;
  *
  * <pre>
  *  Created on July 3rd, 2006
- *  Committed by $Author: hlausen $
+ *  Committed by $Author: nathalie $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/impl/DLBasedWSMLReasoner.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.15 $ $Date: 2007-02-09 08:40:53 $
+ * @version $Revision: 1.16 $ $Date: 2007-03-01 11:37:32 $
  */
 public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 
@@ -562,7 +562,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 			throw new InternalReasonerException(e);
 		} catch (URISyntaxException e) {
 			throw new InternalReasonerException(e);
-		} 
+		}
 		return elements;
 	}
 	
@@ -1010,9 +1010,9 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
-	public Map<IRI, Set<IRI>> getInferingAttributeValues(IRI ontologyID, 
+	public Map<IRI, Set<Term>> getInferingAttributeValues(IRI ontologyID, 
 			Instance instance) {
-		Map<IRI, Set<IRI>> elements = new HashMap<IRI, Set<IRI>>();
+		Map<IRI, Set<Term>> elements = new HashMap<IRI, Set<Term>>();
 		try {
 			Set<Entry<OWLEntity, Set<OWLEntity>>> entrySet = 
 				builtInFacade.getObjectPropertyValues(ontologyID.toString(), 
@@ -1021,7 +1021,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 								entrySet();
 			for (Entry<OWLEntity, Set<OWLEntity>> entry : entrySet) {
 				Set<OWLEntity> set = entry.getValue();
-				Set<IRI> IRISet = new HashSet<IRI>();
+				Set<Term> IRISet = new HashSet<Term>();
 				for (OWLEntity entity : set) {
 					if (ns == null || !entity.getURI().toString().startsWith(ns)) {
 						IRISet.add(wsmoFactory.createIRI(
@@ -1050,9 +1050,9 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
-	public Map<Instance, Set<IRI>> getInferingAttributeInstances(
+	public Map<Instance, Set<Term>> getInferingAttributeInstances(
 			IRI ontologyID, Identifier attributeId) {
-		Map<Instance, Set<IRI>> elements = new HashMap<Instance, Set<IRI>>();
+		Map<Instance, Set<Term>> elements = new HashMap<Instance, Set<Term>>();
 		try {
 			Set<Entry<OWLEntity, Set<OWLEntity>>> entrySet = 
 				builtInFacade.getPropertyValues(ontologyID.toString(), 
@@ -1060,7 +1060,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 								attributeId.toString()))).entrySet();
 			for (Entry<OWLEntity, Set<OWLEntity>> entry : entrySet) {
 				Set<OWLEntity> set = entry.getValue();
-				Set<IRI> IRISet = new HashSet<IRI>();
+				Set<Term> IRISet = new HashSet<Term>();
 				for (OWLEntity entity : set) {
 					if (ns == null || !entity.getURI().toString().startsWith(ns)) {
 						IRISet.add(wsmoFactory.createIRI(
@@ -1120,48 +1120,10 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
-	public Instance getInferingAttributeValue(IRI ontologyID, Instance subject, 
-			Identifier attributeId) {
-		try {
-			return wsmoFactory.getInstance(wsmoFactory.createIRI(
-					builtInFacade.getObjectPropertyValue(ontologyID.toString(), 
-							owlDataFactory.getOWLIndividual(new URI(
-									subject.getIdentifier().toString())),
-									owlDataFactory.getOWLObjectProperty(new URI(
-									attributeId.toString()))).getURI().toString()));
-		} catch (OWLException e) {
-			throw new InternalReasonerException(e);
-		} catch (URISyntaxException e) {
-			throw new InternalReasonerException(e);
-		} catch (InterruptedException e) {
-			throw new InternalReasonerException(e);
-		}
-	}
-	
-	/**
-	 * @return data value of the given instance and attribute
-	 */
-	public String getConstraintAttributeValue(IRI ontologyID, Instance subject, 
-			Identifier attributeId) {
-		try {
-			return(builtInFacade.getDataPropertyValue(ontologyID.toString(), 
-							owlDataFactory.getOWLIndividual(new URI(
-									subject.getIdentifier().toString())),
-							owlDataFactory.getOWLDataProperty(new URI(
-									attributeId.toString()))).getValue().
-									toString());
-		} catch (OWLException e) {
-			throw new InternalReasonerException(e);
-		} catch (URISyntaxException e) {
-			throw new InternalReasonerException(e);
-		} catch (InterruptedException e) {
-			throw new InternalReasonerException(e);
-		}
-	}
-	
-	public Set<Instance> getInferingAttributeValues(IRI ontologyID, 
+	@SuppressWarnings("unchecked")
+	public Set getInferingAttributeValues(IRI ontologyID, 
 			Instance subject, Identifier attributeId) {
-		Set<Instance> elements = new HashSet<Instance>();
+		Set elements = new HashSet();
 		try {
 			Set<OWLEntity> set = builtInFacade.getObjectPropertyValues(
 					ontologyID.toString(), owlDataFactory.getOWLIndividual(
@@ -1170,12 +1132,12 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 									new URI(attributeId.toString())));
 			for (OWLEntity entity : set) {
 				if (ns == null || !entity.getURI().toString().startsWith(ns)) {
-					elements.add(wsmoFactory.getInstance(wsmoFactory.createIRI(
-							entity.getURI().toString())));
+					elements.add(wsmoFactory.createIRI(
+							entity.getURI().toString()));
 				} 
 				else {
-					elements.add(wsmoFactory.getInstance(wsmoFactory.createIRI(
-							ns + entity.getURI().getFragment())));
+					elements.add(wsmoFactory.createIRI(
+							ns + entity.getURI().getFragment()));
 				}
 			}
 		} catch (OWLException e) {
@@ -1191,9 +1153,10 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 	/**
 	 * @return data value of the given instance and attribute
 	 */
-	public Set<String> getConstraintAttributeValues(IRI ontologyID, 
+	@SuppressWarnings("unchecked")
+	public Set getConstraintAttributeValues(IRI ontologyID, 
 			Instance subject, Identifier attributeId) {
-		Set<String> elements = new HashSet<String>();
+		Set elements = new HashSet();
 		try {
 			Set<OWLDataValue> set = builtInFacade.getDataPropertyValues(
 					ontologyID.toString(),owlDataFactory.getOWLIndividual(
@@ -1232,6 +1195,10 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 	 */
 	public boolean executeGroundQuery(IRI ontologyID, 
 			LogicalExpression query) {
+		if (query.toString().contains("?")) {
+			throw new InternalReasonerException("A ground query may not contain " +
+					"variables!");
+		}
 		if (query instanceof AttributeValueMolecule) {
 			AttributeValueMolecule attr = (AttributeValueMolecule) query;
 			if (attr.getRightParameter() instanceof DataValue) {
@@ -1428,6 +1395,9 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.15  2007/02/09 08:40:53  hlausen
+ * DLFacade should be independent of libs of specific reasoner!!!!
+ *
  * Revision 1.14  2007/01/11 13:04:47  nathalie
  * removed unnecessary dependencies from pellet library
  *
