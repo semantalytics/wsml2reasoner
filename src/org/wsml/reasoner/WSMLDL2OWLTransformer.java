@@ -18,10 +18,12 @@
  */
 package org.wsml.reasoner;
 
+import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -51,8 +53,10 @@ import org.omwg.logicalexpression.UniversalQuantification;
 import org.omwg.logicalexpression.Visitor;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Axiom;
+import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.DataValue;
 import org.omwg.ontology.Ontology;
+import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.Variable;
 import org.omwg.ontology.WsmlDataType;
 import org.semanticweb.owl.model.OWLAnd;
@@ -101,12 +105,12 @@ import org.wsmo.factory.LogicalExpressionFactory;
  *
  * <pre>
  *  Created on July 3rd, 2006
- *  Committed by $Author: hlausen $
+ *  Committed by $Author: nathalie $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/WSMLDL2OWLTransformer.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.11 $ $Date: 2007-02-09 08:39:57 $
+ * @version $Revision: 1.12 $ $Date: 2007-03-01 16:39:19 $
  */
 public class WSMLDL2OWLTransformer implements Visitor{
 	
@@ -1629,16 +1633,78 @@ public class WSMLDL2OWLTransformer implements Visitor{
     			e.printStackTrace();
     		}
     		Object val = value.getValue();
+    		if (value.getType().toString().equals(WsmlDataType.WSML_DURATION)) {
+    			ComplexDataValue cValue = (ComplexDataValue) value;
+    			val = "P" + cValue.getArgumentValue((byte) 0) + "Y" + 
+    					cValue.getArgumentValue((byte) 1) + "M" + 
+    					cValue.getArgumentValue((byte) 2) + "DT" + 
+    					cValue.getArgumentValue((byte) 3) + "H" + 
+    					cValue.getArgumentValue((byte) 4) + "M" + 
+    					cValue.getArgumentValue((byte) 5) + "S";  			
+    		}
+    		if (value.getType().toString().equals(WsmlDataType.WSML_DATETIME)) {
+    			int day = ((Calendar) value.getValue()).get(Calendar.DAY_OF_MONTH);
+    			int month = ((Calendar) value.getValue()).get(Calendar.MONTH) + 1;
+    			int year = ((Calendar) value.getValue()).get(Calendar.YEAR);
+    			if (month < 10)
+    				val = year + "-0" + month + "-"; 
+    			else
+    				val = year + "-" + month + "-";
+    			if (day < 10) 
+    				val = val + "0" + day;
+    			else 
+    				val = val + "" + day;
+    			int hours = ((Calendar) value.getValue()).get(Calendar.HOUR);
+    			int minutes = ((Calendar) value.getValue()).get(Calendar.MINUTE);
+    			int seconds = ((Calendar) value.getValue()).get(Calendar.SECOND);
+    			val = val + "T" + hours + ":" + minutes + ":" + seconds;
+    			if (((Calendar) value.getValue()).getTimeZone()
+    					.getDisplayName().toString().contains("GMT")) {
+    				val = val + ((Calendar) value.getValue()).getTimeZone().getDisplayName();
+    			} 			
+    		}
+    		if (value.getType().toString().equals(WsmlDataType.WSML_TIME)) {
+    			int hours = ((Calendar) value.getValue()).get(Calendar.HOUR);
+    			int minutes = ((Calendar) value.getValue()).get(Calendar.MINUTE);
+    			int seconds = ((Calendar) value.getValue()).get(Calendar.SECOND);
+    			val = hours + ":" + minutes + ":" + seconds;
+    			if (((Calendar) value.getValue()).getTimeZone()
+    					.getDisplayName().toString().contains("GMT")) {
+    				val = val + ((Calendar) value.getValue()).getTimeZone().getDisplayName();
+    			}
+    		}
     		if (value.getType().toString().equals(WsmlDataType.WSML_DATE)) {
     			int day = ((Calendar) value.getValue()).get(Calendar.DAY_OF_MONTH);
     			int month = ((Calendar) value.getValue()).get(Calendar.MONTH) + 1;
     			int year = ((Calendar) value.getValue()).get(Calendar.YEAR);
-    			if (month < 10) {
-    				val = year + "-0" + month + "-" + day; 
+    			if (month < 10)
+    				val = year + "-0" + month + "-"; 
+    			else
+    				val = year + "-" + month + "-";
+    			if (day < 10) 
+    				val = val + "0" + day;
+    			else 
+    				val = val + "" + day;
+    			if (((Calendar) value.getValue()).getTimeZone()
+    					.getDisplayName().toString().contains("GMT")) {
+    				val = val + ((Calendar) value.getValue()).getTimeZone().getDisplayName();
     			}
-    			else {
-    				val = year + "-" + month + "-" + day;
-    			}
+    		}
+    		if (value.getType().toString().equals(WsmlDataType.WSML_GYEARMONTH)) {
+    			String year = Array.get(value.getValue(), 0).toString();
+    			String month = Array.get(value.getValue(), 1).toString();
+    			if (month.length() == 1)
+    				month = "0" + month;
+   				val = year + "-" + month;
+    		}
+    		if (value.getType().toString().equals(WsmlDataType.WSML_GMONTHDAY)) {
+    			String month = Array.get(value.getValue(), 0).toString();
+    			String day = Array.get(value.getValue(), 1).toString();
+    			if (month.length() == 1)
+    				month = "0" + month;
+    			if (day.length() == 1)
+    				day = "0" + day;
+   				val = month + "-" + day;
     		}
     		try {
     			dataValue = owlDataFactory.getOWLConcreteData(uri, null, val);
@@ -1652,6 +1718,9 @@ public class WSMLDL2OWLTransformer implements Visitor{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.11  2007/02/09 08:39:57  hlausen
+ * quick fix against uwes quick fix (be aware of unary predicates...)
+ *
  * Revision 1.10  2007/01/10 11:50:39  nathalie
  * completed kaon2DLFacade
  *
