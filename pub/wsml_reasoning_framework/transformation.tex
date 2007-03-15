@@ -16,72 +16,62 @@
 \subsection{Ontology Transformations}
 The transformation of a WSML ontology to Datalog rules forms a
 pipeline of single transformation steps that are subsequently
-applied, starting from the original ontology.
-
-\paragraph{Axiomatization.} In a first step, the transformation
-\transax is applied as a mapping $\O \rightarrow \powset{\LE}$
-from the set of all valid rule-based WSML ontologies to the
-powerset of all logical expressions that conform to rule-based
-WSML. In this transformation step, all conceptual syntax elements,
-such as concept and attribute definitions or cardinality and type
-constraints, are converted into appropriate axioms specified by
-logical expressions. Table \ref{tab:axiomatization} shows the
-details of some of the conversions performed by \transax, based on
-\cite{wsml-spec}. The WSML conceptual syntax constructs on the
-left-hand side are converted to the respective WSML logical
-expressions on the right-hand side. The meta variables $C,C_i$
-range over identifiers of WSML concepts, $R_i,A_i$ over
-identifiers of WSML relations and attributes, $T$ over identifiers
-of WSML concepts or datatypes and $V$ over identifiers of WSML
-instances or data values.
-
-
-%\renewcommand{\vec}[1]{\ensuremath{\overrightarrow{#1}}}
-\renewcommand{\baselinestretch}{1}
+applied, starting from the original ontology.\\[2mm]
+{\it Axiomatization.} In a first step, the transformation \transax
+is applied as a mapping $\O \rightarrow \powset{\LE}$ from the set
+of all valid rule-based WSML ontologies to the powerset of all
+logical expressions that conform to rule-based WSML. In this
+transformation step, all conceptual syntax elements, such as concept
+and attribute definitions or cardinality and type constraints, are
+converted into appropriate axioms specified by logical expressions.
+Table \ref{tab:axiomatization} shows the details of some of the
+conversions performed by \transax, based on \cite{wsml-spec}. The
+WSML conceptual syntax constructs on the left-hand side are
+converted to the respective WSML logical expressions on the
+right-hand side. The meta variables $C,C_i$ range over identifiers
+of WSML concepts, $R_i,A_i$ over identifiers of WSML relations and
+attributes, $T$ over identifiers of WSML concepts or datatypes and
+$V$ over identifiers of WSML instances or data values.
 \begin{table}[tbp]
 \centering
 \begin{scriptsize}
 \begin{tabular}{|l|l|}
   \hline
-  \rule{0cm}{3.2mm}{\small \emph{conceptual syntax}} & {\small \emph{logical expression(s)}} \\
+  \rule{0cm}{3.2mm}{\small \emph{Expression $\alpha$ in conceptual syntax}} & {\small \emph{Resulting logical expression(s)}: $\transax(\alpha)$}  \\
   \hline
-    $\transax($\twsml{concept} $C_1$ \twsml{subConceptOf} $C_2$ $)$ & $C_1$ \twsml{subConceptOf} $C_2.$ \\
+    \twsml{concept} $C_1$ \twsml{subConceptOf} $C_2$  & $C_1$ \twsml{subConceptOf} $C_2.$ \\
   \hline
-      $\transax($\twsml{concept} $C$ $A$ \twsml{ofType} $(0,1)$ $T$ $)$ & $C$[A \twsml{ofType} $T$]. \\[-0.5ex]  &
+      \twsml{concept} $C$ $A$ \twsml{ofType} $(0,1)$ $T$  & $C$[A \twsml{ofType} $T$]. \\[-0.5ex]  &
       !- ?x \twsml{memberOf} $C$ \twsml{and} ?x[A \twsml{hasValue} ?y, A \twsml{hasValue} ?z] \twsml{and} ?y != ?z. \\
   \hline
-      $\transax($\twsml{concept} $C$ A$_1$ \twsml{inverseOf} A$_2$ \twsml{impliesType} $T$ $)$ & $C$[A \twsml{impliesType} $T$]. \\[-0.5ex]
+      \twsml{concept} $C$ A$_1$ \twsml{inverseOf} A$_2$ \twsml{impliesType} $T$ & $C$[A \twsml{impliesType} $T$]. \\[-0.5ex]
       & ?x \twsml{memberOf} $C$ \twsml{and} ?v \twsml{memberOf} $T$ \twsml{implies} \\[-0.5ex]
       & \enspace ( ?x[A$_1$ \twsml{hasValue} ?v] \twsml{equivalent} ?v[A$_2$ \twsml{hasValue} ?x] ). \\
   \hline
-      $\transax($\twsml{relation} $R_1$/$n$ \twsml{subRelationOf} $R_2)$ & $R_1(\vec{x})$ \twsml{implies} $R_2(\vec{x})$.  \begin{scriptsize}where\end{scriptsize} $\vec{x}$ = (x$_1$,...,x$_n$) \\
+      \twsml{relation} $R_1$/$n$ \twsml{subRelationOf} $R_2$ & $R_1(\vec{x})$ \twsml{implies} $R_2(\vec{x})$.  \begin{scriptsize}where\end{scriptsize} $\vec{x}$ = (x$_1$,...,x$_n$) \\
   \hline
-      $\transax($\twsml{instance} $I$ \twsml{memberOf} $C$ A \twsml{hasValue} $V)$ & $I$ \twsml{memberOf} $C$. I[A \twsml{hasValue} $V$]. \\
+      \twsml{instance} $I$ \twsml{memberOf} $C$ A \twsml{hasValue} $V$ & $I$ \twsml{memberOf} $C$. I[A \twsml{hasValue} $V$]. \\
 \hline
 \end{tabular}
 \end{scriptsize}
 \caption{Examples for axiomatizing conceptual ontology modeling
 elements.} \label{tab:axiomatization}
 \end{table}
-\renewcommand{\baselinestretch}{0.95}
-
-\vspace{-2mm}
-\paragraph{Normalization.} The transformation \transnorm is
-applied as a mapping $\powset{\LE} \rightarrow \powset{\LE}$ to
-normalize WSML logical expressions. This normalization step
-reduces the complexity of formulae according to \cite[Section
-8.2]{wsml-spec}, to bring expressions closer to the simple
-syntactic form of literals in Datalog rules. The reduction
-includes conversion to negation and disjunctive normal forms as
-well as decomposition of complex WSML molecules. The left part of
-Table \ref{tab:normalization} shows how the various logical
-expressions are normalized in detail. The meta variables $E_i$
-range over logical expressions in rule-based WSML, while $X,Y_i$
-range over parts of WSML molecules. After \transnorm has been
-applied, the resulting expressions have the form of logic
+\\[2mm]
+{\it Normalization.} The transformation \transnorm is applied as a
+mapping $\powset{\LE} \rightarrow \powset{\LE}$ to normalize WSML
+logical expressions. This normalization step reduces the complexity
+of formulae according to \cite[Section 8.2]{wsml-spec}, to bring
+expressions closer to the simple syntactic form of literals in
+Datalog rules. The reduction includes conversion to negation and
+disjunctive normal forms as well as decomposition of complex WSML
+molecules. The left part of Table \ref{tab:normalization} shows how
+the various logical expressions are normalized in detail. The meta
+variables $E_i$ range over logical expressions in rule-based WSML,
+while $X,Y_i$ range over parts of WSML molecules. After \transnorm
+has been applied, the resulting expressions have the form of logic
 programming rules with no deep nesting of logical connectives.
-
-
+%
 \def\smalldots{\begin{tiny}\dots\end{tiny}}
 \renewcommand{\baselinestretch}{1}
 \begin{table}[tbp]\centering
@@ -124,43 +114,40 @@ programming rules with no deep nesting of logical connectives.
 \caption{Normalization of WSML logical expressions.}
 \label{tab:normalization}
 \end{table}
-\renewcommand{\baselinestretch}{0.95}
-
-\vspace{-2mm}
-\paragraph{Lloyd-Topor Transformation.} The transformation
-\translt is applied as a mapping $\powset{\LE} \rightarrow
-\powset{\LE}$ to flatten the complex WSML logical expressions,
-producing simple rules according to the Lloyd-Topor
-transformations \cite{lloyd-topor}, as shown in the lower part of
-Table~\ref{tab:normalization}. Again, the meta variables
-$E_i,H_i,B_i$ range over WSML logical expressions, while $H_i$ and
-$B_i$ match the form of valid rule head and body expressions,
-respectively, according to \cite{wsml-spec}. After this step, the
-resulting WSML expressions have the form of proper Datalog rules
-with a single head and conjunctive (possibly negated) body
+%
+\\[2mm]
+{\it Lloyd-Topor Transformation.} The transformation \translt is
+applied as a mapping $\powset{\LE} \rightarrow \powset{\LE}$ to
+flatten the complex WSML logical expressions, producing simple rules
+according to the Lloyd-Topor transformations \cite{lloyd-topor}, as
+shown in the lower part of Table~\ref{tab:normalization}. Again, the
+meta variables $E_i,H_i,B_i$ range over WSML logical expressions,
+while $H_i$ and $B_i$ match the form of valid rule head and body
+expressions, respectively, according to \cite{wsml-spec}. After this
+step, the resulting WSML expressions have the form of proper Datalog
+rules with a single head and conjunctive (possibly negated) body
 literals.
-
-\vspace{-2mm}
-\paragraph{Datalog Rule Generation.} In a final step, the
-transformation \transdlog is applied as a mapping $\powset{\LE}
-\rightarrow \P$ from WSML logical expressions to the set of all
-Datalog programs, yielding generic Datalog rules that represent
-the content of the original WSML ontology. Rule-style language
-constructs, such as rules, facts, constraints, conjunction and
-(default) negation, are mapped to the respective Datalog elements.
-All remaining WSML-specific language constructs, such as
-\wsml{subConceptOf} or \wsml{ofType}, are replaced by special
-meta-level predicates for which the semantics of the respective
-language construct is encoded in meta-level axioms as described in
-Section~\ref{sec:meta}. The right-hand part of Table
-\ref{tab:normalization} shows the mapping from WSML logical
-expressions to Datalog including the meta-level predicates \psco,
-\pmo, \phval, \pitype and \potype that represent their respective
-WSML language constructs as can be seen from the mapping. The meta
-variables $E,H,B$ range over WSML logical expressions with a
-general, a head or a body form, while $C,I,a$ denote WSML
-concepts, instances and attributes. Variables $T$ can either
-assume a concept or a datatype, and $V$ stands for either an
+%
+\\[2mm]
+{\it Datalog Rule Generation.} In a final step, the transformation
+\transdlog is applied as a mapping $\powset{\LE} \rightarrow \P$
+from WSML logical expressions to the set of all Datalog programs,
+yielding generic Datalog rules that represent the content of the
+original WSML ontology. Rule-style language constructs, such as
+rules, facts, constraints, conjunction and (default) negation, are
+mapped to the respective Datalog elements. All remaining
+WSML-specific language constructs, such as \wsml{subConceptOf} or
+\wsml{ofType}, are replaced by special meta-level predicates for
+which the semantics of the respective language construct is encoded
+in meta-level axioms as described in Section~\ref{sec:meta}. The
+right-hand part of Table \ref{tab:normalization} shows the mapping
+from WSML logical expressions to Datalog including the meta-level
+predicates \psco, \pmo, \phval, \pitype and \potype that represent
+their respective WSML language constructs as can be seen from the
+mapping. The meta variables $E,H,B$ range over WSML logical
+expressions with a general, a head or a body form, while $C,I,a$
+denote WSML concepts, instances and attributes. Variables $T$ can
+either assume a concept or a datatype, and $V$ stands for either an
 instance or a data value, accordingly.
 
 The resulting Datalog rules are of the form $H \lprl B_1 \dlogand
@@ -172,8 +159,6 @@ facts, and rules with an empty head represent constraints. The
 latter is denoted by the head being the empty clause symbol
 $\square$.
 
-\medskip
-
 Ultimately, we define the basic\footnote{Later on, the
 transformation pipeline is further extended to support datatypes
 and debugging.} transformation $\tau$ for converting a rule-based
@@ -183,7 +168,7 @@ transformation steps introduced before by $ \tau = \transdlog
 %\begin{displaymath}
 %    \tau = \transdlog \circ \translt \circ \transnorm \circ \transax
 %\end{displaymath}
-As a mapping $\tau: \O \rightarrow \P$, this concatenation of the
+As a mapping $\tau: \O \rightarrow \P$, this composition of the
 single steps is applied to a WSML ontology $O \in \O$ to yield a
 semantically equivalent Datalog program $\tau (O) = P \in \P$ when
 interpreted with respect to the meta-level axioms discussed next.

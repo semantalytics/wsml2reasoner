@@ -35,18 +35,19 @@
 
 \def\bla{\textbf{{\sf bla}}\xspace}
 
-\section{Mapping WSML to Datalog\vspace{-1.5mm}\label{sec:mapping}}
+\section{Mapping WSML to Datalog\label{sec:mapping}}
 %-- briefly sketch the idea of reasoning via rule based inferencing \\
 
 The semantics of rule-based WSML is defined via a mapping to
-Datalog~\cite{datalog} with (in)equality and integrity
-constraints, as described in \cite{wsml-spec}. To make use of
-existing rule engines, the reasoning framework performs various
-syntactical transformations to convert an original ontology in
-WSML syntax into a semantically equivalent Datalog program. WSML
-reasoning tasks are then realized by means of Datalog querying via
-calls to an underlying Datalog inference engine fed with the rules
-contained in this program.
+Datalog~\cite{datalog,DBLP:books/aw/AbiteboulHV95} with
+(in)equality, default negation and integrity constraints, as
+described in \cite{wsml-spec}. In the following, we refer to this
+language simply as Datalog. To make use of existing rule engines,
+the reasoning framework performs various syntactical transformations
+to convert an original ontology in WSML syntax into a semantically
+equivalent Datalog program. WSML reasoning tasks are then realized
+by means of Datalog querying via calls to an underlying Datalog
+inference engine fed with the rules contained in this program.
 
 \input{transformation}
 \input{metalevel}

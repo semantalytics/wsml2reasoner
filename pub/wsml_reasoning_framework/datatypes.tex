@@ -42,17 +42,17 @@ these rules as follows. \compress
 \end{displaymath}
 
 In addition to datatypes, WSML also supports some predefined
-predicates on datatypes, such as numeric comparison\footnote{A
-full list of WSML datatypes can be found in the WSML specification
-\cite{wsml-spec}.}. The definition of the axiom
+predicates on datatypes, such as numeric comparison
+(see~\cite{wsml-spec} for a full list of WSML datatypes). The
+definition of the axiom
 \wsmlname{SharePriceFeed\_requires\_bandwidth} from the WSML
-ontology in Section~\ref{sec:wsml}, for example, uses a shortcut
-of the WSML \wsml{numericLessThan} predicate (denoted by $<$). For
+ontology in Section~\ref{sec:wsml}, for example, uses a shortcut of
+the WSML \wsml{numericLessThan} predicate (denoted by $<$). For
 translation of these special predicates to the corresponding
 tool-specific built-in predicates supported by the underlying
 Datalog reasoner, we introduce a new tool-specific transformation
-step \transdpred as a mapping $\P \rightarrow \P$. This affects
-the transformation pipeline $\tau$ as follows. \compress
+step \transdpred as a mapping $\P \rightarrow \P$. This affects the
+transformation pipeline $\tau$ as follows. \compress
 \begin{displaymath}
     \tau = \transdpred \circ \transdlog \circ \translt \circ \transnorm \circ
     \transax \compress
