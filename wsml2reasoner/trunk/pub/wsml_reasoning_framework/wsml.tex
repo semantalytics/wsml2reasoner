@@ -212,7 +212,7 @@ Semantic Web and SWS applications. Here, we sketch the typical
 reasoning tasks for rule-based formalisms, and thus for rule-based
 WSML.
 
-Let $O$ denote a WSML ontology and $\pi_{c-free}(O)$ denote the
+Let $O$ denote a rule-based WSML ontology and $\pi_{c-free}(O)$ denote the
 constraint-free projection of $O$, i.e. the ontology which is
 obtained from $O$ by removing all constraining description
 elements, such as attribute type constraints, cardinality
@@ -220,7 +220,7 @@ constraints, integrity constraints etc. (1) {\bf Consistency
 checking} means to verify whether $O$ is satisfiable, i.e.
 if $\pi_{c-free}(O)$ has a
 model in which no constraint in $O$ is violated. (2) {\bf Ground Entailment} means, given some variable-free
-formula $\phi_g$, to check if $\phi_g$ is satisfied in all models of $\pi_{c-free}(O)$
+formula $\phi_g$, to check if $\phi_g$ is satisfied in well-founded model of $\pi_{c-free}(O)$
 in which no constraint in $O$ is violated. We
 denote this by $O \models \phi_g$. (3) {\bf Instance Retrieval}
 means, given an ontology $O$ and some formula $Q(\vec{x})$ with

@@ -14,11 +14,12 @@ is built up that consists of the meta-level axioms together with the
 transformed ontology. The different WSML reasoning tasks are then
 realized by performing Datalog queries on $P_O$. Posing a query
 $Q(\vec{x})$ to a Datalog program $P \in \P$ is denoted by
-$\,(P,\qury Q(\vec{x}))\,$ and yields a set of tuples that
-instantiate the vector $\vec{x}$ of variables in the query. If
-$Q(\vec{x})$ contains no variables, in fact a boolean query $Q$ is
-posed that instead evaluates either to $\{Q\}$ if $Q$ is satisfied
-in the well-founded model of $P$ or $\emptyset$
+$\,(P,\qury Q(\vec{x}))\,$ and yields the set of all tuples
+$\vec{t}$ that instantiate the vector $\vec{x}$ of variables in the
+query such that $Q(\vec{t})$ is satisfied in the well-founded model
+of $P$. If $Q(\vec{x})$ contains no variables, in fact a boolean
+query $Q$ is posed that instead evaluates either to $\{Q\}$ if $Q$
+is satisfied in the well-founded model of $P$ or $\emptyset$
 otherwise.\\[2mm]
 %
 {\it Ontology Consistency} -- The task of checking a WMSL ontology
