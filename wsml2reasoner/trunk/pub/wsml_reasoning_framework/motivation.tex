@@ -9,7 +9,7 @@
 %-- -- -- it supports debugging features for identifying violated constraints together with the involved ontological entities \\
 %-- -- it is implemented and can be readily used to reason with WSML ontologies; it is the first implementation of this kind \\
 %-- -- it is being developed within and partly funded by the DIP project where it is applied to SWS discovery and to support domain modelling in various use cases \\
-
+%
 In the Semantic Web, recently Web Services are annotated by
 semantic descriptions of their functionality in order to
 facilitate tasks like automated discovery or composition of
@@ -25,8 +25,6 @@ programming \cite{lloyd-FoundationsOfLP}. WSML adds features of
 conceptual modelling and datatypes, known from frame-base
 knowledge representation, on top of logic programming rules.
 
-\smallskip
-
 We present a framework for reasoning with rule-based WSML variants
 that builds on existing infrastructure for inferencing in
 rule-based formalisms. The framework bases on a
@@ -37,37 +35,34 @@ base satisfiability and of instance retrieval can then be
 performed by means of Datalog querying applied on a transformed
 ontology. Thus, the framework directly builds on top of existing
 Datalog inference engines.
-
+%
 Besides these standard reasoning tasks, the framework provides
 debugging features that support an ontology engineer in the task
 of ontology development: the engineer is pointed out to violated
 constraints together with some details on the ontological entities
 that cause the violation. Such a feature helps to improve the
 error reporting in situations of erroneous modelling.
-
+%
 Instead of directly mapping WSML entities, i.e.\ concepts,
 instances, attributes, to Datalog predicates and constants, we use
-special meta-level predicates and axioms which form a vocabulary
-on reified entities for reproducing the WSML language constructs
-in Datalog. This way of using Datalog as an underlying formalism
-facilitates the metamodelling features of WSML.
-
-\smallskip
-
-The framework is implemented and can be readily used to reason
-about ontologies formulated in rule-based WSML. As such, it is the
-first implementation of a reasoning tool for this language. In
-contrast to most of the available rule engines and Datalog
-implementations, this reasoning framework supports the combination
-of typical rule-style representation with frame-style conceptual
-modelling, as offered by WSML.
-
-The WSML reasoning framework is jointly developed within, and
-funded by the European project DIP (IST-FP6-507483) and the
-Austrian projects {SEnSE} (FFG 810807) and {\sf {\bfseries
-R}W$^{\mathsf{2}}$} (FFG 809250), where it is applied to Semantic
-Web Services discovery and to support domain modelling in various
-use case scenarios of eBanking, eGovernment, eEnterprises and
-telecommunications. Thus, the features implemented have a close
-link to the needs in these use cases driven by industrial
-partners.
+special meta-level predicates and axioms which form a vocabulary on
+reified entities for reproducing the WSML language constructs in
+Datalog. This way of using Datalog as an underlying formalism
+facilitates the metamodelling features of WSML. The framework is
+implemented and can be readily used to reason about ontologies
+formulated in rule-based WSML. As such, it is the first
+implementation of a reasoning tool for this language. In contrast to
+most of the available rule engines and Datalog implementations, this
+reasoning framework supports the combination of typical rule-style
+representation with frame-style conceptual modelling, as offered by
+WSML.\\[2mm]
+The WSML reasoning framework is jointly developed within, and funded
+by the European project DIP (IST-FP6-507483) and the Austrian
+projects {SEnSE} (FFG 810807) and {\sf {\bfseries
+R}W$^{\mathsf{2}}$} (FFG 809250)
+%, where it is applied to Semantic
+%Web Services discovery and to support domain modelling in various
+%use case scenarios of eBanking, eGovernment, eEnterprises and
+%telecommunications. Thus, the features implemented have a close link
+%to the needs in these use cases driven by industrial partners
+.
