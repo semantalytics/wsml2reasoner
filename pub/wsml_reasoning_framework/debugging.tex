@@ -111,7 +111,7 @@ reporting the identifier \axiomid of the axiom.
 To give an example, consider again the ontology from Section
 \ref{sec:wsml}. Replacing the network connection
 \wsmlname{ArcorDSL} of \wsmlname{MyBundle} by the slower
-\wsmlname{MSNDialup} one results in the a violation of the
+\wsmlname{MSNDialup} one results in a violation of the
 user-defined constraint specified by the axiom named
 \wsmlname{SharePriceFeed\_requires\_bandwidth}. This constraint
 requires a certain bandwidth for connections in bundles with share
@@ -190,6 +190,25 @@ by \transdebug, as shown in Table
 realising the semantics of attribute type constraints does not
 apply anymore.}
 
+\begin{table}[bt]\centering
+\begin{footnotesize}
+\begin{tabular}{|l|l|}
+  \hline
+  \rule{0cm}{3.2mm} {\normalsize \emph{Constraint}} & {\normalsize \emph{Rule}} \\
+  \hline
+  $\transdebug(\{\mve1, \dots , \mven\})$ & $\{\transdebug(\mve1), \dots , \transdebug(\mven)\}$ \\
+  $\transdebug($\wsml{\cstr}$B_{mincard}.)$ & $\pvmincard(a,I)$\wsml{\lprl}$B_{mincard}.$ \\
+  $\transdebug($\wsml{\cstr}$B_{maxcard}.)$ & $\pvmaxcard(a,I)$\wsml{\lprl}$B_{maxcard}.$ \\
+  $\transdebug($\wsml{\cstr}$B_{user}.)$ & $\pvuser(\axiomid)$\wsml{\lprl}$B_{user}.$ \\
+  $\transdebug(C[a$ \wsml{ofType} $T].)$ & $\pvotype(a,T,I,V)$\wsml{\lprl} \\
+  & $\;C[a$ \wsml{ofType} $T]$ \wsml{and} $I$ \wsml{memberOf} $C$ \wsml{and} \\
+  & $\;I[a$ \wsml{hasValue} $V]$ \wsml{and naf} $V$\wsml{memberOf} $T.$ \\
+  \hline
+\end{tabular}
+\end{footnotesize}
+\caption{Replacing constraints by rules.} \label{tab:debugging}
+\end{table}
+
 \medskip
 
 To maintain the semantics of the replaced constraints, an
@@ -215,24 +234,4 @@ meta-level predicates \pvotype, \pvmincard, \pvmaxcard and
 contains tuples for all occurrences of attribute type violations
 in $P_O$, identifying the respective attribute $a$, expected type
 $T$, involved instance $I$ and violating value $V$ for each
-violation. This set is empty if there are no attribute types
-violated.
-
-\begin{table}[tb]\centering
-\begin{footnotesize}
-\begin{tabular}{|l|l|}
-  \hline
-  \rule{0cm}{3.2mm} {\normalsize \emph{Constraint}} & {\normalsize \emph{Rule}} \\
-  \hline
-  $\transdebug(\{\mve1, \dots , \mven\})$ & $\{\transdebug(\mve1), \dots , \transdebug(\mven)\}$ \\
-  $\transdebug($\wsml{\cstr}$B_{mincard}.)$ & $\pvmincard(a,I)$\wsml{\lprl}$B_{mincard}.$ \\
-  $\transdebug($\wsml{\cstr}$B_{maxcard}.)$ & $\pvmaxcard(a,I)$\wsml{\lprl}$B_{maxcard}.$ \\
-  $\transdebug($\wsml{\cstr}$B_{user}.)$ & $\pvuser(\axiomid)$\wsml{\lprl}$B_{user}.$ \\
-  $\transdebug(C[a$ \wsml{ofType} $T].)$ & $\pvotype(a,T,I,V)$\wsml{\lprl} \\
-  & $\;C[a$ \wsml{ofType} $T]$ \wsml{and} $I$ \wsml{memberOf} $C$ \wsml{and} \\
-  & $\;I[a$ \wsml{hasValue} $V]$ \wsml{and naf} $V$\wsml{memberOf} $T.$ \\
-  \hline
-\end{tabular}
-\end{footnotesize}
-\caption{Replacing constraints by rules.} \label{tab:debugging}
-\end{table}
+violation. This set is empty no attribute types are violated.
