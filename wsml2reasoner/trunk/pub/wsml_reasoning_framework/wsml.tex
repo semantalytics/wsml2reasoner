@@ -7,23 +7,23 @@ The Web Service Modeling Language (WSML) \cite{wsml} is a language
 for the specification of various aspects of Semantic Web Services
 (SWS), such as what functionality is provided by a SWS or how to
 interact with the SWS. It provides a formal language for the Web
-Service Modeling Ontology (WSMO,
-{\url{http://www.wsmo.org}})~\cite{roman05:_web_servic_model_ontol}
-and is based on well-known logic-based knowledge representation (KR)
-formalisms, namely Description
+Service Modeling Ontology
+(WSMO\footnote{\url{http://www.wsmo.org}})~\cite{roman05:_web_servic_model_ontol}
+and is based on well-known logic-based knowledge representation
+(KR) formalisms, namely Description
 Logics~\cite{Baader+CalvaneseETAL-DescLogiHand:03} and Logic
-Programming~\cite{lloyd-FoundationsOfLP}. In fact, WSML is a family
-of representation languages that comes in several variants with
-different expressiveness. Besides various SWS-specific language
-constructs, such as ``goal", ``interface", ``choreography" or
-``capability", WSML particularly provides means to formulate the
-domain ontologies in terms of which SWSs are semantically annotated.
-Since here we are interested in reasoning with such semantic
-annotation with respect to the underlying ontology formalism, we
-focus on the ontology-related part of WSML. Furthermore, we use the
-human-readable syntax of the language in our presentation, while
-WSML also specifies XML and RDF serialisations to be compatible with
-existing web standards.
+Programming~\cite{lloyd-FoundationsOfLP}. In fact, WSML is a
+family of representation languages that comes in several variants
+with different expressiveness. Besides various SWS-specific
+language constructs, such as ``goal", ``interface",
+``choreography" or ``capability", WSML particularly provides means
+to formulate the domain ontologies in terms of which SWSs are
+semantically annotated. Since here we are interested in reasoning
+with such semantic annotation with respect to the underlying
+ontology formalism, we focus on the ontology-related part of WSML.
+Furthermore, we use the human-readable syntax of the language in
+our presentation, while WSML also specifies XML and RDF
+serialisations to be compatible with existing web standards.
 
 \subsection{Language Constructs}
 WSML makes a clear distinction between the modeling of different
@@ -50,18 +50,16 @@ concept DialupConnection subConceptOf NetworkConnection
 concept DSLConnection subConceptOf NetworkConnection
 axiom DialupConnection_DSLConnection_Disjoint definedBy
  !- ?x memberOf DialupConnection and ?x memberOf DSLConnection.
-concept OnlineService subConceptOf BundlePart
-concept SharePriceFeed subConceptOf OnlineService
-axiom SharePriceFeed_requires_bandwidth
-definedBy
+concept OnlineService subConceptOf BundlePart concept
+SharePriceFeed subConceptOf OnlineService axiom
+SharePriceFeed_requires_bandwidth definedBy
  !- ?b memberOf ITBundle and ?b[hasOnlineService hasValue ?o]
     and ?o memberOf SharePriceFeed and
     ?b[hasNetwork hasValue ?n] and
     ?n[providesBandwidth hasValue ?x] and ?x < 512.
 concept BroadbandBundle subConceptOf ITBundle
     hasNetwork ofType (1 1) DSLConnection
-axiom BroadbandBundle_sufficient_condition
-definedBy
+axiom BroadbandBundle_sufficient_condition definedBy
     ?b memberOf BroadbandBundle :- ?b memberOf ITBundle
     and ?b[hasNetwork hasValue ?n] and ?n memberOf DSLConnection.
 instance BritishTelekom memberOf TelecomProvider.
@@ -118,14 +116,15 @@ $n_{max}$)}\end{footnotesize}), as can be seen from
 Litsing~\ref{lst:wsml-ontology-example}. Similar constructs are
 available to define n-ary relations in ontologies.
 
-Instances represent concrete object a the domain, such as
+Instances represent concrete objects a the domain, such as
 \instance{MSNDialup} as a particular dial-up connection in the
 telecommunications domain. By means of the
 \wsml{memberOf}-construct, instances are associated with concepts,
-and using \wsml{hasValue} they are are linked to other instances or
+and using \wsml{hasValue} they are linked to other instances or
 data values, as can also be seen in
-Listing~\ref{lst:wsml-ontology-example}. Notice, that WSML supports
-metamodelling and allows an entity to be both a concept and an
+Listing~\ref{lst:wsml-ontology-example}. Notice, that WSML
+supports metamodelling and allows an entity to be both a concept
+and an
 instance.\\[2mm]
 {\bfseries Logical Expressions.} By means of the
 \wsml{axiom}-construct, arbitrarily complex logical expressions can
@@ -212,18 +211,18 @@ Semantic Web and SWS applications. Here, we sketch the typical
 reasoning tasks for rule-based formalisms, and thus for rule-based
 WSML.
 
-Let $O$ denote a rule-based WSML ontology and $\pi_{c-free}(O)$ denote the
-constraint-free projection of $O$, i.e. the ontology which is
-obtained from $O$ by removing all constraining description
-elements, such as attribute type constraints, cardinality
-constraints, integrity constraints etc. (1) {\bf Consistency
-checking} means to verify whether $O$ is satisfiable, i.e.
-if $\pi_{c-free}(O)$ has a
-model in which no constraint in $O$ is violated. (2) {\bf Ground Entailment} means, given some variable-free
-formula $\phi_g$, to check if $\phi_g$ is satisfied in well-founded model of $\pi_{c-free}(O)$
-in which no constraint in $O$ is violated. We
-denote this by $O \models \phi_g$. (3) {\bf Instance Retrieval}
-means, given an ontology $O$ and some formula $Q(\vec{x})$ with
-free variables $\vec{x} = (x_1,\ldots,x_n)$, to find all suitable
-terms $\vec{t} = (t_1,\ldots,t_n)$ constructed from symbols in $O$
-only, such $O \models Q(\vec{t})$.
+Let $O$ denote a rule-based WSML ontology and $\pi_{c-free}(O)$
+denote the constraint-free projection of $O$, i.e. the ontology
+which is obtained from $O$ by removing all constraining
+description elements, such as attribute type constraints,
+cardinality constraints, integrity constraints etc. (1) {\bf
+Consistency checking} means to verify whether $O$ is satisfiable,
+i.e. if $\pi_{c-free}(O)$ has a model in which no constraint in
+$O$ is violated. (2) {\bf Ground Entailment} means, given some
+variable-free formula $\phi_g$, to check if $\phi_g$ is satisfied
+in well-founded model of $\pi_{c-free}(O)$ in which no constraint
+in $O$ is violated. We denote this by $O \models \phi_g$. (3) {\bf
+Instance Retrieval} means, given an ontology $O$ and some formula
+$Q(\vec{x})$ with free variables $\vec{x} = (x_1,\ldots,x_n)$, to
+find all suitable terms $\vec{t} = (t_1,\ldots,t_n)$ constructed
+from symbols in $O$ only, such that $O \models Q(\vec{t})$.

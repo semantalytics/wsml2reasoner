@@ -10,8 +10,7 @@ minimum
 %\footnote{In fact, the adaptation of the framework to the
 %MINS rule engine took less then a day.}.
 The presented framework has been fully implemented in Java and can
-be downloaded and tested online at
-\begin{small}{\tt http://dev1.deri.at/wsml2reasoner}\end{small}.\\[2mm]
+be downloaded and tested online\footnote{\url{http://dev1.deri.at/wsml2reasoner}}.\\[2mm]
 %\subsection{Architecture and Internal Layering}
 {\bfseries Architecture and Internal Layering.}
 \begin{figure}[tb]
@@ -47,28 +46,29 @@ framework infrastructure. This facade mediates between the generic
 Datalog program produced in the transformations and the external
 engine's tool-specific Datalog implementation and built-in
 predicates.\\[2mm]
-{\bfseries Interface and Integration with Existing Technology.} Our
-framework is based on the WSMO4J
-({\url{http://wsmo4j.sourceforge.net}}) project, which provides an
-API for the programmatic handling of WSML documents. WSMO4J performs
-the task of parsing and validating WSML ontologies and provides the
-source object model for our translations. For a reasoner to be
-connected to the Framework, a small adapter class needs to be
-written, that translates generic Datalog elements to their
-equivalent constructs within the internal representation layer of
-the underlying reasoner. Our framework currently comes with facades
-for two built-in reasoners: KAON2
-({\url{http://kaon2.semanticweb.org}}) and MINS
-({\url{http://dev1.deri.at/mins}}). The initial development was done
-with the KAON2 inference engine that, with respect to the challenges
-for datatype reasoning, provides a very flexible type system that
-allows for user-defined datatypes, together with predicates on these
-datatypes, including type checking predicates. However, KAON2 cannot
-be used for reasoning in WSML-Rule as it does not support function
-symbols and unsafe rules. The second reasoner, MINS, can be used for
-the WSML-Rule variant but has limited support for datatype
-reasoning. (For determining the WSML variant of an ontology, one can
-use the validation facilities built into WSMO4J
+{\bfseries Interface and Integration with Existing Technology.}
+Our framework is based on the WSMO4J
+\footnote{\url{http://wsmo4j.sourceforge.net}} project, which
+provides an API for the programmatic handling of WSML documents.
+WSMO4J performs the task of parsing and validating WSML ontologies
+and provides the source object model for our translations. For a
+reasoner to be connected to the Framework, a small adapter class
+needs to be written, that translates generic Datalog elements to
+their equivalent constructs within the internal representation
+layer of the underlying reasoner. Our framework currently comes
+with facades for two built-in reasoners:
+KAON2\footnote{\url{http://kaon2.semanticweb.org}} and
+MINS\footnote{\url{http://dev1.deri.at/mins}}. The initial
+development was done with the KAON2 inference engine that, with
+respect to the challenges for datatype reasoning, provides a very
+flexible type system that allows for user-defined datatypes,
+together with predicates on these datatypes, including type
+checking predicates. However, KAON2 cannot be used for reasoning
+in WSML-Rule as it does not support function symbols and unsafe
+rules. The second reasoner, MINS, can be used for the WSML-Rule
+variant but has limited support for datatype reasoning. (For
+determining the WSML variant of an ontology, one can use the
+validation facilities built into WSMO4J
 %\footnote{A demo of this
 %feature is available at:
 %\url{http://tools.deri.org/wsml/validator}}
