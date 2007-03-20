@@ -200,4 +200,9 @@ public interface WSMLReasonerFactory {
     public WSMLFlightReasoner createWSMLFlightReasoner()
             throws UnsupportedOperationException;
 
+    public WSMLFOLReasoner createWSMLFOLReasoner()
+    throws UnsupportedOperationException;
+    
+    public WSMLFOLReasoner createWSMLFOLReasoner(Map<String, Object> params)
+    throws UnsupportedOperationException;
 }

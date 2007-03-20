@@ -27,7 +27,7 @@ import org.wsmo.common.TopEntity;
  * Default left to right depth first walker...
  *   
  * @author Holger Lausen
- * @version $Revision: 1.1 $ $Date: 2007-02-08 15:01:31 $
+ * @version $Revision: 1.2 $ $Date: 2007-03-20 20:30:53 $
  * @see org.omwg.logicalexpression.Visitor
  */
 public class TPTPLESerializeVisitor implements Visitor {
@@ -80,12 +80,7 @@ public class TPTPLESerializeVisitor implements Visitor {
      */
     public void visitNegation(Negation expr) {
         expr.getOperand().accept(this);
-        if (expr.getOperand()instanceof AtomicExpression) {
-            stack.add("neg " + (String)stack.remove(stack.size() - 1));
-        }
-        else {
-            stack.add("neg (" + (String)stack.remove(stack.size() - 1) + ")");
-        }
+        stack.add("~ (" + (String)stack.remove(stack.size() - 1) + ")");
     }
 
 
@@ -97,7 +92,7 @@ public class TPTPLESerializeVisitor implements Visitor {
     public void visitConjunction(Conjunction expr) {
         expr.getLeftOperand().accept(this);
         expr.getRightOperand().accept(this);
-        stack.add(stack.remove(stack.size() - 2) + "  and " + stack.remove(stack.size() - 1));
+        stack.add("(" + stack.remove(stack.size() - 2) + "  & " + stack.remove(stack.size() - 1)+ ")");
     }
 
  
@@ -106,9 +101,8 @@ public class TPTPLESerializeVisitor implements Visitor {
     public void visitImplication(Implication expr) {
         expr.getLeftOperand().accept(this);
         expr.getRightOperand().accept(this);
-        stack.add("(" + stack.remove(stack.size() - 2) + " implies " +
+        stack.add("(" + stack.remove(stack.size() - 2) + " => " +
                        stack.remove(stack.size() - 1) + ")");
-        
     }
 
     /**
@@ -119,7 +113,7 @@ public class TPTPLESerializeVisitor implements Visitor {
     public void visitDisjunction(Disjunction expr) {
         expr.getLeftOperand().accept(this);
         expr.getRightOperand().accept(this);
-        stack.add("(" + stack.remove(stack.size() - 2) + "\n  or\n" + stack.remove(stack.size() - 1) +")");
+        stack.add("(" + stack.remove(stack.size() - 2) + " | " + stack.remove(stack.size() - 1) +")");
     }
 
     /**
@@ -129,7 +123,7 @@ public class TPTPLESerializeVisitor implements Visitor {
      */
     public void visitUniversalQuantification(UniversalQuantification expr) {
         String res = helpQuantified(expr);
-        stack.add("forall " + res + "\n  ( " + (String)stack.remove(stack.size() - 1) + " )");
+        stack.add("! " + res + " : ( " + (String)stack.remove(stack.size() - 1) + " )");
     }
 
     /**
@@ -139,7 +133,7 @@ public class TPTPLESerializeVisitor implements Visitor {
      */
     public void visitExistentialQuantification(ExistentialQuantification expr) {
         String res = helpQuantified(expr);
-        stack.add("exists " + res + "\n  ( " + (String)stack.remove(stack.size() - 1) + " )");
+        stack.add("? " + res + " : ( " + (String)stack.remove(stack.size() - 1) + " )");
     }
 
     /**
@@ -163,21 +157,15 @@ public class TPTPLESerializeVisitor implements Visitor {
         String res = "";
         Set s = expr.listVariables();
         Iterator i = s.iterator();
-        if (s.size() > 1) {
-            res = res + "{";
-            while (i.hasNext()) {
-                ((Term)i.next()).accept(visitor);
-                res = res + (String)visitor.getSerializedObject();
-                if (i.hasNext()) {
-                    res = res + ",";
-                }
-            }
-            res = res + "}";
-        }
-        else {
+        res = res + "[";
+        while (i.hasNext()) {
             ((Term)i.next()).accept(visitor);
             res = res + (String)visitor.getSerializedObject();
+            if (i.hasNext()) {
+                res = res + ",";
+            }
         }
+        res = res + "]";
         expr.getOperand().accept(this);
         return res;
     }
@@ -192,11 +180,19 @@ public class TPTPLESerializeVisitor implements Visitor {
     }
     
     public void visitEquivalence(Equivalence expr) {
-        throw new RuntimeException("should not be here anymore!");
+        expr.getLeftOperand().accept(this);
+        expr.getRightOperand().accept(this);
+        stack.add("(" + stack.remove(stack.size() - 2) + " <=> " +
+                       stack.remove(stack.size() - 1) + ")");
+
     }
 
     public void visitInverseImplication(InverseImplication expr) {
-        throw new RuntimeException("should not be here anymore!");
+        expr.getLeftOperand().accept(this);
+        expr.getRightOperand().accept(this);
+        stack.add("(" + stack.remove(stack.size() - 2) + " <= " +
+                       stack.remove(stack.size() - 1) + ")");
+
     }
 
     public void visitLogicProgrammingRule(LogicProgrammingRule expr) {
@@ -225,6 +221,7 @@ public class TPTPLESerializeVisitor implements Visitor {
 
     public void visitSubConceptMolecule(SubConceptMolecule expr) {
         throw new RuntimeException("should not be here anymore!");
+
     }
 
 

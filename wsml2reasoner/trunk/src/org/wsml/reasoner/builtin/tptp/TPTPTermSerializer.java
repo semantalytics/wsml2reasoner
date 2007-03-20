@@ -29,7 +29,7 @@ import org.wsmo.common.*;
 /**
  *   
  * @author Holger Lausen
- * @version $Revision: 1.1 $ $Date: 2007-02-08 15:01:32 $
+ * @version $Revision: 1.2 $ $Date: 2007-03-20 20:30:53 $
  * @see org.omwg.logicalexpression.Visitor
  */
 public class TPTPTermSerializer implements Visitor{
@@ -39,6 +39,9 @@ private Map atoms2ConstructedTerms;
     private Vector<String> stack;
 
     private Namespace[] nsHolder;
+    
+    //hack a bit too much of memory?
+    private static TPTPSymbolMap sym = new TPTPSymbolMap();
     
 
     /**
@@ -91,7 +94,8 @@ private Map atoms2ConstructedTerms;
             else stack.add(t.toString()+"<NonResolvableDependencyToBuiltInAtom>");
             return;
         }
-        stack.add(Constants.VARIABLE_DEL + t.getName());
+        String var = t.getName();
+        stack.add(Character.toUpperCase(var.charAt(0))+var.substring(1));
     }
 
     public void visitComplexDataValue(ComplexDataValue value) {
@@ -138,8 +142,7 @@ private Map atoms2ConstructedTerms;
      * @see org.omwg.logicalexpression.terms.Visitor#visitIRI(org.omwg.logicalexpression.terms.IRI)
      */
     public void visitIRI(IRI t) {
-        //FIXME to whatever is allowed as constants in TPTP
-        stack.add(t.toString());
+        stack.add(sym.getTPTPTerm(t.toString()));
     }
     
     /**

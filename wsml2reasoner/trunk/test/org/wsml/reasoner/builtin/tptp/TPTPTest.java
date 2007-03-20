@@ -25,13 +25,52 @@ public class TPTPTest extends TestCase{
         nsContainer.setDefaultNamespace(i);
     }
     
-    public void testRegister() throws Exception{
+    public void testatom() throws Exception{
         LogicalExpression le = leF.createLogicalExpression(
-            "a(b) and b(c) or b",nsContainer);
+            "subConceptof(_\"urn:/Foo\",  Animal)",nsContainer);
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
         tptp.register("abc", set);
         //FIXME some assertion to come
     }
+
+    public void testVars() throws Exception{
+        LogicalExpression le = leF.createLogicalExpression(
+            "forall {?x,?y,?z} \n " +
+            " (subConceptof(?x,?y) and subConceptof(?y,?z) \n" +
+            " implies subConceptof(?x,?z)) ",nsContainer);
+        Set<LogicalExpression> set = new HashSet<LogicalExpression>();
+        set.add(le);
+        tptp.register("abc", set);
+        //FIXME some assertion to come
+    }
+    
+    public void testConjunctionDisjunction() throws Exception{
+        LogicalExpression le = leF.createLogicalExpression(
+            "a and b or c ",nsContainer);
+        Set<LogicalExpression> set = new HashSet<LogicalExpression>();
+        set.add(le);
+        tptp.register("abc", set);
+        //FIXME some assertion to come
+    }
+    
+    public void testNegation() throws Exception{
+        LogicalExpression le = leF.createLogicalExpression(
+            "a or neg a",nsContainer);
+        Set<LogicalExpression> set = new HashSet<LogicalExpression>();
+        set.add(le);
+        tptp.register("abc", set);
+        //FIXME some assertion to come
+    }
+
+    public void testFsymbols() throws Exception{
+        LogicalExpression le = leF.createLogicalExpression(
+            "a(f(b(c,d,e)))",nsContainer);
+        Set<LogicalExpression> set = new HashSet<LogicalExpression>();
+        set.add(le);
+        tptp.register("abc", set);
+        //FIXME some assertion to come
+    }
+    
 
 }

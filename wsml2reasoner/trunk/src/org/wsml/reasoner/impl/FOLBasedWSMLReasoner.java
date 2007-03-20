@@ -32,6 +32,7 @@ import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.builtin.tptp.TPTPFacade;
 import org.wsml.reasoner.transformation.*;
+import org.wsml.reasoner.transformation.le.*;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -73,7 +74,22 @@ public class FOLBasedWSMLReasoner implements WSMLFOLReasoner {
      * 
      */
     public List<EntailmentType> checkEntailment(IRI ontologyID, List<LogicalExpression> conjectures) {
-        return builtInFacade.checkEntailment(ontologyID.toString(), conjectures);
+        
+        LogicalExpressionNormalizer moleculeNormalizer = new OnePassReplacementNormalizer(
+                new FOLMoleculeDecompositionRules(wsmoManager), wsmoManager);
+
+        List<LogicalExpression> newconjectures = new ArrayList<LogicalExpression>();
+        for (LogicalExpression le: conjectures){
+//            System.out.println("Q before molecule normalization: " + le);
+            le = moleculeNormalizer.normalize(le);
+            newconjectures.add(le);
+//            System.out.println("Q after molecule normalization: " + le);
+        }
+        
+        
+        
+        
+        return builtInFacade.checkEntailment(ontologyID.toString(), newconjectures);
     }
 
     /* (non-Javadoc)
@@ -150,14 +166,15 @@ public class FOLBasedWSMLReasoner implements WSMLFOLReasoner {
     }
 
     public void registerOntology(Ontology ontology) throws InconsistencyException {
-        //FIXME:
-        
         Ontology ontologyAsExpressions;
 
         // Convert conceptual syntax to logical expressions
         OntologyNormalizer normalizer = new AxiomatizationNormalizer(wsmoManager);
         ontologyAsExpressions = normalizer.normalize(ontology);
 
+        normalizer = new MoleculeNormalizer(wsmoManager);
+        ontologyAsExpressions = normalizer.normalize(ontologyAsExpressions);
+        
 //      System.out.println("\n-------\n Ontology after Normalization:\n" +
 //      WSMLNormalizationTest.serializeOntology(normalizedOntology));
 
@@ -179,19 +196,31 @@ public class FOLBasedWSMLReasoner implements WSMLFOLReasoner {
         // transitivity: sco(?c1,?c3) <- sco(?c1,?c2) and sco(?c2,?c3)
         // extension-subset: mo(?o,?c2) <- mo(?o,?c1) and sco(?c1,?c2)
         
-        //TODO simplyfiy LogicalExpressions
-        //convert CompoundMoldecules to conjunction of Atomic molecules
-        //convert equivalence and inversimplication to implication
-        //
 
-        Set<LogicalExpression> le = new HashSet<LogicalExpression>();
+
+        Set<LogicalExpression> les = new HashSet<LogicalExpression>();
+        for (Axiom a :(Set<Axiom>)ontologyAsExpressions.listAxioms()){
+            for (LogicalExpression le : (Set<LogicalExpression>)a.listDefinitions()){
+                les.add(quantify(le));
+            }
+        }
         try {
-            builtInFacade.register(ontology.getIdentifier().toString(), le);
+            builtInFacade.register(ontology.getIdentifier().toString(), les);
         } catch (ExternalToolException e) {
             throw new RuntimeException(e);
         }
         
     }
+
+    LogicalExpressionVariableVisitor lev = new LogicalExpressionVariableVisitor();
+    private LogicalExpression quantify(LogicalExpression le){;
+        lev.reset();
+        le.accept(lev);
+        Set<Variable> freeVars = lev.getFreeVariables(le);
+        if (freeVars.isEmpty()) return le;
+        return leFactory.createUniversalQuantification(freeVars, le);
+    }
+    
 
 
     /* ##################################

@@ -24,11 +24,7 @@ import java.util.Vector;
 
 import org.deri.wsmo4j.validator.WsmlValidatorImpl;
 import org.omwg.ontology.Ontology;
-import org.wsml.reasoner.api.WSMLCoreReasoner;
-import org.wsml.reasoner.api.WSMLDLReasoner;
-import org.wsml.reasoner.api.WSMLFlightReasoner;
-import org.wsml.reasoner.api.WSMLReasoner;
-import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.*;
 import org.wsmo.common.WSML;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.Factory;
@@ -184,6 +180,18 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
     public WSMLFlightReasoner createWSMLFlightReasoner()
             throws UnsupportedOperationException {
         return createWSMLFlightReasoner(null);
+    }
+
+    public WSMLFOLReasoner createWSMLFOLReasoner() throws UnsupportedOperationException {
+        return createWSMLFOLReasoner(null);
+    }
+    public WSMLFOLReasoner createWSMLFOLReasoner(Map<String, Object> params) throws UnsupportedOperationException {
+        if (params == null) {
+            return new org.wsml.reasoner.impl.FOLBasedWSMLReasoner(
+                    BuiltInReasoner.TPTP, new WSMO4JManager());
+        } else {
+            throw new UnsupportedOperationException("maps not yer implemented pass null!");
+        }
     }
 
 }
