@@ -299,6 +299,10 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
                 MembershipMolecule mOf = (MembershipMolecule) conjunct;
                 instanceID = (Term) mOf.getLeftParameter();
                 conceptID = (Term) mOf.getRightParameter();
+            } else if (conjunct instanceof AttributeValueMolecule) {
+            	AttributeValueMolecule attrValMol = (AttributeValueMolecule) conjunct;
+            	attributeID = (Term) attrValMol.getAttribute();
+            	
             } else if (conjunct instanceof CompoundMolecule) {
                 CompoundMolecule compound = (CompoundMolecule) conjunct;
                 List attrValMols = compound.listAttributeValueMolecules();
