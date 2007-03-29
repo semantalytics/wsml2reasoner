@@ -62,8 +62,6 @@ import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
-import com.ontotext.wsmo4j.common.IRIImpl;
-
 /**
  * A normalization step of an ontology that transforms the conceptual syntax
  * part to logical expressions. Hence, it transforms a WSML ontology to a set of
@@ -474,7 +472,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
     protected LogicalExpression createMaxCardinalityConstraint(
             Identifier conceptID, Identifier attributeID, int cardinality) {
         cardinality++;
-
+        
         // build required LE elements:
         Variable xVariable = leFactory.createVariable("x");
         Variable[] yVariable = new Variable[cardinality];
@@ -506,13 +504,18 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         // yn!=yn+1."
         Set<LogicalExpression> conjuncts = new HashSet<LogicalExpression>();
         conjuncts.add(moX);
-//        conjuncts.addAll(Arrays.asList(valXY));
-        conjuncts.add(leFactory.createCompoundMolecule(Arrays.asList(valXY)));
+        if (cardinality == 1) {
+        	conjuncts.addAll(Arrays.asList(valXY));
+        }
+        else {
+        	conjuncts.add(leFactory.createCompoundMolecule(Arrays.asList(valXY)));
+        }
         conjuncts.addAll(inEqualities);
         LogicalExpression conjunction = fixedRules
                 .buildNaryConjunction(conjuncts);
         LogicalExpression maxCardConstraint = leFactory.createConstraint(conjunction);
         proclaimAxiomID(maxCardConstraint, AnonymousIdUtils.getNewMaxCardIri());
+        System.out.println(maxCardConstraint.toString());
         return maxCardConstraint;
     }
 
