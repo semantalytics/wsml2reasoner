@@ -26,6 +26,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 
@@ -35,6 +38,26 @@ public class MinsGraphBug extends BaseReasonerTest {
 
     private static final String NS = "http://www.example.org/example/#";
 
+    private static final String ONTOLOGY_FILE = "reasoner/core/simple-graph.wsml";
+    
+    public static void main(String[] args) {
+        junit.textui.TestRunner.run(MinsGraphBug.suite());
+    }
+
+    public static Test suite() {
+        Test test = new junit.extensions.TestSetup(new TestSuite(
+        		MinsGraphBug.class)) {
+            protected void setUp() throws Exception {
+                setupScenario(ONTOLOGY_FILE);
+            }
+
+            protected void tearDown() throws Exception {
+                System.out.println("Finished!");
+            }
+        };
+        return test;
+    }
+    
     /**
      * MINS BUG HERE! if one rewrites the query to
      * path(?n,?y) and  ?y=f
@@ -46,7 +69,9 @@ public class MinsGraphBug extends BaseReasonerTest {
         String query = "path(?n,f)  ";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
-        binding.put(leFactory.createVariable("n"), wsmoFactory.createIRI(NS
+        binding.put(
+        		leFactory.createVariable("n"), 
+        		wsmoFactory.createIRI(NS
                 + "a"));
         expected.add(binding);
         binding = new HashMap<Variable, Term>();
