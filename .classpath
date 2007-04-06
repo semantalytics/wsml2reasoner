@@ -4,25 +4,25 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="JUNIT_HOME/junit.jar"/>
-	<classpathentry kind="lib" path="lib/ext/pellet/pellet.jar"/>
-	<classpathentry kind="lib" path="lib/ext/relaxng/1.0/relaxngDatatype.jar"/>
-	<classpathentry kind="lib" path="lib/ext/commons-logging/1.1/commons-logging-1.1.jar"/>
-	<classpathentry kind="lib" path="lib/ext/aterm/1.6/aterm-java-1.6.jar"/>
-	<classpathentry kind="lib" path="lib/ext/xsdlib/xsdlib.jar"/>
-	<classpathentry kind="lib" path="lib/ext/log4j/1.2.7/log4j.jar"/>
-	<classpathentry kind="lib" path="lib/ext/interprolog.jar"/>
-	<classpathentry kind="lib" path="lib/ext/wsmo4j/wsmlparser-20061024.jar"/>
-	<classpathentry kind="lib" path="lib/ext/wsmo4j/wsmo4j-20061103.jar"/>
-	<classpathentry kind="lib" path="lib/ext/mins/minsv0_2.jar"/>
-	<classpathentry kind="lib" path="lib/ext/kaon/1.2.9/rdfapi.jar"/>
-	<classpathentry kind="lib" path="lib/ext/owl-api/1.4.3/abstractparser.jar"/>
-	<classpathentry kind="lib" path="lib/ext/owl-api/1.4.3/io.jar"/>
-	<classpathentry kind="lib" path="lib/ext/owl-api/1.4.3/rdfparser.jar"/>
-	<classpathentry kind="lib" path="lib/ext/owl-api/1.4.3/validation.jar"/>
-	<classpathentry kind="lib" path="lib/ext/owl-api/owl-api-econn/2006-04-27/api.jar"/>
-	<classpathentry kind="lib" path="lib/ext/owl-api/owl-api-econn/2006-04-27/impl.jar"/>
-	<classpathentry kind="lib" path="lib/ext/kaon2/kaon2.jar"/>
+	<classpathentry exported="true" kind="var" path="JUNIT_HOME/junit.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ext/pellet/pellet.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ext/relaxng/1.0/relaxngDatatype.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ext/commons-logging/1.1/commons-logging-1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ext/aterm/1.6/aterm-java-1.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ext/xsdlib/xsdlib.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ext/log4j/1.2.7/log4j.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ext/interprolog.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ext/wsmo4j/wsmlparser-20061024.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ext/wsmo4j/wsmo4j-20061103.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ext/mins/minsv0_2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ext/kaon/1.2.9/rdfapi.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ext/owl-api/1.4.3/abstractparser.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ext/owl-api/1.4.3/io.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ext/owl-api/1.4.3/rdfparser.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ext/owl-api/1.4.3/validation.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ext/owl-api/owl-api-econn/2006-04-27/api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ext/owl-api/owl-api-econn/2006-04-27/impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ext/kaon2/kaon2.jar"/>
 	<classpathentry kind="lib" path="lib/ext/iris/iris.jar"/>
 	<classpathentry kind="lib" path="lib/ext/iris/iris-parser.jar"/>
 	<classpathentry kind="lib" path="lib/ext/jgrapht/jgrapht-0.6.0.jar"/>
