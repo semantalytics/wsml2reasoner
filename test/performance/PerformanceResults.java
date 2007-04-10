@@ -56,7 +56,6 @@ public class PerformanceResults {
     
     public void write(String theDirectory) throws IOException{
         File directory = new File(theDirectory);
-        System.out.println(directory.exists());
         if (directory.listFiles() != null){
             for (File f : directory.listFiles()){
                 f.delete();

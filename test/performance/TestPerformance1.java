@@ -65,7 +65,7 @@ public class TestPerformance1 {
      */
     public void doTestRun() throws Exception {
         Ontology o0001 = loadOntology("performance/simple-0001-ontology.wsml");
-        Ontology o0002 = loadOntology("performance/simple-0002-ontology.wsml");
+//        Ontology o0002 = loadOntology("performance/simple-0002-ontology.wsml");
         Ontology o0010 = loadOntology("performance/simple-0010-ontology.wsml");
         Ontology o0020 = loadOntology("performance/simple-0020-ontology.wsml");
         Ontology o0030 = loadOntology("performance/simple-0030-ontology.wsml");
@@ -76,32 +76,25 @@ public class TestPerformance1 {
         Ontology o0080 = loadOntology("performance/simple-0080-ontology.wsml");
         Ontology o0090 = loadOntology("performance/simple-0090-ontology.wsml");
         Ontology o0100 = loadOntology("performance/simple-0100-ontology.wsml");
-        Ontology o1000 = loadOntology("performance/simple-1000-ontology.wsml");
-        
-        WSMLReasoner mins = getReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
-        WSMLReasoner kaon = getReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
-        WSMLReasoner iris = getReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
-        
-        boolean printResults = false;
+//        Ontology o1000 = loadOntology("performance/simple-1000-ontology.wsml");
+        boolean printResults = true;
         
         String[] reasonerNames = new String[]{"MINS", "KAON", "IRIS"};
-        WSMLReasoner[] reasoners = new WSMLReasoner[]{mins, kaon, iris};
-        Ontology[] ontologies = new Ontology[]{o0001};
-        String[] queries = new String[]{"?x subConceptOf ?y", "?x memberOf ?y"};
-//        String[] queries = new String[]{"?x memberOf ?y"};
+        Ontology[] ontologies = new Ontology[]{o0100};
+        String[] queries = new String[]{"?x memberOf ?y"};
         
         PerformanceResults performanceresults = new PerformanceResults();
         for (Ontology ontology : ontologies){
-            for (int i = 0; i < reasoners.length; i++){
+            for (int i = 0; i < reasonerNames.length; i++){
                 for (String query : queries){
-                    performanceresults.addReasonerPerformaceResult(reasonerNames[i], ontology, query, executeQuery(reasoners[i], query, ontology, reasonerNames[i], printResults));
+                    performanceresults.addReasonerPerformaceResult(reasonerNames[i], ontology, query, executeQuery(query, ontology, reasonerNames[i], printResults));
                 }
             }
         }
         performanceresults.write(new File("test/performance/results/").getAbsolutePath());
     }
 
-    private PerformanceResult executeQuery(WSMLReasoner theReasoner, String theQuery, Ontology theOntology, String theReasonerName, boolean thePrintResults) throws ParserException, InconsistencyException {
+    private PerformanceResult executeQuery(String theQuery, Ontology theOntology, String theReasonerName, boolean thePrintResults) throws ParserException, InconsistencyException {
         PerformanceResult performanceresult = new PerformanceResult();
         
         System.out.println("------------------------------------");
@@ -109,42 +102,60 @@ public class TestPerformance1 {
         System.out.println("ontology = '" + theOntology.getIdentifier() + "'");
         System.out.println("reasoner = '" + theReasonerName + "'");
         
-        LogicalExpression query = new WSMO4JManager().getLogicalExpressionFactory().createLogicalExpression(theQuery, theOntology);
-        
-        System.out.print("Registering Ontology ");
-        long t1_start = System.currentTimeMillis();
-        theReasoner.registerOntology(theOntology);
-        long t1_end = System.currentTimeMillis();
-        long t1 = t1_end - t1_start;
-        performanceresult.setRegisterOntology(t1);
-        System.out.println("(" + t1 + "ms)");
-        
-        Set<Map<Variable, Term>> result = null;
-        int j = 1;
-        for (int i = 0; i < j; i++){
-            System.out.print("Executing query " + i + " of " + j + " ");
-            long t2_start = System.currentTimeMillis();
-            result = theReasoner.executeQuery((IRI) theOntology.getIdentifier(), query);
-            long t2_end = System.currentTimeMillis();
-            long t2 = t2_end - t2_start;
-            performanceresult.addExecuteQuery(i, t2);
-            System.out.println("(" + t2 + "ms)");
+        System.out.print("Creating reasoner ");
+        long t0_start = System.currentTimeMillis();
+        WSMLReasoner reasoner = null;
+        if (theReasonerName.equals("MINS")){
+            reasoner = getReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
         }
-
-        System.out.print("Deregistering Ontology ");
-        long t3_start = System.currentTimeMillis();
-        theReasoner.deRegisterOntology((IRI) theOntology.getIdentifier());
-        long t3_end = System.currentTimeMillis();
-        long t3 = t3_end - t3_start;
-        System.out.println("(" + t3 + "ms)");
+        else if (theReasonerName.equals("KAON")){
+            reasoner = getReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+        }
+        else if (theReasonerName.equals("IRIS")){
+            reasoner = getReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+        }
+        long t0_end = System.currentTimeMillis();
+        long t0 = t0_end - t0_start;
+        System.out.println("(" + t0 + "ms)");
         
-        if (thePrintResults){
-            System.out.println("The result:");
-            for (Map<Variable, Term> vBinding : result) {
-                for (Variable var : vBinding.keySet()) {
-                    System.out.print(var + ": " + termToString(vBinding.get(var), theOntology) + "\t ");
+        if (reasoner != null){
+            LogicalExpression query = new WSMO4JManager().getLogicalExpressionFactory().createLogicalExpression(theQuery, theOntology);
+            
+            System.out.print("Registering Ontology ");
+            long t1_start = System.currentTimeMillis();
+            reasoner.registerOntology(theOntology);
+            long t1_end = System.currentTimeMillis();
+            long t1 = t1_end - t1_start;
+            performanceresult.setRegisterOntology(t1);
+            System.out.println("(" + t1 + "ms)");
+            
+            Set<Map<Variable, Term>> result = null;
+            int j = 1;
+            for (int i = 0; i < j; i++){
+                System.out.print("Executing query " + i + " of " + j + " ");
+                long t2_start = System.currentTimeMillis();
+                result = reasoner.executeQuery((IRI) theOntology.getIdentifier(), query);
+                long t2_end = System.currentTimeMillis();
+                long t2 = t2_end - t2_start;
+                performanceresult.addExecuteQuery(i, t2);
+                System.out.println("(" + t2 + "ms)");
+            }
+    
+            System.out.print("Deregistering Ontology ");
+            long t3_start = System.currentTimeMillis();
+            reasoner.deRegisterOntology((IRI) theOntology.getIdentifier());
+            long t3_end = System.currentTimeMillis();
+            long t3 = t3_end - t3_start;
+            System.out.println("(" + t3 + "ms)");
+            
+            if (thePrintResults){
+                System.out.println("The result:");
+                for (Map<Variable, Term> vBinding : result) {
+                    for (Variable var : vBinding.keySet()) {
+                        System.out.print(var + ": " + termToString(vBinding.get(var), theOntology) + "\t ");
+                    }
+                    System.out.println();
                 }
-                System.out.println();
             }
         }
         System.out.println("------------------------------------");
