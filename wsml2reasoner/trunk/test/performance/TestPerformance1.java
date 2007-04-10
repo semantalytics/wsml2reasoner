@@ -64,22 +64,30 @@ public class TestPerformance1 {
      * loads an Ontology and performs sample query
      */
     public void doTestRun() throws Exception {
-        Ontology o0001 = loadOntology("performance/simple-0001-ontology.wsml");
+//        Ontology o0001 = loadOntology("performance/simple-0001-ontology.wsml");
 //        Ontology o0002 = loadOntology("performance/simple-0002-ontology.wsml");
-        Ontology o0010 = loadOntology("performance/simple-0010-ontology.wsml");
-        Ontology o0020 = loadOntology("performance/simple-0020-ontology.wsml");
-        Ontology o0030 = loadOntology("performance/simple-0030-ontology.wsml");
-        Ontology o0040 = loadOntology("performance/simple-0040-ontology.wsml");
-        Ontology o0050 = loadOntology("performance/simple-0050-ontology.wsml");
-        Ontology o0060 = loadOntology("performance/simple-0060-ontology.wsml");
-        Ontology o0070 = loadOntology("performance/simple-0070-ontology.wsml");
-        Ontology o0080 = loadOntology("performance/simple-0080-ontology.wsml");
-        Ontology o0090 = loadOntology("performance/simple-0090-ontology.wsml");
+//        Ontology o0010 = loadOntology("performance/simple-0010-ontology.wsml");
+//        Ontology o0020 = loadOntology("performance/simple-0020-ontology.wsml");
+//        Ontology o0030 = loadOntology("performance/simple-0030-ontology.wsml");
+//        Ontology o0040 = loadOntology("performance/simple-0040-ontology.wsml");
+//        Ontology o0050 = loadOntology("performance/simple-0050-ontology.wsml");
+//        Ontology o0060 = loadOntology("performance/simple-0060-ontology.wsml");
+//        Ontology o0070 = loadOntology("performance/simple-0070-ontology.wsml");
+//        Ontology o0080 = loadOntology("performance/simple-0080-ontology.wsml");
+//        Ontology o0090 = loadOntology("performance/simple-0090-ontology.wsml");
         Ontology o0100 = loadOntology("performance/simple-0100-ontology.wsml");
+//        Ontology o0200 = loadOntology("performance/simple-0200-ontology.wsml");
+//        Ontology o0300 = loadOntology("performance/simple-0300-ontology.wsml");
+//        Ontology o0400 = loadOntology("performance/simple-0400-ontology.wsml");
+//        Ontology o0500 = loadOntology("performance/simple-0500-ontology.wsml");
+//        Ontology o0600 = loadOntology("performance/simple-0600-ontology.wsml");
+//        Ontology o0700 = loadOntology("performance/simple-0700-ontology.wsml");
+//        Ontology o0800 = loadOntology("performance/simple-0800-ontology.wsml");
+//        Ontology o0900 = loadOntology("performance/simple-0900-ontology.wsml");
 //        Ontology o1000 = loadOntology("performance/simple-1000-ontology.wsml");
-        boolean printResults = true;
+        boolean printResults = false;
         
-        String[] reasonerNames = new String[]{"MINS", "KAON", "IRIS"};
+        String[] reasonerNames = new String[]{"IRIS"};
         Ontology[] ontologies = new Ontology[]{o0100};
         String[] queries = new String[]{"?x memberOf ?y"};
         
