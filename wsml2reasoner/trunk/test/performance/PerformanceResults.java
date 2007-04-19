@@ -38,7 +38,7 @@ import org.wsmo.common.IRI;
 
 public class PerformanceResults {
 
-    
+    //   Reasoner    Ontoloy   query
     Map <String, Map<IRI, Map <String, PerformanceResult>>> performanceresults = new HashMap <String, Map<IRI, Map <String, PerformanceResult>>> ();
     
     public void addReasonerPerformaceResult(String theReasonerName, Ontology theOntology, String theQuery, PerformanceResult thePerformanceResult){
@@ -63,11 +63,15 @@ public class PerformanceResults {
         }
         
         Set <IRI> allOntologiesInTest = new HashSet <IRI> ();
-        Set <String> allQueriesInTest = new HashSet <String> ();
+        Map <String,Object[]> allQueriesInTest = new HashMap <String,Object[]> ();
         for (String reasoner : performanceresults.keySet()){
             for (IRI id : performanceresults.get(reasoner).keySet()){
                 allOntologiesInTest.add(id);
-                allQueriesInTest.addAll(performanceresults.get(reasoner).get(id).keySet());
+                for (String query:performanceresults.get(reasoner).get(id).keySet()){
+                    allQueriesInTest.put(
+                            id.getLocalName()+" "+query,
+                            new Object[]{id,query});
+                }
             }
         }
         
@@ -77,8 +81,7 @@ public class PerformanceResults {
                 return o1.toString().compareTo(o2.toString());
             }
         });
-        List <String> sortedAllQueriesInTest = new ArrayList <String>(allQueriesInTest);
-        Collections.sort(sortedAllQueriesInTest);
+
         
         //Write ontology load time data
         File loadTimeFile = new File(directory, "ALL-average-ontology-registration-times.csv");
@@ -103,15 +106,45 @@ public class PerformanceResults {
         }
         bw.flush();
         bw.close();
+        
+//      Write ontology query time data
+        List <String> sortedAllQueriesInTest = new ArrayList <String>(allQueriesInTest.keySet());
+        Collections.sort(sortedAllQueriesInTest);
+        
+        File queryTimeFile = new File(directory, "ALL-average-ontology-query-times.csv");
+        bw = new BufferedWriter(new FileWriter(queryTimeFile));
+        bw.write("Reasoner," + toCommaDelimited(sortedAllQueriesInTest) + "\n");
+        for (String reasoner : performanceresults.keySet()){
+            bw.write(reasoner);
+            for (String id : sortedAllQueriesInTest){
+                IRI ontologyID = (IRI) allQueriesInTest.get(id)[0];
+                String queryID = (String) allQueriesInTest.get(id)[1];
+                PerformanceResult performanceResult = performanceresults.get(reasoner).get(ontologyID).get(queryID);
+                if(performanceResult!=null){
+                    bw.write("," + performanceResult.getAvgExecuteQuers());
+                }else{
+                    bw.write(",-1");
+                }
+            }
+            bw.write("\n");
+        }
+        bw.flush();
+        bw.close();
     }
 
-    private String toCommaDelimited(List <IRI> theList) {
+
+    
+    private String toCommaDelimited(List theList) {
         String result = "";
-        for (IRI o : theList){
+        for (Object o : theList){
             if (!result.equals("")){
                 result += ",";
             }
-            result += o.getLocalName();
+            if(o instanceof IRI){
+                result += ((IRI)o).getLocalName(); 
+            }else{
+                result += o.toString();
+            }
         }
         return result;
     }

@@ -34,6 +34,17 @@ public class PerformanceResult {
     public void addExecuteQuery(int theIteration, long theExecutionTime) {
         this.executeQuery.put(theIteration, theExecutionTime);
     }
+    
+    public long getAvgExecuteQuers(){
+        long total=0;
+        for(long time: executeQuery.values()){
+            total+=time;
+        }
+        if (executeQuery.size()!=0){
+            return total/executeQuery.size();
+        }
+        return -1;
+    }
 
     public long getRegisterOntology() {
         return registerOntology;
