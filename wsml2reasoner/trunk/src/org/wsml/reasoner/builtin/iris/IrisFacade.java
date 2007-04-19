@@ -22,6 +22,7 @@ package org.wsml.reasoner.builtin.iris;
 // TODO: do the builtins
 
 import static org.deri.iris.factory.Factory.BASIC;
+import static org.deri.iris.factory.Factory.BUILTIN;
 import static org.deri.iris.factory.Factory.CONCRETE;
 import static org.deri.iris.factory.Factory.PROGRAM;
 import static org.deri.iris.factory.Factory.TERM;
@@ -67,6 +68,7 @@ import org.deri.iris.api.terms.concrete.IIntegerTerm;
 import org.deri.iris.api.terms.concrete.IIri;
 import org.deri.iris.api.terms.concrete.ISqName;
 import org.deri.iris.evaluation.algebra.ExpressionEvaluator;
+import org.omwg.logicalexpression.Constants;
 import org.omwg.logicalexpression.terms.BuiltInConstructedTerm;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.NumberedAnonymousID;
@@ -93,11 +95,11 @@ import org.wsmo.factory.WsmoFactory;
  * The wsmo4j interface for the iris reasoner.
  * </p>
  * <p>
- * $Id: IrisFacade.java,v 1.3 2007-02-26 18:37:42 graham Exp $
+ * $Id: IrisFacade.java,v 1.4 2007-04-19 09:22:15 richardpoettler Exp $
  * </p>
  * 
  * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class IrisFacade implements DatalogReasonerFacade {
 
@@ -338,7 +340,46 @@ public class IrisFacade implements DatalogReasonerFacade {
 		for (final Term t : l.getTerms()) {
 			terms.add(wsmoTermConverter(t));
 		}
-		return BASIC.createAtom(BASIC.createPredicate(l.getPredicateUri(),
+
+		final String sym = l.getPredicateUri();
+		// checking whether the predicate is a builtin
+		if (sym.equals(Constants.EQUAL) || 
+				sym.equals(Constants.NUMERIC_EQUAL) || 
+				sym.equals(Constants.STRING_EQUAL) || 
+				sym.equals(Constants.STRONG_EQUAL)) {
+			return BUILTIN.createEqual(terms.get(0), terms.get(1));
+
+		} else if (sym.equals(Constants.INEQUAL) || 
+				sym.equals(Constants.NUMERIC_INEQUAL) || 
+				sym.equals(Constants.STRING_INEQUAL)) {
+			return BUILTIN.createUnequal(terms.get(0), terms.get(1));
+
+		} else if (sym.equals(Constants.LESS_THAN)) {
+			return BUILTIN.createLess(terms.get(0), terms.get(1));
+
+		} else if (sym.equals(Constants.LESS_EQUAL)) {
+			return BUILTIN.createLessEqual(terms.get(0), terms.get(1));
+
+		} else if (sym.equals(Constants.GREATER_THAN)) {
+			return BUILTIN.createGreater(terms.get(0), terms.get(1));
+
+		} else if (sym.equals(Constants.GREATER_EQUAL)) {
+			return BUILTIN.createGreaterEqual(terms.get(0), terms.get(1));
+
+		} else if (sym.equals(Constants.NUMERIC_ADD)) {
+			return BUILTIN.createAddBuiltin(terms.get(0), terms.get(1), terms.get(2));
+
+		} else if (sym.equals(Constants.NUMERIC_SUB)) {
+			return BUILTIN.createSubtractBuiltin(terms.get(0), terms.get(1), terms.get(2));
+
+		} else if (sym.equals(Constants.NUMERIC_MUL)) {
+			return BUILTIN.createMultiplyBuiltin(terms.get(0), terms.get(1), terms.get(2));
+
+		} else if (sym.equals(Constants.NUMERIC_DIV)) {
+			return BUILTIN.createDivideBuiltin(terms.get(0), terms.get(1), terms.get(2));
+		}
+		// return an ordinary atom
+		return BASIC.createAtom(BASIC.createPredicate(sym, 
 				terms.size()), BASIC.createTuple(terms));
 	}
 
