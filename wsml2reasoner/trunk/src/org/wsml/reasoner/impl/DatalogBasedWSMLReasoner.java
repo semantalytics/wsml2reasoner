@@ -696,7 +696,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
                 wsmoManager);
 
-        List<Variable> params = new LinkedList<Variable>();
+        List<Term> params = new LinkedList<Term>();
         LogicalExpressionVariableVisitor varVisitor = new LogicalExpressionVariableVisitor();
         q.accept(varVisitor);
         params.addAll(varVisitor.getFreeVariables(q));

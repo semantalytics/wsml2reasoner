@@ -30,11 +30,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.omwg.logicalexpression.Atom;
-import org.omwg.logicalexpression.AttributeValueMolecule;
 import org.omwg.logicalexpression.Conjunction;
 import org.omwg.logicalexpression.Constants;
 import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.logicalexpression.MembershipMolecule;
 import org.omwg.logicalexpression.Molecule;
 import org.omwg.logicalexpression.NegationAsFailure;
 import org.omwg.logicalexpression.terms.Term;
@@ -436,7 +434,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 (cardinality * cardinality + cardinality) / 2 + 1);
         for (int i = 0; i < cardinality; i++) {
             for (int j = i + 1; j < cardinality; j++) {
-                List<Variable> args = new ArrayList<Variable>(2);
+                List<Term> args = new ArrayList<Term>(2);
                 args.add(yVariable[i]);
                 args.add(yVariable[j]);
                 inEqualities.add(leFactory.createAtom(wsmoFactory
@@ -482,7 +480,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         }
         LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable,
                 conceptID);
-        LogicalExpression[] valXY = new LogicalExpression[cardinality];
+        Molecule[] valXY = new Molecule[cardinality];
         for (int i = 0; i < valXY.length; i++) {
             valXY[i] = leFactory.createAttributeValue(xVariable, attributeID,
                     yVariable[i]);
@@ -491,7 +489,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 (cardinality * cardinality + cardinality) / 2 + 1);
         for (int i = 0; i < cardinality; i++) {
             for (int j = i + 1; j < cardinality; j++) {
-                List<Variable> args = new ArrayList<Variable>(2);
+                List<Term> args = new ArrayList<Term>(2);
                 args.add(yVariable[i]);
                 args.add(yVariable[j]);
                 inEqualities.add(leFactory.createAtom(wsmoFactory
@@ -529,16 +527,16 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
         // process super relations:
         int arity = relation.listParameters().size();
-        List<Variable> variables = new ArrayList<Variable>(arity);
+        List<Term> terms = new ArrayList<Term>(arity);
         for (int i = 0; i < arity; i++) {
-            variables
+            terms
                     .add(leFactory.createVariable("x" + Integer.toString(i)));
         }
-        Atom relP = leFactory.createAtom(relationID, variables);
+        Atom relP = leFactory.createAtom(relationID, terms);
         for (Relation superRelation : (Collection<Relation>) relation
                 .listSuperRelations()) {
             Atom superRelP = leFactory.createAtom(
-                    superRelation.getIdentifier(), variables);
+                    superRelation.getIdentifier(), terms);
             resultExpressions.add(leFactory.createImplication(relP, superRelP));
             
             mentionedIRIs.add(superRelation.getIdentifier());
@@ -551,7 +549,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         Collection<LogicalExpression> parameterAxioms = new LinkedList<LogicalExpression>();
         int i = 0;
         for (Parameter parameter : parameters) {
-            List<MembershipMolecule> typeMemberships = new ArrayList<MembershipMolecule>(
+            List<Molecule> typeMemberships = new ArrayList<Molecule>(
                     parameter.listTypes().size());
             for (Type type : (Collection<Type>) parameter.listTypes()) {
                 Identifier typeID;
@@ -563,7 +561,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                     typeID = ((ComplexDataType) type).getIRI();
                 }
                 typeMemberships.add(leFactory.createMemberShipMolecule(
-                        variables.get(i++), typeID));
+                		terms.get(i++), typeID));
             }
             if (!typeMemberships.isEmpty()) {
                 if (parameter.isConstraining()) {
@@ -607,7 +605,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         return resultExpressions;
     }
 
-    protected LogicalExpression buildMolecule(List<? extends Molecule> molecules) {
+    protected LogicalExpression buildMolecule(List<Molecule> molecules) {
         if (molecules.size() == 1) {
             return molecules.get(0);
         } else {
@@ -639,7 +637,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
             mentionedIRIs.add(attribute);
             
             Set<Value> values = attributeValues.get(attribute);
-            List<AttributeValueMolecule> molecules = new ArrayList<AttributeValueMolecule>(
+            List<Molecule> molecules = new ArrayList<Molecule>(
                     values.size());
             for (Value value : values) {
                 Term valueTerm = null;
@@ -667,7 +665,8 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         return resultExpressions;
     }
 
-    private Set<LogicalExpression> explicateIRIDeclaration(Collection<Identifier> mentionedIRIs){
+    @SuppressWarnings("unchecked")
+	private Set<LogicalExpression> explicateIRIDeclaration(Collection<Identifier> mentionedIRIs){
         Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
     
         Identifier pred_declared_iri_symbol = 

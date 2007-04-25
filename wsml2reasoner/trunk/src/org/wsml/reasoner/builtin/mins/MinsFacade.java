@@ -126,7 +126,7 @@ public class MinsFacade implements DatalogReasonerFacade {
             // retrieve KB ment for IRI:
             RuleSet minsEngine = registeredKbs.get(ontologyURI);
             if (minsEngine == null){
-                throw new InternalReasonerException("No KB with given ID registered"+ontologyURI);
+                throw new InternalReasonerException("No KB with given ID registered "+ontologyURI);
             }
             Rule query = translateQuery(q, minsEngine);
 

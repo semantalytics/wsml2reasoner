@@ -48,12 +48,12 @@ import org.wsmo.wsml.ParserException;
  *
  * <pre>
  *  Created on July 3rd, 2006
- *  Committed by $Author: nathalie $
+ *  Committed by $Author: graham $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/transformation/dl/Relation2AttributeNormalizer.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.3 $ $Date: 2006-07-18 13:06:13 $
+ * @version $Revision: 1.4 $ $Date: 2007-04-25 15:55:06 $
  */
 public class Relation2AttributeNormalizer implements OntologyNormalizer {
 
@@ -101,11 +101,11 @@ public class Relation2AttributeNormalizer implements OntologyNormalizer {
 			Parameter p1 = relation.getParameter((byte) 0);
 			Parameter p2 = relation.getParameter((byte) 1);
 			Concept newConcept = null;
-			Set<Concept> types1 = p1.listTypes();
+			Set<Type> types1 = p1.listTypes();
 			Set types2 = p2.listTypes();
-			Iterator<Concept> it1 = types1.iterator();
+			Iterator<Type> it1 = types1.iterator();
 			while (it1.hasNext()) {
-				Concept concept = it1.next();
+				Concept concept = (Concept) it1.next();
 				newConcept = ontology.findConcept(concept.getIdentifier());
 				if (newConcept == null) {
 					newConcept = wsmoFactory.createConcept(concept.getIdentifier());
