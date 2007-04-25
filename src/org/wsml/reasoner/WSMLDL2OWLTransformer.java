@@ -105,12 +105,12 @@ import org.wsmo.factory.LogicalExpressionFactory;
  *
  * <pre>
  *  Created on July 3rd, 2006
- *  Committed by $Author: nathalie $
+ *  Committed by $Author: graham $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/WSMLDL2OWLTransformer.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.12 $ $Date: 2007-03-01 16:39:19 $
+ * @version $Revision: 1.13 $ $Date: 2007-04-25 15:55:07 $
  */
 public class WSMLDL2OWLTransformer implements Visitor{
 	
@@ -218,7 +218,7 @@ public class WSMLDL2OWLTransformer implements Visitor{
 
 	@SuppressWarnings("unchecked")
 	public void visitCompoundMolecule(CompoundMolecule expr) {
-		Iterator<Molecule> it = expr.listOperands().iterator();
+		Iterator<LogicalExpression> it = expr.listOperands().iterator();
         while(it.hasNext()){
             it.next().accept(this);
         }
@@ -1718,6 +1718,10 @@ public class WSMLDL2OWLTransformer implements Visitor{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.12  2007/03/01 16:39:19  nathalie
+ * - updated datavalue transformation
+ * - added test for datavalue transformations
+ *
  * Revision 1.11  2007/02/09 08:39:57  hlausen
  * quick fix against uwes quick fix (be aware of unary predicates...)
  *

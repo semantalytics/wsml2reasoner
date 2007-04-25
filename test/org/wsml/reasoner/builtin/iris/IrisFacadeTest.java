@@ -3,6 +3,7 @@
  */
 package org.wsml.reasoner.builtin.iris;
 
+
 import java.util.Arrays;
 import java.util.TimeZone;
 
@@ -15,6 +16,7 @@ import org.deri.iris.api.factory.IConcreteFactory;
 import org.deri.iris.api.factory.ITermFactory;
 import org.deri.iris.api.terms.IConstructedTerm;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
+import org.omwg.logicalexpression.terms.Term;
 import org.wsml.reasoner.Literal;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -25,11 +27,11 @@ import org.wsmo.factory.WsmoFactory;
  * Tests for the iris facade.
  * </p>
  * <p>
- * $Id: IrisFacadeTest.java,v 1.1 2007-02-01 12:21:42 richardpoettler Exp $
+ * $Id: IrisFacadeTest.java,v 1.2 2007-04-25 15:55:07 graham Exp $
  * </p>
  * 
  * @author Richard Pöttler, richard dot poettler at deri dot org
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class IrisFacadeTest extends TestCase {
 
@@ -65,12 +67,13 @@ public class IrisFacadeTest extends TestCase {
 		// test iri
 		assertEquals(CF.createIri("http://my.iri"), IrisFacade
 				.wsmoTermConverter(WF.createIRI("http://my.iri")));
+		
 		// test constructed term
 		final ConstructedTerm wc = LF.createConstructedTerm(WF
-				.createIRI("http://constr"), Arrays.asList(DF
+				.createIRI("http://constr"), Arrays.asList((Term)DF
 				.createWsmlString("a"), LF.createConstructedTerm(WF
-				.createIRI("http://inner"), Arrays.asList(DF
-				.createWsmlString("b"))), DF.createWsmlString("c")));
+				.createIRI("http://inner"), Arrays.asList((Term)DF
+				.createWsmlString("b"))), (Term)DF.createWsmlString("c")));
 		final IConstructedTerm ic = TF.createConstruct("http://constr", TF
 				.createString("a"), TF.createConstruct("http://inner", TF
 				.createString("b")), TF.createString("c"));
@@ -94,10 +97,10 @@ public class IrisFacadeTest extends TestCase {
 
 		// test constructed
 		final ConstructedTerm wc = LF.createConstructedTerm(WF
-				.createIRI("http://constr"), Arrays.asList(DF
+				.createIRI("http://constr"), Arrays.asList((Term)DF
 				.createWsmlString("a"), LF.createConstructedTerm(WF
-				.createIRI("http://inner"), Arrays.asList(DF
-				.createWsmlString("b"))), DF.createWsmlString("c")));
+				.createIRI("http://inner"), Arrays.asList((Term)DF
+				.createWsmlString("b"))), (Term)DF.createWsmlString("c")));
 		final IConstructedTerm ic = TF.createConstruct("http://constr", TF
 				.createString("a"), TF.createConstruct("http://inner", TF
 				.createString("b")), TF.createString("c"));
@@ -108,7 +111,7 @@ public class IrisFacadeTest extends TestCase {
 		// test variable
 		assertEquals(LF.createVariable("asdf"), IF.irisTermConverter(TF
 				.createVariable("asdf")));
-		// test Base65Binary
+		// test Base64Binary
 		assertEquals(DF.createWsmlBase64Binary("asdf".getBytes()), IF
 				.irisTermConverter(CF.createBase64Binary("asdf")));
 		// test boolean

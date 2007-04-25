@@ -19,6 +19,7 @@
 package org.wsml.reasoner.transformation.le;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.omwg.logicalexpression.CompoundExpression;
@@ -32,6 +33,7 @@ import org.omwg.logicalexpression.Implication;
 import org.omwg.logicalexpression.InverseImplication;
 import org.omwg.logicalexpression.LogicProgrammingRule;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.Molecule;
 import org.omwg.logicalexpression.Negation;
 import org.omwg.logicalexpression.NegationAsFailure;
 import org.omwg.logicalexpression.UniversalQuantification;
@@ -147,7 +149,8 @@ public class OnePassReplacementNormalizer implements
      * @param arguments
      * @return a compound expression with replaced arguments
      */
-    protected CompoundExpression replaceArguments(CompoundExpression compound,
+    @SuppressWarnings("unchecked")
+	protected CompoundExpression replaceArguments(CompoundExpression compound,
             List<LogicalExpression> arguments) {
         CompoundExpression result = null;
         if (compound instanceof Constraint) {
@@ -183,7 +186,9 @@ public class OnePassReplacementNormalizer implements
             result = leFactory.createLogicProgrammingRule(arguments.get(0),
                     arguments.get(1));
         } else if (compound instanceof CompoundMolecule) {
-            result = leFactory.createCompoundMolecule(arguments);
+        	List<Molecule> molecules = new ArrayList<Molecule>();
+        	molecules.addAll((Collection<? extends Molecule>) arguments);
+            result = leFactory.createCompoundMolecule(molecules);
         } else {
             throw new RuntimeException(
                     "in OnePassReplacementNormalizer::replaceArguments() : reached presumably unreachable code! when handling object of type: "
