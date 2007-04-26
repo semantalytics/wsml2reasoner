@@ -104,10 +104,18 @@ public class ConstructReductionNormalizerTest extends WSMLNormalizationTest
         // test whether produced expression is correct
         
         String normString = serializeOntology(normOnt);
-System.out.println(normString);
 
-        Pattern pattern = Pattern.compile("c.*\\[.*r1.*hasValue.*v1.*\\].*and.*c.*\\[.*r3.*hasValue.*v3.*].*and.*c.*\\[.*r2.*hasValue.*v2.*\\].*", Pattern.DOTALL);
+
+        Pattern pattern = Pattern.compile("c.*\\[.*r1.*hasValue.*v1.*\\]");
         Matcher matcher = pattern.matcher(normString);
+        assertTrue(matcher.find());
+        
+        pattern = Pattern.compile("c.*\\[.*r3.*hasValue.*v3.*\\]");
+        matcher = pattern.matcher(normString);
+        assertTrue(matcher.find());
+
+        pattern = Pattern.compile("c.*\\[.*r2.*hasValue.*v2.*\\]");
+        matcher = pattern.matcher(normString);
         assertTrue(matcher.find());
     }
 }
