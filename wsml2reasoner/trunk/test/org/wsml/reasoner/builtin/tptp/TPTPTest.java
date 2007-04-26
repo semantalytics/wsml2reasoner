@@ -2,6 +2,8 @@ package org.wsml.reasoner.builtin.tptp;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Ontology;
@@ -12,6 +14,10 @@ import org.wsmo.factory.*;
 import junit.framework.TestCase;
 
 
+/**
+ * 
+ * Checking if the String transformation is OK!
+ */
 public class TPTPTest extends TestCase{
     
     LogicalExpressionFactory leF = Factory.createLogicalExpressionFactory(null);
@@ -31,7 +37,13 @@ public class TPTPTest extends TestCase{
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
         tptp.register("abc", set);
-        //FIXME some assertion to come
+
+        String fol = tptp.convertedOntologies.get("abc");
+        assertTrue(fol.contains("subConceptof(foo,animal)"));
+        
+//        Pattern pattern = Pattern.compile("c.*\\[.*r1.*hasValue.*v1.*\\].*and.*c.*\\[.*r3.*hasValue.*v3.*].*and.*c.*\\[.*r2.*hasValue.*v2.*\\].*", Pattern.DOTALL);
+//        Matcher matcher = pattern.matcher(fol);
+//        assertTrue(matcher.find());
     }
 
     public void testVars() throws Exception{
@@ -42,7 +54,15 @@ public class TPTPTest extends TestCase{
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
         tptp.register("abc", set);
-        //FIXME some assertion to come
+
+        String fol = tptp.convertedOntologies.get("abc");
+//        System.out.println(fol);
+
+        Pattern pattern = Pattern.compile("! \\[Z,Y,X\\] :"+
+                ".*subConceptof\\(X,Y\\).*&.*subConceptof\\(Y,Z\\).*=>.*subConceptof\\(X,Z\\)");
+        Matcher matcher = pattern.matcher(fol);
+        assertTrue(matcher.find());
+
     }
     
     public void testConjunctionDisjunction() throws Exception{
@@ -51,7 +71,13 @@ public class TPTPTest extends TestCase{
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
         tptp.register("abc", set);
-        //FIXME some assertion to come
+        
+        String fol = tptp.convertedOntologies.get("abc");
+//        System.out.println(fol);
+        Pattern pattern = Pattern.compile(
+                "\\(\\(\\(a.*&.*b\\).*|.*c\\)\\)");
+        Matcher matcher = pattern.matcher(fol);
+        assertTrue(matcher.find());
     }
     
     public void testNegation() throws Exception{
@@ -60,7 +86,15 @@ public class TPTPTest extends TestCase{
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
         tptp.register("abc", set);
-        //FIXME some assertion to come
+
+
+        String fol = tptp.convertedOntologies.get("abc");
+//      System.out.println(fol);
+        Pattern pattern = Pattern.compile(
+                  "a.*|.*\\~.*a");
+        Matcher matcher = pattern.matcher(fol);
+        assertTrue(matcher.find());
+
     }
 
     public void testFsymbols() throws Exception{
@@ -69,7 +103,11 @@ public class TPTPTest extends TestCase{
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
         tptp.register("abc", set);
-        //FIXME some assertion to come
+        
+        String fol = tptp.convertedOntologies.get("abc");
+      
+        assertTrue(fol.contains("(a(f(b(c,d,e)"));
+
     }
     
 
