@@ -40,12 +40,12 @@ import org.wsmo.factory.WsmoFactory;
  *
  * <pre>
  *  Created on July 3rd, 2006
- *  Committed by $Author: nathalie $
+ *  Committed by $Author: graham $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/transformation/dl/WSMLDLLogExprNormalizer.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.3 $ $Date: 2006-07-18 13:06:13 $
+ * @version $Revision: 1.4 $ $Date: 2007-04-26 17:39:14 $
  */
 public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
 	
@@ -57,7 +57,7 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
 
     protected AnonymousIdTranslator anonymousIdTranslator;
     
-    @SuppressWarnings("unchecked")
+    
 	public WSMLDLLogExprNormalizer(WSMO4JManager wsmoManager) {
         // Normalization Rules
     	List<NormalizationRule> preOrderRules = new ArrayList<NormalizationRule>();
@@ -85,7 +85,7 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
     /**
      * @see OntologyNormalizer#normalize(Ontology)
      */
-	@SuppressWarnings("unchecked")
+	
 	public Ontology normalize(Ontology ontology) {
 		try {		
 			// normalizing concepts (replace unnumbered anonymous identifiers)
@@ -139,7 +139,7 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
 	 * If a concept has a superconcept with an unnumbered anonymous identifier, 
 	 * this superconcept's identifier is also replaced.
 	 */
-	@SuppressWarnings("unchecked")
+	
 	private Ontology normalizeConcepts(Ontology ontology) throws SynchronisationException, InvalidModelException {
 		Set<Concept> concepts = (Set<Concept>) ontology.listConcepts();
 		for (Concept concept : concepts) {
@@ -219,7 +219,7 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
 	 * If an instance is member of an concept with an unnumberd anonymous identifier, 
 	 * this concept's identifier is also replaced.
 	 */
-	@SuppressWarnings("unchecked")
+	
 	private Ontology normalizeInstances(Ontology ontology) throws SynchronisationException, InvalidModelException {
 		Set<Instance> instances = (Set<Instance>) ontology.listInstances();
 		Iterator<Instance> it = instances.iterator();
@@ -259,7 +259,7 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
 	 * replaced, and the preorder and postorder rules defined at the constructor 
 	 * are applied.
 	 */
-	@SuppressWarnings("unchecked")
+	
 	private Set<LogicalExpression> normalizeLogExpr(Set<Axiom> axioms) {
 		Set<LogicalExpression> expressions = new HashSet<LogicalExpression>();
 		for (Axiom axiom : axioms) {
@@ -311,6 +311,9 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.3  2006/07/18 13:06:13  nathalie
+ * removed the keeping of nfps
+ *
  * Revision 1.2  2006/07/18 08:45:22  nathalie
  * removed unneeded dataFactory
  *

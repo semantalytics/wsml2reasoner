@@ -19,7 +19,6 @@
 package org.wsml.reasoner.transformation.le;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.omwg.logicalexpression.CompoundExpression;
@@ -149,7 +148,6 @@ public class OnePassReplacementNormalizer implements
      * @param arguments
      * @return a compound expression with replaced arguments
      */
-    @SuppressWarnings("unchecked")
 	protected CompoundExpression replaceArguments(CompoundExpression compound,
             List<LogicalExpression> arguments) {
         CompoundExpression result = null;
@@ -187,7 +185,11 @@ public class OnePassReplacementNormalizer implements
                     arguments.get(1));
         } else if (compound instanceof CompoundMolecule) {
         	List<Molecule> molecules = new ArrayList<Molecule>();
-        	molecules.addAll((Collection<? extends Molecule>) arguments);
+        	for (LogicalExpression le : arguments){
+        		if (le instanceof Molecule){
+        			molecules.add((Molecule) le);
+        		}
+        	}
             result = leFactory.createCompoundMolecule(molecules);
         } else {
             throw new RuntimeException(

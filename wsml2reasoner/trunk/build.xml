@@ -24,7 +24,6 @@
 		<property name="dist.complete.lib" value="${dist.complete}/lib" />
 		<property name="dist.complete.test" value="${dist.complete}/test" />
 		<property name="dist.complete.example" value="${dist.complete}/example" />
-		<property name="deploy.version" value="0_3" />
 	
 		<property name="javadoc.dir" location="${basedir}/javadoc" />
 		
@@ -34,6 +33,7 @@
 		<property name="cvs.path" value=":ext:${cvs.user}@cvs.deri.at:/usr/local/cvsroot" />
 		<property name="shell.host" value="tools.deri.org" />
 		<property name="remote.snapshot.path" value="/var/www/html/tools_deri_org/wsml2reasoner/snapshot/" />
+		<property name="remote.snapshot.path.wsmo" value="${remote.snapshot.path}/wsml2reasoner-wsmo/" />
 		<property name="remote.javadoc.path" value="/var/www/html/tools_deri_org/wsml2reasoner/javadoc/" />
 	</target>
 	
@@ -255,13 +255,12 @@
 	<target name="create-wsml2reasoner-sdk" depends="real-clean, create-dirs" 
 		description="Creates complete wsml2reasoner (including tests) for developers">
 		<copy file="${basedir}/" todir="${dist.complete}"/>
-		<echo file="${dist.complete}/version.txt">${deploy.version}</echo>
 		<copy todir="${dist.complete}" preservelastmodified="yes" includeEmptyDirs="no">
 			<fileset dir="${basedir}">
 				<patternset refid="sdk-files" />
 			</fileset>
 		</copy>
-		<zip destfile="${dist}/wsml2reasoner-sdk-${deploy.version}.zip">
+		<zip destfile="${dist}/wsml2reasoner-sdk-${DSTAMP}.zip">
 			<fileset dir="${dist.complete}"/>
 		</zip>
 		<delete dir="${dist.complete}"/>
@@ -270,12 +269,11 @@
 	<target name="create-wsml2reasoner-wsmo-jar+libs" depends="compile" 
 		description="Creates wsml2reasoner-wsmo jar + libs">
 		<mkdir dir="${dist.complete}" />	
-		<jar jarfile="${dist.complete}/wsml2reasoner-wsmo-${deploy.version}.jar">
+		<jar jarfile="${dist.complete}/wsml2reasoner-wsmo-${DSTAMP}.jar">
 			<fileset dir="${build.src}" />
 			<fileset dir="${build.class}" />
 		</jar>
 		<copy file="${basedir}/license.txt" todir="${dist.complete}"/>
-		<echo file="${dist.complete}/version.txt">${deploy.version}</echo>
 		<copy todir="${dist.complete.lib}" preservelastmodified="yes" includeEmptyDirs="no">
 			<fileset dir="${build.lib}">
 				<patternset refid="wsmo-jars" />
@@ -288,10 +286,10 @@
 		<copy file="${example.dir}/ReasonerExample.java" todir="${dist.complete.example}"/>
 		<copy file="${example.dir}/humanOntology.wsml" todir="${dist.complete.example}"/>
 		<copy file="${example.dir}/simpleOntology.wsml" todir="${dist.complete.example}"/>
-		<zip destfile="${dist}/wsml2reasoner-wsmo-${deploy.version}.zip">
+		<zip destfile="${dist}/wsml2reasoner-wsmo-${DSTAMP}.zip">
 			<fileset dir="${dist.complete}"/>
 		</zip>
-		<delete dir="${dist.complete}"/>
+		<!--<delete dir="${dist.complete}"/>-->
 	</target>
 	
 	<target name="create-wsml2reasoner-wsmo-src" depends="create-wsml2reasoner-wsmo-jar+libs" 
@@ -300,7 +298,7 @@
 		<copy todir="${dist.complete.src}" preservelastmodified="yes" includeEmptyDirs="no">
 			<fileset dir="${build.src}" />
 		</copy>
-		<zip destfile="${dist}/wsml2reasoner-wsmo-src-${deploy.version}.zip">
+		<zip destfile="${dist}/wsml2reasoner-wsmo-src-${DSTAMP}.zip">
 			<fileset dir="${dist.complete}"/>
 		</zip>
 		<delete dir="${dist.complete}"/>
@@ -309,12 +307,11 @@
 	<target name="create-wsml2reasoner-dl-jar+libs" depends="compile" 
 		description="Creates wsml2reasoner-dl jar + libs">
 		<mkdir dir="${dist.complete}" />	
-		<jar jarfile="${dist.complete}/wsml2reasoner-dl-${deploy.version}.jar">
+		<jar jarfile="${dist.complete}/wsml2reasoner-dl-${DSTAMP}.jar">
 			<fileset dir="${build.src}" />
 			<fileset dir="${build.class}" />
 		</jar>
 		<copy file="${basedir}/license.txt" todir="${dist.complete}"/>
-		<echo file="${dist.complete}/version.txt">${deploy.version}</echo>
 		<copy todir="${dist.complete.lib}" preservelastmodified="yes" includeEmptyDirs="no">
 			<fileset dir="${build.lib}">
 				<patternset refid="dl-jars" />
@@ -327,7 +324,7 @@
 		<copy file="${example.dir}/PelletReasonerExample.java" todir="${dist.complete.example}"/>
 		<copy file="${example.dir}/wsml2owlExample.wsml" todir="${dist.complete.example}"/>
 		<copy file="${example.dir}/simpleOntology.wsml" todir="${dist.complete.example}"/>
-		<zip destfile="${dist}/wsml2reasoner-dl-${deploy.version}.zip">
+		<zip destfile="${dist}/wsml2reasoner-dl-${DSTAMP}.zip">
 			<fileset dir="${dist.complete}"/>
 		</zip>
 		<delete dir="${dist.complete}"/>
@@ -341,7 +338,7 @@
 				<patternset refid="dl-files" />	
 			</fileset>
 		</copy>
-		<zip destfile="${dist}/wsml2reasoner-dl-src-${deploy.version}.zip">
+		<zip destfile="${dist}/wsml2reasoner-dl-src-${DSTAMP}.zip">
 			<fileset dir="${dist.complete}"/>
 		</zip>
 		<delete dir="${dist.complete}"/>
@@ -350,12 +347,11 @@
 	<target name="create-wsml2reasoner-dl-pellet-jar+libs" depends="compile" 
 		description="Creates wsml2reasoner-dl-pellet jar + libs">
 		<mkdir dir="${dist.complete}" />	
-		<jar jarfile="${dist.complete}/wsml2reasoner-dl-pellet-${deploy.version}.jar">
+		<jar jarfile="${dist.complete}/wsml2reasoner-dl-pellet-${DSTAMP}.jar">
 			<fileset dir="${build.src}" />
 			<fileset dir="${build.class}" />
 		</jar>
 		<copy file="${basedir}/license.txt" todir="${dist.complete}"/>
-		<echo file="${dist.complete}/version.txt">${deploy.version}</echo>
 		<copy todir="${dist.complete.lib}" preservelastmodified="yes" includeEmptyDirs="no">
 			<fileset dir="${build.lib}">
 				<patternset refid="dl-pellet-jars" />
@@ -368,7 +364,7 @@
 		<copy file="${example.dir}/PelletReasonerExample.java" todir="${dist.complete.example}"/>
 		<copy file="${example.dir}/wsml2owlExample.wsml" todir="${dist.complete.example}"/>
 		<copy file="${example.dir}/simpleOntology.wsml" todir="${dist.complete.example}"/>
-		<zip destfile="${dist}/wsml2reasoner-dl-pellet-${deploy.version}.zip">
+		<zip destfile="${dist}/wsml2reasoner-dl-pellet-${DSTAMP}.zip">
 			<fileset dir="${dist.complete}"/>
 		</zip>
 		<delete dir="${dist.complete}"/>
@@ -382,7 +378,7 @@
 				<patternset refid="dl-pellet-files" />	
 			</fileset>
 		</copy>
-		<zip destfile="${dist}/wsml2reasoner-dl-pellet-src-${deploy.version}.zip">
+		<zip destfile="${dist}/wsml2reasoner-dl-pellet-src-${DSTAMP}.zip">
 			<fileset dir="${dist.complete}"/>
 		</zip>
 		<delete dir="${dist.complete}"/>
@@ -391,12 +387,11 @@
 	<target name="create-wsml2reasoner-datalog-jar+libs" depends="compile" 
 		description="Creates wsml2reasoner-datalog jar + libs">
 		<mkdir dir="${dist.complete}" />	
-		<jar jarfile="${dist.complete}/wsml2reasoner-datalog-${deploy.version}.jar">
+		<jar jarfile="${dist.complete}/wsml2reasoner-datalog-${DSTAMP}.jar">
 			<fileset dir="${build.src}" />
 			<fileset dir="${build.class}" />
 		</jar>
 		<copy file="${basedir}/license.txt" todir="${dist.complete}"/>
-		<echo file="${dist.complete}/version.txt">${deploy.version}</echo>
 		<copy todir="${dist.complete.lib}" preservelastmodified="yes" includeEmptyDirs="no">
 			<fileset dir="${build.lib}">
 				<patternset refid="wsmo-jars" />
@@ -409,7 +404,7 @@
 		<copy file="${example.dir}/ReasonerExample.java" todir="${dist.complete.example}"/>
 		<copy file="${example.dir}/humanOntology.wsml" todir="${dist.complete.example}"/>
 		<copy file="${example.dir}/simpleOntology.wsml" todir="${dist.complete.example}"/>
-		<zip destfile="${dist}/wsml2reasoner-datalog-${deploy.version}.zip">
+		<zip destfile="${dist}/wsml2reasoner-datalog-${DSTAMP}.zip">
 			<fileset dir="${dist.complete}"/>
 		</zip>
 		<delete dir="${dist.complete}"/>
@@ -423,7 +418,7 @@
 				<patternset refid="datalog-files" />	
 			</fileset>
 		</copy>
-		<zip destfile="${dist}/wsml2reasoner-datalog-src-${deploy.version}.zip">
+		<zip destfile="${dist}/wsml2reasoner-datalog-src-${DSTAMP}.zip">
 			<fileset dir="${dist.complete}"/>
 		</zip>
 	</target>
@@ -431,12 +426,11 @@
 	<target name="create-wsml2reasoner-datalog-iris-jar+libs" depends="compile" 
 		description="Creates wsml2reasoner-datalog-iris jar + libs">
 		<mkdir dir="${dist.complete}" />	
-		<jar jarfile="${dist.complete}/wsml2reasoner-datalog-iris-${deploy.version}.jar">
+		<jar jarfile="${dist.complete}/wsml2reasoner-datalog-iris-${DSTAMP}.jar">
 			<fileset dir="${build.src}" />
 			<fileset dir="${build.class}" />
 		</jar>
 		<copy file="${basedir}/license.txt" todir="${dist.complete}"/>
-		<echo file="${dist.complete}/version.txt">${deploy.version}</echo>
 		<copy todir="${dist.complete.lib}" preservelastmodified="yes" includeEmptyDirs="no">
 			<fileset dir="${build.lib}">
 				<patternset refid="datalog-iris-jars" />
@@ -450,7 +444,7 @@
 		<copy file="${example.dir}/IrisReasonerExample.java" todir="${dist.complete.example}"/>
 		<copy file="${example.dir}/humanOntology.wsml" todir="${dist.complete.example}"/>
 		<copy file="${example.dir}/simpleOntology.wsml" todir="${dist.complete.example}"/>
-		<zip destfile="${dist}/wsml2reasoner-datalog-iris-${deploy.version}.zip">
+		<zip destfile="${dist}/wsml2reasoner-datalog-iris-${DSTAMP}.zip">
 			<fileset dir="${dist.complete}"/>
 		</zip>
 		<delete dir="${dist.complete}"/>
@@ -464,7 +458,7 @@
 				<patternset refid="datalog-iris-files" />	
 			</fileset>
 		</copy>
-		<zip destfile="${dist}/wsml2reasoner-datalog-iris-src-${deploy.version}.zip">
+		<zip destfile="${dist}/wsml2reasoner-datalog-iris-src-${DSTAMP}.zip">
 			<fileset dir="${dist.complete}"/>
 		</zip>
 		<delete dir="${dist.complete}"/>
@@ -473,12 +467,11 @@
 	<target name="create-wsml2reasoner-datalog-mins-jar+libs" depends="compile" 
 		description="Creates wsml2reasoner-datalog-mins jar + libs">
 		<mkdir dir="${dist.complete}" />	
-		<jar jarfile="${dist.complete}/wsml2reasoner-datalog-mins-${deploy.version}.jar">
+		<jar jarfile="${dist.complete}/wsml2reasoner-datalog-mins-${DSTAMP}.jar">
 			<fileset dir="${build.src}" />
 			<fileset dir="${build.class}" />
 		</jar>
 		<copy file="${basedir}/license-gpl.txt" todir="${dist.complete}"/>
-		<echo file="${dist.complete}/version.txt">${deploy.version}</echo>
 		<copy todir="${dist.complete.lib}" preservelastmodified="yes" includeEmptyDirs="no">
 			<fileset dir="${build.lib}">
 				<patternset refid="datalog-mins-jars" />
@@ -492,7 +485,7 @@
 		<copy file="${example.dir}/MinsReasonerExample.java" todir="${dist.complete.example}"/>
 		<copy file="${example.dir}/humanOntology.wsml" todir="${dist.complete.example}"/>
 		<copy file="${example.dir}/simpleOntology.wsml" todir="${dist.complete.example}"/>
-		<zip destfile="${dist}/wsml2reasoner-datalog-mins-${deploy.version}.zip">
+		<zip destfile="${dist}/wsml2reasoner-datalog-mins-${DSTAMP}.zip">
 			<fileset dir="${dist.complete}"/>
 		</zip>
 		<delete dir="${dist.complete}"/>
@@ -506,7 +499,7 @@
 				<patternset refid="datalog-mins-files" />	
 			</fileset>
 		</copy>
-		<zip destfile="${dist}/wsml2reasoner-datalog-mins-src-${deploy.version}.zip">
+		<zip destfile="${dist}/wsml2reasoner-datalog-mins-src-${DSTAMP}.zip">
 			<fileset dir="${dist.complete}"/>
 		</zip>
 		<delete dir="${dist.complete}"/>
@@ -519,7 +512,7 @@
 	
 	<target name="create-wsml2reasoner-releases-srcs" depends="create-wsml2reasoner, create-wsml2reasoner-datalog-mins-src, 
 		create-wsml2reasoner-datalog-iris-src, create-wsml2reasoner-datalog-src, create-wsml2reasoner-dl-src,
-		create-wsml2reasoner-dl-pellet-src, create-wsml2reasoner-wsmo-src" description="Creates/zips wsml2reasoner srcs)">
+		create-wsml2reasoner-dl-pellet-src, create-wsml2reasoner-wsmo-src" description="Creates/zips wsml2reasoner srcs">
 	</target>
 	
 	<target name="create-wsml2reasoner-releases" depends="create-wsml2reasoner-releases-bins,create-wsml2reasoner-releases-srcs" 
@@ -553,8 +546,8 @@
 
 	<target name="get-jsse-4-ssh+scp"
           description="Download necessary jar for ssh/scp and place directly into ant lib">
-		<get dest="${ant.library.dir}/jsse.jar"
-         src="http://mesh.dl.sourceforge.net/sourceforge/jsch/jsch-0.1.18.jar" />
+		<get dest="${ant.library.dir}/jsch-0.1.32.jar"
+         src="http://puzzle.dl.sourceforge.net/sourceforge/jsch/jsch-0.1.32.jar" />
 	</target>
 
 	<target name="choose-user-password">
@@ -562,33 +555,58 @@
 		<input message="Password for ${shell.host}:" addproperty="ssh.password" />
 	</target>
 
-	<target name="update_remote_snapshot"
+	<target name="update_remote_snapshot_wsml2reasoner"
 		depends="create-wsml2reasoner"
         description="Updates wsml2reasoner (jar + src) snapshot on tools.deri.org">
 
-		<!--delete old snapshot-->
+		<!--delete old snapshot
 		<sshexec host="${shell.host}"
         	username="${ssh.user}"
             password="${ssh.password}"
             trust="yes"
             command="rm -f ${remote.snapshot.path}/wsml2reasoner*" />
-
-		<!--upload snapshot -->
+		-->
+		<!--upload snapshot-->
 		<scp file="${dist.complete}/wsml2reasoner-${DSTAMP}.jar"
 			trust="yes"
-         	todir="${ssh.user}:${ssh.password}@${shell.host}:${remote.snapshot.path}" />
+         	todir="${ssh.user}:${ssh.password}@${shell.host}:${remote.snapshot.path}" 
+		/>
 
 		<scp file="${dist}/wsml2reasoner-${DSTAMP}.zip"
          	trust="yes"
-         	todir="${ssh.user}:${ssh.password}@${shell.host}:${remote.snapshot.path}" />
+         	todir="${ssh.user}:${ssh.password}@${shell.host}:${remote.snapshot.path}" 
+		/>
+		<delete dir="${dist.complete}"/>
 		
 		<!--
 		<scp file="${basedir}/license.txt"
          	trust="yes"
          	todir="${ssh.user}:${ssh.password}@${shell.host}:${remote.snapshot.path}" />
          -->
+		
 	</target>
-
+	
+	<target name="update_remote_snapshot_wsml2reasoner-wsmo"
+		depends="create-wsml2reasoner-wsmo-jar+libs+example"
+        description="Updates wsml2reasoner-wsmo (jar+lib+example) snapshot on tools.deri.org">
+		<!--delete old snapshot
+		<sshexec host="${shell.host}"
+        	username="${ssh.user}"
+            password="${ssh.password}"
+            trust="yes"
+            command="rm -f ${remote.snapshot.path.wsmo}/wsml2reasoner-wsmo*" />
+		-->
+		<!--upload snapshot-->
+		<scp file="${dist.complete}/wsml2reasoner-wsmo-${DSTAMP}.jar"
+					trust="yes"
+		         	todir="${ssh.user}:${ssh.password}@${shell.host}:${remote.snapshot.path.wsmo}" 
+		/>
+		
+		<scp file="${dist}/wsml2reasoner-wsmo-${DSTAMP}.zip"
+		         	trust="yes"
+		         	todir="${ssh.user}:${ssh.password}@${shell.host}:${remote.snapshot.path.wsmo}" 
+		/>
+	</target>
 
 	<target name="update_remote_javadoc"
           depends="create-javadoc"

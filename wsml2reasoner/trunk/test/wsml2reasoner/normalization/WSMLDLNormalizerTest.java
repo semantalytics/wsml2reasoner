@@ -55,7 +55,7 @@ public class WSMLDLNormalizerTest extends WSMLNormalizationTest {
         System.gc();
     }
     
-    @SuppressWarnings("unchecked")
+    
 	public void testPreProcessingSteps() throws Exception {
     	// read test file and parse it 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(
@@ -87,7 +87,7 @@ System.out.println(serializeOntology(normOnt)+"\n\n\n-------------\n\n\n");
 System.out.println(serializeOntology(normOnt)+"\n\n\n-------------\n\n\n");	       
     }
 	
-    @SuppressWarnings("unchecked")
+    
 	public void testAnonIdTransformationss() throws Exception {
     	// read test file and parse it 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(

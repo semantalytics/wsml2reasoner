@@ -53,7 +53,7 @@ import org.wsmo.wsml.ParserException;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.4 $ $Date: 2007-04-25 15:55:06 $
+ * @version $Revision: 1.5 $ $Date: 2007-04-26 17:39:14 $
  */
 public class Relation2AttributeNormalizer implements OntologyNormalizer {
 
@@ -92,42 +92,29 @@ public class Relation2AttributeNormalizer implements OntologyNormalizer {
 	/*
 	 * Relations are replaced by concept attributes.
 	 */
-	@SuppressWarnings("unchecked")
 	private Ontology normalizeRelations(Ontology ontology) throws InvalidModelException {
-		Set<Relation> relations = (Set<Relation>) ontology.listRelations();
-		Iterator<Relation> it = relations.iterator();
-		while (it.hasNext()) {
-			Relation relation = it.next();
+		for (Relation relation : ontology.listRelations()){
 			Parameter p1 = relation.getParameter((byte) 0);
 			Parameter p2 = relation.getParameter((byte) 1);
 			Concept newConcept = null;
-			Set<Type> types1 = p1.listTypes();
-			Set types2 = p2.listTypes();
-			Iterator<Type> it1 = types1.iterator();
-			while (it1.hasNext()) {
-				Concept concept = (Concept) it1.next();
-				newConcept = ontology.findConcept(concept.getIdentifier());
-				if (newConcept == null) {
-					newConcept = wsmoFactory.createConcept(concept.getIdentifier());
-				}
-				Attribute attribute = newConcept.createAttribute(relation.getIdentifier());	
-				Iterator it2 = types2.iterator();
-				while (it2.hasNext()) {
-					Type type = (Type) it2.next();
-					attribute.addType(type);
-					if (p2.isConstraining()) {
-						attribute.setConstraining(true);
+			for(Type t : p1.listTypes()){
+				if (t instanceof Concept) {
+					Concept concept = (Concept) t;
+					newConcept = ontology.findConcept(concept.getIdentifier());
+					if (newConcept == null) {
+						newConcept = wsmoFactory.createConcept(concept.getIdentifier());
+					}
+					Attribute attribute = newConcept.createAttribute(relation.getIdentifier());	
+					for (Type type : p2.listTypes()){
+						attribute.addType(type);
+						if (p2.isConstraining()) {
+							attribute.setConstraining(true);
+						}
 					}
 				}
-//				if (relation.listNFPValues().size() > 0) {
-//					Map nfps = relation.listNFPValues();
-//					Set<Entry> nfpsSet = nfps.entrySet();
-//					attribute = (Attribute) transferNFPs(nfpsSet, attribute);
-//				}
 			}			
 			if (relation.listSuperRelations().size() > 0) {
-				Set<Relation> superRelations = relation.listSuperRelations();
-				Axiom axiom = normalizeSuperRelations(superRelations, relation);
+				Axiom axiom = normalizeSuperRelations(relation.listSuperRelations(), relation);
 				if (axiom != null) {
 					ontology.addAxiom(axiom);
 				}
@@ -164,7 +151,7 @@ public class Relation2AttributeNormalizer implements OntologyNormalizer {
 	/*
 	 * Relation instances are replaced by attribute values.
 	 */
-	@SuppressWarnings("unchecked")
+	
 	private Ontology normalizeRelationInstances(Ontology ontology) 
 			throws SynchronisationException, InvalidModelException {
 		Set<RelationInstance> relationInstances = (Set<RelationInstance>) 

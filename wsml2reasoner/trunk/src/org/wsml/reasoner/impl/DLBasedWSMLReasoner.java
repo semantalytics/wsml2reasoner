@@ -57,12 +57,12 @@ import uk.ac.man.cs.img.owl.validation.ValidatorLogger;
  *
  * <pre>
  *  Created on July 3rd, 2006
- *  Committed by $Author: nathalie $
+ *  Committed by $Author: graham $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/impl/DLBasedWSMLReasoner.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.16 $ $Date: 2007-03-01 11:37:32 $
+ * @version $Revision: 1.17 $ $Date: 2007-04-26 17:39:14 $
  */
 public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 
@@ -122,7 +122,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 	 * @throws RuntimeException in the case the given WSML-DL ontology is not
 	 * 			valid
 	 */
-	@SuppressWarnings("unchecked")
+	
     public OWLOntology convertOntology(Ontology ontology) {
 		SpeciesValidator owlValidator = null;
 		
@@ -203,7 +203,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 	/*
 	 * Method to transform a WSML ontology into an OWL ontology.
 	 */
-	@SuppressWarnings("unchecked")
+	
 	protected OWLOntology transformOntology(Ontology ontology) 
 			throws OWLException, URISyntaxException {
 		// Set up the implementation class
@@ -234,7 +234,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return owlOntology;
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	protected OWLDescription transformLogicalExpression(
 			LogicalExpression logExpr) {
 		// Set up the implementation class
@@ -1120,7 +1120,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		return elements;
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set getInferingAttributeValues(IRI ontologyID, 
 			Instance subject, Identifier attributeId) {
 		Set elements = new HashSet();
@@ -1153,7 +1153,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 	/**
 	 * @return data value of the given instance and attribute
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public Set getConstraintAttributeValues(IRI ontologyID, 
 			Instance subject, Identifier attributeId) {
 		Set elements = new HashSet();
@@ -1395,6 +1395,9 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.16  2007/03/01 11:37:32  nathalie
+ * updated DLBasedWSMLReasoner according to the new WSMLReasoner interface
+ *
  * Revision 1.15  2007/02/09 08:40:53  hlausen
  * DLFacade should be independent of libs of specific reasoner!!!!
  *

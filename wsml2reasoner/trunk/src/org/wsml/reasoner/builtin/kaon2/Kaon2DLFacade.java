@@ -62,13 +62,13 @@ import org.wsml.reasoner.serializer.owl.OWLSerializerImpl;
  *
  * <pre>
  *  Created on July 3rd, 2006
- *  Committed by $Author: nathalie $
+ *  Committed by $Author: graham $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/builtin/kaon2/Kaon2DLFacade.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck;
  * 		   Holger Lausen, DERI Innsbruck
- * @version $Revision: 1.6 $ $Date: 2007-03-01 11:34:21 $
+ * @version $Revision: 1.7 $ $Date: 2007-04-26 17:39:13 $
  */
 public class Kaon2DLFacade implements DLReasonerFacade {
 
@@ -147,7 +147,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
         }
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public boolean isConsistent(String ontologyURI, OWLDescription description)
 			throws OWLException, InterruptedException {
         try {
@@ -176,7 +176,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
         }
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLEntity> allClasses(String ontologyURI) 
 			throws  OWLException, URISyntaxException {
         try{
@@ -203,7 +203,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLEntity> allIndividuals(String ontologyURI) throws  OWLException, URISyntaxException {
         try{
 			reasoner = getReasoner(ontologyURI);
@@ -221,7 +221,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLEntity> allProperties(String ontologyURI) 
 			throws  OWLException, URISyntaxException {
 		reasoner = getReasoner(ontologyURI);
@@ -231,7 +231,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		return resultSet;
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLEntity> allDataProperties(String ontologyURI) 
 			throws  OWLException, URISyntaxException {
         try{
@@ -250,7 +250,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLEntity> allObjectProperties(String ontologyURI) 
 			throws  OWLException, URISyntaxException {
 		
@@ -270,7 +270,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<Set> descendantClassesOf(String ontologyURI, OWLDescription clazz) 
 			throws OWLException,  URISyntaxException {
         try{
@@ -301,7 +301,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<Set> subClassesOf(String ontologyURI, OWLDescription clazz) 
 			throws OWLException,  URISyntaxException {
         try{
@@ -331,7 +331,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<Set> ancestorClassesOf(String ontologyURI, OWLDescription clazz) 
 			throws OWLException,  URISyntaxException {
         try{
@@ -362,7 +362,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<Set> superClassesOf(String ontologyURI, OWLDescription clazz) 
 			throws OWLException,  URISyntaxException {
         try{
@@ -393,7 +393,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLEntity> equivalentClassesOf(String ontologyURI, OWLDescription clazz) 
 			throws OWLException,  URISyntaxException {
         try{
@@ -478,7 +478,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLEntity> allInstancesOf(String ontologyURI, org.semanticweb.owl.model.OWLClass clazz)
 			throws OWLException,  URISyntaxException {
         try{
@@ -501,7 +501,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<Set> typesOf(String ontologyURI, OWLIndividual individual)
 			throws OWLException,  URISyntaxException {
         try{
@@ -539,7 +539,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<Set> allTypesOf(String ontologyURI, OWLIndividual individual)
 			throws OWLException,  URISyntaxException {
         try{
@@ -565,7 +565,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<Set> descendantPropertiesOf(String ontologyURI,
 			OWLProperty property) 
 			throws OWLException,  URISyntaxException {
@@ -647,7 +647,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<Set> subPropertiesOf(String ontologyURI,
 			OWLProperty property) 
 			throws OWLException,  URISyntaxException {
@@ -723,7 +723,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<Set> ancestorPropertiesOf(String ontologyURI,
 			OWLProperty property) 
 			throws OWLException,  URISyntaxException {
@@ -803,7 +803,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<Set> superPropertiesOf(String ontologyURI,
 			OWLProperty property) 
 			throws OWLException,  URISyntaxException {
@@ -878,7 +878,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLEntity> equivalentPropertiesOf(String ontologyURI,
 			OWLProperty property) throws OWLException,  URISyntaxException {
 		equivalentPropertiesCheck = true;
@@ -950,7 +950,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLEntity> inversePropertiesOf(String ontologyURI,
 			OWLObjectProperty property)	throws OWLException,  URISyntaxException {
         try{
@@ -983,7 +983,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLEntity> domainsOf(String ontologyURI, OWLProperty property)
 			throws OWLException,  URISyntaxException {
         try{
@@ -1007,7 +1007,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLEntity> rangesOf(String ontologyURI, OWLObjectProperty property) 
 			throws OWLException,  URISyntaxException {
         try{
@@ -1031,7 +1031,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLConcreteDataTypeImpl> rangesOf(String ontologyURI, 
 			OWLDataProperty property) 
 			throws OWLException,  URISyntaxException {
@@ -1059,7 +1059,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Map<OWLEntity, Set<OWLEntity>> getObjectPropertyValues(
 			String ontologyURI, OWLIndividual individual) 
 			throws OWLException,  URISyntaxException {
@@ -1090,7 +1090,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Map<OWLEntity, Set<OWLConcreteDataImpl>> getDataPropertyValues(
 			String ontologyURI, OWLIndividual individual) 
 			throws OWLException,  URISyntaxException {
@@ -1130,7 +1130,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
         }
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Map<OWLEntity, Set<OWLEntity>> getPropertyValues(
 			String ontologyURI,	OWLObjectProperty property) 
 			throws OWLException,  URISyntaxException {
@@ -1158,7 +1158,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Map<OWLEntity, Set<OWLConcreteDataImpl>> getPropertyValues(
 			String ontologyURI, OWLDataProperty property) 
 			throws OWLException,  URISyntaxException {
@@ -1195,7 +1195,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public boolean hasPropertyValue(String ontologyURI, OWLIndividual subject,
 			OWLObjectProperty property, OWLIndividual object)
 			throws OWLException,  InterruptedException {
@@ -1215,7 +1215,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public boolean hasPropertyValue(String ontologyURI, OWLIndividual subject,
 			OWLDataProperty property, OWLDataValue object)
 			throws OWLException,  InterruptedException {
@@ -1245,7 +1245,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLEntity> getObjectPropertyValues(String ontologyURI,
 			OWLIndividual subject, OWLObjectProperty property)
 			throws OWLException,  InterruptedException, URISyntaxException {
@@ -1270,7 +1270,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLDataValue> getDataPropertyValues(String ontologyURI,
 			OWLIndividual subject, OWLDataProperty property)
 			throws OWLException,  InterruptedException, URISyntaxException {
@@ -1362,7 +1362,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 //		return results;
 //	}
 	
-	@SuppressWarnings("unchecked")
+	
 	private void addSuperConcepts(String ontologyURI, OWLEntity entity, 
 			Set<OWLEntity> entitySet) 
 			throws OWLException,  URISyntaxException {
@@ -1377,7 +1377,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	private void addSubProperties(String ontologyURI, OWLEntity entity, 
 			Set<OWLEntity> entitySet) 
 			throws OWLException,  URISyntaxException, KAON2Exception {
@@ -1392,7 +1392,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	private void addSuperProperties(String ontologyURI, OWLEntity entity, 
 			Set<OWLEntity> entitySet) 
 			throws OWLException,  URISyntaxException {
@@ -1423,6 +1423,9 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.6  2007/03/01 11:34:21  nathalie
+ * fixed KAON2DLfacade method to get direct concepts of a given instance
+ *
  * Revision 1.5  2007/02/26 16:23:18  nathalie
  * fixed Kaon2 dl facade: 1. changing some requests into subsumption hierarchy queries and 2. fixing sub-, super-, equivalent and inverse relations queries
  *

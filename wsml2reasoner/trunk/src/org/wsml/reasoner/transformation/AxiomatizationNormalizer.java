@@ -115,7 +115,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
      * 
      * @return an ontology represent o semantically but only consists of axioms
      */
-    @SuppressWarnings("unchecked")
+    
     public Ontology normalize(Ontology ontology) {
         String ontologyID = ontology.getIdentifier() + "-as-axioms";
         Ontology resultOntology = wsmoFactory.createOntology(wsmoFactory.createIRI(ontologyID));
@@ -221,7 +221,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    
     protected Set<LogicalExpression> normalizeConcept(Concept concept) {
         Identifier conceptID = concept.getIdentifier();
         Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
@@ -246,7 +246,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         return resultExpressions;
     }
 
-    @SuppressWarnings("unchecked")
+    
     protected Set<LogicalExpression> normalizeConceptAttribute(
             Identifier conceptID, Attribute attribute) {
         Identifier attributeID = attribute.getIdentifier();
@@ -517,7 +517,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         return maxCardConstraint;
     }
 
-    @SuppressWarnings("unchecked")
+    
     protected Set<LogicalExpression> normalizeRelation(Relation relation) {
         Identifier relationID = relation.getIdentifier();
         
@@ -613,7 +613,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    
     protected Set<LogicalExpression> normalizeInstance(Instance instance) {
         Identifier instanceID = instance.getIdentifier();
         
@@ -665,7 +665,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         return resultExpressions;
     }
 
-    @SuppressWarnings("unchecked")
+    
 	private Set<LogicalExpression> explicateIRIDeclaration(Collection<Identifier> mentionedIRIs){
         Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
     

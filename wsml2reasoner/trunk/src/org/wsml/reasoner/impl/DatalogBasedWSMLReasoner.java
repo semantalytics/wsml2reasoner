@@ -146,7 +146,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     		allowImports = allowOntoImports;
     	}
 
-    @SuppressWarnings("unchecked")
+    
     protected Set<org.wsml.reasoner.Rule> convertOntology(Ontology o) {
 
         Ontology normalizedOntology;
@@ -1157,7 +1157,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return concepts;
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<IRI> getSubRelations(IRI ontologyID, Identifier attributeId) {
 		throw new UnsupportedOperationException(
 		"This method is not implemented for Datalog");
@@ -1168,7 +1168,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 				"This method is not implemented for Datalog");
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<IRI> getSuperRelations(IRI ontologyID, Identifier attributeId) {
 		throw new UnsupportedOperationException(
 				"This method is not implemented for Datalog");

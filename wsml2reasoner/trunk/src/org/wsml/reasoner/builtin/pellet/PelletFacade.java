@@ -44,12 +44,12 @@ import org.wsml.reasoner.ExternalToolException;
  *
  * <pre>
  *  Created on July 3rd, 2006
- *  Committed by $Author: nathalie $
+ *  Committed by $Author: graham $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/builtin/pellet/PelletFacade.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.11 $ $Date: 2007-01-11 13:04:46 $
+ * @version $Revision: 1.12 $ $Date: 2007-04-26 17:38:58 $
  */
 public class PelletFacade implements DLReasonerFacade {
 	
@@ -110,65 +110,65 @@ public class PelletFacade implements DLReasonerFacade {
 		return reasoner.isConsistent(description);
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLEntity> allClasses(String ontologyURI) {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.getClasses();
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLEntity> allIndividuals(String ontologyURI) {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.getIndividuals();
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLEntity> allProperties(String ontologyURI) {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.getProperties();
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLEntity> allDataProperties(String ontologyURI) {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.getDataProperties();
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLEntity> allObjectProperties(String ontologyURI) {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.getObjectProperties();
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<Set> descendantClassesOf(String ontologyURI, 
 			OWLDescription clazz) throws OWLException {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.descendantClassesOf(clazz);
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<Set> subClassesOf(String ontologyURI,
 			OWLDescription clazz) throws OWLException {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.subClassesOf(clazz);
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public Set<Set> ancestorClassesOf(String ontologyURI, 
 			OWLDescription clazz) throws OWLException {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.ancestorClassesOf(clazz);
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<Set> superClassesOf(String ontologyURI, 
 			OWLDescription clazz) throws OWLException {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.superClassesOf(clazz);
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLEntity> equivalentClassesOf(String ontologyURI, 
 			OWLDescription clazz) throws OWLException {
 		reasoner = getReasoner(ontologyURI);
@@ -193,119 +193,119 @@ public class PelletFacade implements DLReasonerFacade {
 		return reasoner.isInstanceOf(individual, clazz);
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLEntity> allInstancesOf(String ontologyURI, OWLClass clazz) 
 			throws OWLException {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.allInstancesOf(clazz);
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<Set> typesOf(String ontologyURI, OWLIndividual individual) 
 			throws OWLException {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.typesOf(individual);
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<Set> allTypesOf(String ontologyURI, OWLIndividual individual) 
 			throws OWLException {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.allTypesOf(individual);
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<Set> descendantPropertiesOf(String ontologyURI, 
 			OWLProperty property) throws OWLException {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.descendantPropertiesOf(property);
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<Set> subPropertiesOf(String ontologyURI, 
 			OWLProperty property) throws OWLException {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.subPropertiesOf(property);
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<Set> ancestorPropertiesOf(String ontologyURI, 
 			OWLProperty property) throws OWLException {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.ancestorPropertiesOf(property);
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<Set> superPropertiesOf(String ontologyURI, 
 			OWLProperty property) throws OWLException {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.superPropertiesOf(property);
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLEntity> equivalentPropertiesOf(String ontologyURI, 
 			OWLProperty property) throws OWLException {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.equivalentPropertiesOf(property);
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLEntity> inversePropertiesOf(String ontologyURI, 
 			OWLObjectProperty property)	throws OWLException {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.inversePropertiesOf(property);
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLEntity> domainsOf(String ontologyURI, OWLProperty property) 
 			throws OWLException {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.domainsOf(property);
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLEntity> rangesOf(String ontologyURI, 
 			OWLObjectProperty property) throws OWLException {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.rangesOf(property);
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLConcreteDataTypeImpl> rangesOf(String ontologyURI, 
 			OWLDataProperty property) throws OWLException {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.rangesOf(property);
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Map<OWLEntity, Set<OWLConcreteDataImpl>> getDataPropertyValues(
 			String ontologyURI, OWLIndividual individual) throws OWLException {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.getDataPropertyValues(individual);
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Map<OWLEntity, Set<OWLEntity>> getObjectPropertyValues(
 			String ontologyURI, OWLIndividual individual) throws OWLException {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.getObjectPropertyValues(individual);
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Map<OWLEntity, Set<OWLEntity>> getPropertyValues(String ontologyURI, 
 			OWLObjectProperty property) throws OWLException {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.getPropertyValues(property);
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Map<OWLEntity, Set<OWLConcreteDataImpl>> getPropertyValues(
 			String ontologyURI, OWLDataProperty property) throws OWLException {
 		reasoner = getReasoner(ontologyURI);
 		return reasoner.getPropertyValues(property);
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public boolean hasPropertyValue(String ontologyURI, OWLIndividual subject,
 			OWLObjectProperty property, OWLIndividual object) 
 			throws OWLException {
@@ -313,7 +313,7 @@ public class PelletFacade implements DLReasonerFacade {
 		return reasoner.hasPropertyValue(subject, property, object);
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public boolean hasPropertyValue(String ontologyURI, OWLIndividual subject,
 			OWLDataProperty property, OWLDataValue object) 
 			throws OWLException {
@@ -321,7 +321,7 @@ public class PelletFacade implements DLReasonerFacade {
 		return reasoner.hasPropertyValue(subject, property, object);
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLEntity> getObjectPropertyValues(String ontologyURI, 
 			OWLIndividual subject, OWLObjectProperty property) 
 			throws OWLException {
@@ -329,7 +329,7 @@ public class PelletFacade implements DLReasonerFacade {
 		return reasoner.getPropertyValues(subject, property);
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public Set<OWLDataValue> getDataPropertyValues(String ontologyURI, 
 			OWLIndividual subject, OWLDataProperty property) 
 			throws OWLException{
@@ -379,6 +379,9 @@ public class PelletFacade implements DLReasonerFacade {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.11  2007/01/11 13:04:46  nathalie
+ * removed unnecessary dependencies from pellet library
+ *
  * Revision 1.10  2007/01/10 11:26:39  nathalie
  * fixed problem with equivalent classes
  *

@@ -81,7 +81,7 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
         System.gc();
     }
     
-    @SuppressWarnings("unchecked")
+    
 	public void testWSML2OWL() throws Exception {
     	// read test file and parse it 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(
@@ -568,6 +568,9 @@ public class WSML2OWLTest extends WSMLNormalizationTest {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.9  2007/01/10 14:17:58  nathalie
+ * *** empty log message ***
+ *
  * Revision 1.8  2006/08/31 12:33:09  nathalie
  * removed serializing methods from dl reasoner interface and implementation and put them into specific serializer interfaces and classes
  *
