@@ -95,11 +95,11 @@ import org.wsmo.factory.WsmoFactory;
  * The wsmo4j interface for the iris reasoner.
  * </p>
  * <p>
- * $Id: IrisFacade.java,v 1.4 2007-04-19 09:22:15 richardpoettler Exp $
+ * $Id: IrisFacade.java,v 1.5 2007-04-26 17:40:05 graham Exp $
  * </p>
  * 
  * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class IrisFacade implements DatalogReasonerFacade {
 
@@ -394,6 +394,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 	 * @throws IllegalArgumentException
 	 *             if the term-type couldn't be converted
 	 */
+	
 	static ITerm wsmoTermConverter(final Term t) {
 		if (t == null) {
 			throw new NullPointerException("The term must not be null");

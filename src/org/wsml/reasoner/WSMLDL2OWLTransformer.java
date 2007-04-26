@@ -23,7 +23,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -56,7 +55,6 @@ import org.omwg.ontology.Axiom;
 import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.DataValue;
 import org.omwg.ontology.Ontology;
-import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.Variable;
 import org.omwg.ontology.WsmlDataType;
 import org.semanticweb.owl.model.OWLAnd;
@@ -110,7 +108,7 @@ import org.wsmo.factory.LogicalExpressionFactory;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.13 $ $Date: 2007-04-25 15:55:07 $
+ * @version $Revision: 1.14 $ $Date: 2007-04-26 17:38:53 $
  */
 public class WSMLDL2OWLTransformer implements Visitor{
 	
@@ -154,7 +152,7 @@ public class WSMLDL2OWLTransformer implements Visitor{
      * @throws URISyntaxException
      * @throws OWLException
      */
-    @SuppressWarnings("unchecked")
+    
 	public OWLOntology transform(Ontology ontology) 
 			throws OWLException {
 
@@ -216,12 +214,11 @@ public class WSMLDL2OWLTransformer implements Visitor{
 		molecule.accept(this);
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public void visitCompoundMolecule(CompoundMolecule expr) {
-		Iterator<LogicalExpression> it = expr.listOperands().iterator();
-        while(it.hasNext()){
-            it.next().accept(this);
-        }
+		for(LogicalExpression le : expr.listOperands()){
+			le.accept(this);
+		}
 	}
 
 	public void visitSubConceptMolecule(SubConceptMolecule expr) {
@@ -1164,7 +1161,7 @@ public class WSMLDL2OWLTransformer implements Visitor{
     		}
     	}
     	
-    	@SuppressWarnings("unchecked")
+    	
 		private void createExplicitSubClass(OWLDescription subClass, 
 				OWLDescription superClass) {
     		boolean equivalent = false;
@@ -1718,6 +1715,9 @@ public class WSMLDL2OWLTransformer implements Visitor{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.13  2007/04/25 15:55:07  graham
+ * Switched to latest wsmo4j jars (accommodates migration to Java 1.5 syntax)
+ *
  * Revision 1.12  2007/03/01 16:39:19  nathalie
  * - updated datavalue transformation
  * - added test for datavalue transformations

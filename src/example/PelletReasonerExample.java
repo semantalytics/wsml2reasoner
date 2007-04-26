@@ -48,12 +48,12 @@ import org.wsmo.wsml.Parser;
  *
  * <pre>
  *  Created on July 19rd, 2006
- *  Committed by $Author: nathalie $
+ *  Committed by $Author: graham $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/example/PelletReasonerExample.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.2 $ $Date: 2007-03-01 11:37:03 $
+ * @version $Revision: 1.3 $ $Date: 2007-04-26 17:39:14 $
  */
 public class PelletReasonerExample {
 	
@@ -74,7 +74,7 @@ public class PelletReasonerExample {
 	/**
      * loads an Ontology and performs sample query
      */
-    @SuppressWarnings("unchecked")
+    
 	public void doTestRun() throws Exception {
     	
     	WsmoFactory wsmoFactory = new WSMO4JManager().getWSMOFactory();
@@ -233,6 +233,9 @@ public class PelletReasonerExample {
 
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2007/03/01 11:37:03  nathalie
+ * updated examples according to the new WSMLReasoner interface
+ *
  * Revision 1.1  2007/02/16 19:18:36  graham
  * Copied "user-friendly example to accomodate releases
  *

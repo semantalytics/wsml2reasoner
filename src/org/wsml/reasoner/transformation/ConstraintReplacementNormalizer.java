@@ -84,7 +84,7 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
 
     }
 
-    @SuppressWarnings("unchecked")
+    
     public Ontology normalize(Ontology ontology) {
         String ontologyID = ontology.getIdentifier() + "-contraints-replaced";
         Ontology resultOntology = wsmoFactory.createOntology(wsmoFactory.createIRI(ontologyID));
