@@ -95,11 +95,11 @@ import org.wsmo.factory.WsmoFactory;
  * The wsmo4j interface for the iris reasoner.
  * </p>
  * <p>
- * $Id: IrisFacade.java,v 1.5 2007-04-26 17:40:05 graham Exp $
+ * $Id: IrisFacade.java,v 1.6 2007-05-10 11:55:23 richardpoettler Exp $
  * </p>
  * 
  * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class IrisFacade implements DatalogReasonerFacade {
 
@@ -367,16 +367,16 @@ public class IrisFacade implements DatalogReasonerFacade {
 			return BUILTIN.createGreaterEqual(terms.get(0), terms.get(1));
 
 		} else if (sym.equals(Constants.NUMERIC_ADD)) {
-			return BUILTIN.createAddBuiltin(terms.get(0), terms.get(1), terms.get(2));
+			return BUILTIN.createAddBuiltin(terms.get(1), terms.get(2), terms.get(0));
 
 		} else if (sym.equals(Constants.NUMERIC_SUB)) {
-			return BUILTIN.createSubtractBuiltin(terms.get(0), terms.get(1), terms.get(2));
+			return BUILTIN.createSubtractBuiltin(terms.get(1), terms.get(2), terms.get(0));
 
 		} else if (sym.equals(Constants.NUMERIC_MUL)) {
-			return BUILTIN.createMultiplyBuiltin(terms.get(0), terms.get(1), terms.get(2));
+			return BUILTIN.createMultiplyBuiltin(terms.get(1), terms.get(2), terms.get(0));
 
 		} else if (sym.equals(Constants.NUMERIC_DIV)) {
-			return BUILTIN.createDivideBuiltin(terms.get(0), terms.get(1), terms.get(2));
+			return BUILTIN.createDivideBuiltin(terms.get(1), terms.get(2), terms.get(0));
 		}
 		// return an ordinary atom
 		return BASIC.createAtom(BASIC.createPredicate(sym, 
