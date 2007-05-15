@@ -19,8 +19,6 @@ package reasoner.fol;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashSet;
-import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -46,7 +44,7 @@ import org.wsmo.wsml.Parser;
  *
  * @author Rosi, Holger
  *
- * @version $Revision: 1.1 $ $Date: 2007-03-20 20:30:54 $
+ * @version $Revision: 1.2 $ $Date: 2007-05-15 12:37:11 $
  */
 public class TPTPTest extends TestCase {
 

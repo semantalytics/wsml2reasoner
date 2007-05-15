@@ -6,6 +6,7 @@ import reasoner.OntologyRegistrationTest;
 import reasoner.core.ReasonerCoreTests;
 import reasoner.dl.ReasonerDLTests;
 import reasoner.flight.ReasonerFlightTests;
+import reasoner.fol.ReasonerFOLTests;
 import reasoner.rule.ReasonerRuleTests;
 import wsml2reasoner.normalization.NormalizationTests;
 import wsml2reasoner.transformation.TransformationTests;
@@ -29,7 +30,8 @@ public class ReasonerTests {
         suite.addTestSuite(OntologyRegistrationTest.class);
         suite.addTest(ReasonerCoreTests.suite());
         suite.addTest(ReasonerFlightTests.suite());
-        suite.addTest(ReasonerDLTests.suite());       
+        suite.addTest(ReasonerDLTests.suite());      
+        suite.addTest(ReasonerFOLTests.suite());      
         // $JUnit-END$
         return suite;
     }
