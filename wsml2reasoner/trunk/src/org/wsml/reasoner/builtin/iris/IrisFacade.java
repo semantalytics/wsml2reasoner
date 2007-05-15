@@ -95,11 +95,11 @@ import org.wsmo.factory.WsmoFactory;
  * The wsmo4j interface for the iris reasoner.
  * </p>
  * <p>
- * $Id: IrisFacade.java,v 1.7 2007-05-15 13:33:42 richardpoettler Exp $
+ * $Id: IrisFacade.java,v 1.8 2007-05-15 16:12:06 richardpoettler Exp $
  * </p>
  * 
  * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class IrisFacade implements DatalogReasonerFacade {
 
@@ -217,7 +217,6 @@ public class IrisFacade implements DatalogReasonerFacade {
 				// creating and adding the new rule
 				p.addRule(BASIC.createRule(BASIC.createHead(conjL), 
 						BASIC.createBody(body)));
-				rulesChanged = true;
 				// creating and adding the query
 				conjQ = BASIC.createQuery(conjL);
 				conjunktiveQueries.put(q, conjQ);
