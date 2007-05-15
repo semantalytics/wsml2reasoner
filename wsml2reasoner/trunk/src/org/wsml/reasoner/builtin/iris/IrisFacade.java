@@ -95,11 +95,11 @@ import org.wsmo.factory.WsmoFactory;
  * The wsmo4j interface for the iris reasoner.
  * </p>
  * <p>
- * $Id: IrisFacade.java,v 1.6 2007-05-10 11:55:23 richardpoettler Exp $
+ * $Id: IrisFacade.java,v 1.7 2007-05-15 13:33:42 richardpoettler Exp $
  * </p>
  * 
  * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class IrisFacade implements DatalogReasonerFacade {
 
@@ -121,6 +121,18 @@ public class IrisFacade implements DatalogReasonerFacade {
 	/** The iris program to evaluate the queries. */
 	private IProgram p = PROGRAM.createProgram();
 
+	// TODO: in the end the programms should be stored in a may with ontology_id
+	// -> programm entries
+	/** 
+	 * Map to determine whether a rule for a conjunctive query was already created. 
+	 * <ul>
+	 * <li>key = the <code>ConjunctiveQuery</code> object which was substituted</li>
+	 * <li>value = the literal uesd to substitute the query</li>
+	 * </ul>
+	 */
+	private Map<ConjunctiveQuery, IQuery> conjunktiveQueries = 
+		new HashMap<ConjunctiveQuery, IQuery>();
+	
 	// TODO: in the end this should be stored in a may with ontology_id ->
 	// changed entries
 	/**
@@ -186,8 +198,34 @@ public class IrisFacade implements DatalogReasonerFacade {
 		for (final Literal l : q.getLiterals()) {
 			body.add(literal2Literal(l));
 		}
+		
 		// creating the query
-		final IQuery query = BASIC.createQuery(body);
+		final IQuery query;
+		if (body.size() > 1) { // we got an conjunctive query -> replace it
+			IQuery conjQ = conjunktiveQueries.get(q);
+			if (conjQ == null) { // this query was never replaced before
+				// getting all variables
+				final Set<IVariable> vars = new HashSet<IVariable>();
+				for (final ILiteral l : body) {
+					vars.addAll(l.getTuple().getAllVariables());
+				}
+				// creating the new predicate and literal
+				final ILiteral conjL = BASIC.createLiteral(true, 
+						BASIC.createPredicate("_replacement_" + q.hashCode(), 
+								vars.size()), 
+						BASIC.createTuple(new ArrayList<ITerm>(vars)));
+				// creating and adding the new rule
+				p.addRule(BASIC.createRule(BASIC.createHead(conjL), 
+						BASIC.createBody(body)));
+				rulesChanged = true;
+				// creating and adding the query
+				conjQ = BASIC.createQuery(conjL);
+				conjunktiveQueries.put(q, conjQ);
+			}
+			query = conjQ;
+		} else { // this is a normal query
+			 query = BASIC.createQuery(body);
+		}
 
 		// update the executor, if there has been something changed
 		if (rulesChanged) { // if there are new rules -> translate them all
@@ -223,37 +261,6 @@ public class IrisFacade implements DatalogReasonerFacade {
 			}	
 			res.add(prep);
 		}
-		
-			// translating and adding the terms to the result set
-			/*for (final ITuple t : result) {
-				res.add(Collections.singletonMap(wsmlVar,
-						irisTermConverter(getTermForTuple(t, idx))));
-			}
-			*/
-		
-		/*for (final IVariable v : qVars) {
-			// convert the var to an wsml one
-			final Variable wsmlVar = (Variable) irisTermConverter(v);
-
-			// searching for the index of the term to extract from the tuple
-			final int[] idx = searchQueryForVar(query, v);
-			if (idx.length < 2) { // it the variable couldn't be found ->
-				// exception
-				throw new IllegalArgumentException(
-						"Couldn't find the variable (" + v + ") in query (" + q
-								+ ").");
-			}
-			// translating and adding the terms to the result set
-			for (final ITuple t : result) {
-				res.add(Collections.singletonMap(wsmlVar,
-						irisTermConverter(getTermForTuple(t, idx))));
-			}
-			
-			for (final ITuple t : result){
-				res.add(Collections.singletonMap(wsmlVar,
-						irisTermConverter(getTermForTuple(t, i))));
-				}
-		}*/
 
 		// BEHAVIOR IMITATIED FROM THE KAON FACADE
 		// if there are no variables in the query, fill it with as many empty
