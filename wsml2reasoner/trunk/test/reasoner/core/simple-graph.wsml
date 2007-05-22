@@ -45,4 +45,6 @@ axiom strongComponentElementDefinition
   definedBy
     path(?x,?y) and path(?y,?x) implies scElement(?x).
     
-    
+axiom composedRuleDefinition
+  definedBy
+    composedRule(?x,?y) impliedBy scElement(?x) and path(?x,?y) and path(?y,?x). 

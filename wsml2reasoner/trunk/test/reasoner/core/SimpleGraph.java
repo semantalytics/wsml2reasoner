@@ -150,7 +150,9 @@ public class SimpleGraph extends BaseReasonerTest {
 
     public void testScElementsOnADirecteCircleWithF() throws Exception {
 
-        String query = "scElement(?n) and path(?n,f) and path(f,?n)";
+        // composedRule(?n,?f) impliedBy scElement(?n) and path(?n,?f) and path(?f,?n).
+        String query = "composedRule(?n,f)";
+
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
         binding.put(leFactory.createVariable("n"), wsmoFactory.createIRI(NS
