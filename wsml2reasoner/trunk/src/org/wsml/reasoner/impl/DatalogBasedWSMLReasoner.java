@@ -843,9 +843,9 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             		"http://www.wsmo.org/wsml/wsml-syntax")) {
         		concepts.add(wsmoFactory.getConcept(conceptID2));
         	}
-            if (conceptID1.equals(conceptID2)) {
+            /*if (conceptID1.equals(conceptID2)) {
             	concepts.remove(wsmoFactory.getConcept(conceptID1));
-            }
+            }*/
         }
 
         // build new constraint attributes query:
