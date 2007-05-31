@@ -90,6 +90,7 @@ import org.wsmo.wsml.ParserException;
  * 
  * @author Uwe Keller, DERI Innsbruck
  * @author Gabor Nagypal, FZI
+ * @author Nathalie Steinmetz, DERI Innsbruck
  */
 public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         WSMLCoreReasoner {
@@ -843,11 +844,8 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             		"http://www.wsmo.org/wsml/wsml-syntax")) {
         		concepts.add(wsmoFactory.getConcept(conceptID2));
         	}
-            /*if (conceptID1.equals(conceptID2)) {
-            	concepts.remove(wsmoFactory.getConcept(conceptID1));
-            }*/
         }
-
+        
         // build new constraint attributes query:
         query = leFactory.createAttributeConstraint(
         		conceptVariable1, instanceVariable, conceptVariable2);
@@ -904,6 +902,27 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             		concepts.add(wsmoFactory.getConcept(conceptID));
             	}
             }
+        }
+        
+        Set<Instance> tmpInst = getAllInstances(ontologyID);
+        Set<IRI> tmpAttr = getAllAttributes(ontologyID);
+        Set<Concept> tmpConc = new HashSet<Concept>(concepts.size());
+        for (Concept concept : concepts) {
+        	tmpConc.add(concept);
+        }
+        
+        for (Concept concept : tmpConc) {
+        	IRI conceptID = (IRI) concept.getIdentifier();
+        	for (Instance instance  : tmpInst) {
+        		if (conceptID.equals(instance.getIdentifier())) {
+        			concepts.remove(concept);
+        		}
+        	}
+        	for (IRI attribute : tmpAttr) {
+        		if (conceptID.equals(attribute)) {
+        			concepts.remove(wsmoFactory.getConcept(attribute));
+        		}
+        	}
         }
         
         return concepts;
