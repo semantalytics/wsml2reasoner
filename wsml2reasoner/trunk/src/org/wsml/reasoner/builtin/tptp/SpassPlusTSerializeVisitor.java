@@ -22,11 +22,12 @@ import org.omwg.logicalexpression.*;
  * Default left to right depth first walker...
  *   
  * @author Holger Lausen
- * @version $Revision: 1.3 $ $Date: 2007-06-14 16:38:59 $
+ * @version $Revision: 1.1 $ $Date: 2007-06-14 16:38:59 $
  * @see org.omwg.logicalexpression.Visitor
  */
-public class TPTPLESerializeVisitor extends FOLAbstractSerializeVisitor {
+public class SpassPlusTSerializeVisitor extends FOLAbstractSerializeVisitor {
     
+
     /**
      * Builds a String representing the Unary expression and adds it to a vector.
      * @param expr Unary Expression to be serialized, with operator NEG
@@ -34,7 +35,7 @@ public class TPTPLESerializeVisitor extends FOLAbstractSerializeVisitor {
      */
     public void visitNegation(Negation expr) {
         expr.getOperand().accept(this);
-        stack.add("~ (" + (String)stack.remove(stack.size() - 1) + ")");
+        stack.add("not (" + (String)stack.remove(stack.size() - 1) + ")");
     }
 
 
@@ -46,16 +47,13 @@ public class TPTPLESerializeVisitor extends FOLAbstractSerializeVisitor {
     public void visitConjunction(Conjunction expr) {
         expr.getLeftOperand().accept(this);
         expr.getRightOperand().accept(this);
-        stack.add("(" + stack.remove(stack.size() - 2) + "  & " + stack.remove(stack.size() - 1)+ ")");
+        stack.add(" and (" + stack.remove(stack.size() - 2) + " , " + stack.remove(stack.size() - 1)+ ")");
     }
-
- 
-
 
     public void visitImplication(Implication expr) {
         expr.getLeftOperand().accept(this);
         expr.getRightOperand().accept(this);
-        stack.add("(" + stack.remove(stack.size() - 2) + " => " +
+        stack.add(" implies(" + stack.remove(stack.size() - 2) + ", " +
                        stack.remove(stack.size() - 1) + ")");
     }
 
@@ -67,7 +65,7 @@ public class TPTPLESerializeVisitor extends FOLAbstractSerializeVisitor {
     public void visitDisjunction(Disjunction expr) {
         expr.getLeftOperand().accept(this);
         expr.getRightOperand().accept(this);
-        stack.add("(" + stack.remove(stack.size() - 2) + " | " + stack.remove(stack.size() - 1) +")");
+        stack.add(" or(" + stack.remove(stack.size() - 2) + " , " + stack.remove(stack.size() - 1) +")");
     }
 
     /**
@@ -77,7 +75,7 @@ public class TPTPLESerializeVisitor extends FOLAbstractSerializeVisitor {
      */
     public void visitUniversalQuantification(UniversalQuantification expr) {
         String res = helpQuantified(expr);
-        stack.add("! " + res + " : ( " + (String)stack.remove(stack.size() - 1) + " )");
+        stack.add(" forall (" + res + " , " + (String)stack.remove(stack.size() - 1) + " )");
     }
 
     /**
@@ -87,13 +85,13 @@ public class TPTPLESerializeVisitor extends FOLAbstractSerializeVisitor {
      */
     public void visitExistentialQuantification(ExistentialQuantification expr) {
         String res = helpQuantified(expr);
-        stack.add("? " + res + " : ( " + (String)stack.remove(stack.size() - 1) + " )");
+        stack.add(" exists " + res + " : ( " + (String)stack.remove(stack.size() - 1) + " )");
     }
 
     public void visitEquivalence(Equivalence expr) {
         expr.getLeftOperand().accept(this);
         expr.getRightOperand().accept(this);
-        stack.add("(" + stack.remove(stack.size() - 2) + " <=> " +
+        stack.add(" equiv(" + stack.remove(stack.size() - 2) + " , " +
                        stack.remove(stack.size() - 1) + ")");
 
     }
@@ -101,7 +99,7 @@ public class TPTPLESerializeVisitor extends FOLAbstractSerializeVisitor {
     public void visitInverseImplication(InverseImplication expr) {
         expr.getLeftOperand().accept(this);
         expr.getRightOperand().accept(this);
-        stack.add("(" + stack.remove(stack.size() - 2) + " <= " +
+        stack.add(" implies (" + stack.remove(stack.size() - 1) + " , " +
                        stack.remove(stack.size() - 1) + ")");
 
     }
