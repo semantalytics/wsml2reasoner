@@ -23,7 +23,7 @@ public class TPTPTest extends TestCase{
     LogicalExpressionFactory leF = Factory.createLogicalExpressionFactory(null);
     WsmoFactory wsmoF = Factory.createWsmoFactory(null);
     Ontology nsContainer;
-    TPTPFacade tptp = new TPTPFacade(new WSMO4JManager());
+    TPTPFacade tptp = new TPTPFacade(new WSMO4JManager(),"urn:foo");
     
     public TPTPTest(){
         IRI i = wsmoF.createIRI("foo:bar#");
