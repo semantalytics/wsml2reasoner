@@ -30,6 +30,7 @@ import org.wsml.reasoner.api.WSMLFOLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
+import org.wsml.reasoner.builtin.tptp.SpassPlusTFacade;
 import org.wsml.reasoner.builtin.tptp.TPTPFacade;
 import org.wsml.reasoner.transformation.*;
 import org.wsml.reasoner.transformation.le.*;
@@ -56,11 +57,15 @@ public class FOLBasedWSMLReasoner implements WSMLFOLReasoner {
 
     public FOLBasedWSMLReasoner(
             WSMLReasonerFactory.BuiltInReasoner builtInType,
-            WSMO4JManager wsmoManager) {
+            WSMO4JManager wsmoManager,
+            String uri) {
         this.wsmoManager = wsmoManager;
         switch (builtInType) {
         case TPTP:
-            builtInFacade = new TPTPFacade(wsmoManager);
+            builtInFacade = new TPTPFacade(wsmoManager,uri);
+            break;
+        case SPASS_PLUS_T:
+            builtInFacade = new SpassPlusTFacade(wsmoManager,uri);
             break;
         default:
             throw new UnsupportedOperationException("Reasoning with "

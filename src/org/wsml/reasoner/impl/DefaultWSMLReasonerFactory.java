@@ -19,17 +19,14 @@
 
 package org.wsml.reasoner.impl;
 
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 import org.deri.wsmo4j.validator.WsmlValidatorImpl;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.*;
+import org.wsml.reasoner.builtin.tptp.TPTPFacade;
 import org.wsmo.common.WSML;
-import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.Factory;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
+import org.wsmo.factory.*;
 import org.wsmo.validator.WsmlValidator;
 
 /**
@@ -185,13 +182,35 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
     public WSMLFOLReasoner createWSMLFOLReasoner() throws UnsupportedOperationException {
         return createWSMLFOLReasoner(null);
     }
+    
     public WSMLFOLReasoner createWSMLFOLReasoner(Map<String, Object> params) throws UnsupportedOperationException {
         if (params == null) {
-            return new org.wsml.reasoner.impl.FOLBasedWSMLReasoner(
-                    BuiltInReasoner.TPTP, new WSMO4JManager());
-        } else {
-            throw new UnsupportedOperationException("maps not yer implemented pass null!");
+        	params = new HashMap<String, Object>();
         }
+
+        BuiltInReasoner reasoner = BuiltInReasoner.SPASS_PLUS_T;
+        if (!params.containsKey(PARAM_BUILT_IN_REASONER)){
+        	reasoner = (BuiltInReasoner)params.get(PARAM_BUILT_IN_REASONER);
+        }
+        
+        String uri=null;
+        if (params.containsKey(PARAM_EXTERNAL_REASONER_URI)){
+        	uri = (String) params.get(PARAM_EXTERNAL_REASONER_URI);
+        }
+        if (uri==null){
+        	if (reasoner==BuiltInReasoner.SPASS_PLUS_T){
+        		uri=TPTPFacade.DERI_SPASS_PLUS_T_REASONER;
+        	}else if (reasoner==BuiltInReasoner.TPTP){
+        		uri=TPTPFacade.DERI_TPTP_REASONER;
+        	}else{
+        		throw new RuntimeException("need to specify URI");
+        	}
+        }
+        
+        return new org.wsml.reasoner.impl.FOLBasedWSMLReasoner(
+    			(BuiltInReasoner)params.get(PARAM_BUILT_IN_REASONER),
+    			new WSMO4JManager(),
+    			uri);
     }
 
 }

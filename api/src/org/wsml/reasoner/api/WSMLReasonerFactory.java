@@ -52,8 +52,10 @@ public interface WSMLReasonerFactory {
     
     public String PARAM_ALLOW_IMPORTS = "Allow ontology imports";
     
+    public String PARAM_EXTERNAL_REASONER_URI = "ENDPOINT";
+
     public enum BuiltInReasoner {
-        KAON2, MINS, PELLET, XSB, IRIS, TPTP
+        KAON2, MINS, PELLET, XSB, IRIS, TPTP, SPASS_PLUS_T
     };
 
     /**

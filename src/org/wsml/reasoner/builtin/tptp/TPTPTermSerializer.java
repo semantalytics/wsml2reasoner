@@ -29,7 +29,7 @@ import org.wsmo.common.*;
 /**
  *   
  * @author Holger Lausen
- * @version $Revision: 1.2 $ $Date: 2007-03-20 20:30:53 $
+ * @version $Revision: 1.3 $ $Date: 2007-06-14 16:38:59 $
  * @see org.omwg.logicalexpression.Visitor
  */
 public class TPTPTermSerializer implements Visitor{
@@ -42,6 +42,10 @@ private Map atoms2ConstructedTerms;
     
     //hack a bit too much of memory?
     private static TPTPSymbolMap sym = new TPTPSymbolMap();
+    
+    public TPTPSymbolMap getSymbolMap(){
+    	return sym;
+    }
     
 
     /**

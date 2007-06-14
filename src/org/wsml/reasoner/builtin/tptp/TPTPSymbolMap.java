@@ -20,8 +20,6 @@ package org.wsml.reasoner.builtin.tptp;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.omwg.ontology.Variable;
-
 /**
  * Interface or class description
  *
@@ -33,7 +31,7 @@ import org.omwg.ontology.Variable;
  *
  * @author Rosi, Holger
  *
- * @version $Revision: 1.1 $ $Date: 2007-03-20 20:30:53 $
+ * @version $Revision: 1.2 $ $Date: 2007-06-14 16:38:59 $
  */
 public class TPTPSymbolMap {
     
