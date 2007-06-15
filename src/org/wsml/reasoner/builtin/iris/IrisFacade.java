@@ -95,11 +95,11 @@ import org.wsmo.factory.WsmoFactory;
  * The wsmo4j interface for the iris reasoner.
  * </p>
  * <p>
- * $Id: IrisFacade.java,v 1.8 2007-05-15 16:12:06 richardpoettler Exp $
+ * $Id: IrisFacade.java,v 1.9 2007-06-15 12:06:41 graham Exp $
  * </p>
  * 
  * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class IrisFacade implements DatalogReasonerFacade {
 
@@ -207,7 +207,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 				// getting all variables
 				final Set<IVariable> vars = new HashSet<IVariable>();
 				for (final ILiteral l : body) {
-					vars.addAll(l.getTuple().getAllVariables());
+					vars.addAll(l.getTuple().getVariables());
 				}
 				// creating the new predicate and literal
 				final ILiteral conjL = BASIC.createLiteral(true, 
