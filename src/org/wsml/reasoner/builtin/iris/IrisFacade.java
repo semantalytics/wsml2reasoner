@@ -95,11 +95,11 @@ import org.wsmo.factory.WsmoFactory;
  * The wsmo4j interface for the iris reasoner.
  * </p>
  * <p>
- * $Id: IrisFacade.java,v 1.9 2007-06-15 12:06:41 graham Exp $
+ * $Id: IrisFacade.java,v 1.10 2007-06-15 12:42:41 darko Exp $
  * </p>
  * 
  * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class IrisFacade implements DatalogReasonerFacade {
 
@@ -207,7 +207,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 				// getting all variables
 				final Set<IVariable> vars = new HashSet<IVariable>();
 				for (final ILiteral l : body) {
-					vars.addAll(l.getTuple().getVariables());
+					vars.addAll(l.getTuple().getAllVariables());
 				}
 				// creating the new predicate and literal
 				final ILiteral conjL = BASIC.createLiteral(true, 
@@ -230,10 +230,11 @@ public class IrisFacade implements DatalogReasonerFacade {
 		if (rulesChanged) { // if there are new rules -> translate them all
 			e = new Executor(p, new ExpressionEvaluator());
 		}
-		if (factsChanged || rulesChanged) { // if there are new facts or rules
+		// FIXME needs to be checked out w.r.t LordOfRings example
+		//if (factsChanged || rulesChanged) { // if there are new facts or rules
 			// -> compute the fixed point
 			e.execute();
-		}
+		//}
 		rulesChanged = false;
 		factsChanged = false;
 
