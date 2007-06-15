@@ -500,7 +500,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         for (Ontology o : ontologies) {
             IRI ontologyId = (IRI) o.getIdentifier();
 //            if (!disableConsitencyCheck){
-            errors.addAll(checkConsistency(ontologyId));
+            //errors.addAll(checkConsistency(ontologyId));
 //            }
         }
         if (errors.size() > 0) {
