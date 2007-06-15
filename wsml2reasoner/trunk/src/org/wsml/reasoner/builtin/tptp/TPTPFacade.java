@@ -18,11 +18,12 @@
  */
 package org.wsml.reasoner.builtin.tptp;
 
-import java.util.Set;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.wsml.reasoner.ExternalToolException;
+import org.wsml.reasoner.api.WSMLFOLReasoner.EntailmentType;
 import org.wsml.reasoner.impl.WSMO4JManager;
 
 /**
@@ -30,23 +31,24 @@ import org.wsml.reasoner.impl.WSMO4JManager;
  * The wsmo4j interface to and from TPTP
  * </p>
  * <p>
- * $Id: TPTPFacade.java,v 1.3 2007-06-14 16:38:59 hlausen Exp $
+ * $Id: TPTPFacade.java,v 1.4 2007-06-15 10:23:38 hlausen Exp $
  * </p>
  * 
  * @author Holger Lausen
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class TPTPFacade extends FOLAbstractFacade {
 
     Logger log = Logger.getLogger(TPTPFacade.class);
-    TPTPLESerializeVisitor les = new TPTPLESerializeVisitor();
     
     public TPTPFacade(WSMO4JManager manager, String syntax){
     	super(manager,syntax);
     }
     
     @Override
-    String getConjecture(LogicalExpression le) {
+    String getConjecture(LogicalExpression le, TPTPSymbolMap map) {
+    	TPTPLESerializeVisitor les = new TPTPLESerializeVisitor();
+    	les.setSymbolMap(map);
         le.accept(les);
         String conjectureString = les.getSerializedObject();
         return "fof(id" + id++ + ",conjecture, ("
@@ -57,7 +59,8 @@ public class TPTPFacade extends FOLAbstractFacade {
     
     public void register(String ontologyURI, Set<LogicalExpression> expressions) throws ExternalToolException {
         String kb ="";
-
+        TPTPLESerializeVisitor les = new TPTPLESerializeVisitor();
+        
         for (LogicalExpression le:expressions ){
             le.accept(les);
             String newExpression = les.getSerializedObject();
@@ -66,5 +69,6 @@ public class TPTPFacade extends FOLAbstractFacade {
         }
         log.debug(kb);
         convertedOntologies.put(ontologyURI, kb);
+        symbolMaps.put(ontologyURI,les.getSymbolMap());
     }
 }

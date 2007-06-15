@@ -33,8 +33,11 @@ import org.wsml.reasoner.api.WSMLFOLReasoner.EntailmentType;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
+import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.common.exception.SynchronisationException;
 import org.wsmo.factory.*;
 import org.wsmo.wsml.Parser;
+import org.wsmo.wsml.ParserException;
 
 /**
  * Interface or class description
@@ -47,7 +50,7 @@ import org.wsmo.wsml.Parser;
  *
  * @author Rosi, Holger
  *
- * @version $Revision: 1.1 $ $Date: 2007-06-14 16:36:40 $
+ * @version $Revision: 1.2 $ $Date: 2007-06-15 10:23:41 $
  */
 public class SpassPlusTTest extends TestCase {
 
@@ -110,17 +113,54 @@ public class SpassPlusTTest extends TestCase {
         ont.addAxiom(a);
         wsmlReasoner.registerOntology(ont);
         LogicalExpression conjecture = leFactory.createLogicalExpression(
-                "?x[b hasValue c]",ont);
+                "exists ?x (?x[b hasValue c]).",ont);
         EntailmentType t;
-//        t = wsmlReasoner.checkEntailment(iri, conjecture);
-//        assertEquals(EntailmentType.entailed, t);
+        t = wsmlReasoner.checkEntailment(iri, conjecture);
+        assertEquals(EntailmentType.entailed, t);
         
         conjecture = leFactory.createLogicalExpression(
                 "f[b hasValue d]",ont);
         t = wsmlReasoner.checkEntailment(iri, conjecture);
         assertEquals(EntailmentType.notEntailed, t);
-     
+    }
+    static int i;
+    private Ontology getOntology(){
+    	IRI iri = wsmoFactory.createIRI("urn://foobar"+ ++i);
+        Ontology ont = wsmoFactory.createOntology(iri);
+        ont.setDefaultNamespace(iri);
+        return ont;
     }
     
+    private void addExpression(Ontology ont ,String str) throws ParserException, SynchronisationException, InvalidModelException{
+		LogicalExpression le = leFactory.createLogicalExpression(
+    	            str,ont);
+        Axiom a = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
+        a.addDefinition(le);
+        ont.addAxiom(a);
+    }
+    
+    public void testSimpleArithmetics() throws Exception{
+    	Ontology ont = getOntology();
+    	addExpression(ont,"hv(i,12)");
+        
+    	wsmlReasoner.registerOntology(ont);
+    	LogicalExpression conjecture;
+    	EntailmentType t;
+    	
+    	conjecture= leFactory.createLogicalExpression(
+                "22 > 2",ont);
+        t = wsmlReasoner.checkEntailment((IRI)ont.getIdentifier(), conjecture);
+        assertEquals(EntailmentType.entailed, t);
+    	
+    	conjecture= leFactory.createLogicalExpression(
+                "hv(i,(6+6)).",ont);
+        t = wsmlReasoner.checkEntailment((IRI)ont.getIdentifier(), conjecture);
+        assertEquals(EntailmentType.entailed, t);
+        
+//        conjecture = leFactory.createLogicalExpression(
+//                "f[b hasValue d]",ont);
+//        t = wsmlReasoner.checkEntailment(iri, conjecture);
+//        assertEquals(EntailmentType.notEntailed, t);
+    }
     
 }

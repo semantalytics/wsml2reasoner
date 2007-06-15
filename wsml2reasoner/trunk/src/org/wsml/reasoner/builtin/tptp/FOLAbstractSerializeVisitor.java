@@ -18,20 +18,24 @@ package org.wsml.reasoner.builtin.tptp;
 
 import java.util.*;
 
+import org.deri.wsmo4j.io.parser.wsml.TempVariable;
 import org.deri.wsmo4j.logicalexpression.ConstantTransformer;
+import org.deri.wsmo4j.logicalexpression.terms.ConstructedTermImpl;
 import org.omwg.logicalexpression.*;
 import org.omwg.logicalexpression.terms.Term;
+import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 
 /**
  * Default left to right depth first walker...
  *   
  * @author Holger Lausen
- * @version $Revision: 1.1 $ $Date: 2007-06-14 16:38:59 $
+ * @version $Revision: 1.2 $ $Date: 2007-06-15 10:23:38 $
  * @see org.omwg.logicalexpression.Visitor
  */
 public abstract class FOLAbstractSerializeVisitor implements Visitor {
-    
+	Map<Term,Term> atoms2Rewrite = new HashMap<Term, Term>();
+   
     Vector<String> stack;
     TPTPTermSerializer visitor;
 
@@ -42,6 +46,7 @@ public abstract class FOLAbstractSerializeVisitor implements Visitor {
     public FOLAbstractSerializeVisitor() {
         visitor = new TPTPTermSerializer();
         stack = new Vector<String>();
+        visitor.setAtoms2ConstructedTerms(atoms2Rewrite);
     }
     
     
@@ -150,5 +155,7 @@ public abstract class FOLAbstractSerializeVisitor implements Visitor {
 		return visitor.getSymbolMap();
 	}
 
-
+	public void setSymbolMap(TPTPSymbolMap map) {
+		visitor.SetSymbolMap(map);
+	}
 }

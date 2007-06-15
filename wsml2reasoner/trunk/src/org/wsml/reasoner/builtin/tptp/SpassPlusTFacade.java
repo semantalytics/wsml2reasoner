@@ -18,13 +18,15 @@
  */
 package org.wsml.reasoner.builtin.tptp;
 
-import java.util.Set;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
+import org.omwg.logicalexpression.terms.Term;
 import org.wsml.reasoner.ExternalToolException;
+import org.wsml.reasoner.api.WSMLFOLReasoner.EntailmentType;
 import org.wsml.reasoner.impl.WSMO4JManager;
 
 /**
@@ -32,23 +34,50 @@ import org.wsml.reasoner.impl.WSMO4JManager;
  * The wsmo4j interface to and from TPTP
  * </p>
  * <p>
- * $Id: SpassPlusTFacade.java,v 1.1 2007-06-14 16:38:59 hlausen Exp $
+ * $Id: SpassPlusTFacade.java,v 1.2 2007-06-15 10:23:38 hlausen Exp $
  * </p>
  * 
  * @author Holger Lausen
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class SpassPlusTFacade extends FOLAbstractFacade {
 
     Logger log = Logger.getLogger(SpassPlusTFacade.class);
-    SpassPlusTSerializeVisitor les = new SpassPlusTSerializeVisitor();
     
+    
+    private PredicateAndFSymbolCollector collector = new PredicateAndFSymbolCollector();
+
     public SpassPlusTFacade(WSMO4JManager manager, String endpoint){
     	super(manager, endpoint);
     }
 
     @Override
-    String getConjecture(LogicalExpression le) {
+    public List<EntailmentType> checkEntailment(String ontologyIRI,List<LogicalExpression> conjecture) {
+        String ontology = convertedOntologies.get(ontologyIRI);
+        if (ontology==null) throw new RuntimeException("ontology not registered");
+        TPTPSymbolMap map = symbolMaps.get(ontologyIRI);
+        if (map==null) throw new RuntimeException("Could not find a symbolmap for iri, error in conversion");
+        
+        List<EntailmentType> results = new ArrayList<EntailmentType>();
+        for (LogicalExpression le : conjecture) {
+            String conjectureString = getConjecture(le,map);
+            collector.clear();
+            le.accept(collector);
+            ontology = ontology.replace("<REPLACE_ME_WITH_MORE_PREDICATES>", 
+            		getPredicates(map));
+            ontology = ontology.replace("<REPLACE_ME_WITH_MORE_FUNCTIONS>", 
+            		getFunctions(map));
+            log.debug("checking conjecture:" +conjectureString);
+            log.debug("\n\n"+ontology + "\n" + conjectureString);
+            results.add(invokeHttp(ontology + "\n" + conjectureString));
+        }
+        return results;
+    }
+    
+    @Override
+    String getConjecture(LogicalExpression le, TPTPSymbolMap map) {
+    	SpassPlusTSerializeVisitor les = new SpassPlusTSerializeVisitor();
+    	les.setSymbolMap(map);
     	String conjecture = "list_of_formulae(conjectures).\n";
     	le.accept(les);
     	conjecture += "formula("+les.getSerializedObject()+").\n";
@@ -57,15 +86,15 @@ public class SpassPlusTFacade extends FOLAbstractFacade {
     	return conjecture;
     }
     
-    private PredicateAndFSymbolCollector collector = new PredicateAndFSymbolCollector();
-
+    
     public void register(String ontologyURI, Set<LogicalExpression> expressions) throws ExternalToolException {
         String kb ="";
     	kb += "begin_problem(WSML_Problem).\n\n";
     	kb += getSpassMetaDisc();
-
     	kb += "list_of_symbols.\n";
     	
+    	SpassPlusTSerializeVisitor les = new SpassPlusTSerializeVisitor();
+        
     	String allAxioms ="";
         for (LogicalExpression le:expressions ){
             le.accept(les);
@@ -81,29 +110,51 @@ public class SpassPlusTFacade extends FOLAbstractFacade {
     	}
 
     	kb += "functions[(succ,1),(minus,2),(plus,2),(times,2),(0,0)";
-    	for (ConstructedTerm c : collector.getFSyms()){
-    		kb += ",("+c.getFunctionSymbol()+","+c.getArity()+")";
-    	}
-    	kb += "].\n";
+    	kb += getFunctions(symmap);
+    	kb += "<REPLACE_ME_WITH_MORE_FUNCTIONS>].\n";
     			
-    	kb+="predicates[(greater,2),(greatereq,2),(less,2),(lesseq,2)";
-    	for (Atom a: collector.getAtoms()){
-    		kb += ",("+
-    			symmap.getTPTPTerm(a.getIdentifier().toString())+","+
-    			a.getArity()+")";
-    	}
-    	kb += "].\n";
-    	
+    	kb +="predicates[(greater,2),(greatereq,2),(less,2),(lesseq,2)";
+    	kb += getPredicates(symmap);
+    	kb += "<REPLACE_ME_WITH_MORE_PREDICATES>].\n";
     	kb += "end_of_list.\n" ;
     	kb += "list_of_formulae(axioms).\n";
     	kb += getSpassStandardFormulas()+"\n";
-        
     	kb += allAxioms;
-    	
     	kb += "end_of_list.\n";
-    	log.debug("REGISTERED KB: "+ontologyURI+"\n"+kb);
+//    	log.debug("REGISTERED KB: "+ontologyURI+"\n"+kb);
         convertedOntologies.put(ontologyURI, kb);
+        symbolMaps.put(ontologyURI,symmap);
     }
+
+	/**
+	 * @param kb
+	 * @param symmap
+	 * @return
+	 */
+	private String getPredicates(TPTPSymbolMap symmap) {
+		String kb = "";
+		for (Atom a: collector.getAtoms()){
+    		kb += ",("+symmap.getTPTPTerm(a.getIdentifier().toString())+","+
+    			a.getArity()+")";
+    	}
+		return kb;
+	}
+
+	/**
+	 * @param kb
+	 * @param symmap
+	 * @return
+	 */
+	private String getFunctions(TPTPSymbolMap symmap) {
+		String kb ="";
+		for (ConstructedTerm c : collector.getFSyms()){
+    		kb += ",("+c.getFunctionSymbol()+","+c.getArity()+")";
+    	}
+    	for (Term t: collector.getConstants()){
+    		kb += ",("+symmap.getTPTPTerm(t.toString())+",0)";
+    	}
+		return kb;
+	}
     
     public String getSpassStandardFormulas(){
     	return "formula(forall([X,Y],equal(plus(minus(X,Y),Y),X))).\n" +
