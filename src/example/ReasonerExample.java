@@ -81,7 +81,7 @@ public class ReasonerExample {
      * loads an Ontology and performs sample query
      */
     public void doTestRun(String reasoningEngine) throws Exception {
-        Ontology exampleOntology = loadOntology("example/humanOntology.wsml");
+        Ontology exampleOntology = loadOntology("example/simpleOntology.wsml");
         if (exampleOntology == null)
             return;
         LogicalExpressionFactory leFactory = new WSMO4JManager()
