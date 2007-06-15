@@ -19,9 +19,9 @@ package org.wsml.reasoner.builtin.tptp;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.deri.wsmo4j.io.parser.wsml.TempVariable;
 import org.omwg.logicalexpression.Atom;
-import org.omwg.logicalexpression.terms.ConstructedTerm;
-import org.omwg.logicalexpression.terms.NumberedAnonymousID;
+import org.omwg.logicalexpression.terms.*;
 import org.omwg.ontology.*;
 import org.wsml.reasoner.transformation.InfixOrderLogicalExpressionVisitor;
 import org.wsmo.common.IRI;
@@ -30,24 +30,37 @@ import org.wsmo.common.UnnumberedAnonymousID;
 public class PredicateAndFSymbolCollector extends InfixOrderLogicalExpressionVisitor {
     
     private Set<Atom> atoms = new HashSet<Atom>();
-    private FSymCollector col = new FSymCollector(); 
+    
+    private FSymCollector termCollectVisitor = new FSymCollector(); 
     
     public void clear(){
-    	col.fsymbols.clear();
+    	termCollectVisitor.fsymbols.clear();
+    	termCollectVisitor.constants.clear();
     	atoms.clear();
     }
     
     public Set<ConstructedTerm> getFSyms(){
-    	return col.fsymbols;
+    	return termCollectVisitor.fsymbols;
     }
     
     public Set<Atom> getAtoms(){
     	return atoms;
     }
+    
+    public Set<Term> getConstants(){
+    	return termCollectVisitor.constants;
+    }
 
 	@Override
-    public void visitAtom(Atom expr) {
-        atoms.add(expr);
+    public void handleAtom(Atom expr) {
+		if(expr.getArity()>0 && expr.getParameter(0) instanceof TempVariable){
+			//do nothing this is a buildin which is converted to a function
+		}else{
+			atoms.add(expr);
+		}
+		for (Term t :expr.listParameters()){
+			t.accept(termCollectVisitor);
+		}
     }
 
 	@Override
@@ -58,8 +71,11 @@ public class PredicateAndFSymbolCollector extends InfixOrderLogicalExpressionVis
 
 class FSymCollector implements org.omwg.logicalexpression.terms.Visitor{
     Set<ConstructedTerm> fsymbols = new HashSet<ConstructedTerm>();
+    Set<Term> constants = new HashSet<Term>();
     
-	public void visitIRI(IRI arg0) {}
+	public void visitIRI(IRI arg0) {
+		constants.add(arg0);
+	}
 	public void visitComplexDataValue(ComplexDataValue arg0) {}
 	public void visitNumberedID(NumberedAnonymousID arg0) {}
 	public void visitSimpleDataValue(SimpleDataValue arg0) {}

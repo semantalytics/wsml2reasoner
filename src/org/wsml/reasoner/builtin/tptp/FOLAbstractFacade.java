@@ -34,11 +34,11 @@ import org.wsml.reasoner.impl.WSMO4JManager;
  * The wsmo4j interface to and from TPTP
  * </p>
  * <p>
- * $Id: FOLAbstractFacade.java,v 1.1 2007-06-14 16:38:59 hlausen Exp $
+ * $Id: FOLAbstractFacade.java,v 1.2 2007-06-15 10:23:38 hlausen Exp $
  * </p>
  * 
  * @author Holger Lausen
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */ 
 public abstract class FOLAbstractFacade implements FOLReasonerFacade {
 
@@ -46,7 +46,8 @@ public abstract class FOLAbstractFacade implements FOLReasonerFacade {
     WSMO4JManager wsmo4jmanager;
     String httpAddress;
     Map<String,String> convertedOntologies = new HashMap<String, String>();
-    
+    Map<String,TPTPSymbolMap> symbolMaps = new HashMap<String, TPTPSymbolMap>();
+ 
     static public String DERI_TPTP_REASONER="http://dev1.deri.at/dont-treat-this-service-to-hard";
     static public String DERI_SPASS_PLUS_T_REASONER="http://dev1.deri.at/spass-plus-t";
     
@@ -58,18 +59,20 @@ public abstract class FOLAbstractFacade implements FOLReasonerFacade {
     public List<EntailmentType> checkEntailment(String ontologyIRI,List<LogicalExpression> conjecture) {
         String ontology = convertedOntologies.get(ontologyIRI);
         if (ontology==null) throw new RuntimeException("ontology not registered");
-
+        TPTPSymbolMap map = symbolMaps.get(ontologyIRI);
+        if (map==null) throw new RuntimeException("Could not find a symbolmap for iri, error in conversion");
+        
         List<EntailmentType> results = new ArrayList<EntailmentType>();
         for (LogicalExpression le : conjecture) {
-            String conjectureString = getConjecture(le);
+            String conjectureString = getConjecture(le,map);
             log.debug("checking conjecture:" +conjectureString);
-            log.debug("\n\n"+ontology + "\n" + conjectureString);
+//            log.debug("\n\n"+ontology + "\n" + conjectureString);
             results.add(invokeHttp(ontology + "\n" + conjectureString));
         }
         return results;
     }
     
-    String getConjecture(LogicalExpression le){
+    String getConjecture(LogicalExpression le, TPTPSymbolMap map){
     	throw new RuntimeException("must be overwritten!");
     }
     
@@ -82,7 +85,7 @@ public abstract class FOLAbstractFacade implements FOLReasonerFacade {
         }
     }
     
-    private EntailmentType invokeHttp(String stuff){
+    EntailmentType invokeHttp(String stuff){
             String data = encode("theory") + "="+ encode(stuff);
             URL url;
             EntailmentType result =EntailmentType.unkown;
@@ -101,7 +104,7 @@ public abstract class FOLAbstractFacade implements FOLReasonerFacade {
                 BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 String line;
                 while ((line = rd.readLine()) != null) {
-                    log.debug(line);
+                    log.debug("resultline: "+ line);
                     if (line.contains("Proof found")){
                         result=EntailmentType.entailed;
                     }

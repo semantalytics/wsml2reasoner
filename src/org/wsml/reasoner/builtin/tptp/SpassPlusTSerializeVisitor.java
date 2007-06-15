@@ -16,13 +16,20 @@
 
 package org.wsml.reasoner.builtin.tptp;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.deri.wsmo4j.io.parser.wsml.TempVariable;
+import org.deri.wsmo4j.logicalexpression.terms.ConstructedTermImpl;
 import org.omwg.logicalexpression.*;
+import org.omwg.logicalexpression.terms.Term;
+import org.wsmo.common.IRI;
 
 /**
  * Default left to right depth first walker...
  *   
  * @author Holger Lausen
- * @version $Revision: 1.1 $ $Date: 2007-06-14 16:38:59 $
+ * @version $Revision: 1.2 $ $Date: 2007-06-15 10:23:38 $
  * @see org.omwg.logicalexpression.Visitor
  */
 public class SpassPlusTSerializeVisitor extends FOLAbstractSerializeVisitor {
@@ -45,6 +52,19 @@ public class SpassPlusTSerializeVisitor extends FOLAbstractSerializeVisitor {
      * @see org.deri.wsmo4j.logicalexpression.AbstractVisitor#visitConjunction(Conjunction)
      */
     public void visitConjunction(Conjunction expr) {
+    	 //check functionsymbols to rewrite
+        if (expr.getRightOperand() instanceof Atom){
+            Atom a = (Atom)expr.getRightOperand();
+            if (a.getArity()>0 && a.getParameter(0) instanceof TempVariable){
+                List <Term> params = new LinkedList <Term>(a.listParameters());
+                params.remove(0);
+                Term key = a.getParameter(0);
+                Term subst = new ConstructedTermImpl((IRI)a.getIdentifier(), params);
+                atoms2Rewrite.put(a.getParameter(0),subst);
+                expr.getLeftOperand().accept(this);
+                return;
+            }
+        }
         expr.getLeftOperand().accept(this);
         expr.getRightOperand().accept(this);
         stack.add(" and (" + stack.remove(stack.size() - 2) + " , " + stack.remove(stack.size() - 1)+ ")");
@@ -75,7 +95,7 @@ public class SpassPlusTSerializeVisitor extends FOLAbstractSerializeVisitor {
      */
     public void visitUniversalQuantification(UniversalQuantification expr) {
         String res = helpQuantified(expr);
-        stack.add(" forall (" + res + " , " + (String)stack.remove(stack.size() - 1) + " )");
+        stack.add(" forall (" + res + "," + (String)stack.remove(stack.size() - 1) + " )");
     }
 
     /**
@@ -85,7 +105,7 @@ public class SpassPlusTSerializeVisitor extends FOLAbstractSerializeVisitor {
      */
     public void visitExistentialQuantification(ExistentialQuantification expr) {
         String res = helpQuantified(expr);
-        stack.add(" exists " + res + " : ( " + (String)stack.remove(stack.size() - 1) + " )");
+        stack.add(" exists(" + res + "," + (String)stack.remove(stack.size() - 1) + " )");
     }
 
     public void visitEquivalence(Equivalence expr) {
@@ -93,7 +113,6 @@ public class SpassPlusTSerializeVisitor extends FOLAbstractSerializeVisitor {
         expr.getRightOperand().accept(this);
         stack.add(" equiv(" + stack.remove(stack.size() - 2) + " , " +
                        stack.remove(stack.size() - 1) + ")");
-
     }
 
     public void visitInverseImplication(InverseImplication expr) {

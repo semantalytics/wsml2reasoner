@@ -16,13 +16,20 @@
 
 package org.wsml.reasoner.builtin.tptp;
 
+import java.util.*;
+
+import org.deri.wsmo4j.io.parser.wsml.TempVariable;
+import org.deri.wsmo4j.logicalexpression.terms.ConstructedTermImpl;
 import org.omwg.logicalexpression.*;
+import org.omwg.logicalexpression.terms.Term;
+import org.wsmo.common.IRI;
+import org.wsmo.common.TopEntity;
 
 /**
  * Default left to right depth first walker...
  *   
  * @author Holger Lausen
- * @version $Revision: 1.3 $ $Date: 2007-06-14 16:38:59 $
+ * @version $Revision: 1.4 $ $Date: 2007-06-15 10:23:38 $
  * @see org.omwg.logicalexpression.Visitor
  */
 public class TPTPLESerializeVisitor extends FOLAbstractSerializeVisitor {
@@ -44,6 +51,19 @@ public class TPTPLESerializeVisitor extends FOLAbstractSerializeVisitor {
      * @see org.deri.wsmo4j.logicalexpression.AbstractVisitor#visitConjunction(Conjunction)
      */
     public void visitConjunction(Conjunction expr) {
+    	 //check functionsymbols to rewrite
+        if (expr.getRightOperand() instanceof Atom){
+            Atom a = (Atom)expr.getRightOperand();
+            if (a.getArity()>0 && a.getParameter(0) instanceof TempVariable){
+                List <Term> params = new LinkedList <Term>(a.listParameters());
+                params.remove(0);
+                Term key = a.getParameter(0);
+                Term subst = new ConstructedTermImpl((IRI)a.getIdentifier(), params);
+                atoms2Rewrite.put(a.getParameter(0),subst);
+                expr.getLeftOperand().accept(this);
+                return;
+            }
+        }
         expr.getLeftOperand().accept(this);
         expr.getRightOperand().accept(this);
         stack.add("(" + stack.remove(stack.size() - 2) + "  & " + stack.remove(stack.size() - 1)+ ")");

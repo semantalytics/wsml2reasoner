@@ -20,6 +20,8 @@ package org.wsml.reasoner.builtin.tptp;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.omwg.logicalexpression.Constants;
+
 /**
  * Interface or class description
  *
@@ -31,14 +33,31 @@ import java.util.Map;
  *
  * @author Rosi, Holger
  *
- * @version $Revision: 1.2 $ $Date: 2007-06-14 16:38:59 $
+ * @version $Revision: 1.3 $ $Date: 2007-06-15 10:23:38 $
  */
 public class TPTPSymbolMap {
     
     private Map<String, String> iri2tptpTerm = new HashMap<String, String>();
     private Map<String, String> tptp2iriTerm = new HashMap<String, String>();
     
+    private Map<String,String> buildinmapping = new HashMap<String, String>();
+    
+    public TPTPSymbolMap(){
+    	buildinmapping.put(Constants.NUMERIC_ADD , "plus");
+    	buildinmapping.put(Constants.NUMERIC_SUB , "minus");
+    	buildinmapping.put(Constants.NUMERIC_MUL , "times");
+    	buildinmapping.put(Constants.GREATER_THAN , "greater");
+    	buildinmapping.put(Constants.GREATER_EQUAL , "greatereq");
+    	buildinmapping.put(Constants.LESS_THAN , "less");
+    	buildinmapping.put(Constants.LESS_EQUAL , "lesseq");
+    	buildinmapping.put(Constants.NUMERIC_EQUAL , "equiv");
+    }
+    
+    
     public String getTPTPTerm(String wsmlTerm){
+    	if(buildinmapping.containsKey(wsmlTerm)){
+    		return buildinmapping.get(wsmlTerm);
+    	}
         String tptpTerm = iri2tptpTerm.get(wsmlTerm);
         if (tptpTerm!=null) return tptpTerm;
         tptpTerm = getLastAlphaNumerics(wsmlTerm);
