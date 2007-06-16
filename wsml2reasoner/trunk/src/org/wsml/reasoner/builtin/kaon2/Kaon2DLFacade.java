@@ -62,13 +62,13 @@ import org.wsml.reasoner.serializer.owl.OWLSerializerImpl;
  *
  * <pre>
  *  Created on July 3rd, 2006
- *  Committed by $Author: graham $
+ *  Committed by $Author: nathalie $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/builtin/kaon2/Kaon2DLFacade.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck;
  * 		   Holger Lausen, DERI Innsbruck
- * @version $Revision: 1.7 $ $Date: 2007-04-26 17:39:13 $
+ * @version $Revision: 1.8 $ $Date: 2007-06-16 12:57:45 $
  */
 public class Kaon2DLFacade implements DLReasonerFacade {
 
@@ -113,10 +113,12 @@ public class Kaon2DLFacade implements DLReasonerFacade {
         InputStream in = new ByteArrayInputStream(buf.toString().getBytes());
 //System.out.println(buf);
 
-        KAON2Connection connection = KAON2Manager.newConnection();
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put(KAON2Connection.LOAD_FROM_INPUT_STREAM, in);
+        KAON2Connection connection;
         try {
+			connection = KAON2Manager.newConnection();
+			Map<String, Object> m = new HashMap<String, Object>();
+			m.put(KAON2Connection.LOAD_FROM_INPUT_STREAM, in);
+			
         	ontology = connection.openOntology(owlOntology.getURI().toString(), m);    	
 			Reasoner reasoner = ontology.createReasoner();
 			registeredOntologies.put(owlOntology.getURI().toString(),
@@ -1174,6 +1176,7 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 			for (DataPropertyMember member : individuals) {
 				Set<OWLConcreteDataImpl> dataTypeSet = 
 					new HashSet<OWLConcreteDataImpl>();
+//				TODO fix problem with latest stable kaon2 jar
 				if (member.getTargetValue() instanceof String) {
 					dataTypeSet.add((OWLConcreteDataImpl) owlDataFactory.
 							getOWLConcreteData(new URI(Namespaces.XSD_NS + "string"), 
@@ -1423,6 +1426,9 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.7  2007/04/26 17:39:13  graham
+ * Fixed switch to new wsmo4j jars, switched to new IRIS (20070426) and jgrapht (v0.7.1) jars, and removed warning suppressions
+ *
  * Revision 1.6  2007/03/01 11:34:21  nathalie
  * fixed KAON2DLfacade method to get direct concepts of a given instance
  *
