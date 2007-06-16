@@ -553,20 +553,21 @@ public class Kaon2Facade implements DatalogReasonerFacade {
 
     public void register(String ontologyURI, Set<org.wsml.reasoner.Rule> kb)
             throws ExternalToolException {
-        if (conn == null) {
-            conn = KAON2Manager.newConnection();
-            DefaultOntologyResolver resolver = new DefaultOntologyResolver();
-            conn.setOntologyResolver(resolver);
-        }
-        // Deregister, if already registered
-        if (this.registeredOntologies.contains(ontologyURI)) {
-            deregister(ontologyURI);
-        }
-        // TODO Handle ontology imports
-        DefaultOntologyResolver resolver = (DefaultOntologyResolver) conn
-                .getOntologyResolver();
-        resolver.registerReplacement(ontologyURI, "file:/C:/tmp/wsml.xml");
         try {
+        	if (conn == null) {
+        		conn = KAON2Manager.newConnection();
+        		DefaultOntologyResolver resolver = new DefaultOntologyResolver();
+        		conn.setOntologyResolver(resolver);
+        	}
+        	// Deregister, if already registered
+        	if (this.registeredOntologies.contains(ontologyURI)) {
+        		deregister(ontologyURI);
+        	}
+        	// TODO Handle ontology imports
+        	DefaultOntologyResolver resolver = (DefaultOntologyResolver) conn
+        		.getOntologyResolver();
+        	resolver.registerReplacement(ontologyURI, "file:/C:/tmp/wsml.xml");
+        	
             Ontology o = conn.createOntology(ontologyURI, EMPTY_MAP);
             Set<Rule> rules = translateKnowledgebase(kb);
             appendRules(o, rules);
