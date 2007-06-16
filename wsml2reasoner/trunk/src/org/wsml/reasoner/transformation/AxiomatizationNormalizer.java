@@ -513,7 +513,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 .buildNaryConjunction(conjuncts);
         LogicalExpression maxCardConstraint = leFactory.createConstraint(conjunction);
         proclaimAxiomID(maxCardConstraint, AnonymousIdUtils.getNewMaxCardIri());
-        System.out.println(maxCardConstraint.toString());
+//        System.out.println(maxCardConstraint.toString());
         return maxCardConstraint;
     }
 
