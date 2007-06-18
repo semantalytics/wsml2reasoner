@@ -39,6 +39,9 @@ public class PerformanceResults {
     
     public void write(String theDirectory) throws IOException{
         File directory = new File(theDirectory);
+        if (!directory.exists()){
+        	directory.mkdir();
+        }
         if (directory.listFiles() != null){
             for (File f : directory.listFiles()){
                 f.delete();
@@ -46,14 +49,12 @@ public class PerformanceResults {
         }
         
         Set <IRI> allOntologiesInTest = new HashSet <IRI> ();
-        Map <String,Object[]> allQueriesInTest = new HashMap <String,Object[]> ();
+        Set<String> allQueriesInTest = new HashSet<String>();
         for (String reasoner : performanceresults.keySet()){
             for (IRI id : performanceresults.get(reasoner).keySet()){
                 allOntologiesInTest.add(id);
                 for (String query:performanceresults.get(reasoner).get(id).keySet()){
-                    allQueriesInTest.put(
-                            id.getLocalName()+" "+query,
-                            new Object[]{id,query});
+                	allQueriesInTest.add(query);
                 }
             }
         }
@@ -64,6 +65,8 @@ public class PerformanceResults {
                 return o1.toString().compareTo(o2.toString());
             }
         });
+        
+
 
         
         //Write ontology load time data
@@ -92,29 +95,35 @@ public class PerformanceResults {
         System.out.println("Written to: " + loadTimeFile.getAbsolutePath());
         
         // Write ontology query time data
-        List <String> sortedAllQueriesInTest = new ArrayList <String>(allQueriesInTest.keySet());
+        List <String> sortedAllQueriesInTest = new ArrayList <String>(allQueriesInTest);
         Collections.sort(sortedAllQueriesInTest);
         
-        File queryTimeFile = new File(directory, "ALL-average-ontology-query-times.csv");
-        bw = new BufferedWriter(new FileWriter(queryTimeFile));
-        bw.write("Reasoner," + toCommaDelimited(sortedAllQueriesInTest) + "\n");
-        for (String reasoner : performanceresults.keySet()){
-            bw.write(reasoner);
-	            for (String id : sortedAllQueriesInTest){
-	                IRI ontologyID = (IRI) allQueriesInTest.get(id)[0];
-	                String queryID = (String) allQueriesInTest.get(id)[1];
-	                PerformanceResult performanceResult = performanceresults.get(reasoner).get(ontologyID).get(queryID);
-	                if(performanceResult!=null){
-	                    bw.write("," + performanceResult.getAvgExecuteQuers());
-	                }else{
-	                    bw.write(",-1");
-	                }
-	            }
-            bw.write("\n");
+        
+        for (String queryid : sortedAllQueriesInTest){
+        	File queryTimeFile = new File(directory, "average-ontology-"+queryid+"-times.csv");
+        	bw = new BufferedWriter(new FileWriter(queryTimeFile));
+        	bw.write("Reasoner," + toCommaDelimited(sortedAllOntologiesInTest) + "\n");
+        	for (String reasoner : performanceresults.keySet()) {
+				bw.write(reasoner);
+				for (IRI id : sortedAllOntologiesInTest) {
+					if (performanceresults.get(reasoner).containsKey(id)) {
+						PerformanceResult result = performanceresults.get(
+								reasoner).get(id).get(queryid);
+						if (result != null) {
+							bw.write("," + result.getAvgExecuteQuers());
+						} else {
+							bw.write(",-1");
+						}
+					} else {
+						bw.write(",-1");
+					}
+				}
+				bw.write("\n");
+        	}
+            bw.flush();
+            bw.close();
+            System.out.println("Written to: " + queryTimeFile.getAbsolutePath());
         }
-        bw.flush();
-        bw.close();
-        System.out.println("Written to: " + queryTimeFile.getAbsolutePath());
     }
 
 
