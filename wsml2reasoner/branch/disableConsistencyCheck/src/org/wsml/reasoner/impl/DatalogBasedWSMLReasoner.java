@@ -107,6 +107,8 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     protected WSMO4JManager wsmoManager;
     
     public static int allowImports = 0;
+    
+    private boolean disableConsitencyCheck = false;
 
     public DatalogBasedWSMLReasoner(
             WSMLReasonerFactory.BuiltInReasoner builtInType,
@@ -124,6 +126,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             break;
         case IRIS:
         	builtInFacade = new IrisFacade(wsmoManager);
+        	disableConsitencyCheck = true;
         	break;
         default:
             throw new UnsupportedOperationException("Reasoning with "
@@ -133,9 +136,9 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         leFactory = this.wsmoManager.getLogicalExpressionFactory();
     }
     
-//    public void setDisableConsitencyCheck(boolean check){
-//        this.disableConsitencyCheck = check;
-//    }
+    public void setDisableConsitencyCheck(boolean check){
+        this.disableConsitencyCheck = check;
+    }
     
     public void setEvalMethod(int method){
         if (builtInFacade instanceof MinsFacade){
@@ -496,20 +499,20 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     public void registerOntologies(Set<Ontology> ontologies) throws InconsistencyException {
         registerOntologiesNoVerification(ontologies);
         // check satisfiability
-        Set<ConsistencyViolation> errors = new HashSet<ConsistencyViolation>();
-        for (Ontology o : ontologies) {
-            IRI ontologyId = (IRI) o.getIdentifier();
-//            if (!disableConsitencyCheck){
-            //errors.addAll(checkConsistency(ontologyId));
-//            }
-        }
-        if (errors.size() > 0) {
-            Set<IRI> ids = new HashSet<IRI>();
-            for (Ontology o : ontologies) {
-                ids.add((IRI) o.getIdentifier());
-            }
-            deRegisterOntology(ids);
-            throw new InconsistencyException(errors);
+        if (!disableConsitencyCheck){
+	        Set<ConsistencyViolation> errors = new HashSet<ConsistencyViolation>();
+	        for (Ontology o : ontologies) {
+	            IRI ontologyId = (IRI) o.getIdentifier();
+	            errors.addAll(checkConsistency(ontologyId));
+	        }
+	        if (errors.size() > 0) {
+	            Set<IRI> ids = new HashSet<IRI>();
+	            for (Ontology o : ontologies) {
+	                ids.add((IRI) o.getIdentifier());
+	            }
+	            deRegisterOntology(ids);
+	            throw new InconsistencyException(errors);
+	        }
         }
     }
 
