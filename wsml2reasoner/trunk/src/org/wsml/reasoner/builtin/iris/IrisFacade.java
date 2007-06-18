@@ -95,11 +95,11 @@ import org.wsmo.factory.WsmoFactory;
  * The wsmo4j interface for the iris reasoner.
  * </p>
  * <p>
- * $Id: IrisFacade.java,v 1.10 2007-06-15 12:42:41 darko Exp $
+ * $Id: IrisFacade.java,v 1.11 2007-06-18 10:50:46 nathalie Exp $
  * </p>
  * 
  * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class IrisFacade implements DatalogReasonerFacade {
 
@@ -175,6 +175,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 		// program only supports one instance per vm
 		rulesChanged = true;
 		factsChanged = true;
+		p.resetProgram();
 	}
 
 	/*
