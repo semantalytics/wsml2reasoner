@@ -27,7 +27,9 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
+import org.semanticweb.kaon2.id;
 import org.semanticweb.kaon2.api.*;
+import org.semanticweb.kaon2.api.logic.Constant;
 import org.semanticweb.kaon2.api.owl.axioms.ClassMember;
 import org.semanticweb.kaon2.api.owl.axioms.DataPropertyMember;
 import org.semanticweb.kaon2.api.owl.axioms.DataPropertyRange;
@@ -68,7 +70,7 @@ import org.wsml.reasoner.serializer.owl.OWLSerializerImpl;
  *
  * @author Nathalie Steinmetz, DERI Innsbruck;
  * 		   Holger Lausen, DERI Innsbruck
- * @version $Revision: 1.8 $ $Date: 2007-06-16 12:57:45 $
+ * @version $Revision: 1.9 $ $Date: 2007-06-18 16:03:05 $
  */
 public class Kaon2DLFacade implements DLReasonerFacade {
 
@@ -1111,15 +1113,15 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 				for (Object obj : set) {
 					Set<OWLConcreteDataImpl> dataTypeSet = new HashSet<OWLConcreteDataImpl>();
 					OWLDataValue dataValue = null;
-					if (obj instanceof String) {
+					if (((id) obj).getFunctionSymbol() instanceof String) {
 						dataValue = owlDataFactory.getOWLConcreteData(
 								new URI(Namespaces.XSD_NS + "string"), 
-								null, obj);
+								null, ((id) obj).getFunctionSymbol());
 					}
-					else if (obj instanceof Integer) {
+					else if (((id) obj).getFunctionSymbol() instanceof Integer) {
 						dataValue = owlDataFactory.getOWLConcreteData(
 								new URI(Namespaces.XSD_NS + "integer"), 
-								null, obj);	
+								null, ((id) obj).getFunctionSymbol());	
 					}
 					dataTypeSet.add((OWLConcreteDataImpl) dataValue);
 					resultMap.put(owlDataFactory.getOWLDataProperty(
@@ -1176,16 +1178,17 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 			for (DataPropertyMember member : individuals) {
 				Set<OWLConcreteDataImpl> dataTypeSet = 
 					new HashSet<OWLConcreteDataImpl>();
-//				TODO fix problem with latest stable kaon2 jar
-				if (member.getTargetValue() instanceof String) {
-					dataTypeSet.add((OWLConcreteDataImpl) owlDataFactory.
-							getOWLConcreteData(new URI(Namespaces.XSD_NS + "string"), 
-									null, member.getTargetValue()));
-				}
-				else if (member.getTargetValue() instanceof Integer) {
-					dataTypeSet.add((OWLConcreteDataImpl) owlDataFactory.
-							getOWLConcreteData(new URI(Namespaces.XSD_NS + "integer"), 
-									null, member.getTargetValue()));
+				if (member.getTargetValue() instanceof Constant) {
+					if (member.getTargetValue().getValue() instanceof String) {
+						dataTypeSet.add((OWLConcreteDataImpl) owlDataFactory.
+								getOWLConcreteData(new URI(Namespaces.XSD_NS + "string"), 
+										null, member.getTargetValue().getValue()));
+					}
+					else if (member.getTargetValue().getValue() instanceof Integer) {
+						dataTypeSet.add((OWLConcreteDataImpl) owlDataFactory.
+								getOWLConcreteData(new URI(Namespaces.XSD_NS + "integer"), 
+										null, member.getTargetValue().getValue()));
+					}
 				}
 				resultMap.put(owlDataFactory.getOWLIndividual(
 						new URI(member.getSourceIndividual().toString())), 
@@ -1287,14 +1290,16 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 			query.open();
 			while (!query.afterLast()) {
 				Object[] tupleBuffer = query.tupleBuffer();
-				if (tupleBuffer[0] instanceof String) {
+				if (((id) tupleBuffer[0]).getFunctionSymbol() instanceof String) {
 					dataValueSet.add(owlDataFactory.getOWLConcreteData(new URI(
-							Namespaces.XSD_NS + "string"), null, tupleBuffer[0]));
+							Namespaces.XSD_NS + "string"), null, 
+							((id) tupleBuffer[0]).getFunctionSymbol().toString()));
 				}
-				else if (tupleBuffer[0] instanceof Integer || 
+				else if (((id) tupleBuffer[0]).getFunctionSymbol() instanceof Integer || 
 						tupleBuffer[0] instanceof BigInteger) {
 					dataValueSet.add(owlDataFactory.getOWLConcreteData(new URI(
-							Namespaces.XSD_NS + "integer"), null, tupleBuffer[0]));
+							Namespaces.XSD_NS + "integer"), null, 
+							((id) tupleBuffer[0]).getFunctionSymbol().toString()));
 				}
 				query.next();
 			}
@@ -1426,6 +1431,9 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.8  2007-06-16 12:57:45  nathalie
+ * small change in exception handling that enables using the latest stable kaon2.jar from 2007-06-11
+ *
  * Revision 1.7  2007/04/26 17:39:13  graham
  * Fixed switch to new wsmo4j jars, switched to new IRIS (20070426) and jgrapht (v0.7.1) jars, and removed warning suppressions
  *
