@@ -1,0 +1,35 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://www.subconcept-10-ontology.org#"
+ }
+
+ontology o10
+
+concept c1
+
+concept c2 subConceptOf c1
+
+concept c3 subConceptOf c1
+
+concept c4 subConceptOf c1
+
+concept c5 subConceptOf c1
+
+concept c6 subConceptOf c1
+
+concept c7 subConceptOf c1
+
+concept c8 subConceptOf c1
+
+concept c9 subConceptOf c1
+
+concept c10 subConceptOf c1
+
+concept c11 subConceptOf c1
+
+instance i1 memberOf c1
+
+instance i2 memberOf c11
+
+relationInstance query1("?x memberOf c1")
+
+relationInstance query2("?x memberOf ?y")

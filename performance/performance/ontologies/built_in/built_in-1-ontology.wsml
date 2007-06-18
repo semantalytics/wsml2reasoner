@@ -1,0 +1,32 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://www.built_in-1-ontology.org#"
+ }
+
+ontology o1
+
+axiom ax1
+     definedBy 
+          ?x[a0 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a1 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+
+concept c1
+     a0 ofType _integer
+     a1 ofType _integer
+
+concept c2
+
+instance i1
+     a0 hasValue 17
+
+instance i2
+     a0 hasValue 14
+
+instance i3
+     a0 hasValue 5
+
+instance i4
+     a1 hasValue 9
+
+relationInstance query1("?x memberOf c2")
+
+relationInstance query2("?x memberOf ?y")

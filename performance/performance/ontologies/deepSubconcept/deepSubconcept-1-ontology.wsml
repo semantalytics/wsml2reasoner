@@ -1,0 +1,17 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://www.deepSubconcept-1-ontology.org#"
+ }
+
+ontology o1
+
+concept c1
+
+concept c2 subConceptOf c1
+
+instance i1 memberOf c1
+
+instance i2 memberOf c2
+
+relationInstance query1("?x memberOf c1")
+
+relationInstance query2("?x memberOf ?y")

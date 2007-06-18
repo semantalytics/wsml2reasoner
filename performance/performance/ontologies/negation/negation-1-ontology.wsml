@@ -1,0 +1,25 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://www.negation-1-ontology.org#"
+ }
+
+ontology o1
+
+axiom ax1
+     definedBy 
+          ?x[a0 hasValue ?y] :- naf ?x[a1 hasValue ?y].
+
+concept c1
+     a0 ofType c1
+     a1 ofType c1
+
+instance i1
+
+instance i2
+
+instance i3
+
+relationInstance query1("i1[a0 hasValue ?x]")
+
+relationInstance query2("?x[a0 hasValue ?y]")
+
+relationInstance query3("?x[a0 hasValue ?y]")
