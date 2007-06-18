@@ -65,17 +65,15 @@ public class Chart {
 			CategoryDataset dataset = createDataset(csv);
 			String name = dir.toString().replaceAll("/[^/]+", "");
 			name = name.substring(name.lastIndexOf('\\')+1);
-			if (csv.toString().contains("query")){
-				name += " Query Times";
-			}else{
-				name += " Registration Times";
-			}
+			name +=csv.getName();
+			
 			System.out.println("processing: "+ name);
 			JFreeChart chart = createChart(name,dataset);
 			ChartUtilities.saveChartAsJPEG(
 					new File(csv.getAbsolutePath()+"-chart.jpg"), 
 					chart, 500, 300);
 			fw.append("<h2>"+name+"</h2>\n");
+//			fw.append("<p>"++"</p>");
 			fw.append(createTable(dataset)+"\n");
 			fw.append("<img src=\""+csv.getName()+"-chart.jpg"+"\"><br>\n");
 
@@ -97,7 +95,11 @@ public class Chart {
 		for (Object col : data.getColumnKeys()){
 			buf.append("<tr><td><b>"+col+"</b></td>\n");
 			for (Object row : data.getRowKeys()){
-				buf.append("<td>\n"+data.getValue(row.toString(), col.toString())+"</td>");
+				buf.append("<td>");
+				Object value = data.getValue(row.toString(), col.toString());
+				if (value!=null) buf.append(value);
+				
+				buf.append("</td>");
 			}
 			buf.append("</tr>\n");
 		}
@@ -108,7 +110,7 @@ public class Chart {
 	
 	private static JFreeChart createChart(String name, CategoryDataset data) throws IOException {
 		JFreeChart chart = ChartFactory
-				.createBarChart3D(
+				.createLineChart3D(
 						name, // Title
 						"", // X-Axis label
 						"Time in ms", // Y-Axis label
@@ -130,7 +132,11 @@ public class Chart {
 		FileReader fr = new FileReader(csv);
 		BufferedReader br = new BufferedReader(fr);
 		String[] head = br.readLine().split(",");
+		
+		
+		
 		Map<String, String[]> results = new HashMap<String, String[]>();
+		
 		while (br.ready()) {
 			String[] data = br.readLine().split(",");
 			results.put(data[0], data);
@@ -143,7 +149,9 @@ public class Chart {
 			String[] data = results.get(reasoner);
 			for (int i = 1; i < data.length; i++) {
 				double time = Double.parseDouble(data[i]);
-				dataset.addValue((int)time, head[i], reasoner);
+				if (time>0){
+					dataset.addValue((int)time,reasoner , head[i]);
+				}
 			}
 		}
 		

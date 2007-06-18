@@ -1,33 +1,17 @@
 package performance;
 
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.Random;
 
 import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.ontology.Attribute;
-import org.omwg.ontology.Axiom;
-import org.omwg.ontology.Concept;
-import org.omwg.ontology.Instance;
-import org.omwg.ontology.Ontology;
-import org.omwg.ontology.Relation;
-import org.omwg.ontology.RelationInstance;
-import org.omwg.ontology.WsmlDataType;
+import org.omwg.ontology.*;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.common.IRI;
-import org.wsmo.common.Namespace;
-import org.wsmo.common.TopEntity;
-import org.wsmo.common.WSML;
+import org.wsmo.common.*;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.common.exception.SynchronisationException;
-import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.Factory;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
+import org.wsmo.factory.*;
 import org.wsmo.wsml.ParserException;
 import org.wsmo.wsml.Serializer;
 
@@ -113,8 +97,7 @@ public class BenchmarkOntologyGenerator {
 					wsmoFactory.createIRI(getNamespace(SUBCONCEPT, amount[i])));
 			
 			// create ontology
-			ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(
-					ns, "o" + amount[i]));
+			ontology = createOntology(ns,amount[i]);
 			
 			// set ontology default namespace and variant
 			ontology.setDefaultNamespace(ns.getIRI());
@@ -192,8 +175,7 @@ public class BenchmarkOntologyGenerator {
 					wsmoFactory.createIRI(getNamespace(DEEP_SUBCONCEPT, amount[i])));
 			
 			// create ontology
-			ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(
-					ns, "o" + amount[i]));
+			ontology = createOntology(ns,amount[i]);
 			
 			// set ontology default namespace and variant
 			ontology.setDefaultNamespace(ns.getIRI());
@@ -267,8 +249,7 @@ public class BenchmarkOntologyGenerator {
 					wsmoFactory.createIRI(getNamespace(INSTANCE, amount[i])));
 			
 			// create ontology
-			ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(
-					ns, "o" + amount[i]));
+			ontology = createOntology(ns,amount[i]);
 			
 			// set ontology default namespace and variant
 			ontology.setDefaultNamespace(ns.getIRI());
@@ -332,8 +313,7 @@ public class BenchmarkOntologyGenerator {
 					wsmoFactory.createIRI(getNamespace(INSTANCE_SUBCONCEPT, amount[i])));
 			
 			// create ontology
-			ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(
-					ns, "o" + amount[i]));
+			ontology = createOntology(ns,amount[i]);
 			
 			// set ontology default namespace and variant
 			ontology.setDefaultNamespace(ns.getIRI());
@@ -400,8 +380,7 @@ public class BenchmarkOntologyGenerator {
 					wsmoFactory.createIRI(getNamespace(INSTANCE_DEEP_SUBCONCEPT, amount[i])));
 			
 			// create ontology
-			ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(
-					ns, "o" + amount[i]));
+			ontology = createOntology(ns,amount[i]);
 			
 			// set ontology default namespace and variant
 			ontology.setDefaultNamespace(ns.getIRI());
@@ -474,8 +453,7 @@ public class BenchmarkOntologyGenerator {
 					wsmoFactory.createIRI(getNamespace(OFTYPE, amount[i])));
 			
 			// create ontology
-			ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(
-					ns, "o" + amount[i]));
+			ontology = createOntology(ns,amount[i]);
 			
 			// set ontology default namespace and variant
 			ontology.setDefaultNamespace(ns.getIRI());
@@ -553,8 +531,7 @@ public class BenchmarkOntologyGenerator {
 					wsmoFactory.createIRI(getNamespace(OFTYPE_SUBCONCEPT, amount[i])));
 			
 			// create ontology
-			ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(
-					ns, "o" + amount[i]));
+			ontology = createOntology(ns,amount[i]);
 			
 			// set ontology default namespace and variant
 			ontology.setDefaultNamespace(ns.getIRI());
@@ -635,8 +612,7 @@ public class BenchmarkOntologyGenerator {
 					wsmoFactory.createIRI(getNamespace(CARDINALITY_01, amount[i])));
 			
 			// create ontology
-			ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(
-					ns, "o" + amount[i]));
+			ontology = createOntology(ns,amount[i]);
 			
 			// set ontology default namespace and variant
 			ontology.setDefaultNamespace(ns.getIRI());
@@ -712,8 +688,7 @@ public class BenchmarkOntologyGenerator {
 					wsmoFactory.createIRI(getNamespace(CARDINALITY_010, amount[i])));
 			
 			// create ontology
-			ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(
-					ns, "o" + amount[i]));
+			ontology = createOntology(ns,amount[i]);
 			
 			// set ontology default namespace and variant
 			ontology.setDefaultNamespace(ns.getIRI());
@@ -807,8 +782,7 @@ public class BenchmarkOntologyGenerator {
 					wsmoFactory.createIRI(getNamespace(INVERSE, amount[i])));
 			
 			// create ontology
-			ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(
-					ns, "o" + amount[i]));
+			ontology = createOntology(ns,amount[i]);
 			
 			// set ontology default namespace and variant
 			ontology.setDefaultNamespace(ns.getIRI());
@@ -888,8 +862,7 @@ public class BenchmarkOntologyGenerator {
 					wsmoFactory.createIRI(getNamespace(TRANSITIVE, amount[i])));
 			
 			// create ontology
-			ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(
-					ns, "o" + amount[i]));
+			ontology = createOntology(ns,amount[i]);
 			
 			// set ontology default namespace and variant
 			ontology.setDefaultNamespace(ns.getIRI());
@@ -974,8 +947,7 @@ public class BenchmarkOntologyGenerator {
 					wsmoFactory.createIRI(getNamespace(SYMMETRIC, amount[i])));
 			
 			// create ontology
-			ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(
-					ns, "o" + amount[i]));
+			ontology = createOntology(ns,amount[i]);
 			
 			// set ontology default namespace and variant
 			ontology.setDefaultNamespace(ns.getIRI());
@@ -1055,8 +1027,7 @@ public class BenchmarkOntologyGenerator {
 					wsmoFactory.createIRI(getNamespace(REFLEXIVE, amount[i])));
 			
 			// create ontology
-			ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(
-					ns, "o" + amount[i]));
+			ontology = createOntology(ns,amount[i]);
 			
 			// set ontology default namespace and variant
 			ontology.setDefaultNamespace(ns.getIRI());
@@ -1131,8 +1102,7 @@ public class BenchmarkOntologyGenerator {
 					wsmoFactory.createIRI(getNamespace(LOC_STRAT_NEGATION, amount[i])));
 			
 			// create ontology
-			ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(
-					ns, "o" + amount[i]));
+			ontology = createOntology(ns,amount[i]);
 			
 			// set ontology default namespace and variant
 			ontology.setDefaultNamespace(ns.getIRI());
@@ -1225,8 +1195,7 @@ public class BenchmarkOntologyGenerator {
 					wsmoFactory.createIRI(getNamespace(GLOB_STRAT_NEGATION, amount[i])));
 			
 			// create ontology
-			ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(
-					ns, "o" + amount[i]));
+			ontology = createOntology(ns,amount[i]);
 			
 			// set ontology default namespace and variant
 			ontology.setDefaultNamespace(ns.getIRI());
@@ -1312,8 +1281,7 @@ public class BenchmarkOntologyGenerator {
 					wsmoFactory.createIRI(getNamespace(BUILTIN, amount[i])));
 			
 			// create ontology
-			ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(
-					ns, "o" + amount[i]));
+			ontology = createOntology(ns,amount[i]);
 			
 			// set ontology default namespace and variant
 			ontology.setDefaultNamespace(ns.getIRI());
@@ -1383,6 +1351,10 @@ public class BenchmarkOntologyGenerator {
 		return "http://www." + getFileName(ontType, number) + ".org";
 	}
 	
+	private Ontology createOntology(Namespace ns, int no){
+		DecimalFormat dformat = new DecimalFormat("00000");
+		return wsmoFactory.createOntology(wsmoFactory.createIRI(ns,"o_"+dformat.format(no)));
+	}
 	private String getFileName(String ontType, int number) {
 		DecimalFormat dformat = new DecimalFormat("00000");
 		return ontType + "-" + dformat.format(number) + "-ontology";
@@ -1390,11 +1362,14 @@ public class BenchmarkOntologyGenerator {
 	
 	private void writeFile(String ontType, String fileName, Ontology ontology) 
 			throws IOException {
+		File path1 = new File(BenchmarkOntologyGenerator.path);
+		if (!path1.exists()){
+			path1.mkdir();
+		}
 		File path = new File(BenchmarkOntologyGenerator.path + "/" + ontType);
 		if (!path.exists()){
 			System.out.println("creating directory: "+path);
 			path.mkdir();
-//			path.createNewFile();
 		}
 		
 		// Write ontology to file
@@ -1448,6 +1423,9 @@ public class BenchmarkOntologyGenerator {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.3  2007-06-18 13:04:00  hlausen
+ * adding numberformat to better sort files and creating directories on the fly
+ *
  * Revision 1.2  2007-06-18 11:24:56  nathalie
  * changed/added methods to generate locally and globally stratified negation ontologies
  *
