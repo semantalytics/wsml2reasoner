@@ -246,7 +246,6 @@ public class TestPerformanceWithUseOfFeatures {
     private void runPerformanceTests(String[] reasonerNames, Ontology[] ontologies, String path) 
     		throws SynchronisationException, InvalidModelException, ParserException, 
     		InconsistencyException, IOException {
-    	boolean printResults = false;
     	SortedMap<String,String> queries = new TreeMap<String, String>();
         
         PerformanceResults performanceresults = new PerformanceResults();
@@ -265,11 +264,16 @@ public class TestPerformanceWithUseOfFeatures {
           
             for (int i = 0; i < reasonerNames.length; i++){      
                 for (Entry<String, String> query : queries.entrySet()){
-                    performanceresults.addReasonerPerformaceResult(
-                            reasonerNames[i], 
-                            ontology, 
-                            query.getKey(), 
-                            executeQuery(query.getValue(), ontology, reasonerNames[i], printResults));
+                	try{
+	                    performanceresults.addReasonerPerformaceResult(
+	                            reasonerNames[i], 
+	                            ontology, 
+	                            query.getKey(), 
+	                            executeQuery(query.getValue(), ontology, reasonerNames[i]));
+                	}catch (Exception e){
+                		System.out.println("error with ontology "+ontology.getIdentifier()+" and reasoner "+reasonerNames[i]);
+                		e.printStackTrace();
+                	}
                 }
                 System.gc();
             }
@@ -279,20 +283,7 @@ public class TestPerformanceWithUseOfFeatures {
     
     Set<String> timedOutReasoner = new HashSet<String>();
     
-    private PerformanceResult executeQuery(String theQuery, Ontology theOntology, 
-    		String theReasonerName, boolean thePrintResults) 
-    		throws ParserException, InconsistencyException {
-        PerformanceResult performanceresult = new PerformanceResult();
-    	if (timedOutReasoner.contains(theReasonerName)){
-    		System.out.println(theReasonerName+" has previously already timed out!!");
-    		return performanceresult;
-    	}
-        
-        System.out.println("------------------------------------");
-        System.out.println("query = '" + theQuery + "'");
-        System.out.println("ontology = '" + theOntology.getIdentifier() + "'");
-        System.out.println("reasoner = '" + theReasonerName + "'");
-        
+    private WSMLReasoner createReasoner(String theReasonerName) throws InconsistencyException{
         System.out.print("Creating reasoner ");
         long t0_start = System.currentTimeMillis();
         WSMLReasoner reasoner = null;
@@ -308,66 +299,73 @@ public class TestPerformanceWithUseOfFeatures {
         long t0_end = System.currentTimeMillis();
         long t0 = t0_end - t0_start;
         System.out.println("(" + t0 + "ms)");
+        return reasoner;
+    }
+    
+    private PerformanceResult executeQuery(
+    		String theQuery, Ontology theOntology, 
+    		String theReasonerName) 
+    		throws ParserException, InconsistencyException {
         
-        if (reasoner != null){
-            LogicalExpression query = new WSMO4JManager().getLogicalExpressionFactory().
-            		createLogicalExpression(theQuery, theOntology);
-            
-            System.out.print("Registering Ontology ");
-            RegistrationThread registrationThread = new RegistrationThread(
-            		theOntology,reasoner,performanceresult);
-            registrationThread.start();
-            long counter=0;
-            waitUntilAlive(registrationThread);
-            while(registrationThread.isAlive()){
-            	if (counter > TIMELIMIT_REGISTRATION){
+    	PerformanceResult performanceresult = new PerformanceResult();
+    	if (timedOutReasoner.contains(theReasonerName)){
+    		System.out.println(theReasonerName+" has previously already timed out!!");
+    		return performanceresult;
+    	}
+        
+        System.out.println("------------------------------------");
+        System.out.println("query = '" + theQuery + "'");
+        System.out.println("ontology = '" + theOntology.getIdentifier() + "'");
+        System.out.println("reasoner = '" + theReasonerName + "'");
+        
+        WSMLReasoner reasoner = createReasoner(theReasonerName);
+        if (reasoner==null) return performanceresult;
+    
+        LogicalExpression query = new WSMO4JManager().getLogicalExpressionFactory().createLogicalExpression(theQuery, theOntology);
+        
+        System.out.print("Registering Ontology ");
+        RegistrationThread registrationThread = new RegistrationThread(theOntology,reasoner,performanceresult);
+        registrationThread.start();
+        long counter=0;
+        waitUntilAlive(registrationThread);
+        while(registrationThread.isAlive()){
+        	if (counter > TIMELIMIT_REGISTRATION){
+        		System.out.println("stopping registration thread due to timeout");
+        		registrationThread.stop();
+        		timedOutReasoner.add(theReasonerName);
+        		return performanceresult;
+        	}
+        	waitABit();
+        	counter += WAIT_INTERVAL;
+        }
+        System.out.println(" done.");
+       
+        for (int i=0; i<NO_OF_TESTRUNS && !timedOutReasoner.contains(theReasonerName);i++){
+            QueryThread queryThread = new QueryThread(theOntology,reasoner,query);
+            System.out.print("Executing query ");
+            queryThread.start();
+            waitUntilAlive(queryThread);
+            counter=0;
+            while(queryThread.isAlive()){
+	            if (counter > TIMELIMIT_QUERY){
             		System.out.println("stopping reasoning thread due to timeout");
-            		registrationThread.stop();
+            		queryThread.stop();
             		timedOutReasoner.add(theReasonerName);
             	}
-            	waitABit();
+	            waitABit();
             	counter += WAIT_INTERVAL;
             }
-           
-            for (int i=0; i<NO_OF_TESTRUNS && !timedOutReasoner.contains(theReasonerName);i++){
-	            
-	            QueryThread queryThread = new QueryThread(theOntology,reasoner,query);
-	            System.out.print("Executing query ");
-	            queryThread.start();
-	            waitUntilAlive(queryThread);
-	            counter=0;
-	            while(queryThread.isAlive()){
-		            if (counter > TIMELIMIT_QUERY){
-	            		System.out.println("stopping reasoning thread due to timeout");
-	            		queryThread.stop();
-	            		timedOutReasoner.add(theReasonerName);
-	            	}
-		            waitABit();
-	            	counter += WAIT_INTERVAL;
-	            }
-	            long t2=queryThread.getDuration();
-	    	    performanceresult.addExecuteQuery(i, t2);
-	            System.out.println("(" + t2 + " ms)");
-            }
-            
-            System.out.print("Deregistering Ontology ");
-            long t3_start = System.currentTimeMillis();
-            reasoner.deRegisterOntology((IRI) theOntology.getIdentifier());
-            long t3_end = System.currentTimeMillis();
-            long t3 = t3_end - t3_start;
-            System.out.println("(" + t3 + "ms)");
-            
-            
-            if (thePrintResults){
-                System.out.println("The result:");
-                for (Map<Variable, Term> vBinding : result) {
-                    for (Variable var : vBinding.keySet()) {
-                        System.out.print(var + ": " + termToString(vBinding.get(var), theOntology) + "\t ");
-                    }
-                    System.out.println();
-                }
-            }
+            long t2=queryThread.getDuration();
+    	    performanceresult.addExecuteQuery(i, t2);
+            System.out.println("(" + t2 + " ms)");
         }
+        
+        System.out.print("Deregistering Ontology ");
+        long t3_start = System.currentTimeMillis();
+        reasoner.deRegisterOntology((IRI) theOntology.getIdentifier());
+        long t3_end = System.currentTimeMillis();
+        long t3 = t3_end - t3_start;
+        System.out.println("(" + t3 + "ms)");
         System.out.println("------------------------------------");
         return performanceresult;
     }
