@@ -40,31 +40,26 @@ public class TestPerformanceWithUseOfFeatures {
      * @param args
      *            none expected
      */
-    public static void main(String[] args) {
+    public static void main(String[] args)throws Exception {
         TestPerformanceWithUseOfFeatures ex = new TestPerformanceWithUseOfFeatures();
-        try {
-//            ex.doTestRun();
-//        	ex.testSubconceptOntologies();
-        	ex.testDeepSubconceptOntologies();
-//        	ex.testInstanceOntologies();
-//        	ex.testInstanceANDsubconceptOntologies();
-//        	ex.testInstanceANDdeepSubconceptOntologies();
-//        	ex.testOfTypeOntologies();
-//        	ex.testOfTypeANDsubconceptOntologies();
-//        	ex.testCardinality01Ontologies();
-//        	ex.testCardinality010Ontologies();
-//        	ex.testInverseAttributeOntologies();
-//        	ex.testTransitiveAttributeOntologies();
-//        	ex.testSymmetricAttributeOntologies();
-//        	ex.testReflexiveAttributeOntologies();
-//        	ex.testLocallyStratifiedNegationOntologies();
-//        	ex.testGloballyStratifiedNegationOntologies();
-//        	ex.testBuiltInAttributeOntologies();
-            System.exit(0);
-        }
-        catch (Throwable e) {
-            e.printStackTrace();
-        }
+       
+//        ex.doTestRun();
+    	ex.testSubconceptOntologies();
+    	ex.testDeepSubconceptOntologies();
+    	ex.testInstanceOntologies();
+    	ex.testInstanceANDsubconceptOntologies();
+    	ex.testInstanceANDdeepSubconceptOntologies();
+    	ex.testOfTypeOntologies();
+    	ex.testOfTypeANDsubconceptOntologies();
+    	ex.testCardinality01Ontologies();
+    	ex.testCardinality010Ontologies();
+    	ex.testInverseAttributeOntologies();
+    	ex.testTransitiveAttributeOntologies();
+    	ex.testSymmetricAttributeOntologies();
+    	ex.testReflexiveAttributeOntologies();
+    	ex.testLocallyStratifiedNegation();
+    	ex.testGloballyStratifiedNegation();
+    	ex.testBuiltInAttributeOntologies();
     }
 
     /**
@@ -78,21 +73,38 @@ public class TestPerformanceWithUseOfFeatures {
         runPerformanceTests(this.reasonerNames, ontologies, fileName);
     }
 
+    Ontology[] loadOntologies(String dir){
+    	System.out.println("Loading ontologies "+dir);
+    	File d = new File(dir);
+    	List<Ontology> onts = new ArrayList<Ontology>(); 
+    	File[] files = d.listFiles(wsmlFilter);
+//    	System.out.println(dir+"\n"+files);
+    	for (File f:files){
+    		try {
+				Ontology ont = (Ontology)wsmlParser.parse(new FileReader(f))[0];
+				onts.add(ont);
+			} catch (Exception e) {
+				throw new RuntimeException("could not load ontology",e);
+			}
+    	}
+    	Ontology[] ret = new Ontology[onts.size()];
+    	onts.toArray(ret);
+    	return ret;
+    }
+    
+    FileFilter wsmlFilter = new FileFilter(){
+		public boolean accept(File pathname) {
+			return pathname.toString().endsWith(".wsml");
+		}
+    };
+    
+    static final String BASE="performance/performance/ontologies/";
     /**
      * loads subconcept type ontologies and performs sample queries
      */
     public void testSubconceptOntologies() throws Exception {
-    	Ontology o1 = loadOntology("performance/ontologies/subconcept/subconcept-1-ontology.wsml");
-    	Ontology o2 = loadOntology("performance/ontologies/subconcept/subconcept-10-ontology.wsml");
-    	Ontology o3 = loadOntology("performance/ontologies/subconcept/subconcept-100-ontology.wsml");
-    	Ontology o4 = loadOntology("performance/ontologies/subconcept/subconcept-500-ontology.wsml");
-    	Ontology o5 = loadOntology("performance/ontologies/subconcept/subconcept-1000-ontology.wsml");
-    	Ontology o6 = loadOntology("performance/ontologies/subconcept/subconcept-5000-ontology.wsml");
-    	Ontology o7 = loadOntology("performance/ontologies/subconcept/subconcept-10000-ontology.wsml");       
-//        Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5,o6,o7};
-        Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5};
-//    	Ontology[] ontologies = new Ontology[] {o1};
         String fileName = "subconcept/";
+    	Ontology[] ontologies = loadOntologies(BASE+fileName);
         runPerformanceTests(this.reasonerNames, ontologies, fileName);
     }
     
@@ -100,17 +112,8 @@ public class TestPerformanceWithUseOfFeatures {
      * loads deep subconcept type ontologies and performs sample queries
      */
     public void testDeepSubconceptOntologies() throws Exception {
-    	Ontology o1 = loadOntology("performance/ontologies/deepSubconcept/deepSubconcept-1-ontology.wsml");
-    	Ontology o2 = loadOntology("performance/ontologies/deepSubconcept/deepSubconcept-10-ontology.wsml");
-    	Ontology o3 = loadOntology("performance/ontologies/deepSubconcept/deepSubconcept-100-ontology.wsml");
-    	Ontology o4 = loadOntology("performance/ontologies/deepSubconcept/deepSubconcept-500-ontology.wsml");
-    	Ontology o5 = loadOntology("performance/ontologies/deepSubconcept/deepSubconcept-1000-ontology.wsml");
-    	Ontology o6 = loadOntology("performance/ontologies/deepSubconcept/deepSubconcept-5000-ontology.wsml");
-    	Ontology o7 = loadOntology("performance/ontologies/deepSubconcept/deepSubconcept-10000-ontology.wsml");       
-    	Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5,o6,o7};
-//        Ontology[] ontologies = new Ontology[] {o1,o2};
-//    	Ontology[] ontologies = new Ontology[] {o1};
         String path = "deepSubconcept/";
+    	Ontology[] ontologies = loadOntologies(BASE+path);
         runPerformanceTests(this.reasonerNames, ontologies, path);
     }
 
@@ -118,17 +121,8 @@ public class TestPerformanceWithUseOfFeatures {
      * loads instance type ontologies and performs sample queries
      */
     public void testInstanceOntologies() throws Exception {
-    	Ontology o1 = loadOntology("performance/ontologies/instance/instance-1-ontology.wsml");
-    	Ontology o2 = loadOntology("performance/ontologies/instance/instance-10-ontology.wsml");
-    	Ontology o3 = loadOntology("performance/ontologies/instance/instance-100-ontology.wsml");
-    	Ontology o4 = loadOntology("performance/ontologies/instance/instance-500-ontology.wsml");
-    	Ontology o5 = loadOntology("performance/ontologies/instance/instance-1000-ontology.wsml");
-    	Ontology o6 = loadOntology("performance/ontologies/instance/instance-5000-ontology.wsml");
-    	Ontology o7 = loadOntology("performance/ontologies/instance/instance-10000-ontology.wsml");       
-//    	Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5,o6,o7};
-        Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5};
-//    	Ontology[] ontologies = new Ontology[] {o1};
         String path = "instance/";
+        Ontology[] ontologies = loadOntologies(BASE+path);
         runPerformanceTests(this.reasonerNames, ontologies, path);
     }
     
@@ -136,17 +130,8 @@ public class TestPerformanceWithUseOfFeatures {
      * loads instance and subconcept type ontologies and performs sample queries
      */
     public void testInstanceANDsubconceptOntologies() throws Exception {
-    	Ontology o1 = loadOntology("performance/ontologies/instanceANDsubconcept/instanceANDsubconcept-1-ontology.wsml");
-    	Ontology o2 = loadOntology("performance/ontologies/instanceANDsubconcept/instanceANDsubconcept-10-ontology.wsml");
-    	Ontology o3 = loadOntology("performance/ontologies/instanceANDsubconcept/instanceANDsubconcept-100-ontology.wsml");
-    	Ontology o4 = loadOntology("performance/ontologies/instanceANDsubconcept/instanceANDsubconcept-500-ontology.wsml");
-    	Ontology o5 = loadOntology("performance/ontologies/instanceANDsubconcept/instanceANDsubconcept-1000-ontology.wsml");
-    	Ontology o6 = loadOntology("performance/ontologies/instanceANDsubconcept/instanceANDsubconcept-5000-ontology.wsml");
-    	Ontology o7 = loadOntology("performance/ontologies/instanceANDsubconcept/instanceANDsubconcept-10000-ontology.wsml");       
-//    	Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5,o6,o7};
-        Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5};
-//    	Ontology[] ontologies = new Ontology[] {o1};
         String path = "instanceANDsubconcept/";
+        Ontology[] ontologies = loadOntologies(BASE+path);
         runPerformanceTests(this.reasonerNames, ontologies, path);
     }
     
@@ -154,17 +139,8 @@ public class TestPerformanceWithUseOfFeatures {
      * loads instance and deep subconcept type ontologies and performs sample queries
      */
     public void testInstanceANDdeepSubconceptOntologies() throws Exception {
-    	Ontology o1 = loadOntology("performance/ontologies/instanceANDdeepSubconcept/instanceANDdeepSubconcept-1-ontology.wsml");
-    	Ontology o2 = loadOntology("performance/ontologies/instanceANDdeepSubconcept/instanceANDdeepSubconcept-10-ontology.wsml");
-    	Ontology o3 = loadOntology("performance/ontologies/instanceANDdeepSubconcept/instanceANDdeepSubconcept-100-ontology.wsml");
-    	Ontology o4 = loadOntology("performance/ontologies/instanceANDdeepSubconcept/instanceANDdeepSubconcept-500-ontology.wsml");
-    	Ontology o5 = loadOntology("performance/ontologies/instanceANDdeepSubconcept/instanceANDdeepSubconcept-1000-ontology.wsml");
-    	Ontology o6 = loadOntology("performance/ontologies/instanceANDdeepSubconcept/instanceANDdeepSubconcept-5000-ontology.wsml");
-    	Ontology o7 = loadOntology("performance/ontologies/instanceANDdeepSubconcept/instanceANDdeepSubconcept-10000-ontology.wsml");       
-//    	Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5,o6,o7};
-        Ontology[] ontologies = new Ontology[] {o1,o2};
-//    	Ontology[] ontologies = new Ontology[] {o1};
         String path = "instanceANDdeepSubconcept/";
+        Ontology[] ontologies = loadOntologies(BASE+path);
         runPerformanceTests(this.reasonerNames, ontologies, path);
     }
     
@@ -172,17 +148,8 @@ public class TestPerformanceWithUseOfFeatures {
      * loads ofType type ontologies and performs sample queries
      */
     public void testOfTypeOntologies() throws Exception {
-    	Ontology o1 = loadOntology("performance/ontologies/ofType/ofType-1-ontology.wsml");
-    	Ontology o2 = loadOntology("performance/ontologies/ofType/ofType-10-ontology.wsml");
-    	Ontology o3 = loadOntology("performance/ontologies/ofType/ofType-100-ontology.wsml");
-    	Ontology o4 = loadOntology("performance/ontologies/ofType/ofType-500-ontology.wsml");
-    	Ontology o5 = loadOntology("performance/ontologies/ofType/ofType-1000-ontology.wsml");
-    	Ontology o6 = loadOntology("performance/ontologies/ofType/ofType-5000-ontology.wsml");
-    	Ontology o7 = loadOntology("performance/ontologies/ofType/ofType-10000-ontology.wsml");       
-//    	Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5,o6,o7};
-        Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5};
-//    	Ontology[] ontologies = new Ontology[] {o1};
         String path = "ofType/";
+        Ontology[] ontologies = loadOntologies(BASE+path);
         String[] reasonerNames = new String[]{"MINS", "KAON"};
         runPerformanceTests(reasonerNames, ontologies, path);
     }
@@ -191,17 +158,8 @@ public class TestPerformanceWithUseOfFeatures {
      * loads ofType and subconcept type ontologies and performs sample queries
      */
     public void testOfTypeANDsubconceptOntologies() throws Exception {
-    	Ontology o1 = loadOntology("performance/ontologies/ofTypeANDsubconcept/ofTypeANDsubconcept-1-ontology.wsml");
-    	Ontology o2 = loadOntology("performance/ontologies/ofTypeANDsubconcept/ofTypeANDsubconcept-10-ontology.wsml");
-    	Ontology o3 = loadOntology("performance/ontologies/ofTypeANDsubconcept/ofTypeANDsubconcept-100-ontology.wsml");
-    	Ontology o4 = loadOntology("performance/ontologies/ofTypeANDsubconcept/ofTypeANDsubconcept-500-ontology.wsml");
-    	Ontology o5 = loadOntology("performance/ontologies/ofTypeANDsubconcept/ofTypeANDsubconcept-1000-ontology.wsml");
-    	Ontology o6 = loadOntology("performance/ontologies/ofTypeANDsubconcept/ofTypeANDsubconcept-5000-ontology.wsml");
-    	Ontology o7 = loadOntology("performance/ontologies/ofTypeANDsubconcept/ofTypeANDsubconcept-10000-ontology.wsml");       
-//    	Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5,o6,o7};
-        Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5};
-//    	Ontology[] ontologies = new Ontology[] {o1};
         String path = "ofTypeANDsubconcept/";
+        Ontology[] ontologies = loadOntologies(BASE+path);
         runPerformanceTests(this.reasonerNames, ontologies, path);
     }
     
@@ -209,17 +167,8 @@ public class TestPerformanceWithUseOfFeatures {
      * loads cardinality (0 1) type ontologies and performs sample queries
      */
     public void testCardinality01Ontologies() throws Exception {
-    	Ontology o1 = loadOntology("performance/ontologies/cardinality_0_1/cardinality_0_1-1-ontology.wsml");
-    	Ontology o2 = loadOntology("performance/ontologies/cardinality_0_1/cardinality_0_1-10-ontology.wsml");
-    	Ontology o3 = loadOntology("performance/ontologies/cardinality_0_1/cardinality_0_1-100-ontology.wsml");
-    	Ontology o4 = loadOntology("performance/ontologies/cardinality_0_1/cardinality_0_1-500-ontology.wsml");
-    	Ontology o5 = loadOntology("performance/ontologies/cardinality_0_1/cardinality_0_1-1000-ontology.wsml");
-    	Ontology o6 = loadOntology("performance/ontologies/cardinality_0_1/cardinality_0_1-5000-ontology.wsml");
-    	Ontology o7 = loadOntology("performance/ontologies/cardinality_0_1/cardinality_0_1-10000-ontology.wsml");       
-//    	Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5,o6,o7};
-        Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5};
-//    	Ontology[] ontologies = new Ontology[] {o1};
         String path = "cardinality_0_1/";
+        Ontology[] ontologies = loadOntologies(BASE+path);
         String[] reasonerNames = new String[]{"MINS", "KAON"};
         runPerformanceTests(reasonerNames, ontologies, path);
     }
@@ -228,18 +177,9 @@ public class TestPerformanceWithUseOfFeatures {
      * loads cardinality (0 10) type ontologies and performs sample queries
      */
     public void testCardinality010Ontologies() throws Exception {
-    	Ontology o1 = loadOntology("performance/ontologies/cardinality_0_10/cardinality_0_10-1-ontology.wsml");
-    	Ontology o2 = loadOntology("performance/ontologies/cardinality_0_10/cardinality_0_10-10-ontology.wsml");
-    	Ontology o3 = loadOntology("performance/ontologies/cardinality_0_10/cardinality_0_10-100-ontology.wsml");
-    	Ontology o4 = loadOntology("performance/ontologies/cardinality_0_10/cardinality_0_10-500-ontology.wsml");
-    	Ontology o5 = loadOntology("performance/ontologies/cardinality_0_10/cardinality_0_10-1000-ontology.wsml");
-    	Ontology o6 = loadOntology("performance/ontologies/cardinality_0_10/cardinality_0_10-5000-ontology.wsml");
-    	Ontology o7 = loadOntology("performance/ontologies/cardinality_0_10/cardinality_0_10-10000-ontology.wsml");       
-//    	Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5,o6,o7};
-        Ontology[] ontologies = new Ontology[] {o1,o2,o3};
-//    	Ontology[] ontologies = new Ontology[] {o1};
         String path = "cardinality_0_10/";
         String[] reasonerNames = new String[]{"KAON", "MINS"};
+        Ontology[] ontologies = loadOntologies(BASE+path);
         runPerformanceTests(reasonerNames, ontologies, path);
     }
     
@@ -247,17 +187,8 @@ public class TestPerformanceWithUseOfFeatures {
      * loads inverse attribute type ontologies and performs sample queries
      */
     public void testInverseAttributeOntologies() throws Exception {
-    	Ontology o1 = loadOntology("performance/ontologies/inverseAttribute/inverseAttribute-1-ontology.wsml");
-    	Ontology o2 = loadOntology("performance/ontologies/inverseAttribute/inverseAttribute-10-ontology.wsml");
-    	Ontology o3 = loadOntology("performance/ontologies/inverseAttribute/inverseAttribute-100-ontology.wsml");
-    	Ontology o4 = loadOntology("performance/ontologies/inverseAttribute/inverseAttribute-500-ontology.wsml");
-    	Ontology o5 = loadOntology("performance/ontologies/inverseAttribute/inverseAttribute-1000-ontology.wsml");
-    	Ontology o6 = loadOntology("performance/ontologies/inverseAttribute/inverseAttribute-5000-ontology.wsml");
-    	Ontology o7 = loadOntology("performance/ontologies/inverseAttribute/inverseAttribute-10000-ontology.wsml");       
-//    	Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5,o6,o7};
-        Ontology[] ontologies = new Ontology[] {o1,o2,o3};
-//    	Ontology[] ontologies = new Ontology[] {o1};
         String path = "inverseAttribute/";
+        Ontology[] ontologies = loadOntologies(BASE+path);
         runPerformanceTests(this.reasonerNames, ontologies, path);
     }
     
@@ -265,17 +196,8 @@ public class TestPerformanceWithUseOfFeatures {
      * loads transitive attribute type ontologies and performs sample queries
      */
     public void testTransitiveAttributeOntologies() throws Exception {
-    	Ontology o1 = loadOntology("performance/ontologies/transitiveAttribute/transitiveAttribute-1-ontology.wsml");
-    	Ontology o2 = loadOntology("performance/ontologies/transitiveAttribute/transitiveAttribute-10-ontology.wsml");
-    	Ontology o3 = loadOntology("performance/ontologies/transitiveAttribute/transitiveAttribute-100-ontology.wsml");
-    	Ontology o4 = loadOntology("performance/ontologies/transitiveAttribute/transitiveAttribute-500-ontology.wsml");
-    	Ontology o5 = loadOntology("performance/ontologies/transitiveAttribute/transitiveAttribute-1000-ontology.wsml");
-    	Ontology o6 = loadOntology("performance/ontologies/transitiveAttribute/transitiveAttribute-5000-ontology.wsml");
-    	Ontology o7 = loadOntology("performance/ontologies/transitiveAttribute/transitiveAttribute-10000-ontology.wsml");       
-//    	Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5,o6,o7};
-        Ontology[] ontologies = new Ontology[] {o1,o2,o3};
-//    	Ontology[] ontologies = new Ontology[] {o1};
         String path = "transitiveAttribute/";
+        Ontology[] ontologies = loadOntologies(BASE+path);
         String[] reasonerNames = new String[]{"MINS", "KAON"};
         runPerformanceTests(reasonerNames, ontologies, path);
     }
@@ -284,17 +206,8 @@ public class TestPerformanceWithUseOfFeatures {
      * loads symmetric attribute type ontologies and performs sample queries
      */
     public void testSymmetricAttributeOntologies() throws Exception {
-    	Ontology o1 = loadOntology("performance/ontologies/symmetricAttribute/symmetricAttribute-1-ontology.wsml");
-    	Ontology o2 = loadOntology("performance/ontologies/symmetricAttribute/symmetricAttribute-10-ontology.wsml");
-    	Ontology o3 = loadOntology("performance/ontologies/symmetricAttribute/symmetricAttribute-100-ontology.wsml");
-    	Ontology o4 = loadOntology("performance/ontologies/symmetricAttribute/symmetricAttribute-500-ontology.wsml");
-    	Ontology o5 = loadOntology("performance/ontologies/symmetricAttribute/symmetricAttribute-1000-ontology.wsml");
-    	Ontology o6 = loadOntology("performance/ontologies/symmetricAttribute/symmetricAttribute-5000-ontology.wsml");
-    	Ontology o7 = loadOntology("performance/ontologies/symmetricAttribute/symmetricAttribute-10000-ontology.wsml");       
-//    	Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5,o6,o7};
-        Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4};
-//    	Ontology[] ontologies = new Ontology[] {o1};
         String path = "symmetricAttribute/";
+        Ontology[] ontologies = loadOntologies(BASE+path);
         String[] reasonerNames = new String[]{"MINS", "KAON"};
         runPerformanceTests(reasonerNames, ontologies, path);
     }
@@ -303,74 +216,30 @@ public class TestPerformanceWithUseOfFeatures {
      * loads reflexive attribute type ontologies and performs sample queries
      */
     public void testReflexiveAttributeOntologies() throws Exception {
-    	Ontology o1 = loadOntology("performance/ontologies/reflexiveAttribute/reflexiveAttribute-1-ontology.wsml");
-    	Ontology o2 = loadOntology("performance/ontologies/reflexiveAttribute/reflexiveAttribute-10-ontology.wsml");
-    	Ontology o3 = loadOntology("performance/ontologies/reflexiveAttribute/reflexiveAttribute-100-ontology.wsml");
-    	Ontology o4 = loadOntology("performance/ontologies/reflexiveAttribute/reflexiveAttribute-500-ontology.wsml");
-    	Ontology o5 = loadOntology("performance/ontologies/reflexiveAttribute/reflexiveAttribute-1000-ontology.wsml");
-    	Ontology o6 = loadOntology("performance/ontologies/reflexiveAttribute/reflexiveAttribute-5000-ontology.wsml");
-    	Ontology o7 = loadOntology("performance/ontologies/reflexiveAttribute/reflexiveAttribute-10000-ontology.wsml");       
-//    	Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5,o6,o7};
-        Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5};
-//    	Ontology[] ontologies = new Ontology[] {o1};
         String path = "reflexiveAttribute/";
+        Ontology[] ontologies = loadOntologies(BASE+path);
         runPerformanceTests(this.reasonerNames, ontologies, path);
     }
     
-    /**
-     * loads locally statified negation logical expression type ontologies 
-     * and performs sample queries
-     */
-    public void testLocallyStratifiedNegationOntologies() throws Exception {
-    	Ontology o1 = loadOntology("performance/ontologies/locallyStratifiedNegation/locallyStratifiedNegation-1-ontology.wsml");
-    	Ontology o2 = loadOntology("performance/ontologies/locallyStratifiedNegation/locallyStratifiedNegation-10-ontology.wsml");
-    	Ontology o3 = loadOntology("performance/ontologies/locallyStratifiedNegation/locallyStratifiedNegation-100-ontology.wsml");
-    	Ontology o4 = loadOntology("performance/ontologies/locallyStratifiedNegation/locallyStratifiedNegation-500-ontology.wsml");
-    	Ontology o5 = loadOntology("performance/ontologies/locallyStratifiedNegation/locallyStratifiedNegation-1000-ontology.wsml");
-//    	Ontology o6 = loadOntology("performance/ontologies/locallyStratifiedNegation/locallyStratifiedNegation-5000-ontology.wsml");
-//    	Ontology o7 = loadOntology("performance/ontologies/locallyStratifiedNegation/locallyStratifiedNegation-10000-ontology.wsml");       
-//    	Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5,o6,o7};
-        Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5};
-//    	Ontology[] ontologies = new Ontology[] {o1};
+
+    public void testLocallyStratifiedNegation() throws Exception {
         String path = "locallyStratifiedNegation/";
-        String[] reasonerNames = new String[]{"MINS"};
-        runPerformanceTests(reasonerNames, ontologies, path);
+        Ontology[] ontologies = loadOntologies(BASE+path);
+        runPerformanceTests(this.reasonerNames, ontologies, path);
     }
     
-    /**
-     * loads globally stratified negation logical expression type ontologies 
-     * and performs sample queries
-     */
-    public void testGloballyStratifiedNegationOntologies() throws Exception {
-    	Ontology o1 = loadOntology("performance/ontologies/globallyStratifiedNegation/globallyStratifiedNegation-1-ontology.wsml");
-    	Ontology o2 = loadOntology("performance/ontologies/globallyStratifiedNegation/globallyStratifiedNegation-10-ontology.wsml");
-    	Ontology o3 = loadOntology("performance/ontologies/globallyStratifiedNegation/globallyStratifiedNegation-100-ontology.wsml");
-    	Ontology o4 = loadOntology("performance/ontologies/globallyStratifiedNegation/globallyStratifiedNegation-500-ontology.wsml");
-    	Ontology o5 = loadOntology("performance/ontologies/globallyStratifiedNegation/globallyStratifiedNegation-1000-ontology.wsml");
-//    	Ontology o6 = loadOntology("performance/ontologies/globallyStratifiedNegation/globallyStratifiedNegation-5000-ontology.wsml");
-//    	Ontology o7 = loadOntology("performance/ontologies/globallyStratifiedNegation/globallyStratifiedNegation-10000-ontology.wsml");       
-//    	Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5,o6,o7};
-        Ontology[] ontologies = new Ontology[] {o1,o2,o3};
-//    	Ontology[] ontologies = new Ontology[] {o1};
+    public void testGloballyStratifiedNegation() throws Exception {
         String path = "globallyStratifiedNegation/";
-        runPerformanceTests(reasonerNames, ontologies, path);
+        Ontology[] ontologies = loadOntologies(BASE+path);
+        runPerformanceTests(this.reasonerNames, ontologies, path);
     }
     
     /**
      * loads built-in attribute type ontologies and performs sample queries
      */
     public void testBuiltInAttributeOntologies() throws Exception {
-    	Ontology o1 = loadOntology("performance/ontologies/built_in/built_in-1-ontology.wsml");
-    	Ontology o2 = loadOntology("performance/ontologies/built_in/built_in-10-ontology.wsml");
-    	Ontology o3 = loadOntology("performance/ontologies/built_in/built_in-100-ontology.wsml");
-    	Ontology o4 = loadOntology("performance/ontologies/built_in/built_in-500-ontology.wsml");
-    	Ontology o5 = loadOntology("performance/ontologies/built_in/built_in-1000-ontology.wsml");
-    	Ontology o6 = loadOntology("performance/ontologies/built_in/built_in-5000-ontology.wsml");
-    	Ontology o7 = loadOntology("performance/ontologies/built_in/built_in-10000-ontology.wsml");       
-//    	Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5,o6,o7};
-        Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5};
-//    	Ontology[] ontologies = new Ontology[] {o1};
         String path = "built_in/";
+        Ontology[] ontologies = loadOntologies(BASE+path);
         runPerformanceTests(this.reasonerNames, ontologies, path);
     }
     
@@ -531,9 +400,9 @@ public class TestPerformanceWithUseOfFeatures {
         return reasoner;
     }
     
+    Parser wsmlParser = Factory.createParser(null);
+   
     private Ontology loadOntology(String file) {
-        Parser wsmlParser = Factory.createParser(null);
-
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);
         try {
             final TopEntity[] identifiable = wsmlParser.parse(new InputStreamReader(is));
