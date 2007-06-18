@@ -1,0 +1,1018 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://www.inverseAttribute-500-ontology.org#"
+ }
+
+ontology o500
+
+concept c1
+     a1 inverseOf(a0) ofType c2
+     a2 inverseOf(a0) ofType c2
+     a3 inverseOf(a0) ofType c2
+     a4 inverseOf(a0) ofType c2
+     a5 inverseOf(a0) ofType c2
+     a6 inverseOf(a0) ofType c2
+     a7 inverseOf(a0) ofType c2
+     a8 inverseOf(a0) ofType c2
+     a9 inverseOf(a0) ofType c2
+     a10 inverseOf(a0) ofType c2
+     a11 inverseOf(a0) ofType c2
+     a12 inverseOf(a0) ofType c2
+     a13 inverseOf(a0) ofType c2
+     a14 inverseOf(a0) ofType c2
+     a15 inverseOf(a0) ofType c2
+     a16 inverseOf(a0) ofType c2
+     a17 inverseOf(a0) ofType c2
+     a18 inverseOf(a0) ofType c2
+     a19 inverseOf(a0) ofType c2
+     a20 inverseOf(a0) ofType c2
+     a21 inverseOf(a0) ofType c2
+     a22 inverseOf(a0) ofType c2
+     a23 inverseOf(a0) ofType c2
+     a24 inverseOf(a0) ofType c2
+     a25 inverseOf(a0) ofType c2
+     a26 inverseOf(a0) ofType c2
+     a27 inverseOf(a0) ofType c2
+     a28 inverseOf(a0) ofType c2
+     a29 inverseOf(a0) ofType c2
+     a30 inverseOf(a0) ofType c2
+     a31 inverseOf(a0) ofType c2
+     a32 inverseOf(a0) ofType c2
+     a33 inverseOf(a0) ofType c2
+     a34 inverseOf(a0) ofType c2
+     a35 inverseOf(a0) ofType c2
+     a36 inverseOf(a0) ofType c2
+     a37 inverseOf(a0) ofType c2
+     a38 inverseOf(a0) ofType c2
+     a39 inverseOf(a0) ofType c2
+     a40 inverseOf(a0) ofType c2
+     a41 inverseOf(a0) ofType c2
+     a42 inverseOf(a0) ofType c2
+     a43 inverseOf(a0) ofType c2
+     a44 inverseOf(a0) ofType c2
+     a45 inverseOf(a0) ofType c2
+     a46 inverseOf(a0) ofType c2
+     a47 inverseOf(a0) ofType c2
+     a48 inverseOf(a0) ofType c2
+     a49 inverseOf(a0) ofType c2
+     a50 inverseOf(a0) ofType c2
+     a51 inverseOf(a0) ofType c2
+     a52 inverseOf(a0) ofType c2
+     a53 inverseOf(a0) ofType c2
+     a54 inverseOf(a0) ofType c2
+     a55 inverseOf(a0) ofType c2
+     a56 inverseOf(a0) ofType c2
+     a57 inverseOf(a0) ofType c2
+     a58 inverseOf(a0) ofType c2
+     a59 inverseOf(a0) ofType c2
+     a60 inverseOf(a0) ofType c2
+     a61 inverseOf(a0) ofType c2
+     a62 inverseOf(a0) ofType c2
+     a63 inverseOf(a0) ofType c2
+     a64 inverseOf(a0) ofType c2
+     a65 inverseOf(a0) ofType c2
+     a66 inverseOf(a0) ofType c2
+     a67 inverseOf(a0) ofType c2
+     a68 inverseOf(a0) ofType c2
+     a69 inverseOf(a0) ofType c2
+     a70 inverseOf(a0) ofType c2
+     a71 inverseOf(a0) ofType c2
+     a72 inverseOf(a0) ofType c2
+     a73 inverseOf(a0) ofType c2
+     a74 inverseOf(a0) ofType c2
+     a75 inverseOf(a0) ofType c2
+     a76 inverseOf(a0) ofType c2
+     a77 inverseOf(a0) ofType c2
+     a78 inverseOf(a0) ofType c2
+     a79 inverseOf(a0) ofType c2
+     a80 inverseOf(a0) ofType c2
+     a81 inverseOf(a0) ofType c2
+     a82 inverseOf(a0) ofType c2
+     a83 inverseOf(a0) ofType c2
+     a84 inverseOf(a0) ofType c2
+     a85 inverseOf(a0) ofType c2
+     a86 inverseOf(a0) ofType c2
+     a87 inverseOf(a0) ofType c2
+     a88 inverseOf(a0) ofType c2
+     a89 inverseOf(a0) ofType c2
+     a90 inverseOf(a0) ofType c2
+     a91 inverseOf(a0) ofType c2
+     a92 inverseOf(a0) ofType c2
+     a93 inverseOf(a0) ofType c2
+     a94 inverseOf(a0) ofType c2
+     a95 inverseOf(a0) ofType c2
+     a96 inverseOf(a0) ofType c2
+     a97 inverseOf(a0) ofType c2
+     a98 inverseOf(a0) ofType c2
+     a99 inverseOf(a0) ofType c2
+     a100 inverseOf(a0) ofType c2
+     a101 inverseOf(a0) ofType c2
+     a102 inverseOf(a0) ofType c2
+     a103 inverseOf(a0) ofType c2
+     a104 inverseOf(a0) ofType c2
+     a105 inverseOf(a0) ofType c2
+     a106 inverseOf(a0) ofType c2
+     a107 inverseOf(a0) ofType c2
+     a108 inverseOf(a0) ofType c2
+     a109 inverseOf(a0) ofType c2
+     a110 inverseOf(a0) ofType c2
+     a111 inverseOf(a0) ofType c2
+     a112 inverseOf(a0) ofType c2
+     a113 inverseOf(a0) ofType c2
+     a114 inverseOf(a0) ofType c2
+     a115 inverseOf(a0) ofType c2
+     a116 inverseOf(a0) ofType c2
+     a117 inverseOf(a0) ofType c2
+     a118 inverseOf(a0) ofType c2
+     a119 inverseOf(a0) ofType c2
+     a120 inverseOf(a0) ofType c2
+     a121 inverseOf(a0) ofType c2
+     a122 inverseOf(a0) ofType c2
+     a123 inverseOf(a0) ofType c2
+     a124 inverseOf(a0) ofType c2
+     a125 inverseOf(a0) ofType c2
+     a126 inverseOf(a0) ofType c2
+     a127 inverseOf(a0) ofType c2
+     a128 inverseOf(a0) ofType c2
+     a129 inverseOf(a0) ofType c2
+     a130 inverseOf(a0) ofType c2
+     a131 inverseOf(a0) ofType c2
+     a132 inverseOf(a0) ofType c2
+     a133 inverseOf(a0) ofType c2
+     a134 inverseOf(a0) ofType c2
+     a135 inverseOf(a0) ofType c2
+     a136 inverseOf(a0) ofType c2
+     a137 inverseOf(a0) ofType c2
+     a138 inverseOf(a0) ofType c2
+     a139 inverseOf(a0) ofType c2
+     a140 inverseOf(a0) ofType c2
+     a141 inverseOf(a0) ofType c2
+     a142 inverseOf(a0) ofType c2
+     a143 inverseOf(a0) ofType c2
+     a144 inverseOf(a0) ofType c2
+     a145 inverseOf(a0) ofType c2
+     a146 inverseOf(a0) ofType c2
+     a147 inverseOf(a0) ofType c2
+     a148 inverseOf(a0) ofType c2
+     a149 inverseOf(a0) ofType c2
+     a150 inverseOf(a0) ofType c2
+     a151 inverseOf(a0) ofType c2
+     a152 inverseOf(a0) ofType c2
+     a153 inverseOf(a0) ofType c2
+     a154 inverseOf(a0) ofType c2
+     a155 inverseOf(a0) ofType c2
+     a156 inverseOf(a0) ofType c2
+     a157 inverseOf(a0) ofType c2
+     a158 inverseOf(a0) ofType c2
+     a159 inverseOf(a0) ofType c2
+     a160 inverseOf(a0) ofType c2
+     a161 inverseOf(a0) ofType c2
+     a162 inverseOf(a0) ofType c2
+     a163 inverseOf(a0) ofType c2
+     a164 inverseOf(a0) ofType c2
+     a165 inverseOf(a0) ofType c2
+     a166 inverseOf(a0) ofType c2
+     a167 inverseOf(a0) ofType c2
+     a168 inverseOf(a0) ofType c2
+     a169 inverseOf(a0) ofType c2
+     a170 inverseOf(a0) ofType c2
+     a171 inverseOf(a0) ofType c2
+     a172 inverseOf(a0) ofType c2
+     a173 inverseOf(a0) ofType c2
+     a174 inverseOf(a0) ofType c2
+     a175 inverseOf(a0) ofType c2
+     a176 inverseOf(a0) ofType c2
+     a177 inverseOf(a0) ofType c2
+     a178 inverseOf(a0) ofType c2
+     a179 inverseOf(a0) ofType c2
+     a180 inverseOf(a0) ofType c2
+     a181 inverseOf(a0) ofType c2
+     a182 inverseOf(a0) ofType c2
+     a183 inverseOf(a0) ofType c2
+     a184 inverseOf(a0) ofType c2
+     a185 inverseOf(a0) ofType c2
+     a186 inverseOf(a0) ofType c2
+     a187 inverseOf(a0) ofType c2
+     a188 inverseOf(a0) ofType c2
+     a189 inverseOf(a0) ofType c2
+     a190 inverseOf(a0) ofType c2
+     a191 inverseOf(a0) ofType c2
+     a192 inverseOf(a0) ofType c2
+     a193 inverseOf(a0) ofType c2
+     a194 inverseOf(a0) ofType c2
+     a195 inverseOf(a0) ofType c2
+     a196 inverseOf(a0) ofType c2
+     a197 inverseOf(a0) ofType c2
+     a198 inverseOf(a0) ofType c2
+     a199 inverseOf(a0) ofType c2
+     a200 inverseOf(a0) ofType c2
+     a201 inverseOf(a0) ofType c2
+     a202 inverseOf(a0) ofType c2
+     a203 inverseOf(a0) ofType c2
+     a204 inverseOf(a0) ofType c2
+     a205 inverseOf(a0) ofType c2
+     a206 inverseOf(a0) ofType c2
+     a207 inverseOf(a0) ofType c2
+     a208 inverseOf(a0) ofType c2
+     a209 inverseOf(a0) ofType c2
+     a210 inverseOf(a0) ofType c2
+     a211 inverseOf(a0) ofType c2
+     a212 inverseOf(a0) ofType c2
+     a213 inverseOf(a0) ofType c2
+     a214 inverseOf(a0) ofType c2
+     a215 inverseOf(a0) ofType c2
+     a216 inverseOf(a0) ofType c2
+     a217 inverseOf(a0) ofType c2
+     a218 inverseOf(a0) ofType c2
+     a219 inverseOf(a0) ofType c2
+     a220 inverseOf(a0) ofType c2
+     a221 inverseOf(a0) ofType c2
+     a222 inverseOf(a0) ofType c2
+     a223 inverseOf(a0) ofType c2
+     a224 inverseOf(a0) ofType c2
+     a225 inverseOf(a0) ofType c2
+     a226 inverseOf(a0) ofType c2
+     a227 inverseOf(a0) ofType c2
+     a228 inverseOf(a0) ofType c2
+     a229 inverseOf(a0) ofType c2
+     a230 inverseOf(a0) ofType c2
+     a231 inverseOf(a0) ofType c2
+     a232 inverseOf(a0) ofType c2
+     a233 inverseOf(a0) ofType c2
+     a234 inverseOf(a0) ofType c2
+     a235 inverseOf(a0) ofType c2
+     a236 inverseOf(a0) ofType c2
+     a237 inverseOf(a0) ofType c2
+     a238 inverseOf(a0) ofType c2
+     a239 inverseOf(a0) ofType c2
+     a240 inverseOf(a0) ofType c2
+     a241 inverseOf(a0) ofType c2
+     a242 inverseOf(a0) ofType c2
+     a243 inverseOf(a0) ofType c2
+     a244 inverseOf(a0) ofType c2
+     a245 inverseOf(a0) ofType c2
+     a246 inverseOf(a0) ofType c2
+     a247 inverseOf(a0) ofType c2
+     a248 inverseOf(a0) ofType c2
+     a249 inverseOf(a0) ofType c2
+     a250 inverseOf(a0) ofType c2
+     a251 inverseOf(a0) ofType c2
+     a252 inverseOf(a0) ofType c2
+     a253 inverseOf(a0) ofType c2
+     a254 inverseOf(a0) ofType c2
+     a255 inverseOf(a0) ofType c2
+     a256 inverseOf(a0) ofType c2
+     a257 inverseOf(a0) ofType c2
+     a258 inverseOf(a0) ofType c2
+     a259 inverseOf(a0) ofType c2
+     a260 inverseOf(a0) ofType c2
+     a261 inverseOf(a0) ofType c2
+     a262 inverseOf(a0) ofType c2
+     a263 inverseOf(a0) ofType c2
+     a264 inverseOf(a0) ofType c2
+     a265 inverseOf(a0) ofType c2
+     a266 inverseOf(a0) ofType c2
+     a267 inverseOf(a0) ofType c2
+     a268 inverseOf(a0) ofType c2
+     a269 inverseOf(a0) ofType c2
+     a270 inverseOf(a0) ofType c2
+     a271 inverseOf(a0) ofType c2
+     a272 inverseOf(a0) ofType c2
+     a273 inverseOf(a0) ofType c2
+     a274 inverseOf(a0) ofType c2
+     a275 inverseOf(a0) ofType c2
+     a276 inverseOf(a0) ofType c2
+     a277 inverseOf(a0) ofType c2
+     a278 inverseOf(a0) ofType c2
+     a279 inverseOf(a0) ofType c2
+     a280 inverseOf(a0) ofType c2
+     a281 inverseOf(a0) ofType c2
+     a282 inverseOf(a0) ofType c2
+     a283 inverseOf(a0) ofType c2
+     a284 inverseOf(a0) ofType c2
+     a285 inverseOf(a0) ofType c2
+     a286 inverseOf(a0) ofType c2
+     a287 inverseOf(a0) ofType c2
+     a288 inverseOf(a0) ofType c2
+     a289 inverseOf(a0) ofType c2
+     a290 inverseOf(a0) ofType c2
+     a291 inverseOf(a0) ofType c2
+     a292 inverseOf(a0) ofType c2
+     a293 inverseOf(a0) ofType c2
+     a294 inverseOf(a0) ofType c2
+     a295 inverseOf(a0) ofType c2
+     a296 inverseOf(a0) ofType c2
+     a297 inverseOf(a0) ofType c2
+     a298 inverseOf(a0) ofType c2
+     a299 inverseOf(a0) ofType c2
+     a300 inverseOf(a0) ofType c2
+     a301 inverseOf(a0) ofType c2
+     a302 inverseOf(a0) ofType c2
+     a303 inverseOf(a0) ofType c2
+     a304 inverseOf(a0) ofType c2
+     a305 inverseOf(a0) ofType c2
+     a306 inverseOf(a0) ofType c2
+     a307 inverseOf(a0) ofType c2
+     a308 inverseOf(a0) ofType c2
+     a309 inverseOf(a0) ofType c2
+     a310 inverseOf(a0) ofType c2
+     a311 inverseOf(a0) ofType c2
+     a312 inverseOf(a0) ofType c2
+     a313 inverseOf(a0) ofType c2
+     a314 inverseOf(a0) ofType c2
+     a315 inverseOf(a0) ofType c2
+     a316 inverseOf(a0) ofType c2
+     a317 inverseOf(a0) ofType c2
+     a318 inverseOf(a0) ofType c2
+     a319 inverseOf(a0) ofType c2
+     a320 inverseOf(a0) ofType c2
+     a321 inverseOf(a0) ofType c2
+     a322 inverseOf(a0) ofType c2
+     a323 inverseOf(a0) ofType c2
+     a324 inverseOf(a0) ofType c2
+     a325 inverseOf(a0) ofType c2
+     a326 inverseOf(a0) ofType c2
+     a327 inverseOf(a0) ofType c2
+     a328 inverseOf(a0) ofType c2
+     a329 inverseOf(a0) ofType c2
+     a330 inverseOf(a0) ofType c2
+     a331 inverseOf(a0) ofType c2
+     a332 inverseOf(a0) ofType c2
+     a333 inverseOf(a0) ofType c2
+     a334 inverseOf(a0) ofType c2
+     a335 inverseOf(a0) ofType c2
+     a336 inverseOf(a0) ofType c2
+     a337 inverseOf(a0) ofType c2
+     a338 inverseOf(a0) ofType c2
+     a339 inverseOf(a0) ofType c2
+     a340 inverseOf(a0) ofType c2
+     a341 inverseOf(a0) ofType c2
+     a342 inverseOf(a0) ofType c2
+     a343 inverseOf(a0) ofType c2
+     a344 inverseOf(a0) ofType c2
+     a345 inverseOf(a0) ofType c2
+     a346 inverseOf(a0) ofType c2
+     a347 inverseOf(a0) ofType c2
+     a348 inverseOf(a0) ofType c2
+     a349 inverseOf(a0) ofType c2
+     a350 inverseOf(a0) ofType c2
+     a351 inverseOf(a0) ofType c2
+     a352 inverseOf(a0) ofType c2
+     a353 inverseOf(a0) ofType c2
+     a354 inverseOf(a0) ofType c2
+     a355 inverseOf(a0) ofType c2
+     a356 inverseOf(a0) ofType c2
+     a357 inverseOf(a0) ofType c2
+     a358 inverseOf(a0) ofType c2
+     a359 inverseOf(a0) ofType c2
+     a360 inverseOf(a0) ofType c2
+     a361 inverseOf(a0) ofType c2
+     a362 inverseOf(a0) ofType c2
+     a363 inverseOf(a0) ofType c2
+     a364 inverseOf(a0) ofType c2
+     a365 inverseOf(a0) ofType c2
+     a366 inverseOf(a0) ofType c2
+     a367 inverseOf(a0) ofType c2
+     a368 inverseOf(a0) ofType c2
+     a369 inverseOf(a0) ofType c2
+     a370 inverseOf(a0) ofType c2
+     a371 inverseOf(a0) ofType c2
+     a372 inverseOf(a0) ofType c2
+     a373 inverseOf(a0) ofType c2
+     a374 inverseOf(a0) ofType c2
+     a375 inverseOf(a0) ofType c2
+     a376 inverseOf(a0) ofType c2
+     a377 inverseOf(a0) ofType c2
+     a378 inverseOf(a0) ofType c2
+     a379 inverseOf(a0) ofType c2
+     a380 inverseOf(a0) ofType c2
+     a381 inverseOf(a0) ofType c2
+     a382 inverseOf(a0) ofType c2
+     a383 inverseOf(a0) ofType c2
+     a384 inverseOf(a0) ofType c2
+     a385 inverseOf(a0) ofType c2
+     a386 inverseOf(a0) ofType c2
+     a387 inverseOf(a0) ofType c2
+     a388 inverseOf(a0) ofType c2
+     a389 inverseOf(a0) ofType c2
+     a390 inverseOf(a0) ofType c2
+     a391 inverseOf(a0) ofType c2
+     a392 inverseOf(a0) ofType c2
+     a393 inverseOf(a0) ofType c2
+     a394 inverseOf(a0) ofType c2
+     a395 inverseOf(a0) ofType c2
+     a396 inverseOf(a0) ofType c2
+     a397 inverseOf(a0) ofType c2
+     a398 inverseOf(a0) ofType c2
+     a399 inverseOf(a0) ofType c2
+     a400 inverseOf(a0) ofType c2
+     a401 inverseOf(a0) ofType c2
+     a402 inverseOf(a0) ofType c2
+     a403 inverseOf(a0) ofType c2
+     a404 inverseOf(a0) ofType c2
+     a405 inverseOf(a0) ofType c2
+     a406 inverseOf(a0) ofType c2
+     a407 inverseOf(a0) ofType c2
+     a408 inverseOf(a0) ofType c2
+     a409 inverseOf(a0) ofType c2
+     a410 inverseOf(a0) ofType c2
+     a411 inverseOf(a0) ofType c2
+     a412 inverseOf(a0) ofType c2
+     a413 inverseOf(a0) ofType c2
+     a414 inverseOf(a0) ofType c2
+     a415 inverseOf(a0) ofType c2
+     a416 inverseOf(a0) ofType c2
+     a417 inverseOf(a0) ofType c2
+     a418 inverseOf(a0) ofType c2
+     a419 inverseOf(a0) ofType c2
+     a420 inverseOf(a0) ofType c2
+     a421 inverseOf(a0) ofType c2
+     a422 inverseOf(a0) ofType c2
+     a423 inverseOf(a0) ofType c2
+     a424 inverseOf(a0) ofType c2
+     a425 inverseOf(a0) ofType c2
+     a426 inverseOf(a0) ofType c2
+     a427 inverseOf(a0) ofType c2
+     a428 inverseOf(a0) ofType c2
+     a429 inverseOf(a0) ofType c2
+     a430 inverseOf(a0) ofType c2
+     a431 inverseOf(a0) ofType c2
+     a432 inverseOf(a0) ofType c2
+     a433 inverseOf(a0) ofType c2
+     a434 inverseOf(a0) ofType c2
+     a435 inverseOf(a0) ofType c2
+     a436 inverseOf(a0) ofType c2
+     a437 inverseOf(a0) ofType c2
+     a438 inverseOf(a0) ofType c2
+     a439 inverseOf(a0) ofType c2
+     a440 inverseOf(a0) ofType c2
+     a441 inverseOf(a0) ofType c2
+     a442 inverseOf(a0) ofType c2
+     a443 inverseOf(a0) ofType c2
+     a444 inverseOf(a0) ofType c2
+     a445 inverseOf(a0) ofType c2
+     a446 inverseOf(a0) ofType c2
+     a447 inverseOf(a0) ofType c2
+     a448 inverseOf(a0) ofType c2
+     a449 inverseOf(a0) ofType c2
+     a450 inverseOf(a0) ofType c2
+     a451 inverseOf(a0) ofType c2
+     a452 inverseOf(a0) ofType c2
+     a453 inverseOf(a0) ofType c2
+     a454 inverseOf(a0) ofType c2
+     a455 inverseOf(a0) ofType c2
+     a456 inverseOf(a0) ofType c2
+     a457 inverseOf(a0) ofType c2
+     a458 inverseOf(a0) ofType c2
+     a459 inverseOf(a0) ofType c2
+     a460 inverseOf(a0) ofType c2
+     a461 inverseOf(a0) ofType c2
+     a462 inverseOf(a0) ofType c2
+     a463 inverseOf(a0) ofType c2
+     a464 inverseOf(a0) ofType c2
+     a465 inverseOf(a0) ofType c2
+     a466 inverseOf(a0) ofType c2
+     a467 inverseOf(a0) ofType c2
+     a468 inverseOf(a0) ofType c2
+     a469 inverseOf(a0) ofType c2
+     a470 inverseOf(a0) ofType c2
+     a471 inverseOf(a0) ofType c2
+     a472 inverseOf(a0) ofType c2
+     a473 inverseOf(a0) ofType c2
+     a474 inverseOf(a0) ofType c2
+     a475 inverseOf(a0) ofType c2
+     a476 inverseOf(a0) ofType c2
+     a477 inverseOf(a0) ofType c2
+     a478 inverseOf(a0) ofType c2
+     a479 inverseOf(a0) ofType c2
+     a480 inverseOf(a0) ofType c2
+     a481 inverseOf(a0) ofType c2
+     a482 inverseOf(a0) ofType c2
+     a483 inverseOf(a0) ofType c2
+     a484 inverseOf(a0) ofType c2
+     a485 inverseOf(a0) ofType c2
+     a486 inverseOf(a0) ofType c2
+     a487 inverseOf(a0) ofType c2
+     a488 inverseOf(a0) ofType c2
+     a489 inverseOf(a0) ofType c2
+     a490 inverseOf(a0) ofType c2
+     a491 inverseOf(a0) ofType c2
+     a492 inverseOf(a0) ofType c2
+     a493 inverseOf(a0) ofType c2
+     a494 inverseOf(a0) ofType c2
+     a495 inverseOf(a0) ofType c2
+     a496 inverseOf(a0) ofType c2
+     a497 inverseOf(a0) ofType c2
+     a498 inverseOf(a0) ofType c2
+     a499 inverseOf(a0) ofType c2
+     a500 inverseOf(a0) ofType c2
+
+concept c2
+     a0 ofType c1
+
+instance i1 memberOf c1
+
+instance i2 memberOf c2
+     a1 hasValue i1
+     a2 hasValue i1
+     a3 hasValue i1
+     a4 hasValue i1
+     a5 hasValue i1
+     a6 hasValue i1
+     a7 hasValue i1
+     a8 hasValue i1
+     a9 hasValue i1
+     a10 hasValue i1
+     a11 hasValue i1
+     a12 hasValue i1
+     a13 hasValue i1
+     a14 hasValue i1
+     a15 hasValue i1
+     a16 hasValue i1
+     a17 hasValue i1
+     a18 hasValue i1
+     a19 hasValue i1
+     a20 hasValue i1
+     a21 hasValue i1
+     a22 hasValue i1
+     a23 hasValue i1
+     a24 hasValue i1
+     a25 hasValue i1
+     a26 hasValue i1
+     a27 hasValue i1
+     a28 hasValue i1
+     a29 hasValue i1
+     a30 hasValue i1
+     a31 hasValue i1
+     a32 hasValue i1
+     a33 hasValue i1
+     a34 hasValue i1
+     a35 hasValue i1
+     a36 hasValue i1
+     a37 hasValue i1
+     a38 hasValue i1
+     a39 hasValue i1
+     a40 hasValue i1
+     a41 hasValue i1
+     a42 hasValue i1
+     a43 hasValue i1
+     a44 hasValue i1
+     a45 hasValue i1
+     a46 hasValue i1
+     a47 hasValue i1
+     a48 hasValue i1
+     a49 hasValue i1
+     a50 hasValue i1
+     a51 hasValue i1
+     a52 hasValue i1
+     a53 hasValue i1
+     a54 hasValue i1
+     a55 hasValue i1
+     a56 hasValue i1
+     a57 hasValue i1
+     a58 hasValue i1
+     a59 hasValue i1
+     a60 hasValue i1
+     a61 hasValue i1
+     a62 hasValue i1
+     a63 hasValue i1
+     a64 hasValue i1
+     a65 hasValue i1
+     a66 hasValue i1
+     a67 hasValue i1
+     a68 hasValue i1
+     a69 hasValue i1
+     a70 hasValue i1
+     a71 hasValue i1
+     a72 hasValue i1
+     a73 hasValue i1
+     a74 hasValue i1
+     a75 hasValue i1
+     a76 hasValue i1
+     a77 hasValue i1
+     a78 hasValue i1
+     a79 hasValue i1
+     a80 hasValue i1
+     a81 hasValue i1
+     a82 hasValue i1
+     a83 hasValue i1
+     a84 hasValue i1
+     a85 hasValue i1
+     a86 hasValue i1
+     a87 hasValue i1
+     a88 hasValue i1
+     a89 hasValue i1
+     a90 hasValue i1
+     a91 hasValue i1
+     a92 hasValue i1
+     a93 hasValue i1
+     a94 hasValue i1
+     a95 hasValue i1
+     a96 hasValue i1
+     a97 hasValue i1
+     a98 hasValue i1
+     a99 hasValue i1
+     a100 hasValue i1
+     a101 hasValue i1
+     a102 hasValue i1
+     a103 hasValue i1
+     a104 hasValue i1
+     a105 hasValue i1
+     a106 hasValue i1
+     a107 hasValue i1
+     a108 hasValue i1
+     a109 hasValue i1
+     a110 hasValue i1
+     a111 hasValue i1
+     a112 hasValue i1
+     a113 hasValue i1
+     a114 hasValue i1
+     a115 hasValue i1
+     a116 hasValue i1
+     a117 hasValue i1
+     a118 hasValue i1
+     a119 hasValue i1
+     a120 hasValue i1
+     a121 hasValue i1
+     a122 hasValue i1
+     a123 hasValue i1
+     a124 hasValue i1
+     a125 hasValue i1
+     a126 hasValue i1
+     a127 hasValue i1
+     a128 hasValue i1
+     a129 hasValue i1
+     a130 hasValue i1
+     a131 hasValue i1
+     a132 hasValue i1
+     a133 hasValue i1
+     a134 hasValue i1
+     a135 hasValue i1
+     a136 hasValue i1
+     a137 hasValue i1
+     a138 hasValue i1
+     a139 hasValue i1
+     a140 hasValue i1
+     a141 hasValue i1
+     a142 hasValue i1
+     a143 hasValue i1
+     a144 hasValue i1
+     a145 hasValue i1
+     a146 hasValue i1
+     a147 hasValue i1
+     a148 hasValue i1
+     a149 hasValue i1
+     a150 hasValue i1
+     a151 hasValue i1
+     a152 hasValue i1
+     a153 hasValue i1
+     a154 hasValue i1
+     a155 hasValue i1
+     a156 hasValue i1
+     a157 hasValue i1
+     a158 hasValue i1
+     a159 hasValue i1
+     a160 hasValue i1
+     a161 hasValue i1
+     a162 hasValue i1
+     a163 hasValue i1
+     a164 hasValue i1
+     a165 hasValue i1
+     a166 hasValue i1
+     a167 hasValue i1
+     a168 hasValue i1
+     a169 hasValue i1
+     a170 hasValue i1
+     a171 hasValue i1
+     a172 hasValue i1
+     a173 hasValue i1
+     a174 hasValue i1
+     a175 hasValue i1
+     a176 hasValue i1
+     a177 hasValue i1
+     a178 hasValue i1
+     a179 hasValue i1
+     a180 hasValue i1
+     a181 hasValue i1
+     a182 hasValue i1
+     a183 hasValue i1
+     a184 hasValue i1
+     a185 hasValue i1
+     a186 hasValue i1
+     a187 hasValue i1
+     a188 hasValue i1
+     a189 hasValue i1
+     a190 hasValue i1
+     a191 hasValue i1
+     a192 hasValue i1
+     a193 hasValue i1
+     a194 hasValue i1
+     a195 hasValue i1
+     a196 hasValue i1
+     a197 hasValue i1
+     a198 hasValue i1
+     a199 hasValue i1
+     a200 hasValue i1
+     a201 hasValue i1
+     a202 hasValue i1
+     a203 hasValue i1
+     a204 hasValue i1
+     a205 hasValue i1
+     a206 hasValue i1
+     a207 hasValue i1
+     a208 hasValue i1
+     a209 hasValue i1
+     a210 hasValue i1
+     a211 hasValue i1
+     a212 hasValue i1
+     a213 hasValue i1
+     a214 hasValue i1
+     a215 hasValue i1
+     a216 hasValue i1
+     a217 hasValue i1
+     a218 hasValue i1
+     a219 hasValue i1
+     a220 hasValue i1
+     a221 hasValue i1
+     a222 hasValue i1
+     a223 hasValue i1
+     a224 hasValue i1
+     a225 hasValue i1
+     a226 hasValue i1
+     a227 hasValue i1
+     a228 hasValue i1
+     a229 hasValue i1
+     a230 hasValue i1
+     a231 hasValue i1
+     a232 hasValue i1
+     a233 hasValue i1
+     a234 hasValue i1
+     a235 hasValue i1
+     a236 hasValue i1
+     a237 hasValue i1
+     a238 hasValue i1
+     a239 hasValue i1
+     a240 hasValue i1
+     a241 hasValue i1
+     a242 hasValue i1
+     a243 hasValue i1
+     a244 hasValue i1
+     a245 hasValue i1
+     a246 hasValue i1
+     a247 hasValue i1
+     a248 hasValue i1
+     a249 hasValue i1
+     a250 hasValue i1
+     a251 hasValue i1
+     a252 hasValue i1
+     a253 hasValue i1
+     a254 hasValue i1
+     a255 hasValue i1
+     a256 hasValue i1
+     a257 hasValue i1
+     a258 hasValue i1
+     a259 hasValue i1
+     a260 hasValue i1
+     a261 hasValue i1
+     a262 hasValue i1
+     a263 hasValue i1
+     a264 hasValue i1
+     a265 hasValue i1
+     a266 hasValue i1
+     a267 hasValue i1
+     a268 hasValue i1
+     a269 hasValue i1
+     a270 hasValue i1
+     a271 hasValue i1
+     a272 hasValue i1
+     a273 hasValue i1
+     a274 hasValue i1
+     a275 hasValue i1
+     a276 hasValue i1
+     a277 hasValue i1
+     a278 hasValue i1
+     a279 hasValue i1
+     a280 hasValue i1
+     a281 hasValue i1
+     a282 hasValue i1
+     a283 hasValue i1
+     a284 hasValue i1
+     a285 hasValue i1
+     a286 hasValue i1
+     a287 hasValue i1
+     a288 hasValue i1
+     a289 hasValue i1
+     a290 hasValue i1
+     a291 hasValue i1
+     a292 hasValue i1
+     a293 hasValue i1
+     a294 hasValue i1
+     a295 hasValue i1
+     a296 hasValue i1
+     a297 hasValue i1
+     a298 hasValue i1
+     a299 hasValue i1
+     a300 hasValue i1
+     a301 hasValue i1
+     a302 hasValue i1
+     a303 hasValue i1
+     a304 hasValue i1
+     a305 hasValue i1
+     a306 hasValue i1
+     a307 hasValue i1
+     a308 hasValue i1
+     a309 hasValue i1
+     a310 hasValue i1
+     a311 hasValue i1
+     a312 hasValue i1
+     a313 hasValue i1
+     a314 hasValue i1
+     a315 hasValue i1
+     a316 hasValue i1
+     a317 hasValue i1
+     a318 hasValue i1
+     a319 hasValue i1
+     a320 hasValue i1
+     a321 hasValue i1
+     a322 hasValue i1
+     a323 hasValue i1
+     a324 hasValue i1
+     a325 hasValue i1
+     a326 hasValue i1
+     a327 hasValue i1
+     a328 hasValue i1
+     a329 hasValue i1
+     a330 hasValue i1
+     a331 hasValue i1
+     a332 hasValue i1
+     a333 hasValue i1
+     a334 hasValue i1
+     a335 hasValue i1
+     a336 hasValue i1
+     a337 hasValue i1
+     a338 hasValue i1
+     a339 hasValue i1
+     a340 hasValue i1
+     a341 hasValue i1
+     a342 hasValue i1
+     a343 hasValue i1
+     a344 hasValue i1
+     a345 hasValue i1
+     a346 hasValue i1
+     a347 hasValue i1
+     a348 hasValue i1
+     a349 hasValue i1
+     a350 hasValue i1
+     a351 hasValue i1
+     a352 hasValue i1
+     a353 hasValue i1
+     a354 hasValue i1
+     a355 hasValue i1
+     a356 hasValue i1
+     a357 hasValue i1
+     a358 hasValue i1
+     a359 hasValue i1
+     a360 hasValue i1
+     a361 hasValue i1
+     a362 hasValue i1
+     a363 hasValue i1
+     a364 hasValue i1
+     a365 hasValue i1
+     a366 hasValue i1
+     a367 hasValue i1
+     a368 hasValue i1
+     a369 hasValue i1
+     a370 hasValue i1
+     a371 hasValue i1
+     a372 hasValue i1
+     a373 hasValue i1
+     a374 hasValue i1
+     a375 hasValue i1
+     a376 hasValue i1
+     a377 hasValue i1
+     a378 hasValue i1
+     a379 hasValue i1
+     a380 hasValue i1
+     a381 hasValue i1
+     a382 hasValue i1
+     a383 hasValue i1
+     a384 hasValue i1
+     a385 hasValue i1
+     a386 hasValue i1
+     a387 hasValue i1
+     a388 hasValue i1
+     a389 hasValue i1
+     a390 hasValue i1
+     a391 hasValue i1
+     a392 hasValue i1
+     a393 hasValue i1
+     a394 hasValue i1
+     a395 hasValue i1
+     a396 hasValue i1
+     a397 hasValue i1
+     a398 hasValue i1
+     a399 hasValue i1
+     a400 hasValue i1
+     a401 hasValue i1
+     a402 hasValue i1
+     a403 hasValue i1
+     a404 hasValue i1
+     a405 hasValue i1
+     a406 hasValue i1
+     a407 hasValue i1
+     a408 hasValue i1
+     a409 hasValue i1
+     a410 hasValue i1
+     a411 hasValue i1
+     a412 hasValue i1
+     a413 hasValue i1
+     a414 hasValue i1
+     a415 hasValue i1
+     a416 hasValue i1
+     a417 hasValue i1
+     a418 hasValue i1
+     a419 hasValue i1
+     a420 hasValue i1
+     a421 hasValue i1
+     a422 hasValue i1
+     a423 hasValue i1
+     a424 hasValue i1
+     a425 hasValue i1
+     a426 hasValue i1
+     a427 hasValue i1
+     a428 hasValue i1
+     a429 hasValue i1
+     a430 hasValue i1
+     a431 hasValue i1
+     a432 hasValue i1
+     a433 hasValue i1
+     a434 hasValue i1
+     a435 hasValue i1
+     a436 hasValue i1
+     a437 hasValue i1
+     a438 hasValue i1
+     a439 hasValue i1
+     a440 hasValue i1
+     a441 hasValue i1
+     a442 hasValue i1
+     a443 hasValue i1
+     a444 hasValue i1
+     a445 hasValue i1
+     a446 hasValue i1
+     a447 hasValue i1
+     a448 hasValue i1
+     a449 hasValue i1
+     a450 hasValue i1
+     a451 hasValue i1
+     a452 hasValue i1
+     a453 hasValue i1
+     a454 hasValue i1
+     a455 hasValue i1
+     a456 hasValue i1
+     a457 hasValue i1
+     a458 hasValue i1
+     a459 hasValue i1
+     a460 hasValue i1
+     a461 hasValue i1
+     a462 hasValue i1
+     a463 hasValue i1
+     a464 hasValue i1
+     a465 hasValue i1
+     a466 hasValue i1
+     a467 hasValue i1
+     a468 hasValue i1
+     a469 hasValue i1
+     a470 hasValue i1
+     a471 hasValue i1
+     a472 hasValue i1
+     a473 hasValue i1
+     a474 hasValue i1
+     a475 hasValue i1
+     a476 hasValue i1
+     a477 hasValue i1
+     a478 hasValue i1
+     a479 hasValue i1
+     a480 hasValue i1
+     a481 hasValue i1
+     a482 hasValue i1
+     a483 hasValue i1
+     a484 hasValue i1
+     a485 hasValue i1
+     a486 hasValue i1
+     a487 hasValue i1
+     a488 hasValue i1
+     a489 hasValue i1
+     a490 hasValue i1
+     a491 hasValue i1
+     a492 hasValue i1
+     a493 hasValue i1
+     a494 hasValue i1
+     a495 hasValue i1
+     a496 hasValue i1
+     a497 hasValue i1
+     a498 hasValue i1
+     a499 hasValue i1
+     a500 hasValue i1
+
+relationInstance query1("i1[a1 hasValue ?x]")
+
+relationInstance query2("i1[?x hasValue ?y]")

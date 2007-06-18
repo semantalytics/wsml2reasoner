@@ -1,0 +1,1015 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://www.deepSubconcept-500-ontology.org#"
+ }
+
+ontology o500
+
+concept c1
+
+concept c2 subConceptOf c1
+
+concept c3 subConceptOf c2
+
+concept c4 subConceptOf c3
+
+concept c5 subConceptOf c4
+
+concept c6 subConceptOf c5
+
+concept c7 subConceptOf c6
+
+concept c8 subConceptOf c7
+
+concept c9 subConceptOf c8
+
+concept c10 subConceptOf c9
+
+concept c11 subConceptOf c10
+
+concept c12 subConceptOf c11
+
+concept c13 subConceptOf c12
+
+concept c14 subConceptOf c13
+
+concept c15 subConceptOf c14
+
+concept c16 subConceptOf c15
+
+concept c17 subConceptOf c16
+
+concept c18 subConceptOf c17
+
+concept c19 subConceptOf c18
+
+concept c20 subConceptOf c19
+
+concept c21 subConceptOf c20
+
+concept c22 subConceptOf c21
+
+concept c23 subConceptOf c22
+
+concept c24 subConceptOf c23
+
+concept c25 subConceptOf c24
+
+concept c26 subConceptOf c25
+
+concept c27 subConceptOf c26
+
+concept c28 subConceptOf c27
+
+concept c29 subConceptOf c28
+
+concept c30 subConceptOf c29
+
+concept c31 subConceptOf c30
+
+concept c32 subConceptOf c31
+
+concept c33 subConceptOf c32
+
+concept c34 subConceptOf c33
+
+concept c35 subConceptOf c34
+
+concept c36 subConceptOf c35
+
+concept c37 subConceptOf c36
+
+concept c38 subConceptOf c37
+
+concept c39 subConceptOf c38
+
+concept c40 subConceptOf c39
+
+concept c41 subConceptOf c40
+
+concept c42 subConceptOf c41
+
+concept c43 subConceptOf c42
+
+concept c44 subConceptOf c43
+
+concept c45 subConceptOf c44
+
+concept c46 subConceptOf c45
+
+concept c47 subConceptOf c46
+
+concept c48 subConceptOf c47
+
+concept c49 subConceptOf c48
+
+concept c50 subConceptOf c49
+
+concept c51 subConceptOf c50
+
+concept c52 subConceptOf c51
+
+concept c53 subConceptOf c52
+
+concept c54 subConceptOf c53
+
+concept c55 subConceptOf c54
+
+concept c56 subConceptOf c55
+
+concept c57 subConceptOf c56
+
+concept c58 subConceptOf c57
+
+concept c59 subConceptOf c58
+
+concept c60 subConceptOf c59
+
+concept c61 subConceptOf c60
+
+concept c62 subConceptOf c61
+
+concept c63 subConceptOf c62
+
+concept c64 subConceptOf c63
+
+concept c65 subConceptOf c64
+
+concept c66 subConceptOf c65
+
+concept c67 subConceptOf c66
+
+concept c68 subConceptOf c67
+
+concept c69 subConceptOf c68
+
+concept c70 subConceptOf c69
+
+concept c71 subConceptOf c70
+
+concept c72 subConceptOf c71
+
+concept c73 subConceptOf c72
+
+concept c74 subConceptOf c73
+
+concept c75 subConceptOf c74
+
+concept c76 subConceptOf c75
+
+concept c77 subConceptOf c76
+
+concept c78 subConceptOf c77
+
+concept c79 subConceptOf c78
+
+concept c80 subConceptOf c79
+
+concept c81 subConceptOf c80
+
+concept c82 subConceptOf c81
+
+concept c83 subConceptOf c82
+
+concept c84 subConceptOf c83
+
+concept c85 subConceptOf c84
+
+concept c86 subConceptOf c85
+
+concept c87 subConceptOf c86
+
+concept c88 subConceptOf c87
+
+concept c89 subConceptOf c88
+
+concept c90 subConceptOf c89
+
+concept c91 subConceptOf c90
+
+concept c92 subConceptOf c91
+
+concept c93 subConceptOf c92
+
+concept c94 subConceptOf c93
+
+concept c95 subConceptOf c94
+
+concept c96 subConceptOf c95
+
+concept c97 subConceptOf c96
+
+concept c98 subConceptOf c97
+
+concept c99 subConceptOf c98
+
+concept c100 subConceptOf c99
+
+concept c101 subConceptOf c100
+
+concept c102 subConceptOf c101
+
+concept c103 subConceptOf c102
+
+concept c104 subConceptOf c103
+
+concept c105 subConceptOf c104
+
+concept c106 subConceptOf c105
+
+concept c107 subConceptOf c106
+
+concept c108 subConceptOf c107
+
+concept c109 subConceptOf c108
+
+concept c110 subConceptOf c109
+
+concept c111 subConceptOf c110
+
+concept c112 subConceptOf c111
+
+concept c113 subConceptOf c112
+
+concept c114 subConceptOf c113
+
+concept c115 subConceptOf c114
+
+concept c116 subConceptOf c115
+
+concept c117 subConceptOf c116
+
+concept c118 subConceptOf c117
+
+concept c119 subConceptOf c118
+
+concept c120 subConceptOf c119
+
+concept c121 subConceptOf c120
+
+concept c122 subConceptOf c121
+
+concept c123 subConceptOf c122
+
+concept c124 subConceptOf c123
+
+concept c125 subConceptOf c124
+
+concept c126 subConceptOf c125
+
+concept c127 subConceptOf c126
+
+concept c128 subConceptOf c127
+
+concept c129 subConceptOf c128
+
+concept c130 subConceptOf c129
+
+concept c131 subConceptOf c130
+
+concept c132 subConceptOf c131
+
+concept c133 subConceptOf c132
+
+concept c134 subConceptOf c133
+
+concept c135 subConceptOf c134
+
+concept c136 subConceptOf c135
+
+concept c137 subConceptOf c136
+
+concept c138 subConceptOf c137
+
+concept c139 subConceptOf c138
+
+concept c140 subConceptOf c139
+
+concept c141 subConceptOf c140
+
+concept c142 subConceptOf c141
+
+concept c143 subConceptOf c142
+
+concept c144 subConceptOf c143
+
+concept c145 subConceptOf c144
+
+concept c146 subConceptOf c145
+
+concept c147 subConceptOf c146
+
+concept c148 subConceptOf c147
+
+concept c149 subConceptOf c148
+
+concept c150 subConceptOf c149
+
+concept c151 subConceptOf c150
+
+concept c152 subConceptOf c151
+
+concept c153 subConceptOf c152
+
+concept c154 subConceptOf c153
+
+concept c155 subConceptOf c154
+
+concept c156 subConceptOf c155
+
+concept c157 subConceptOf c156
+
+concept c158 subConceptOf c157
+
+concept c159 subConceptOf c158
+
+concept c160 subConceptOf c159
+
+concept c161 subConceptOf c160
+
+concept c162 subConceptOf c161
+
+concept c163 subConceptOf c162
+
+concept c164 subConceptOf c163
+
+concept c165 subConceptOf c164
+
+concept c166 subConceptOf c165
+
+concept c167 subConceptOf c166
+
+concept c168 subConceptOf c167
+
+concept c169 subConceptOf c168
+
+concept c170 subConceptOf c169
+
+concept c171 subConceptOf c170
+
+concept c172 subConceptOf c171
+
+concept c173 subConceptOf c172
+
+concept c174 subConceptOf c173
+
+concept c175 subConceptOf c174
+
+concept c176 subConceptOf c175
+
+concept c177 subConceptOf c176
+
+concept c178 subConceptOf c177
+
+concept c179 subConceptOf c178
+
+concept c180 subConceptOf c179
+
+concept c181 subConceptOf c180
+
+concept c182 subConceptOf c181
+
+concept c183 subConceptOf c182
+
+concept c184 subConceptOf c183
+
+concept c185 subConceptOf c184
+
+concept c186 subConceptOf c185
+
+concept c187 subConceptOf c186
+
+concept c188 subConceptOf c187
+
+concept c189 subConceptOf c188
+
+concept c190 subConceptOf c189
+
+concept c191 subConceptOf c190
+
+concept c192 subConceptOf c191
+
+concept c193 subConceptOf c192
+
+concept c194 subConceptOf c193
+
+concept c195 subConceptOf c194
+
+concept c196 subConceptOf c195
+
+concept c197 subConceptOf c196
+
+concept c198 subConceptOf c197
+
+concept c199 subConceptOf c198
+
+concept c200 subConceptOf c199
+
+concept c201 subConceptOf c200
+
+concept c202 subConceptOf c201
+
+concept c203 subConceptOf c202
+
+concept c204 subConceptOf c203
+
+concept c205 subConceptOf c204
+
+concept c206 subConceptOf c205
+
+concept c207 subConceptOf c206
+
+concept c208 subConceptOf c207
+
+concept c209 subConceptOf c208
+
+concept c210 subConceptOf c209
+
+concept c211 subConceptOf c210
+
+concept c212 subConceptOf c211
+
+concept c213 subConceptOf c212
+
+concept c214 subConceptOf c213
+
+concept c215 subConceptOf c214
+
+concept c216 subConceptOf c215
+
+concept c217 subConceptOf c216
+
+concept c218 subConceptOf c217
+
+concept c219 subConceptOf c218
+
+concept c220 subConceptOf c219
+
+concept c221 subConceptOf c220
+
+concept c222 subConceptOf c221
+
+concept c223 subConceptOf c222
+
+concept c224 subConceptOf c223
+
+concept c225 subConceptOf c224
+
+concept c226 subConceptOf c225
+
+concept c227 subConceptOf c226
+
+concept c228 subConceptOf c227
+
+concept c229 subConceptOf c228
+
+concept c230 subConceptOf c229
+
+concept c231 subConceptOf c230
+
+concept c232 subConceptOf c231
+
+concept c233 subConceptOf c232
+
+concept c234 subConceptOf c233
+
+concept c235 subConceptOf c234
+
+concept c236 subConceptOf c235
+
+concept c237 subConceptOf c236
+
+concept c238 subConceptOf c237
+
+concept c239 subConceptOf c238
+
+concept c240 subConceptOf c239
+
+concept c241 subConceptOf c240
+
+concept c242 subConceptOf c241
+
+concept c243 subConceptOf c242
+
+concept c244 subConceptOf c243
+
+concept c245 subConceptOf c244
+
+concept c246 subConceptOf c245
+
+concept c247 subConceptOf c246
+
+concept c248 subConceptOf c247
+
+concept c249 subConceptOf c248
+
+concept c250 subConceptOf c249
+
+concept c251 subConceptOf c250
+
+concept c252 subConceptOf c251
+
+concept c253 subConceptOf c252
+
+concept c254 subConceptOf c253
+
+concept c255 subConceptOf c254
+
+concept c256 subConceptOf c255
+
+concept c257 subConceptOf c256
+
+concept c258 subConceptOf c257
+
+concept c259 subConceptOf c258
+
+concept c260 subConceptOf c259
+
+concept c261 subConceptOf c260
+
+concept c262 subConceptOf c261
+
+concept c263 subConceptOf c262
+
+concept c264 subConceptOf c263
+
+concept c265 subConceptOf c264
+
+concept c266 subConceptOf c265
+
+concept c267 subConceptOf c266
+
+concept c268 subConceptOf c267
+
+concept c269 subConceptOf c268
+
+concept c270 subConceptOf c269
+
+concept c271 subConceptOf c270
+
+concept c272 subConceptOf c271
+
+concept c273 subConceptOf c272
+
+concept c274 subConceptOf c273
+
+concept c275 subConceptOf c274
+
+concept c276 subConceptOf c275
+
+concept c277 subConceptOf c276
+
+concept c278 subConceptOf c277
+
+concept c279 subConceptOf c278
+
+concept c280 subConceptOf c279
+
+concept c281 subConceptOf c280
+
+concept c282 subConceptOf c281
+
+concept c283 subConceptOf c282
+
+concept c284 subConceptOf c283
+
+concept c285 subConceptOf c284
+
+concept c286 subConceptOf c285
+
+concept c287 subConceptOf c286
+
+concept c288 subConceptOf c287
+
+concept c289 subConceptOf c288
+
+concept c290 subConceptOf c289
+
+concept c291 subConceptOf c290
+
+concept c292 subConceptOf c291
+
+concept c293 subConceptOf c292
+
+concept c294 subConceptOf c293
+
+concept c295 subConceptOf c294
+
+concept c296 subConceptOf c295
+
+concept c297 subConceptOf c296
+
+concept c298 subConceptOf c297
+
+concept c299 subConceptOf c298
+
+concept c300 subConceptOf c299
+
+concept c301 subConceptOf c300
+
+concept c302 subConceptOf c301
+
+concept c303 subConceptOf c302
+
+concept c304 subConceptOf c303
+
+concept c305 subConceptOf c304
+
+concept c306 subConceptOf c305
+
+concept c307 subConceptOf c306
+
+concept c308 subConceptOf c307
+
+concept c309 subConceptOf c308
+
+concept c310 subConceptOf c309
+
+concept c311 subConceptOf c310
+
+concept c312 subConceptOf c311
+
+concept c313 subConceptOf c312
+
+concept c314 subConceptOf c313
+
+concept c315 subConceptOf c314
+
+concept c316 subConceptOf c315
+
+concept c317 subConceptOf c316
+
+concept c318 subConceptOf c317
+
+concept c319 subConceptOf c318
+
+concept c320 subConceptOf c319
+
+concept c321 subConceptOf c320
+
+concept c322 subConceptOf c321
+
+concept c323 subConceptOf c322
+
+concept c324 subConceptOf c323
+
+concept c325 subConceptOf c324
+
+concept c326 subConceptOf c325
+
+concept c327 subConceptOf c326
+
+concept c328 subConceptOf c327
+
+concept c329 subConceptOf c328
+
+concept c330 subConceptOf c329
+
+concept c331 subConceptOf c330
+
+concept c332 subConceptOf c331
+
+concept c333 subConceptOf c332
+
+concept c334 subConceptOf c333
+
+concept c335 subConceptOf c334
+
+concept c336 subConceptOf c335
+
+concept c337 subConceptOf c336
+
+concept c338 subConceptOf c337
+
+concept c339 subConceptOf c338
+
+concept c340 subConceptOf c339
+
+concept c341 subConceptOf c340
+
+concept c342 subConceptOf c341
+
+concept c343 subConceptOf c342
+
+concept c344 subConceptOf c343
+
+concept c345 subConceptOf c344
+
+concept c346 subConceptOf c345
+
+concept c347 subConceptOf c346
+
+concept c348 subConceptOf c347
+
+concept c349 subConceptOf c348
+
+concept c350 subConceptOf c349
+
+concept c351 subConceptOf c350
+
+concept c352 subConceptOf c351
+
+concept c353 subConceptOf c352
+
+concept c354 subConceptOf c353
+
+concept c355 subConceptOf c354
+
+concept c356 subConceptOf c355
+
+concept c357 subConceptOf c356
+
+concept c358 subConceptOf c357
+
+concept c359 subConceptOf c358
+
+concept c360 subConceptOf c359
+
+concept c361 subConceptOf c360
+
+concept c362 subConceptOf c361
+
+concept c363 subConceptOf c362
+
+concept c364 subConceptOf c363
+
+concept c365 subConceptOf c364
+
+concept c366 subConceptOf c365
+
+concept c367 subConceptOf c366
+
+concept c368 subConceptOf c367
+
+concept c369 subConceptOf c368
+
+concept c370 subConceptOf c369
+
+concept c371 subConceptOf c370
+
+concept c372 subConceptOf c371
+
+concept c373 subConceptOf c372
+
+concept c374 subConceptOf c373
+
+concept c375 subConceptOf c374
+
+concept c376 subConceptOf c375
+
+concept c377 subConceptOf c376
+
+concept c378 subConceptOf c377
+
+concept c379 subConceptOf c378
+
+concept c380 subConceptOf c379
+
+concept c381 subConceptOf c380
+
+concept c382 subConceptOf c381
+
+concept c383 subConceptOf c382
+
+concept c384 subConceptOf c383
+
+concept c385 subConceptOf c384
+
+concept c386 subConceptOf c385
+
+concept c387 subConceptOf c386
+
+concept c388 subConceptOf c387
+
+concept c389 subConceptOf c388
+
+concept c390 subConceptOf c389
+
+concept c391 subConceptOf c390
+
+concept c392 subConceptOf c391
+
+concept c393 subConceptOf c392
+
+concept c394 subConceptOf c393
+
+concept c395 subConceptOf c394
+
+concept c396 subConceptOf c395
+
+concept c397 subConceptOf c396
+
+concept c398 subConceptOf c397
+
+concept c399 subConceptOf c398
+
+concept c400 subConceptOf c399
+
+concept c401 subConceptOf c400
+
+concept c402 subConceptOf c401
+
+concept c403 subConceptOf c402
+
+concept c404 subConceptOf c403
+
+concept c405 subConceptOf c404
+
+concept c406 subConceptOf c405
+
+concept c407 subConceptOf c406
+
+concept c408 subConceptOf c407
+
+concept c409 subConceptOf c408
+
+concept c410 subConceptOf c409
+
+concept c411 subConceptOf c410
+
+concept c412 subConceptOf c411
+
+concept c413 subConceptOf c412
+
+concept c414 subConceptOf c413
+
+concept c415 subConceptOf c414
+
+concept c416 subConceptOf c415
+
+concept c417 subConceptOf c416
+
+concept c418 subConceptOf c417
+
+concept c419 subConceptOf c418
+
+concept c420 subConceptOf c419
+
+concept c421 subConceptOf c420
+
+concept c422 subConceptOf c421
+
+concept c423 subConceptOf c422
+
+concept c424 subConceptOf c423
+
+concept c425 subConceptOf c424
+
+concept c426 subConceptOf c425
+
+concept c427 subConceptOf c426
+
+concept c428 subConceptOf c427
+
+concept c429 subConceptOf c428
+
+concept c430 subConceptOf c429
+
+concept c431 subConceptOf c430
+
+concept c432 subConceptOf c431
+
+concept c433 subConceptOf c432
+
+concept c434 subConceptOf c433
+
+concept c435 subConceptOf c434
+
+concept c436 subConceptOf c435
+
+concept c437 subConceptOf c436
+
+concept c438 subConceptOf c437
+
+concept c439 subConceptOf c438
+
+concept c440 subConceptOf c439
+
+concept c441 subConceptOf c440
+
+concept c442 subConceptOf c441
+
+concept c443 subConceptOf c442
+
+concept c444 subConceptOf c443
+
+concept c445 subConceptOf c444
+
+concept c446 subConceptOf c445
+
+concept c447 subConceptOf c446
+
+concept c448 subConceptOf c447
+
+concept c449 subConceptOf c448
+
+concept c450 subConceptOf c449
+
+concept c451 subConceptOf c450
+
+concept c452 subConceptOf c451
+
+concept c453 subConceptOf c452
+
+concept c454 subConceptOf c453
+
+concept c455 subConceptOf c454
+
+concept c456 subConceptOf c455
+
+concept c457 subConceptOf c456
+
+concept c458 subConceptOf c457
+
+concept c459 subConceptOf c458
+
+concept c460 subConceptOf c459
+
+concept c461 subConceptOf c460
+
+concept c462 subConceptOf c461
+
+concept c463 subConceptOf c462
+
+concept c464 subConceptOf c463
+
+concept c465 subConceptOf c464
+
+concept c466 subConceptOf c465
+
+concept c467 subConceptOf c466
+
+concept c468 subConceptOf c467
+
+concept c469 subConceptOf c468
+
+concept c470 subConceptOf c469
+
+concept c471 subConceptOf c470
+
+concept c472 subConceptOf c471
+
+concept c473 subConceptOf c472
+
+concept c474 subConceptOf c473
+
+concept c475 subConceptOf c474
+
+concept c476 subConceptOf c475
+
+concept c477 subConceptOf c476
+
+concept c478 subConceptOf c477
+
+concept c479 subConceptOf c478
+
+concept c480 subConceptOf c479
+
+concept c481 subConceptOf c480
+
+concept c482 subConceptOf c481
+
+concept c483 subConceptOf c482
+
+concept c484 subConceptOf c483
+
+concept c485 subConceptOf c484
+
+concept c486 subConceptOf c485
+
+concept c487 subConceptOf c486
+
+concept c488 subConceptOf c487
+
+concept c489 subConceptOf c488
+
+concept c490 subConceptOf c489
+
+concept c491 subConceptOf c490
+
+concept c492 subConceptOf c491
+
+concept c493 subConceptOf c492
+
+concept c494 subConceptOf c493
+
+concept c495 subConceptOf c494
+
+concept c496 subConceptOf c495
+
+concept c497 subConceptOf c496
+
+concept c498 subConceptOf c497
+
+concept c499 subConceptOf c498
+
+concept c500 subConceptOf c499
+
+concept c501 subConceptOf c500
+
+instance i1 memberOf c1
+
+instance i2 memberOf c501
+
+relationInstance query1("?x memberOf c1")
+
+relationInstance query2("?x memberOf ?y")

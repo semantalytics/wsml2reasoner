@@ -1,0 +1,19 @@
+namespace _"urn:foo22#"
+
+ontology o2
+
+concept c1
+concept c2 subConceptOf c1
+concept c3 subConceptOf c2
+concept c4 subConceptOf c3
+concept c5 subConceptOf c4
+concept c6 subConceptOf c5
+
+instance i1 memberOf c1
+
+//queries
+relationInstance query001("?x memberOf c6")
+relationInstance query001("?x memberOf ?y")
+  
+  
+  

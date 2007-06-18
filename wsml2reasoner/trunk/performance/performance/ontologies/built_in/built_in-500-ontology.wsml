@@ -1,0 +1,2527 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://www.built_in-500-ontology.org#"
+ }
+
+ontology o500
+
+axiom ax1
+     definedBy 
+          ?x[a0 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a1 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a2 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a3 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a4 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a5 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a6 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a7 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a8 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a9 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a10 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a11 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a12 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a13 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a14 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a15 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a16 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a17 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a18 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a19 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a20 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a21 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a22 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a23 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a24 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a25 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a26 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a27 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a28 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a29 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a30 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a31 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a32 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a33 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a34 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a35 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a36 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a37 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a38 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a39 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a40 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a41 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a42 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a43 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a44 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a45 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a46 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a47 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a48 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a49 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a50 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a51 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a52 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a53 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a54 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a55 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a56 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a57 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a58 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a59 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a60 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a61 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a62 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a63 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a64 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a65 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a66 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a67 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a68 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a69 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a70 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a71 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a72 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a73 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a74 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a75 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a76 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a77 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a78 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a79 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a80 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a81 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a82 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a83 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a84 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a85 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a86 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a87 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a88 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a89 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a90 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a91 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a92 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a93 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a94 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a95 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a96 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a97 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a98 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a99 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a100 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a101 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a102 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a103 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a104 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a105 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a106 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a107 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a108 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a109 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a110 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a111 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a112 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a113 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a114 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a115 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a116 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a117 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a118 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a119 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a120 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a121 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a122 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a123 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a124 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a125 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a126 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a127 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a128 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a129 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a130 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a131 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a132 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a133 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a134 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a135 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a136 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a137 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a138 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a139 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a140 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a141 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a142 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a143 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a144 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a145 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a146 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a147 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a148 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a149 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a150 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a151 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a152 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a153 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a154 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a155 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a156 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a157 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a158 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a159 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a160 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a161 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a162 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a163 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a164 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a165 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a166 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a167 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a168 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a169 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a170 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a171 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a172 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a173 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a174 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a175 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a176 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a177 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a178 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a179 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a180 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a181 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a182 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a183 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a184 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a185 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a186 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a187 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a188 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a189 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a190 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a191 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a192 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a193 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a194 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a195 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a196 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a197 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a198 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a199 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a200 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a201 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a202 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a203 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a204 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a205 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a206 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a207 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a208 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a209 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a210 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a211 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a212 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a213 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a214 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a215 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a216 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a217 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a218 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a219 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a220 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a221 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a222 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a223 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a224 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a225 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a226 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a227 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a228 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a229 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a230 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a231 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a232 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a233 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a234 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a235 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a236 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a237 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a238 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a239 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a240 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a241 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a242 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a243 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a244 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a245 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a246 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a247 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a248 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a249 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a250 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a251 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a252 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a253 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a254 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a255 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a256 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a257 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a258 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a259 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a260 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a261 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a262 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a263 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a264 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a265 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a266 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a267 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a268 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a269 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a270 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a271 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a272 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a273 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a274 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a275 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a276 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a277 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a278 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a279 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a280 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a281 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a282 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a283 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a284 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a285 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a286 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a287 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a288 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a289 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a290 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a291 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a292 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a293 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a294 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a295 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a296 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a297 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a298 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a299 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a300 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a301 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a302 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a303 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a304 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a305 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a306 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a307 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a308 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a309 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a310 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a311 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a312 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a313 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a314 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a315 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a316 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a317 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a318 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a319 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a320 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a321 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a322 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a323 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a324 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a325 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a326 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a327 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a328 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a329 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a330 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a331 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a332 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a333 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a334 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a335 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a336 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a337 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a338 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a339 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a340 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a341 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a342 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a343 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a344 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a345 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a346 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a347 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a348 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a349 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a350 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a351 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a352 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a353 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a354 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a355 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a356 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a357 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a358 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a359 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a360 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a361 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a362 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a363 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a364 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a365 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a366 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a367 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a368 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a369 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a370 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a371 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a372 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a373 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a374 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a375 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a376 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a377 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a378 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a379 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a380 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a381 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a382 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a383 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a384 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a385 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a386 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a387 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a388 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a389 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a390 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a391 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a392 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a393 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a394 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a395 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a396 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a397 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a398 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a399 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a400 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a401 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a402 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a403 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a404 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a405 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a406 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a407 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a408 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a409 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a410 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a411 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a412 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a413 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a414 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a415 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a416 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a417 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a418 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a419 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a420 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a421 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a422 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a423 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a424 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a425 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a426 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a427 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a428 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a429 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a430 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a431 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a432 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a433 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a434 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a435 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a436 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a437 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a438 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a439 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a440 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a441 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a442 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a443 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a444 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a445 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a446 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a447 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a448 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a449 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a450 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a451 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a452 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a453 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a454 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a455 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a456 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a457 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a458 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a459 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a460 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a461 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a462 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a463 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a464 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a465 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a466 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a467 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a468 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a469 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a470 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a471 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a472 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a473 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a474 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a475 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a476 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a477 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a478 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a479 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a480 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a481 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a482 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a483 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a484 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a485 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a486 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a487 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a488 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a489 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a490 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a491 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a492 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a493 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a494 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a495 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a496 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a497 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a498 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a499 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+          ?x[a500 hasValue ?y] and ?y < 16 implies ?x memberOf c2.
+
+concept c1
+     a0 ofType _integer
+     a1 ofType _integer
+     a2 ofType _integer
+     a3 ofType _integer
+     a4 ofType _integer
+     a5 ofType _integer
+     a6 ofType _integer
+     a7 ofType _integer
+     a8 ofType _integer
+     a9 ofType _integer
+     a10 ofType _integer
+     a11 ofType _integer
+     a12 ofType _integer
+     a13 ofType _integer
+     a14 ofType _integer
+     a15 ofType _integer
+     a16 ofType _integer
+     a17 ofType _integer
+     a18 ofType _integer
+     a19 ofType _integer
+     a20 ofType _integer
+     a21 ofType _integer
+     a22 ofType _integer
+     a23 ofType _integer
+     a24 ofType _integer
+     a25 ofType _integer
+     a26 ofType _integer
+     a27 ofType _integer
+     a28 ofType _integer
+     a29 ofType _integer
+     a30 ofType _integer
+     a31 ofType _integer
+     a32 ofType _integer
+     a33 ofType _integer
+     a34 ofType _integer
+     a35 ofType _integer
+     a36 ofType _integer
+     a37 ofType _integer
+     a38 ofType _integer
+     a39 ofType _integer
+     a40 ofType _integer
+     a41 ofType _integer
+     a42 ofType _integer
+     a43 ofType _integer
+     a44 ofType _integer
+     a45 ofType _integer
+     a46 ofType _integer
+     a47 ofType _integer
+     a48 ofType _integer
+     a49 ofType _integer
+     a50 ofType _integer
+     a51 ofType _integer
+     a52 ofType _integer
+     a53 ofType _integer
+     a54 ofType _integer
+     a55 ofType _integer
+     a56 ofType _integer
+     a57 ofType _integer
+     a58 ofType _integer
+     a59 ofType _integer
+     a60 ofType _integer
+     a61 ofType _integer
+     a62 ofType _integer
+     a63 ofType _integer
+     a64 ofType _integer
+     a65 ofType _integer
+     a66 ofType _integer
+     a67 ofType _integer
+     a68 ofType _integer
+     a69 ofType _integer
+     a70 ofType _integer
+     a71 ofType _integer
+     a72 ofType _integer
+     a73 ofType _integer
+     a74 ofType _integer
+     a75 ofType _integer
+     a76 ofType _integer
+     a77 ofType _integer
+     a78 ofType _integer
+     a79 ofType _integer
+     a80 ofType _integer
+     a81 ofType _integer
+     a82 ofType _integer
+     a83 ofType _integer
+     a84 ofType _integer
+     a85 ofType _integer
+     a86 ofType _integer
+     a87 ofType _integer
+     a88 ofType _integer
+     a89 ofType _integer
+     a90 ofType _integer
+     a91 ofType _integer
+     a92 ofType _integer
+     a93 ofType _integer
+     a94 ofType _integer
+     a95 ofType _integer
+     a96 ofType _integer
+     a97 ofType _integer
+     a98 ofType _integer
+     a99 ofType _integer
+     a100 ofType _integer
+     a101 ofType _integer
+     a102 ofType _integer
+     a103 ofType _integer
+     a104 ofType _integer
+     a105 ofType _integer
+     a106 ofType _integer
+     a107 ofType _integer
+     a108 ofType _integer
+     a109 ofType _integer
+     a110 ofType _integer
+     a111 ofType _integer
+     a112 ofType _integer
+     a113 ofType _integer
+     a114 ofType _integer
+     a115 ofType _integer
+     a116 ofType _integer
+     a117 ofType _integer
+     a118 ofType _integer
+     a119 ofType _integer
+     a120 ofType _integer
+     a121 ofType _integer
+     a122 ofType _integer
+     a123 ofType _integer
+     a124 ofType _integer
+     a125 ofType _integer
+     a126 ofType _integer
+     a127 ofType _integer
+     a128 ofType _integer
+     a129 ofType _integer
+     a130 ofType _integer
+     a131 ofType _integer
+     a132 ofType _integer
+     a133 ofType _integer
+     a134 ofType _integer
+     a135 ofType _integer
+     a136 ofType _integer
+     a137 ofType _integer
+     a138 ofType _integer
+     a139 ofType _integer
+     a140 ofType _integer
+     a141 ofType _integer
+     a142 ofType _integer
+     a143 ofType _integer
+     a144 ofType _integer
+     a145 ofType _integer
+     a146 ofType _integer
+     a147 ofType _integer
+     a148 ofType _integer
+     a149 ofType _integer
+     a150 ofType _integer
+     a151 ofType _integer
+     a152 ofType _integer
+     a153 ofType _integer
+     a154 ofType _integer
+     a155 ofType _integer
+     a156 ofType _integer
+     a157 ofType _integer
+     a158 ofType _integer
+     a159 ofType _integer
+     a160 ofType _integer
+     a161 ofType _integer
+     a162 ofType _integer
+     a163 ofType _integer
+     a164 ofType _integer
+     a165 ofType _integer
+     a166 ofType _integer
+     a167 ofType _integer
+     a168 ofType _integer
+     a169 ofType _integer
+     a170 ofType _integer
+     a171 ofType _integer
+     a172 ofType _integer
+     a173 ofType _integer
+     a174 ofType _integer
+     a175 ofType _integer
+     a176 ofType _integer
+     a177 ofType _integer
+     a178 ofType _integer
+     a179 ofType _integer
+     a180 ofType _integer
+     a181 ofType _integer
+     a182 ofType _integer
+     a183 ofType _integer
+     a184 ofType _integer
+     a185 ofType _integer
+     a186 ofType _integer
+     a187 ofType _integer
+     a188 ofType _integer
+     a189 ofType _integer
+     a190 ofType _integer
+     a191 ofType _integer
+     a192 ofType _integer
+     a193 ofType _integer
+     a194 ofType _integer
+     a195 ofType _integer
+     a196 ofType _integer
+     a197 ofType _integer
+     a198 ofType _integer
+     a199 ofType _integer
+     a200 ofType _integer
+     a201 ofType _integer
+     a202 ofType _integer
+     a203 ofType _integer
+     a204 ofType _integer
+     a205 ofType _integer
+     a206 ofType _integer
+     a207 ofType _integer
+     a208 ofType _integer
+     a209 ofType _integer
+     a210 ofType _integer
+     a211 ofType _integer
+     a212 ofType _integer
+     a213 ofType _integer
+     a214 ofType _integer
+     a215 ofType _integer
+     a216 ofType _integer
+     a217 ofType _integer
+     a218 ofType _integer
+     a219 ofType _integer
+     a220 ofType _integer
+     a221 ofType _integer
+     a222 ofType _integer
+     a223 ofType _integer
+     a224 ofType _integer
+     a225 ofType _integer
+     a226 ofType _integer
+     a227 ofType _integer
+     a228 ofType _integer
+     a229 ofType _integer
+     a230 ofType _integer
+     a231 ofType _integer
+     a232 ofType _integer
+     a233 ofType _integer
+     a234 ofType _integer
+     a235 ofType _integer
+     a236 ofType _integer
+     a237 ofType _integer
+     a238 ofType _integer
+     a239 ofType _integer
+     a240 ofType _integer
+     a241 ofType _integer
+     a242 ofType _integer
+     a243 ofType _integer
+     a244 ofType _integer
+     a245 ofType _integer
+     a246 ofType _integer
+     a247 ofType _integer
+     a248 ofType _integer
+     a249 ofType _integer
+     a250 ofType _integer
+     a251 ofType _integer
+     a252 ofType _integer
+     a253 ofType _integer
+     a254 ofType _integer
+     a255 ofType _integer
+     a256 ofType _integer
+     a257 ofType _integer
+     a258 ofType _integer
+     a259 ofType _integer
+     a260 ofType _integer
+     a261 ofType _integer
+     a262 ofType _integer
+     a263 ofType _integer
+     a264 ofType _integer
+     a265 ofType _integer
+     a266 ofType _integer
+     a267 ofType _integer
+     a268 ofType _integer
+     a269 ofType _integer
+     a270 ofType _integer
+     a271 ofType _integer
+     a272 ofType _integer
+     a273 ofType _integer
+     a274 ofType _integer
+     a275 ofType _integer
+     a276 ofType _integer
+     a277 ofType _integer
+     a278 ofType _integer
+     a279 ofType _integer
+     a280 ofType _integer
+     a281 ofType _integer
+     a282 ofType _integer
+     a283 ofType _integer
+     a284 ofType _integer
+     a285 ofType _integer
+     a286 ofType _integer
+     a287 ofType _integer
+     a288 ofType _integer
+     a289 ofType _integer
+     a290 ofType _integer
+     a291 ofType _integer
+     a292 ofType _integer
+     a293 ofType _integer
+     a294 ofType _integer
+     a295 ofType _integer
+     a296 ofType _integer
+     a297 ofType _integer
+     a298 ofType _integer
+     a299 ofType _integer
+     a300 ofType _integer
+     a301 ofType _integer
+     a302 ofType _integer
+     a303 ofType _integer
+     a304 ofType _integer
+     a305 ofType _integer
+     a306 ofType _integer
+     a307 ofType _integer
+     a308 ofType _integer
+     a309 ofType _integer
+     a310 ofType _integer
+     a311 ofType _integer
+     a312 ofType _integer
+     a313 ofType _integer
+     a314 ofType _integer
+     a315 ofType _integer
+     a316 ofType _integer
+     a317 ofType _integer
+     a318 ofType _integer
+     a319 ofType _integer
+     a320 ofType _integer
+     a321 ofType _integer
+     a322 ofType _integer
+     a323 ofType _integer
+     a324 ofType _integer
+     a325 ofType _integer
+     a326 ofType _integer
+     a327 ofType _integer
+     a328 ofType _integer
+     a329 ofType _integer
+     a330 ofType _integer
+     a331 ofType _integer
+     a332 ofType _integer
+     a333 ofType _integer
+     a334 ofType _integer
+     a335 ofType _integer
+     a336 ofType _integer
+     a337 ofType _integer
+     a338 ofType _integer
+     a339 ofType _integer
+     a340 ofType _integer
+     a341 ofType _integer
+     a342 ofType _integer
+     a343 ofType _integer
+     a344 ofType _integer
+     a345 ofType _integer
+     a346 ofType _integer
+     a347 ofType _integer
+     a348 ofType _integer
+     a349 ofType _integer
+     a350 ofType _integer
+     a351 ofType _integer
+     a352 ofType _integer
+     a353 ofType _integer
+     a354 ofType _integer
+     a355 ofType _integer
+     a356 ofType _integer
+     a357 ofType _integer
+     a358 ofType _integer
+     a359 ofType _integer
+     a360 ofType _integer
+     a361 ofType _integer
+     a362 ofType _integer
+     a363 ofType _integer
+     a364 ofType _integer
+     a365 ofType _integer
+     a366 ofType _integer
+     a367 ofType _integer
+     a368 ofType _integer
+     a369 ofType _integer
+     a370 ofType _integer
+     a371 ofType _integer
+     a372 ofType _integer
+     a373 ofType _integer
+     a374 ofType _integer
+     a375 ofType _integer
+     a376 ofType _integer
+     a377 ofType _integer
+     a378 ofType _integer
+     a379 ofType _integer
+     a380 ofType _integer
+     a381 ofType _integer
+     a382 ofType _integer
+     a383 ofType _integer
+     a384 ofType _integer
+     a385 ofType _integer
+     a386 ofType _integer
+     a387 ofType _integer
+     a388 ofType _integer
+     a389 ofType _integer
+     a390 ofType _integer
+     a391 ofType _integer
+     a392 ofType _integer
+     a393 ofType _integer
+     a394 ofType _integer
+     a395 ofType _integer
+     a396 ofType _integer
+     a397 ofType _integer
+     a398 ofType _integer
+     a399 ofType _integer
+     a400 ofType _integer
+     a401 ofType _integer
+     a402 ofType _integer
+     a403 ofType _integer
+     a404 ofType _integer
+     a405 ofType _integer
+     a406 ofType _integer
+     a407 ofType _integer
+     a408 ofType _integer
+     a409 ofType _integer
+     a410 ofType _integer
+     a411 ofType _integer
+     a412 ofType _integer
+     a413 ofType _integer
+     a414 ofType _integer
+     a415 ofType _integer
+     a416 ofType _integer
+     a417 ofType _integer
+     a418 ofType _integer
+     a419 ofType _integer
+     a420 ofType _integer
+     a421 ofType _integer
+     a422 ofType _integer
+     a423 ofType _integer
+     a424 ofType _integer
+     a425 ofType _integer
+     a426 ofType _integer
+     a427 ofType _integer
+     a428 ofType _integer
+     a429 ofType _integer
+     a430 ofType _integer
+     a431 ofType _integer
+     a432 ofType _integer
+     a433 ofType _integer
+     a434 ofType _integer
+     a435 ofType _integer
+     a436 ofType _integer
+     a437 ofType _integer
+     a438 ofType _integer
+     a439 ofType _integer
+     a440 ofType _integer
+     a441 ofType _integer
+     a442 ofType _integer
+     a443 ofType _integer
+     a444 ofType _integer
+     a445 ofType _integer
+     a446 ofType _integer
+     a447 ofType _integer
+     a448 ofType _integer
+     a449 ofType _integer
+     a450 ofType _integer
+     a451 ofType _integer
+     a452 ofType _integer
+     a453 ofType _integer
+     a454 ofType _integer
+     a455 ofType _integer
+     a456 ofType _integer
+     a457 ofType _integer
+     a458 ofType _integer
+     a459 ofType _integer
+     a460 ofType _integer
+     a461 ofType _integer
+     a462 ofType _integer
+     a463 ofType _integer
+     a464 ofType _integer
+     a465 ofType _integer
+     a466 ofType _integer
+     a467 ofType _integer
+     a468 ofType _integer
+     a469 ofType _integer
+     a470 ofType _integer
+     a471 ofType _integer
+     a472 ofType _integer
+     a473 ofType _integer
+     a474 ofType _integer
+     a475 ofType _integer
+     a476 ofType _integer
+     a477 ofType _integer
+     a478 ofType _integer
+     a479 ofType _integer
+     a480 ofType _integer
+     a481 ofType _integer
+     a482 ofType _integer
+     a483 ofType _integer
+     a484 ofType _integer
+     a485 ofType _integer
+     a486 ofType _integer
+     a487 ofType _integer
+     a488 ofType _integer
+     a489 ofType _integer
+     a490 ofType _integer
+     a491 ofType _integer
+     a492 ofType _integer
+     a493 ofType _integer
+     a494 ofType _integer
+     a495 ofType _integer
+     a496 ofType _integer
+     a497 ofType _integer
+     a498 ofType _integer
+     a499 ofType _integer
+     a500 ofType _integer
+
+concept c2
+
+instance i1
+     a0 hasValue 17
+
+instance i2
+     a0 hasValue 14
+
+instance i3
+     a0 hasValue 20
+
+instance i4
+     a1 hasValue 73
+
+instance i5
+     a2 hasValue 40
+
+instance i6
+     a3 hasValue 35
+
+instance i7
+     a4 hasValue 32
+
+instance i8
+     a5 hasValue 10
+
+instance i9
+     a6 hasValue 38
+
+instance i10
+     a7 hasValue 65
+
+instance i11
+     a8 hasValue 7
+
+instance i12
+     a9 hasValue 41
+
+instance i13
+     a10 hasValue 10
+
+instance i14
+     a11 hasValue 36
+
+instance i15
+     a12 hasValue 8
+
+instance i16
+     a13 hasValue 50
+
+instance i17
+     a14 hasValue 33
+
+instance i18
+     a15 hasValue 77
+
+instance i19
+     a16 hasValue 65
+
+instance i20
+     a17 hasValue 29
+
+instance i21
+     a18 hasValue 32
+
+instance i22
+     a19 hasValue 13
+
+instance i23
+     a20 hasValue 67
+
+instance i24
+     a21 hasValue 41
+
+instance i25
+     a22 hasValue 8
+
+instance i26
+     a23 hasValue 65
+
+instance i27
+     a24 hasValue 29
+
+instance i28
+     a25 hasValue 35
+
+instance i29
+     a26 hasValue 31
+
+instance i30
+     a27 hasValue 56
+
+instance i31
+     a28 hasValue 55
+
+instance i32
+     a29 hasValue 2
+
+instance i33
+     a30 hasValue 79
+
+instance i34
+     a31 hasValue 47
+
+instance i35
+     a32 hasValue 8
+
+instance i36
+     a33 hasValue 26
+
+instance i37
+     a34 hasValue 44
+
+instance i38
+     a35 hasValue 67
+
+instance i39
+     a36 hasValue 14
+
+instance i40
+     a37 hasValue 47
+
+instance i41
+     a38 hasValue 65
+
+instance i42
+     a39 hasValue 8
+
+instance i43
+     a40 hasValue 35
+
+instance i44
+     a41 hasValue 9
+
+instance i45
+     a42 hasValue 28
+
+instance i46
+     a43 hasValue 55
+
+instance i47
+     a44 hasValue 51
+
+instance i48
+     a45 hasValue 4
+
+instance i49
+     a46 hasValue 53
+
+instance i50
+     a47 hasValue 21
+
+instance i51
+     a48 hasValue 51
+
+instance i52
+     a49 hasValue 40
+
+instance i53
+     a50 hasValue 38
+
+instance i54
+     a51 hasValue 71
+
+instance i55
+     a52 hasValue 12
+
+instance i56
+     a53 hasValue 77
+
+instance i57
+     a54 hasValue 45
+
+instance i58
+     a55 hasValue 26
+
+instance i59
+     a56 hasValue 69
+
+instance i60
+     a57 hasValue 44
+
+instance i61
+     a58 hasValue 59
+
+instance i62
+     a59 hasValue 49
+
+instance i63
+     a60 hasValue 41
+
+instance i64
+     a61 hasValue 77
+
+instance i65
+     a62 hasValue 22
+
+instance i66
+     a63 hasValue 47
+
+instance i67
+     a64 hasValue 27
+
+instance i68
+     a65 hasValue 0
+
+instance i69
+     a66 hasValue 39
+
+instance i70
+     a67 hasValue 40
+
+instance i71
+     a68 hasValue 73
+
+instance i72
+     a69 hasValue 35
+
+instance i73
+     a70 hasValue 23
+
+instance i74
+     a71 hasValue 77
+
+instance i75
+     a72 hasValue 54
+
+instance i76
+     a73 hasValue 33
+
+instance i77
+     a74 hasValue 49
+
+instance i78
+     a75 hasValue 75
+
+instance i79
+     a76 hasValue 1
+
+instance i80
+     a77 hasValue 66
+
+instance i81
+     a78 hasValue 21
+
+instance i82
+     a79 hasValue 42
+
+instance i83
+     a80 hasValue 1
+
+instance i84
+     a81 hasValue 21
+
+instance i85
+     a82 hasValue 32
+
+instance i86
+     a83 hasValue 56
+
+instance i87
+     a84 hasValue 12
+
+instance i88
+     a85 hasValue 12
+
+instance i89
+     a86 hasValue 58
+
+instance i90
+     a87 hasValue 60
+
+instance i91
+     a88 hasValue 28
+
+instance i92
+     a89 hasValue 65
+
+instance i93
+     a90 hasValue 0
+
+instance i94
+     a91 hasValue 79
+
+instance i95
+     a92 hasValue 9
+
+instance i96
+     a93 hasValue 1
+
+instance i97
+     a94 hasValue 51
+
+instance i98
+     a95 hasValue 60
+
+instance i99
+     a96 hasValue 70
+
+instance i100
+     a97 hasValue 45
+
+instance i101
+     a98 hasValue 26
+
+instance i102
+     a99 hasValue 8
+
+instance i103
+     a100 hasValue 11
+
+instance i104
+     a101 hasValue 78
+
+instance i105
+     a102 hasValue 31
+
+instance i106
+     a103 hasValue 74
+
+instance i107
+     a104 hasValue 43
+
+instance i108
+     a105 hasValue 44
+
+instance i109
+     a106 hasValue 28
+
+instance i110
+     a107 hasValue 53
+
+instance i111
+     a108 hasValue 69
+
+instance i112
+     a109 hasValue 24
+
+instance i113
+     a110 hasValue 5
+
+instance i114
+     a111 hasValue 19
+
+instance i115
+     a112 hasValue 52
+
+instance i116
+     a113 hasValue 65
+
+instance i117
+     a114 hasValue 71
+
+instance i118
+     a115 hasValue 41
+
+instance i119
+     a116 hasValue 44
+
+instance i120
+     a117 hasValue 50
+
+instance i121
+     a118 hasValue 58
+
+instance i122
+     a119 hasValue 6
+
+instance i123
+     a120 hasValue 40
+
+instance i124
+     a121 hasValue 31
+
+instance i125
+     a122 hasValue 41
+
+instance i126
+     a123 hasValue 31
+
+instance i127
+     a124 hasValue 43
+
+instance i128
+     a125 hasValue 78
+
+instance i129
+     a126 hasValue 16
+
+instance i130
+     a127 hasValue 34
+
+instance i131
+     a128 hasValue 32
+
+instance i132
+     a129 hasValue 22
+
+instance i133
+     a130 hasValue 60
+
+instance i134
+     a131 hasValue 37
+
+instance i135
+     a132 hasValue 35
+
+instance i136
+     a133 hasValue 72
+
+instance i137
+     a134 hasValue 59
+
+instance i138
+     a135 hasValue 11
+
+instance i139
+     a136 hasValue 25
+
+instance i140
+     a137 hasValue 17
+
+instance i141
+     a138 hasValue 53
+
+instance i142
+     a139 hasValue 15
+
+instance i143
+     a140 hasValue 28
+
+instance i144
+     a141 hasValue 55
+
+instance i145
+     a142 hasValue 52
+
+instance i146
+     a143 hasValue 67
+
+instance i147
+     a144 hasValue 51
+
+instance i148
+     a145 hasValue 29
+
+instance i149
+     a146 hasValue 65
+
+instance i150
+     a147 hasValue 63
+
+instance i151
+     a148 hasValue 12
+
+instance i152
+     a149 hasValue 10
+
+instance i153
+     a150 hasValue 57
+
+instance i154
+     a151 hasValue 39
+
+instance i155
+     a152 hasValue 22
+
+instance i156
+     a153 hasValue 76
+
+instance i157
+     a154 hasValue 72
+
+instance i158
+     a155 hasValue 51
+
+instance i159
+     a156 hasValue 68
+
+instance i160
+     a157 hasValue 32
+
+instance i161
+     a158 hasValue 69
+
+instance i162
+     a159 hasValue 66
+
+instance i163
+     a160 hasValue 49
+
+instance i164
+     a161 hasValue 33
+
+instance i165
+     a162 hasValue 33
+
+instance i166
+     a163 hasValue 10
+
+instance i167
+     a164 hasValue 38
+
+instance i168
+     a165 hasValue 60
+
+instance i169
+     a166 hasValue 35
+
+instance i170
+     a167 hasValue 69
+
+instance i171
+     a168 hasValue 72
+
+instance i172
+     a169 hasValue 60
+
+instance i173
+     a170 hasValue 4
+
+instance i174
+     a171 hasValue 44
+
+instance i175
+     a172 hasValue 77
+
+instance i176
+     a173 hasValue 5
+
+instance i177
+     a174 hasValue 41
+
+instance i178
+     a175 hasValue 63
+
+instance i179
+     a176 hasValue 9
+
+instance i180
+     a177 hasValue 59
+
+instance i181
+     a178 hasValue 71
+
+instance i182
+     a179 hasValue 73
+
+instance i183
+     a180 hasValue 61
+
+instance i184
+     a181 hasValue 23
+
+instance i185
+     a182 hasValue 69
+
+instance i186
+     a183 hasValue 47
+
+instance i187
+     a184 hasValue 65
+
+instance i188
+     a185 hasValue 38
+
+instance i189
+     a186 hasValue 52
+
+instance i190
+     a187 hasValue 22
+
+instance i191
+     a188 hasValue 45
+
+instance i192
+     a189 hasValue 63
+
+instance i193
+     a190 hasValue 53
+
+instance i194
+     a191 hasValue 45
+
+instance i195
+     a192 hasValue 30
+
+instance i196
+     a193 hasValue 10
+
+instance i197
+     a194 hasValue 49
+
+instance i198
+     a195 hasValue 19
+
+instance i199
+     a196 hasValue 2
+
+instance i200
+     a197 hasValue 5
+
+instance i201
+     a198 hasValue 32
+
+instance i202
+     a199 hasValue 36
+
+instance i203
+     a200 hasValue 15
+
+instance i204
+     a201 hasValue 65
+
+instance i205
+     a202 hasValue 50
+
+instance i206
+     a203 hasValue 13
+
+instance i207
+     a204 hasValue 0
+
+instance i208
+     a205 hasValue 44
+
+instance i209
+     a206 hasValue 50
+
+instance i210
+     a207 hasValue 54
+
+instance i211
+     a208 hasValue 40
+
+instance i212
+     a209 hasValue 67
+
+instance i213
+     a210 hasValue 34
+
+instance i214
+     a211 hasValue 72
+
+instance i215
+     a212 hasValue 74
+
+instance i216
+     a213 hasValue 79
+
+instance i217
+     a214 hasValue 21
+
+instance i218
+     a215 hasValue 56
+
+instance i219
+     a216 hasValue 43
+
+instance i220
+     a217 hasValue 51
+
+instance i221
+     a218 hasValue 71
+
+instance i222
+     a219 hasValue 48
+
+instance i223
+     a220 hasValue 8
+
+instance i224
+     a221 hasValue 15
+
+instance i225
+     a222 hasValue 40
+
+instance i226
+     a223 hasValue 74
+
+instance i227
+     a224 hasValue 54
+
+instance i228
+     a225 hasValue 79
+
+instance i229
+     a226 hasValue 29
+
+instance i230
+     a227 hasValue 43
+
+instance i231
+     a228 hasValue 62
+
+instance i232
+     a229 hasValue 67
+
+instance i233
+     a230 hasValue 22
+
+instance i234
+     a231 hasValue 57
+
+instance i235
+     a232 hasValue 69
+
+instance i236
+     a233 hasValue 64
+
+instance i237
+     a234 hasValue 77
+
+instance i238
+     a235 hasValue 13
+
+instance i239
+     a236 hasValue 13
+
+instance i240
+     a237 hasValue 30
+
+instance i241
+     a238 hasValue 55
+
+instance i242
+     a239 hasValue 12
+
+instance i243
+     a240 hasValue 77
+
+instance i244
+     a241 hasValue 76
+
+instance i245
+     a242 hasValue 23
+
+instance i246
+     a243 hasValue 39
+
+instance i247
+     a244 hasValue 49
+
+instance i248
+     a245 hasValue 7
+
+instance i249
+     a246 hasValue 78
+
+instance i250
+     a247 hasValue 55
+
+instance i251
+     a248 hasValue 15
+
+instance i252
+     a249 hasValue 65
+
+instance i253
+     a250 hasValue 7
+
+instance i254
+     a251 hasValue 72
+
+instance i255
+     a252 hasValue 46
+
+instance i256
+     a253 hasValue 64
+
+instance i257
+     a254 hasValue 26
+
+instance i258
+     a255 hasValue 50
+
+instance i259
+     a256 hasValue 79
+
+instance i260
+     a257 hasValue 77
+
+instance i261
+     a258 hasValue 77
+
+instance i262
+     a259 hasValue 67
+
+instance i263
+     a260 hasValue 70
+
+instance i264
+     a261 hasValue 59
+
+instance i265
+     a262 hasValue 23
+
+instance i266
+     a263 hasValue 63
+
+instance i267
+     a264 hasValue 34
+
+instance i268
+     a265 hasValue 39
+
+instance i269
+     a266 hasValue 39
+
+instance i270
+     a267 hasValue 33
+
+instance i271
+     a268 hasValue 59
+
+instance i272
+     a269 hasValue 49
+
+instance i273
+     a270 hasValue 28
+
+instance i274
+     a271 hasValue 44
+
+instance i275
+     a272 hasValue 65
+
+instance i276
+     a273 hasValue 67
+
+instance i277
+     a274 hasValue 20
+
+instance i278
+     a275 hasValue 50
+
+instance i279
+     a276 hasValue 63
+
+instance i280
+     a277 hasValue 61
+
+instance i281
+     a278 hasValue 45
+
+instance i282
+     a279 hasValue 42
+
+instance i283
+     a280 hasValue 74
+
+instance i284
+     a281 hasValue 39
+
+instance i285
+     a282 hasValue 35
+
+instance i286
+     a283 hasValue 70
+
+instance i287
+     a284 hasValue 10
+
+instance i288
+     a285 hasValue 66
+
+instance i289
+     a286 hasValue 9
+
+instance i290
+     a287 hasValue 4
+
+instance i291
+     a288 hasValue 31
+
+instance i292
+     a289 hasValue 26
+
+instance i293
+     a290 hasValue 39
+
+instance i294
+     a291 hasValue 58
+
+instance i295
+     a292 hasValue 79
+
+instance i296
+     a293 hasValue 39
+
+instance i297
+     a294 hasValue 75
+
+instance i298
+     a295 hasValue 11
+
+instance i299
+     a296 hasValue 51
+
+instance i300
+     a297 hasValue 79
+
+instance i301
+     a298 hasValue 7
+
+instance i302
+     a299 hasValue 23
+
+instance i303
+     a300 hasValue 19
+
+instance i304
+     a301 hasValue 32
+
+instance i305
+     a302 hasValue 53
+
+instance i306
+     a303 hasValue 3
+
+instance i307
+     a304 hasValue 26
+
+instance i308
+     a305 hasValue 0
+
+instance i309
+     a306 hasValue 68
+
+instance i310
+     a307 hasValue 68
+
+instance i311
+     a308 hasValue 13
+
+instance i312
+     a309 hasValue 3
+
+instance i313
+     a310 hasValue 4
+
+instance i314
+     a311 hasValue 52
+
+instance i315
+     a312 hasValue 34
+
+instance i316
+     a313 hasValue 17
+
+instance i317
+     a314 hasValue 65
+
+instance i318
+     a315 hasValue 19
+
+instance i319
+     a316 hasValue 8
+
+instance i320
+     a317 hasValue 64
+
+instance i321
+     a318 hasValue 34
+
+instance i322
+     a319 hasValue 63
+
+instance i323
+     a320 hasValue 29
+
+instance i324
+     a321 hasValue 36
+
+instance i325
+     a322 hasValue 71
+
+instance i326
+     a323 hasValue 37
+
+instance i327
+     a324 hasValue 8
+
+instance i328
+     a325 hasValue 57
+
+instance i329
+     a326 hasValue 59
+
+instance i330
+     a327 hasValue 28
+
+instance i331
+     a328 hasValue 1
+
+instance i332
+     a329 hasValue 16
+
+instance i333
+     a330 hasValue 22
+
+instance i334
+     a331 hasValue 40
+
+instance i335
+     a332 hasValue 61
+
+instance i336
+     a333 hasValue 58
+
+instance i337
+     a334 hasValue 60
+
+instance i338
+     a335 hasValue 56
+
+instance i339
+     a336 hasValue 22
+
+instance i340
+     a337 hasValue 52
+
+instance i341
+     a338 hasValue 41
+
+instance i342
+     a339 hasValue 15
+
+instance i343
+     a340 hasValue 13
+
+instance i344
+     a341 hasValue 35
+
+instance i345
+     a342 hasValue 67
+
+instance i346
+     a343 hasValue 46
+
+instance i347
+     a344 hasValue 11
+
+instance i348
+     a345 hasValue 42
+
+instance i349
+     a346 hasValue 27
+
+instance i350
+     a347 hasValue 22
+
+instance i351
+     a348 hasValue 36
+
+instance i352
+     a349 hasValue 67
+
+instance i353
+     a350 hasValue 64
+
+instance i354
+     a351 hasValue 39
+
+instance i355
+     a352 hasValue 46
+
+instance i356
+     a353 hasValue 64
+
+instance i357
+     a354 hasValue 74
+
+instance i358
+     a355 hasValue 72
+
+instance i359
+     a356 hasValue 67
+
+instance i360
+     a357 hasValue 71
+
+instance i361
+     a358 hasValue 18
+
+instance i362
+     a359 hasValue 46
+
+instance i363
+     a360 hasValue 0
+
+instance i364
+     a361 hasValue 2
+
+instance i365
+     a362 hasValue 22
+
+instance i366
+     a363 hasValue 12
+
+instance i367
+     a364 hasValue 16
+
+instance i368
+     a365 hasValue 29
+
+instance i369
+     a366 hasValue 37
+
+instance i370
+     a367 hasValue 12
+
+instance i371
+     a368 hasValue 50
+
+instance i372
+     a369 hasValue 73
+
+instance i373
+     a370 hasValue 1
+
+instance i374
+     a371 hasValue 31
+
+instance i375
+     a372 hasValue 57
+
+instance i376
+     a373 hasValue 11
+
+instance i377
+     a374 hasValue 40
+
+instance i378
+     a375 hasValue 15
+
+instance i379
+     a376 hasValue 22
+
+instance i380
+     a377 hasValue 63
+
+instance i381
+     a378 hasValue 62
+
+instance i382
+     a379 hasValue 8
+
+instance i383
+     a380 hasValue 27
+
+instance i384
+     a381 hasValue 63
+
+instance i385
+     a382 hasValue 57
+
+instance i386
+     a383 hasValue 59
+
+instance i387
+     a384 hasValue 41
+
+instance i388
+     a385 hasValue 32
+
+instance i389
+     a386 hasValue 35
+
+instance i390
+     a387 hasValue 24
+
+instance i391
+     a388 hasValue 71
+
+instance i392
+     a389 hasValue 65
+
+instance i393
+     a390 hasValue 76
+
+instance i394
+     a391 hasValue 4
+
+instance i395
+     a392 hasValue 24
+
+instance i396
+     a393 hasValue 62
+
+instance i397
+     a394 hasValue 3
+
+instance i398
+     a395 hasValue 23
+
+instance i399
+     a396 hasValue 75
+
+instance i400
+     a397 hasValue 52
+
+instance i401
+     a398 hasValue 33
+
+instance i402
+     a399 hasValue 2
+
+instance i403
+     a400 hasValue 71
+
+instance i404
+     a401 hasValue 79
+
+instance i405
+     a402 hasValue 5
+
+instance i406
+     a403 hasValue 45
+
+instance i407
+     a404 hasValue 74
+
+instance i408
+     a405 hasValue 79
+
+instance i409
+     a406 hasValue 27
+
+instance i410
+     a407 hasValue 12
+
+instance i411
+     a408 hasValue 70
+
+instance i412
+     a409 hasValue 18
+
+instance i413
+     a410 hasValue 1
+
+instance i414
+     a411 hasValue 48
+
+instance i415
+     a412 hasValue 52
+
+instance i416
+     a413 hasValue 13
+
+instance i417
+     a414 hasValue 53
+
+instance i418
+     a415 hasValue 64
+
+instance i419
+     a416 hasValue 50
+
+instance i420
+     a417 hasValue 30
+
+instance i421
+     a418 hasValue 60
+
+instance i422
+     a419 hasValue 29
+
+instance i423
+     a420 hasValue 67
+
+instance i424
+     a421 hasValue 45
+
+instance i425
+     a422 hasValue 45
+
+instance i426
+     a423 hasValue 38
+
+instance i427
+     a424 hasValue 46
+
+instance i428
+     a425 hasValue 6
+
+instance i429
+     a426 hasValue 5
+
+instance i430
+     a427 hasValue 26
+
+instance i431
+     a428 hasValue 36
+
+instance i432
+     a429 hasValue 53
+
+instance i433
+     a430 hasValue 61
+
+instance i434
+     a431 hasValue 1
+
+instance i435
+     a432 hasValue 33
+
+instance i436
+     a433 hasValue 38
+
+instance i437
+     a434 hasValue 29
+
+instance i438
+     a435 hasValue 24
+
+instance i439
+     a436 hasValue 19
+
+instance i440
+     a437 hasValue 47
+
+instance i441
+     a438 hasValue 32
+
+instance i442
+     a439 hasValue 32
+
+instance i443
+     a440 hasValue 24
+
+instance i444
+     a441 hasValue 25
+
+instance i445
+     a442 hasValue 37
+
+instance i446
+     a443 hasValue 70
+
+instance i447
+     a444 hasValue 40
+
+instance i448
+     a445 hasValue 15
+
+instance i449
+     a446 hasValue 20
+
+instance i450
+     a447 hasValue 63
+
+instance i451
+     a448 hasValue 29
+
+instance i452
+     a449 hasValue 16
+
+instance i453
+     a450 hasValue 29
+
+instance i454
+     a451 hasValue 18
+
+instance i455
+     a452 hasValue 73
+
+instance i456
+     a453 hasValue 62
+
+instance i457
+     a454 hasValue 25
+
+instance i458
+     a455 hasValue 5
+
+instance i459
+     a456 hasValue 59
+
+instance i460
+     a457 hasValue 18
+
+instance i461
+     a458 hasValue 20
+
+instance i462
+     a459 hasValue 44
+
+instance i463
+     a460 hasValue 60
+
+instance i464
+     a461 hasValue 30
+
+instance i465
+     a462 hasValue 40
+
+instance i466
+     a463 hasValue 65
+
+instance i467
+     a464 hasValue 73
+
+instance i468
+     a465 hasValue 54
+
+instance i469
+     a466 hasValue 17
+
+instance i470
+     a467 hasValue 4
+
+instance i471
+     a468 hasValue 23
+
+instance i472
+     a469 hasValue 72
+
+instance i473
+     a470 hasValue 29
+
+instance i474
+     a471 hasValue 20
+
+instance i475
+     a472 hasValue 73
+
+instance i476
+     a473 hasValue 38
+
+instance i477
+     a474 hasValue 53
+
+instance i478
+     a475 hasValue 45
+
+instance i479
+     a476 hasValue 11
+
+instance i480
+     a477 hasValue 61
+
+instance i481
+     a478 hasValue 5
+
+instance i482
+     a479 hasValue 49
+
+instance i483
+     a480 hasValue 64
+
+instance i484
+     a481 hasValue 16
+
+instance i485
+     a482 hasValue 34
+
+instance i486
+     a483 hasValue 35
+
+instance i487
+     a484 hasValue 14
+
+instance i488
+     a485 hasValue 70
+
+instance i489
+     a486 hasValue 9
+
+instance i490
+     a487 hasValue 69
+
+instance i491
+     a488 hasValue 74
+
+instance i492
+     a489 hasValue 44
+
+instance i493
+     a490 hasValue 39
+
+instance i494
+     a491 hasValue 34
+
+instance i495
+     a492 hasValue 2
+
+instance i496
+     a493 hasValue 57
+
+instance i497
+     a494 hasValue 10
+
+instance i498
+     a495 hasValue 69
+
+instance i499
+     a496 hasValue 66
+
+instance i500
+     a497 hasValue 57
+
+instance i501
+     a498 hasValue 41
+
+instance i502
+     a499 hasValue 65
+
+instance i503
+     a500 hasValue 12
+
+relationInstance query1("?x memberOf c2")
+
+relationInstance query2("?x memberOf ?y")

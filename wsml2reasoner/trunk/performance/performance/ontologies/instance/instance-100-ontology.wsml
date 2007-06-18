@@ -1,0 +1,211 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://www.instance-100-ontology.org#"
+ }
+
+ontology o100
+
+concept c1
+
+instance i1 memberOf c1
+
+instance i2 memberOf c1
+
+instance i3 memberOf c1
+
+instance i4 memberOf c1
+
+instance i5 memberOf c1
+
+instance i6 memberOf c1
+
+instance i7 memberOf c1
+
+instance i8 memberOf c1
+
+instance i9 memberOf c1
+
+instance i10 memberOf c1
+
+instance i11 memberOf c1
+
+instance i12 memberOf c1
+
+instance i13 memberOf c1
+
+instance i14 memberOf c1
+
+instance i15 memberOf c1
+
+instance i16 memberOf c1
+
+instance i17 memberOf c1
+
+instance i18 memberOf c1
+
+instance i19 memberOf c1
+
+instance i20 memberOf c1
+
+instance i21 memberOf c1
+
+instance i22 memberOf c1
+
+instance i23 memberOf c1
+
+instance i24 memberOf c1
+
+instance i25 memberOf c1
+
+instance i26 memberOf c1
+
+instance i27 memberOf c1
+
+instance i28 memberOf c1
+
+instance i29 memberOf c1
+
+instance i30 memberOf c1
+
+instance i31 memberOf c1
+
+instance i32 memberOf c1
+
+instance i33 memberOf c1
+
+instance i34 memberOf c1
+
+instance i35 memberOf c1
+
+instance i36 memberOf c1
+
+instance i37 memberOf c1
+
+instance i38 memberOf c1
+
+instance i39 memberOf c1
+
+instance i40 memberOf c1
+
+instance i41 memberOf c1
+
+instance i42 memberOf c1
+
+instance i43 memberOf c1
+
+instance i44 memberOf c1
+
+instance i45 memberOf c1
+
+instance i46 memberOf c1
+
+instance i47 memberOf c1
+
+instance i48 memberOf c1
+
+instance i49 memberOf c1
+
+instance i50 memberOf c1
+
+instance i51 memberOf c1
+
+instance i52 memberOf c1
+
+instance i53 memberOf c1
+
+instance i54 memberOf c1
+
+instance i55 memberOf c1
+
+instance i56 memberOf c1
+
+instance i57 memberOf c1
+
+instance i58 memberOf c1
+
+instance i59 memberOf c1
+
+instance i60 memberOf c1
+
+instance i61 memberOf c1
+
+instance i62 memberOf c1
+
+instance i63 memberOf c1
+
+instance i64 memberOf c1
+
+instance i65 memberOf c1
+
+instance i66 memberOf c1
+
+instance i67 memberOf c1
+
+instance i68 memberOf c1
+
+instance i69 memberOf c1
+
+instance i70 memberOf c1
+
+instance i71 memberOf c1
+
+instance i72 memberOf c1
+
+instance i73 memberOf c1
+
+instance i74 memberOf c1
+
+instance i75 memberOf c1
+
+instance i76 memberOf c1
+
+instance i77 memberOf c1
+
+instance i78 memberOf c1
+
+instance i79 memberOf c1
+
+instance i80 memberOf c1
+
+instance i81 memberOf c1
+
+instance i82 memberOf c1
+
+instance i83 memberOf c1
+
+instance i84 memberOf c1
+
+instance i85 memberOf c1
+
+instance i86 memberOf c1
+
+instance i87 memberOf c1
+
+instance i88 memberOf c1
+
+instance i89 memberOf c1
+
+instance i90 memberOf c1
+
+instance i91 memberOf c1
+
+instance i92 memberOf c1
+
+instance i93 memberOf c1
+
+instance i94 memberOf c1
+
+instance i95 memberOf c1
+
+instance i96 memberOf c1
+
+instance i97 memberOf c1
+
+instance i98 memberOf c1
+
+instance i99 memberOf c1
+
+instance i100 memberOf c1
+
+relationInstance query1("?x memberOf c1")
+
+relationInstance query2("?x memberOf ?y")

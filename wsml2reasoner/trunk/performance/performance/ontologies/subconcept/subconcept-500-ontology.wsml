@@ -1,0 +1,1015 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://www.subconcept-500-ontology.org#"
+ }
+
+ontology o500
+
+concept c1
+
+concept c2 subConceptOf c1
+
+concept c3 subConceptOf c1
+
+concept c4 subConceptOf c1
+
+concept c5 subConceptOf c1
+
+concept c6 subConceptOf c1
+
+concept c7 subConceptOf c1
+
+concept c8 subConceptOf c1
+
+concept c9 subConceptOf c1
+
+concept c10 subConceptOf c1
+
+concept c11 subConceptOf c1
+
+concept c12 subConceptOf c1
+
+concept c13 subConceptOf c1
+
+concept c14 subConceptOf c1
+
+concept c15 subConceptOf c1
+
+concept c16 subConceptOf c1
+
+concept c17 subConceptOf c1
+
+concept c18 subConceptOf c1
+
+concept c19 subConceptOf c1
+
+concept c20 subConceptOf c1
+
+concept c21 subConceptOf c1
+
+concept c22 subConceptOf c1
+
+concept c23 subConceptOf c1
+
+concept c24 subConceptOf c1
+
+concept c25 subConceptOf c1
+
+concept c26 subConceptOf c1
+
+concept c27 subConceptOf c1
+
+concept c28 subConceptOf c1
+
+concept c29 subConceptOf c1
+
+concept c30 subConceptOf c1
+
+concept c31 subConceptOf c1
+
+concept c32 subConceptOf c1
+
+concept c33 subConceptOf c1
+
+concept c34 subConceptOf c1
+
+concept c35 subConceptOf c1
+
+concept c36 subConceptOf c1
+
+concept c37 subConceptOf c1
+
+concept c38 subConceptOf c1
+
+concept c39 subConceptOf c1
+
+concept c40 subConceptOf c1
+
+concept c41 subConceptOf c1
+
+concept c42 subConceptOf c1
+
+concept c43 subConceptOf c1
+
+concept c44 subConceptOf c1
+
+concept c45 subConceptOf c1
+
+concept c46 subConceptOf c1
+
+concept c47 subConceptOf c1
+
+concept c48 subConceptOf c1
+
+concept c49 subConceptOf c1
+
+concept c50 subConceptOf c1
+
+concept c51 subConceptOf c1
+
+concept c52 subConceptOf c1
+
+concept c53 subConceptOf c1
+
+concept c54 subConceptOf c1
+
+concept c55 subConceptOf c1
+
+concept c56 subConceptOf c1
+
+concept c57 subConceptOf c1
+
+concept c58 subConceptOf c1
+
+concept c59 subConceptOf c1
+
+concept c60 subConceptOf c1
+
+concept c61 subConceptOf c1
+
+concept c62 subConceptOf c1
+
+concept c63 subConceptOf c1
+
+concept c64 subConceptOf c1
+
+concept c65 subConceptOf c1
+
+concept c66 subConceptOf c1
+
+concept c67 subConceptOf c1
+
+concept c68 subConceptOf c1
+
+concept c69 subConceptOf c1
+
+concept c70 subConceptOf c1
+
+concept c71 subConceptOf c1
+
+concept c72 subConceptOf c1
+
+concept c73 subConceptOf c1
+
+concept c74 subConceptOf c1
+
+concept c75 subConceptOf c1
+
+concept c76 subConceptOf c1
+
+concept c77 subConceptOf c1
+
+concept c78 subConceptOf c1
+
+concept c79 subConceptOf c1
+
+concept c80 subConceptOf c1
+
+concept c81 subConceptOf c1
+
+concept c82 subConceptOf c1
+
+concept c83 subConceptOf c1
+
+concept c84 subConceptOf c1
+
+concept c85 subConceptOf c1
+
+concept c86 subConceptOf c1
+
+concept c87 subConceptOf c1
+
+concept c88 subConceptOf c1
+
+concept c89 subConceptOf c1
+
+concept c90 subConceptOf c1
+
+concept c91 subConceptOf c1
+
+concept c92 subConceptOf c1
+
+concept c93 subConceptOf c1
+
+concept c94 subConceptOf c1
+
+concept c95 subConceptOf c1
+
+concept c96 subConceptOf c1
+
+concept c97 subConceptOf c1
+
+concept c98 subConceptOf c1
+
+concept c99 subConceptOf c1
+
+concept c100 subConceptOf c1
+
+concept c101 subConceptOf c1
+
+concept c102 subConceptOf c1
+
+concept c103 subConceptOf c1
+
+concept c104 subConceptOf c1
+
+concept c105 subConceptOf c1
+
+concept c106 subConceptOf c1
+
+concept c107 subConceptOf c1
+
+concept c108 subConceptOf c1
+
+concept c109 subConceptOf c1
+
+concept c110 subConceptOf c1
+
+concept c111 subConceptOf c1
+
+concept c112 subConceptOf c1
+
+concept c113 subConceptOf c1
+
+concept c114 subConceptOf c1
+
+concept c115 subConceptOf c1
+
+concept c116 subConceptOf c1
+
+concept c117 subConceptOf c1
+
+concept c118 subConceptOf c1
+
+concept c119 subConceptOf c1
+
+concept c120 subConceptOf c1
+
+concept c121 subConceptOf c1
+
+concept c122 subConceptOf c1
+
+concept c123 subConceptOf c1
+
+concept c124 subConceptOf c1
+
+concept c125 subConceptOf c1
+
+concept c126 subConceptOf c1
+
+concept c127 subConceptOf c1
+
+concept c128 subConceptOf c1
+
+concept c129 subConceptOf c1
+
+concept c130 subConceptOf c1
+
+concept c131 subConceptOf c1
+
+concept c132 subConceptOf c1
+
+concept c133 subConceptOf c1
+
+concept c134 subConceptOf c1
+
+concept c135 subConceptOf c1
+
+concept c136 subConceptOf c1
+
+concept c137 subConceptOf c1
+
+concept c138 subConceptOf c1
+
+concept c139 subConceptOf c1
+
+concept c140 subConceptOf c1
+
+concept c141 subConceptOf c1
+
+concept c142 subConceptOf c1
+
+concept c143 subConceptOf c1
+
+concept c144 subConceptOf c1
+
+concept c145 subConceptOf c1
+
+concept c146 subConceptOf c1
+
+concept c147 subConceptOf c1
+
+concept c148 subConceptOf c1
+
+concept c149 subConceptOf c1
+
+concept c150 subConceptOf c1
+
+concept c151 subConceptOf c1
+
+concept c152 subConceptOf c1
+
+concept c153 subConceptOf c1
+
+concept c154 subConceptOf c1
+
+concept c155 subConceptOf c1
+
+concept c156 subConceptOf c1
+
+concept c157 subConceptOf c1
+
+concept c158 subConceptOf c1
+
+concept c159 subConceptOf c1
+
+concept c160 subConceptOf c1
+
+concept c161 subConceptOf c1
+
+concept c162 subConceptOf c1
+
+concept c163 subConceptOf c1
+
+concept c164 subConceptOf c1
+
+concept c165 subConceptOf c1
+
+concept c166 subConceptOf c1
+
+concept c167 subConceptOf c1
+
+concept c168 subConceptOf c1
+
+concept c169 subConceptOf c1
+
+concept c170 subConceptOf c1
+
+concept c171 subConceptOf c1
+
+concept c172 subConceptOf c1
+
+concept c173 subConceptOf c1
+
+concept c174 subConceptOf c1
+
+concept c175 subConceptOf c1
+
+concept c176 subConceptOf c1
+
+concept c177 subConceptOf c1
+
+concept c178 subConceptOf c1
+
+concept c179 subConceptOf c1
+
+concept c180 subConceptOf c1
+
+concept c181 subConceptOf c1
+
+concept c182 subConceptOf c1
+
+concept c183 subConceptOf c1
+
+concept c184 subConceptOf c1
+
+concept c185 subConceptOf c1
+
+concept c186 subConceptOf c1
+
+concept c187 subConceptOf c1
+
+concept c188 subConceptOf c1
+
+concept c189 subConceptOf c1
+
+concept c190 subConceptOf c1
+
+concept c191 subConceptOf c1
+
+concept c192 subConceptOf c1
+
+concept c193 subConceptOf c1
+
+concept c194 subConceptOf c1
+
+concept c195 subConceptOf c1
+
+concept c196 subConceptOf c1
+
+concept c197 subConceptOf c1
+
+concept c198 subConceptOf c1
+
+concept c199 subConceptOf c1
+
+concept c200 subConceptOf c1
+
+concept c201 subConceptOf c1
+
+concept c202 subConceptOf c1
+
+concept c203 subConceptOf c1
+
+concept c204 subConceptOf c1
+
+concept c205 subConceptOf c1
+
+concept c206 subConceptOf c1
+
+concept c207 subConceptOf c1
+
+concept c208 subConceptOf c1
+
+concept c209 subConceptOf c1
+
+concept c210 subConceptOf c1
+
+concept c211 subConceptOf c1
+
+concept c212 subConceptOf c1
+
+concept c213 subConceptOf c1
+
+concept c214 subConceptOf c1
+
+concept c215 subConceptOf c1
+
+concept c216 subConceptOf c1
+
+concept c217 subConceptOf c1
+
+concept c218 subConceptOf c1
+
+concept c219 subConceptOf c1
+
+concept c220 subConceptOf c1
+
+concept c221 subConceptOf c1
+
+concept c222 subConceptOf c1
+
+concept c223 subConceptOf c1
+
+concept c224 subConceptOf c1
+
+concept c225 subConceptOf c1
+
+concept c226 subConceptOf c1
+
+concept c227 subConceptOf c1
+
+concept c228 subConceptOf c1
+
+concept c229 subConceptOf c1
+
+concept c230 subConceptOf c1
+
+concept c231 subConceptOf c1
+
+concept c232 subConceptOf c1
+
+concept c233 subConceptOf c1
+
+concept c234 subConceptOf c1
+
+concept c235 subConceptOf c1
+
+concept c236 subConceptOf c1
+
+concept c237 subConceptOf c1
+
+concept c238 subConceptOf c1
+
+concept c239 subConceptOf c1
+
+concept c240 subConceptOf c1
+
+concept c241 subConceptOf c1
+
+concept c242 subConceptOf c1
+
+concept c243 subConceptOf c1
+
+concept c244 subConceptOf c1
+
+concept c245 subConceptOf c1
+
+concept c246 subConceptOf c1
+
+concept c247 subConceptOf c1
+
+concept c248 subConceptOf c1
+
+concept c249 subConceptOf c1
+
+concept c250 subConceptOf c1
+
+concept c251 subConceptOf c1
+
+concept c252 subConceptOf c1
+
+concept c253 subConceptOf c1
+
+concept c254 subConceptOf c1
+
+concept c255 subConceptOf c1
+
+concept c256 subConceptOf c1
+
+concept c257 subConceptOf c1
+
+concept c258 subConceptOf c1
+
+concept c259 subConceptOf c1
+
+concept c260 subConceptOf c1
+
+concept c261 subConceptOf c1
+
+concept c262 subConceptOf c1
+
+concept c263 subConceptOf c1
+
+concept c264 subConceptOf c1
+
+concept c265 subConceptOf c1
+
+concept c266 subConceptOf c1
+
+concept c267 subConceptOf c1
+
+concept c268 subConceptOf c1
+
+concept c269 subConceptOf c1
+
+concept c270 subConceptOf c1
+
+concept c271 subConceptOf c1
+
+concept c272 subConceptOf c1
+
+concept c273 subConceptOf c1
+
+concept c274 subConceptOf c1
+
+concept c275 subConceptOf c1
+
+concept c276 subConceptOf c1
+
+concept c277 subConceptOf c1
+
+concept c278 subConceptOf c1
+
+concept c279 subConceptOf c1
+
+concept c280 subConceptOf c1
+
+concept c281 subConceptOf c1
+
+concept c282 subConceptOf c1
+
+concept c283 subConceptOf c1
+
+concept c284 subConceptOf c1
+
+concept c285 subConceptOf c1
+
+concept c286 subConceptOf c1
+
+concept c287 subConceptOf c1
+
+concept c288 subConceptOf c1
+
+concept c289 subConceptOf c1
+
+concept c290 subConceptOf c1
+
+concept c291 subConceptOf c1
+
+concept c292 subConceptOf c1
+
+concept c293 subConceptOf c1
+
+concept c294 subConceptOf c1
+
+concept c295 subConceptOf c1
+
+concept c296 subConceptOf c1
+
+concept c297 subConceptOf c1
+
+concept c298 subConceptOf c1
+
+concept c299 subConceptOf c1
+
+concept c300 subConceptOf c1
+
+concept c301 subConceptOf c1
+
+concept c302 subConceptOf c1
+
+concept c303 subConceptOf c1
+
+concept c304 subConceptOf c1
+
+concept c305 subConceptOf c1
+
+concept c306 subConceptOf c1
+
+concept c307 subConceptOf c1
+
+concept c308 subConceptOf c1
+
+concept c309 subConceptOf c1
+
+concept c310 subConceptOf c1
+
+concept c311 subConceptOf c1
+
+concept c312 subConceptOf c1
+
+concept c313 subConceptOf c1
+
+concept c314 subConceptOf c1
+
+concept c315 subConceptOf c1
+
+concept c316 subConceptOf c1
+
+concept c317 subConceptOf c1
+
+concept c318 subConceptOf c1
+
+concept c319 subConceptOf c1
+
+concept c320 subConceptOf c1
+
+concept c321 subConceptOf c1
+
+concept c322 subConceptOf c1
+
+concept c323 subConceptOf c1
+
+concept c324 subConceptOf c1
+
+concept c325 subConceptOf c1
+
+concept c326 subConceptOf c1
+
+concept c327 subConceptOf c1
+
+concept c328 subConceptOf c1
+
+concept c329 subConceptOf c1
+
+concept c330 subConceptOf c1
+
+concept c331 subConceptOf c1
+
+concept c332 subConceptOf c1
+
+concept c333 subConceptOf c1
+
+concept c334 subConceptOf c1
+
+concept c335 subConceptOf c1
+
+concept c336 subConceptOf c1
+
+concept c337 subConceptOf c1
+
+concept c338 subConceptOf c1
+
+concept c339 subConceptOf c1
+
+concept c340 subConceptOf c1
+
+concept c341 subConceptOf c1
+
+concept c342 subConceptOf c1
+
+concept c343 subConceptOf c1
+
+concept c344 subConceptOf c1
+
+concept c345 subConceptOf c1
+
+concept c346 subConceptOf c1
+
+concept c347 subConceptOf c1
+
+concept c348 subConceptOf c1
+
+concept c349 subConceptOf c1
+
+concept c350 subConceptOf c1
+
+concept c351 subConceptOf c1
+
+concept c352 subConceptOf c1
+
+concept c353 subConceptOf c1
+
+concept c354 subConceptOf c1
+
+concept c355 subConceptOf c1
+
+concept c356 subConceptOf c1
+
+concept c357 subConceptOf c1
+
+concept c358 subConceptOf c1
+
+concept c359 subConceptOf c1
+
+concept c360 subConceptOf c1
+
+concept c361 subConceptOf c1
+
+concept c362 subConceptOf c1
+
+concept c363 subConceptOf c1
+
+concept c364 subConceptOf c1
+
+concept c365 subConceptOf c1
+
+concept c366 subConceptOf c1
+
+concept c367 subConceptOf c1
+
+concept c368 subConceptOf c1
+
+concept c369 subConceptOf c1
+
+concept c370 subConceptOf c1
+
+concept c371 subConceptOf c1
+
+concept c372 subConceptOf c1
+
+concept c373 subConceptOf c1
+
+concept c374 subConceptOf c1
+
+concept c375 subConceptOf c1
+
+concept c376 subConceptOf c1
+
+concept c377 subConceptOf c1
+
+concept c378 subConceptOf c1
+
+concept c379 subConceptOf c1
+
+concept c380 subConceptOf c1
+
+concept c381 subConceptOf c1
+
+concept c382 subConceptOf c1
+
+concept c383 subConceptOf c1
+
+concept c384 subConceptOf c1
+
+concept c385 subConceptOf c1
+
+concept c386 subConceptOf c1
+
+concept c387 subConceptOf c1
+
+concept c388 subConceptOf c1
+
+concept c389 subConceptOf c1
+
+concept c390 subConceptOf c1
+
+concept c391 subConceptOf c1
+
+concept c392 subConceptOf c1
+
+concept c393 subConceptOf c1
+
+concept c394 subConceptOf c1
+
+concept c395 subConceptOf c1
+
+concept c396 subConceptOf c1
+
+concept c397 subConceptOf c1
+
+concept c398 subConceptOf c1
+
+concept c399 subConceptOf c1
+
+concept c400 subConceptOf c1
+
+concept c401 subConceptOf c1
+
+concept c402 subConceptOf c1
+
+concept c403 subConceptOf c1
+
+concept c404 subConceptOf c1
+
+concept c405 subConceptOf c1
+
+concept c406 subConceptOf c1
+
+concept c407 subConceptOf c1
+
+concept c408 subConceptOf c1
+
+concept c409 subConceptOf c1
+
+concept c410 subConceptOf c1
+
+concept c411 subConceptOf c1
+
+concept c412 subConceptOf c1
+
+concept c413 subConceptOf c1
+
+concept c414 subConceptOf c1
+
+concept c415 subConceptOf c1
+
+concept c416 subConceptOf c1
+
+concept c417 subConceptOf c1
+
+concept c418 subConceptOf c1
+
+concept c419 subConceptOf c1
+
+concept c420 subConceptOf c1
+
+concept c421 subConceptOf c1
+
+concept c422 subConceptOf c1
+
+concept c423 subConceptOf c1
+
+concept c424 subConceptOf c1
+
+concept c425 subConceptOf c1
+
+concept c426 subConceptOf c1
+
+concept c427 subConceptOf c1
+
+concept c428 subConceptOf c1
+
+concept c429 subConceptOf c1
+
+concept c430 subConceptOf c1
+
+concept c431 subConceptOf c1
+
+concept c432 subConceptOf c1
+
+concept c433 subConceptOf c1
+
+concept c434 subConceptOf c1
+
+concept c435 subConceptOf c1
+
+concept c436 subConceptOf c1
+
+concept c437 subConceptOf c1
+
+concept c438 subConceptOf c1
+
+concept c439 subConceptOf c1
+
+concept c440 subConceptOf c1
+
+concept c441 subConceptOf c1
+
+concept c442 subConceptOf c1
+
+concept c443 subConceptOf c1
+
+concept c444 subConceptOf c1
+
+concept c445 subConceptOf c1
+
+concept c446 subConceptOf c1
+
+concept c447 subConceptOf c1
+
+concept c448 subConceptOf c1
+
+concept c449 subConceptOf c1
+
+concept c450 subConceptOf c1
+
+concept c451 subConceptOf c1
+
+concept c452 subConceptOf c1
+
+concept c453 subConceptOf c1
+
+concept c454 subConceptOf c1
+
+concept c455 subConceptOf c1
+
+concept c456 subConceptOf c1
+
+concept c457 subConceptOf c1
+
+concept c458 subConceptOf c1
+
+concept c459 subConceptOf c1
+
+concept c460 subConceptOf c1
+
+concept c461 subConceptOf c1
+
+concept c462 subConceptOf c1
+
+concept c463 subConceptOf c1
+
+concept c464 subConceptOf c1
+
+concept c465 subConceptOf c1
+
+concept c466 subConceptOf c1
+
+concept c467 subConceptOf c1
+
+concept c468 subConceptOf c1
+
+concept c469 subConceptOf c1
+
+concept c470 subConceptOf c1
+
+concept c471 subConceptOf c1
+
+concept c472 subConceptOf c1
+
+concept c473 subConceptOf c1
+
+concept c474 subConceptOf c1
+
+concept c475 subConceptOf c1
+
+concept c476 subConceptOf c1
+
+concept c477 subConceptOf c1
+
+concept c478 subConceptOf c1
+
+concept c479 subConceptOf c1
+
+concept c480 subConceptOf c1
+
+concept c481 subConceptOf c1
+
+concept c482 subConceptOf c1
+
+concept c483 subConceptOf c1
+
+concept c484 subConceptOf c1
+
+concept c485 subConceptOf c1
+
+concept c486 subConceptOf c1
+
+concept c487 subConceptOf c1
+
+concept c488 subConceptOf c1
+
+concept c489 subConceptOf c1
+
+concept c490 subConceptOf c1
+
+concept c491 subConceptOf c1
+
+concept c492 subConceptOf c1
+
+concept c493 subConceptOf c1
+
+concept c494 subConceptOf c1
+
+concept c495 subConceptOf c1
+
+concept c496 subConceptOf c1
+
+concept c497 subConceptOf c1
+
+concept c498 subConceptOf c1
+
+concept c499 subConceptOf c1
+
+concept c500 subConceptOf c1
+
+concept c501 subConceptOf c1
+
+instance i1 memberOf c1
+
+instance i2 memberOf c501
+
+relationInstance query1("?x memberOf c1")
+
+relationInstance query2("?x memberOf ?y")

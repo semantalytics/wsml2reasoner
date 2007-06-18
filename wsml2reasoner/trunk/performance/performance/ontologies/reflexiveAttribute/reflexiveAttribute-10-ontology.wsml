@@ -1,0 +1,24 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://www.reflexiveAttribute-10-ontology.org#"
+ }
+
+ontology o10
+
+concept c1
+     a0 reflexive  ofType c1
+     a1 reflexive  ofType c1
+     a2 reflexive  ofType c1
+     a3 reflexive  ofType c1
+     a4 reflexive  ofType c1
+     a5 reflexive  ofType c1
+     a6 reflexive  ofType c1
+     a7 reflexive  ofType c1
+     a8 reflexive  ofType c1
+     a9 reflexive  ofType c1
+     a10 reflexive  ofType c1
+
+instance i1
+
+relationInstance query1("i1[a0 hasValue ?x]")
+
+relationInstance query2("i1[?x hasValue ?y]")

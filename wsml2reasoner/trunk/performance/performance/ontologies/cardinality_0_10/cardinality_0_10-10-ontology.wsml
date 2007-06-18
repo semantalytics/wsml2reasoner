@@ -1,0 +1,41 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://www.cardinality_0_10-10-ontology.org#"
+ }
+
+ontology o10
+
+concept c1
+     a1 ofType  (0 10) c1
+     a2 ofType  (0 10) c1
+     a3 ofType  (0 10) c1
+     a4 ofType  (0 10) c1
+     a5 ofType  (0 10) c1
+     a6 ofType  (0 10) c1
+     a7 ofType  (0 10) c1
+     a8 ofType  (0 10) c1
+     a9 ofType  (0 10) c1
+     a10 ofType  (0 10) c1
+
+instance i1
+     a1 hasValue {i2, i3, i4, i5 }
+     a2 hasValue {i2, i3, i4, i5 }
+     a3 hasValue {i2, i3, i4, i5 }
+     a4 hasValue {i2, i3, i4, i5 }
+     a5 hasValue {i2, i3, i4, i5 }
+     a6 hasValue {i2, i3, i4, i5 }
+     a7 hasValue {i2, i3, i4, i5 }
+     a8 hasValue {i2, i3, i4, i5 }
+     a9 hasValue {i2, i3, i4, i5 }
+     a10 hasValue {i2, i3, i4, i5 }
+
+instance i2 memberOf c1
+
+instance i3 memberOf c1
+
+instance i4 memberOf c1
+
+instance i5 memberOf c1
+
+relationInstance query1("i1[a1 hasValue ?y]")
+
+relationInstance query2("?x[?y hasValue ?z]")
