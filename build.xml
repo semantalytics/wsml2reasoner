@@ -625,5 +625,22 @@
 			<fileset dir="${javadoc.dir}" />
 		</scp>
 	</target>
+  
+    <path id="all">
+        <fileset dir="${basedir}/lib" includes="**/*.jar"/>
+    </path>
 
+    <target name="performence-create-benchmark-files" depends="init">
+        <javac srcdir="${basedir}/performance" destdir="${build.class}" classpathref="all" classpath="${build.class}" />
+        <java  classname="performance.BenchmarkOntologyGenerator" classpathref="all" classpath="${build.class}" jvmargs="-Xmx 1024"/>
+    </target>
+  
+    <target name="performence-run-benchmark" depends="init">
+        <java  classname="performance.TestPerformanceWithUseOfFeatures" classpathref="all" classpath="${build.class}" jvmargs="-Xmx 1024"/>
+    </target>
+
+    <target name="performence-run-chart" depends="init">
+        <java  classname="performance.chart.Chart" classpathref="all" classpath="${build.class}" jvmargs="-Xmx 1024"/>
+    </target>
+  
 </project>
