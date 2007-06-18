@@ -246,6 +246,8 @@ public class TestPerformanceWithUseOfFeatures {
     private void runPerformanceTests(String[] reasonerNames, Ontology[] ontologies, String path) 
     		throws SynchronisationException, InvalidModelException, ParserException, 
     		InconsistencyException, IOException {
+    	
+    	timedOutReasoner.clear();
     	SortedMap<String,String> queries = new TreeMap<String, String>();
         
         PerformanceResults performanceresults = new PerformanceResults();
