@@ -76,19 +76,22 @@ public class TestPerformanceWithUseOfFeatures {
     Ontology[] loadOntologies(String dir){
     	System.out.println("Loading ontologies "+dir);
     	File d = new File(dir);
-    	List<Ontology> onts = new ArrayList<Ontology>(); 
+    	Map<String,Ontology> onts = new TreeMap<String, Ontology>(); 
     	File[] files = d.listFiles(wsmlFilter);
 //    	System.out.println(dir+"\n"+files);
     	for (File f:files){
     		try {
 				Ontology ont = (Ontology)wsmlParser.parse(new FileReader(f))[0];
-				onts.add(ont);
+				onts.put(f.getName(),ont);
 			} catch (Exception e) {
 				throw new RuntimeException("could not load ontology",e);
 			}
     	}
     	Ontology[] ret = new Ontology[onts.size()];
-    	onts.toArray(ret);
+    	int i=0;
+    	for (Ontology o:onts.values()){
+    		ret[i++]=o;
+    	}
     	return ret;
     }
     
