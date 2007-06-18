@@ -80,7 +80,9 @@ public class BenchmarkOntologyGenerator {
 	
 	private static String REFLEXIVE = "reflexiveAttribute";
 	
-	private static String NEGATION = "negation";
+	private static String LOC_STRAT_NEGATION = "locallyStratifiedNegation";
+	
+	private static String GLOB_STRAT_NEGATION = "globallyStratifiedNegation";
 	
 	private static String BUILTIN = "built_in";
 	
@@ -1098,14 +1100,16 @@ public class BenchmarkOntologyGenerator {
 	}	
 
 	/**
-	 * Generate ontologies containing logical expressions with negation 
+	 * Generate ontologies containing logical expressions with locally 
+	 * stratified negation 
 	 * e.g.:
 	 * concept Human
 	 *   knows ofType Human
 	 *   distrust ofType Human	
 	 * instance Homer
 	 * axiom definedBy
-	 *   ?x[distrust hasValue ?y] :- naf ?x[knows hasValue ?y].
+	 *   ?x[distrust hasValue ?y] :- naf ?x[knows hasValue ?y] 
+	 *   and ?x memberOf Human and ?y memberOf Human.
 	 * 
 	 * Queries: 
 	 * - Homer[distrust hasValue ?x]
@@ -1116,13 +1120,13 @@ public class BenchmarkOntologyGenerator {
 	 * @throws InvalidModelException
 	 * @throws ParserException 
 	 */
-	public void genNegationOntologies() 
+	public void genLocallyStratifiedNegationOntologies() 
 			throws IOException, SynchronisationException, InvalidModelException, ParserException {
 		Ontology ontology = null;
 		for (int i = 0; i < amount.length; i++) {	
 			// create default namespace
 			Namespace ns = wsmoFactory.createNamespace("", 
-					wsmoFactory.createIRI(getNamespace(NEGATION, amount[i])));
+					wsmoFactory.createIRI(getNamespace(LOC_STRAT_NEGATION, amount[i])));
 			
 			// create ontology
 			ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(
@@ -1160,7 +1164,8 @@ public class BenchmarkOntologyGenerator {
 				attribute.addType(concept);
 				attribute.setConstraining(true);
 				logExpr = leFactory.createLogicalExpression(
-						"?x[a" + j + " hasValue ?y] :- naf ?x[a" + (j+1) + " hasValue ?y]", 
+						"?x[a" + j + " hasValue ?y] :- naf ?x[a" + (j+1) + " hasValue ?y] " +
+								"and ?x memberOf c1 and ?y memberOf c1", 
 						ontology);
 				axiom.addDefinition(logExpr);
 			}
@@ -1184,7 +1189,94 @@ public class BenchmarkOntologyGenerator {
 			ontology.addRelationInstance(query3);
 			
 			// write ontology file
-			writeFile(NEGATION, getFileName(NEGATION, amount[i]), ontology);
+			writeFile(LOC_STRAT_NEGATION, getFileName(LOC_STRAT_NEGATION, amount[i]), ontology);
+		}
+	}	
+	
+	/**
+	 * Generate ontologies containing logical expressions with globally 
+	 * stratified negation 
+	 * e.g.:
+	 * concept Human
+	 *   knows ofType Human
+	 * concept DistrustedPerson  
+	 * instance Homer
+	 * axiom definedBy
+	 *   ?y memberOf DistrustedPerson :- naf ?x[knows hasValue ?y] 
+	 *   and ?x memberOf Human and ?y memberOf Human.
+	 * 
+	 * Queries: 
+	 * - ?x memberOf DistrustedPerson
+	 * - ?x memberOf ?y
+	 * 
+	 * @throws IOException
+	 * @throws SynchronisationException
+	 * @throws InvalidModelException
+	 * @throws ParserException 
+	 */
+	public void genGloballyStratifiedNegationOntologies() 
+			throws IOException, SynchronisationException, InvalidModelException, ParserException {
+		Ontology ontology = null;
+		for (int i = 0; i < amount.length; i++) {	
+			// create default namespace
+			Namespace ns = wsmoFactory.createNamespace("", 
+					wsmoFactory.createIRI(getNamespace(GLOB_STRAT_NEGATION, amount[i])));
+			
+			// create ontology
+			ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(
+					ns, "o" + amount[i]));
+			
+			// set ontology default namespace and variant
+			ontology.setDefaultNamespace(ns.getIRI());
+			ontology.setWsmlVariant(WSML.WSML_FLIGHT);
+			
+			// add initial elements
+			Concept concept1 = wsmoFactory.createConcept(wsmoFactory.createIRI(ns, "c1"));
+			ontology.addConcept(concept1);
+			Concept concept2 = wsmoFactory.createConcept(wsmoFactory.createIRI(ns, "c2"));
+			ontology.addConcept(concept2);
+			Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns, "ax1"));
+			ontology.addAxiom(axiom);
+			
+			// add instances
+			Instance instance1 = wsmoFactory.createInstance(
+					wsmoFactory.createIRI(ns, "i1"));
+			Instance instance2 = wsmoFactory.createInstance(
+					wsmoFactory.createIRI(ns, "i2"));
+			Instance instance3 = wsmoFactory.createInstance(
+					wsmoFactory.createIRI(ns, "i3"));
+			ontology.addInstance(instance1);
+			ontology.addInstance(instance2);
+			ontology.addInstance(instance3);
+
+			// add amount[i] number of logical expressions containing negation
+			LogicalExpression logExpr = null;
+			Attribute attribute = null;
+			for (int j = 0; j < amount[i]; j++) {
+				attribute = concept1.createAttribute(wsmoFactory.createIRI(ns, "a" + j));
+				attribute.addType(concept1);
+				attribute.setConstraining(true);
+				logExpr = leFactory.createLogicalExpression(
+						"?y memberOf c2 :- naf ?x[a" + j + " hasValue ?y] " +
+								"and ?x memberOf c2 and ?y memberOf c1", 
+						ontology);
+				axiom.addDefinition(logExpr);
+			}
+
+			// add queries in form of relationinstances (see TestPerformanceWithUseOfFeatures)
+			Relation r1 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query1"));
+			r1.createParameter((byte) 0);
+			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
+			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("?x memberOf c2"));
+			ontology.addRelationInstance(query1);
+			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
+			r2.createParameter((byte) 0);
+			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
+			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("?x memberOf ?y"));
+			ontology.addRelationInstance(query2);
+			
+			// write ontology file
+			writeFile(GLOB_STRAT_NEGATION, getFileName(GLOB_STRAT_NEGATION, amount[i]), ontology);
 		}
 	}	
 	
@@ -1332,7 +1424,8 @@ public class BenchmarkOntologyGenerator {
 			generator.genTransitiveAttributeOntologies();
 			generator.genSymmetricAttributeOntologies();
 			generator.genReflexiveAttributeOntologies();
-			generator.genNegationOntologies();
+			generator.genLocallyStratifiedNegationOntologies();
+			generator.genGloballyStratifiedNegationOntologies();
 			generator.genBuiltInAttributeOntologies();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -1348,5 +1441,9 @@ public class BenchmarkOntologyGenerator {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.1  2007-06-18 07:20:11  nathalie
+ * added 1) automatic ontology generator class and 2)
+ * performance test ontologies and results
+ *
  *
  */
