@@ -1,0 +1,43 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://www.locallyStratifiedNegation-10-ontology.org#"
+ }
+
+ontology o10
+
+axiom ax1
+     definedBy 
+          ?x[a0 hasValue ?y] :- naf ?x[a1 hasValue ?y] and ?x memberOf c1 and ?y memberOf c1.
+          ?x[a1 hasValue ?y] :- naf ?x[a2 hasValue ?y] and ?x memberOf c1 and ?y memberOf c1.
+          ?x[a2 hasValue ?y] :- naf ?x[a3 hasValue ?y] and ?x memberOf c1 and ?y memberOf c1.
+          ?x[a3 hasValue ?y] :- naf ?x[a4 hasValue ?y] and ?x memberOf c1 and ?y memberOf c1.
+          ?x[a4 hasValue ?y] :- naf ?x[a5 hasValue ?y] and ?x memberOf c1 and ?y memberOf c1.
+          ?x[a5 hasValue ?y] :- naf ?x[a6 hasValue ?y] and ?x memberOf c1 and ?y memberOf c1.
+          ?x[a6 hasValue ?y] :- naf ?x[a7 hasValue ?y] and ?x memberOf c1 and ?y memberOf c1.
+          ?x[a7 hasValue ?y] :- naf ?x[a8 hasValue ?y] and ?x memberOf c1 and ?y memberOf c1.
+          ?x[a8 hasValue ?y] :- naf ?x[a9 hasValue ?y] and ?x memberOf c1 and ?y memberOf c1.
+          ?x[a9 hasValue ?y] :- naf ?x[a10 hasValue ?y] and ?x memberOf c1 and ?y memberOf c1.
+
+concept c1
+     a0 ofType c1
+     a1 ofType c1
+     a2 ofType c1
+     a3 ofType c1
+     a4 ofType c1
+     a5 ofType c1
+     a6 ofType c1
+     a7 ofType c1
+     a8 ofType c1
+     a9 ofType c1
+     a10 ofType c1
+
+instance i1
+
+instance i2
+
+instance i3
+
+relationInstance query1("i1[a0 hasValue ?x]")
+
+relationInstance query2("?x[a0 hasValue ?y]")
+
+relationInstance query3("?x[a9 hasValue ?y]")
