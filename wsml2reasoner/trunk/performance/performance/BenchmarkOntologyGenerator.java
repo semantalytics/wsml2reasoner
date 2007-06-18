@@ -4,6 +4,8 @@ package performance;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Random;
 
 import org.omwg.logicalexpression.LogicalExpression;
@@ -1382,12 +1384,18 @@ public class BenchmarkOntologyGenerator {
 	}
 	
 	private String getFileName(String ontType, int number) {
-		return ontType + "-" + number + "-ontology";
+		DecimalFormat dformat = new DecimalFormat("00000");
+		return ontType + "-" + dformat.format(number) + "-ontology";
 	}
 	
 	private void writeFile(String ontType, String fileName, Ontology ontology) 
 			throws IOException {
 		File path = new File(BenchmarkOntologyGenerator.path + "/" + ontType);
+		if (!path.exists()){
+			System.out.println("creating directory: "+path);
+			path.mkdir();
+//			path.createNewFile();
+		}
 		
 		// Write ontology to file
 	    File ontFile = new File(path, fileName + ".wsml");
@@ -1402,7 +1410,6 @@ public class BenchmarkOntologyGenerator {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
 		WSMO4JManager wsmo4jManager = new WSMO4JManager();
 		wsmoFactory = wsmo4jManager.getWSMOFactory();
 		leFactory = wsmo4jManager.getLogicalExpressionFactory();
@@ -1441,6 +1448,9 @@ public class BenchmarkOntologyGenerator {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2007-06-18 11:24:56  nathalie
+ * changed/added methods to generate locally and globally stratified negation ontologies
+ *
  * Revision 1.1  2007-06-18 07:20:11  nathalie
  * added 1) automatic ontology generator class and 2)
  * performance test ontologies and results
