@@ -57,7 +57,8 @@ public class TestPerformanceWithUseOfFeatures {
 //        	ex.testTransitiveAttributeOntologies();
 //        	ex.testSymmetricAttributeOntologies();
 //        	ex.testReflexiveAttributeOntologies();
-//        	ex.testNegationOntologies();
+//        	ex.testLocallyStratifiedNegationOntologies();
+//        	ex.testGloballyStratifiedNegationOntologies();
 //        	ex.testBuiltInAttributeOntologies();
             System.exit(0);
         }
@@ -317,21 +318,41 @@ public class TestPerformanceWithUseOfFeatures {
     }
     
     /**
-     * loads negation logical expression type ontologies and performs sample queries
+     * loads locally statified negation logical expression type ontologies 
+     * and performs sample queries
      */
-    public void testNegationOntologies() throws Exception {
-    	Ontology o1 = loadOntology("performance/ontologies/negation/negation-1-ontology.wsml");
-//    	Ontology o2 = loadOntology("performance/ontologies/negation/negation-10-ontology.wsml");
-//    	Ontology o3 = loadOntology("performance/ontologies/negation/negation-100-ontology.wsml");
-//    	Ontology o4 = loadOntology("performance/ontologies/negation/negation-500-ontology.wsml");
-//    	Ontology o5 = loadOntology("performance/ontologies/negation/negation-1000-ontology.wsml");
-//    	Ontology o6 = loadOntology("performance/ontologies/negation/negation-5000-ontology.wsml");
-//    	Ontology o7 = loadOntology("performance/ontologies/negation/negation-10000-ontology.wsml");       
+    public void testLocallyStratifiedNegationOntologies() throws Exception {
+    	Ontology o1 = loadOntology("performance/ontologies/locallyStratifiedNegation/locallyStratifiedNegation-1-ontology.wsml");
+    	Ontology o2 = loadOntology("performance/ontologies/locallyStratifiedNegation/locallyStratifiedNegation-10-ontology.wsml");
+    	Ontology o3 = loadOntology("performance/ontologies/locallyStratifiedNegation/locallyStratifiedNegation-100-ontology.wsml");
+    	Ontology o4 = loadOntology("performance/ontologies/locallyStratifiedNegation/locallyStratifiedNegation-500-ontology.wsml");
+    	Ontology o5 = loadOntology("performance/ontologies/locallyStratifiedNegation/locallyStratifiedNegation-1000-ontology.wsml");
+//    	Ontology o6 = loadOntology("performance/ontologies/locallyStratifiedNegation/locallyStratifiedNegation-5000-ontology.wsml");
+//    	Ontology o7 = loadOntology("performance/ontologies/locallyStratifiedNegation/locallyStratifiedNegation-10000-ontology.wsml");       
 //    	Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5,o6,o7};
-//        Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5};
-    	Ontology[] ontologies = new Ontology[] {o1};
-        String path = "negation/";
-        String[] reasonerNames = new String[]{"KAON"};
+        Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5};
+//    	Ontology[] ontologies = new Ontology[] {o1};
+        String path = "locallyStratifiedNegation/";
+        String[] reasonerNames = new String[]{"MINS"};
+        runPerformanceTests(reasonerNames, ontologies, path);
+    }
+    
+    /**
+     * loads globally stratified negation logical expression type ontologies 
+     * and performs sample queries
+     */
+    public void testGloballyStratifiedNegationOntologies() throws Exception {
+    	Ontology o1 = loadOntology("performance/ontologies/globallyStratifiedNegation/globallyStratifiedNegation-1-ontology.wsml");
+    	Ontology o2 = loadOntology("performance/ontologies/globallyStratifiedNegation/globallyStratifiedNegation-10-ontology.wsml");
+    	Ontology o3 = loadOntology("performance/ontologies/globallyStratifiedNegation/globallyStratifiedNegation-100-ontology.wsml");
+    	Ontology o4 = loadOntology("performance/ontologies/globallyStratifiedNegation/globallyStratifiedNegation-500-ontology.wsml");
+    	Ontology o5 = loadOntology("performance/ontologies/globallyStratifiedNegation/globallyStratifiedNegation-1000-ontology.wsml");
+//    	Ontology o6 = loadOntology("performance/ontologies/globallyStratifiedNegation/globallyStratifiedNegation-5000-ontology.wsml");
+//    	Ontology o7 = loadOntology("performance/ontologies/globallyStratifiedNegation/globallyStratifiedNegation-10000-ontology.wsml");       
+//    	Ontology[] ontologies = new Ontology[] {o1,o2,o3,o4,o5,o6,o7};
+        Ontology[] ontologies = new Ontology[] {o1,o2,o3};
+//    	Ontology[] ontologies = new Ontology[] {o1};
+        String path = "globallyStratifiedNegation/";
         runPerformanceTests(reasonerNames, ontologies, path);
     }
     
