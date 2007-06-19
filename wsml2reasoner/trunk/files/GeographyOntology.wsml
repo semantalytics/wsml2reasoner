@@ -1,0 +1,3126 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"webode://mccarthy.dia.fi.upm.es/Geography_Eures_Ontology#" , wsml _"http://www.wsmo.org/wsml/wsml-syntax#" ,
+	JobOffOnt _"webode://mccarthy.dia.fi.upm.es/Job_Offer_Eures_Ontology#",
+	JobSeeOnt _"webode://mccarthy.dia.fi.upm.es/Job_Seeker_Eures_Ontology#"}
+
+ontology Geography_Eures_Ontology
+
+
+importsOntology { JobOffOnt#Job_Offer_Eures_Ontology,
+	JobSeeOnt#Job_Seeker_Eures_Ontology }
+
+
+concept Continent subConceptOf Location
+	Name ofType (1) _string
+	Description ofType (1) _string
+	Code ofType (1) _string
+	has_country_Country ofType (0 *) Country
+
+concept Country subConceptOf Location
+	Name ofType (1) _string
+	Code ofType (1) _string
+	is_located_in_Continent ofType (0 1) Continent
+	has_region_Region ofType (0 *) Region
+	is_nation_of_Job_Seeker ofType (0 *) JobSeeOnt#Job_Seeker
+	is_residence_of_Job_Seeker ofType (0 *) JobSeeOnt#Job_Seeker
+
+concept Location
+	is_associated_with_Vacancy ofType (0 *) JobOffOnt#Vacancy
+	is_location_of_Organization ofType (0 *) JobOffOnt#Organization
+
+concept Region subConceptOf Location
+	Name ofType (1) _string
+	Description ofType (1) _string
+	is_located_in_Country ofType (1 *) Country
+
+instance ZIMBABWE__ZW memberOf Country
+	Code hasValue "ZW"
+	Name hasValue "ZIMBABWE"
+	is_located_in_Continent hasValue AF__Africa
+
+instance ZAMBIA__ZM memberOf Country
+	Code hasValue "ZM"
+	Name hasValue "ZAMBIA"
+	is_located_in_Continent hasValue AF__Africa
+
+instance YEMEN__YE memberOf Country
+	Code hasValue "YE"
+	Name hasValue "YEMEN"
+	is_located_in_Continent hasValue AF__Africa
+
+instance WESTERN_SAHARA__EH memberOf Country
+	Code hasValue "EH"
+	Name hasValue "WESTERN SAHARA"
+	is_located_in_Continent hasValue AF__Africa
+
+instance WALLIS_AND_FUTUNA__WF memberOf Country
+	Code hasValue "WF"
+	Name hasValue "WALLIS AND FUTUNA"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance VIRGIN_ISLANDS_US__VI memberOf Country
+	Code hasValue "VI"
+	Name hasValue "VIRGIN ISLANDS, U.S."
+	is_located_in_Continent hasValue SA__South_America
+
+instance VIRGIN_ISLANDS_BRITISH__VG memberOf Country
+	Code hasValue "VG"
+	Name hasValue "VIRGIN ISLANDS, BRITISH"
+	is_located_in_Continent hasValue SA__South_America
+
+instance VIET_NAM__VN memberOf Country
+	Code hasValue "VN"
+	Name hasValue "VIET NAM"
+	is_located_in_Continent hasValue AS__Asia
+
+instance VENEZUELA__VE memberOf Country
+	Code hasValue "VE"
+	Name hasValue "VENEZUELA"
+	is_located_in_Continent hasValue SA__South_America
+
+instance VANUATU__VU memberOf Country
+	Code hasValue "VU"
+	Name hasValue "VANUATU"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance UZBEKISTAN__UZ memberOf Country
+	Code hasValue "UZ"
+	Name hasValue "UZBEKISTAN"
+	is_located_in_Continent hasValue AS__Asia
+
+instance URUGUAY__UY memberOf Country
+	Code hasValue "UY"
+	Name hasValue "URUGUAY"
+	is_located_in_Continent hasValue SA__South_America
+
+instance UNITED_STATES_MINOR_OUTLYING_ISLANDS__UM memberOf Country
+	Code hasValue "UM"
+	Name hasValue "UNITED STATES MINOR OUTLYING ISLANDS"
+
+instance UNITED_STATES__US memberOf Country
+	Code hasValue "US"
+	Name hasValue "UNITED STATES"
+	is_located_in_Continent hasValue NA__North_America
+
+instance UNITED_KINGDOM__GB memberOf Country
+	Code hasValue "GB"
+	Name hasValue "UNITED KINGDOM"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {Northern_Ireland,North,East_Anglia,South_East,South_West,Wales,West_Midlands,North_West,East_Midlands,Scotland,Yorkshire_and_Humberside}
+
+instance UNITED_ARAB_EMIRATES__AE memberOf Country
+	Code hasValue "AE"
+	Name hasValue "UNITED ARAB EMIRATES"
+	is_located_in_Continent hasValue AS__Asia
+
+instance UKRAINE__UA memberOf Country
+	Code hasValue "UA"
+	Name hasValue "UKRAINE"
+
+instance UGANDA__UG memberOf Country
+	Code hasValue "UG"
+	Name hasValue "UGANDA"
+	is_located_in_Continent hasValue AF__Africa
+
+instance TUVALU__TV memberOf Country
+	Code hasValue "TV"
+	Name hasValue "TUVALU"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance TURKS_AND_CAICOS_ISLANDS__TC memberOf Country
+	Code hasValue "TC"
+	Name hasValue "TURKS AND CAICOS ISLANDS"
+	is_located_in_Continent hasValue SA__South_America
+
+instance TURKMENISTAN__TM memberOf Country
+	Code hasValue "TM"
+	Name hasValue "TURKMENISTAN"
+	is_located_in_Continent hasValue AS__Asia
+
+instance TURKEY__TR memberOf Country
+	Code hasValue "TR"
+	Name hasValue "TURKEY"
+	is_located_in_Continent hasValue AS__Asia
+
+instance TUNISIA__TN memberOf Country
+	Code hasValue "TN"
+	Name hasValue "TUNISIA"
+	is_located_in_Continent hasValue AF__Africa
+
+instance TRINIDAD_AND_TOBAGO__TT memberOf Country
+	Code hasValue "TT"
+	Name hasValue "TRINIDAD AND TOBAGO"
+
+instance TONGA__TO memberOf Country
+	Code hasValue "TO"
+	Name hasValue "TONGA"
+	is_located_in_Continent hasValue AF__Africa
+
+instance TOKELAU__TK memberOf Country
+	Code hasValue "TK"
+	Name hasValue "TOKELAU"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance TOGO__TG memberOf Country
+	Code hasValue "TG"
+	Name hasValue "TOGO"
+	is_located_in_Continent hasValue AF__Africa
+
+instance TIMORLESTE__TL memberOf Country
+	Code hasValue "TL"
+	Name hasValue "TIMOR-LESTE"
+
+instance THAILAND__TH memberOf Country
+	Code hasValue "TH"
+	Name hasValue "THAILAND"
+	is_located_in_Continent hasValue AS__Asia
+
+instance TANZANIA_UNITED_REPUBLIC_OF__TZ memberOf Country
+	Code hasValue "TZ"
+	Name hasValue "TANZANIA, UNITED REPUBLIC OF"
+	is_located_in_Continent hasValue AF__Africa
+
+instance TAJIKISTAN__TJ memberOf Country
+	Code hasValue "TJ"
+	Name hasValue "TAJIKISTAN"
+	is_located_in_Continent hasValue AS__Asia
+
+instance TAIWAN_PROVINCE_OF_CHINA__TW memberOf Country
+	Code hasValue "TW"
+	Name hasValue "TAIWAN, PROVINCE OF CHINA"
+	is_located_in_Continent hasValue AS__Asia
+
+instance SYRIAN_ARAB_REPUBLIC__SY memberOf Country
+	Code hasValue "SY"
+	Name hasValue "SYRIAN ARAB REPUBLIC"
+	is_located_in_Continent hasValue AS__Asia
+
+instance SWITZERLAND__CH memberOf Country
+	Code hasValue "CH"
+	Name hasValue "SWITZERLAND"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {Schwyz,Appenzell_InnerRhodes,Berne,BasleCountry___Land,Vaud,Schaffhausen,Nidwald___Nidwalden,Thurgovia___Thurgau,BasleCity___Town,Argovia___Aargau,Grisons,St_Gall,Appenzell_OuterRhodes,Valais,Zug,Obwald___Obwalden,Jura,Neuchâtel,Uri,Glarus,Zurich,Solothurn,Geneva,Fribourg,Ticino,Lucerne}
+
+instance SWEDEN__SE memberOf Country
+	Code hasValue "SE"
+	Name hasValue "SWEDEN"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {Gävleborg,Skåne,Gotland,Jämtland,Örebro,Uppsala,Västernorrland,Västra_Götaland,Östergötland,Södermanland,Värmland,Stockholm,Jönköping,Blekinge,Norrbotten,Kalmar,Halland,Västerbotten,Kronoberg,Dalarna,Västmanland}
+
+instance SWAZILAND__SZ memberOf Country
+	Code hasValue "SZ"
+	Name hasValue "SWAZILAND"
+	is_located_in_Continent hasValue AF__Africa
+
+instance SVALBARD_AND_JAN_MAYEN__SJ memberOf Country
+	Code hasValue "SJ"
+	Name hasValue "SVALBARD AND JAN MAYEN"
+	is_located_in_Continent hasValue EU__Europe
+
+instance SURINAME__SR memberOf Country
+	Code hasValue "SR"
+	Name hasValue "SURINAME"
+	is_located_in_Continent hasValue SA__South_America
+
+instance SUDAN__SD memberOf Country
+	Code hasValue "SD"
+	Name hasValue "SUDAN"
+	is_located_in_Continent hasValue AF__Africa
+
+instance SRI_LANKA__LK memberOf Country
+	Code hasValue "LK"
+	Name hasValue "SRI LANKA"
+	is_located_in_Continent hasValue AS__Asia
+
+instance SPAIN__ES memberOf Country
+	Code hasValue "ES"
+	Name hasValue "SPAIN"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {Cataluña,Pais_Vasco,Canarias,Castilla_y_Leon,Galicia,La_Rioja,Andalucia,Navarra,Asturias,Comunidad_de_Madrid,Murcia,Comunidad_Valenciana,Aragon,Baleares,CastillaLa_Mancha,Cantabria,Extramadura}
+
+instance SOUTH_GEORGIA_AND_THE_SOUTH_SANDWICH_ISLANDS__GS memberOf Country
+	Code hasValue "GS"
+	Name hasValue "SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS"
+	is_located_in_Continent hasValue SA__South_America
+
+instance SOUTH_AFRICA__ZA memberOf Country
+	Code hasValue "ZA"
+	Name hasValue "SOUTH AFRICA"
+	is_located_in_Continent hasValue AF__Africa
+
+instance SOMALIA__SO memberOf Country
+	Code hasValue "SO"
+	Name hasValue "SOMALIA"
+	is_located_in_Continent hasValue AF__Africa
+
+instance SOLOMON_ISLANDS__SB memberOf Country
+	Code hasValue "SB"
+	Name hasValue "SOLOMON ISLANDS"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance SLOVENIA__SI memberOf Country
+	Code hasValue "SI"
+	Name hasValue "SLOVENIA"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {Zasavska,Savinjska,Podravska,Spodnjeposavska,Osrednjeslovenska,Jugovzhodna_Slovenija,Notranjskokraska,Koroska,Goriska,Gorenjska,Obalnokraska,Pomurska}
+
+instance SLOVAKIA__SK memberOf Country
+	Code hasValue "SK"
+	Name hasValue "SLOVAKIA"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {Nitriansky_kraj,Trenciansky_kraj,Presovsky_kraj,Banskobystricky_kraj,Zilinsky_kraj,Kosicky_kraj,Trnavsky_kraj,Bratislavsky_kraj}
+
+instance SINGAPORE__SG memberOf Country
+	Code hasValue "SG"
+	Name hasValue "SINGAPORE"
+	is_located_in_Continent hasValue AS__Asia
+
+instance SIERRA_LEONE__SL memberOf Country
+	Code hasValue "SL"
+	Name hasValue "SIERRA LEONE"
+	is_located_in_Continent hasValue AF__Africa
+
+instance SEYCHELLES__SC memberOf Country
+	Code hasValue "SC"
+	Name hasValue "SEYCHELLES"
+	is_located_in_Continent hasValue AF__Africa
+
+instance SERBIA__RS memberOf Country
+	Code hasValue "RS"
+	Name hasValue "SERBIA"
+
+instance SENEGAL__SN memberOf Country
+	Code hasValue "SN"
+	Name hasValue "SENEGAL"
+	is_located_in_Continent hasValue AF__Africa
+
+instance SAUDI_ARABIA__SA memberOf Country
+	Code hasValue "SA"
+	Name hasValue "SAUDI ARABIA"
+	is_located_in_Continent hasValue AS__Asia
+
+instance SAO_TOME_AND_PRINCIPE__ST memberOf Country
+	Code hasValue "ST"
+	Name hasValue "SAO TOME AND PRINCIPE"
+	is_located_in_Continent hasValue AF__Africa
+
+instance SAN_MARINO__SM memberOf Country
+	Code hasValue "SM"
+	Name hasValue "SAN MARINO"
+	is_located_in_Continent hasValue EU__Europe
+
+instance SAMOA__WS memberOf Country
+	Code hasValue "WS"
+	Name hasValue "SAMOA"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance SAINT_VINCENT_AND_THE_GRENADINES__VC memberOf Country
+	Code hasValue "VC"
+	Name hasValue "SAINT VINCENT AND THE GRENADINES"
+
+instance SAINT_PIERRE_AND_MIQUELON__PM memberOf Country
+	Code hasValue "PM"
+	Name hasValue "SAINT PIERRE AND MIQUELON"
+	is_located_in_Continent hasValue NA__North_America
+
+instance SAINT_LUCIA__LC memberOf Country
+	Code hasValue "LC"
+	Name hasValue "SAINT LUCIA"
+	is_located_in_Continent hasValue SA__South_America
+
+instance SAINT_KITTS_AND_NEVIS__KN memberOf Country
+	Code hasValue "KN"
+	Name hasValue "SAINT KITTS AND NEVIS"
+	is_located_in_Continent hasValue SA__South_America
+
+instance SAINT_HELENA__SH memberOf Country
+	Code hasValue "SH"
+	Name hasValue "SAINT HELENA"
+	is_located_in_Continent hasValue AF__Africa
+
+instance RWANDA__RW memberOf Country
+	Code hasValue "RW"
+	Name hasValue "RWANDA"
+	is_located_in_Continent hasValue AF__Africa
+
+instance RUSSIAN_FEDERATION__RU memberOf Country
+	Code hasValue "RU"
+	Name hasValue "RUSSIAN FEDERATION"
+	is_located_in_Continent hasValue AS__Asia
+
+instance ROMANIA__RO memberOf Country
+	Code hasValue "RO"
+	Name hasValue "ROMANIA"
+	is_located_in_Continent hasValue EU__Europe
+
+instance REUNION__RE memberOf Country
+	Code hasValue "RE"
+	Name hasValue "REUNION"
+
+instance QATAR__QA memberOf Country
+	Code hasValue "QA"
+	Name hasValue "QATAR"
+	is_located_in_Continent hasValue AS__Asia
+
+instance PUERTO_RICO__PR memberOf Country
+	Code hasValue "PR"
+	Name hasValue "PUERTO RICO"
+	is_located_in_Continent hasValue SA__South_America
+
+instance PORTUGAL__PT memberOf Country
+	Code hasValue "PT"
+	Name hasValue "PORTUGAL"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {Açores,Alentejo,Centro,Algarve,Norte,Lisboa_e_Vale_do_Tejo,Madeira}
+
+instance POLAND__PL memberOf Country
+	Code hasValue "PL"
+	Name hasValue "POLAND"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {Koninski,Gdanski,Bielskobialski,Bydgoski,Poznanski,Elblaski,Lubelski,M_Warszawa,Ciechanowskoplocki,Swietokrzyski,Wroclawski,Krosnienskoprzemyski,Olsztynski,Radomski,Gorzowski,Torunskowloclawski,Koszalinski,Bialskopodlaski,Kaliski,Krakowskotarnowski,Nowosadecki,Chelmskozamojski,Rzeszowskotarnobrzeski,Warszawski,Pilski,Slupski,Piotrkowskoskierniewicki,M_Lodz,Zielonogorski,Centralny_slaski,Jeleniogorskowalbrzyski,Opolski,Bialostockosuwalski,Szczecinski,Lodzki,Czestochowski,Legnicki,GdanskGdyniaSopot,Rybnickojastrzebski,M_Poznan,M_Krakow,Elcki,Ostroleckosiedlecki,M_Wroclaw,Lomzynski}
+
+instance PITCAIRN__PN memberOf Country
+	Code hasValue "PN"
+	Name hasValue "PITCAIRN"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance PHILIPPINES__PH memberOf Country
+	Code hasValue "PH"
+	Name hasValue "PHILIPPINES"
+	is_located_in_Continent hasValue AS__Asia
+
+instance PERU__PE memberOf Country
+	Code hasValue "PE"
+	Name hasValue "PERU"
+	is_located_in_Continent hasValue SA__South_America
+
+instance PARAGUAY__PY memberOf Country
+	Code hasValue "PY"
+	Name hasValue "PARAGUAY"
+	is_located_in_Continent hasValue SA__South_America
+
+instance PAPUA_NEW_GUINEA__PG memberOf Country
+	Code hasValue "PG"
+	Name hasValue "PAPUA NEW GUINEA"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance PANAMA__PA memberOf Country
+	Code hasValue "PA"
+	Name hasValue "PANAMA"
+	is_located_in_Continent hasValue SA__South_America
+
+instance PALESTINIAN_TERRITORY_OCCUPIED__PS memberOf Country
+	Code hasValue "PS"
+	Name hasValue "PALESTINIAN TERRITORY, OCCUPIED"
+
+instance PALAU__PW memberOf Country
+	Code hasValue "PW"
+	Name hasValue "PALAU"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance PAKISTAN__PK memberOf Country
+	Code hasValue "PK"
+	Name hasValue "PAKISTAN"
+	is_located_in_Continent hasValue AS__Asia
+
+instance OMAN__OM memberOf Country
+	Code hasValue "OM"
+	Name hasValue "OMAN"
+	is_located_in_Continent hasValue AS__Asia
+
+instance NORWAY__NO memberOf Country
+	Code hasValue "NO"
+	Name hasValue "NORWAY"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {Nordland,Sør_Trøndelag,Akershus,Oppland,Rogaland,Vestfold,Buskerud,Hordaland,Telemark,Østfold,Sogn_og_Fjordane,Møre_og_Romsdal,VestAgder,NordTrøndelag,AustAgder,Oslo,Hedmark,Troms,Finnmark}
+
+instance NORTHERN_MARIANA_ISLANDS__MP memberOf Country
+	Code hasValue "MP"
+	Name hasValue "NORTHERN MARIANA ISLANDS"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance NORFOLK_ISLAND__NF memberOf Country
+	Code hasValue "NF"
+	Name hasValue "NORFOLK ISLAND"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance NIUE__NU memberOf Country
+	Code hasValue "NU"
+	Name hasValue "NIUE"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance NIGERIA__NG memberOf Country
+	Code hasValue "NG"
+	Name hasValue "NIGERIA"
+	is_located_in_Continent hasValue AF__Africa
+
+instance NIGER__NE memberOf Country
+	Code hasValue "NE"
+	Name hasValue "NIGER"
+	is_located_in_Continent hasValue AF__Africa
+
+instance NICARAGUA__NI memberOf Country
+	Code hasValue "NI"
+	Name hasValue "NICARAGUA"
+	is_located_in_Continent hasValue SA__South_America
+
+instance NEW_ZEALAND__NZ memberOf Country
+	Code hasValue "NZ"
+	Name hasValue "NEW ZEALAND"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance NEW_CALEDONIA__NC memberOf Country
+	Code hasValue "NC"
+	Name hasValue "NEW CALEDONIA"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance NETHERLANDS_ANTILLES__AN memberOf Country
+	Code hasValue "AN"
+	Name hasValue "NETHERLANDS ANTILLES"
+	is_located_in_Continent hasValue SA__South_America
+
+instance NETHERLANDS__NL memberOf Country
+	Code hasValue "NL"
+	Name hasValue "NETHERLANDS"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {Friesland,NoordBrabant,Overijssel,Zeeland,ZuidHolland,Limburg,Flevoland,Utrecht,NoordHolland,Groningen,Drenthe,Gelderland}
+
+instance NEPAL__NP memberOf Country
+	Code hasValue "NP"
+	Name hasValue "NEPAL"
+	is_located_in_Continent hasValue AS__Asia
+
+instance NAURU__NR memberOf Country
+	Code hasValue "NR"
+	Name hasValue "NAURU"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance NAMIBIA__NA memberOf Country
+	Code hasValue "NA"
+	Name hasValue "NAMIBIA"
+	is_located_in_Continent hasValue AF__Africa
+
+instance MYANMAR__MM memberOf Country
+	Code hasValue "MM"
+	Name hasValue "MYANMAR"
+	is_located_in_Continent hasValue AS__Asia
+
+instance MOZAMBIQUE__MZ memberOf Country
+	Code hasValue "MZ"
+	Name hasValue "MOZAMBIQUE"
+	is_located_in_Continent hasValue AF__Africa
+
+instance MOROCCO__MA memberOf Country
+	Code hasValue "MA"
+	Name hasValue "MOROCCO"
+
+instance MONTSERRAT__MS memberOf Country
+	Code hasValue "MS"
+	Name hasValue "MONTSERRAT"
+	is_located_in_Continent hasValue SA__South_America
+
+instance MONTENEGRO__ME memberOf Country
+	Code hasValue "ME"
+	Name hasValue "MONTENEGRO"
+
+instance MONGOLIA__MN memberOf Country
+	Code hasValue "MN"
+	Name hasValue "MONGOLIA"
+	is_located_in_Continent hasValue AS__Asia
+
+instance MONACO__MC memberOf Country
+	Code hasValue "MC"
+	Name hasValue "MONACO"
+	is_located_in_Continent hasValue EU__Europe
+
+instance MOLDOVA_REPUBLIC_OF__MD memberOf Country
+	Code hasValue "MD"
+	Name hasValue "MOLDOVA, REPUBLIC OF"
+
+instance MICRONESIA_FEDERATED_STATES_OF__FM memberOf Country
+	Code hasValue "FM"
+	Name hasValue "MICRONESIA, FEDERATED STATES OF"
+
+instance MEXICO__MX memberOf Country
+	Code hasValue "MX"
+	Name hasValue "MEXICO"
+	is_located_in_Continent hasValue NA__North_America
+
+instance MAYOTTE__YT memberOf Country
+	Code hasValue "YT"
+	Name hasValue "MAYOTTE"
+	is_located_in_Continent hasValue AF__Africa
+
+instance MAURITIUS__MU memberOf Country
+	Code hasValue "MU"
+	Name hasValue "MAURITIUS"
+	is_located_in_Continent hasValue AF__Africa
+
+instance MAURITANIA__MR memberOf Country
+	Code hasValue "MR"
+	Name hasValue "MAURITANIA"
+	is_located_in_Continent hasValue AF__Africa
+
+instance MARTINIQUE__MQ memberOf Country
+	Code hasValue "MQ"
+	Name hasValue "MARTINIQUE"
+	is_located_in_Continent hasValue SA__South_America
+
+instance MARSHALL_ISLANDS__MH memberOf Country
+	Code hasValue "MH"
+	Name hasValue "MARSHALL ISLANDS"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance MALTA__MT memberOf Country
+	Code hasValue "MT"
+	Name hasValue "MALTA"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {Gozo_and_Comino_Ghawdex_u_Kemmuna,Malta}
+
+instance MALI__ML memberOf Country
+	Code hasValue "ML"
+	Name hasValue "MALI"
+	is_located_in_Continent hasValue AF__Africa
+
+instance MALDIVES__MV memberOf Country
+	Code hasValue "MV"
+	Name hasValue "MALDIVES"
+	is_located_in_Continent hasValue AS__Asia
+
+instance MALAYSIA__MY memberOf Country
+	Code hasValue "MY"
+	Name hasValue "MALAYSIA"
+	is_located_in_Continent hasValue AS__Asia
+
+instance MALAWI__MW memberOf Country
+	Code hasValue "MW"
+	Name hasValue "MALAWI"
+	is_located_in_Continent hasValue AF__Africa
+
+instance MADAGASCAR__MG memberOf Country
+	Code hasValue "MG"
+	Name hasValue "MADAGASCAR"
+	is_located_in_Continent hasValue AF__Africa
+
+instance MACEDONIA_THE_FORMER_YUGOSLAV_REPUBLIC_OF__MK memberOf Country
+	Code hasValue "MK"
+	Name hasValue "MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF"
+
+instance MACAO__MO memberOf Country
+	Code hasValue "MO"
+	Name hasValue "MACAO"
+
+instance LUXEMBOURG__LU memberOf Country
+	Code hasValue "LU"
+	Name hasValue "LUXEMBOURG"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue Luxembourg
+
+instance LITHUANIA__LT memberOf Country
+	Code hasValue "LT"
+	Name hasValue "LITHUANIA"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {Vilniaus,Alytaus,Klaipedos,Siauliu,Telsiu,Taurages,Panevezio,Kauno,Marijampoles,Utenos}
+
+instance LIECHTENSTEIN__LI memberOf Country
+	Code hasValue "LI"
+	Name hasValue "LIECHTENSTEIN"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue Liechtenstein
+
+instance LIBYAN_ARAB_JAMAHIRIYA__LY memberOf Country
+	Code hasValue "LY"
+	Name hasValue "LIBYAN ARAB JAMAHIRIYA"
+	is_located_in_Continent hasValue AF__Africa
+
+instance LIBERIA__LR memberOf Country
+	Code hasValue "LR"
+	Name hasValue "LIBERIA"
+	is_located_in_Continent hasValue AF__Africa
+
+instance LESOTHO__LS memberOf Country
+	Code hasValue "LS"
+	Name hasValue "LESOTHO"
+	is_located_in_Continent hasValue AF__Africa
+
+instance LEBANON__LB memberOf Country
+	Code hasValue "LB"
+	Name hasValue "LEBANON"
+	is_located_in_Continent hasValue AS__Asia
+
+instance LATVIA__LV memberOf Country
+	Code hasValue "LV"
+	Name hasValue "LATVIA"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {Latgale,Riga,Zemgale,Kurzeme,Vidzeme}
+
+instance LAO_PEOPLES_DEMOCRATIC_REPUBLIC__LA memberOf Country
+	Code hasValue "LA"
+	Name hasValue "LAO PEOPLE'S DEMOCRATIC REPUBLIC"
+
+instance KYRGYZSTAN__KG memberOf Country
+	Code hasValue "KG"
+	Name hasValue "KYRGYZSTAN"
+	is_located_in_Continent hasValue AS__Asia
+
+instance KUWAIT__KW memberOf Country
+	Code hasValue "KW"
+	Name hasValue "KUWAIT"
+	is_located_in_Continent hasValue AS__Asia
+
+instance KOREA_REPUBLIC_OF__KR memberOf Country
+	Code hasValue "KR"
+	Name hasValue "KOREA, REPUBLIC OF"
+	is_located_in_Continent hasValue AS__Asia
+
+instance KOREA_DEMOCRATIC_PEOPLES_REPUBLIC_OF__KP memberOf Country
+	Code hasValue "KP"
+	Name hasValue "KOREA, DEMOCRATIC PEOPLE'S REPUBLIC OF"
+
+instance KIRIBATI__KI memberOf Country
+	Code hasValue "KI"
+	Name hasValue "KIRIBATI"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance KENYA__KE memberOf Country
+	Code hasValue "KE"
+	Name hasValue "KENYA"
+	is_located_in_Continent hasValue AF__Africa
+
+instance KAZAKHSTAN__KZ memberOf Country
+	Code hasValue "KZ"
+	Name hasValue "KAZAKHSTAN"
+
+instance JORDAN__JO memberOf Country
+	Code hasValue "JO"
+	Name hasValue "JORDAN"
+	is_located_in_Continent hasValue AS__Asia
+
+instance JERSEY__JE memberOf Country
+	Code hasValue "JE"
+	Name hasValue "JERSEY"
+
+instance JAPAN__JP memberOf Country
+	Code hasValue "JP"
+	Name hasValue "JAPAN"
+	is_located_in_Continent hasValue AS__Asia
+
+instance JAMAICA__JM memberOf Country
+	Code hasValue "JM"
+	Name hasValue "JAMAICA"
+	is_located_in_Continent hasValue SA__South_America
+
+instance ITALY__IT memberOf Country
+	Code hasValue "IT"
+	Name hasValue "ITALY"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {Veneto,Marche,Calabria,Campania,Liguria,Valle_DAosta,Lazio,Toscana,Piemonte,Puglia,Sicilia,Basilicata,Abruzzo,EmiliaRomagna,Lombardia,Sardegna,Umbria,Friuli_VeneziaGiulia,Trentino_Süd_Tirol,Molise}
+
+instance ISRAEL__IL memberOf Country
+	Code hasValue "IL"
+	Name hasValue "ISRAEL"
+	is_located_in_Continent hasValue AS__Asia
+
+instance ISLE_OF_MAN__IM memberOf Country
+	Code hasValue "IM"
+	Name hasValue "ISLE OF MAN"
+
+instance IRELAND__IE memberOf Country
+	Code hasValue "IE"
+	Name hasValue "IRELAND"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {South_West,Midwest,North_East,East,South_East,Midlands,West,North_West}
+
+instance IRAQ__IQ memberOf Country
+	Code hasValue "IQ"
+	Name hasValue "IRAQ"
+	is_located_in_Continent hasValue AS__Asia
+
+instance IRAN_ISLAMIC_REPUBLIC_OF__IR memberOf Country
+	Code hasValue "IR"
+	Name hasValue "IRAN, ISLAMIC REPUBLIC OF"
+
+instance INDONESIA__ID memberOf Country
+	Code hasValue "ID"
+	Name hasValue "INDONESIA"
+	is_located_in_Continent hasValue AS__Asia
+
+instance INDIA__IN memberOf Country
+	Code hasValue "IN"
+	Name hasValue "INDIA"
+	is_located_in_Continent hasValue AS__Asia
+
+instance ICELAND__IS memberOf Country
+	Code hasValue "IS"
+	Name hasValue "ICELAND"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue Island
+
+instance HUNGARY__HU memberOf Country
+	Code hasValue "HU"
+	Name hasValue "HUNGARY"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {Vas,SzabolcsSzatmarBereg,Nograd,Csongrad,KomaromEsztergom,Pest,Tolna,BacsKiskun,GyorMosonSopron,BorsodAbaujZemplen,Veszprem,JaszNagykunSzolnok,Somogy,Heves,Budapest,Zala,Fejer,Baranya,Bekes,HajduBihar}
+
+instance HONG_KONG__HK memberOf Country
+	Code hasValue "HK"
+	Name hasValue "HONG KONG"
+	is_located_in_Continent hasValue AS__Asia
+
+instance HONDURAS__HN memberOf Country
+	Code hasValue "HN"
+	Name hasValue "HONDURAS"
+	is_located_in_Continent hasValue SA__South_America
+
+instance HOLY_SEE__VATICAN_CITY_STATE___VA memberOf Country
+	Code hasValue "VA"
+	Name hasValue "HOLY SEE (VATICAN CITY STATE)"
+	is_located_in_Continent hasValue EU__Europe
+
+instance HEARD_ISLAND_AND_MCDONALD_ISLANDS__HM memberOf Country
+	Code hasValue "HM"
+	Name hasValue "HEARD ISLAND AND MCDONALD ISLANDS"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance HAITI__HT memberOf Country
+	Code hasValue "HT"
+	Name hasValue "HAITI"
+	is_located_in_Continent hasValue SA__South_America
+
+instance GUYANA__GY memberOf Country
+	Code hasValue "GY"
+	Name hasValue "GUYANA"
+	is_located_in_Continent hasValue SA__South_America
+
+instance GUINEABISSAU__GW memberOf Country
+	Code hasValue "GW"
+	Name hasValue "GUINEA-BISSAU"
+	is_located_in_Continent hasValue AF__Africa
+
+instance GUINEA__GN memberOf Country
+	Code hasValue "GN"
+	Name hasValue "GUINEA"
+	is_located_in_Continent hasValue AF__Africa
+
+instance GUERNSEY__GG memberOf Country
+	Code hasValue "GG"
+	Name hasValue "GUERNSEY"
+
+instance GUATEMALA__GT memberOf Country
+	Code hasValue "GT"
+	Name hasValue "GUATEMALA"
+	is_located_in_Continent hasValue SA__South_America
+
+instance GUAM__GU memberOf Country
+	Code hasValue "GU"
+	Name hasValue "GUAM"
+	is_located_in_Continent hasValue SA__South_America
+
+instance GUADELOUPE__GP memberOf Country
+	Code hasValue "GP"
+	Name hasValue "GUADELOUPE"
+	is_located_in_Continent hasValue SA__South_America
+
+instance GRENADA__GD memberOf Country
+	Code hasValue "GD"
+	Name hasValue "GRENADA"
+	is_located_in_Continent hasValue SA__South_America
+
+instance GREENLAND__GL memberOf Country
+	Code hasValue "GL"
+	Name hasValue "GREENLAND"
+	is_located_in_Continent hasValue NA__North_America
+
+instance GREECE__GR memberOf Country
+	Code hasValue "GR"
+	Name hasValue "GREECE"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {Sterea_Ellada,Peloponnesos,Notio_Aigaio,Thessalia,Anatoliki_Makedonia_Kai_Thraki,Dytiki_Ellada,Attiki,Voreio_Aigaio,Kriti,Ionioi_Nisoi,Dytiki_Makedonia,Ipeiros,Kentriki_Makedonia}
+
+instance GIBRALTAR__GI memberOf Country
+	Code hasValue "GI"
+	Name hasValue "GIBRALTAR"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue Gibraltar
+
+instance GHANA__GH memberOf Country
+	Code hasValue "GH"
+	Name hasValue "GHANA"
+	is_located_in_Continent hasValue AF__Africa
+
+instance GERMANY__DE memberOf Country
+	Code hasValue "DE"
+	Name hasValue "GERMANY"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {SchleswigHolstein,Sachsen,Brandenburg,Hamburg,MecklenburgVorpommern,NordrheinWestfalen,RheinlandPfalz,Hessen,SachsenAnhalt,Bayern,Bremen,BadenWürttemberg,Thuringen,Berlin,Saarland,Niedersachsen}
+
+instance GEORGIA__GE memberOf Country
+	Code hasValue "GE"
+	Name hasValue "GEORGIA"
+	is_located_in_Continent hasValue AS__Asia
+
+instance GAMBIA__GM memberOf Country
+	Code hasValue "GM"
+	Name hasValue "GAMBIA"
+	is_located_in_Continent hasValue AF__Africa
+
+instance GABON__GA memberOf Country
+	Code hasValue "GA"
+	Name hasValue "GABON"
+	is_located_in_Continent hasValue AF__Africa
+
+instance FRENCH_SOUTHERN_TERRITORIES__TF memberOf Country
+	Code hasValue "TF"
+	Name hasValue "FRENCH SOUTHERN TERRITORIES"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance FRENCH_POLYNESIA__PF memberOf Country
+	Code hasValue "PF"
+	Name hasValue "FRENCH POLYNESIA"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance FRENCH_GUIANA__GF memberOf Country
+	Code hasValue "GF"
+	Name hasValue "FRENCH GUIANA"
+	is_located_in_Continent hasValue SA__South_America
+
+instance FRANCE__FR memberOf Country
+	Code hasValue "FR"
+	Name hasValue "FRANCE"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {Picardie,Centre,BasseNormandie,LanguedocRoussillon,NordpasdeCalais,Alsace,Ile_de_France,RhoneAlpes,PoitouCharentes,MidiPyrénées,Bretagne,ChampagneArdenne,ProvenceAlpesCotedAzur,Pays_de_la_Loire,Aquitaine,Corse,Lorraine,Bourgogne,FrancheComte,Limousin,HauteNormandie,Auvergne}
+
+instance FINLAND__FI memberOf Country
+	Code hasValue "FI"
+	Name hasValue "FINLAND"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {KaakkoisSuomi,Pirkanmaa,KeskiSuomi,EtelaSavo,Pohjanmaa,Uusimaa,Åland_Islands,PohjoisKarjala,PohjoisSavo,PohjoisPohjanmaa,VarsinaisSuomi,Satakunta,Kainnu,EtelaPohjanmaa,Lappi,Hame}
+
+instance FIJI__FJ memberOf Country
+	Code hasValue "FJ"
+	Name hasValue "FIJI"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance FAROE_ISLANDS__FO memberOf Country
+	Code hasValue "FO"
+	Name hasValue "FAROE ISLANDS"
+	is_located_in_Continent hasValue EU__Europe
+
+instance FALKLAND_ISLANDS__MALVINAS___FK memberOf Country
+	Code hasValue "FK"
+	Name hasValue "FALKLAND ISLANDS (MALVINAS)"
+
+instance ETHIOPIA__ET memberOf Country
+	Code hasValue "ET"
+	Name hasValue "ETHIOPIA"
+	is_located_in_Continent hasValue AF__Africa
+
+instance ESTONIA__EE memberOf Country
+	Code hasValue "EE"
+	Name hasValue "ESTONIA"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {KeskEesti,KirdeEesti,LääneEesti,LõunaEesti,PõhjaEesti}
+
+instance ERITREA__ER memberOf Country
+	Code hasValue "ER"
+	Name hasValue "ERITREA"
+	is_located_in_Continent hasValue AF__Africa
+
+instance EQUATORIAL_GUINEA__GQ memberOf Country
+	Code hasValue "GQ"
+	Name hasValue "EQUATORIAL GUINEA"
+	is_located_in_Continent hasValue AF__Africa
+
+instance EL_SALVADOR__SV memberOf Country
+	Code hasValue "SV"
+	Name hasValue "EL SALVADOR"
+	is_located_in_Continent hasValue SA__South_America
+
+instance EGYPT__EG memberOf Country
+	Code hasValue "EG"
+	Name hasValue "EGYPT"
+	is_located_in_Continent hasValue AF__Africa
+
+instance ECUADOR__EC memberOf Country
+	Code hasValue "EC"
+	Name hasValue "ECUADOR"
+	is_located_in_Continent hasValue SA__South_America
+
+instance DOMINICAN_REPUBLIC__DO memberOf Country
+	Code hasValue "DO"
+	Name hasValue "DOMINICAN REPUBLIC"
+	is_located_in_Continent hasValue SA__South_America
+
+instance DOMINICA__DM memberOf Country
+	Code hasValue "DM"
+	Name hasValue "DOMINICA"
+	is_located_in_Continent hasValue SA__South_America
+
+instance DJIBOUTI__DJ memberOf Country
+	Code hasValue "DJ"
+	Name hasValue "DJIBOUTI"
+	is_located_in_Continent hasValue AF__Africa
+
+instance DENMARK__DK memberOf Country
+	Code hasValue "DK"
+	Name hasValue "DENMARK"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {Ringkøbing,Århus,Frederiksborg,Vestsjællands,Københavns,Nordjyllands,Vejle,Roskilde,Viborg,Sønderjyllands,Fyns,Stortstrøms,Bornholms,Ribe}
+
+instance CZECH_REPUBLIC__CZ memberOf Country
+	Code hasValue "CZ"
+	Name hasValue "CZECH REPUBLIC"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {Liberecky,Jihocesky,Olomoucky,Vysocina,Zlinsky,Kralovehradecky,Pardubicky,Jihomoravsky,Plzensky,Moravskoslezsky,Stredocesky,Karlovarsky,Ustecky}
+
+instance CYPRUS__CY memberOf Country
+	Code hasValue "CY"
+	Name hasValue "CYPRUS"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue Kypros___Kibris
+
+instance CUBA__CU memberOf Country
+	Code hasValue "CU"
+	Name hasValue "CUBA"
+	is_located_in_Continent hasValue SA__South_America
+
+instance CROATIA__HR memberOf Country
+	Code hasValue "HR"
+	Name hasValue "CROATIA"
+	is_located_in_Continent hasValue EU__Europe
+
+instance COTE_DIVOIRE__CI memberOf Country
+	Code hasValue "CI"
+	Name hasValue "COTE D'IVOIRE"
+
+instance COSTA_RICA__CR memberOf Country
+	Code hasValue "CR"
+	Name hasValue "COSTA RICA"
+	is_located_in_Continent hasValue SA__South_America
+
+instance COOK_ISLANDS__CK memberOf Country
+	Code hasValue "CK"
+	Name hasValue "COOK ISLANDS"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance CONGO_THE_DEMOCRATIC_REPUBLIC_OF_THE__CD memberOf Country
+	Code hasValue "CD"
+	Name hasValue "CONGO, THE DEMOCRATIC REPUBLIC OF THE"
+
+instance CONGO__CG memberOf Country
+	Code hasValue "CG"
+	Name hasValue "CONGO"
+	is_located_in_Continent hasValue AF__Africa
+
+instance COMOROS__KM memberOf Country
+	Code hasValue "KM"
+	Name hasValue "COMOROS"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance COLOMBIA__CO memberOf Country
+	Code hasValue "CO"
+	Name hasValue "COLOMBIA"
+	is_located_in_Continent hasValue SA__South_America
+
+instance COCOS__KEELING__ISLANDS__CC memberOf Country
+	Code hasValue "CC"
+	Name hasValue "COCOS (KEELING) ISLANDS"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance CHRISTMAS_ISLAND__CX memberOf Country
+	Code hasValue "CX"
+	Name hasValue "CHRISTMAS ISLAND"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance CHINA__CN memberOf Country
+	Code hasValue "CN"
+	Name hasValue "CHINA"
+	is_located_in_Continent hasValue AS__Asia
+
+instance CHILE__CL memberOf Country
+	Code hasValue "CL"
+	Name hasValue "CHILE"
+	is_located_in_Continent hasValue SA__South_America
+
+instance CHAD__TD memberOf Country
+	Code hasValue "TD"
+	Name hasValue "CHAD"
+	is_located_in_Continent hasValue AF__Africa
+
+instance CENTRAL_AFRICAN_REPUBLIC__CF memberOf Country
+	Code hasValue "CF"
+	Name hasValue "CENTRAL AFRICAN REPUBLIC"
+	is_located_in_Continent hasValue AF__Africa
+
+instance CAYMAN_ISLANDS__KY memberOf Country
+	Code hasValue "KY"
+	Name hasValue "CAYMAN ISLANDS"
+	is_located_in_Continent hasValue SA__South_America
+
+instance CAPE_VERDE__CV memberOf Country
+	Code hasValue "CV"
+	Name hasValue "CAPE VERDE"
+	is_located_in_Continent hasValue AF__Africa
+
+instance CANADA__CA memberOf Country
+	Code hasValue "CA"
+	Name hasValue "CANADA"
+	is_located_in_Continent hasValue NA__North_America
+
+instance CAMEROON__CM memberOf Country
+	Code hasValue "CM"
+	Name hasValue "CAMEROON"
+	is_located_in_Continent hasValue AF__Africa
+
+instance CAMBODIA__KH memberOf Country
+	Code hasValue "KH"
+	Name hasValue "CAMBODIA"
+	is_located_in_Continent hasValue AS__Asia
+
+instance BURUNDI__BI memberOf Country
+	Code hasValue "BI"
+	Name hasValue "BURUNDI"
+	is_located_in_Continent hasValue AF__Africa
+
+instance BURKINA_FASO__BF memberOf Country
+	Code hasValue "BF"
+	Name hasValue "BURKINA FASO"
+	is_located_in_Continent hasValue AF__Africa
+
+instance BULGARIA__BG memberOf Country
+	Code hasValue "BG"
+	Name hasValue "BULGARIA"
+	is_located_in_Continent hasValue EU__Europe
+
+instance BRUNEI_DARUSSALAM__BN memberOf Country
+	Code hasValue "BN"
+	Name hasValue "BRUNEI DARUSSALAM"
+	is_located_in_Continent hasValue AS__Asia
+
+instance BRITISH_INDIAN_OCEAN_TERRITORY__IO memberOf Country
+	Code hasValue "IO"
+	Name hasValue "BRITISH INDIAN OCEAN TERRITORY"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance BRAZIL__BR memberOf Country
+	Code hasValue "BR"
+	Name hasValue "BRAZIL"
+	is_located_in_Continent hasValue SA__South_America
+
+instance BOUVET_ISLAND__BV memberOf Country
+	Code hasValue "BV"
+	Name hasValue "BOUVET ISLAND"
+	is_located_in_Continent hasValue AF__Africa
+
+instance BOTSWANA__BW memberOf Country
+	Code hasValue "BW"
+	Name hasValue "BOTSWANA"
+	is_located_in_Continent hasValue AF__Africa
+
+instance BOSNIA_AND_HERZEGOVINA__BA memberOf Country
+	Code hasValue "BA"
+	Name hasValue "BOSNIA AND HERZEGOVINA"
+	is_located_in_Continent hasValue EU__Europe
+
+instance BOLIVIA__BO memberOf Country
+	Code hasValue "BO"
+	Name hasValue "BOLIVIA"
+	is_located_in_Continent hasValue SA__South_America
+
+instance BHUTAN__BT memberOf Country
+	Code hasValue "BT"
+	Name hasValue "BHUTAN"
+	is_located_in_Continent hasValue AS__Asia
+
+instance BERMUDA__BM memberOf Country
+	Code hasValue "BM"
+	Name hasValue "BERMUDA"
+	is_located_in_Continent hasValue SA__South_America
+
+instance BENIN__BJ memberOf Country
+	Code hasValue "BJ"
+	Name hasValue "BENIN"
+	is_located_in_Continent hasValue AF__Africa
+
+instance BELIZE__BZ memberOf Country
+	Code hasValue "BZ"
+	Name hasValue "BELIZE"
+	is_located_in_Continent hasValue SA__South_America
+
+instance BELGIUM__BE memberOf Country
+	Code hasValue "BE"
+	Name hasValue "BELGIUM"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {Brabant_Wallon,Oost_Vlaanderen,Hainaut,Luxembourg,Vlaams_Brabant,Limburg,Bruxelles_Brussel,Liege,Antwerpen,Namur,West_Vlaanderen}
+
+instance BELARUS__BY memberOf Country
+	Code hasValue "BY"
+	Name hasValue "BELARUS"
+	is_located_in_Continent hasValue EU__Europe
+
+instance BARBADOS__BB memberOf Country
+	Code hasValue "BB"
+	Name hasValue "BARBADOS"
+	is_located_in_Continent hasValue SA__South_America
+
+instance BANGLADESH__BD memberOf Country
+	Code hasValue "BD"
+	Name hasValue "BANGLADESH"
+	is_located_in_Continent hasValue AS__Asia
+
+instance BAHRAIN__BH memberOf Country
+	Code hasValue "BH"
+	Name hasValue "BAHRAIN"
+	is_located_in_Continent hasValue AS__Asia
+
+instance BAHAMAS__BS memberOf Country
+	Code hasValue "BS"
+	Name hasValue "BAHAMAS"
+	is_located_in_Continent hasValue SA__South_America
+
+instance AZERBAIJAN__AZ memberOf Country
+	Code hasValue "AZ"
+	Name hasValue "AZERBAIJAN"
+	is_located_in_Continent hasValue AS__Asia
+
+instance AUSTRIA__AT memberOf Country
+	Code hasValue "AT"
+	Name hasValue "AUSTRIA"
+	is_located_in_Continent hasValue EU__Europe
+	has_region_Region hasValue {Wien,Oberösterreich,Steiermark,Kärnten,Burgenland,Tirol,Voralberg,Salzburg,Niederösterreich}
+
+instance AUSTRALIA__AU memberOf Country
+	Code hasValue "AU"
+	Name hasValue "AUSTRALIA"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance ARUBA__AW memberOf Country
+	Code hasValue "AW"
+	Name hasValue "ARUBA"
+	is_located_in_Continent hasValue SA__South_America
+
+instance ARMENIA__AM memberOf Country
+	Code hasValue "AM"
+	Name hasValue "ARMENIA"
+	is_located_in_Continent hasValue AS__Asia
+
+instance ARGENTINA__AR memberOf Country
+	Code hasValue "AR"
+	Name hasValue "ARGENTINA"
+	is_located_in_Continent hasValue SA__South_America
+
+instance ANTIGUA_AND_BARBUDA__AG memberOf Country
+	Code hasValue "AG"
+	Name hasValue "ANTIGUA AND BARBUDA"
+	is_located_in_Continent hasValue SA__South_America
+
+instance ANTARCTICA__AQ memberOf Country
+	Code hasValue "AQ"
+	Name hasValue "ANTARCTICA"
+	is_located_in_Continent hasValue AN__Antarctica
+
+instance ANGUILLA__AI memberOf Country
+	Code hasValue "AI"
+	Name hasValue "ANGUILLA"
+	is_located_in_Continent hasValue SA__South_America
+
+instance ANGOLA__AO memberOf Country
+	Code hasValue "AO"
+	Name hasValue "ANGOLA"
+	is_located_in_Continent hasValue AF__Africa
+
+instance ANDORRA__AD memberOf Country
+	Code hasValue "AD"
+	Name hasValue "ANDORRA"
+	is_located_in_Continent hasValue EU__Europe
+
+instance AMERICAN_SAMOA__AS memberOf Country
+	Code hasValue "AS"
+	Name hasValue "AMERICAN SAMOA"
+	is_located_in_Continent hasValue OC__Oceania
+
+instance ALGERIA__DZ memberOf Country
+	Code hasValue "DZ"
+	Name hasValue "ALGERIA"
+	is_located_in_Continent hasValue AF__Africa
+
+instance ALBANIA__AL memberOf Country
+	Code hasValue "AL"
+	Name hasValue "ALBANIA"
+	is_located_in_Continent hasValue EU__Europe
+
+instance ÅLAND_ISLANDS__AX memberOf Country
+	Code hasValue "AX"
+	Name hasValue "ÅLAND ISLANDS"
+	is_located_in_Continent hasValue EU__Europe
+
+instance AFGHANISTAN__AF memberOf Country
+	Code hasValue "AF"
+	Name hasValue "AFGHANISTAN"
+	is_located_in_Continent hasValue AS__Asia
+
+instance NA__North_America memberOf Continent
+	Description hasValue "North America"
+	Code hasValue "NA"
+	Name hasValue "North America"
+	has_country_Country hasValue {CANADA__CA,GREENLAND__GL,MEXICO__MX,SAINT_PIERRE_AND_MIQUELON__PM,UNITED_STATES__US}
+
+instance AN__Antarctica memberOf Continent
+	Description hasValue "Antarctica"
+	Code hasValue "AN"
+	Name hasValue "Antarctica"
+	has_country_Country hasValue ANTARCTICA__AQ
+
+instance SA__South_America memberOf Continent
+	Description hasValue "South America"
+	Code hasValue "SA"
+	Name hasValue "South America"
+	has_country_Country hasValue {ANGUILLA__AI,ANTIGUA_AND_BARBUDA__AG,ARGENTINA__AR,ARUBA__AW,BAHAMAS__BS,BARBADOS__BB,BELIZE__BZ,BERMUDA__BM,BOLIVIA__BO,BRAZIL__BR,CAYMAN_ISLANDS__KY,CHILE__CL,COLOMBIA__CO,COSTA_RICA__CR,CUBA__CU,DOMINICA__DM,DOMINICAN_REPUBLIC__DO,ECUADOR__EC,EL_SALVADOR__SV,FRENCH_GUIANA__GF,GRENADA__GD,GUADELOUPE__GP,GUAM__GU,GUATEMALA__GT,GUYANA__GY,HAITI__HT,HONDURAS__HN,JAMAICA__JM,MARTINIQUE__MQ,MONTSERRAT__MS,NETHERLANDS_ANTILLES__AN,NICARAGUA__NI,PANAMA__PA,PARAGUAY__PY,PERU__PE,PUERTO_RICO__PR,SAINT_KITTS_AND_NEVIS__KN,SAINT_LUCIA__LC,SOUTH_GEORGIA_AND_THE_SOUTH_SANDWICH_ISLANDS__GS,SURINAME__SR,TURKS_AND_CAICOS_ISLANDS__TC,URUGUAY__UY,VENEZUELA__VE,VIRGIN_ISLANDS_BRITISH__VG,VIRGIN_ISLANDS_US__VI}
+
+instance OC__Oceania memberOf Continent
+	Description hasValue "Oceania"
+	Code hasValue "OC"
+	Name hasValue "Oceania"
+	has_country_Country hasValue {AMERICAN_SAMOA__AS,AUSTRALIA__AU,BRITISH_INDIAN_OCEAN_TERRITORY__IO,CHRISTMAS_ISLAND__CX,COCOS__KEELING__ISLANDS__CC,COMOROS__KM,COOK_ISLANDS__CK,FIJI__FJ,FRENCH_POLYNESIA__PF,FRENCH_SOUTHERN_TERRITORIES__TF,HEARD_ISLAND_AND_MCDONALD_ISLANDS__HM,KIRIBATI__KI,MARSHALL_ISLANDS__MH,NAURU__NR,NEW_CALEDONIA__NC,NEW_ZEALAND__NZ,NIUE__NU,NORFOLK_ISLAND__NF,NORTHERN_MARIANA_ISLANDS__MP,PALAU__PW,PAPUA_NEW_GUINEA__PG,PITCAIRN__PN,SAMOA__WS,SOLOMON_ISLANDS__SB,TOKELAU__TK,TUVALU__TV,VANUATU__VU,WALLIS_AND_FUTUNA__WF}
+
+instance AF__Africa memberOf Continent
+	Description hasValue "Africa"
+	Code hasValue "AF"
+	Name hasValue "Africa"
+	has_country_Country hasValue {ALGERIA__DZ,ANGOLA__AO,BENIN__BJ,BOTSWANA__BW,BOUVET_ISLAND__BV,BURKINA_FASO__BF,BURUNDI__BI,CAMEROON__CM,CAPE_VERDE__CV,CENTRAL_AFRICAN_REPUBLIC__CF,CHAD__TD,CONGO__CG,DJIBOUTI__DJ,EGYPT__EG,EQUATORIAL_GUINEA__GQ,ERITREA__ER,ETHIOPIA__ET,GABON__GA,GAMBIA__GM,GHANA__GH,GUINEA__GN,GUINEABISSAU__GW,KENYA__KE,LESOTHO__LS,LIBERIA__LR,LIBYAN_ARAB_JAMAHIRIYA__LY,MADAGASCAR__MG,MALAWI__MW,MALI__ML,MAURITANIA__MR,MAURITIUS__MU,MAYOTTE__YT,MOZAMBIQUE__MZ,NAMIBIA__NA,NIGER__NE,NIGERIA__NG,RWANDA__RW,SAINT_HELENA__SH,SAO_TOME_AND_PRINCIPE__ST,SENEGAL__SN,SEYCHELLES__SC,SIERRA_LEONE__SL,SOMALIA__SO,SOUTH_AFRICA__ZA,SUDAN__SD,SWAZILAND__SZ,TANZANIA_UNITED_REPUBLIC_OF__TZ,TOGO__TG,TONGA__TO,TUNISIA__TN,UGANDA__UG,WESTERN_SAHARA__EH,YEMEN__YE,ZAMBIA__ZM,ZIMBABWE__ZW}
+
+instance EU__Europe memberOf Continent
+	Description hasValue "Europe"
+	Code hasValue "EU"
+	Name hasValue "Europe"
+	has_country_Country hasValue {ÅLAND_ISLANDS__AX,ALBANIA__AL,ANDORRA__AD,AUSTRIA__AT,BELARUS__BY,BELGIUM__BE,BOSNIA_AND_HERZEGOVINA__BA,BULGARIA__BG,CROATIA__HR,CYPRUS__CY,CZECH_REPUBLIC__CZ,DENMARK__DK,ESTONIA__EE,FAROE_ISLANDS__FO,FINLAND__FI,FRANCE__FR,GERMANY__DE,GIBRALTAR__GI,GREECE__GR,HOLY_SEE__VATICAN_CITY_STATE___VA,HUNGARY__HU,ICELAND__IS,IRELAND__IE,ITALY__IT,LATVIA__LV,LIECHTENSTEIN__LI,LITHUANIA__LT,LUXEMBOURG__LU,MALTA__MT,MONACO__MC,NETHERLANDS__NL,NORWAY__NO,POLAND__PL,PORTUGAL__PT,ROMANIA__RO,SAN_MARINO__SM,SLOVAKIA__SK,SLOVENIA__SI,SPAIN__ES,SVALBARD_AND_JAN_MAYEN__SJ,SWEDEN__SE,SWITZERLAND__CH,UNITED_KINGDOM__GB}
+
+instance AS__Asia memberOf Continent
+	Description hasValue "Asia"
+	Code hasValue "AS"
+	Name hasValue "Asia"
+	has_country_Country hasValue {AFGHANISTAN__AF,ARMENIA__AM,AZERBAIJAN__AZ,BAHRAIN__BH,BANGLADESH__BD,BHUTAN__BT,BRUNEI_DARUSSALAM__BN,CAMBODIA__KH,CHINA__CN,GEORGIA__GE,HONG_KONG__HK,INDIA__IN,INDONESIA__ID,IRAQ__IQ,ISRAEL__IL,JAPAN__JP,JORDAN__JO,KOREA_REPUBLIC_OF__KR,KUWAIT__KW,KYRGYZSTAN__KG,LEBANON__LB,MALAYSIA__MY,MALDIVES__MV,MONGOLIA__MN,MYANMAR__MM,NEPAL__NP,OMAN__OM,PAKISTAN__PK,PHILIPPINES__PH,QATAR__QA,RUSSIAN_FEDERATION__RU,SAUDI_ARABIA__SA,SINGAPORE__SG,SRI_LANKA__LK,SYRIAN_ARAB_REPUBLIC__SY,TAIWAN_PROVINCE_OF_CHINA__TW,TAJIKISTAN__TJ,THAILAND__TH,TURKEY__TR,TURKMENISTAN__TM,UNITED_ARAB_EMIRATES__AE,UZBEKISTAN__UZ,VIET_NAM__VN}
+
+instance Yorkshire_and_Humberside memberOf Region
+	Description hasValue "Yorkshire and Humberside"
+	Name hasValue "Yorkshire and Humberside"
+	is_located_in_Country hasValue UNITED_KINGDOM__GB
+
+instance Scotland memberOf Region
+	Description hasValue "Scotland"
+	Name hasValue "Scotland"
+	is_located_in_Country hasValue UNITED_KINGDOM__GB
+
+instance East_Midlands memberOf Region
+	Description hasValue "East Midlands"
+	Name hasValue "East Midlands"
+	is_located_in_Country hasValue UNITED_KINGDOM__GB
+
+instance West_Midlands memberOf Region
+	Description hasValue "West Midlands"
+	Name hasValue "West Midlands"
+	is_located_in_Country hasValue UNITED_KINGDOM__GB
+
+instance Wales memberOf Region
+	Description hasValue "Wales"
+	Name hasValue "Wales"
+	is_located_in_Country hasValue UNITED_KINGDOM__GB
+
+instance East_Anglia memberOf Region
+	Description hasValue "East Anglia"
+	Name hasValue "East Anglia"
+	is_located_in_Country hasValue UNITED_KINGDOM__GB
+
+instance North memberOf Region
+	Description hasValue "North"
+	Name hasValue "North"
+	is_located_in_Country hasValue UNITED_KINGDOM__GB
+
+instance Northern_Ireland memberOf Region
+	Description hasValue "Northern Ireland"
+	Name hasValue "Northern Ireland"
+	is_located_in_Country hasValue UNITED_KINGDOM__GB
+
+instance Lucerne memberOf Region
+	Description hasValue "Lucerne"
+	Name hasValue "Lucerne"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance Ticino memberOf Region
+	Description hasValue "Ticino"
+	Name hasValue "Ticino"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance Fribourg memberOf Region
+	Description hasValue "Fribourg"
+	Name hasValue "Fribourg"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance Geneva memberOf Region
+	Description hasValue "Geneva"
+	Name hasValue "Geneva"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance Solothurn memberOf Region
+	Description hasValue "Solothurn"
+	Name hasValue "Solothurn"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance Zurich memberOf Region
+	Description hasValue "Zurich"
+	Name hasValue "Zurich"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance Glarus memberOf Region
+	Description hasValue "Glarus"
+	Name hasValue "Glarus"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance Uri memberOf Region
+	Description hasValue "Uri"
+	Name hasValue "Uri"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance Neuchâtel memberOf Region
+	Description hasValue "Neuchâtel"
+	Name hasValue "Neuchâtel"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance Jura memberOf Region
+	Description hasValue "Jura"
+	Name hasValue "Jura"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance Obwald___Obwalden memberOf Region
+	Description hasValue "Obwald / Obwalden"
+	Name hasValue "Obwald / Obwalden"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance Zug memberOf Region
+	Description hasValue "Zug"
+	Name hasValue "Zug"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance Valais memberOf Region
+	Description hasValue "Valais"
+	Name hasValue "Valais"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance Appenzell_OuterRhodes memberOf Region
+	Description hasValue "Appenzell Outer-Rhodes"
+	Name hasValue "Appenzell Outer-Rhodes"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance St_Gall memberOf Region
+	Description hasValue "St. Gall"
+	Name hasValue "St. Gall"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance Grisons memberOf Region
+	Description hasValue "Grisons"
+	Name hasValue "Grisons"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance Argovia___Aargau memberOf Region
+	Description hasValue "Argovia / Aargau"
+	Name hasValue "Argovia / Aargau"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance BasleCity___Town memberOf Region
+	Description hasValue "Basle-City / -Town"
+	Name hasValue "Basle-City / -Town"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance Thurgovia___Thurgau memberOf Region
+	Description hasValue "Thurgovia / Thurgau"
+	Name hasValue "Thurgovia / Thurgau"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance Nidwald___Nidwalden memberOf Region
+	Description hasValue "Nidwald / Nidwalden"
+	Name hasValue "Nidwald / Nidwalden"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance Schaffhausen memberOf Region
+	Description hasValue "Schaffhausen"
+	Name hasValue "Schaffhausen"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance Vaud memberOf Region
+	Description hasValue "Vaud"
+	Name hasValue "Vaud"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance BasleCountry___Land memberOf Region
+	Description hasValue "Basle-Country / -Land"
+	Name hasValue "Basle-Country / -Land"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance Berne memberOf Region
+	Description hasValue "Berne"
+	Name hasValue "Berne"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance Appenzell_InnerRhodes memberOf Region
+	Description hasValue "Appenzell Inner-Rhodes"
+	Name hasValue "Appenzell Inner-Rhodes"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance Schwyz memberOf Region
+	Description hasValue "Schwyz"
+	Name hasValue "Schwyz"
+	is_located_in_Country hasValue SWITZERLAND__CH
+
+instance Västmanland memberOf Region
+	Description hasValue "Västmanland"
+	Name hasValue "Västmanland"
+	is_located_in_Country hasValue SWEDEN__SE
+
+instance Dalarna memberOf Region
+	Description hasValue "Dalarna"
+	Name hasValue "Dalarna"
+	is_located_in_Country hasValue SWEDEN__SE
+
+instance Kronoberg memberOf Region
+	Description hasValue "Kronoberg"
+	Name hasValue "Kronoberg"
+	is_located_in_Country hasValue SWEDEN__SE
+
+instance Västerbotten memberOf Region
+	Description hasValue "Västerbotten"
+	Name hasValue "Västerbotten"
+	is_located_in_Country hasValue SWEDEN__SE
+
+instance Halland memberOf Region
+	Description hasValue "Halland"
+	Name hasValue "Halland"
+	is_located_in_Country hasValue SWEDEN__SE
+
+instance Kalmar memberOf Region
+	Description hasValue "Kalmar"
+	Name hasValue "Kalmar"
+	is_located_in_Country hasValue SWEDEN__SE
+
+instance Norrbotten memberOf Region
+	Description hasValue "Norrbotten"
+	Name hasValue "Norrbotten"
+	is_located_in_Country hasValue SWEDEN__SE
+
+instance Blekinge memberOf Region
+	Description hasValue "Blekinge"
+	Name hasValue "Blekinge"
+	is_located_in_Country hasValue SWEDEN__SE
+
+instance Jönköping memberOf Region
+	Description hasValue "Jönköping"
+	Name hasValue "Jönköping"
+	is_located_in_Country hasValue SWEDEN__SE
+
+instance Stockholm memberOf Region
+	Description hasValue "Stockholm"
+	Name hasValue "Stockholm"
+	is_located_in_Country hasValue SWEDEN__SE
+
+instance Värmland memberOf Region
+	Description hasValue "Värmland"
+	Name hasValue "Värmland"
+	is_located_in_Country hasValue SWEDEN__SE
+
+instance Södermanland memberOf Region
+	Description hasValue "Södermanland"
+	Name hasValue "Södermanland"
+	is_located_in_Country hasValue SWEDEN__SE
+
+instance Östergötland memberOf Region
+	Description hasValue "Östergötland"
+	Name hasValue "Östergötland"
+	is_located_in_Country hasValue SWEDEN__SE
+
+instance Västra_Götaland memberOf Region
+	Description hasValue "Västra Götaland"
+	Name hasValue "Västra Götaland"
+	is_located_in_Country hasValue SWEDEN__SE
+
+instance Västernorrland memberOf Region
+	Description hasValue "Västernorrland"
+	Name hasValue "Västernorrland"
+	is_located_in_Country hasValue SWEDEN__SE
+
+instance Uppsala memberOf Region
+	Description hasValue "Uppsala"
+	Name hasValue "Uppsala"
+	is_located_in_Country hasValue SWEDEN__SE
+
+instance Örebro memberOf Region
+	Description hasValue "Örebro"
+	Name hasValue "Örebro"
+	is_located_in_Country hasValue SWEDEN__SE
+
+instance Jämtland memberOf Region
+	Description hasValue "Jämtland"
+	Name hasValue "Jämtland"
+	is_located_in_Country hasValue SWEDEN__SE
+
+instance Gotland memberOf Region
+	Description hasValue "Gotland"
+	Name hasValue "Gotland"
+	is_located_in_Country hasValue SWEDEN__SE
+
+instance Skåne memberOf Region
+	Description hasValue "Skåne"
+	Name hasValue "Skåne"
+	is_located_in_Country hasValue SWEDEN__SE
+
+instance Gävleborg memberOf Region
+	Description hasValue "Gävleborg"
+	Name hasValue "Gävleborg"
+	is_located_in_Country hasValue SWEDEN__SE
+
+instance Extramadura memberOf Region
+	Description hasValue "Extramadura"
+	Name hasValue "Extramadura"
+	is_located_in_Country hasValue SPAIN__ES
+
+instance Cantabria memberOf Region
+	Description hasValue "Cantabria"
+	Name hasValue "Cantabria"
+	is_located_in_Country hasValue SPAIN__ES
+
+instance CastillaLa_Mancha memberOf Region
+	Description hasValue "Castilla-La Mancha"
+	Name hasValue "Castilla-La Mancha"
+	is_located_in_Country hasValue SPAIN__ES
+
+instance Baleares memberOf Region
+	Description hasValue "Baleares"
+	Name hasValue "Baleares"
+	is_located_in_Country hasValue SPAIN__ES
+
+instance Aragon memberOf Region
+	Description hasValue "Aragon"
+	Name hasValue "Aragon"
+	is_located_in_Country hasValue SPAIN__ES
+
+instance Comunidad_Valenciana memberOf Region
+	Description hasValue "Comunidad Valenciana"
+	Name hasValue "Comunidad Valenciana"
+	is_located_in_Country hasValue SPAIN__ES
+
+instance Murcia memberOf Region
+	Description hasValue "Murcia"
+	Name hasValue "Murcia"
+	is_located_in_Country hasValue SPAIN__ES
+
+instance Comunidad_de_Madrid memberOf Region
+	Description hasValue "Comunidad de Madrid"
+	Name hasValue "Comunidad de Madrid"
+	is_located_in_Country hasValue SPAIN__ES
+
+instance Asturias memberOf Region
+	Description hasValue "Asturias"
+	Name hasValue "Asturias"
+	is_located_in_Country hasValue SPAIN__ES
+
+instance Navarra memberOf Region
+	Description hasValue "Navarra"
+	Name hasValue "Navarra"
+	is_located_in_Country hasValue SPAIN__ES
+
+instance Andalucia memberOf Region
+	Description hasValue "Andalucia"
+	Name hasValue "Andalucia"
+	is_located_in_Country hasValue SPAIN__ES
+
+instance La_Rioja memberOf Region
+	Description hasValue "La Rioja"
+	Name hasValue "La Rioja"
+	is_located_in_Country hasValue SPAIN__ES
+
+instance Galicia memberOf Region
+	Description hasValue "Galicia"
+	Name hasValue "Galicia"
+	is_located_in_Country hasValue SPAIN__ES
+
+instance Castilla_y_Leon memberOf Region
+	Description hasValue "Castilla y Leon"
+	Name hasValue "Castilla y Leon"
+	is_located_in_Country hasValue SPAIN__ES
+
+instance Canarias memberOf Region
+	Description hasValue "Canarias"
+	Name hasValue "Canarias"
+	is_located_in_Country hasValue SPAIN__ES
+
+instance Pais_Vasco memberOf Region
+	Description hasValue "Pais Vasco"
+	Name hasValue "Pais Vasco"
+	is_located_in_Country hasValue SPAIN__ES
+
+instance Cataluña memberOf Region
+	Description hasValue "Cataluña"
+	Name hasValue "Cataluña"
+	is_located_in_Country hasValue SPAIN__ES
+
+instance Pomurska memberOf Region
+	Description hasValue "Pomurska"
+	Name hasValue "Pomurska"
+	is_located_in_Country hasValue SLOVENIA__SI
+
+instance Obalnokraska memberOf Region
+	Description hasValue "Obalno-kraska"
+	Name hasValue "Obalno-kraska"
+	is_located_in_Country hasValue SLOVENIA__SI
+
+instance Gorenjska memberOf Region
+	Description hasValue "Gorenjska"
+	Name hasValue "Gorenjska"
+	is_located_in_Country hasValue SLOVENIA__SI
+
+instance Goriska memberOf Region
+	Description hasValue "Goriska"
+	Name hasValue "Goriska"
+	is_located_in_Country hasValue SLOVENIA__SI
+
+instance Koroska memberOf Region
+	Description hasValue "Koroska"
+	Name hasValue "Koroska"
+	is_located_in_Country hasValue SLOVENIA__SI
+
+instance Notranjskokraska memberOf Region
+	Description hasValue "Notranjsko-kraska"
+	Name hasValue "Notranjsko-kraska"
+	is_located_in_Country hasValue SLOVENIA__SI
+
+instance Jugovzhodna_Slovenija memberOf Region
+	Description hasValue "Jugovzhodna Slovenija"
+	Name hasValue "Jugovzhodna Slovenija"
+	is_located_in_Country hasValue SLOVENIA__SI
+
+instance Osrednjeslovenska memberOf Region
+	Description hasValue "Osrednjeslovenska"
+	Name hasValue "Osrednjeslovenska"
+	is_located_in_Country hasValue SLOVENIA__SI
+
+instance Spodnjeposavska memberOf Region
+	Description hasValue "Spodnjeposavska"
+	Name hasValue "Spodnjeposavska"
+	is_located_in_Country hasValue SLOVENIA__SI
+
+instance Podravska memberOf Region
+	Description hasValue "Podravska"
+	Name hasValue "Podravska"
+	is_located_in_Country hasValue SLOVENIA__SI
+
+instance Savinjska memberOf Region
+	Description hasValue "Savinjska"
+	Name hasValue "Savinjska"
+	is_located_in_Country hasValue SLOVENIA__SI
+
+instance Zasavska memberOf Region
+	Description hasValue "Zasavska"
+	Name hasValue "Zasavska"
+	is_located_in_Country hasValue SLOVENIA__SI
+
+instance Bratislavsky_kraj memberOf Region
+	Description hasValue "Bratislavsky kraj"
+	Name hasValue "Bratislavsky kraj"
+	is_located_in_Country hasValue SLOVAKIA__SK
+
+instance Trnavsky_kraj memberOf Region
+	Description hasValue "Trnavsky kraj"
+	Name hasValue "Trnavsky kraj"
+	is_located_in_Country hasValue SLOVAKIA__SK
+
+instance Kosicky_kraj memberOf Region
+	Description hasValue "Kosicky kraj"
+	Name hasValue "Kosicky kraj"
+	is_located_in_Country hasValue SLOVAKIA__SK
+
+instance Zilinsky_kraj memberOf Region
+	Description hasValue "Zilinsky kraj"
+	Name hasValue "Zilinsky kraj"
+	is_located_in_Country hasValue SLOVAKIA__SK
+
+instance Banskobystricky_kraj memberOf Region
+	Description hasValue "Banskobystricky kraj"
+	Name hasValue "Banskobystricky kraj"
+	is_located_in_Country hasValue SLOVAKIA__SK
+
+instance Presovsky_kraj memberOf Region
+	Description hasValue "Presovsky kraj"
+	Name hasValue "Presovsky kraj"
+	is_located_in_Country hasValue SLOVAKIA__SK
+
+instance Trenciansky_kraj memberOf Region
+	Description hasValue "Trenciansky kraj"
+	Name hasValue "Trenciansky kraj"
+	is_located_in_Country hasValue SLOVAKIA__SK
+
+instance Nitriansky_kraj memberOf Region
+	Description hasValue "Nitriansky kraj"
+	Name hasValue "Nitriansky kraj"
+	is_located_in_Country hasValue SLOVAKIA__SK
+
+instance Madeira memberOf Region
+	Description hasValue "Madeira"
+	Name hasValue "Madeira"
+	is_located_in_Country hasValue PORTUGAL__PT
+
+instance Lisboa_e_Vale_do_Tejo memberOf Region
+	Description hasValue "Lisboa e Vale do Tejo"
+	Name hasValue "Lisboa e Vale do Tejo"
+	is_located_in_Country hasValue PORTUGAL__PT
+
+instance Norte memberOf Region
+	Description hasValue "Norte"
+	Name hasValue "Norte"
+	is_located_in_Country hasValue PORTUGAL__PT
+
+instance Algarve memberOf Region
+	Description hasValue "Algarve"
+	Name hasValue "Algarve"
+	is_located_in_Country hasValue PORTUGAL__PT
+
+instance Centro memberOf Region
+	Description hasValue "Centro"
+	Name hasValue "Centro"
+	is_located_in_Country hasValue PORTUGAL__PT
+
+instance Alentejo memberOf Region
+	Description hasValue "Alentejo"
+	Name hasValue "Alentejo"
+	is_located_in_Country hasValue PORTUGAL__PT
+
+instance Açores memberOf Region
+	Description hasValue "Açores"
+	Name hasValue "Açores"
+	is_located_in_Country hasValue PORTUGAL__PT
+
+instance Lomzynski memberOf Region
+	Description hasValue "Lomzynski"
+	Name hasValue "Lomzynski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance M_Wroclaw memberOf Region
+	Description hasValue "M. Wroclaw"
+	Name hasValue "M. Wroclaw"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Ostroleckosiedlecki memberOf Region
+	Description hasValue "Ostrolecko-siedlecki"
+	Name hasValue "Ostrolecko-siedlecki"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Elcki memberOf Region
+	Description hasValue "Elcki"
+	Name hasValue "Elcki"
+	is_located_in_Country hasValue POLAND__PL
+
+instance M_Krakow memberOf Region
+	Description hasValue "M. Krakow"
+	Name hasValue "M. Krakow"
+	is_located_in_Country hasValue POLAND__PL
+
+instance M_Poznan memberOf Region
+	Description hasValue "M. Poznan"
+	Name hasValue "M. Poznan"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Rybnickojastrzebski memberOf Region
+	Description hasValue "Rybnicko-jastrzebski"
+	Name hasValue "Rybnicko-jastrzebski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance GdanskGdyniaSopot memberOf Region
+	Description hasValue "Gdansk-Gdynia-Sopot"
+	Name hasValue "Gdansk-Gdynia-Sopot"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Legnicki memberOf Region
+	Description hasValue "Legnicki"
+	Name hasValue "Legnicki"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Czestochowski memberOf Region
+	Description hasValue "Czestochowski"
+	Name hasValue "Czestochowski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Lodzki memberOf Region
+	Description hasValue "Lodzki"
+	Name hasValue "Lodzki"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Szczecinski memberOf Region
+	Description hasValue "Szczecinski"
+	Name hasValue "Szczecinski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Bialostockosuwalski memberOf Region
+	Description hasValue "Bialostocko-suwalski"
+	Name hasValue "Bialostocko-suwalski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Opolski memberOf Region
+	Description hasValue "Opolski"
+	Name hasValue "Opolski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Jeleniogorskowalbrzyski memberOf Region
+	Description hasValue "Jeleniogorsko-walbrzyski"
+	Name hasValue "Jeleniogorsko-walbrzyski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Centralny_slaski memberOf Region
+	Description hasValue "Centralny slaski"
+	Name hasValue "Centralny slaski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Zielonogorski memberOf Region
+	Description hasValue "Zielonogorski"
+	Name hasValue "Zielonogorski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance M_Lodz memberOf Region
+	Description hasValue "M. Lodz"
+	Name hasValue "M. Lodz"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Piotrkowskoskierniewicki memberOf Region
+	Description hasValue "Piotrkowsko-skierniewicki"
+	Name hasValue "Piotrkowsko-skierniewicki"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Slupski memberOf Region
+	Description hasValue "Slupski"
+	Name hasValue "Slupski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Pilski memberOf Region
+	Description hasValue "Pilski"
+	Name hasValue "Pilski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Warszawski memberOf Region
+	Description hasValue "Warszawski"
+	Name hasValue "Warszawski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Rzeszowskotarnobrzeski memberOf Region
+	Description hasValue "Rzeszowsko-tarnobrzeski"
+	Name hasValue "Rzeszowsko-tarnobrzeski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Chelmskozamojski memberOf Region
+	Description hasValue "Chelmsko-zamojski"
+	Name hasValue "Chelmsko-zamojski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Nowosadecki memberOf Region
+	Description hasValue "Nowosadecki"
+	Name hasValue "Nowosadecki"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Krakowskotarnowski memberOf Region
+	Description hasValue "Krakowsko-tarnowski"
+	Name hasValue "Krakowsko-tarnowski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Kaliski memberOf Region
+	Description hasValue "Kaliski"
+	Name hasValue "Kaliski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Bialskopodlaski memberOf Region
+	Description hasValue "Bialskopodlaski"
+	Name hasValue "Bialskopodlaski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Koszalinski memberOf Region
+	Description hasValue "Koszalinski"
+	Name hasValue "Koszalinski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Torunskowloclawski memberOf Region
+	Description hasValue "Torunsko-wloclawski"
+	Name hasValue "Torunsko-wloclawski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Gorzowski memberOf Region
+	Description hasValue "Gorzowski"
+	Name hasValue "Gorzowski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Radomski memberOf Region
+	Description hasValue "Radomski"
+	Name hasValue "Radomski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Olsztynski memberOf Region
+	Description hasValue "Olsztynski"
+	Name hasValue "Olsztynski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Krosnienskoprzemyski memberOf Region
+	Description hasValue "Krosniensko-przemyski"
+	Name hasValue "Krosniensko-przemyski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Wroclawski memberOf Region
+	Description hasValue "Wroclawski"
+	Name hasValue "Wroclawski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Swietokrzyski memberOf Region
+	Description hasValue "Swietokrzyski"
+	Name hasValue "Swietokrzyski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Ciechanowskoplocki memberOf Region
+	Description hasValue "Ciechanowsko-plocki"
+	Name hasValue "Ciechanowsko-plocki"
+	is_located_in_Country hasValue POLAND__PL
+
+instance M_Warszawa memberOf Region
+	Description hasValue "M. Warszawa"
+	Name hasValue "M. Warszawa"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Lubelski memberOf Region
+	Description hasValue "Lubelski"
+	Name hasValue "Lubelski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Elblaski memberOf Region
+	Description hasValue "Elblaski"
+	Name hasValue "Elblaski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Poznanski memberOf Region
+	Description hasValue "Poznanski"
+	Name hasValue "Poznanski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Bydgoski memberOf Region
+	Description hasValue "Bydgoski"
+	Name hasValue "Bydgoski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Bielskobialski memberOf Region
+	Description hasValue "Bielsko-bialski"
+	Name hasValue "Bielsko-bialski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Gdanski memberOf Region
+	Description hasValue "Gdanski"
+	Name hasValue "Gdanski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Koninski memberOf Region
+	Description hasValue "Koninski"
+	Name hasValue "Koninski"
+	is_located_in_Country hasValue POLAND__PL
+
+instance Finnmark memberOf Region
+	Description hasValue "Finnmark"
+	Name hasValue "Finnmark"
+	is_located_in_Country hasValue NORWAY__NO
+
+instance Troms memberOf Region
+	Description hasValue "Troms"
+	Name hasValue "Troms"
+	is_located_in_Country hasValue NORWAY__NO
+
+instance Hedmark memberOf Region
+	Description hasValue "Hedmark"
+	Name hasValue "Hedmark"
+	is_located_in_Country hasValue NORWAY__NO
+
+instance Oslo memberOf Region
+	Description hasValue "Oslo"
+	Name hasValue "Oslo"
+	is_located_in_Country hasValue NORWAY__NO
+
+instance AustAgder memberOf Region
+	Description hasValue "Aust-Agder"
+	Name hasValue "Aust-Agder"
+	is_located_in_Country hasValue NORWAY__NO
+
+instance NordTrøndelag memberOf Region
+	Description hasValue "Nord-Trøndelag"
+	Name hasValue "Nord-Trøndelag"
+	is_located_in_Country hasValue NORWAY__NO
+
+instance VestAgder memberOf Region
+	Description hasValue "Vest-Agder"
+	Name hasValue "Vest-Agder"
+	is_located_in_Country hasValue NORWAY__NO
+
+instance Møre_og_Romsdal memberOf Region
+	Description hasValue "Møre og Romsdal"
+	Name hasValue "Møre og Romsdal"
+	is_located_in_Country hasValue NORWAY__NO
+
+instance Sogn_og_Fjordane memberOf Region
+	Description hasValue "Sogn og Fjordane"
+	Name hasValue "Sogn og Fjordane"
+	is_located_in_Country hasValue NORWAY__NO
+
+instance Østfold memberOf Region
+	Description hasValue "Østfold"
+	Name hasValue "Østfold"
+	is_located_in_Country hasValue NORWAY__NO
+
+instance Telemark memberOf Region
+	Description hasValue "Telemark"
+	Name hasValue "Telemark"
+	is_located_in_Country hasValue NORWAY__NO
+
+instance Hordaland memberOf Region
+	Description hasValue "Hordaland"
+	Name hasValue "Hordaland"
+	is_located_in_Country hasValue NORWAY__NO
+
+instance Buskerud memberOf Region
+	Description hasValue "Buskerud"
+	Name hasValue "Buskerud"
+	is_located_in_Country hasValue NORWAY__NO
+
+instance Vestfold memberOf Region
+	Description hasValue "Vestfold"
+	Name hasValue "Vestfold"
+	is_located_in_Country hasValue NORWAY__NO
+
+instance Rogaland memberOf Region
+	Description hasValue "Rogaland"
+	Name hasValue "Rogaland"
+	is_located_in_Country hasValue NORWAY__NO
+
+instance Oppland memberOf Region
+	Description hasValue "Oppland"
+	Name hasValue "Oppland"
+	is_located_in_Country hasValue NORWAY__NO
+
+instance Akershus memberOf Region
+	Description hasValue "Akershus"
+	Name hasValue "Akershus"
+	is_located_in_Country hasValue NORWAY__NO
+
+instance Sør_Trøndelag memberOf Region
+	Description hasValue "Sør- Trøndelag"
+	Name hasValue "Sør- Trøndelag"
+	is_located_in_Country hasValue NORWAY__NO
+
+instance Nordland memberOf Region
+	Description hasValue "Nordland"
+	Name hasValue "Nordland"
+	is_located_in_Country hasValue NORWAY__NO
+
+instance Gelderland memberOf Region
+	Description hasValue "Gelderland"
+	Name hasValue "Gelderland"
+	is_located_in_Country hasValue NETHERLANDS__NL
+
+instance Drenthe memberOf Region
+	Description hasValue "Drenthe"
+	Name hasValue "Drenthe"
+	is_located_in_Country hasValue NETHERLANDS__NL
+
+instance Groningen memberOf Region
+	Description hasValue "Groningen"
+	Name hasValue "Groningen"
+	is_located_in_Country hasValue NETHERLANDS__NL
+
+instance NoordHolland memberOf Region
+	Description hasValue "Noord-Holland"
+	Name hasValue "Noord-Holland"
+	is_located_in_Country hasValue NETHERLANDS__NL
+
+instance Utrecht memberOf Region
+	Description hasValue "Utrecht"
+	Name hasValue "Utrecht"
+	is_located_in_Country hasValue NETHERLANDS__NL
+
+instance Flevoland memberOf Region
+	Description hasValue "Flevoland"
+	Name hasValue "Flevoland"
+	is_located_in_Country hasValue NETHERLANDS__NL
+
+instance ZuidHolland memberOf Region
+	Description hasValue "Zuid-Holland"
+	Name hasValue "Zuid-Holland"
+	is_located_in_Country hasValue NETHERLANDS__NL
+
+instance Zeeland memberOf Region
+	Description hasValue "Zeeland"
+	Name hasValue "Zeeland"
+	is_located_in_Country hasValue NETHERLANDS__NL
+
+instance Overijssel memberOf Region
+	Description hasValue "Overijssel"
+	Name hasValue "Overijssel"
+	is_located_in_Country hasValue NETHERLANDS__NL
+
+instance NoordBrabant memberOf Region
+	Description hasValue "Noord-Brabant"
+	Name hasValue "Noord-Brabant"
+	is_located_in_Country hasValue NETHERLANDS__NL
+
+instance Friesland memberOf Region
+	Description hasValue "Friesland"
+	Name hasValue "Friesland"
+	is_located_in_Country hasValue NETHERLANDS__NL
+
+instance Malta memberOf Region
+	Description hasValue "Malta"
+	Name hasValue "Malta"
+	is_located_in_Country hasValue MALTA__MT
+
+instance Gozo_and_Comino_Ghawdex_u_Kemmuna memberOf Region
+	Description hasValue "Gozo and Comino/Ghawdex u Kemmuna"
+	Name hasValue "Gozo and Comino/Ghawdex u Kemmuna"
+	is_located_in_Country hasValue MALTA__MT
+
+instance Utenos memberOf Region
+	Description hasValue "Utenos"
+	Name hasValue "Utenos"
+	is_located_in_Country hasValue LITHUANIA__LT
+
+instance Marijampoles memberOf Region
+	Description hasValue "Marijampoles"
+	Name hasValue "Marijampoles"
+	is_located_in_Country hasValue LITHUANIA__LT
+
+instance Kauno memberOf Region
+	Description hasValue "Kauno"
+	Name hasValue "Kauno"
+	is_located_in_Country hasValue LITHUANIA__LT
+
+instance Panevezio memberOf Region
+	Description hasValue "Panevezio"
+	Name hasValue "Panevezio"
+	is_located_in_Country hasValue LITHUANIA__LT
+
+instance Taurages memberOf Region
+	Description hasValue "Taurages"
+	Name hasValue "Taurages"
+	is_located_in_Country hasValue LITHUANIA__LT
+
+instance Telsiu memberOf Region
+	Description hasValue "Telsiu"
+	Name hasValue "Telsiu"
+	is_located_in_Country hasValue LITHUANIA__LT
+
+instance Siauliu memberOf Region
+	Description hasValue "Siauliu"
+	Name hasValue "Siauliu"
+	is_located_in_Country hasValue LITHUANIA__LT
+
+instance Klaipedos memberOf Region
+	Description hasValue "Klaipedos"
+	Name hasValue "Klaipedos"
+	is_located_in_Country hasValue LITHUANIA__LT
+
+instance Alytaus memberOf Region
+	Description hasValue "Alytaus"
+	Name hasValue "Alytaus"
+	is_located_in_Country hasValue LITHUANIA__LT
+
+instance Vilniaus memberOf Region
+	Description hasValue "Vilniaus"
+	Name hasValue "Vilniaus"
+	is_located_in_Country hasValue LITHUANIA__LT
+
+instance Liechtenstein memberOf Region
+	Description hasValue "Liechtenstein"
+	Name hasValue "Liechtenstein"
+	is_located_in_Country hasValue LIECHTENSTEIN__LI
+
+instance Vidzeme memberOf Region
+	Description hasValue "Vidzeme"
+	Name hasValue "Vidzeme"
+	is_located_in_Country hasValue LATVIA__LV
+
+instance Kurzeme memberOf Region
+	Description hasValue "Kurzeme"
+	Name hasValue "Kurzeme"
+	is_located_in_Country hasValue LATVIA__LV
+
+instance Zemgale memberOf Region
+	Description hasValue "Zemgale"
+	Name hasValue "Zemgale"
+	is_located_in_Country hasValue LATVIA__LV
+
+instance Riga memberOf Region
+	Description hasValue "Riga"
+	Name hasValue "Riga"
+	is_located_in_Country hasValue LATVIA__LV
+
+instance Latgale memberOf Region
+	Description hasValue "Latgale"
+	Name hasValue "Latgale"
+	is_located_in_Country hasValue LATVIA__LV
+
+instance Molise memberOf Region
+	Description hasValue "Molise"
+	Name hasValue "Molise"
+	is_located_in_Country hasValue ITALY__IT
+
+instance Trentino_Süd_Tirol memberOf Region
+	Description hasValue "Trentino Süd Tirol"
+	Name hasValue "Trentino Süd Tirol"
+	is_located_in_Country hasValue ITALY__IT
+
+instance Friuli_VeneziaGiulia memberOf Region
+	Description hasValue "Friuli Venezia-Giulia"
+	Name hasValue "Friuli Venezia-Giulia"
+	is_located_in_Country hasValue ITALY__IT
+
+instance Umbria memberOf Region
+	Description hasValue "Umbria"
+	Name hasValue "Umbria"
+	is_located_in_Country hasValue ITALY__IT
+
+instance Sardegna memberOf Region
+	Description hasValue "Sardegna"
+	Name hasValue "Sardegna"
+	is_located_in_Country hasValue ITALY__IT
+
+instance Lombardia memberOf Region
+	Description hasValue "Lombardia"
+	Name hasValue "Lombardia"
+	is_located_in_Country hasValue ITALY__IT
+
+instance EmiliaRomagna memberOf Region
+	Description hasValue "Emilia-Romagna"
+	Name hasValue "Emilia-Romagna"
+	is_located_in_Country hasValue ITALY__IT
+
+instance Abruzzo memberOf Region
+	Description hasValue "Abruzzo"
+	Name hasValue "Abruzzo"
+	is_located_in_Country hasValue ITALY__IT
+
+instance Basilicata memberOf Region
+	Description hasValue "Basilicata"
+	Name hasValue "Basilicata"
+	is_located_in_Country hasValue ITALY__IT
+
+instance Sicilia memberOf Region
+	Description hasValue "Sicilia"
+	Name hasValue "Sicilia"
+	is_located_in_Country hasValue ITALY__IT
+
+instance Puglia memberOf Region
+	Description hasValue "Puglia"
+	Name hasValue "Puglia"
+	is_located_in_Country hasValue ITALY__IT
+
+instance Piemonte memberOf Region
+	Description hasValue "Piemonte"
+	Name hasValue "Piemonte"
+	is_located_in_Country hasValue ITALY__IT
+
+instance Toscana memberOf Region
+	Description hasValue "Toscana"
+	Name hasValue "Toscana"
+	is_located_in_Country hasValue ITALY__IT
+
+instance Lazio memberOf Region
+	Description hasValue "Lazio"
+	Name hasValue "Lazio"
+	is_located_in_Country hasValue ITALY__IT
+
+instance Valle_DAosta memberOf Region
+	Description hasValue "Valle D'Aosta"
+	Name hasValue "Valle D'Aosta"
+	is_located_in_Country hasValue ITALY__IT
+
+instance Liguria memberOf Region
+	Description hasValue "Liguria"
+	Name hasValue "Liguria"
+	is_located_in_Country hasValue ITALY__IT
+
+instance Campania memberOf Region
+	Description hasValue "Campania"
+	Name hasValue "Campania"
+	is_located_in_Country hasValue ITALY__IT
+
+instance Calabria memberOf Region
+	Description hasValue "Calabria"
+	Name hasValue "Calabria"
+	is_located_in_Country hasValue ITALY__IT
+
+instance Marche memberOf Region
+	Description hasValue "Marche"
+	Name hasValue "Marche"
+	is_located_in_Country hasValue ITALY__IT
+
+instance Veneto memberOf Region
+	Description hasValue "Veneto"
+	Name hasValue "Veneto"
+	is_located_in_Country hasValue ITALY__IT
+
+instance North_West memberOf Region
+	Description hasValue "North West"
+	Name hasValue "North West"
+	is_located_in_Country hasValue {IRELAND__IE,UNITED_KINGDOM__GB}
+
+instance West memberOf Region
+	Description hasValue "West"
+	Name hasValue "West"
+	is_located_in_Country hasValue IRELAND__IE
+
+instance Midlands memberOf Region
+	Description hasValue "Midlands"
+	Name hasValue "Midlands"
+	is_located_in_Country hasValue IRELAND__IE
+
+instance South_East memberOf Region
+	Description hasValue "South East"
+	Name hasValue "South East"
+	is_located_in_Country hasValue {IRELAND__IE,UNITED_KINGDOM__GB}
+
+instance East memberOf Region
+	Description hasValue "East"
+	Name hasValue "East"
+	is_located_in_Country hasValue IRELAND__IE
+
+instance North_East memberOf Region
+	Description hasValue "North East"
+	Name hasValue "North East"
+	is_located_in_Country hasValue IRELAND__IE
+
+instance Midwest memberOf Region
+	Description hasValue "Midwest"
+	Name hasValue "Midwest"
+	is_located_in_Country hasValue IRELAND__IE
+
+instance South_West memberOf Region
+	Description hasValue "South West"
+	Name hasValue "South West"
+	is_located_in_Country hasValue {IRELAND__IE,UNITED_KINGDOM__GB}
+
+instance Island memberOf Region
+	Description hasValue "Island"
+	Name hasValue "Island"
+	is_located_in_Country hasValue ICELAND__IS
+
+instance HajduBihar memberOf Region
+	Description hasValue "Hajdu-Bihar"
+	Name hasValue "Hajdu-Bihar"
+	is_located_in_Country hasValue HUNGARY__HU
+
+instance Bekes memberOf Region
+	Description hasValue "Bekes"
+	Name hasValue "Bekes"
+	is_located_in_Country hasValue HUNGARY__HU
+
+instance Baranya memberOf Region
+	Description hasValue "Baranya"
+	Name hasValue "Baranya"
+	is_located_in_Country hasValue HUNGARY__HU
+
+instance Fejer memberOf Region
+	Description hasValue "Fejer"
+	Name hasValue "Fejer"
+	is_located_in_Country hasValue HUNGARY__HU
+
+instance Zala memberOf Region
+	Description hasValue "Zala"
+	Name hasValue "Zala"
+	is_located_in_Country hasValue HUNGARY__HU
+
+instance Budapest memberOf Region
+	Description hasValue "Budapest"
+	Name hasValue "Budapest"
+	is_located_in_Country hasValue HUNGARY__HU
+
+instance Heves memberOf Region
+	Description hasValue "Heves"
+	Name hasValue "Heves"
+	is_located_in_Country hasValue HUNGARY__HU
+
+instance Somogy memberOf Region
+	Description hasValue "Somogy"
+	Name hasValue "Somogy"
+	is_located_in_Country hasValue HUNGARY__HU
+
+instance JaszNagykunSzolnok memberOf Region
+	Description hasValue "Jasz-Nagykun-Szolnok"
+	Name hasValue "Jasz-Nagykun-Szolnok"
+	is_located_in_Country hasValue HUNGARY__HU
+
+instance Veszprem memberOf Region
+	Description hasValue "Veszprem"
+	Name hasValue "Veszprem"
+	is_located_in_Country hasValue HUNGARY__HU
+
+instance BorsodAbaujZemplen memberOf Region
+	Description hasValue "Borsod-Abauj-Zemplen"
+	Name hasValue "Borsod-Abauj-Zemplen"
+	is_located_in_Country hasValue HUNGARY__HU
+
+instance GyorMosonSopron memberOf Region
+	Description hasValue "Gyor-Moson-Sopron"
+	Name hasValue "Gyor-Moson-Sopron"
+	is_located_in_Country hasValue HUNGARY__HU
+
+instance BacsKiskun memberOf Region
+	Description hasValue "Bacs-Kiskun"
+	Name hasValue "Bacs-Kiskun"
+	is_located_in_Country hasValue HUNGARY__HU
+
+instance Tolna memberOf Region
+	Description hasValue "Tolna"
+	Name hasValue "Tolna"
+	is_located_in_Country hasValue HUNGARY__HU
+
+instance Pest memberOf Region
+	Description hasValue "Pest"
+	Name hasValue "Pest"
+	is_located_in_Country hasValue HUNGARY__HU
+
+instance KomaromEsztergom memberOf Region
+	Description hasValue "Komarom-Esztergom"
+	Name hasValue "Komarom-Esztergom"
+	is_located_in_Country hasValue HUNGARY__HU
+
+instance Csongrad memberOf Region
+	Description hasValue "Csongrad"
+	Name hasValue "Csongrad"
+	is_located_in_Country hasValue HUNGARY__HU
+
+instance Nograd memberOf Region
+	Description hasValue "Nograd"
+	Name hasValue "Nograd"
+	is_located_in_Country hasValue HUNGARY__HU
+
+instance SzabolcsSzatmarBereg memberOf Region
+	Description hasValue "Szabolcs-Szatmar-Bereg"
+	Name hasValue "Szabolcs-Szatmar-Bereg"
+	is_located_in_Country hasValue HUNGARY__HU
+
+instance Vas memberOf Region
+	Description hasValue "Vas"
+	Name hasValue "Vas"
+	is_located_in_Country hasValue HUNGARY__HU
+
+instance Kentriki_Makedonia memberOf Region
+	Description hasValue "Kentriki Makedonia"
+	Name hasValue "Kentriki Makedonia"
+	is_located_in_Country hasValue GREECE__GR
+
+instance Ipeiros memberOf Region
+	Description hasValue "Ipeiros"
+	Name hasValue "Ipeiros"
+	is_located_in_Country hasValue GREECE__GR
+
+instance Dytiki_Makedonia memberOf Region
+	Description hasValue "Dytiki Makedonia"
+	Name hasValue "Dytiki Makedonia"
+	is_located_in_Country hasValue GREECE__GR
+
+instance Ionioi_Nisoi memberOf Region
+	Description hasValue "Ionioi Nisoi"
+	Name hasValue "Ionioi Nisoi"
+	is_located_in_Country hasValue GREECE__GR
+
+instance Kriti memberOf Region
+	Description hasValue "Kriti"
+	Name hasValue "Kriti"
+	is_located_in_Country hasValue GREECE__GR
+
+instance Voreio_Aigaio memberOf Region
+	Description hasValue "Voreio Aigaio"
+	Name hasValue "Voreio Aigaio"
+	is_located_in_Country hasValue GREECE__GR
+
+instance Attiki memberOf Region
+	Description hasValue "Attiki"
+	Name hasValue "Attiki"
+	is_located_in_Country hasValue GREECE__GR
+
+instance Dytiki_Ellada memberOf Region
+	Description hasValue "Dytiki Ellada"
+	Name hasValue "Dytiki Ellada"
+	is_located_in_Country hasValue GREECE__GR
+
+instance Anatoliki_Makedonia_Kai_Thraki memberOf Region
+	Description hasValue "Anatoliki Makedonia Kai Thraki"
+	Name hasValue "Anatoliki Makedonia Kai Thraki"
+	is_located_in_Country hasValue GREECE__GR
+
+instance Thessalia memberOf Region
+	Description hasValue "Thessalia"
+	Name hasValue "Thessalia"
+	is_located_in_Country hasValue GREECE__GR
+
+instance Notio_Aigaio memberOf Region
+	Description hasValue "Notio Aigaio"
+	Name hasValue "Notio Aigaio"
+	is_located_in_Country hasValue GREECE__GR
+
+instance Peloponnesos memberOf Region
+	Description hasValue "Peloponnesos"
+	Name hasValue "Peloponnesos"
+	is_located_in_Country hasValue GREECE__GR
+
+instance Sterea_Ellada memberOf Region
+	Description hasValue "Sterea Ellada"
+	Name hasValue "Sterea Ellada"
+	is_located_in_Country hasValue GREECE__GR
+
+instance Gibraltar memberOf Region
+	Description hasValue "Gibraltar"
+	Name hasValue "Gibraltar"
+	is_located_in_Country hasValue GIBRALTAR__GI
+
+instance Niedersachsen memberOf Region
+	Description hasValue "Niedersachsen"
+	Name hasValue "Niedersachsen"
+	is_located_in_Country hasValue GERMANY__DE
+
+instance Saarland memberOf Region
+	Description hasValue "Saarland"
+	Name hasValue "Saarland"
+	is_located_in_Country hasValue GERMANY__DE
+
+instance Berlin memberOf Region
+	Description hasValue "Berlin"
+	Name hasValue "Berlin"
+	is_located_in_Country hasValue GERMANY__DE
+
+instance Thuringen memberOf Region
+	Description hasValue "Thuringen"
+	Name hasValue "Thuringen"
+	is_located_in_Country hasValue GERMANY__DE
+
+instance BadenWürttemberg memberOf Region
+	Description hasValue "Baden-Württemberg"
+	Name hasValue "Baden-Württemberg"
+	is_located_in_Country hasValue GERMANY__DE
+
+instance Bremen memberOf Region
+	Description hasValue "Bremen"
+	Name hasValue "Bremen"
+	is_located_in_Country hasValue GERMANY__DE
+
+instance Bayern memberOf Region
+	Description hasValue "Bayern"
+	Name hasValue "Bayern"
+	is_located_in_Country hasValue GERMANY__DE
+
+instance SachsenAnhalt memberOf Region
+	Description hasValue "Sachsen-Anhalt"
+	Name hasValue "Sachsen-Anhalt"
+	is_located_in_Country hasValue GERMANY__DE
+
+instance Hessen memberOf Region
+	Description hasValue "Hessen"
+	Name hasValue "Hessen"
+	is_located_in_Country hasValue GERMANY__DE
+
+instance RheinlandPfalz memberOf Region
+	Description hasValue "Rheinland-Pfalz"
+	Name hasValue "Rheinland-Pfalz"
+	is_located_in_Country hasValue GERMANY__DE
+
+instance NordrheinWestfalen memberOf Region
+	Description hasValue "Nordrhein-Westfalen"
+	Name hasValue "Nordrhein-Westfalen"
+	is_located_in_Country hasValue GERMANY__DE
+
+instance MecklenburgVorpommern memberOf Region
+	Description hasValue "Mecklenburg-Vorpommern"
+	Name hasValue "Mecklenburg-Vorpommern"
+	is_located_in_Country hasValue GERMANY__DE
+
+instance Hamburg memberOf Region
+	Description hasValue "Hamburg"
+	Name hasValue "Hamburg"
+	is_located_in_Country hasValue GERMANY__DE
+
+instance Brandenburg memberOf Region
+	Description hasValue "Brandenburg"
+	Name hasValue "Brandenburg"
+	is_located_in_Country hasValue GERMANY__DE
+
+instance Sachsen memberOf Region
+	Description hasValue "Sachsen"
+	Name hasValue "Sachsen"
+	is_located_in_Country hasValue GERMANY__DE
+
+instance SchleswigHolstein memberOf Region
+	Description hasValue "Schleswig-Holstein"
+	Name hasValue "Schleswig-Holstein"
+	is_located_in_Country hasValue GERMANY__DE
+
+instance Auvergne memberOf Region
+	Description hasValue "Auvergne"
+	Name hasValue "Auvergne"
+	is_located_in_Country hasValue FRANCE__FR
+
+instance HauteNormandie memberOf Region
+	Description hasValue "Haute-Normandie"
+	Name hasValue "Haute-Normandie"
+	is_located_in_Country hasValue FRANCE__FR
+
+instance Limousin memberOf Region
+	Description hasValue "Limousin"
+	Name hasValue "Limousin"
+	is_located_in_Country hasValue FRANCE__FR
+
+instance FrancheComte memberOf Region
+	Description hasValue "Franche-Comte"
+	Name hasValue "Franche-Comte"
+	is_located_in_Country hasValue FRANCE__FR
+
+instance Bourgogne memberOf Region
+	Description hasValue "Bourgogne"
+	Name hasValue "Bourgogne"
+	is_located_in_Country hasValue FRANCE__FR
+
+instance Lorraine memberOf Region
+	Description hasValue "Lorraine"
+	Name hasValue "Lorraine"
+	is_located_in_Country hasValue FRANCE__FR
+
+instance Corse memberOf Region
+	Description hasValue "Corse"
+	Name hasValue "Corse"
+	is_located_in_Country hasValue FRANCE__FR
+
+instance Aquitaine memberOf Region
+	Description hasValue "Aquitaine"
+	Name hasValue "Aquitaine"
+	is_located_in_Country hasValue FRANCE__FR
+
+instance Pays_de_la_Loire memberOf Region
+	Description hasValue "Pays de la Loire"
+	Name hasValue "Pays de la Loire"
+	is_located_in_Country hasValue FRANCE__FR
+
+instance ProvenceAlpesCotedAzur memberOf Region
+	Description hasValue "Provence-Alpes-Cote-d'Azur"
+	Name hasValue "Provence-Alpes-Cote-d'Azur"
+	is_located_in_Country hasValue FRANCE__FR
+
+instance ChampagneArdenne memberOf Region
+	Description hasValue "Champagne-Ardenne"
+	Name hasValue "Champagne-Ardenne"
+	is_located_in_Country hasValue FRANCE__FR
+
+instance Bretagne memberOf Region
+	Description hasValue "Bretagne"
+	Name hasValue "Bretagne"
+	is_located_in_Country hasValue FRANCE__FR
+
+instance MidiPyrénées memberOf Region
+	Description hasValue "Midi-Pyrénées"
+	Name hasValue "Midi-Pyrénées"
+	is_located_in_Country hasValue FRANCE__FR
+
+instance PoitouCharentes memberOf Region
+	Description hasValue "Poitou-Charentes"
+	Name hasValue "Poitou-Charentes"
+	is_located_in_Country hasValue FRANCE__FR
+
+instance RhoneAlpes memberOf Region
+	Description hasValue "Rhone-Alpes"
+	Name hasValue "Rhone-Alpes"
+	is_located_in_Country hasValue FRANCE__FR
+
+instance Ile_de_France memberOf Region
+	Description hasValue "Ile de France"
+	Name hasValue "Ile de France"
+	is_located_in_Country hasValue FRANCE__FR
+
+instance Alsace memberOf Region
+	Description hasValue "Alsace"
+	Name hasValue "Alsace"
+	is_located_in_Country hasValue FRANCE__FR
+
+instance NordpasdeCalais memberOf Region
+	Description hasValue "Nord-pas-de-Calais"
+	Name hasValue "Nord-pas-de-Calais"
+	is_located_in_Country hasValue FRANCE__FR
+
+instance LanguedocRoussillon memberOf Region
+	Description hasValue "Languedoc-Roussillon"
+	Name hasValue "Languedoc-Roussillon"
+	is_located_in_Country hasValue FRANCE__FR
+
+instance BasseNormandie memberOf Region
+	Description hasValue "Basse-Normandie"
+	Name hasValue "Basse-Normandie"
+	is_located_in_Country hasValue FRANCE__FR
+
+instance Centre memberOf Region
+	Description hasValue "Centre"
+	Name hasValue "Centre"
+	is_located_in_Country hasValue FRANCE__FR
+
+instance Picardie memberOf Region
+	Description hasValue "Picardie"
+	Name hasValue "Picardie"
+	is_located_in_Country hasValue FRANCE__FR
+
+instance Hame memberOf Region
+	Description hasValue "Hame"
+	Name hasValue "Hame"
+	is_located_in_Country hasValue FINLAND__FI
+
+instance Lappi memberOf Region
+	Description hasValue "Lappi"
+	Name hasValue "Lappi"
+	is_located_in_Country hasValue FINLAND__FI
+
+instance EtelaPohjanmaa memberOf Region
+	Description hasValue "Etela-Pohjanmaa"
+	Name hasValue "Etela-Pohjanmaa"
+	is_located_in_Country hasValue FINLAND__FI
+
+instance Kainnu memberOf Region
+	Description hasValue "Kainnu"
+	Name hasValue "Kainnu"
+	is_located_in_Country hasValue FINLAND__FI
+
+instance Satakunta memberOf Region
+	Description hasValue "Satakunta"
+	Name hasValue "Satakunta"
+	is_located_in_Country hasValue FINLAND__FI
+
+instance VarsinaisSuomi memberOf Region
+	Description hasValue "Varsinais-Suomi"
+	Name hasValue "Varsinais-Suomi"
+	is_located_in_Country hasValue FINLAND__FI
+
+instance PohjoisPohjanmaa memberOf Region
+	Description hasValue "Pohjois-Pohjanmaa"
+	Name hasValue "Pohjois-Pohjanmaa"
+	is_located_in_Country hasValue FINLAND__FI
+
+instance PohjoisSavo memberOf Region
+	Description hasValue "Pohjois-Savo"
+	Name hasValue "Pohjois-Savo"
+	is_located_in_Country hasValue FINLAND__FI
+
+instance PohjoisKarjala memberOf Region
+	Description hasValue "Pohjois-Karjala"
+	Name hasValue "Pohjois-Karjala"
+	is_located_in_Country hasValue FINLAND__FI
+
+instance Åland_Islands memberOf Region
+	Description hasValue "Åland Islands"
+	Name hasValue "Åland Islands"
+	is_located_in_Country hasValue FINLAND__FI
+
+instance Uusimaa memberOf Region
+	Description hasValue "Uusimaa"
+	Name hasValue "Uusimaa"
+	is_located_in_Country hasValue FINLAND__FI
+
+instance Pohjanmaa memberOf Region
+	Description hasValue "Pohjanmaa"
+	Name hasValue "Pohjanmaa"
+	is_located_in_Country hasValue FINLAND__FI
+
+instance EtelaSavo memberOf Region
+	Description hasValue "Etela-Savo"
+	Name hasValue "Etela-Savo"
+	is_located_in_Country hasValue FINLAND__FI
+
+instance KeskiSuomi memberOf Region
+	Description hasValue "Keski-Suomi"
+	Name hasValue "Keski-Suomi"
+	is_located_in_Country hasValue FINLAND__FI
+
+instance Pirkanmaa memberOf Region
+	Description hasValue "Pirkanmaa"
+	Name hasValue "Pirkanmaa"
+	is_located_in_Country hasValue FINLAND__FI
+
+instance KaakkoisSuomi memberOf Region
+	Description hasValue "Kaakkois-Suomi"
+	Name hasValue "Kaakkois-Suomi"
+	is_located_in_Country hasValue FINLAND__FI
+
+instance PõhjaEesti memberOf Region
+	Description hasValue "Põhja-Eesti"
+	Name hasValue "Põhja-Eesti"
+	is_located_in_Country hasValue ESTONIA__EE
+
+instance LõunaEesti memberOf Region
+	Description hasValue "Lõuna-Eesti"
+	Name hasValue "Lõuna-Eesti"
+	is_located_in_Country hasValue ESTONIA__EE
+
+instance LääneEesti memberOf Region
+	Description hasValue "Lääne-Eesti"
+	Name hasValue "Lääne-Eesti"
+	is_located_in_Country hasValue ESTONIA__EE
+
+instance KirdeEesti memberOf Region
+	Description hasValue "Kirde-Eesti"
+	Name hasValue "Kirde-Eesti"
+	is_located_in_Country hasValue ESTONIA__EE
+
+instance KeskEesti memberOf Region
+	Description hasValue "Kesk-Eesti"
+	Name hasValue "Kesk-Eesti"
+	is_located_in_Country hasValue ESTONIA__EE
+
+instance Ribe memberOf Region
+	Description hasValue "Ribe"
+	Name hasValue "Ribe"
+	is_located_in_Country hasValue DENMARK__DK
+
+instance Bornholms memberOf Region
+	Description hasValue "Bornholms"
+	Name hasValue "Bornholms"
+	is_located_in_Country hasValue DENMARK__DK
+
+instance Stortstrøms memberOf Region
+	Description hasValue "Stortstrøms"
+	Name hasValue "Stortstrøms"
+	is_located_in_Country hasValue DENMARK__DK
+
+instance Fyns memberOf Region
+	Description hasValue "Fyns"
+	Name hasValue "Fyns"
+	is_located_in_Country hasValue DENMARK__DK
+
+instance Sønderjyllands memberOf Region
+	Description hasValue "Sønderjyllands"
+	Name hasValue "Sønderjyllands"
+	is_located_in_Country hasValue DENMARK__DK
+
+instance Viborg memberOf Region
+	Description hasValue "Viborg"
+	Name hasValue "Viborg"
+	is_located_in_Country hasValue DENMARK__DK
+
+instance Roskilde memberOf Region
+	Description hasValue "Roskilde"
+	Name hasValue "Roskilde"
+	is_located_in_Country hasValue DENMARK__DK
+
+instance Vejle memberOf Region
+	Description hasValue "Vejle"
+	Name hasValue "Vejle"
+	is_located_in_Country hasValue DENMARK__DK
+
+instance Nordjyllands memberOf Region
+	Description hasValue "Nordjyllands"
+	Name hasValue "Nordjyllands"
+	is_located_in_Country hasValue DENMARK__DK
+
+instance Københavns memberOf Region
+	Description hasValue "Københavns"
+	Name hasValue "Københavns"
+	is_located_in_Country hasValue DENMARK__DK
+
+instance Vestsjællands memberOf Region
+	Description hasValue "Vestsjællands"
+	Name hasValue "Vestsjællands"
+	is_located_in_Country hasValue DENMARK__DK
+
+instance Frederiksborg memberOf Region
+	Description hasValue "Frederiksborg"
+	Name hasValue "Frederiksborg"
+	is_located_in_Country hasValue DENMARK__DK
+
+instance Århus memberOf Region
+	Description hasValue "Århus"
+	Name hasValue "Århus"
+	is_located_in_Country hasValue DENMARK__DK
+
+instance Ringkøbing memberOf Region
+	Description hasValue "Ringkøbing"
+	Name hasValue "Ringkøbing"
+	is_located_in_Country hasValue DENMARK__DK
+
+instance Ustecky memberOf Region
+	Description hasValue "Ustecky"
+	Name hasValue "Ustecky"
+	is_located_in_Country hasValue CZECH_REPUBLIC__CZ
+
+instance Karlovarsky memberOf Region
+	Description hasValue "Karlovarsky"
+	Name hasValue "Karlovarsky"
+	is_located_in_Country hasValue CZECH_REPUBLIC__CZ
+
+instance Stredocesky memberOf Region
+	Description hasValue "Stredocesky"
+	Name hasValue "Stredocesky"
+	is_located_in_Country hasValue CZECH_REPUBLIC__CZ
+
+instance Moravskoslezsky memberOf Region
+	Description hasValue "Moravskoslezsky"
+	Name hasValue "Moravskoslezsky"
+	is_located_in_Country hasValue CZECH_REPUBLIC__CZ
+
+instance Plzensky memberOf Region
+	Description hasValue "Plzensky"
+	Name hasValue "Plzensky"
+	is_located_in_Country hasValue CZECH_REPUBLIC__CZ
+
+instance Jihomoravsky memberOf Region
+	Description hasValue "Jihomoravsky"
+	Name hasValue "Jihomoravsky"
+	is_located_in_Country hasValue CZECH_REPUBLIC__CZ
+
+instance Pardubicky memberOf Region
+	Description hasValue "Pardubicky"
+	Name hasValue "Pardubicky"
+	is_located_in_Country hasValue CZECH_REPUBLIC__CZ
+
+instance Kralovehradecky memberOf Region
+	Description hasValue "Kralovehradecky"
+	Name hasValue "Kralovehradecky"
+	is_located_in_Country hasValue CZECH_REPUBLIC__CZ
+
+instance Zlinsky memberOf Region
+	Description hasValue "Zlinsky"
+	Name hasValue "Zlinsky"
+	is_located_in_Country hasValue CZECH_REPUBLIC__CZ
+
+instance Vysocina memberOf Region
+	Description hasValue "Vysocina"
+	Name hasValue "Vysocina"
+	is_located_in_Country hasValue CZECH_REPUBLIC__CZ
+
+instance Olomoucky memberOf Region
+	Description hasValue "Olomoucky"
+	Name hasValue "Olomoucky"
+	is_located_in_Country hasValue CZECH_REPUBLIC__CZ
+
+instance Jihocesky memberOf Region
+	Description hasValue "Jihocesky"
+	Name hasValue "Jihocesky"
+	is_located_in_Country hasValue CZECH_REPUBLIC__CZ
+
+instance Liberecky memberOf Region
+	Description hasValue "Liberecky"
+	Name hasValue "Liberecky"
+	is_located_in_Country hasValue CZECH_REPUBLIC__CZ
+
+instance Kypros___Kibris memberOf Region
+	Description hasValue "Kypros / Kibris"
+	Name hasValue "Kypros / Kibris"
+	is_located_in_Country hasValue CYPRUS__CY
+
+instance West_Vlaanderen memberOf Region
+	Description hasValue "West Vlaanderen"
+	Name hasValue "West Vlaanderen"
+	is_located_in_Country hasValue BELGIUM__BE
+
+instance Namur memberOf Region
+	Description hasValue "Namur"
+	Name hasValue "Namur"
+	is_located_in_Country hasValue BELGIUM__BE
+
+instance Antwerpen memberOf Region
+	Description hasValue "Antwerpen"
+	Name hasValue "Antwerpen"
+	is_located_in_Country hasValue BELGIUM__BE
+
+instance Liege memberOf Region
+	Description hasValue "Liege"
+	Name hasValue "Liege"
+	is_located_in_Country hasValue BELGIUM__BE
+
+instance Bruxelles_Brussel memberOf Region
+	Description hasValue "Bruxelles/Brussel"
+	Name hasValue "Bruxelles/Brussel"
+	is_located_in_Country hasValue BELGIUM__BE
+
+instance Limburg memberOf Region
+	Description hasValue "Limburg"
+	Name hasValue "Limburg"
+	is_located_in_Country hasValue {BELGIUM__BE,NETHERLANDS__NL}
+
+instance Vlaams_Brabant memberOf Region
+	Description hasValue "Vlaams Brabant"
+	Name hasValue "Vlaams Brabant"
+	is_located_in_Country hasValue BELGIUM__BE
+
+instance Luxembourg memberOf Region
+	Description hasValue "Luxembourg"
+	Name hasValue "Luxembourg"
+	is_located_in_Country hasValue {BELGIUM__BE,LUXEMBOURG__LU}
+
+instance Hainaut memberOf Region
+	Description hasValue "Hainaut"
+	Name hasValue "Hainaut"
+	is_located_in_Country hasValue BELGIUM__BE
+
+instance Oost_Vlaanderen memberOf Region
+	Description hasValue "Oost Vlaanderen"
+	Name hasValue "Oost Vlaanderen"
+	is_located_in_Country hasValue BELGIUM__BE
+
+instance Brabant_Wallon memberOf Region
+	Description hasValue "Brabant Wallon"
+	Name hasValue "Brabant Wallon"
+	is_located_in_Country hasValue BELGIUM__BE
+
+instance Niederösterreich memberOf Region
+	Description hasValue "Niederösterreich"
+	Name hasValue "Niederösterreich"
+	is_located_in_Country hasValue AUSTRIA__AT
+
+instance Salzburg memberOf Region
+	Description hasValue "Salzburg"
+	Name hasValue "Salzburg"
+	is_located_in_Country hasValue AUSTRIA__AT
+
+instance Voralberg memberOf Region
+	Description hasValue "Voralberg"
+	Name hasValue "Voralberg"
+	is_located_in_Country hasValue AUSTRIA__AT
+
+instance Tirol memberOf Region
+	Description hasValue "Tirol"
+	Name hasValue "Tirol"
+	is_located_in_Country hasValue AUSTRIA__AT
+
+instance Burgenland memberOf Region
+	Description hasValue "Burgenland"
+	Name hasValue "Burgenland"
+	is_located_in_Country hasValue AUSTRIA__AT
+
+instance Kärnten memberOf Region
+	Description hasValue "Kärnten"
+	Name hasValue "Kärnten"
+	is_located_in_Country hasValue AUSTRIA__AT
+
+instance Steiermark memberOf Region
+	Description hasValue "Steiermark"
+	Name hasValue "Steiermark"
+	is_located_in_Country hasValue AUSTRIA__AT
+
+instance Oberösterreich memberOf Region
+	Description hasValue "Oberösterreich"
+	Name hasValue "Oberösterreich"
+	is_located_in_Country hasValue AUSTRIA__AT
+
+instance Wien memberOf Region
+	Description hasValue "Wien"
+	Name hasValue "Wien"
+	is_located_in_Country hasValue AUSTRIA__AT
+
+
+// axioms for reverse relationships
+
+axiom has_country_Country_is_located_in_Continent
+definedBy
+	?x[has_country_Country hasValue ?y] memberOf Continent :- ?y[is_located_in_Continent hasValue ?x] memberOf Country.
+	?x[is_located_in_Continent hasValue ?y] memberOf Country :- ?y[has_country_Country hasValue ?x] memberOf Continent.
+
+axiom has_region_Region_is_located_in_Country
+definedBy
+	?x[has_region_Region hasValue ?y] memberOf Country :- ?y[is_located_in_Country hasValue ?x] memberOf Region.
+	?x[is_located_in_Country hasValue ?y] memberOf Region :- ?y[has_region_Region hasValue ?x] memberOf Country.
+
