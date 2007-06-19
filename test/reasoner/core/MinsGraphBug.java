@@ -32,7 +32,7 @@ import junit.framework.TestSuite;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 
-import test.BaseReasonerTest;
+import reasoner.BaseReasonerTest;
 
 public class MinsGraphBug extends BaseReasonerTest {
 

@@ -24,6 +24,8 @@ import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
+import reasoner.BaseReasonerTest;
+
 /**
  * Interface or class description
  * 
@@ -37,25 +39,12 @@ import org.wsmo.wsml.Parser;
  * 
  * @version $Revision$ $Date$
  */
-public class RegisterMultipleTimes extends TestCase {
+public class RegisterMultipleTimes  extends BaseReasonerTest  {
     String FILE = "RegisterMultipleTimes.wsml";
     Parser parser;
     LogicalExpressionFactory leFactory;
     WsmoFactory wsmoFactory;
     WSMLReasoner reasoner;
-    
-    public void setUp(){
-        parser = Factory.createParser(null);
-        Map<String, Object> m ;
-        m = new HashMap<String, Object>();
-        m.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
-                WSMLReasonerFactory.BuiltInReasoner.MINS);
-        leFactory = Factory.createLogicalExpressionFactory(null);
-        reasoner = DefaultWSMLReasonerFactory.getFactory()
-        .createWSMLFlightReasoner(m);
-        
-        wsmoFactory = Factory.createWsmoFactory(null);
-    }
 
     /**
      * This test failed since WSMO4J uses statics in its default factory
@@ -139,11 +128,11 @@ public class RegisterMultipleTimes extends TestCase {
     
     
     public static void main(String[] args) {
-        junit.textui.TestRunner.run(SimpleGraph.suite());
+        junit.textui.TestRunner.run(RegisterMultipleTimes.suite());
     }
 
     public static Test suite() {
-        Test test = new junit.extensions.TestSetup(new TestSuite(SimpleGraph.class)) {};
+        Test test = new junit.extensions.TestSetup(new TestSuite(RegisterMultipleTimes.class)) {};
         return test;
     }
 

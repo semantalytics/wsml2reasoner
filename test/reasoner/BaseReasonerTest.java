@@ -17,7 +17,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  */
-package test;
+package reasoner;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -55,9 +55,9 @@ import org.wsmo.wsml.Serializer;
 public class BaseReasonerTest extends TestCase {
 
     //CHANGE HERE TO CHECK DIFFERENT REASONERS!
-    public static WSMLReasonerFactory.BuiltInReasoner reasoner = 
-        WSMLReasonerFactory.BuiltInReasoner.KAON2;
-//    	WSMLReasonerFactory.BuiltInReasoner.IRIS;
+    public static WSMLReasonerFactory.BuiltInReasoner reasoner =
+//    	WSMLReasonerFactory.BuiltInReasoner.KAON2;
+    	WSMLReasonerFactory.BuiltInReasoner.IRIS;
 //    	WSMLReasonerFactory.BuiltInReasoner.MINS;
     	
     //CHANGE HERE TO CHECK DIFFERENT EVALUATION METHODS-
@@ -65,7 +65,7 @@ public class BaseReasonerTest extends TestCase {
     //e.g. ReasonerCoreTest
     public static int evalMethod = 3;
 
-    	//0=allow imports
+    //0=allow imports
     //1=do not allow imports
     public static int allowImports = 0;
     

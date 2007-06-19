@@ -32,7 +32,7 @@ import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLFlightReasoner;
 import org.wsmo.common.IRI;
 
-import test.BaseReasonerTest;
+import reasoner.BaseReasonerTest;
 
 public class DogsworldTest extends BaseReasonerTest {
     private static final String NS = "urn:dogsworld#";

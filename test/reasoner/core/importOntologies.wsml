@@ -12,7 +12,7 @@ namespace { _"http://www.importexample.org#",
 
 ontology _"http://www.importexample.org"
 
-importsOntology {_"file:///Developer/andiamo/toBeImported.wsml"}
+importsOntology {_"file:///c:/deri/wsml2reasoner/toBeImported.wsml"}
 		
 concept state
 instance wisconsin memberOf state

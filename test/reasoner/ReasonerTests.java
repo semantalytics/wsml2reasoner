@@ -1,8 +1,7 @@
-package test;
+package reasoner;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import reasoner.OntologyRegistrationTest;
 import reasoner.core.ReasonerCoreTests;
 import reasoner.dl.ReasonerDLTests;
 import reasoner.flight.ReasonerFlightTests;

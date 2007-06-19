@@ -32,7 +32,7 @@ import junit.framework.TestSuite;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 
-import test.BaseReasonerTest;
+import reasoner.BaseReasonerTest;
 
 /** 
  * Interface or class description
@@ -40,10 +40,10 @@ import test.BaseReasonerTest;
  * @author Adrian Mocan, Holger Lausen
  *
  * Created on 17-Feb-2006
- * Committed by $Author: hlausen $
+ * Committed by $Author: graham $
  * 
  * $Source: /home/richi/temp/w2r/wsml2reasoner/test/reasoner/rule/FunctionSymbolsTest.java,v $, 
- * @version $Revision: 1.8 $ $Date: 2006-07-17 11:45:59 $
+ * @version $Revision: 1.9 $ $Date: 2007-06-19 09:56:24 $
  */
 
 public class FunctionSymbolsTest extends BaseReasonerTest {

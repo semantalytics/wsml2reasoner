@@ -23,7 +23,7 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 
-import test.BaseReasonerTest;
+import reasoner.BaseReasonerTest;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

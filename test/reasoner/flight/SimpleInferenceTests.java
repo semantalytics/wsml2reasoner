@@ -36,7 +36,7 @@ import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
-import test.BaseReasonerTest;
+import reasoner.BaseReasonerTest;
 
 import junit.framework.TestCase;
 
@@ -360,6 +360,9 @@ public class SimpleInferenceTests extends TestCase {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.1  2007/03/01 11:44:31  nathalie
+ * added test for the newly implemented datalog based reasoning methods
+ *
  * Revision 1.7  2006/09/01 12:06:48  nathalie
  * *** empty log message ***
  *

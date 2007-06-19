@@ -30,7 +30,7 @@ import org.wsmo.common.IRI;
 import org.wsmo.factory.Factory;
 import org.wsmo.wsml.Parser;
 
-import test.BaseReasonerTest;
+import reasoner.BaseReasonerTest;
 
 import junit.framework.TestCase;
 
@@ -74,5 +74,8 @@ public class CarlosBugTest extends TestCase {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.1  2007/03/29 21:21:41  nathalie
+ * fixed bug caused by maxCardinality of 0
+ *
  *
  */

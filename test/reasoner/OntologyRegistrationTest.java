@@ -26,7 +26,6 @@ import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
-import test.BaseReasonerTest;
 
 public class OntologyRegistrationTest extends TestCase {
 
