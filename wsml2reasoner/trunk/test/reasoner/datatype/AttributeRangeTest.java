@@ -18,19 +18,16 @@
  */
 package reasoner.datatype;
 
-import java.util.Map;
-import java.util.Set;
+import java.io.FileReader;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
-import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsmo.common.IRI;
+import org.wsmo.common.TopEntity;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -45,14 +42,14 @@ import reasoner.BaseReasonerTest;
  * <pre>
  *   Created on 20.04.2006
  *   Committed by $Author: graham $
- *   $Source: /home/richi/temp/w2r/wsml2reasoner/test/reasoner/datatype/IRITest.java,v $,
+ *   $Source: /home/richi/temp/w2r/wsml2reasoner/test/reasoner/datatype/AttributeRangeTest.java,v $,
  * </pre>
  * 
- * @author Holger lausen
+ * @author
  * 
- * @version $Revision: 1.3 $ $Date: 2007-06-19 09:56:23 $
+ * @version $Revision: 1.1 $ $Date: 2007-06-19 09:56:23 $
  */
-public class IRITest extends TestCase {
+public class AttributeRangeTest extends TestCase {
     Parser parser;
     LogicalExpressionFactory leFactory;
     DataFactory dFactory;
@@ -71,37 +68,42 @@ public class IRITest extends TestCase {
      * 
      * @throws Exception
      */
-    public void testIRI() throws Exception {
-        String ns = "http://ex1.org#";
-        String test = "namespace _\""+ns+"\" \n" +
-                "ontology o1 \n" +
-                "axiom a definedBy \n" +
-                "a[sqname hasValue ab] memberOf A. \n " +
-                "a[iri hasValue _\"urn:foo\"] memberOf A. \n " +
-                "a[fsymbol hasValue f(x)] memberOf A. " +
-                "" +
-                "A[sqname ofType _iri]. " +
-                "A[iri ofType _iri]. " +
-                "A[fsymbol ofType _iri]. ";
-
-        Ontology o = (Ontology) parser.parse(new StringBuffer(test))[0];
-        Set<Map<Variable, Term>> result = null;
-        LogicalExpression query ;
-        reasoner.registerOntology(o);
-
-        query = leFactory.createLogicalExpression("?x memberOf _iri", o);
-        result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
-        System.out.println(result);
-        //for(Entry<Variable, Term>)
+    public void testAttributeRange() throws Exception {
+    	Ontology exampleOntology = loadOntology("files/AttributeRangeOntology.wsml");
+    	try{
+    		reasoner.registerOntology(exampleOntology);
+    		assertTrue(true);
+    	}
+    	catch (Exception e){
+    		e.printStackTrace();
+    		assertTrue(false);
+    	}
     }
     
+    private Ontology loadOntology(String file) {
+        try {
+            final TopEntity[] identifiable = parser
+                    .parse(new FileReader(file));
+            if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {
+                return (Ontology) identifiable[0];
+            } else {
+                System.out.println("First Element of file no ontology ");
+                return null;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Unable to parse ontology: " + e.getMessage());
+            return null;
+        }
+
+    }
     
     public static void main(String[] args) {
-        junit.textui.TestRunner.run(IRITest.suite());
+        junit.textui.TestRunner.run(AttributeRangeTest.suite());
     }
 
     public static Test suite() {
-        Test test = new junit.extensions.TestSetup(new TestSuite(IRITest.class)) {};
+        Test test = new junit.extensions.TestSetup(new TestSuite(AttributeRangeTest.class)) {};
         return test;
     }
 

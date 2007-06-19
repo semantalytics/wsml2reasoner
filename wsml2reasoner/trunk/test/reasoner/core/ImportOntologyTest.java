@@ -34,6 +34,7 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.Factory;
@@ -41,7 +42,7 @@ import org.wsmo.locator.Locator;
 import org.wsmo.locator.LocatorManager;
 import org.wsmo.wsml.Parser;
 
-import test.BaseReasonerTest;
+import reasoner.BaseReasonerTest;
 
 public class ImportOntologyTest extends BaseReasonerTest {
 
@@ -80,6 +81,8 @@ public class ImportOntologyTest extends BaseReasonerTest {
         LogicalExpression query = leFactory.createLogicalExpression(
                 "?x memberOf c", ontology);
         WSMLReasoner reasoner = BaseReasonerTest.getReasoner();
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(WSMLReasonerFactory.PARAM_ALLOW_IMPORTS, 1);
         Set<Map<Variable, Term>> result = null;
         reasoner.registerOntology(ontology);
         result = reasoner.executeQuery((IRI) ontology.getIdentifier(), query);
@@ -138,9 +141,11 @@ public class ImportOntologyTest extends BaseReasonerTest {
         dataFactory = wsmoManager.getDataFactory();
         
         LogicalExpression query = leFactory.createLogicalExpression(
-                "?x memberOf state", ontology);
+                "?x memberOf ?v", ontology);
         System.out.println("Query:\n" + query.toString());
         WSMLReasoner reasoner = BaseReasonerTest.getReasoner();
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(WSMLReasonerFactory.PARAM_ALLOW_IMPORTS, 0);
         Set<Map<Variable, Term>> result = null;
         reasoner.registerOntology(ontology);
         result = reasoner.executeQuery((IRI) ontology.getIdentifier(), query);

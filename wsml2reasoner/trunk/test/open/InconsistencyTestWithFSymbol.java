@@ -29,7 +29,7 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 
-import test.BaseReasonerTest;
+import reasoner.BaseReasonerTest;
 
 public class InconsistencyTestWithFSymbol extends BaseReasonerTest {
     private static final String NS = "urn:functionsymbol#";

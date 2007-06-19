@@ -32,7 +32,7 @@ import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.Serializer;
 
-import test.BaseReasonerTest;
+import reasoner.BaseReasonerTest;
 
 /**
  * 

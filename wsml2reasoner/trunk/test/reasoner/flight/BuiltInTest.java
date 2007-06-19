@@ -29,7 +29,7 @@ import junit.framework.TestSuite;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 
-import test.BaseReasonerTest;
+import reasoner.BaseReasonerTest;
 
 public class BuiltInTest extends BaseReasonerTest {
     private static final String NS = "http://www.example.org#datatypes/";

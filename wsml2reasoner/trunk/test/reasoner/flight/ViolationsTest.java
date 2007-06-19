@@ -50,7 +50,7 @@ import org.wsmo.factory.Factory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
-import test.BaseReasonerTest;
+import reasoner.BaseReasonerTest;
 
 public class ViolationsTest extends BaseReasonerTest {
     private static final String NS = "urn:bad#";
@@ -69,8 +69,6 @@ public class ViolationsTest extends BaseReasonerTest {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
                 WSMLReasonerFactory.BuiltInReasoner.MINS);
-        // params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
-        // WSMLReasonerFactory.BuiltInReasoner.MINS);
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
                 .createWSMLFlightReasoner(params);
 
