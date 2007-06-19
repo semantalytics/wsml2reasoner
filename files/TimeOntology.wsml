@@ -1,0 +1,188 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"webode://mccarthy.dia.fi.upm.es/Time_Eures_Ontology#" , 
+wsml _"http://www.wsmo.org/wsml/wsml-syntax#",
+JobOffOnt _"webode://mccarthy.dia.fi.upm.es/Job_Offer_Eures_Ontology#",
+	JobSeeOnt _"webode://mccarthy.dia.fi.upm.es/Job_Seeker_Eures_Ontology#",
+	EduOnt _"webode://mccarthy.dia.fi.upm.es/Education_Eures_Ontology#" }
+
+ontology Time_Eures_Ontology
+
+importsOntology { JobOffOnt#Job_Offer_Eures_Ontology,
+	JobSeeOnt#Job_Seeker_Eures_Ontology,
+	EduOnt#Education_Eures_Ontology
+	 }
+
+concept DateTimeDescription
+	day ofType (0 1) _integer
+	dayOfWeek ofType (0 1) DayOfWeek
+	dayOfYear ofType (0 1) _integer
+	hour ofType (0 1) _integer
+	minute ofType (0 1) _integer
+	second ofType (0 1) _float
+	timeZone ofType (0 1) TimeZone
+	unitType ofType (1 1) TemporalUnit
+	week ofType (0 1) _integer
+	year ofType (0 1) _integer
+	// inversas nuevas
+	is_publication_date_of_JV ofType JobOffOnt#Job_Vacancy
+	//is_date_of_fixed_date ofType JobOffOnt#Fixed_date
+	is_begin_date_of_Candidacy ofType JobSeeOnt#Candidacy
+	//is_end_date_of_Candidacy ofType JobSeeOnt#Candidacy
+	is_birth_of_JS ofType JobSeeOnt#Job_Seeker
+	is_begin_date_of_OWE ofType JobSeeOnt#Offered_Work_Experience
+	is_end_date_of_OWE ofType JobSeeOnt#Offered_Work_Experience
+	is_end_date_of_Education ofType EduOnt#Education 
+	is_begin_date_of_Education ofType EduOnt#Education
+	
+concept DayOfWeek
+
+axiom ExhaustiveDayOfWeekSet     
+     definedBy 
+         !- ?x memberOf DayOfWeek
+and naf
+  	(?x = monday
+  	or
+	?x = tuesday
+	or
+	?x = wednesday
+	or
+	?x = thursday
+	or
+	?x = friday
+	or
+	?x = saturday
+  	or
+	?x = sunday). 
+	
+	
+concept DurationDescription
+	days ofType (0 1) _float
+	months ofType (0 1) _float	
+	hours ofType (0 1) _float
+	minutes ofType (0 1) _float
+	seconds ofType (0 1) _float	
+	weeks ofType (0 1) _float
+	years ofType (0 1) _float
+
+concept Year subConceptOf DurationDescription
+	years ofType (1 1) _float
+
+concept TemporalEntity
+	before ofType (0 *) TemporalEntity
+	after ofType (0 *) TemporalEntity
+	hasBeginning ofType (0 *) Instant
+	hasDurationDescription ofType (0 *) DurationDescription
+	hasEnd ofType (0 *) Instant
+	
+//instance A memberOf TemporalEntity
+//	before hasValue B
+//
+//instance B memberOf TemporalEntity
+//	before hasValue B
+
+axiom BeforeInverseofAfter1
+	definedBy
+	?x[before hasValue ?y] :- ?y[after hasValue ?x].
+	
+axiom BeforeInverseofAfter2
+	definedBy
+	?x[after hasValue ?y] :- ?y[before hasValue ?x].
+	
+axiom BeforeIsTransitive // so "after" too
+	definedBy
+	?x[before hasValue ?z] :- ?x[before hasValue ?y] and ?y[before hasValue ?z].
+	
+//relation after
+
+//relation before	
+//inverseOf after
+//	domain ofType TemporalEntity
+//	range ofType TemporalEntity
+	
+//relation intervalBefore subRelationOf before
+//	domain ofType ProperInterval
+//	range ofType ProperInterval
+
+axiom ExhaustiveTaxonomyTemporalEnt1     
+     definedBy 
+           ?x memberOf Instant 
+  :- (?x memberOf TemporalEntity
+  and
+naf ?x memberOf Interval). 
+
+axiom ExhaustiveTaxonomyTemporalEnt2     
+     definedBy 
+           ?x memberOf Interval 
+  :- (?x memberOf TemporalEntity
+  and
+naf ?x memberOf Instant). 
+
+
+axiom ExhaustiveTemporalUnitSet     
+     definedBy 
+          !- ?x memberOf TemporalUnit 
+  and naf (?x = unitMinute
+  or
+?x = unitHour
+or
+?x = unitDay
+or
+?x = unitWeek
+or
+?x = unitMonth
+or
+?x = unitYear
+  or
+?x = unitSecond).
+
+concept Instant subConceptOf TemporalEntity
+	inDateTime ofType (0 *) DateTimeDescription
+
+concept Interval subConceptOf TemporalEntity
+	inside ofType (0 *) Instant
+	
+
+concept ProperInterval subConceptOf Interval
+	intervalBefore ofType (0 *) ProperInterval
+	intervalDuring ofType (0 *) ProperInterval
+	intervalEquals ofType (0 *) ProperInterval
+	intervalFinishes ofType (0 *) ProperInterval
+	intervalMeets ofType (0 *) ProperInterval
+	intervalOverlaps ofType (0 *) ProperInterval
+	intervalStarts ofType (0 *) ProperInterval
+
+concept DateTimeInterval subConceptOf ProperInterval
+	hasDateTimeDescription ofType (0 *) DateTimeDescription
+
+concept TemporalUnit
+
+concept TimeZone
+
+instance unitSecond memberOf TemporalUnit
+
+instance unitMinute memberOf TemporalUnit
+
+instance unitHour memberOf TemporalUnit
+
+instance unitDay memberOf TemporalUnit
+
+instance unitWeek memberOf TemporalUnit
+
+instance unitMonth memberOf TemporalUnit
+
+instance unitYear memberOf TemporalUnit
+
+
+instance monday memberOf DayOfWeek
+
+instance tuesday memberOf DayOfWeek
+
+instance wednesday memberOf DayOfWeek
+
+instance thursday memberOf DayOfWeek
+
+instance friday memberOf DayOfWeek
+
+instance saturday memberOf DayOfWeek
+
+instance sunday memberOf DayOfWeek

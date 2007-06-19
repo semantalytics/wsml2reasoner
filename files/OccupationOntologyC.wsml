@@ -1,0 +1,838 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"webode://mccarthy.dia.fi.upm.es/Occupation_Eures_Ontology#" , wsml _"http://www.wsmo.org/wsml/wsml-syntax#",
+	JobOffOnt _"webode://mccarthy.dia.fi.upm.es/Job_Offer_Eures_Ontology#",
+	JobSeeOnt _"webode://mccarthy.dia.fi.upm.es/Job_Seeker_Eures_Ontology#" }
+
+ontology Occupation_Eures_Ontology
+
+
+importsOntology { JobOffOnt#Job_Offer_Eures_Ontology,
+	JobSeeOnt#Job_Seeker_Eures_Ontology }
+
+
+concept Occupation
+	Name ofType (0 1) _string
+	Level ofType (0 1) _string
+	Description ofType (0 1) _string
+	Code ofType (0 1) _string
+	is_associated_with_Vacancy ofType (0 *) JobOffOnt#Vacancy
+	
+	is_associated_with_Objective ofType (0 *) JobSeeOnt#Objective
+	is_associated_with_Offered_Work_Experience ofType (0 *) JobSeeOnt#Offered_Work_Experience
+
+
+
+concept Access_supervisor_data_processing_IT__2716 subConceptOf Other_computer_specialists__39
+
+concept Application_developer__5311 subConceptOf Systems_engineers_and_programmers__38
+
+concept Application_engineer__2426 subConceptOf Systems_engineers_and_programmers__38
+
+concept Communications_technician__2514 subConceptOf Computer_engineers__108
+
+concept Computer_engineer__2408 subConceptOf Systems_engineers_and_programmers__38
+
+concept Computer_engineers__108 subConceptOf Occupation
+
+concept Computer_manager__5425 subConceptOf IT_managers__20
+
+concept Computer_methods_director__2910 subConceptOf Other_computer_specialists__39
+
+concept Computer_operator__6027 subConceptOf Computer_operators__109
+
+concept Computer_operators__109 subConceptOf Occupation
+
+concept Computer_security_director__5944 subConceptOf Other_computer_specialists__39
+
+concept Computer_security_manager__2715 subConceptOf Other_computer_specialists__39
+
+concept Data_analyst__2407 subConceptOf Systems_engineers_and_programmers__38
+
+concept Data_processing_analyst__2909 subConceptOf Other_computer_specialists__39
+
+concept Data_processing_consultant__2406 subConceptOf Systems_engineers_and_programmers__38
+
+concept Data_processing_coordinator__2911 subConceptOf Other_computer_specialists__39
+
+concept Data_processing_investigator__2913 subConceptOf Other_computer_specialists__39
+
+concept Data_processing_manager__5914 subConceptOf IT_managers__20
+
+concept Data_processing_operator__3091 subConceptOf Computer_operators__109
+
+concept Data_processing_strategist__5995 subConceptOf Other_computer_specialists__39
+
+concept Data_processing_supervisor__6515 subConceptOf IT_managers__20
+
+concept Database_administrator__5896 subConceptOf Systems_engineers_and_programmers__38
+
+concept Database_designer__2421 subConceptOf Systems_engineers_and_programmers__38
+
+concept Database_developer__2423 subConceptOf Systems_engineers_and_programmers__38
+
+concept Database_engineer__2422 subConceptOf Systems_engineers_and_programmers__38
+
+concept Foreman_data_processing__3097 subConceptOf Computer_operators__109
+
+concept Graduate_engineer_computing__6511 subConceptOf IT_managers__20
+
+concept Graduate_engineer_system_development__6509 subConceptOf Systems_engineers_and_programmers__38
+
+concept Indexer__2425 subConceptOf Systems_engineers_and_programmers__38
+
+concept Interaction_designer__6530 subConceptOf Systems_engineers_and_programmers__38
+
+concept IT_analyst__2914 subConceptOf Other_computer_specialists__39
+
+concept IT_architect__6626 subConceptOf Systems_engineers_and_programmers__38
+
+concept IT_consultant__2409 subConceptOf Systems_engineers_and_programmers__38
+
+concept IT_coordinator__2915 subConceptOf Other_computer_specialists__39
+
+concept IT_investigator__2917 subConceptOf Other_computer_specialists__39
+
+concept IT_manager__5433 subConceptOf IT_managers__20
+
+concept IT_managers__20 subConceptOf Occupation
+
+concept IT_project_manager__5380 subConceptOf Systems_engineers_and_programmers__38
+
+concept IT_security_manager__2717 subConceptOf Other_computer_specialists__39
+
+concept IT_strategist__5432 subConceptOf Other_computer_specialists__39
+
+concept IT_supervisor__2543 subConceptOf IT_managers__20
+
+concept IT_technician__6625 subConceptOf Computer_engineers__108
+
+concept Methods_analyst_computing__2410 subConceptOf Systems_engineers_and_programmers__38
+
+concept Network_administrator__2515 subConceptOf Computer_engineers__108
+
+concept Network_designer__6602 subConceptOf Computer_engineers__108
+
+concept Network_manager__2516 subConceptOf Computer_engineers__108
+
+concept Network_operator__2519 subConceptOf Computer_engineers__108
+
+concept Network_technician__5912 subConceptOf Computer_engineers__108
+
+concept Operations_manager_computing__5434 subConceptOf IT_managers__20
+
+concept Operations_manager_data_processing__6010 subConceptOf IT_managers__20
+
+concept Operations_technician_computing__5431 subConceptOf Computer_engineers__108
+
+concept Operations_technician_data_processing__5998 subConceptOf Computer_engineers__108
+
+concept Other_computer_specialists__39 subConceptOf Occupation
+
+concept PC_coordination_manager__5997 subConceptOf Computer_engineers__108
+
+concept PC_coordinator__5428 subConceptOf Computer_engineers__108
+
+concept Program_developer__2430 subConceptOf Systems_engineers_and_programmers__38
+
+concept Programmer__5897 subConceptOf Systems_engineers_and_programmers__38
+
+concept Project_manager_IT__5388 subConceptOf Systems_engineers_and_programmers__38
+
+concept Security_administrator_data_processing_IT__2718 subConceptOf Other_computer_specialists__39
+
+concept Security_analyst_data_processing_IT__2719 subConceptOf Other_computer_specialists__39
+
+concept Security_director_data_processing_IT__2720 subConceptOf Other_computer_specialists__39
+
+concept Software_designer__2431 subConceptOf Systems_engineers_and_programmers__38
+
+concept Software_programmer__2428 subConceptOf Systems_engineers_and_programmers__38
+
+concept System_administrator__2918 subConceptOf Systems_engineers_and_programmers__38
+
+concept System_analyst__2411 subConceptOf Systems_engineers_and_programmers__38
+
+concept System_architect__2412 subConceptOf Systems_engineers_and_programmers__38
+
+concept System_attendant__2416 subConceptOf Systems_engineers_and_programmers__38
+
+concept System_designer__2415 subConceptOf Systems_engineers_and_programmers__38
+
+concept System_developer__2419 subConceptOf Systems_engineers_and_programmers__38
+
+concept System_director__5894 subConceptOf Systems_engineers_and_programmers__38
+
+concept System_engineer__5895 subConceptOf Systems_engineers_and_programmers__38
+
+concept System_engineer_computing__2414 subConceptOf Systems_engineers_and_programmers__38
+
+concept System_investigator__2418 subConceptOf Systems_engineers_and_programmers__38
+
+concept System_manager__2919 subConceptOf Systems_engineers_and_programmers__38
+
+concept System_operator__3100 subConceptOf Computer_operators__109
+
+concept System_programmer__2432 subConceptOf Systems_engineers_and_programmers__38
+
+concept System_supervisor__5996 subConceptOf Systems_engineers_and_programmers__38
+
+concept System_technician__2417 subConceptOf Systems_engineers_and_programmers__38
+
+concept System_technician_network__2522 subConceptOf Computer_engineers__108
+
+concept System_tester__5422 subConceptOf Systems_engineers_and_programmers__38
+
+concept Systems_designer__2413 subConceptOf Systems_engineers_and_programmers__38
+
+concept Systems_engineers_and_programmers__38 subConceptOf Occupation
+
+concept Systems_manager__2920 subConceptOf Systems_engineers_and_programmers__38
+
+concept Usability_designer__6528 subConceptOf Systems_engineers_and_programmers__38
+
+concept Usability_expert__6529 subConceptOf Systems_engineers_and_programmers__38
+
+concept Web_developer__2420 subConceptOf Systems_engineers_and_programmers__38
+
+concept Web_manager__2523 subConceptOf Computer_engineers__108
+
+concept Web_master__2525 subConceptOf Computer_engineers__108
+
+concept Web_programmer__5360 subConceptOf Systems_engineers_and_programmers__38
+
+concept Web_supervisor__2524 subConceptOf Computer_engineers__108
+
+axiom IT_managers__20_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "20"] and
+	 ?x[Name hasValue "IT managers - 20"] and
+	 ?x[Level hasValue "2"]
+	:- di(?x, IT_managers__20).
+
+axiom Data_processing_manager__5914_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "5914"] and
+	 ?x[Name hasValue "Data processing manager - 5914"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Data_processing_manager__5914).
+
+axiom Computer_manager__5425_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "5425"] and
+	 ?x[Name hasValue "Computer manager - 5425"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Computer_manager__5425).
+
+axiom Data_processing_supervisor__6515_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "6515"] and
+	 ?x[Name hasValue "Data processing supervisor - 6515"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Data_processing_supervisor__6515).
+
+axiom Operations_manager_computing__5434_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "5434"] and
+	 ?x[Name hasValue "Operations manager, computing - 5434"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Operations_manager_computing__5434).
+
+axiom IT_manager__5433_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "5433"] and
+	 ?x[Name hasValue "IT manager - 5433"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, IT_manager__5433).
+
+axiom IT_supervisor__2543_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2543"] and
+	 ?x[Name hasValue "IT supervisor - 2543"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, IT_supervisor__2543).
+
+axiom Graduate_engineer_computing__6511_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "6511"] and
+	 ?x[Name hasValue "Graduate engineer, computing - 6511"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Graduate_engineer_computing__6511).
+
+axiom Operations_manager_data_processing__6010_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "6010"] and
+	 ?x[Name hasValue "Operations manager, data processing - 6010"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Operations_manager_data_processing__6010).
+
+axiom Computer_engineers__108_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "108"] and
+	 ?x[Name hasValue "Computer engineers - 108"] and
+	 ?x[Level hasValue "2"]
+	:- di(?x, Computer_engineers__108).
+
+axiom System_technician_network__2522_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2522"] and
+	 ?x[Name hasValue "System technician, network - 2522"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, System_technician_network__2522).
+
+axiom PC_coordinator__5428_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "5428"] and
+	 ?x[Name hasValue "PC coordinator - 5428"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, PC_coordinator__5428).
+
+axiom Network_manager__2516_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2516"] and
+	 ?x[Name hasValue "Network manager - 2516"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Network_manager__2516).
+
+axiom PC_coordination_manager__5997_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "5997"] and
+	 ?x[Name hasValue "PC coordination manager - 5997"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, PC_coordination_manager__5997).
+
+axiom System_engineer_computing__2414_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2414"] and
+	 ?x[Name hasValue "System engineer, computing - 2414"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, System_engineer_computing__2414).
+
+axiom IT_architect__6626_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "6626"] and
+	 ?x[Name hasValue "IT architect - 6626"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, IT_architect__6626).
+
+axiom Application_engineer__2426_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2426"] and
+	 ?x[Name hasValue "Application engineer - 2426"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Application_engineer__2426).
+
+axiom System_director__5894_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "5894"] and
+	 ?x[Name hasValue "System director - 5894"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, System_director__5894).
+
+axiom Systems_designer__2413_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2413"] and
+	 ?x[Name hasValue "Systems designer - 2413"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Systems_designer__2413).
+
+axiom System_designer__2415_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2415"] and
+	 ?x[Name hasValue "System designer - 2415"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, System_designer__2415).
+
+axiom Computer_engineer__2408_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2408"] and
+	 ?x[Name hasValue "Computer engineer - 2408"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Computer_engineer__2408).
+
+axiom Web_developer__2420_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2420"] and
+	 ?x[Name hasValue "Web developer - 2420"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Web_developer__2420).
+
+axiom System_administrator__2918_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2918"] and
+	 ?x[Name hasValue "System administrator - 2918"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, System_administrator__2918).
+
+axiom Interaction_designer__6530_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "6530"] and
+	 ?x[Name hasValue "Interaction designer - 6530"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Interaction_designer__6530).
+
+axiom System_supervisor__5996_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "5996"] and
+	 ?x[Name hasValue "System supervisor - 5996"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, System_supervisor__5996).
+
+axiom System_manager__2919_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2919"] and
+	 ?x[Name hasValue "System manager - 2919"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, System_manager__2919).
+
+axiom Program_developer__2430_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2430"] and
+	 ?x[Name hasValue "Program developer - 2430"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Program_developer__2430).
+
+axiom Methods_analyst_computing__2410_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2410"] and
+	 ?x[Name hasValue "Methods analyst, computing - 2410"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Methods_analyst_computing__2410).
+
+axiom Graduate_engineer_system_development__6509_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "6509"] and
+	 ?x[Name hasValue "Graduate engineer, system development - 6509"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Graduate_engineer_system_development__6509).
+
+axiom System_analyst__2411_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2411"] and
+	 ?x[Name hasValue "System analyst - 2411"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, System_analyst__2411).
+
+axiom Data_analyst__2407_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2407"] and
+	 ?x[Name hasValue "Data analyst - 2407"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Data_analyst__2407).
+
+axiom System_technician__2417_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2417"] and
+	 ?x[Name hasValue "System technician - 2417"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, System_technician__2417).
+
+axiom Indexer__2425_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2425"] and
+	 ?x[Name hasValue "Indexer - 2425"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Indexer__2425).
+
+axiom Application_developer__5311_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "5311"] and
+	 ?x[Name hasValue "Application developer - 5311"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Application_developer__5311).
+
+axiom Web_programmer__5360_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "5360"] and
+	 ?x[Name hasValue "Web programmer - 5360"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Web_programmer__5360).
+
+axiom Project_manager_IT__5388_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "5388"] and
+	 ?x[Name hasValue "Project manager, IT - 5388"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Project_manager_IT__5388).
+
+axiom System_attendant__2416_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2416"] and
+	 ?x[Name hasValue "System attendant - 2416"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, System_attendant__2416).
+
+axiom Database_developer__2423_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2423"] and
+	 ?x[Name hasValue "Database developer - 2423"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Database_developer__2423).
+
+axiom IT_project_manager__5380_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "5380"] and
+	 ?x[Name hasValue "IT project manager - 5380"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, IT_project_manager__5380).
+
+axiom Usability_expert__6529_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "6529"] and
+	 ?x[Name hasValue "Usability expert - 6529"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Usability_expert__6529).
+
+axiom System_investigator__2418_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2418"] and
+	 ?x[Name hasValue "System investigator - 2418"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, System_investigator__2418).
+
+axiom System_programmer__2432_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2432"] and
+	 ?x[Name hasValue "System programmer - 2432"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, System_programmer__2432).
+
+axiom System_tester__5422_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "5422"] and
+	 ?x[Name hasValue "System tester - 5422"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, System_tester__5422).
+
+axiom Database_administrator__5896_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "5896"] and
+	 ?x[Name hasValue "Database administrator - 5896"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Database_administrator__5896).
+
+axiom Database_engineer__2422_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2422"] and
+	 ?x[Name hasValue "Database engineer - 2422"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Database_engineer__2422).
+
+axiom Software_programmer__2428_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2428"] and
+	 ?x[Name hasValue "Software programmer - 2428"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Software_programmer__2428).
+
+axiom Software_designer__2431_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2431"] and
+	 ?x[Name hasValue "Software designer - 2431"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Software_designer__2431).
+
+axiom IT_consultant__2409_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2409"] and
+	 ?x[Name hasValue "IT consultant - 2409"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, IT_consultant__2409).
+
+axiom Systems_manager__2920_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2920"] and
+	 ?x[Name hasValue "Systems manager - 2920"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Systems_manager__2920).
+
+axiom Database_designer__2421_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2421"] and
+	 ?x[Name hasValue "Database designer - 2421"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Database_designer__2421).
+
+axiom Programmer__5897_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "5897"] and
+	 ?x[Name hasValue "Programmer - 5897"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Programmer__5897).
+
+axiom Usability_designer__6528_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "6528"] and
+	 ?x[Name hasValue "Usability designer - 6528"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Usability_designer__6528).
+
+axiom Data_processing_consultant__2406_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2406"] and
+	 ?x[Name hasValue "Data processing consultant - 2406"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Data_processing_consultant__2406).
+
+axiom System_engineer__5895_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "5895"] and
+	 ?x[Name hasValue "System engineer - 5895"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, System_engineer__5895).
+
+axiom System_developer__2419_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2419"] and
+	 ?x[Name hasValue "System developer - 2419"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, System_developer__2419).
+
+axiom System_architect__2412_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2412"] and
+	 ?x[Name hasValue "System architect - 2412"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, System_architect__2412).
+
+axiom Computer_security_manager__2715_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2715"] and
+	 ?x[Name hasValue "Computer security manager - 2715"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Computer_security_manager__2715).
+
+axiom Computer_methods_director__2910_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2910"] and
+	 ?x[Name hasValue "Computer methods director - 2910"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Computer_methods_director__2910).
+
+axiom IT_security_manager__2717_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2717"] and
+	 ?x[Name hasValue "IT security manager - 2717"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, IT_security_manager__2717).
+
+axiom Security_analyst_data_processing_IT__2719_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2719"] and
+	 ?x[Name hasValue "Security analyst, data processing/IT - 2719"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Security_analyst_data_processing_IT__2719).
+
+axiom IT_strategist__5432_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "5432"] and
+	 ?x[Name hasValue "IT strategist - 5432"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, IT_strategist__5432).
+
+axiom Computer_security_director__5944_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "5944"] and
+	 ?x[Name hasValue "Computer security director - 5944"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Computer_security_director__5944).
+
+axiom Data_processing_strategist__5995_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "5995"] and
+	 ?x[Name hasValue "Data processing strategist - 5995"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Data_processing_strategist__5995).
+
+axiom Data_processing_coordinator__2911_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2911"] and
+	 ?x[Name hasValue "Data processing coordinator - 2911"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Data_processing_coordinator__2911).
+
+axiom Security_administrator_data_processing_IT__2718_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2718"] and
+	 ?x[Name hasValue "Security administrator, data processing/IT - 2718"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Security_administrator_data_processing_IT__2718).
+
+axiom IT_analyst__2914_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2914"] and
+	 ?x[Name hasValue "IT analyst - 2914"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, IT_analyst__2914).
+
+axiom IT_coordinator__2915_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2915"] and
+	 ?x[Name hasValue "IT coordinator - 2915"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, IT_coordinator__2915).
+
+axiom Access_supervisor_data_processing_IT__2716_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2716"] and
+	 ?x[Name hasValue "Access supervisor, data processing/IT - 2716"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Access_supervisor_data_processing_IT__2716).
+
+axiom Data_processing_investigator__2913_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2913"] and
+	 ?x[Name hasValue "Data processing investigator - 2913"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Data_processing_investigator__2913).
+
+axiom Data_processing_analyst__2909_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2909"] and
+	 ?x[Name hasValue "Data processing analyst - 2909"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Data_processing_analyst__2909).
+
+axiom Security_director_data_processing_IT__2720_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2720"] and
+	 ?x[Name hasValue "Security director, data processing/IT - 2720"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Security_director_data_processing_IT__2720).
+
+axiom Systems_engineers_and_programmers__38_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "38"] and
+	 ?x[Name hasValue "Systems engineers and programmers - 38"] and
+	 ?x[Level hasValue "2"]
+	:- di(?x, Systems_engineers_and_programmers__38).
+
+axiom Network_operator__2519_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2519"] and
+	 ?x[Name hasValue "Network operator - 2519"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Network_operator__2519).
+
+axiom Web_master__2525_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2525"] and
+	 ?x[Name hasValue "Web master - 2525"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Web_master__2525).
+
+axiom Operations_technician_data_processing__5998_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "5998"] and
+	 ?x[Name hasValue "Operations technician, data processing - 5998"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Operations_technician_data_processing__5998).
+
+axiom IT_technician__6625_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "6625"] and
+	 ?x[Name hasValue "IT technician - 6625"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, IT_technician__6625).
+
+axiom Communications_technician__2514_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2514"] and
+	 ?x[Name hasValue "Communications technician - 2514"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Communications_technician__2514).
+
+axiom Web_manager__2523_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2523"] and
+	 ?x[Name hasValue "Web manager - 2523"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Web_manager__2523).
+
+axiom Network_administrator__2515_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2515"] and
+	 ?x[Name hasValue "Network administrator - 2515"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Network_administrator__2515).
+
+axiom Operations_technician_computing__5431_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "5431"] and
+	 ?x[Name hasValue "Operations technician, computing - 5431"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Operations_technician_computing__5431).
+
+axiom Network_designer__6602_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "6602"] and
+	 ?x[Name hasValue "Network designer - 6602"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Network_designer__6602).
+
+axiom Network_technician__5912_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "5912"] and
+	 ?x[Name hasValue "Network technician - 5912"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Network_technician__5912).
+
+axiom Computer_operators__109_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "109"] and
+	 ?x[Name hasValue "Computer operators - 109"] and
+	 ?x[Level hasValue "2"]
+	:- di(?x, Computer_operators__109).
+
+axiom Computer_operator__6027_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "6027"] and
+	 ?x[Name hasValue "Computer operator - 6027"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Computer_operator__6027).
+
+axiom Data_processing_operator__3091_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "3091"] and
+	 ?x[Name hasValue "Data processing operator - 3091"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Data_processing_operator__3091).
+
+axiom System_operator__3100_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "3100"] and
+	 ?x[Name hasValue "System operator - 3100"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, System_operator__3100).
+
+axiom Foreman_data_processing__3097_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "3097"] and
+	 ?x[Name hasValue "Foreman, data processing - 3097"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Foreman_data_processing__3097).
+
+axiom Other_computer_specialists__39_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "39"] and
+	 ?x[Name hasValue "Other computer specialists - 39"] and
+	 ?x[Level hasValue "2"]
+	:- di(?x, Other_computer_specialists__39).
+
+axiom IT_investigator__2917_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2917"] and
+	 ?x[Name hasValue "IT investigator - 2917"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, IT_investigator__2917).
+
+axiom Web_supervisor__2524_ definedBy
+	 ?x[Description hasValue "-"] and
+	 ?x[Code hasValue "2524"] and
+	 ?x[Name hasValue "Web supervisor - 2524"] and
+	 ?x[Level hasValue "3"]
+	:- di(?x, Web_supervisor__2524).
+
+
+axiom direct_instance definedBy
+	di(?x, ?T) :- ?x memberOf ?T and naf(ndi(?x, ?T)).
+	ndi(?x, ?T) :- ?x memberOf ?T and ?subT subConceptOf ?T and ?x memberOf ?subT.

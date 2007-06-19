@@ -1,0 +1,279 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"webode://mccarthy.dia.fi.upm.es/Job_Offer_Eures_Ontology#" , wsml _"http://www.wsmo.org/wsml/wsml-syntax#" ,
+	LanOnt _"webode://mccarthy.dia.fi.upm.es/Language_Eures_Ontology#",
+	EduOnt _"webode://mccarthy.dia.fi.upm.es/Education_Eures_Ontology#",
+	LabRegOnt _"webode://mccarthy.dia.fi.upm.es/Labour_Regulatory_Eures_Ontology#",
+	GeoOnt _"webode://mccarthy.dia.fi.upm.es/Geography_Eures_Ontology#",
+	OccOnt _"webode://mccarthy.dia.fi.upm.es/Occupation_Eures_Ontology#",
+	ComOnt _"webode://mccarthy.dia.fi.upm.es/Competence_Eures_Ontology#",
+	CompOnt _"webode://mccarthy.dia.fi.upm.es/Compensation_Eures_Ontology#",
+	EcoActOnt _"webode://mccarthy.dia.fi.upm.es/Economic_Activity_Eures_Ontology#",
+	Time _"webode://mccarthy.dia.fi.upm.es/Time_Eures_Ontology#",
+	DrvOnt _"webode://mccarthy.dia.fi.upm.es/Driving_License_Eures_Ontology#"}
+
+ontology Job_Offer_Eures_Ontology
+
+/*
+importsOntology { GeoOnt#Geography_Eures_Ontology,
+	ComOnt#Competence_Eures_Ontology,
+	EcoActOnt#Economic_Activity_Eures_Ontology,
+	EduOnt#Education_Eures_Ontology,
+	OccOnt#Occupation_Eures_Ontology,
+	LabRegOnt#Labour_Regulatory_Eures_Ontology,
+	LanOnt#Language_Eures_Ontology,
+	Time#Time_Eures_Ontology,
+	CompOnt#Compensation_Eures_Ontology }
+*/
+
+concept ICT_Vacancy subConceptOf Vacancy
+	has_job_category ofType (1) OccOnt#Computing_professionals__213
+
+concept Job_Vacancy
+	has_vacancy ofType (1) Vacancy
+	belongs_to ofType (0 1) Organization
+	employment_agent ofType (0 1) _string
+	how_to_apply ofType (0 1) How_To_Apply // nuevo
+	last_day_for_apply ofType (0 1) Time#DateTimeDescription // nuevo
+	publication_date ofType (0 1) Time#DateTimeDescription // nuevo en RC
+	
+
+concept Organization	
+	Telephone ofType (0 1) _string					//bvt
+	Postal_Code ofType (0 1) _string					//bvt
+	Full_Name ofType (1) _string					//bvt
+	contact_person ofType (1) _string				//bvt
+	Fax ofType (0 1) _string						//bvt
+	email ofType (0 1) _string					//bvt
+	Address ofType (0 1) _string					//bvt
+	is_located_in ofType (0 1) GeoOnt#Location			//bvt
+	number_workers ofType (0 1) _integer // nuevo // roughly 	//bvt
+	
+	contact_information ofType (0 1) _string // nuevo	
+	has_job_vacancy ofType (1 *) Job_Vacancy	
+	has_activity_sector ofType (1) EcoActOnt#Sector // nuevo
+
+concept boolean
+
+concept Vacancy
+	job_name ofType (1) _string
+	job_description ofType (1) _string
+	accommodation ofType (0 1) _string // nuevo
+	Min_age ofType (1) _integer
+	Max_age ofType (1) _integer
+	End_date ofType (0 1) Time#DateTimeDescription
+	Begin_date ofType (0 1) Time#DateTimeDescription
+	belongs_to ofType (1) Job_Vacancy	
+	requires_competence ofType (0 *) ComOnt#Competence
+	requires_education_level ofType (0 1) EduOnt#Education_Skill // nuevo
+	requires_prof_qualification ofType (1) boolean // nuevo	
+	has_compensation ofType (1) CompOnt#Compensation		
+	has_work_condition ofType (1) LabRegOnt#Work_Condition
+	has_contract_type ofType (1) LabRegOnt#Contract_Type
+	is_located_in_country ofType (0 1) GeoOnt#Country // nuevo
+	is_located_in_region ofType (0 1) GeoOnt#Region // nuevo
+	has_job_category ofType (0 1) OccOnt#Occupation
+	requires_work_experience ofType (1) Work_Experience // nuevo
+
+instance true memberOf boolean
+
+instance false memberOf boolean
+
+
+axiom Max_Greater_Min_Age     
+     definedBy 
+          !- 
+          	 ?x[Max_age hasValue ?a1] memberOf Vacancy and
+          	 ?x[Min_age hasValue ?a2] memberOf Vacancy          	 
+  		  and ?a1<?a2.
+  		  
+  		  
+concept Work_Experience
+	id ofType (1 *) _string
+	description ofType (1) _string
+	is_associated_with ofType Vacancy
+	
+instance None_required memberOf Work_Experience
+	id hasValue {"A", "N"}
+	description hasValue "None required"
+	
+instance Up_1_year memberOf Work_Experience
+	id hasValue "B"
+	description hasValue "Up to 1 year"
+	
+instance Up_2_years memberOf Work_Experience
+	id hasValue "C"
+	description hasValue "Up to 2 years"
+	
+instance Between_2_and_5_years memberOf Work_Experience
+	id hasValue "D"
+	description hasValue "Between 2 and 5 years"	
+
+instance More_than_5_years memberOf Work_Experience
+	id hasValue "E"
+	description hasValue "More than 5 years"
+
+instance See_free_text memberOf Work_Experience
+	id hasValue "F"
+	description hasValue "See free text"
+
+instance Required memberOf Work_Experience
+	id hasValue "Y"
+	description hasValue "Required"
+	
+		
+
+
+concept How_To_Apply
+	id ofType (1) _integer
+	description ofType (1) _string
+	belongs_to ofType Job_Vacancy
+	
+instance Letter_plus_CV_to_CONTACT_EA memberOf How_To_Apply
+	id hasValue 1
+	description hasValue "Letter + CV to CONTACT EA"
+	
+instance Letter_plus_CV_to_EMPLOYER memberOf How_To_Apply
+	id hasValue 2
+	description hasValue "Letter + CV to EMPLOYER"
+	
+instance Letter_plus_CV_to_Domestic_Adviser memberOf How_To_Apply
+	id hasValue 3
+	description hasValue "Letter + CV to Domestic Adviser"
+
+instance Telephone_CONTACT_EA memberOf How_To_Apply
+	id hasValue 4
+	description hasValue "Telephone CONTACT EA"
+	
+instance Telephone_EMPLOYER memberOf How_To_Apply
+	id hasValue 5
+	description hasValue "Telephone EMPLOYER"
+	
+instance Appointment_set_by_employer memberOf How_To_Apply
+	id hasValue 6
+	description hasValue "Appointment set by employer - see free text"
+	
+instance Other memberOf How_To_Apply
+	id hasValue 7
+	description hasValue "Other - see free text"
+	
+	
+// axioms for reverse relationships
+
+axiom has_job_category_is_associated_with_ICT_Vacancy
+definedBy
+	?x[has_job_category hasValue ?y] memberOf ICT_Vacancy :- ?y[OccOnt#is_associated_with_ICT_Vacancy hasValue ?x] memberOf OccOnt#Computing_professionals__213.
+	?x[OccOnt#is_associated_with_ICT_Vacancy hasValue ?y] memberOf OccOnt#Computing_professionals__213 :- ?y[has_job_category hasValue ?x] memberOf ICT_Vacancy.
+
+axiom has_vacancy_belongs_to
+definedBy
+	?x[has_vacancy hasValue ?y] memberOf Job_Vacancy :- ?y[belongs_to hasValue ?x] memberOf Vacancy.
+	?x[belongs_to hasValue ?y] memberOf Vacancy :- ?y[has_vacancy hasValue ?x] memberOf Job_Vacancy.
+
+axiom publication_date_is_publication_date_of_JV
+definedBy
+	?x[publication_date hasValue ?y] memberOf Job_Vacancy :- ?y[Time#is_publication_date_of_JV hasValue ?x] memberOf Time#DateTimeDescription.
+	?x[Time#is_publication_date_of_JV hasValue ?y] memberOf Time#DateTimeDescription :- ?y[publication_date hasValue ?x] memberOf Job_Vacancy.
+
+axiom how_to_apply_belongs_to
+definedBy
+	?x[how_to_apply hasValue ?y] memberOf Job_Vacancy :- ?y[belongs_to hasValue ?x] memberOf How_To_Apply.
+	?x[belongs_to hasValue ?y] memberOf How_To_Apply :- ?y[how_to_apply hasValue ?x] memberOf Job_Vacancy.
+
+axiom has_job_vacancy_belongs_to
+definedBy
+	?x[has_job_vacancy hasValue ?y] memberOf Organization :- ?y[belongs_to hasValue ?x] memberOf Job_Vacancy.
+	?x[belongs_to hasValue ?y] memberOf Job_Vacancy :- ?y[has_job_vacancy hasValue ?x] memberOf Organization.
+
+axiom is_located_in_is_location_of_Organization
+definedBy
+	?x[is_located_in hasValue ?y] memberOf Organization :- ?y[GeoOnt#is_location_of_Organization hasValue ?x] memberOf GeoOnt#Location.
+	?x[GeoOnt#is_location_of_Organization hasValue ?y] memberOf GeoOnt#Location :- ?y[is_located_in hasValue ?x] memberOf Organization.
+
+axiom Years_is_years_of_w_exp
+definedBy
+	?x[Years hasValue ?y] memberOf Requested_Work_Experience :- ?y[Time#is_years_of_w_exp hasValue ?x] memberOf Time#Year.
+	?x[Time#is_years_of_w_exp hasValue ?y] memberOf Time#Year :- ?y[Years hasValue ?x] memberOf Requested_Work_Experience.
+
+axiom is_associated_with_requires_work_experience
+definedBy
+	?x[is_associated_with hasValue ?y] memberOf Work_Experience :- ?y[requires_work_experience hasValue ?x] memberOf Vacancy.
+	?x[requires_work_experience hasValue ?y] memberOf Vacancy :- ?y[is_associated_with hasValue ?x] memberOf Work_Experience.
+
+axiom belongs_to_end_date_End_date
+definedBy
+	?x[belongs_to_end_date hasValue ?y] memberOf Time_specification :- ?y[End_date hasValue ?x] memberOf Vacancy.
+	?x[End_date hasValue ?y] memberOf Vacancy :- ?y[belongs_to_end_date hasValue ?x] memberOf Time_specification.
+
+axiom belongs_to_begin_date_Begin_date
+definedBy
+	?x[belongs_to_begin_date hasValue ?y] memberOf Time_specification :- ?y[Begin_date hasValue ?x] memberOf Vacancy.
+	?x[Begin_date hasValue ?y] memberOf Vacancy :- ?y[belongs_to_begin_date hasValue ?x] memberOf Time_specification.
+
+axiom End_date_belongs_to_end_date
+definedBy
+	?x[End_date hasValue ?y] memberOf Vacancy :- ?y[belongs_to_end_date hasValue ?x] memberOf Time_specification.
+	?x[belongs_to_end_date hasValue ?y] memberOf Time_specification :- ?y[End_date hasValue ?x] memberOf Vacancy.
+
+axiom Begin_date_belongs_to_begin_date
+definedBy
+	?x[Begin_date hasValue ?y] memberOf Vacancy :- ?y[belongs_to_begin_date hasValue ?x] memberOf Time_specification.
+	?x[belongs_to_begin_date hasValue ?y] memberOf Time_specification :- ?y[Begin_date hasValue ?x] memberOf Vacancy.
+
+axiom belongs_to_has_vacancy
+definedBy
+	?x[belongs_to hasValue ?y] memberOf Vacancy :- ?y[has_vacancy hasValue ?x] memberOf Job_Vacancy.
+	?x[has_vacancy hasValue ?y] memberOf Job_Vacancy :- ?y[belongs_to hasValue ?x] memberOf Vacancy.
+
+axiom requires_competence_is_associated_with_Vacancy
+definedBy
+	?x[requires_competence hasValue ?y] memberOf Vacancy :- ?y[ComOnt#is_associated_with_Vacancy hasValue ?x] memberOf ComOnt#Competence.
+	?x[ComOnt#is_associated_with_Vacancy hasValue ?y] memberOf ComOnt#Competence :- ?y[requires_competence hasValue ?x] memberOf Vacancy.
+
+
+axiom requires_education_level_associated_with_Vacancy
+definedBy
+	?x[requires_education_level hasValue ?y] memberOf Vacancy :- ?y[EduOnt#is_associated_with_Vacancy hasValue ?x] memberOf EduOnt#Education_Skill.
+	?x[EduOnt#is_associated_with_Vacancy hasValue ?y] memberOf EduOnt#Education_Skill :- ?y[requires_education_level hasValue ?x] memberOf Vacancy.
+
+
+axiom has_compensation_is_associated_with_Vacancy
+definedBy
+	?x[has_compensation hasValue ?y] memberOf Vacancy :- ?y[CompOnt#is_associated_with_Vacancy hasValue ?x] memberOf CompOnt#Compensation.
+	?x[CompOnt#is_associated_with_Vacancy hasValue ?y] memberOf CompOnt#Compensation :- ?y[has_compensation hasValue ?x] memberOf Vacancy.
+
+axiom has_activity_sector_is_associated_with_Organization
+definedBy
+	?x[has_activity_sector hasValue ?y] memberOf Organization :- ?y[EcoActOnt#is_associated_with_Organization hasValue ?x] memberOf EcoActOnt#Sector.
+	?x[EcoActOnt#is_associated_with_Organization hasValue ?y] memberOf EcoActOnt#Sector :- ?y[has_activity_sector hasValue ?x] memberOf Organization.
+
+axiom has_work_condition_is_associated_with_Vacancy
+definedBy
+	?x[has_work_condition hasValue ?y] memberOf Vacancy :- ?y[LabRegOnt#is_associated_with_Vacancy hasValue ?x] memberOf LabRegOnt#Work_Condition.
+	?x[LabRegOnt#is_associated_with_Vacancy hasValue ?y] memberOf LabRegOnt#Work_Condition :- ?y[has_work_condition hasValue ?x] memberOf Vacancy.
+
+axiom has_contract_type_is_associated_with_Vacancy
+definedBy
+	?x[has_contract_type hasValue ?y] memberOf Vacancy :- ?y[LabRegOnt#is_associated_with_Vacancy hasValue ?x] memberOf LabRegOnt#Contract_Type.
+	?x[LabRegOnt#is_associated_with_Vacancy hasValue ?y] memberOf LabRegOnt#Contract_Type :- ?y[has_contract_type hasValue ?x] memberOf Vacancy.
+
+axiom is_located_in_country_is_associated_with_Vacancy
+definedBy
+	?x[is_located_in_country hasValue ?y] memberOf Vacancy :- ?y[GeoOnt#is_associated_with_Vacancy hasValue ?x] memberOf GeoOnt#Country.
+	?x[GeoOnt#is_associated_with_Vacancy hasValue ?y] memberOf GeoOnt#Country :- ?y[is_located_in_country hasValue ?x] memberOf Vacancy.
+
+axiom is_located_in_region_is_associated_with_Vacancy
+definedBy
+	?x[is_located_in_region hasValue ?y] memberOf Vacancy :- ?y[GeoOnt#is_associated_with_Vacancy hasValue ?x] memberOf GeoOnt#Region.
+	?x[GeoOnt#is_associated_with_Vacancy hasValue ?y] memberOf GeoOnt#Region :- ?y[is_located_in_region hasValue ?x] memberOf Vacancy.
+
+axiom has_job_category_is_associated_with_Vacancy
+definedBy
+	?x[has_job_category hasValue ?y] memberOf Vacancy :- ?y[OccOnt#is_associated_with_Vacancy hasValue ?x] memberOf OccOnt#Occupation.
+	?x[OccOnt#is_associated_with_Vacancy hasValue ?y] memberOf OccOnt#Occupation :- ?y[has_job_category hasValue ?x] memberOf Vacancy.
+
+//axiom requires_professional_affiliation_is_associated_with_Vacancy_Prof_Aff
+//definedBy
+//	?x[requires_professional_affiliation hasValue ?y] memberOf Vacancy :- ?y[OccOnt#is_associated_with_Vacancy_Prof_Aff hasValue ?x] memberOf OccOnt#Occupation.
+//	?x[OccOnt#is_associated_with_Vacancy_Prof_Aff hasValue ?y] memberOf OccOnt#Occupation :- ?y[requires_professional_affiliation hasValue ?x] memberOf Vacancy.
+
+
