@@ -126,7 +126,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             break;
         case IRIS:
         	builtInFacade = new IrisFacade(wsmoManager);
-        	disableConsitencyCheck = false;
+        	disableConsitencyCheck = true;
         	break;
         default:
             throw new UnsupportedOperationException("Reasoning with "
