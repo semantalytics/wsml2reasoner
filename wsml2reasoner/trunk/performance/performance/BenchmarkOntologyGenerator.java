@@ -67,7 +67,7 @@ public class BenchmarkOntologyGenerator {
 	
 	// for each type of ontology (like e.g. subconcept ontology) ontologies 
 	// with the following amounts of entities shall be created
-	private static int[] amount = {1,10};//,100,500,1000,5000,10000};
+	private static int[] amount = {10,500,1000,1500,2000,2500,3000,3500,4000,4500,5000};
 	
 	/*
 	 * Non functional properties used for description of the ontologies and queries
@@ -2098,6 +2098,9 @@ public class BenchmarkOntologyGenerator {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.7  2007-06-20 15:47:36  nathalie
+ * added nfps
+ *
  * Revision 1.6  2007-06-20 14:11:39  nathalie
  * added nfps
  *
