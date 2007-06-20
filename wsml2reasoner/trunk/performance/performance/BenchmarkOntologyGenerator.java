@@ -1,5 +1,22 @@
+/**
+ * WSML Reasoner Implementation.
+ *
+ * Copyright (c) 2007, DERI, Innsbruck.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with this library; if not, write to the Free Software Foundation, Inc.,
+ * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * 
+ */
 package performance;
-
 
 import java.io.*;
 import java.text.DecimalFormat;
@@ -7,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import org.deri.wsmo4j.logicalexpression.util.OntologyUtil;
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.AttributeValueMolecule;
 import org.omwg.logicalexpression.Conjunction;
@@ -51,6 +69,28 @@ public class BenchmarkOntologyGenerator {
 	// with the following amounts of entities shall be created
 	private static int[] amount = {1,10};//,100,500,1000,5000,10000};
 	
+	/*
+	 * Non functional properties used for description of the ontologies and queries
+	 */
+	private static String DC_TITLE = "http://purl.org/dc/elements/1.1#title";
+	
+	private static String DC_DESCRIPTION = "http://purl.org/dc/elements/1.1#description";
+	
+	private static String BM_RESULT = "http://wsml2reasoner/benchmarks#result";
+	
+	private static String BM_CONCEPTS = "http://wsml2reasoner/benchmarks#conceptsAmount";
+	
+	private static String BM_INSTANCES = "http://wsml2reasoner/benchmarks#instancesAmount";
+		
+	private static String BM_ATTRIBUTES = "http://wsml2reasoner/benchmarks#attributesAmount";
+	
+	private static String BM_TOTAL = "http://wsml2reasoner/benchmarks#totalTermAmount";
+	
+	private static String BM_REPLICATED = "http://wsml2reasoner/benchmarks#replicated";
+	
+	/*
+	 * Types of ontologies created
+	 */
 	private static String SUBCONCEPT = "subconcept";
 	
 	private static String DEEP_SUBCONCEPT = "deepSubconcept";
@@ -84,6 +124,13 @@ public class BenchmarkOntologyGenerator {
 	private static String GLOB_STRAT_NEGATION = "globallyStratifiedNegation";
 	
 	private static String BUILTIN = "built_in";
+	
+	/*
+	 * Types of queries
+	 */
+	private static String MEMBEROF = "MemberOf query";
+	
+	private static String ATTR_VALUE = "Attribute value query";
 	
 	/**
 	 * Generate ontologies containing simple hierarchy expressions like 
@@ -143,17 +190,43 @@ public class BenchmarkOntologyGenerator {
 			ontology.addInstance(instance1);
 			ontology.addInstance(instance2);
 			
-			// add queries in form of relationinstances (see TestPerformanceWithUseOfFeatures)
+			/*
+			 * add queries to ontology in form of relationinstances
+			 */ 
+			// create query 1
 			Relation r1 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query1"));
 			r1.createParameter((byte) 0);
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
 			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("?x memberOf c1"));
+			// add NFPs to query 1
+			String description = "This query will result in a number of result sets equivalent " +
+					"to the amount of subconcept expressions.";
+			String result1 = "?x=i2";
+			addNFPs(query1, MEMBEROF, description, result1);
 			ontology.addRelationInstance(query1);
+			// create query 2
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
 			r2.createParameter((byte) 0);
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
 			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("?x memberOf ?y"));
 			ontology.addRelationInstance(query2);
+			// add NFPs to query 2
+			description = "This query will result in a high number of result sets, " +
+					"depending on the varying amount of subconcept expressions.";
+			String result2 = "?x=i2,?y=c11";
+			addNFPs(query2, MEMBEROF, description, result2);
+			ontology.addRelationInstance(query1);
+			
+			// add non functional properties to the ontology:
+			// title, description
+			String title = "Subconcept expressions";
+			description = "\n\t\t\tThis ontology is containing simple hierarchy expressions.\n\t\t\t " +
+					"The x-axis value of the graph indicates the number of subconcept expressions." +
+					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2 subConceptOf c1" +
+					"\n\t\t\t instance i1 memberOf c1\n\t\t\t instance i2 memberOf c2\n\t\t\t " +
+					"The following two queries are applied to it:\n\t\t\t " +
+					"Query 1: ?x memberOf c1\n\t\t\t Query 2: ?x memberOf ?y";
+			ontology = addNFPs(ontology, title, description, amount[i]);
 			
 			// write ontology file
 			writeFile(SUBCONCEPT, getFileName(SUBCONCEPT, amount[i]), ontology);
@@ -1479,10 +1552,75 @@ public class BenchmarkOntologyGenerator {
 		return "http://www." + getFileName(ontType, number) + ".org";
 	}
 	
+	/*
+	 * Create an ontology and add namespaces to it
+	 */
 	private Ontology createOntology(Namespace ns, int no){
 		DecimalFormat dformat = new DecimalFormat("00000");
-		return wsmoFactory.createOntology(wsmoFactory.createIRI(ns,"o_"+dformat.format(no)));
+		Ontology ontology = wsmoFactory.createOntology(
+				wsmoFactory.createIRI(ns,"o_"+dformat.format(no)));
+		Namespace dcNs = wsmoFactory.createNamespace("dc", 
+				wsmoFactory.createIRI("http://purl.org/dc/elements/1.1#"));
+		ontology.addNamespace(dcNs);
+		Namespace bmNs = wsmoFactory.createNamespace("bm", 
+				wsmoFactory.createIRI("http://wsml2reasoner/benchmarks#"));
+		ontology.addNamespace(bmNs);
+		return ontology;
 	}
+	
+	/*
+	 * Add non functional properties to the given ontology:
+	 * - dc:title (title given as parameter)
+	 * - dc:description
+	 */
+	private Ontology addNFPs(Ontology ontology, String title, String description, 
+			int replications) 
+			throws SynchronisationException, InvalidModelException {
+		
+		ontology.addNFPValue(wsmoFactory.createIRI(DC_TITLE), 
+				dataFactory.createWsmlString(title));
+		ontology.addNFPValue(wsmoFactory.createIRI(DC_DESCRIPTION), 
+				dataFactory.createWsmlString(description));
+		
+		// collect amount of ontology terms
+		List<Term> concepts = OntologyUtil.getConcepts(ontology);
+		int attributes = 0;
+		for (Term c : concepts) {
+			attributes =+ OntologyUtil.getAttributes(c, ontology).size();
+		}
+		int instances = OntologyUtil.getInstances(ontology).size();
+		
+		ontology.addNFPValue(wsmoFactory.createIRI(BM_CONCEPTS), 
+				dataFactory.createWsmlInteger("" + concepts.size()));
+		ontology.addNFPValue(wsmoFactory.createIRI(BM_INSTANCES), 
+				dataFactory.createWsmlInteger("" + instances));
+		ontology.addNFPValue(wsmoFactory.createIRI(BM_ATTRIBUTES), 
+				dataFactory.createWsmlInteger("" + attributes));
+		ontology.addNFPValue(wsmoFactory.createIRI(BM_TOTAL), 
+				dataFactory.createWsmlInteger("" + 
+						(concepts.size() + instances + attributes)));
+		ontology.addNFPValue(wsmoFactory.createIRI(BM_REPLICATED), 
+				dataFactory.createWsmlInteger("" + replications));
+		
+		return ontology;
+	}
+	
+	/*
+	 * Add non functional properties to the given relation instance
+	 */
+	private RelationInstance addNFPs(RelationInstance relInst, String title, 
+			String description, String result) 
+			throws SynchronisationException, InvalidModelException {
+		relInst.addNFPValue(wsmoFactory.createIRI(DC_TITLE), 
+				dataFactory.createWsmlString(title));
+		relInst.addNFPValue(wsmoFactory.createIRI(DC_DESCRIPTION), 
+				dataFactory.createWsmlString(description));
+		relInst.addNFPValue(wsmoFactory.createIRI(BM_RESULT), 
+				dataFactory.createWsmlString(result));
+		
+		return relInst;
+	}
+	
 	private String getFileName(String ontType, int number) {
 		DecimalFormat dformat = new DecimalFormat("00000");
 		return ontType + "-" + dformat.format(number) + "-ontology";
@@ -1521,7 +1659,7 @@ public class BenchmarkOntologyGenerator {
 		
 		BenchmarkOntologyGenerator generator = new BenchmarkOntologyGenerator();
 		try {
-//			generator.genSubconceptOntologies();
+			generator.genSubconceptOntologies();
 //			generator.genDeepSubconceptOntologies();
 //			generator.genInstanceOntologies();
 //			generator.genInstanceANDsubconceptOntologies();
@@ -1530,7 +1668,7 @@ public class BenchmarkOntologyGenerator {
 //			generator.genOfTypeANDsubconceptOntologies();
 //			generator.genCardinality01Ontologies();
 //			generator.genCardinality010Ontologies();
-			generator.genMinCardinalityOntologies();
+//			generator.genMinCardinalityOntologies();
 //			generator.genInverseAttributeOntologies();
 //			generator.genTransitiveAttributeOntologies();
 //			generator.genSymmetricAttributeOntologies();
@@ -1552,6 +1690,9 @@ public class BenchmarkOntologyGenerator {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.5  2007-06-20 09:43:30  nathalie
+ * added minCardinality ontologies and tests; added minor changes in the ontology building
+ *
  * Revision 1.4  2007-06-18 16:46:56  hlausen
  * more improvements for better charts (one per query)
  *
