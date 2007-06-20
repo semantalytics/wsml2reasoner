@@ -67,7 +67,7 @@ public class BenchmarkOntologyGenerator {
 	
 	// for each type of ontology (like e.g. subconcept ontology) ontologies 
 	// with the following amounts of entities shall be created
-	private static int[] amount = {10,500,1000,1500,2000,2500,3000,3500,4000,4500,5000};
+	private static int[] amount = {10};//,500,1000,1500,2000,2500,3000,3500,4000,4500,5000};
 	
 	/*
 	 * Non functional properties used for description of the ontologies and queries
@@ -214,7 +214,7 @@ public class BenchmarkOntologyGenerator {
 			// add NFPs to query 2
 			description = "This query will return three result sets containing i1 and i2 (i2 is " +
 					"member of two concepts).";
-			String result2 = "?x=i2,?y=c11";
+			String result2 = "?x=i2,?y=" + ((IRI) subConcept.getIdentifier()).getLocalName();
 			addNFPs(query2, MEMBEROF, description, result2);
 			ontology.addRelationInstance(query2);
 			
@@ -397,7 +397,7 @@ public class BenchmarkOntologyGenerator {
 			// add NFPs to query 1
 			String description = "This query will return a number of result sets equivalent " +
 					"to the number of memberof expressions in the ontology.";
-			String result1 = "?x=i1";
+			String result1 = "?x=i" + amount[i];
 			addNFPs(query1, MEMBEROF, description, result1);
 			ontology.addRelationInstance(query1);
 
@@ -477,7 +477,7 @@ public class BenchmarkOntologyGenerator {
 			// add NFPs to query 1
 			String description = "This query will return a number of result sets equivalent " +
 					"to the number of memberof expressions in the ontology.";
-			String result1 = "?x=i1";
+			String result1 = "?x=i" + amount[i];
 			addNFPs(query1, MEMBEROF, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
@@ -486,8 +486,9 @@ public class BenchmarkOntologyGenerator {
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
 			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("?x memberOf ?y"));
 			// add NFPs to query 2
-			description = "";
-			String result2 = "?x=i1,?y=c2";
+			description = "This query will return a number of result sets equivalent " +
+					"to 2 x the number of memberof expressions in the ontology.";
+			String result2 = "?x=i" + amount[i] +",?y=c2";
 			addNFPs(query2, MEMBEROF, description, result2);
 			ontology.addRelationInstance(query2);
 			
@@ -573,8 +574,9 @@ public class BenchmarkOntologyGenerator {
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
 			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("?x memberOf c1"));
 			// add NFPs to query 1
-			String description = "";
-			String result1 = "";
+			String description = "This query will return a number of result sets equivalent " +
+					"to the number of memberof expressions in the ontology.";
+			String result1 = "?x=i" + amount[i];
 			addNFPs(query1, MEMBEROF, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
@@ -583,8 +585,9 @@ public class BenchmarkOntologyGenerator {
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
 			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("?x memberOf ?y"));
 			// add NFPs to query 2
-			description = "";
-			String result2 = "";
+			description = "The number of result sets returned by this query is growing exponentially " +
+					"in relation to the amount of subconcept expressions in the ontology.";
+			String result2 = "?x=i" + amount[i] + ",?y=c" + amount[i];
 			addNFPs(query2, MEMBEROF, description, result2);
 			ontology.addRelationInstance(query2);
 
@@ -592,13 +595,15 @@ public class BenchmarkOntologyGenerator {
 			 * add non functional properties to the ontology: title, description
 			 */
 			String title = "Memberof and deep subconcept expressions";
-//			description = "\n\t\t\t This ontology is containing deep hierarchy expressions.\n\t\t\t " +
-//					"The x-axis value of the graph indicates the number of subconcept expressions." +
-//					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2 subConceptOf c1" +
-//					"\n\t\t\t concept c3 subConceptOf c2" +
-//					"\n\t\t\t instance i1 memberOf c1\n\t\t\t instance i2 memberOf c3\n\t\t\t " +
-//					"The following two queries are applied to it:\n\t\t\t " +
-//					"Query 1: ?x memberOf c1\n\t\t\t Query 2: ?x memberOf ?y";
+			description = "\n\t\t\t This ontology is containing memberor and deep hierarchy " +
+					"expressions.\n\t\t\t " +
+					"The x-axis value of the graph indicates the number of memberOf and of subconcept " +
+					"expressions." +
+					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2 subConceptOf c1" +
+					"\n\t\t\t concept c3 subConceptOf c2" +
+					"\n\t\t\t instance i1 memberOf c2\n\t\t\t instance i2 memberOf c3\n\t\t\t " +
+					"The following two queries are applied to it:\n\t\t\t " +
+					"Query 1: ?x memberOf c1\n\t\t\t Query 2: ?x memberOf ?y";
 			ontology = addNFPs(ontology, title, description, amount[i]);
 			
 			// write ontology file
@@ -2098,6 +2103,9 @@ public class BenchmarkOntologyGenerator {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.8  2007-06-20 15:51:28  nathalie
+ * changed amount of element features per ontology
+ *
  * Revision 1.7  2007-06-20 15:47:36  nathalie
  * added nfps
  *
