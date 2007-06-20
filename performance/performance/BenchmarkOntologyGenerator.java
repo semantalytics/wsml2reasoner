@@ -3,9 +3,20 @@ package performance;
 
 import java.io.*;
 import java.text.DecimalFormat;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
-import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.Atom;
+import org.omwg.logicalexpression.AttributeValueMolecule;
+import org.omwg.logicalexpression.Conjunction;
+import org.omwg.logicalexpression.Constants;
+import org.omwg.logicalexpression.Implication;
+import org.omwg.logicalexpression.LogicProgrammingRule;
+import org.omwg.logicalexpression.MembershipMolecule;
+import org.omwg.logicalexpression.NegationAsFailure;
+import org.omwg.logicalexpression.terms.ConstructedTerm;
+import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.*;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.*;
@@ -38,7 +49,7 @@ public class BenchmarkOntologyGenerator {
 	
 	// for each type of ontology (like e.g. subconcept ontology) ontologies 
 	// with the following amounts of entities shall be created
-	private static int[] amount = {1,10,100,500,1000,5000,10000};
+	private static int[] amount = {1,10};//,100,500,1000,5000,10000};
 	
 	private static String SUBCONCEPT = "subconcept";
 	
@@ -57,6 +68,8 @@ public class BenchmarkOntologyGenerator {
 	private static String CARDINALITY_01 = "cardinality_0_1";
 	
 	private static String CARDINALITY_010 = "cardinality_0_10";
+	
+	private static String CARDINALITY_MIN = "cardinality_1_max";
 	
 	private static String INVERSE = "inverseAttribute";
 	
@@ -638,7 +651,6 @@ public class BenchmarkOntologyGenerator {
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
 				attribute.addType(concept);
-				attribute.setConstraining(true);
 				attribute.setMinCardinality(0);
 				attribute.setMaxCardinality(1);
 				instance1.addAttributeValue(attribute.getIdentifier(), instance2);
@@ -728,13 +740,9 @@ public class BenchmarkOntologyGenerator {
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
 				attribute.addType(concept);
-				attribute.setConstraining(true);
 				attribute.setMinCardinality(0);
 				attribute.setMaxCardinality(10);
 				instance1.addAttributeValue(attribute.getIdentifier(), instance2);
-				instance1.addAttributeValue(attribute.getIdentifier(), instance3);
-				instance1.addAttributeValue(attribute.getIdentifier(), instance4);
-				instance1.addAttributeValue(attribute.getIdentifier(), instance5);
 			}
 			
 			// add queries in form of relationinstances (see TestPerformanceWithUseOfFeatures)
@@ -754,6 +762,79 @@ public class BenchmarkOntologyGenerator {
 		}
 	}	
 
+	/**
+	 * Generate ontologies containing cardinality constraints like e.g.:
+	 * concept Human
+	 *   hasRelative ofType (1 *) Human
+	 * instance Homer memberOf Human
+	 *   hasRelative hasValue Bart
+	 * instance Bart memberOf Human
+	 * 
+	 * Queries: 
+	 * - Homer[hasRelative hasValue ?y]
+	 * - ?x[?y hasValue ?z]
+	 * 
+	 * @throws IOException
+	 * @throws SynchronisationException
+	 * @throws InvalidModelException
+	 */
+	public void genMinCardinalityOntologies() 
+			throws IOException, SynchronisationException, InvalidModelException {
+		Ontology ontology = null;
+		for (int i = 0; i < amount.length; i++) {	
+			// create default namespace
+			Namespace ns = wsmoFactory.createNamespace("", 
+					wsmoFactory.createIRI(getNamespace(CARDINALITY_MIN, amount[i])));
+			
+			// create ontology
+			ontology = createOntology(ns,amount[i]);
+			
+			// set ontology default namespace and variant
+			ontology.setDefaultNamespace(ns.getIRI());
+			ontology.setWsmlVariant(WSML.WSML_FLIGHT);
+			
+			// add initial elements
+			Concept concept = wsmoFactory.createConcept(
+					wsmoFactory.createIRI(ns, "c1"));
+			ontology.addConcept(concept);
+			
+			// add instances
+			Instance instance1 = wsmoFactory.createInstance(
+					wsmoFactory.createIRI(ns, "i1"));
+			Instance instance2 = wsmoFactory.createInstance(
+					wsmoFactory.createIRI(ns, "i2"));
+			instance1.addConcept(concept);
+			instance2.addConcept(concept);
+			ontology.addInstance(instance1);
+			ontology.addInstance(instance2);
+			
+			// add amount[i] number of entities with cardinality contraints
+			Attribute attribute = null;
+			for (int j = 0; j < amount[i]; j++) {
+				attribute = concept.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
+				attribute.addType(concept);
+				attribute.setMinCardinality(1);
+				attribute.setMaxCardinality(Integer.MAX_VALUE);
+				instance1.addAttributeValue(attribute.getIdentifier(), instance2);
+			}
+			
+			// add queries in form of relationinstances (see TestPerformanceWithUseOfFeatures)
+			Relation r1 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query1"));
+			r1.createParameter((byte) 0);
+			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
+			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("i1[a1 hasValue ?x]"));
+			ontology.addRelationInstance(query1);
+			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
+			r2.createParameter((byte) 0);
+			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
+			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("?x[?y hasValue ?z]"));
+			ontology.addRelationInstance(query2);
+			
+			// write ontology file
+			writeFile(CARDINALITY_MIN, getFileName(CARDINALITY_MIN, amount[i]), ontology);
+		}
+	}	
+	
 	/**
 	 * Generate ontologies containing inverse attribute features like 
 	 * e.g.:
@@ -1126,8 +1207,15 @@ public class BenchmarkOntologyGenerator {
 			ontology.addInstance(instance3);
 
 			// add amount[i] number of logical expressions containing negation
-			LogicalExpression logExpr = null;
-			Attribute attribute = null;
+			Attribute attribute;
+			AttributeValueMolecule molecule1, molecule2;
+			MembershipMolecule memberMol1, memberMol2;
+			NegationAsFailure naf;
+			Conjunction con1, con2;
+			LogicProgrammingRule lpRule;
+			/* create the following logical expression programmaticaly:
+			 * "?x[a" + j + " hasValue ?y] :- naf ?x[a" + (j+1) + " hasValue ?y] " +
+			 * "and ?x memberOf c1 and ?y memberOf c1" */
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept.createAttribute(wsmoFactory.createIRI(ns, "a" + j));
 				attribute.addType(concept);
@@ -1135,11 +1223,19 @@ public class BenchmarkOntologyGenerator {
 				attribute = concept.createAttribute(wsmoFactory.createIRI(ns, "a" + (j+1)));
 				attribute.addType(concept);
 				attribute.setConstraining(true);
-				logExpr = leFactory.createLogicalExpression(
-						"?x[a" + j + " hasValue ?y] :- naf ?x[a" + (j+1) + " hasValue ?y] " +
-								"and ?x memberOf c1 and ?y memberOf c1", 
-						ontology);
-				axiom.addDefinition(logExpr);
+				molecule1 = leFactory.createAttributeValue(leFactory.createVariable("?x"), 
+						wsmoFactory.createIRI(ns, "a" + j), leFactory.createVariable("?y"));
+				molecule2 = leFactory.createAttributeValue(leFactory.createVariable("?x"), 
+						wsmoFactory.createIRI(ns, "a" + (j+1)), leFactory.createVariable("?y"));
+				memberMol1 = leFactory.createMemberShipMolecule(leFactory.createVariable("?x"), 
+						wsmoFactory.createIRI(ns, "c1"));
+				memberMol2 = leFactory.createMemberShipMolecule(leFactory.createVariable("?y"), 
+						wsmoFactory.createIRI(ns, "c1"));
+				naf = leFactory.createNegationAsFailure(molecule2);
+				con1 = leFactory.createConjunction(naf, memberMol1);
+				con2 = leFactory.createConjunction(con1, memberMol2);
+				lpRule = leFactory.createLogicProgrammingRule(molecule1, con2); 
+				axiom.addDefinition(lpRule);
 			}
 
 			// add queries in form of relationinstances (see TestPerformanceWithUseOfFeatures)
@@ -1221,17 +1317,32 @@ public class BenchmarkOntologyGenerator {
 			ontology.addInstance(instance3);
 
 			// add amount[i] number of logical expressions containing negation
-			LogicalExpression logExpr = null;
-			Attribute attribute = null;
+			Attribute attribute;
+			MembershipMolecule memberMol1, memberMol2, memberMol3;
+			AttributeValueMolecule molecule;
+			NegationAsFailure naf;
+			Conjunction con1, con2;
+			LogicProgrammingRule lpRule;
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept1.createAttribute(wsmoFactory.createIRI(ns, "a" + j));
 				attribute.addType(concept1);
 				attribute.setConstraining(true);
-				logExpr = leFactory.createLogicalExpression(
-						"?y memberOf c2 :- naf ?x[a" + j + " hasValue ?y] " +
-								"and ?x memberOf c2 and ?y memberOf c1", 
-						ontology);
-				axiom.addDefinition(logExpr);
+				/* create the following logical expression programmaticaly:
+				 * "?y memberOf c2 :- naf ?x[a" + j + " hasValue ?y] " +
+				 * "and ?x memberOf c2 and ?y memberOf c1" */ 
+				memberMol1 = leFactory.createMemberShipMolecule(leFactory.createVariable("?y"),
+						wsmoFactory.createIRI(ns, "c2"));
+				molecule = leFactory.createAttributeValue(leFactory.createVariable("?x"),
+						wsmoFactory.createIRI(ns, "a" + j), leFactory.createVariable("?y"));
+				memberMol2 = leFactory.createMemberShipMolecule(leFactory.createVariable("?x"), 
+						wsmoFactory.createIRI(ns, "c2"));
+				memberMol3 = leFactory.createMemberShipMolecule(leFactory.createVariable("?y"), 
+						wsmoFactory.createIRI(ns, "c1"));
+				naf = leFactory.createNegationAsFailure(molecule);
+				con1 = leFactory.createConjunction(naf, memberMol2);
+				con2 = leFactory.createConjunction(con1, memberMol3);
+				lpRule = leFactory.createLogicProgrammingRule(memberMol1, con2);
+				axiom.addDefinition(lpRule);
 			}
 
 			// add queries in form of relationinstances (see TestPerformanceWithUseOfFeatures)
@@ -1292,38 +1403,55 @@ public class BenchmarkOntologyGenerator {
 			Concept concept2 = wsmoFactory.createConcept(wsmoFactory.createIRI(ns, "c2"));
 			ontology.addConcept(concept1);
 			ontology.addConcept(concept2);
-			Attribute attribute1 = concept1.createAttribute(wsmoFactory.createIRI(ns, "a0"));
-			attribute1.addType(dataFactory.createWsmlDataType(WsmlDataType.WSML_INTEGER));
-			attribute1.setConstraining(true);
 			Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns, "ax1"));
 			ontology.addAxiom(axiom);
-			
-			// add instances
-			Instance instance1 = wsmoFactory.createInstance(
-					wsmoFactory.createIRI(ns, "i1"));
-			instance1.addAttributeValue(attribute1.getIdentifier(), dataFactory.createWsmlInteger("17"));
-			Instance instance2 = wsmoFactory.createInstance(
-					wsmoFactory.createIRI(ns, "i2"));
-			instance2.addAttributeValue(attribute1.getIdentifier(), dataFactory.createWsmlInteger("14"));
-			ontology.addInstance(instance1);
-			ontology.addInstance(instance2);
 
 			// add amount[i] number of logical expressions containing built-ins
-			LogicalExpression logExpr = null;
-			Attribute attribute = null;
-			Instance instance = null;
+			Instance instance;
+			AttributeValueMolecule molecule;
+			MembershipMolecule memberMol;
+			Atom builtIn1;
+			ConstructedTerm builtIn2, builtIn3, builtIn4;
+			List<Term> terms1 = new LinkedList<Term>();
+			List<Term> terms2 = new LinkedList<Term>();
+			List<Term> terms3 = new LinkedList<Term>();
+			List<Term> terms4 = new LinkedList<Term>();
+			Conjunction con;
+			Implication impl;
 			Random random = new Random();
-			for (int j = 0; j < amount[i]+1; j++) {
-				attribute = concept1.createAttribute(wsmoFactory.createIRI(ns, "a" + j));
-				attribute.addType(dataFactory.createWsmlDataType(WsmlDataType.WSML_INTEGER));
-				attribute.setConstraining(true);
-				instance = wsmoFactory.createInstance(wsmoFactory.createIRI(ns, "i" + (j+3)));
-				instance.addAttributeValue(attribute.getIdentifier(), 
+			for (int j = 0; j < amount[i]; j++) {
+				instance = wsmoFactory.createInstance(wsmoFactory.createIRI(ns, "i" + (j+1)));
+				instance.addAttributeValue(wsmoFactory.createIRI(ns, "a" + (j+1)), 
 						dataFactory.createWsmlInteger("" + (Math.abs(random.nextInt()) % 80)));
-				logExpr = leFactory.createLogicalExpression(
-						"?x[a" + j + " hasValue ?y] and ?y < 16 implies ?x memberOf c2", 
-						ontology);
-				axiom.addDefinition(logExpr);
+				/* create the following logical expression programmaticaly:
+				 * "?x[a" + j + " hasValue ?y] and (((?y*2)/4)+1) < 16 implies ?x memberOf c2" */
+				molecule = leFactory.createAttributeValue(leFactory.createVariable("?x"), 
+						wsmoFactory.createIRI(ns, "a" + j), leFactory.createVariable("?y"));
+				terms2.clear();
+				terms2.add(leFactory.createVariable("?y"));
+				terms2.add(dataFactory.createWsmlInteger("2"));
+				builtIn2 = leFactory.createConstructedTerm(
+						wsmoFactory.createIRI(Constants.NUMERIC_MUL), terms2);
+				terms3.clear();
+				terms3.add(builtIn2);
+				terms3.add(dataFactory.createWsmlInteger("4"));
+				builtIn3 = leFactory.createConstructedTerm(
+						wsmoFactory.createIRI(Constants.NUMERIC_DIV), terms3);
+				terms4.clear();
+				terms4.add(builtIn3);
+				terms4.add(dataFactory.createWsmlInteger("1"));
+				builtIn4 = leFactory.createConstructedTerm(
+						wsmoFactory.createIRI(Constants.NUMERIC_ADD), terms4);
+				terms1.clear();
+				terms1.add(builtIn4);
+				terms1.add(dataFactory.createWsmlInteger("16"));
+				builtIn1 = leFactory.createAtom(wsmoFactory.createIRI(Constants.LESS_THAN), 
+						terms1);
+				memberMol = leFactory.createMemberShipMolecule(leFactory.createVariable("?x"),
+						wsmoFactory.createIRI(ns, "c2"));
+				con = leFactory.createConjunction(molecule, builtIn1);
+				impl = leFactory.createImplication(con, memberMol);
+				axiom.addDefinition(impl);
 				ontology.addInstance(instance);
 			}
 
@@ -1393,36 +1521,40 @@ public class BenchmarkOntologyGenerator {
 		
 		BenchmarkOntologyGenerator generator = new BenchmarkOntologyGenerator();
 		try {
-			generator.genSubconceptOntologies();
-			generator.genDeepSubconceptOntologies();
-			generator.genInstanceOntologies();
-			generator.genInstanceANDsubconceptOntologies();
-			generator.genInstanceANDdeepSubconceptOntologies();
-			generator.genOfTypeOntologies();
-			generator.genOfTypeANDsubconceptOntologies();
-			generator.genCardinality01Ontologies();
-			generator.genCardinality010Ontologies();
-			generator.genInverseAttributeOntologies();
-			generator.genTransitiveAttributeOntologies();
-			generator.genSymmetricAttributeOntologies();
-			generator.genReflexiveAttributeOntologies();
-			generator.genLocallyStratifiedNegationOntologies();
-			generator.genGloballyStratifiedNegationOntologies();
-			generator.genBuiltInAttributeOntologies();
+//			generator.genSubconceptOntologies();
+//			generator.genDeepSubconceptOntologies();
+//			generator.genInstanceOntologies();
+//			generator.genInstanceANDsubconceptOntologies();
+//			generator.genInstanceANDdeepSubconceptOntologies();
+//			generator.genOfTypeOntologies();
+//			generator.genOfTypeANDsubconceptOntologies();
+//			generator.genCardinality01Ontologies();
+//			generator.genCardinality010Ontologies();
+			generator.genMinCardinalityOntologies();
+//			generator.genInverseAttributeOntologies();
+//			generator.genTransitiveAttributeOntologies();
+//			generator.genSymmetricAttributeOntologies();
+//			generator.genReflexiveAttributeOntologies();
+//			generator.genLocallyStratifiedNegationOntologies();
+//			generator.genGloballyStratifiedNegationOntologies();
+//			generator.genBuiltInAttributeOntologies();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (SynchronisationException e) {
 			e.printStackTrace();
 		} catch (InvalidModelException e) {
 			e.printStackTrace();
-		} catch (ParserException e) {
-			e.printStackTrace();
+//		} catch (ParserException e) {
+//			e.printStackTrace();
 		}
 	}
 
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.4  2007-06-18 16:46:56  hlausen
+ * more improvements for better charts (one per query)
+ *
  * Revision 1.3  2007-06-18 13:04:00  hlausen
  * adding numberformat to better sort files and creating directories on the fly
  *
