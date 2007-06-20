@@ -53,6 +53,7 @@ public class TestPerformanceWithUseOfFeatures {
     	ex.testOfTypeANDsubconceptOntologies();
     	ex.testCardinality01Ontologies();
     	ex.testCardinality010Ontologies();
+    	ex.testCardinality1maxOntologies();
     	ex.testInverseAttributeOntologies();
     	ex.testTransitiveAttributeOntologies();
     	ex.testSymmetricAttributeOntologies();
@@ -183,6 +184,16 @@ public class TestPerformanceWithUseOfFeatures {
         String path = "cardinality_0_10/";
         String[] reasonerNames = new String[]{"KAON", "MINS"};
         Ontology[] ontologies = loadOntologies(BASE+path);
+        runPerformanceTests(reasonerNames, ontologies, path);
+    }
+    
+    /**
+     * loads cardinality (1 *) type ontologies and performs sample queries
+     */
+    public void testCardinality1maxOntologies() throws Exception {
+        String path = "cardinality_1_max/";
+        Ontology[] ontologies = loadOntologies(BASE+path);
+        String[] reasonerNames = new String[]{"MINS", "KAON"};
         runPerformanceTests(reasonerNames, ontologies, path);
     }
     
