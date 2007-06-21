@@ -1,10 +1,6 @@
 package performance;
 
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -17,6 +13,10 @@ import java.util.Set;
 
 import org.omwg.ontology.Ontology;
 import org.wsmo.common.IRI;
+import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.wsml.ParserException;
+
+import performance.chart.Chart;
 
 
 public class PerformanceResults {
@@ -37,25 +37,30 @@ public class PerformanceResults {
         performanceresults.get(theReasonerName).get(id).put(theQuery, thePerformanceResult);
     }
     
-    public void write(String theDirectory) throws IOException{
-        File directory = new File(theDirectory);
+    FileFilter nonWsml = new FileFilter(){
+
+		public boolean accept(File pathname) {
+			return !pathname.getName().endsWith("wsml");
+		}
+    	
+    };
+    
+    private void clearDirectory(File directory){
         if (!directory.exists()){
         	directory.mkdir();
         }
-        if (directory.listFiles() != null){
-            for (File f : directory.listFiles()){
+        if (directory.listFiles(nonWsml) != null){
+            for (File f : directory.listFiles(nonWsml)){
                 f.delete();
             }
         }
-        
+    }
+    
+    public List<IRI> getAllOntologiesInResultSorted(){
         Set <IRI> allOntologiesInTest = new HashSet <IRI> ();
-        Set<String> allQueriesInTest = new HashSet<String>();
         for (String reasoner : performanceresults.keySet()){
             for (IRI id : performanceresults.get(reasoner).keySet()){
                 allOntologiesInTest.add(id);
-                for (String query:performanceresults.get(reasoner).get(id).keySet()){
-                	allQueriesInTest.add(query);
-                }
             }
         }
         
@@ -65,10 +70,25 @@ public class PerformanceResults {
                 return o1.toString().compareTo(o2.toString());
             }
         });
-        
-
-
-        
+        return sortedAllOntologiesInTest;
+    }
+    
+    public List<String> getAllQueriesInResultSorted(){
+        Set<String> allQueriesInTest = new HashSet<String>();
+        for (String reasoner : performanceresults.keySet()){
+            for (IRI id : performanceresults.get(reasoner).keySet()){
+                for (String query:performanceresults.get(reasoner).get(id).keySet()){
+                	allQueriesInTest.add(query);
+                }
+            }
+        }
+        List <String> sortedAllQueriesInTest = new ArrayList <String>(allQueriesInTest);
+        Collections.sort(sortedAllQueriesInTest);
+        return sortedAllQueriesInTest;
+    }
+    
+    public void writeCSVLoadTime(File directory) throws IOException{
+        List<IRI> sortedAllOntologiesInTest = getAllOntologiesInResultSorted();
         //Write ontology load time data
         File loadTimeFile = new File(directory, "ALL-average-ontology-registration-times.csv");
         BufferedWriter bw = new BufferedWriter(new FileWriter(loadTimeFile));
@@ -93,15 +113,17 @@ public class PerformanceResults {
         bw.flush();
         bw.close();
         System.out.println("Written to: " + loadTimeFile.getAbsolutePath());
-        
-        // Write ontology query time data
-        List <String> sortedAllQueriesInTest = new ArrayList <String>(allQueriesInTest);
+    }
+
+    public void writeCSVQueryTimes(File directory) throws IOException{
+//    	 Write ontology query time data
+        List <String> sortedAllQueriesInTest = getAllQueriesInResultSorted();
+        List<IRI> sortedAllOntologiesInTest = getAllOntologiesInResultSorted();
         Collections.sort(sortedAllQueriesInTest);
-        
         
         for (String queryid : sortedAllQueriesInTest){
         	File queryTimeFile = new File(directory, "average-ontology-"+queryid+"-times.csv");
-        	bw = new BufferedWriter(new FileWriter(queryTimeFile));
+        	BufferedWriter bw = new BufferedWriter(new FileWriter(queryTimeFile));
         	bw.write("Reasoner," + toCommaDelimited(sortedAllOntologiesInTest) + "\n");
         	for (String reasoner : performanceresults.keySet()) {
 				bw.write(reasoner);
@@ -125,8 +147,14 @@ public class PerformanceResults {
             System.out.println("Written to: " + queryTimeFile.getAbsolutePath());
         }
     }
-
-
+    public void writeAll(String theDirectory) throws IOException, ParserException, InvalidModelException{
+        File directory = new File(theDirectory);
+        clearDirectory(directory);
+        writeCSVLoadTime(directory);
+        writeCSVQueryTimes(directory);
+        
+        new Chart().doChartsFromCSV(directory);
+    }
     
     private String toCommaDelimited(List theList) {
         String result = "";
