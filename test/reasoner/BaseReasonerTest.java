@@ -56,8 +56,8 @@ public class BaseReasonerTest extends TestCase {
 
     //CHANGE HERE TO CHECK DIFFERENT REASONERS!
     public static WSMLReasonerFactory.BuiltInReasoner reasoner =
-//    	WSMLReasonerFactory.BuiltInReasoner.KAON2;
-    	WSMLReasonerFactory.BuiltInReasoner.IRIS;
+    	WSMLReasonerFactory.BuiltInReasoner.KAON2;
+//    	WSMLReasonerFactory.BuiltInReasoner.IRIS;
 //    	WSMLReasonerFactory.BuiltInReasoner.MINS;
     	
     //CHANGE HERE TO CHECK DIFFERENT EVALUATION METHODS-

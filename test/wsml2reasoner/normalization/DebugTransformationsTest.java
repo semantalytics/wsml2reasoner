@@ -24,7 +24,7 @@ public class DebugTransformationsTest extends WSMLNormalizationTest
         Ontology ontology = null;
         try
         {
-            ontology = parseOntology("c:/projects/DIP/WP1/reviewPrep/bundles.wsml");
+            ontology = parseOntology("files/SkillOntology.wsml");
         } catch(Exception e)
         {
             // TODO Auto-generated catch block
