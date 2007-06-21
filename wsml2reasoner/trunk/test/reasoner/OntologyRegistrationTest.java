@@ -143,7 +143,7 @@ public class OntologyRegistrationTest extends TestCase {
      */
     public void testIntenseOntologyRegistration() throws Exception {
         wsmlReasoner = BaseReasonerTest.getReasoner(); 		
-		String path = "files" + File.separator;
+		String path = "test/files" + File.separator;
 
 		parser.parse(new FileReader(path + "MoonOntology.wsml"));
 		parser.parse(new FileReader(path + File.separator + "WSMoon.wsml"));
