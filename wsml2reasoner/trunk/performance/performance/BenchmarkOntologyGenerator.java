@@ -595,7 +595,7 @@ public class BenchmarkOntologyGenerator {
 			 * add non functional properties to the ontology: title, description
 			 */
 			String title = "Memberof and deep subconcept expressions";
-			description = "\n\t\t\t This ontology is containing memberor and deep hierarchy " +
+			description = "\n\t\t\t This ontology is containing both memberof and deep hierarchy " +
 					"expressions.\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of memberOf and of subconcept " +
 					"expressions." +
@@ -700,13 +700,16 @@ public class BenchmarkOntologyGenerator {
 			 * add non functional properties to the ontology: title, description
 			 */
 			String title = "Constraining attribute expressions";
-//			description = "\n\t\t\t This ontology is containing deep hierarchy expressions.\n\t\t\t " +
-//					"The x-axis value of the graph indicates the number of subconcept expressions." +
-//					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2 subConceptOf c1" +
-//					"\n\t\t\t concept c3 subConceptOf c2" +
-//					"\n\t\t\t instance i1 memberOf c1\n\t\t\t instance i2 memberOf c3\n\t\t\t " +
-//					"The following two queries are applied to it:\n\t\t\t " +
-//					"Query 1: ?x memberOf c1\n\t\t\t Query 2: ?x memberOf ?y";
+			description = "\n\t\t\t This ontology is containing constraining attribute " +
+					"expressions.\n\t\t\t " +
+					"The x-axis value of the graph indicates the number of constraining " +
+					"attribute and attribute value expressions." +
+					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2" +
+					"\n\t\t\t \t a1 ofType c1" +
+					"\n\t\t\t instance i1 memberOf c2\n\t\t\t \t a1 hasValue i2" +
+					"\n\t\t\t instance i2 memberOf c1\n\t\t\t " +
+					"The following two queries are applied to it:\n\t\t\t " +
+					"Query 1: i1[a1 hasValue ?y] \n\t\t\t Query 2: ?x[?y hasValue ?z]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
 			
 			// write ontology file
@@ -1999,7 +2002,7 @@ public class BenchmarkOntologyGenerator {
 		List<Term> concepts = OntologyUtil.getConcepts(ontology);
 		int attributes = 0;
 		for (Term c : concepts) {
-			attributes =+ OntologyUtil.getAttributes(c, ontology).size();
+			attributes += OntologyUtil.getAttributes(c, ontology).size();
 		}
 		int instances = OntologyUtil.getInstances(ontology).size();
 		
@@ -2103,6 +2106,9 @@ public class BenchmarkOntologyGenerator {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.10  2007-06-21 06:42:30  hlausen
+ * sorry for the delay
+ *
  * Revision 1.9  2007-06-20 16:44:32  nathalie
  * *** empty log message ***
  *
