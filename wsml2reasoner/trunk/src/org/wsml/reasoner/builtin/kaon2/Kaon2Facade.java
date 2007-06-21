@@ -32,6 +32,8 @@ import org.omwg.logicalexpression.Constants;
 import org.omwg.ontology.DataValue;
 import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.WsmlDataType;
+import org.semanticweb.kaon2.id;
+import org.semanticweb.kaon2.ld;
 import org.semanticweb.kaon2.api.DefaultOntologyResolver;
 import org.semanticweb.kaon2.api.KAON2Connection;
 import org.semanticweb.kaon2.api.KAON2Exception;
@@ -530,18 +532,35 @@ public class Kaon2Facade implements DatalogReasonerFacade {
         org.omwg.logicalexpression.terms.Term[] result = new org.omwg.logicalexpression.terms.Term[tupleBuffer.length];
         for (int i = 0; i < tupleBuffer.length; i++) {
             Object obj = tupleBuffer[i];
-            if (obj instanceof Individual) {
-                Individual inst = (Individual) obj;
-                result[i] = wf.createIRI(inst.getURI());
-            } else if (obj instanceof String) {
-                result[i] = df.createWsmlString((String) obj);
-            } else if (obj instanceof BigInteger) {
-                result[i] = df.createWsmlInteger((BigInteger) obj);
-            } else if (obj instanceof BigDecimal) {
-                result[i] = df.createWsmlDecimal((BigDecimal) obj);
-            } else if (obj instanceof Boolean) {
-                result[i] = df.createWsmlBoolean((Boolean) obj);
-            } else {
+            if (obj instanceof id){
+	            if (((id)obj).getFunctionSymbol() instanceof Individual) {
+	                Individual inst = (Individual) ((id)obj).getFunctionSymbol();
+	                result[i] = wf.createIRI(inst.getURI());
+	            } else if (((id)obj).getFunctionSymbol() instanceof String) {
+	                result[i] = df.createWsmlString((String) ((id)obj).getFunctionSymbol());
+	            } else if (((id) obj).getFunctionSymbol() instanceof BigInteger) {
+	                result[i] = df.createWsmlInteger((BigInteger) ((id)obj).getFunctionSymbol());
+	            } else if (((id) obj).getFunctionSymbol() instanceof BigDecimal) {
+	                result[i] = df.createWsmlDecimal((BigDecimal) ((id)obj).getFunctionSymbol());
+	            } else if (((id) obj).getFunctionSymbol() instanceof Boolean) {
+	                result[i] = df.createWsmlBoolean((Boolean) ((id)obj).getFunctionSymbol());
+	            }
+            }
+            else if (obj instanceof ld){
+	            if (((ld)obj).getFunctionSymbol() instanceof Individual) {
+	                Individual inst = (Individual) ((ld)obj).getFunctionSymbol();
+	                result[i] = wf.createIRI(inst.getURI());
+	            } else if (((ld)obj).getFunctionSymbol() instanceof String) {
+	                result[i] = df.createWsmlString((String) ((ld)obj).getFunctionSymbol());
+	            } else if (((ld) obj).getFunctionSymbol() instanceof BigInteger) {
+	                result[i] = df.createWsmlInteger((BigInteger) ((ld)obj).getFunctionSymbol());
+	            } else if (((ld) obj).getFunctionSymbol() instanceof BigDecimal) {
+	                result[i] = df.createWsmlDecimal((BigDecimal) ((ld)obj).getFunctionSymbol());
+	            } else if (((ld) obj).getFunctionSymbol() instanceof Boolean) {
+	                result[i] = df.createWsmlBoolean((Boolean) ((ld)obj).getFunctionSymbol());
+	            }
+            } 
+            else {
                 throw new ExternalToolException(
                         "Unknown object in the KAON2 ontology: "
                                 + obj.toString());
