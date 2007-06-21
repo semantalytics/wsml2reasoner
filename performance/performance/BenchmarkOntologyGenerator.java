@@ -20,19 +20,10 @@ package performance;
 
 import java.io.*;
 import java.text.DecimalFormat;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import org.deri.wsmo4j.logicalexpression.util.OntologyUtil;
-import org.omwg.logicalexpression.Atom;
-import org.omwg.logicalexpression.AttributeValueMolecule;
-import org.omwg.logicalexpression.Conjunction;
-import org.omwg.logicalexpression.Constants;
-import org.omwg.logicalexpression.Implication;
-import org.omwg.logicalexpression.LogicProgrammingRule;
-import org.omwg.logicalexpression.MembershipMolecule;
-import org.omwg.logicalexpression.NegationAsFailure;
+import org.omwg.logicalexpression.*;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.*;
@@ -67,7 +58,15 @@ public class BenchmarkOntologyGenerator {
 	
 	// for each type of ontology (like e.g. subconcept ontology) ontologies 
 	// with the following amounts of entities shall be created
-	private static int[] amount = {10,500,1000,1500,2000,2500,3000,3500,4000,4500,5000};
+	private static Integer[] amount;
+	static{ 
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		for (int i=0;i <3000;i += 250){
+			list.add(i);
+		}
+		amount=new Integer[list.size()];
+		amount=list.toArray(amount);
+	}
 	
 	/*
 	 * Non functional properties used for description of the ontologies and queries
@@ -2106,6 +2105,9 @@ public class BenchmarkOntologyGenerator {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.11  2007-06-21 07:28:50  nathalie
+ * fixed bug in attribute counting
+ *
  * Revision 1.10  2007-06-21 06:42:30  hlausen
  * sorry for the delay
  *
