@@ -63,11 +63,11 @@ public class BenchmarkOntologyGenerator {
 	private static Serializer serializer = null;
 	
 	// default path defining the directory in which to store the ontologies
-	private static String path = "performance/performance/ontologies/";
+	private static String path = "performance/performance/results/";
 	
 	// for each type of ontology (like e.g. subconcept ontology) ontologies 
 	// with the following amounts of entities shall be created
-	private static int[] amount = {10};//,500,1000,1500,2000,2500,3000,3500,4000,4500,5000};
+	private static int[] amount = {10,500,1000,1500,2000,2500,3000,3500,4000,4500,5000};
 	
 	/*
 	 * Non functional properties used for description of the ontologies and queries
@@ -2103,6 +2103,9 @@ public class BenchmarkOntologyGenerator {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.9  2007-06-20 16:44:32  nathalie
+ * *** empty log message ***
+ *
  * Revision 1.8  2007-06-20 15:51:28  nathalie
  * changed amount of element features per ontology
  *

@@ -22,9 +22,11 @@ import org.wsmo.factory.Factory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
+import sun.util.logging.resources.logging;
+
 public class TestPerformanceWithUseOfFeatures {
 	//how often to repeat each query!
-    public static int NO_OF_TESTRUNS = 3;
+    public static int NO_OF_TESTRUNS = 1;
     public static int TIMELIMIT_QUERY = 10000;
     public static int TIMELIMIT_REGISTRATION = 20000;
     public static int WAIT_INTERVAL = 1000;
@@ -41,26 +43,30 @@ public class TestPerformanceWithUseOfFeatures {
      *            none expected
      */
     public static void main(String[] args)throws Exception {
+    	if (args!=null && args.length>0){
+    		NO_OF_TESTRUNS = Integer.parseInt(args[0]);
+    	}
+    	
         TestPerformanceWithUseOfFeatures ex = new TestPerformanceWithUseOfFeatures();
        
 //        ex.doTestRun();
     	ex.testSubconceptOntologies();
-    	ex.testDeepSubconceptOntologies();
-    	ex.testInstanceOntologies();
-    	ex.testInstanceANDsubconceptOntologies();
-    	ex.testInstanceANDdeepSubconceptOntologies();
-    	ex.testOfTypeOntologies();
-    	ex.testOfTypeANDsubconceptOntologies();
-    	ex.testCardinality01Ontologies();
-    	ex.testCardinality010Ontologies();
-    	ex.testCardinality1maxOntologies();
-    	ex.testInverseAttributeOntologies();
-    	ex.testTransitiveAttributeOntologies();
-    	ex.testSymmetricAttributeOntologies();
-    	ex.testReflexiveAttributeOntologies();
-    	ex.testLocallyStratifiedNegation();
-    	ex.testGloballyStratifiedNegation();
-    	ex.testBuiltInAttributeOntologies();
+//    	ex.testDeepSubconceptOntologies();
+//    	ex.testInstanceOntologies();
+//    	ex.testInstanceANDsubconceptOntologies();
+//    	ex.testInstanceANDdeepSubconceptOntologies();
+//    	ex.testOfTypeOntologies();
+//    	ex.testOfTypeANDsubconceptOntologies();
+//    	ex.testCardinality01Ontologies();
+//    	ex.testCardinality010Ontologies();
+//    	ex.testCardinality1maxOntologies();
+//    	ex.testInverseAttributeOntologies();
+//    	ex.testTransitiveAttributeOntologies();
+//    	ex.testSymmetricAttributeOntologies();
+//    	ex.testReflexiveAttributeOntologies();
+//    	ex.testLocallyStratifiedNegation();
+//    	ex.testGloballyStratifiedNegation();
+//    	ex.testBuiltInAttributeOntologies();
     }
 
     /**
@@ -79,7 +85,6 @@ public class TestPerformanceWithUseOfFeatures {
     	File d = new File(dir);
     	Map<String,Ontology> onts = new TreeMap<String, Ontology>(); 
     	File[] files = d.listFiles(wsmlFilter);
-//    	System.out.println(dir+"\n"+files);
     	for (File f:files){
     		try {
 				Ontology ont = (Ontology)wsmlParser.parse(new FileReader(f))[0];
@@ -102,7 +107,7 @@ public class TestPerformanceWithUseOfFeatures {
 		}
     };
     
-    static final String BASE="performance/performance/ontologies/";
+    static final String BASE="performance/performance/results/";
     /**
      * loads subconcept type ontologies and performs sample queries
      */
@@ -265,15 +270,17 @@ public class TestPerformanceWithUseOfFeatures {
     	SortedMap<String,String> queries = new TreeMap<String, String>();
         
         PerformanceResults performanceresults = new PerformanceResults();
+        MyStringBuffer log = new MyStringBuffer();
         for (Ontology ontology : ontologies){
             if (ontology.listRelationInstances().isEmpty()){
-                System.err.println("WARNING: "+ontology.getIdentifier()+" has no queries defined");
+                log.println("WARNING: "+ontology.getIdentifier()+" has no queries defined\n");
             }
             for (RelationInstance r: (Set<RelationInstance>)ontology.listRelationInstances()){
                 //assume on axiom per query
                 IRI id=(IRI)r.getRelation().getIdentifier();
                 if (id.getLocalName().toString().startsWith("query")){
-                    queries.put(id.getLocalName().toString(), 
+                    queries.put(
+                    		id.getLocalName().toString(), 
                     		r.getParameterValue((byte)0).toString());
                 }
             }
@@ -285,22 +292,28 @@ public class TestPerformanceWithUseOfFeatures {
 	                            reasonerNames[i], 
 	                            ontology, 
 	                            query.getKey(), 
-	                            executeQuery(query.getValue(), ontology, reasonerNames[i]));
+	                            executeQuery(query.getValue(), 
+                        		ontology, 
+                        		reasonerNames[i],
+                        		log));
                 	}catch (Exception e){
-                		System.out.println("error with ontology "+ontology.getIdentifier()+" and reasoner "+reasonerNames[i]);
+                		log.println("error with ontology "+ontology.getIdentifier()+" and reasoner "+reasonerNames[i]);
+                		log.println(e.getMessage());
+                		log.println(e.getCause()+"");
                 		e.printStackTrace();
                 	}
                 }
                 System.gc();
             }
         }
-        performanceresults.write(new File(directoryPath + path).getAbsolutePath());
+        performanceresults.writeAll(new File(directoryPath + path).getAbsolutePath());
+        log.write(new File(directoryPath + path + "log.txt"));
     }
     
     Set<String> timedOutReasoner = new HashSet<String>();
     
-    private WSMLReasoner createReasoner(String theReasonerName) throws InconsistencyException{
-        System.out.print("Creating reasoner ");
+    private WSMLReasoner createReasoner(String theReasonerName, MyStringBuffer log) throws InconsistencyException{
+        log.print("Creating reasoner ");
         long t0_start = System.currentTimeMillis();
         WSMLReasoner reasoner = null;
         if (theReasonerName.equals("MINS")){
@@ -314,39 +327,43 @@ public class TestPerformanceWithUseOfFeatures {
         }
         long t0_end = System.currentTimeMillis();
         long t0 = t0_end - t0_start;
-        System.out.println("(" + t0 + "ms)");
+        log.println("(" + t0 + "ms)");
         return reasoner;
     }
     
     private PerformanceResult executeQuery(
-    		String theQuery, Ontology theOntology, 
-    		String theReasonerName) 
-    		throws ParserException, InconsistencyException {
+    		String theQuery,
+    		Ontology theOntology, 
+    		String theReasonerName,
+    		MyStringBuffer log) throws ParserException, InconsistencyException {
         
     	PerformanceResult performanceresult = new PerformanceResult();
     	if (timedOutReasoner.contains(theReasonerName)){
-    		System.out.println(theReasonerName+" has previously already timed out!!");
+    		log.println(theReasonerName+" has previously already timed out!!");
     		return performanceresult;
     	}
         
-        System.out.println("------------------------------------");
-        System.out.println("query = '" + theQuery + "'");
-        System.out.println("ontology = '" + theOntology.getIdentifier() + "'");
-        System.out.println("reasoner = '" + theReasonerName + "'");
+        log.println("------------------------------------");
+        log.println("query = '" + theQuery + "'");
+        log.println("ontology = '" + theOntology.getIdentifier() + "'");
+        log.println("reasoner = '" + theReasonerName + "'");
         
-        WSMLReasoner reasoner = createReasoner(theReasonerName);
-        if (reasoner==null) return performanceresult;
+        WSMLReasoner reasoner = createReasoner(theReasonerName,log);
+        if (reasoner==null){
+        	log.println("ERRRRROOOORRR");
+        	return performanceresult;
+        }
     
         LogicalExpression query = new WSMO4JManager().getLogicalExpressionFactory().createLogicalExpression(theQuery, theOntology);
         
-        System.out.print("Registering Ontology ");
-        RegistrationThread registrationThread = new RegistrationThread(theOntology,reasoner,performanceresult);
+        log.print("Registering Ontology ");
+        RegistrationThread registrationThread = new RegistrationThread(theOntology,reasoner,performanceresult,log);
         registrationThread.start();
         long counter=0;
         waitUntilAlive(registrationThread);
         while(registrationThread.isAlive()){
         	if (counter > TIMELIMIT_REGISTRATION){
-        		System.out.println("stopping registration thread due to timeout");
+        		log.print("stopping registration thread due to timeout");
         		registrationThread.stop();
         		timedOutReasoner.add(theReasonerName);
         		return performanceresult;
@@ -354,17 +371,17 @@ public class TestPerformanceWithUseOfFeatures {
         	waitABit();
         	counter += WAIT_INTERVAL;
         }
-        System.out.println(" done.");
+        log.println("");
        
         for (int i=0; i<NO_OF_TESTRUNS && !timedOutReasoner.contains(theReasonerName);i++){
-            QueryThread queryThread = new QueryThread(theOntology,reasoner,query);
-            System.out.print("Executing query ");
+            QueryThread queryThread = new QueryThread(theOntology,reasoner,query, log);
+            log.print("Executing query ");
             queryThread.start();
             waitUntilAlive(queryThread);
             counter=0;
             while(queryThread.isAlive()){
 	            if (counter > TIMELIMIT_QUERY){
-            		System.out.println("stopping reasoning thread due to timeout");
+            		log.println("stopping reasoning thread due to timeout");
             		queryThread.stop();
             		timedOutReasoner.add(theReasonerName);
             	}
@@ -373,20 +390,19 @@ public class TestPerformanceWithUseOfFeatures {
             }
             long t2=queryThread.getDuration();
     	    performanceresult.addExecuteQuery(i, t2);
-            System.out.println("(" + t2 + " ms)");
+            log.println("(" + t2 + " ms)");
         }
         
-        System.out.print("Deregistering Ontology ");
+        log.print("Deregistering Ontology ");
         long t3_start = System.currentTimeMillis();
         reasoner.deRegisterOntology((IRI) theOntology.getIdentifier());
         long t3_end = System.currentTimeMillis();
         long t3 = t3_end - t3_start;
-        System.out.println("(" + t3 + "ms)");
-        System.out.println("------------------------------------");
+        log.println("(" + t3 + "ms)");
+        log.println("------------------------------------");
         return performanceresult;
     }
     
-    static Set<Map<Variable, Term>> result = null;
     private void waitABit(){
     	synchronized (this) {
     		try {
@@ -429,7 +445,7 @@ public class TestPerformanceWithUseOfFeatures {
             }
         }
         catch (Exception e) {
-            System.out.println("Unable to parse ontology: " + e.getMessage());
+        	System.out.println("Unable to parse ontology: " + e.getMessage());
             return null;
         }
     }
@@ -454,11 +470,13 @@ class RegistrationThread extends MyThread {
 	Ontology o;
 	WSMLReasoner reasoner;
 	PerformanceResult performanceresult;
+	MyStringBuffer log;
 
-	RegistrationThread(Ontology o, WSMLReasoner reasoner,PerformanceResult performence) {
+	RegistrationThread(Ontology o, WSMLReasoner reasoner,PerformanceResult performence, MyStringBuffer log) {
 		this.o = o;
 		this.reasoner = reasoner;
 		this.performanceresult=performence;
+		this.log=log;
 	}
 
 	public void run() {
@@ -468,7 +486,7 @@ class RegistrationThread extends MyThread {
 			reasoner.registerOntology(o);
 			long t1_end = System.currentTimeMillis();
 			long t1 = t1_end-t1_start;
-			System.out.println("(" + t1 + "ms)");
+			log.println("(" + t1 + "ms)");
             performanceresult.setRegisterOntology(t1);
             isFinished = true;
 		} catch (InconsistencyException e) {
@@ -482,16 +500,22 @@ class QueryThread extends MyThread {
 	Ontology o;
 	WSMLReasoner reasoner;
 	LogicalExpression query;
+	MyStringBuffer log;
 
-	QueryThread(Ontology o, WSMLReasoner reasoner,LogicalExpression query) {
+	QueryThread(Ontology o, WSMLReasoner reasoner,LogicalExpression query,MyStringBuffer log) {
 		this.o = o;
 		this.reasoner = reasoner;
 		this.query=query;
+		this.log=log;
 	}
 	long t2=-1;
 	public void run() {
 	    long t2_start = System.currentTimeMillis();
-        TestPerformanceWithUseOfFeatures.result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
+	    Set<Map<Variable, Term>> result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
+	    log.print("  size: "+result.size());
+	    if (!result.isEmpty()){
+	    	log.println(" sample: "+result.iterator().next());
+	    }
         long t2_end = System.currentTimeMillis();
         t2 = t2_end - t2_start;
 //        System.out.print("  -"  +t2+ "-   ");
@@ -502,4 +526,27 @@ class QueryThread extends MyThread {
 		return t2;
 	}
 
+}
+
+class MyStringBuffer{
+	StringBuffer log = new StringBuffer();
+	public void println(String s){
+		log.append(s+"\n");
+		System.out.println(s);
+	}
+	
+	public void print(String s){
+		log.append(s);
+		System.out.print(s);
+	}
+
+	public String toString(){
+		return log.toString();
+	}
+	
+	public void write(File f) throws IOException{
+		FileWriter fw = new FileWriter(f);
+		fw.append(log);
+		fw.close();
+	}
 }

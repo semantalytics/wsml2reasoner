@@ -82,7 +82,7 @@ public class TestPerformance1 {
                 }
             }
         }
-        performanceresults.write(new File("test/performance/results/").getAbsolutePath());
+        performanceresults.writeAll(new File("test/performance/results/").getAbsolutePath());
     }
 
     private PerformanceResult executeQuery(String theQuery, Ontology theOntology, String theReasonerName, boolean thePrintResults) throws ParserException, InconsistencyException {
