@@ -147,7 +147,9 @@
 	<patternset id="dl-jars">
 		<exclude name="CVS/*" />
 		<exclude name="*.DS_Store" />
+		<include name="ext/aterm/**"/>
 		<include name="ext/commons-logging/**"/>
+		<include name="ext/kaon/**"/>
 		<include name="ext/log4j/**"/>
 		<include name="ext/owl-api/**"/>
 		<include name="ext/relaxng/**"/>
@@ -158,7 +160,9 @@
 	<patternset id="dl-pellet-jars">
 		<exclude name="CVS/*" />
 		<exclude name="*.DS_Store" />
+		<include name="ext/aterm/**"/>
 		<include name="ext/commons-logging/**"/>
+		<include name="ext/kaon/**"/>
 		<include name="ext/log4j/**"/>
 		<include name="ext/owl-api/**"/>
 		<include name="ext/pellet/**"/>
@@ -173,6 +177,7 @@
 		<include name="ext/wsmo4j/**"/>
 		<include name="ext/iris/**"/>
 		<include name="ext/jgrapht/**"/>
+		<include name="ext/log4j/**"/>
 	</patternset>
 	
 	<patternset id="datalog-mins-jars">
@@ -574,7 +579,7 @@
 	</target>
 
 	<target name="update-releases"
-		depends="create-wsml2reasoner-releases"
+		depends="create-wsml2reasoner-releases, choose-user-password"
         description="Loads new releases onto tools.deri.org">
 
 		<!--delete old snapshot
