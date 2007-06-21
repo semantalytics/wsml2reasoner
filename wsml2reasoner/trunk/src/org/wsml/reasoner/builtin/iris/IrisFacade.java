@@ -18,7 +18,6 @@
  */
 package org.wsml.reasoner.builtin.iris;
 
-// TODO: at the moment there is only support for one ontology
 // TODO: do the builtins
 
 import static org.deri.iris.factory.Factory.BASIC;
@@ -95,11 +94,11 @@ import org.wsmo.factory.WsmoFactory;
  * The wsmo4j interface for the iris reasoner.
  * </p>
  * <p>
- * $Id: IrisFacade.java,v 1.11 2007-06-18 10:50:46 nathalie Exp $
+ * $Id: IrisFacade.java,v 1.12 2007-06-21 10:34:24 richardpoettler Exp $
  * </p>
  * 
  * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class IrisFacade implements DatalogReasonerFacade {
 
@@ -116,43 +115,49 @@ public class IrisFacade implements DatalogReasonerFacade {
 	private static final Pattern DURATION_PATTERN = Pattern
 			.compile("P(\\d{4})Y(\\d{1,2})M(\\d{1,2})DT(\\d{1,2})H(\\d{1,2})M(\\d{1,2})S");
 
-	// TODO: in the end the programms should be stored in a may with ontology_id
-	// -> programm entries
-	/** The iris program to evaluate the queries. */
-	private IProgram p = PROGRAM.createProgram();
+	/** Map storing all the uri <-> program mappings. */
+	private final Map<String, IProgram> progs = new HashMap<String, IProgram>();
 
-	// TODO: in the end the programms should be stored in a may with ontology_id
-	// -> programm entries
 	/** 
-	 * Map to determine whether a rule for a conjunctive query was already created. 
+	 * Map to determine whether a rule for a conjunctive query in a program was 
+	 * already created. The first map stores the ontologyId &gt;-&lt; conjunctive 
+	 * query mappings.  The second map is build as follows: 
 	 * <ul>
 	 * <li>key = the <code>ConjunctiveQuery</code> object which was substituted</li>
 	 * <li>value = the literal uesd to substitute the query</li>
 	 * </ul>
 	 */
-	private Map<ConjunctiveQuery, IQuery> conjunktiveQueries = 
-		new HashMap<ConjunctiveQuery, IQuery>();
+	private Map<String, Map<ConjunctiveQuery, IQuery>> conjunktiveQueries = 
+		new HashMap<String, Map<ConjunctiveQuery, IQuery>>();
 	
-	// TODO: in the end this should be stored in a may with ontology_id ->
-	// changed entries
 	/**
 	 * Records whether the ontology changed since the last calculation of the
 	 * fixed point.
+	 * <ul>
+	 * <li>key = ontologyId</li>
+	 * <li>value = <code>true</code> if changed, otherwise <code>false</code></li>
+	 * </ul>
 	 */
-	private boolean factsChanged = true;
+	private Map<String, Boolean> factsChanged = new HashMap<String, Boolean>();
 
-	// TODO: in the end this should be stored in a may with ontology_id ->
-	// changed entries
 	/**
 	 * Records whether the ontology changed since the last calculation of the
 	 * fixed point.
+	 * <ul>
+	 * <li>key = ontologyId</li>
+	 * <li>value = <code>true</code> if changed, otherwise <code>false</code></li>
+	 * </ul>
 	 */
-	private boolean rulesChanged = true;
+	private Map<String, Boolean> rulesChanged = new HashMap<String, Boolean>();
 
-	// TODO: in the end this should be stored in a may with ontology_id ->
-	// changed entries
-	/** Excutor the execute the queries. */
-	private IExecutor e = new Executor(p, new ExpressionEvaluator());
+	/**
+	 * Excutor to execute the queries.
+	 * <ul>
+	 * <li>key = ontologyId</li>
+	 * <li>value = the executor</li>
+	 * </ul>
+	 */
+	private final Map<String, IExecutor> executor = new HashMap<String, IExecutor>();
 
 	public IrisFacade(final WSMO4JManager m) {
 		DATA_FACTORY = m.getDataFactory();
@@ -164,30 +169,20 @@ public class IrisFacade implements DatalogReasonerFacade {
 		this(new WSMO4JManager());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.wsml.reasoner.DatalogReasonerFacade#deregister(java.lang.String)
-	 */
 	public synchronized void deregister(String ontologyURI)
 			throws ExternalToolException {
-		// the ontologyURI is at the moment ignored, because at the moment
-		// program only supports one instance per vm
-		rulesChanged = true;
-		factsChanged = true;
-		p.resetProgram();
+		progs.remove(ontologyURI);
+		executor.remove(ontologyURI);
+		conjunktiveQueries.remove(ontologyURI);
+		rulesChanged.remove(ontologyURI);
+		factsChanged.remove(ontologyURI);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.wsml.reasoner.DatalogReasonerFacade#evaluate(org.wsml.reasoner.ConjunctiveQuery,
-	 *      java.lang.String)
-	 */
 	public synchronized Set<Map<Variable, Term>> evaluate(ConjunctiveQuery q,
 			String ontologyURI) throws ExternalToolException {
-		// the ontologyURI is at the moment ignored, because at the moment
-		// program only supports one instance per vm
+		if (ontologyURI == null) {
+			throw new NullPointerException("The ontology uri must not be null");
+		}
 		if (q == null) {
 			throw new NullPointerException("The query must not be null");
 		}
@@ -203,7 +198,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 		// creating the query
 		final IQuery query;
 		if (body.size() > 1) { // we got an conjunctive query -> replace it
-			IQuery conjQ = conjunktiveQueries.get(q);
+			IQuery conjQ = conjunktiveQueries.get(ontologyURI).get(q);
 			if (conjQ == null) { // this query was never replaced before
 				// getting all variables
 				final Set<IVariable> vars = new HashSet<IVariable>();
@@ -216,11 +211,11 @@ public class IrisFacade implements DatalogReasonerFacade {
 								vars.size()), 
 						BASIC.createTuple(new ArrayList<ITerm>(vars)));
 				// creating and adding the new rule
-				p.addRule(BASIC.createRule(BASIC.createHead(conjL), 
-						BASIC.createBody(body)));
+				progs.get(ontologyURI).addRule(BASIC.createRule(
+						BASIC.createHead(conjL), BASIC.createBody(body)));
 				// creating and adding the query
 				conjQ = BASIC.createQuery(conjL);
-				conjunktiveQueries.put(q, conjQ);
+				conjunktiveQueries.get(ontologyURI).put(q, conjQ);
 			}
 			query = conjQ;
 		} else { // this is a normal query
@@ -228,19 +223,20 @@ public class IrisFacade implements DatalogReasonerFacade {
 		}
 
 		// update the executor, if there has been something changed
-		if (rulesChanged) { // if there are new rules -> translate them all
-			e = new Executor(p, new ExpressionEvaluator());
+		if (rulesChanged.get(ontologyURI)) { // if there are new rules -> translate them all
+			executor.put(ontologyURI, new Executor(
+					progs.get(ontologyURI), new ExpressionEvaluator()));
 		}
 		// FIXME needs to be checked out w.r.t LordOfRings example
 		//if (factsChanged || rulesChanged) { // if there are new facts or rules
 			// -> compute the fixed point
-			e.execute();
+			executor.get(ontologyURI).execute();
 		//}
-		rulesChanged = false;
-		factsChanged = false;
+		rulesChanged.put(ontologyURI, false);
+		factsChanged.put(ontologyURI, false);
 
 		// constructing the result set
-		final Set<ITuple> result = e.computeSubstitution(query);
+		final Set<ITuple> result = executor.get(ontologyURI).computeSubstitution(query);
 
 		final Set<Map<Variable, Term>> res = new HashSet<Map<Variable, Term>>();
 		final List<IVariable> qVars = query.getQueryVariables();
@@ -275,26 +271,23 @@ public class IrisFacade implements DatalogReasonerFacade {
 		return res;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.wsml.reasoner.DatalogReasonerFacade#register(java.lang.String,
-	 *      java.util.Set)
-	 */
 	public synchronized void register(String ontologyURI, Set<Rule> kb)
 			throws ExternalToolException {
-		// the ontologyURI is at the moment ignored, because at the moment
-		// program only supports one instance per vm
+		if (ontologyURI == null) {
+			throw new NullPointerException("The ontology uri must not be null");
+		}
 		if (kb == null) {
 			throw new NullPointerException("The knowlebe base must not be null");
 		}
-
+		if (progs.containsKey(ontologyURI)) {
+			deregister(ontologyURI);
+		}
+		
+		final IProgram p = PROGRAM.createProgram();
 		// translating all the rules
 		for (final Rule r : kb) {
 			if (r.isFact()) { // the rule is a fact
-				if (p.addFact(literal2Atom(r.getHead()))) {
-					factsChanged = true;
-				}
+				p.addFact(literal2Atom(r.getHead()));
 			} else { // the rule is an ordinary rule
 				final List<ILiteral> body = new ArrayList<ILiteral>(r.getBody()
 						.size());
@@ -302,13 +295,16 @@ public class IrisFacade implements DatalogReasonerFacade {
 				for (final Literal l : r.getBody()) {
 					body.add(literal2Literal(l));
 				}
-				if (p.addRule(BASIC.createRule(BASIC
-						.createHead(literal2Literal(r.getHead())), BASIC
-						.createBody(body)))) {
-					rulesChanged = true;
-				}
+				p.addRule(BASIC.createRule(
+						BASIC.createHead(literal2Literal(r.getHead())),
+						BASIC.createBody(body)));
 			}
 		}
+		
+		this.factsChanged.put(ontologyURI, true);
+		this.rulesChanged.put(ontologyURI, true);
+		this.progs.put(ontologyURI, p);
+		this.executor.put(ontologyURI, new Executor(p, new ExpressionEvaluator()));
 	}
 
 	/**
