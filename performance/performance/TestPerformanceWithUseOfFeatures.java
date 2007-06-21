@@ -48,25 +48,24 @@ public class TestPerformanceWithUseOfFeatures {
         TestPerformanceWithUseOfFeatures ex = new TestPerformanceWithUseOfFeatures();
        
 //        ex.doTestRun();
-        ex.testTransitiveAttributeOntologies();
         
-//    	ex.testSubconceptOntologies();
-//    	ex.testDeepSubconceptOntologies();
-//    	ex.testInstanceOntologies();
-//    	ex.testInstanceANDsubconceptOntologies();
-//    	ex.testInstanceANDdeepSubconceptOntologies();
-//    	ex.testOfTypeOntologies();
-//    	ex.testOfTypeANDsubconceptOntologies();
-//    	ex.testCardinality01Ontologies();
-//    	ex.testCardinality010Ontologies();
-//    	ex.testCardinality1maxOntologies();
-//    	ex.testInverseAttributeOntologies();
-//    	
-//    	ex.testSymmetricAttributeOntologies();
-//    	ex.testReflexiveAttributeOntologies();
-//    	ex.testLocallyStratifiedNegation();
-//    	ex.testGloballyStratifiedNegation();
-//    	ex.testBuiltInAttributeOntologies();
+    	ex.testSubconceptOntologies();
+    	ex.testDeepSubconceptOntologies();
+    	ex.testInstanceOntologies();
+    	ex.testInstanceANDsubconceptOntologies();
+    	ex.testInstanceANDdeepSubconceptOntologies();
+    	ex.testOfTypeOntologies();
+    	ex.testOfTypeANDsubconceptOntologies();
+    	ex.testCardinality01Ontologies();
+    	ex.testCardinality010Ontologies();
+    	ex.testCardinality1maxOntologies();
+    	ex.testInverseAttributeOntologies();
+    	ex.testTransitiveAttributeOntologies();
+    	ex.testSymmetricAttributeOntologies();
+    	ex.testReflexiveAttributeOntologies();
+    	ex.testLocallyStratifiedNegation();
+    	ex.testGloballyStratifiedNegation();
+    	ex.testBuiltInAttributeOntologies();
     }
 
     /**
@@ -77,7 +76,7 @@ public class TestPerformanceWithUseOfFeatures {
         Ontology o2 = loadOntology("performance/ontologies/002-simpleontHirachy.wsml");
         Ontology[] ontologies = new Ontology[]{o1,o2};
         String fileName = "simple/";
-        runPerformanceTests(this.reasonerNames, ontologies, fileName);
+        runPerformanceTests(reasonerNames, ontologies, fileName);
     }
 
     Ontology[] loadOntologies(String dir){
@@ -113,10 +112,9 @@ public class TestPerformanceWithUseOfFeatures {
      * loads subconcept type ontologies and performs sample queries
      */
     public void testSubconceptOntologies() throws Exception {
-    	reasonerNames = new String[]{"KAON", "MINS"};
         String fileName = "subconcept/";
     	Ontology[] ontologies = loadOntologies(BASE+fileName);
-        runPerformanceTests(this.reasonerNames, ontologies, fileName);
+        runPerformanceTests(reasonerNames, ontologies, fileName);
     }
     
     /**
@@ -125,7 +123,7 @@ public class TestPerformanceWithUseOfFeatures {
     public void testDeepSubconceptOntologies() throws Exception {
         String path = "deepSubconcept/";
     	Ontology[] ontologies = loadOntologies(BASE+path);
-        runPerformanceTests(this.reasonerNames, ontologies, path);
+        runPerformanceTests(reasonerNames, ontologies, path);
     }
 
     /**
@@ -134,7 +132,7 @@ public class TestPerformanceWithUseOfFeatures {
     public void testInstanceOntologies() throws Exception {
         String path = "instance/";
         Ontology[] ontologies = loadOntologies(BASE+path);
-        runPerformanceTests(this.reasonerNames, ontologies, path);
+        runPerformanceTests(reasonerNames, ontologies, path);
     }
     
     /**
@@ -143,7 +141,7 @@ public class TestPerformanceWithUseOfFeatures {
     public void testInstanceANDsubconceptOntologies() throws Exception {
         String path = "instanceANDsubconcept/";
         Ontology[] ontologies = loadOntologies(BASE+path);
-        runPerformanceTests(this.reasonerNames, ontologies, path);
+        runPerformanceTests(reasonerNames, ontologies, path);
     }
     
     /**
@@ -152,7 +150,7 @@ public class TestPerformanceWithUseOfFeatures {
     public void testInstanceANDdeepSubconceptOntologies() throws Exception {
         String path = "instanceANDdeepSubconcept/";
         Ontology[] ontologies = loadOntologies(BASE+path);
-        runPerformanceTests(this.reasonerNames, ontologies, path);
+        runPerformanceTests(reasonerNames, ontologies, path);
     }
     
     /**
@@ -170,7 +168,7 @@ public class TestPerformanceWithUseOfFeatures {
     public void testOfTypeANDsubconceptOntologies() throws Exception {
         String path = "ofTypeANDsubconcept/";
         Ontology[] ontologies = loadOntologies(BASE+path);
-        runPerformanceTests(this.reasonerNames, ontologies, path);
+        runPerformanceTests(reasonerNames, ontologies, path);
     }
     
     /**
@@ -206,7 +204,7 @@ public class TestPerformanceWithUseOfFeatures {
     public void testInverseAttributeOntologies() throws Exception {
         String path = "inverseAttribute/";
         Ontology[] ontologies = loadOntologies(BASE+path);
-        runPerformanceTests(this.reasonerNames, ontologies, path);
+        runPerformanceTests(reasonerNames, ontologies, path);
     }
     
     /**
@@ -240,13 +238,13 @@ public class TestPerformanceWithUseOfFeatures {
     public void testLocallyStratifiedNegation() throws Exception {
         String path = "locallyStratifiedNegation/";
         Ontology[] ontologies = loadOntologies(BASE+path);
-        runPerformanceTests(this.reasonerNames, ontologies, path);
+        runPerformanceTests(reasonerNames, ontologies, path);
     }
     
     public void testGloballyStratifiedNegation() throws Exception {
         String path = "globallyStratifiedNegation/";
         Ontology[] ontologies = loadOntologies(BASE+path);
-        runPerformanceTests(this.reasonerNames, ontologies, path);
+        runPerformanceTests(reasonerNames, ontologies, path);
     }
     
     /**
@@ -255,7 +253,7 @@ public class TestPerformanceWithUseOfFeatures {
     public void testBuiltInAttributeOntologies() throws Exception {
         String path = "built_in/";
         Ontology[] ontologies = loadOntologies(BASE+path);
-        runPerformanceTests(this.reasonerNames, ontologies, path);
+        runPerformanceTests(reasonerNames, ontologies, path);
     }
     
     private void runPerformanceTests(String[] reasonerNames, Ontology[] ontologies, String path) 
