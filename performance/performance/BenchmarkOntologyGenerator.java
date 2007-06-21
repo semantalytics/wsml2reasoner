@@ -127,11 +127,13 @@ public class BenchmarkOntologyGenerator {
 	/*
 	 * Types of queries
 	 */
-	public static String MEMBEROF = "MemberOf query";
+	public static String MEMBEROF_1 = "MemberOf query 1";
 	
-	public static String ATTR_VALUE = "Attribute value query";
+	public static String MEMBEROF_2 = "MemberOf query 2";
 	
-	public static String CONJ = "Conjunction of memberOf and attribute value";
+	public static String ATTR_VALUE_1 = "Attribute value query 1";
+	
+	public static String ATTR_VALUE_2 = "Attribute value query 2";
 	
 	
 	public static void main(String[] args) throws Exception{
@@ -142,23 +144,23 @@ public class BenchmarkOntologyGenerator {
 		serializer = Factory.createSerializer(null);
 		
 		BenchmarkOntologyGenerator generator = new BenchmarkOntologyGenerator();
+			generator.genSubconceptOntologies();
+			generator.genDeepSubconceptOntologies();
+			generator.genInstanceOntologies();
+			generator.genInstanceANDsubconceptOntologies();
+			generator.genInstanceANDdeepSubconceptOntologies();
+			generator.genOfTypeOntologies();
+			generator.genOfTypeANDsubconceptOntologies();
+			generator.genCardinality01Ontologies();
+			generator.genCardinality010Ontologies();
+			generator.genMinCardinalityOntologies();
+			generator.genInverseAttributeOntologies();
 			generator.genTransitiveAttributeOntologies();
-//			generator.genSubconceptOntologies();
-//			generator.genDeepSubconceptOntologies();
-//			generator.genInstanceOntologies();
-//			generator.genInstanceANDsubconceptOntologies();
-//			generator.genInstanceANDdeepSubconceptOntologies();
-//			generator.genOfTypeOntologies();
-//			generator.genOfTypeANDsubconceptOntologies();
-//			generator.genCardinality01Ontologies();
-//			generator.genCardinality010Ontologies();
-//			generator.genMinCardinalityOntologies();
-//			generator.genInverseAttributeOntologies();
-//			generator.genSymmetricAttributeOntologies();
-//			generator.genReflexiveAttributeOntologies();
-//			generator.genLocallyStratifiedNegationOntologies();
-//			generator.genGloballyStratifiedNegationOntologies();
-//			generator.genBuiltInAttributeOntologies();
+			generator.genSymmetricAttributeOntologies();
+			generator.genReflexiveAttributeOntologies();
+			generator.genLocallyStratifiedNegationOntologies();
+			generator.genGloballyStratifiedNegationOntologies();
+			generator.genBuiltInAttributeOntologies();
 	}
 	
 	/**
@@ -231,7 +233,7 @@ public class BenchmarkOntologyGenerator {
 			String description = "This query will return two result sets containing " +
 					"i1 and i2.";
 			String result1 = "?x=i2";
-			addNFPs(query1, MEMBEROF, description, result1);
+			addNFPs(query1, MEMBEROF_1, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
@@ -242,7 +244,7 @@ public class BenchmarkOntologyGenerator {
 			description = "This query will return three result sets containing i1 and i2 (i2 is " +
 					"member of two concepts).";
 			String result2 = "?x=i2,?y=" + ((IRI) subConcept.getIdentifier()).getLocalName();
-			addNFPs(query2, MEMBEROF, description, result2);
+			addNFPs(query2, MEMBEROF_2, description, result2);
 			ontology.addRelationInstance(query2);
 			
 			/*
@@ -334,7 +336,7 @@ public class BenchmarkOntologyGenerator {
 			String description = "This query will return two result sets containing " +
 					"i1 and i2.";
 			String result1 = "?x=i2";
-			addNFPs(query1, MEMBEROF, description, result1);
+			addNFPs(query1, MEMBEROF_1, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
@@ -345,7 +347,7 @@ public class BenchmarkOntologyGenerator {
 			description = "This query will return a number of result sets rising along with " +
 					"the amount of subconcept expressions in the ontology.";
 			String result2 = "?x=i2,?y=c11";
-			addNFPs(query2, MEMBEROF, description, result2);
+			addNFPs(query2, MEMBEROF_2, description, result2);
 			ontology.addRelationInstance(query2);
 
 			/*
@@ -424,7 +426,7 @@ public class BenchmarkOntologyGenerator {
 			String description = "This query will return a number of result sets equivalent " +
 					"to the number of memberof expressions in the ontology.";
 			String result1 = "?x=i" + amount[i];
-			addNFPs(query1, MEMBEROF, description, result1);
+			addNFPs(query1, MEMBEROF_1, description, result1);
 			ontology.addRelationInstance(query1);
 
 			/*
@@ -504,7 +506,7 @@ public class BenchmarkOntologyGenerator {
 			String description = "This query will return a number of result sets equivalent " +
 					"to the number of memberof expressions in the ontology.";
 			String result1 = "?x=i" + amount[i];
-			addNFPs(query1, MEMBEROF, description, result1);
+			addNFPs(query1, MEMBEROF_1, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
@@ -515,7 +517,7 @@ public class BenchmarkOntologyGenerator {
 			description = "This query will return a number of result sets equivalent " +
 					"to 2 x the number of memberof expressions in the ontology.";
 			String result2 = "?x=i" + amount[i] +",?y=c2";
-			addNFPs(query2, MEMBEROF, description, result2);
+			addNFPs(query2, MEMBEROF_2, description, result2);
 			ontology.addRelationInstance(query2);
 			
 			/*
@@ -602,7 +604,7 @@ public class BenchmarkOntologyGenerator {
 			String description = "This query will return a number of result sets equivalent " +
 					"to the number of memberof expressions in the ontology.";
 			String result1 = "?x=i" + amount[i];
-			addNFPs(query1, MEMBEROF, description, result1);
+			addNFPs(query1, MEMBEROF_1, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
@@ -613,7 +615,7 @@ public class BenchmarkOntologyGenerator {
 			description = "The number of result sets returned by this query is growing exponentially " +
 					"in relation to the amount of subconcept expressions in the ontology.";
 			String result2 = "?x=i" + amount[i] + ",?y=c" + amount[i];
-			addNFPs(query2, MEMBEROF, description, result2);
+			addNFPs(query2, MEMBEROF_2, description, result2);
 			ontology.addRelationInstance(query2);
 
 			/*
@@ -708,7 +710,7 @@ public class BenchmarkOntologyGenerator {
 			// add NFPs to query 1
 			String description = "This query will return exactly one result set.";
 			String result1 = "?x=i2";
-			addNFPs(query1, ATTR_VALUE, description, result1);
+			addNFPs(query1, ATTR_VALUE_1, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
@@ -719,7 +721,7 @@ public class BenchmarkOntologyGenerator {
 			description = "";
 			String result2 = "This query returns a number of result sets equivalent to the number " +
 					"of attribute value expressions in the ontology.";
-			addNFPs(query2, ATTR_VALUE, description, result2);
+			addNFPs(query2, ATTR_VALUE_2, description, result2);
 			ontology.addRelationInstance(query2);
 
 			/*
@@ -812,24 +814,24 @@ public class BenchmarkOntologyGenerator {
 			r1.createParameter((byte) 0);
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
 			query1.setParameterValue((byte) 0, dataFactory.createWsmlString(
-					"i1[a1 hasValue ?x] and ?x memberOf ?y"));
+					"i1[a1 hasValue ?x]"));
 			// add NFPs to query 1
 			String description = "This query will return exactly one result set, as it is querying " +
 					"for the value of one specific attribute.";
-			String result1 = "?x=i2,?y=c2";
-			addNFPs(query1, CONJ, description, result1);
+			String result1 = "?x=i2";
+			addNFPs(query1, ATTR_VALUE_1, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
 			r2.createParameter((byte) 0);
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
 			query2.setParameterValue((byte) 0, dataFactory.createWsmlString(
-					"?x[?y hasValue ?z] and ?z memberOf ?w"));
+					"?x[?y hasValue ?z]"));
 			// add NFPs to query 2
 			description = "This query will return a number of result sets equivalent to the " +
 					"amount of attribute value expressions in the ontology.";
-			String result2 = "?x=i1,?y=a" + amount[i] + ",?z=i2,?w=c2";
-			addNFPs(query2, CONJ, description, result2);
+			String result2 = "?x=i1,?y=a" + amount[i] + ",?z=i2";
+			addNFPs(query2, ATTR_VALUE_2, description, result2);
 			ontology.addRelationInstance(query2);
 
 			/*
@@ -845,8 +847,8 @@ public class BenchmarkOntologyGenerator {
 					"\n\t\t\t instance i1 memberOf c1 \n\t\t\t \t a1 hasValue i2" +
 					"\n\t\t\t instance i2 memberOf c2\n\t\t\t " +
 					"The following two queries are applied to it:\n\t\t\t " +
-					"Query 1: i1[a1 hasValue ?y] and ?y memberOf ?z" +
-					"\n\t\t\t Query 2: ?x[?y hasValue ?z] and ?z memberOf ?w";
+					"Query 1: i1[a1 hasValue ?y]" +
+					"\n\t\t\t Query 2: ?x[?y hasValue ?z]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
 			
 			// write ontology file
@@ -922,7 +924,7 @@ public class BenchmarkOntologyGenerator {
 			String description = "This query will return exactly one result set, as it is querying " +
 					"for the value of one specific attribute.";
 			String result1 = "?x=i2";
-			addNFPs(query1, ATTR_VALUE, description, result1);
+			addNFPs(query1, ATTR_VALUE_1, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
@@ -933,7 +935,7 @@ public class BenchmarkOntologyGenerator {
 			description = "This query will return a number of result sets equivalent to the " +
 					"amount of attribute value expressions in the ontology.";
 			String result2 = "?x=i1,?y=a" + amount[i] + ",?z=i2";
-			addNFPs(query2, ATTR_VALUE, description, result2);
+			addNFPs(query2, ATTR_VALUE_2, description, result2);
 			ontology.addRelationInstance(query2);
 
 			/*
@@ -1022,7 +1024,7 @@ public class BenchmarkOntologyGenerator {
 			String description = "This query will return exactly one result set, as it is querying " +
 					"for the value of one specific attribute.";
 			String result1 = "?x=i2";
-			addNFPs(query1, ATTR_VALUE, description, result1);
+			addNFPs(query1, ATTR_VALUE_1, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
@@ -1033,7 +1035,7 @@ public class BenchmarkOntologyGenerator {
 			description = "This query will return a number of result sets equivalent to the " +
 					"amount of attribute value expressions in the ontology.";
 			String result2 = "?x=i1,?y=a" + amount[i] + ",?z=i2";
-			addNFPs(query2, ATTR_VALUE, description, result2);
+			addNFPs(query2, ATTR_VALUE_2, description, result2);
 			ontology.addRelationInstance(query2);
 
 			/*
@@ -1097,7 +1099,6 @@ public class BenchmarkOntologyGenerator {
 			Instance instance2 = wsmoFactory.createInstance(
 					wsmoFactory.createIRI(ns, "i2"));
 			instance1.addConcept(concept);
-			instance2.addConcept(concept);
 			ontology.addInstance(instance1);
 			ontology.addInstance(instance2);
 			
@@ -1105,7 +1106,7 @@ public class BenchmarkOntologyGenerator {
 			Attribute attribute = null;
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
-				attribute.addType(concept);
+				attribute.addType(wsmoFactory.createConcept(wsmoFactory.createIRI(ns, "c2")));
 				attribute.setMinCardinality(1);
 				attribute.setMaxCardinality(Integer.MAX_VALUE);
 				instance1.addAttributeValue(attribute.getIdentifier(), instance2);
@@ -1123,7 +1124,7 @@ public class BenchmarkOntologyGenerator {
 			String description = "This query will return exactly one result set, as it is querying " +
 					"for the value of one specific attribute.";
 			String result1 = "?x=i2";
-			addNFPs(query1, ATTR_VALUE, description, result1);
+			addNFPs(query1, ATTR_VALUE_1, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
@@ -1134,7 +1135,7 @@ public class BenchmarkOntologyGenerator {
 			description = "This query will return a number of result sets equivalent to the " +
 					"amount of attribute value expressions in the ontology.";
 			String result2 = "?x=i1,?y=a" + amount[i] + ",?z=i2";
-			addNFPs(query2, ATTR_VALUE, description, result2);
+			addNFPs(query2, ATTR_VALUE_2, description, result2);
 			ontology.addRelationInstance(query2);
 
 			/*
@@ -1229,7 +1230,7 @@ public class BenchmarkOntologyGenerator {
 			String description = "This query will return exactly one result set, as it is querying " +
 					"for the value of one specific attribute.";
 			String result1 = "?x=i2";
-			addNFPs(query1, ATTR_VALUE, description, result1);
+			addNFPs(query1, ATTR_VALUE_1, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
@@ -1240,7 +1241,7 @@ public class BenchmarkOntologyGenerator {
 			description = "This query will return a number of result sets equivalent to the " +
 					"amount of inverse attribute expressions in the ontology.";
 			String result2 = "?x=a" + amount[i] + ",?y=i2";
-			addNFPs(query2, ATTR_VALUE, description, result2);
+			addNFPs(query2, ATTR_VALUE_2, description, result2);
 			ontology.addRelationInstance(query2);
 
 			/*
@@ -1339,7 +1340,7 @@ public class BenchmarkOntologyGenerator {
 			String description = "This query will return two result sets; it is querying " +
 					"for the value of one specific transitive attribute.";
 			String result1 = "?x=i3";
-			addNFPs(query1, ATTR_VALUE, description, result1);
+			addNFPs(query1, ATTR_VALUE_1, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
@@ -1352,7 +1353,7 @@ public class BenchmarkOntologyGenerator {
 					"in a linear way with the amount of attribute value expressions in the " +
 					"ontology.";
 			String result2 = "";
-			addNFPs(query2, ATTR_VALUE, description, result2);
+			addNFPs(query2, ATTR_VALUE_2, description, result2);
 			ontology.addRelationInstance(query2);
 
 			/*
@@ -1444,7 +1445,7 @@ public class BenchmarkOntologyGenerator {
 			String description = "This query will return exactly one result set as it is querying " +
 					"for the value of one specific symmetric attribute.";
 			String result1 = "?x=i1";
-			addNFPs(query1, ATTR_VALUE, description, result1);
+			addNFPs(query1, ATTR_VALUE_1, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
@@ -1457,7 +1458,7 @@ public class BenchmarkOntologyGenerator {
 			description = "This query will return two result set as it is querying " +
 					"for the value of one specific symmetric attribute.";
 			String result2 = "?x=i2,?y=i1";
-			addNFPs(query2, ATTR_VALUE, description, result2);
+			addNFPs(query2, ATTR_VALUE_2, description, result2);
 			ontology.addRelationInstance(query2);
 
 			/*
@@ -1538,7 +1539,7 @@ public class BenchmarkOntologyGenerator {
 			String description = "This query will return exactly one result set as it is querying " +
 					"for the value of one specific reflexive attribute.";
 			String result1 = "?x=i1";
-			addNFPs(query1, ATTR_VALUE, description, result1);
+			addNFPs(query1, ATTR_VALUE_1, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
@@ -1549,7 +1550,7 @@ public class BenchmarkOntologyGenerator {
 			description = "This query will return a number of result sets equivalent to the " +
 					"amount of reflexive attribute expressions in the ontology.";
 			String result2 = "?x=a" + amount[i] + ",?y=i1";
-			addNFPs(query2, ATTR_VALUE, description, result2);
+			addNFPs(query2, ATTR_VALUE_2, description, result2);
 			ontology.addRelationInstance(query2);
 
 			/*
@@ -1659,7 +1660,7 @@ public class BenchmarkOntologyGenerator {
 					"for the value of one specific attribute that gets a value as result of " +
 					"evaluation of the logical expression.";
 			String result1 = "?x=i1";
-			addNFPs(query1, ATTR_VALUE, description, result1);
+			addNFPs(query1, ATTR_VALUE_1, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
@@ -1673,7 +1674,7 @@ public class BenchmarkOntologyGenerator {
 					"for the value of one specific attribute that gets a value as result of " +
 					"evaluation of the logical expression.";
 			String result2 = "?x=i1,?y=i1";
-			addNFPs(query2, ATTR_VALUE, description, result2);
+			addNFPs(query2, ATTR_VALUE_2, description, result2);
 			ontology.addRelationInstance(query2);
 
 			/*
@@ -1785,7 +1786,7 @@ public class BenchmarkOntologyGenerator {
 					"to the number of instances in the ontology, i.e. exactly one result set " +
 					"for this ontology.";
 			String result1 = "?x=i1";
-			addNFPs(query1, MEMBEROF, description, result1);
+			addNFPs(query1, MEMBEROF_1, description, result1);
 			ontology.addRelationInstance(query1);
 
 			/*
@@ -1921,7 +1922,7 @@ public class BenchmarkOntologyGenerator {
 					"the ontology. The maximal number of result sets is the number of " +
 					"instances in the ontology.";
 			String result1 = "?x=i0";
-			addNFPs(query1, MEMBEROF, description, result1);
+			addNFPs(query1, MEMBEROF_1, description, result1);
 			ontology.addRelationInstance(query1);
 
 			/*
@@ -2055,6 +2056,9 @@ public class BenchmarkOntologyGenerator {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.15  2007-06-21 10:57:28  hlausen
+ * *** empty log message ***
+ *
  * Revision 1.14  2007-06-21 10:34:41  nathalie
  * more nfps and slight changes in the ontology building
  *
