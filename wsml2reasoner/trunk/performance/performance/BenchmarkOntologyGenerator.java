@@ -58,14 +58,14 @@ public class BenchmarkOntologyGenerator {
 	
 	// for each type of ontology (like e.g. subconcept ontology) ontologies 
 	// with the following amounts of entities shall be created
-	private static Integer[] amount;
+	private static int[] amount;
 	static{ 
-		ArrayList<Integer> list = new ArrayList<Integer>();
-		for (int i=0;i <3000;i += 250){
-			list.add(i);
+		amount = new int[15];
+		for (int i=0;i <amount.length;i++){
+			int t = i*250;
+			if (t==0) t=10;
+			amount[i]=t;
 		}
-		amount=new Integer[list.size()];
-		amount=list.toArray(amount);
 	}
 	
 	/*
@@ -2105,6 +2105,9 @@ public class BenchmarkOntologyGenerator {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.12  2007-06-21 07:48:19  hlausen
+ * *** empty log message ***
+ *
  * Revision 1.11  2007-06-21 07:28:50  nathalie
  * fixed bug in attribute counting
  *
