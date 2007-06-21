@@ -133,6 +133,34 @@ public class BenchmarkOntologyGenerator {
 	
 	public static String CONJ = "Conjunction of memberOf and attribute value";
 	
+	
+	public static void main(String[] args) throws Exception{
+		WSMO4JManager wsmo4jManager = new WSMO4JManager();
+		wsmoFactory = wsmo4jManager.getWSMOFactory();
+		leFactory = wsmo4jManager.getLogicalExpressionFactory();
+		dataFactory = wsmo4jManager.getDataFactory();
+		serializer = Factory.createSerializer(null);
+		
+		BenchmarkOntologyGenerator generator = new BenchmarkOntologyGenerator();
+			generator.genTransitiveAttributeOntologies();
+//			generator.genSubconceptOntologies();
+//			generator.genDeepSubconceptOntologies();
+//			generator.genInstanceOntologies();
+//			generator.genInstanceANDsubconceptOntologies();
+//			generator.genInstanceANDdeepSubconceptOntologies();
+//			generator.genOfTypeOntologies();
+//			generator.genOfTypeANDsubconceptOntologies();
+//			generator.genCardinality01Ontologies();
+//			generator.genCardinality010Ontologies();
+//			generator.genMinCardinalityOntologies();
+//			generator.genInverseAttributeOntologies();
+//			generator.genSymmetricAttributeOntologies();
+//			generator.genReflexiveAttributeOntologies();
+//			generator.genLocallyStratifiedNegationOntologies();
+//			generator.genGloballyStratifiedNegationOntologies();
+//			generator.genBuiltInAttributeOntologies();
+	}
+	
 	/**
 	 * Generate ontologies containing simple hierarchy expressions like 
 	 * e.g. 
@@ -255,7 +283,6 @@ public class BenchmarkOntologyGenerator {
 			throws IOException, SynchronisationException, InvalidModelException {
 		Ontology ontology = null;
 		// reduce amounts of entities that shall be created for this ontology type
-		int[] amount = {1,10,100,500,1000};
 		for (int i = 0; i < amount.length; i++) {	
 			// create default namespace
 			Namespace ns = wsmoFactory.createNamespace("", 
@@ -529,7 +556,6 @@ public class BenchmarkOntologyGenerator {
 	public void genInstanceANDdeepSubconceptOntologies() 
 			throws IOException, SynchronisationException, InvalidModelException {
 		Ontology ontology = null;
-		int[] amount = {1,10,100,500,1000};
 		for (int i = 0; i < amount.length; i++) {	
 			// create default namespace
 			Namespace ns = wsmoFactory.createNamespace("", 
@@ -2022,49 +2048,16 @@ public class BenchmarkOntologyGenerator {
 	    writer.close();
 	    System.out.println("Wrote " + fileName + ".wsml");
 	}
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		WSMO4JManager wsmo4jManager = new WSMO4JManager();
-		wsmoFactory = wsmo4jManager.getWSMOFactory();
-		leFactory = wsmo4jManager.getLogicalExpressionFactory();
-		dataFactory = wsmo4jManager.getDataFactory();
-		serializer = Factory.createSerializer(null);
-		
-		BenchmarkOntologyGenerator generator = new BenchmarkOntologyGenerator();
-		try {
-			generator.genSubconceptOntologies();
-			generator.genDeepSubconceptOntologies();
-			generator.genInstanceOntologies();
-			generator.genInstanceANDsubconceptOntologies();
-			generator.genInstanceANDdeepSubconceptOntologies();
-			generator.genOfTypeOntologies();
-			generator.genOfTypeANDsubconceptOntologies();
-			generator.genCardinality01Ontologies();
-			generator.genCardinality010Ontologies();
-			generator.genMinCardinalityOntologies();
-			generator.genInverseAttributeOntologies();
-			generator.genTransitiveAttributeOntologies();
-			generator.genSymmetricAttributeOntologies();
-			generator.genReflexiveAttributeOntologies();
-			generator.genLocallyStratifiedNegationOntologies();
-			generator.genGloballyStratifiedNegationOntologies();
-			generator.genBuiltInAttributeOntologies();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (SynchronisationException e) {
-			e.printStackTrace();
-		} catch (InvalidModelException e) {
-			e.printStackTrace();
-		} catch (ParserException e) {
-			e.printStackTrace();
-		}
-	}
+
+
+	
 
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.14  2007-06-21 10:34:41  nathalie
+ * more nfps and slight changes in the ontology building
+ *
  * Revision 1.13  2007-06-21 07:52:12  hlausen
  * more steps no iteration per step!
  *

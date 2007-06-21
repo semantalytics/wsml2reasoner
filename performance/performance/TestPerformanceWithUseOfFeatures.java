@@ -48,23 +48,25 @@ public class TestPerformanceWithUseOfFeatures {
         TestPerformanceWithUseOfFeatures ex = new TestPerformanceWithUseOfFeatures();
        
 //        ex.doTestRun();
-    	ex.testSubconceptOntologies();
-    	ex.testDeepSubconceptOntologies();
-    	ex.testInstanceOntologies();
-    	ex.testInstanceANDsubconceptOntologies();
-    	ex.testInstanceANDdeepSubconceptOntologies();
-    	ex.testOfTypeOntologies();
-    	ex.testOfTypeANDsubconceptOntologies();
-    	ex.testCardinality01Ontologies();
-    	ex.testCardinality010Ontologies();
-    	ex.testCardinality1maxOntologies();
-    	ex.testInverseAttributeOntologies();
-    	ex.testTransitiveAttributeOntologies();
-    	ex.testSymmetricAttributeOntologies();
-    	ex.testReflexiveAttributeOntologies();
-    	ex.testLocallyStratifiedNegation();
-    	ex.testGloballyStratifiedNegation();
-    	ex.testBuiltInAttributeOntologies();
+        ex.testTransitiveAttributeOntologies();
+        
+//    	ex.testSubconceptOntologies();
+//    	ex.testDeepSubconceptOntologies();
+//    	ex.testInstanceOntologies();
+//    	ex.testInstanceANDsubconceptOntologies();
+//    	ex.testInstanceANDdeepSubconceptOntologies();
+//    	ex.testOfTypeOntologies();
+//    	ex.testOfTypeANDsubconceptOntologies();
+//    	ex.testCardinality01Ontologies();
+//    	ex.testCardinality010Ontologies();
+//    	ex.testCardinality1maxOntologies();
+//    	ex.testInverseAttributeOntologies();
+//    	
+//    	ex.testSymmetricAttributeOntologies();
+//    	ex.testReflexiveAttributeOntologies();
+//    	ex.testLocallyStratifiedNegation();
+//    	ex.testGloballyStratifiedNegation();
+//    	ex.testBuiltInAttributeOntologies();
     }
 
     /**
@@ -88,6 +90,7 @@ public class TestPerformanceWithUseOfFeatures {
 				Ontology ont = (Ontology)wsmlParser.parse(new FileReader(f))[0];
 				onts.put(f.getName(),ont);
 			} catch (Exception e) {
+				System.out.println(f.getAbsolutePath()+"/"+f.getName());
 				throw new RuntimeException("could not load ontology",e);
 			}
     	}
@@ -110,6 +113,7 @@ public class TestPerformanceWithUseOfFeatures {
      * loads subconcept type ontologies and performs sample queries
      */
     public void testSubconceptOntologies() throws Exception {
+    	reasonerNames = new String[]{"KAON", "MINS"};
         String fileName = "subconcept/";
     	Ontology[] ontologies = loadOntologies(BASE+fileName);
         runPerformanceTests(this.reasonerNames, ontologies, fileName);
@@ -157,7 +161,6 @@ public class TestPerformanceWithUseOfFeatures {
     public void testOfTypeOntologies() throws Exception {
         String path = "ofType/";
         Ontology[] ontologies = loadOntologies(BASE+path);
-        String[] reasonerNames = new String[]{"MINS", "KAON"};
         runPerformanceTests(reasonerNames, ontologies, path);
     }
     
@@ -176,7 +179,6 @@ public class TestPerformanceWithUseOfFeatures {
     public void testCardinality01Ontologies() throws Exception {
         String path = "cardinality_0_1/";
         Ontology[] ontologies = loadOntologies(BASE+path);
-        String[] reasonerNames = new String[]{"MINS", "KAON"};
         runPerformanceTests(reasonerNames, ontologies, path);
     }
     
@@ -185,7 +187,6 @@ public class TestPerformanceWithUseOfFeatures {
      */
     public void testCardinality010Ontologies() throws Exception {
         String path = "cardinality_0_10/";
-        String[] reasonerNames = new String[]{"KAON", "MINS"};
         Ontology[] ontologies = loadOntologies(BASE+path);
         runPerformanceTests(reasonerNames, ontologies, path);
     }
@@ -196,7 +197,6 @@ public class TestPerformanceWithUseOfFeatures {
     public void testCardinality1maxOntologies() throws Exception {
         String path = "cardinality_1_max/";
         Ontology[] ontologies = loadOntologies(BASE+path);
-        String[] reasonerNames = new String[]{"MINS", "KAON"};
         runPerformanceTests(reasonerNames, ontologies, path);
     }
     
@@ -215,7 +215,6 @@ public class TestPerformanceWithUseOfFeatures {
     public void testTransitiveAttributeOntologies() throws Exception {
         String path = "transitiveAttribute/";
         Ontology[] ontologies = loadOntologies(BASE+path);
-        String[] reasonerNames = new String[]{"MINS", "KAON"};
         runPerformanceTests(reasonerNames, ontologies, path);
     }
     
@@ -225,7 +224,6 @@ public class TestPerformanceWithUseOfFeatures {
     public void testSymmetricAttributeOntologies() throws Exception {
         String path = "symmetricAttribute/";
         Ontology[] ontologies = loadOntologies(BASE+path);
-        String[] reasonerNames = new String[]{"MINS", "KAON"};
         runPerformanceTests(reasonerNames, ontologies, path);
     }
     
@@ -286,14 +284,12 @@ public class TestPerformanceWithUseOfFeatures {
             for (int i = 0; i < reasonerNames.length; i++){      
                 for (Entry<String, String> query : queries.entrySet()){
                 	try{
+                		PerformanceResult result = executeQuery(query.getValue(), ontology,reasonerNames[i],log);
 	                    performanceresults.addReasonerPerformaceResult(
 	                            reasonerNames[i], 
 	                            ontology, 
 	                            query.getKey(), 
-	                            executeQuery(query.getValue(), 
-                        		ontology, 
-                        		reasonerNames[i],
-                        		log));
+	                            result);
                 	}catch (Exception e){
                 		log.println("error with ontology "+ontology.getIdentifier()+" and reasoner "+reasonerNames[i]);
                 		log.println(e.getMessage());
@@ -341,14 +337,14 @@ public class TestPerformanceWithUseOfFeatures {
     		return performanceresult;
     	}
         
-        log.println("------------------------------------");
+        log.println("\n------------------------------------");
         log.println("query = '" + theQuery + "'");
         log.println("ontology = '" + theOntology.getIdentifier() + "'");
         log.println("reasoner = '" + theReasonerName + "'");
         
         WSMLReasoner reasoner = createReasoner(theReasonerName,log);
         if (reasoner==null){
-        	log.println("ERRRRROOOORRR");
+        	log.println("EROR could not create Reasoner");
         	return performanceresult;
         }
     
@@ -369,7 +365,6 @@ public class TestPerformanceWithUseOfFeatures {
         	waitABit();
         	counter += WAIT_INTERVAL;
         }
-        log.println("");
        
         for (int i=0; i<NO_OF_TESTRUNS && !timedOutReasoner.contains(theReasonerName);i++){
             QueryThread queryThread = new QueryThread(theOntology,reasoner,query, log);
@@ -453,8 +448,6 @@ public class TestPerformanceWithUseOfFeatures {
         t.accept(v);
         return v.getSerializedObject();
     }
-    
-
 }
 
 class MyThread extends Thread{
@@ -488,6 +481,8 @@ class RegistrationThread extends MyThread {
             performanceresult.setRegisterOntology(t1);
             isFinished = true;
 		} catch (InconsistencyException e) {
+			log.println("error registering ontology "+((IRI)o.getIdentifier()).getLocalName());
+			log.println("  error detail: "+e);
 			throw new RuntimeException(e);
 		}
 	}
@@ -508,16 +503,23 @@ class QueryThread extends MyThread {
 	}
 	long t2=-1;
 	public void run() {
-	    long t2_start = System.currentTimeMillis();
-	    Set<Map<Variable, Term>> result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
-	    log.print("  size: "+result.size());
-	    if (!result.isEmpty()){
-	    	log.println(" sample: "+result.iterator().next());
-	    }
-        long t2_end = System.currentTimeMillis();
-        t2 = t2_end - t2_start;
-//        System.out.print("  -"  +t2+ "-   ");
-        isFinished = true;
+		try{
+		    long t2_start = System.currentTimeMillis();
+		    Set<Map<Variable, Term>> result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
+		    log.print("  size: "+result.size());
+		    if (!result.isEmpty()){
+		    	log.print(" sample: "+result.iterator().next());
+//		    	log.println("\n ALL: "+result+"\n");
+		    }
+	        long t2_end = System.currentTimeMillis();
+	        t2 = t2_end - t2_start;
+	//        System.out.print("  -"  +t2+ "-   ");
+	        isFinished = true;
+		}catch (Throwable e){
+			log.println("error querying ontology "+((IRI)o.getIdentifier()).getLocalName()+
+					" with query "+query.toString(o) +":");
+			log.println("  error detail: "+e);
+		}
 	}
 	
 	public long getDuration(){
