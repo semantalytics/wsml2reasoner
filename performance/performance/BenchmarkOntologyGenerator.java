@@ -251,10 +251,10 @@ public class BenchmarkOntologyGenerator {
 			 * add non functional properties to the ontology: title, description
 			 */
 			String title = "Subconcept expressions";
-			description = "\n\t\t\t This ontology is containing simple hierarchy expressions.\n\t\t\t " +
+			description = "\n\t\t\t This ontology is containing simple hierarchy expressions.\n\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of subconcept expressions." +
-					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2 subConceptOf c1" +
-					"\n\t\t\t instance i1 memberOf c1\n\t\t\t instance i2 memberOf c2\n\t\t\t " +
+					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2 subConceptOf c1" +
+					"\n\t\t\t instance i1 memberOf c1\n\t\t\t instance i2 memberOf c2\n\n\t\t\t " +
 					"The following two queries are applied to it:\n\t\t\t " +
 					"Query 1: ?x memberOf c1\n\t\t\t Query 2: ?x memberOf ?y";
 			ontology = addNFPs(ontology, title, description, amount[i]);
@@ -354,11 +354,11 @@ public class BenchmarkOntologyGenerator {
 			 * add non functional properties to the ontology: title, description
 			 */
 			String title = "Deep subconcept expressions";
-			description = "\n\t\t\t This ontology is containing deep hierarchy expressions.\n\t\t\t " +
+			description = "\n\t\t\t This ontology is containing deep hierarchy expressions.\n\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of subconcept expressions." +
-					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2 subConceptOf c1" +
+					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2 subConceptOf c1" +
 					"\n\t\t\t concept c3 subConceptOf c2" +
-					"\n\t\t\t instance i1 memberOf c1\n\t\t\t instance i2 memberOf c3\n\t\t\t " +
+					"\n\t\t\t instance i1 memberOf c1\n\t\t\t instance i2 memberOf c3\n\n\t\t\t " +
 					"The following two queries are applied to it:\n\t\t\t " +
 					"Query 1: ?x memberOf c1\n\t\t\t Query 2: ?x memberOf ?y";
 			ontology = addNFPs(ontology, title, description, amount[i]);
@@ -433,10 +433,10 @@ public class BenchmarkOntologyGenerator {
 			 * add non functional properties to the ontology: title, description
 			 */
 			String title = "Memberof expressions";
-			description = "\n\t\t\t This ontology is containing memberof expressions.\n\t\t\t " +
+			description = "\n\t\t\t This ontology is containing memberof expressions.\n\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of memberof expressions." +
-					"\n\t\t\t Ontology example: \n\t\t\t concept c1 " +
-					"\n\t\t\t instance i1 memberOf c1\n\t\t\t instance i2 memberOf c1\n\t\t\t " +
+					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 " +
+					"\n\t\t\t instance i1 memberOf c1\n\t\t\t instance i2 memberOf c1\n\n\t\t\t " +
 					"The following query is applied to it:\n\t\t\t " +
 					"Query: ?x memberOf c1";
 			ontology = addNFPs(ontology, title, description, amount[i]);
@@ -525,10 +525,10 @@ public class BenchmarkOntologyGenerator {
 			 */
 			String title = "Memberof and subconcept expressions";
 			description = "\n\t\t\t This ontology is containing both memberof and simple hierarchy " +
-					"expressions.\n\t\t\t " +
+					"expressions.\n\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of memberof expressions." +
-					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2 subConceptOf c1" +
-					"\n\t\t\t instance i1 memberOf c2\n\t\t\t instance i2 memberOf c2\n\t\t\t " +
+					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2 subConceptOf c1" +
+					"\n\t\t\t instance i1 memberOf c2\n\t\t\t instance i2 memberOf c2\n\n\t\t\t " +
 					"The following two queries are applied to it:\n\t\t\t " +
 					"Query 1: ?x memberOf c1\n\t\t\t Query 2: ?x memberOf ?y";
 			ontology = addNFPs(ontology, title, description, amount[i]);
@@ -623,12 +623,12 @@ public class BenchmarkOntologyGenerator {
 			 */
 			String title = "Memberof and deep subconcept expressions";
 			description = "\n\t\t\t This ontology is containing both memberof and deep hierarchy " +
-					"expressions.\n\t\t\t " +
+					"expressions.\n\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of memberOf and of subconcept " +
 					"expressions." +
-					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2 subConceptOf c1" +
+					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2 subConceptOf c1" +
 					"\n\t\t\t concept c3 subConceptOf c2" +
-					"\n\t\t\t instance i1 memberOf c2\n\t\t\t instance i2 memberOf c3\n\t\t\t " +
+					"\n\t\t\t instance i1 memberOf c2\n\t\t\t instance i2 memberOf c3\n\n\t\t\t " +
 					"The following two queries are applied to it:\n\t\t\t " +
 					"Query 1: ?x memberOf c1\n\t\t\t Query 2: ?x memberOf ?y";
 			ontology = addNFPs(ontology, title, description, amount[i]);
@@ -729,13 +729,13 @@ public class BenchmarkOntologyGenerator {
 			 */
 			String title = "Constraining attribute expressions";
 			description = "\n\t\t\t This ontology is containing constraining attribute " +
-					"expressions.\n\t\t\t " +
+					"expressions.\n\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of constraining " +
 					"attribute and attribute value expressions." +
-					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2" +
+					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2" +
 					"\n\t\t\t \t a1 ofType c1" +
 					"\n\t\t\t instance i1 memberOf c2\n\t\t\t \t a1 hasValue i2" +
-					"\n\t\t\t instance i2 memberOf c1\n\t\t\t " +
+					"\n\t\t\t instance i2 memberOf c1\n\n\t\t\t " +
 					"The following two queries are applied to it:\n\t\t\t " +
 					"Query 1: i1[a1 hasValue ?y] \n\t\t\t Query 2: ?x[?y hasValue ?z]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
@@ -839,13 +839,13 @@ public class BenchmarkOntologyGenerator {
 			 */
 			String title = "Constraining attributes with subconcept expressions";
 			description = "\n\t\t\t This ontology is containing constraining attribute and simple " +
-					"hierarchy expressions.\n\t\t\t " +
+					"hierarchy expressions.\n\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of constraining attribute " +
 					"and attribute value expressions." +
-					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 ofType c2" +
+					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 ofType c2" +
 					"\n\t\t\t concept c2 subConceptOf c1" +
 					"\n\t\t\t instance i1 memberOf c1 \n\t\t\t \t a1 hasValue i2" +
-					"\n\t\t\t instance i2 memberOf c2\n\t\t\t " +
+					"\n\t\t\t instance i2 memberOf c2\n\n\t\t\t " +
 					"The following two queries are applied to it:\n\t\t\t " +
 					"Query 1: i1[a1 hasValue ?y]" +
 					"\n\t\t\t Query 2: ?x[?y hasValue ?z]";
@@ -943,11 +943,11 @@ public class BenchmarkOntologyGenerator {
 			 */
 			String title = "Maximal cardinality contraint (0 1) expressions";
 			description = "\n\t\t\t This ontology is containing cardinality constraint expressions " +
-					"with a maximal cardinality of 1.\n\t\t\t " +
+					"with a maximal cardinality of 1.\n\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of cardinality constraint expressions." +
-					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 ofType (0 1) c1" +
+					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 ofType (0 1) c1" +
 					"\n\t\t\t instance i1 memberOf c1 \n\t\t\t \t a1 hasValue i2" +
-					"\n\t\t\t instance i2 memberOf c1\n\t\t\t " +
+					"\n\t\t\t instance i2 memberOf c1\n\n\t\t\t " +
 					"The following two queries are applied to it:\n\t\t\t " +
 					"Query 1: i1[a1 hasValue ?y]\n\t\t\t Query 2: ?x[?y hasValue ?z]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
@@ -1043,11 +1043,11 @@ public class BenchmarkOntologyGenerator {
 			 */
 			String title = "Maximal cardinality contraint (0 10) expressions";
 			description = "\n\t\t\t This ontology is containing cardinality constraint expressions " +
-					"with a maximal cardinality of 10.\n\t\t\t " +
+					"with a maximal cardinality of 10.\n\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of cardinality constraint expressions." +
-					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 ofType (0 10) c1" +
+					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 ofType (0 10) c1" +
 					"\n\t\t\t instance i1 memberOf c1 \n\t\t\t \t a1 hasValue i2" +
-					"\n\t\t\t instance i2 memberOf c1\n\t\t\t " +
+					"\n\t\t\t instance i2 memberOf c1\n\n\t\t\t " +
 					"The following two queries are applied to it:\n\t\t\t " +
 					"Query 1: i1[a1 hasValue ?y]\n\t\t\t Query 2: ?x[?y hasValue ?z]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
@@ -1143,11 +1143,11 @@ public class BenchmarkOntologyGenerator {
 			 */
 			String title = "Minimal cardinality contraint (1 *) expressions";
 			description = "\n\t\t\t This ontology is containing cardinality constraint expressions " +
-					"with a minimal cardinality of 1.\n\t\t\t " +
+					"with a minimal cardinality of 1.\n\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of cardinality constraint expressions." +
 					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 ofType (1 *) c1" +
 					"\n\t\t\t instance i1 memberOf c1 \n\t\t\t \t a1 hasValue i2" +
-					"\n\t\t\t instance i2 memberOf c1\n\t\t\t " +
+					"\n\t\t\t instance i2 memberOf c1\n\n\t\t\t " +
 					"The following two queries are applied to it:\n\t\t\t " +
 					"Query 1: i1[a1 hasValue ?y]\n\t\t\t Query 2: ?x[?y hasValue ?z]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
@@ -1248,13 +1248,13 @@ public class BenchmarkOntologyGenerator {
 			 * add non functional properties to the ontology: title, description
 			 */
 			String title = "Inverse attribute feature";
-			description = "\n\t\t\t This ontology is containing inverse attribute expressions.\n\t\t\t " +
+			description = "\n\t\t\t This ontology is containing inverse attribute expressions.\n\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of inverse attribute and " +
 					"attribute value expressions." +
-					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 inverseOf(a2) impliesType c2" +
+					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 inverseOf(a2) impliesType c2" +
 					"\n\t\t\t concept c2 \n\t\t\t \t a2 impliesType c1" +
 					"\n\t\t\t instance i1 memberOf c1" +
-					"\n\t\t\t instance i2 memberOf c2 \n\t\t\t \t a2 hasValue i1 \n\t\t\t " +
+					"\n\t\t\t instance i2 memberOf c2 \n\t\t\t \t a2 hasValue i1 \n\n\t\t\t " +
 					"The following two queries are applied to it:\n\t\t\t " +
 					"Query 1: i1[a1 hasValue ?x]\n\t\t\t Query 2: i1[?x hasValue ?y]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
@@ -1360,13 +1360,13 @@ public class BenchmarkOntologyGenerator {
 			 * add non functional properties to the ontology: title, description
 			 */
 			String title = "Transitive attribute feature";
-			description = "\n\t\t\t This ontology is containing transitive attribute expressions.\n\t\t\t " +
+			description = "\n\t\t\t This ontology is containing transitive attribute expressions.\n\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of transitive attribute and " +
 			"attribute value expressions." +
-			"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 transitive impliesType c1" +
+			"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 transitive impliesType c1" +
 			"\n\t\t\t instance i1 \n\t\t\t \t a1 hasValue i2" +
 			"\n\t\t\t instance i2 \n\t\t\t \t a2 hasValue i3" +
-			"\n\t\t\t instance i3 \n\t\t\t " +
+			"\n\t\t\t instance i3 \n\n\t\t\t " +
 			"The following two queries are applied to it:\n\t\t\t " +
 			"Query 1: i1[a1 hasValue ?x]\n\t\t\t Query 2: ?x[?y hasValue ?z]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
@@ -1465,12 +1465,12 @@ public class BenchmarkOntologyGenerator {
 			 * add non functional properties to the ontology: title, description
 			 */
 			String title = "Symmetric attribute feature";
-			description = "\n\t\t\t This ontology is containing symmetric attribute expressions.\n\t\t\t " +
+			description = "\n\t\t\t This ontology is containing symmetric attribute expressions.\n\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of symmetric attribute and " +
 					"attribute value expressions." +
-					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 symmetric impliesType c1" +
+					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 symmetric impliesType c1" +
 					"\n\t\t\t instance i1 \n\t\t\t \t a1 hasValue i2" +
-					"\n\t\t\t instance i2 \n\t\t\t " +
+					"\n\t\t\t instance i2 \n\n\t\t\t " +
 					"The following two queries are applied to it:\n\t\t\t " +
 					"Query 1: i1[a1 hasValue ?x]\n\t\t\t Query 2: ?x[a1 hasValue ?y]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
@@ -1557,10 +1557,10 @@ public class BenchmarkOntologyGenerator {
 			 * add non functional properties to the ontology: title, description
 			 */
 			String title = "Reflexive attribute feature";
-			description = "\n\t\t\t This ontology is containing reflexive attribute expressions.\n\t\t\t " +
+			description = "\n\t\t\t This ontology is containing reflexive attribute expressions.\n\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of reflexive attribute expressions." +
-					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 reflexive impliesType c1" +
-					"\n\t\t\t instance i1 \n\t\t\t " +
+					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 reflexive impliesType c1" +
+					"\n\t\t\t instance i1 \n\n\t\t\t " +
 					"The following two queries are applied to it:\n\t\t\t " +
 					"Query 1: i1[a1 hasValue ?x]\n\t\t\t Query 2: i1[?x hasValue ?y]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
@@ -1682,13 +1682,13 @@ public class BenchmarkOntologyGenerator {
 			 */
 			String title = "Logical expressions with locally stratified negation";
 			description = "\n\t\t\t This ontology is containing logical expressions with " +
-					"locally stratified negation.\n\t\t\t " +
+					"locally stratified negation.\n\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of logical expressions and " +
 					"of attribute expressions." +
-					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 impliesType c1" +
+					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 impliesType c1" +
 					"\n\t\t\t \t a2 impliesType c1 \n\t\t\t instance i1 " +
 					"\n\t\t\t axiom definedBy \n\t\t\t \t ?x[a2 hasValue ?y] :- naf ?x[a1 hasValue ?y] " +
-					"and ?x memberOf c1 and ?y memberOf c1.\n\t\t\t" +
+					"and ?x memberOf c1 and ?y memberOf c1.\n\n\t\t\t" +
 					"The following two queries are applied to it:\n\t\t\t " +
 					"Query 1: i1[a2 hasValue ?x]\n\t\t\t Query 2: ?x[a2 hasValue ?y]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
@@ -1794,13 +1794,13 @@ public class BenchmarkOntologyGenerator {
 			 */
 			String title = "Logical expressions with globally stratified negation";
 			description = "\n\t\t\t This ontology is containing logical expressions with " +
-					"globally stratified negation.\n\t\t\t " +
+					"globally stratified negation.\n\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of logical expressions and " +
 					"of attribute and instance expressions." +
-					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 impliesType c1" +
+					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 impliesType c1" +
 					"\n\t\t\t concept c2 \n\t\t\t instance i1 " +
 					"\n\t\t\t axiom definedBy \n\t\t\t \t ?x memberOf c2 :- naf ?x[a1 hasValue ?y] " +
-					"and ?x memberOf c1 and ?y memberOf c1.\n\t\t\t" +
+					"and ?x memberOf c1 and ?y memberOf c1.\n\n\t\t\t" +
 					"The following two queries are applied to it:\n\t\t\t " +
 					"Query 1: ?x memberOf c2";
 			ontology = addNFPs(ontology, title, description, amount[i]);
@@ -1930,14 +1930,14 @@ public class BenchmarkOntologyGenerator {
 			 */
 			String title = "Logical expressions with built-ins";
 			description = "\n\t\t\t This ontology is containing logical expressions with " +
-					"built-ins.\n\t\t\t " +
+					"built-ins.\n\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of logical expressions and " +
 					"of instances (with one attribute value per instance)." +
-					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 ofType _integer" +
+					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 ofType _integer" +
 					"\n\t\t\t instance i1 memberOf c1 \n\t\t\t \t a1 hasValue 17" +
 					"\n\t\t\t instance i2 memberOf c1 \n\t\t\t \t a1 hasValue 14" +
 					"\n\t\t\t axiom definedBy \n\t\t\t \t ?x[a1 hasValue ?y] and ?y < 16 implies " +
-					"?x memberOf c2.\n\t\t\t " +
+					"?x memberOf c2.\n\n\t\t\t " +
 					"The following two queries are applied to it:\n\t\t\t " +
 					"Query 1: ?x memberOf c2 \n\t\t\t Query 2: ?x memberOf ?y";
 			ontology = addNFPs(ontology, title, description, amount[i]);
@@ -2056,6 +2056,9 @@ public class BenchmarkOntologyGenerator {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.16  2007-06-21 11:25:05  nathalie
+ * added query numbering to query names and fixed inconsistencies in minimal cardinality ontologies
+ *
  * Revision 1.15  2007-06-21 10:57:28  hlausen
  * *** empty log message ***
  *
