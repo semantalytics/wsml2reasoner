@@ -99,10 +99,15 @@ public class PerformanceResults {
                 if (performanceresults.get(reasoner).containsKey(id)){
                     Collection <PerformanceResult> values = performanceresults.get(reasoner).get(id).values();
                     int total = 0;
+                    int size = values.size();
                     for (PerformanceResult performanceResult : values){
-                        total += performanceResult.getRegisterOntology();
+                    	long registerTime = performanceResult.getRegisterOntology();
+                    	if (registerTime>0) {
+                    		total +=registerTime;
+                    		size++;
+                    	}
                     }
-                    bw.write("," + (total/values.size()));
+                    bw.write("," + (total/size));
                 }
                 else{
                     bw.write(",-1");
