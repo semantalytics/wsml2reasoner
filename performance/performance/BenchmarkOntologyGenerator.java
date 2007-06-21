@@ -680,8 +680,8 @@ public class BenchmarkOntologyGenerator {
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
 			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("i1[a1 hasValue ?x]"));
 			// add NFPs to query 1
-			String description = "";
-			String result1 = "";
+			String description = "This query will return exactly one result set.";
+			String result1 = "?x=i2";
 			addNFPs(query1, ATTR_VALUE, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
@@ -691,7 +691,8 @@ public class BenchmarkOntologyGenerator {
 			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("?x[?y hasValue ?z]"));
 			// add NFPs to query 2
 			description = "";
-			String result2 = "";
+			String result2 = "This query returns a number of result sets equivalent to the number " +
+					"of attribute value expressions in the ontology.";
 			addNFPs(query2, ATTR_VALUE, description, result2);
 			ontology.addRelationInstance(query2);
 
@@ -719,8 +720,7 @@ public class BenchmarkOntologyGenerator {
 	/**
 	 * Generate ontologies containing simple hierarchy and constraining 
 	 * attribute value expressions like e.g.:
-	 * concept Animal
-	 * concept Human subConceptOf Animal
+	 * concept Human
 	 *   hasChild ofType Child
 	 * concept Child subConceptOf Human
 	 * instance Homer memberOf Human
@@ -755,10 +755,7 @@ public class BenchmarkOntologyGenerator {
 					wsmoFactory.createIRI(ns, "c1"));
 			Concept concept2 = wsmoFactory.createConcept(
 					wsmoFactory.createIRI(ns, "c2"));
-			Concept concept3 = wsmoFactory.createConcept(
-					wsmoFactory.createIRI(ns, "c3"));
-			concept2.addSuperConcept(concept3);
-			concept1.addSuperConcept(concept2);
+			concept2.addSuperConcept(concept1);
 			ontology.addConcept(concept2);
 			ontology.addConcept(concept1);
 			
@@ -767,16 +764,16 @@ public class BenchmarkOntologyGenerator {
 					wsmoFactory.createIRI(ns, "i1"));
 			Instance instance2 = wsmoFactory.createInstance(
 					wsmoFactory.createIRI(ns, "i2"));
-			instance1.addConcept(concept2);
-			instance2.addConcept(concept3);
+			instance1.addConcept(concept1);
+			instance2.addConcept(concept2);
 			ontology.addInstance(instance1);
 			ontology.addInstance(instance2);
 			
 			// add amount[i] number of constraining attribute entities
 			Attribute attribute;
 			for (int j = 0; j < amount[i]; j++) {
-				attribute = concept2.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
-				attribute.addType(concept3);
+				attribute = concept1.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
+				attribute.addType(concept2);
 				attribute.setConstraining(true);
 				instance1.addAttributeValue(attribute.getIdentifier(), instance2);
 			}
@@ -791,8 +788,9 @@ public class BenchmarkOntologyGenerator {
 			query1.setParameterValue((byte) 0, dataFactory.createWsmlString(
 					"i1[a1 hasValue ?x] and ?x memberOf ?y"));
 			// add NFPs to query 1
-			String description = "";
-			String result1 = "";
+			String description = "This query will return exactly one result set, as it is querying " +
+					"for the value of one specific attribute.";
+			String result1 = "?x=i2,?y=c2";
 			addNFPs(query1, CONJ, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
@@ -802,8 +800,9 @@ public class BenchmarkOntologyGenerator {
 			query2.setParameterValue((byte) 0, dataFactory.createWsmlString(
 					"?x[?y hasValue ?z] and ?z memberOf ?w"));
 			// add NFPs to query 2
-			description = "";
-			String result2 = "";
+			description = "This query will return a number of result sets equivalent to the " +
+					"amount of attribute value expressions in the ontology.";
+			String result2 = "?x=i1,?y=a" + amount[i] + ",?z=i2,?w=c2";
 			addNFPs(query2, CONJ, description, result2);
 			ontology.addRelationInstance(query2);
 
@@ -811,13 +810,17 @@ public class BenchmarkOntologyGenerator {
 			 * add non functional properties to the ontology: title, description
 			 */
 			String title = "Constraining attributes with subconcept expressions";
-//			description = "\n\t\t\t This ontology is containing deep hierarchy expressions.\n\t\t\t " +
-//					"The x-axis value of the graph indicates the number of subconcept expressions." +
-//					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2 subConceptOf c1" +
-//					"\n\t\t\t concept c3 subConceptOf c2" +
-//					"\n\t\t\t instance i1 memberOf c1\n\t\t\t instance i2 memberOf c3\n\t\t\t " +
-//					"The following two queries are applied to it:\n\t\t\t " +
-//					"Query 1: ?x memberOf c1\n\t\t\t Query 2: ?x memberOf ?y";
+			description = "\n\t\t\t This ontology is containing constraining attribute and simple " +
+					"hierarchy expressions.\n\t\t\t " +
+					"The x-axis value of the graph indicates the number of constraining attribute " +
+					"and attribute value expressions." +
+					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 ofType c2" +
+					"\n\t\t\t concept c2 subConceptOf c1" +
+					"\n\t\t\t instance i1 memberOf c1 \n\t\t\t \t a1 hasValue i2" +
+					"\n\t\t\t instance i2 memberOf c2\n\t\t\t " +
+					"The following two queries are applied to it:\n\t\t\t " +
+					"Query 1: i1[a1 hasValue ?y] and ?y memberOf ?z" +
+					"\n\t\t\t Query 2: ?x[?y hasValue ?z] and ?z memberOf ?w";
 			ontology = addNFPs(ontology, title, description, amount[i]);
 			
 			// write ontology file
@@ -890,8 +893,9 @@ public class BenchmarkOntologyGenerator {
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
 			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("i1[a1 hasValue ?x]"));
 			// add NFPs to query 1
-			String description = "";
-			String result1 = "";
+			String description = "This query will return exactly one result set, as it is querying " +
+					"for the value of one specific attribute.";
+			String result1 = "?x=i2";
 			addNFPs(query1, ATTR_VALUE, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
@@ -900,22 +904,24 @@ public class BenchmarkOntologyGenerator {
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
 			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("?x[?y hasValue ?z]"));
 			// add NFPs to query 2
-			description = "";
-			String result2 = "";
+			description = "This query will return a number of result sets equivalent to the " +
+					"amount of attribute value expressions in the ontology.";
+			String result2 = "?x=i1,?y=a" + amount[i] + ",?z=i2";
 			addNFPs(query2, ATTR_VALUE, description, result2);
 			ontology.addRelationInstance(query2);
 
 			/*
 			 * add non functional properties to the ontology: title, description
 			 */
-			String title = "Maximal cardinality contraints (1) expressions";
-//			description = "\n\t\t\t This ontology is containing deep hierarchy expressions.\n\t\t\t " +
-//					"The x-axis value of the graph indicates the number of subconcept expressions." +
-//					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2 subConceptOf c1" +
-//					"\n\t\t\t concept c3 subConceptOf c2" +
-//					"\n\t\t\t instance i1 memberOf c1\n\t\t\t instance i2 memberOf c3\n\t\t\t " +
-//					"The following two queries are applied to it:\n\t\t\t " +
-//					"Query 1: ?x memberOf c1\n\t\t\t Query 2: ?x memberOf ?y";
+			String title = "Maximal cardinality contraint (0 1) expressions";
+			description = "\n\t\t\t This ontology is containing cardinality constraint expressions " +
+					"with a maximal cardinality of 1.\n\t\t\t " +
+					"The x-axis value of the graph indicates the number of cardinality constraint expressions." +
+					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 ofType (0 1) c1" +
+					"\n\t\t\t instance i1 memberOf c1 \n\t\t\t \t a1 hasValue i2" +
+					"\n\t\t\t instance i2 memberOf c1\n\t\t\t " +
+					"The following two queries are applied to it:\n\t\t\t " +
+					"Query 1: i1[a1 hasValue ?y]\n\t\t\t Query 2: ?x[?y hasValue ?z]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
 			
 			// write ontology file
@@ -929,9 +935,7 @@ public class BenchmarkOntologyGenerator {
 	 *   hasChild ofType (0 10) Human
 	 * instance Homer memberOf Human
 	 *   hasChild hasValue Bart
-	 *   hasChild hasValue Lisa
 	 * instance Bart memberOf Human
-	 * instance Lisa memberOf Human
 	 * 
 	 * Queries: 
 	 * - Homer[hasChild hasValue ?y]
@@ -967,23 +971,8 @@ public class BenchmarkOntologyGenerator {
 			Instance instance2 = wsmoFactory.createInstance(
 					wsmoFactory.createIRI(ns, "i2"));
 			instance2.addConcept(concept);
-			Instance instance3 = wsmoFactory.createInstance(
-					wsmoFactory.createIRI(ns, "i3"));
-			instance2.addConcept(concept);
-			Instance instance4 = wsmoFactory.createInstance(
-					wsmoFactory.createIRI(ns, "i4"));
-			instance2.addConcept(concept);
-			Instance instance5 = wsmoFactory.createInstance(
-					wsmoFactory.createIRI(ns, "i5"));
-			instance2.addConcept(concept);
-			instance3.addConcept(concept);
-			instance4.addConcept(concept);
-			instance5.addConcept(concept);
 			ontology.addInstance(instance1);
 			ontology.addInstance(instance2);
-			ontology.addInstance(instance3);
-			ontology.addInstance(instance4);
-			ontology.addInstance(instance5);
 			
 			// add amount[i] number of entities with cardinality contraints
 			Attribute attribute = null;
@@ -1004,8 +993,9 @@ public class BenchmarkOntologyGenerator {
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
 			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("i1[a1 hasValue ?y]"));
 			// add NFPs to query 1
-			String description = "";
-			String result1 = "";
+			String description = "This query will return exactly one result set, as it is querying " +
+					"for the value of one specific attribute.";
+			String result1 = "?x=i2";
 			addNFPs(query1, ATTR_VALUE, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
@@ -1014,22 +1004,24 @@ public class BenchmarkOntologyGenerator {
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
 			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("?x[?y hasValue ?z]"));
 			// add NFPs to query 2
-			description = "";
-			String result2 = "";
+			description = "This query will return a number of result sets equivalent to the " +
+					"amount of attribute value expressions in the ontology.";
+			String result2 = "?x=i1,?y=a" + amount[i] + ",?z=i2";
 			addNFPs(query2, ATTR_VALUE, description, result2);
 			ontology.addRelationInstance(query2);
 
 			/*
 			 * add non functional properties to the ontology: title, description
 			 */
-			String title = "Maximal cardinality contraints (10) expressions";
-//			description = "\n\t\t\t This ontology is containing deep hierarchy expressions.\n\t\t\t " +
-//					"The x-axis value of the graph indicates the number of subconcept expressions." +
-//					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2 subConceptOf c1" +
-//					"\n\t\t\t concept c3 subConceptOf c2" +
-//					"\n\t\t\t instance i1 memberOf c1\n\t\t\t instance i2 memberOf c3\n\t\t\t " +
-//					"The following two queries are applied to it:\n\t\t\t " +
-//					"Query 1: ?x memberOf c1\n\t\t\t Query 2: ?x memberOf ?y";
+			String title = "Maximal cardinality contraint (0 10) expressions";
+			description = "\n\t\t\t This ontology is containing cardinality constraint expressions " +
+					"with a maximal cardinality of 10.\n\t\t\t " +
+					"The x-axis value of the graph indicates the number of cardinality constraint expressions." +
+					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 ofType (0 10) c1" +
+					"\n\t\t\t instance i1 memberOf c1 \n\t\t\t \t a1 hasValue i2" +
+					"\n\t\t\t instance i2 memberOf c1\n\t\t\t " +
+					"The following two queries are applied to it:\n\t\t\t " +
+					"Query 1: i1[a1 hasValue ?y]\n\t\t\t Query 2: ?x[?y hasValue ?z]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
 			
 			// write ontology file
@@ -1102,8 +1094,9 @@ public class BenchmarkOntologyGenerator {
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
 			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("i1[a1 hasValue ?x]"));
 			// add NFPs to query 1
-			String description = "";
-			String result1 = "";
+			String description = "This query will return exactly one result set, as it is querying " +
+					"for the value of one specific attribute.";
+			String result1 = "?x=i2";
 			addNFPs(query1, ATTR_VALUE, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
@@ -1112,22 +1105,24 @@ public class BenchmarkOntologyGenerator {
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
 			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("?x[?y hasValue ?z]"));
 			// add NFPs to query 2
-			description = "";
-			String result2 = "";
+			description = "This query will return a number of result sets equivalent to the " +
+					"amount of attribute value expressions in the ontology.";
+			String result2 = "?x=i1,?y=a" + amount[i] + ",?z=i2";
 			addNFPs(query2, ATTR_VALUE, description, result2);
 			ontology.addRelationInstance(query2);
 
 			/*
 			 * add non functional properties to the ontology: title, description
 			 */
-			String title = "Minimal cardinality contraint expressions";
-//			description = "\n\t\t\t This ontology is containing deep hierarchy expressions.\n\t\t\t " +
-//					"The x-axis value of the graph indicates the number of subconcept expressions." +
-//					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2 subConceptOf c1" +
-//					"\n\t\t\t concept c3 subConceptOf c2" +
-//					"\n\t\t\t instance i1 memberOf c1\n\t\t\t instance i2 memberOf c3\n\t\t\t " +
-//					"The following two queries are applied to it:\n\t\t\t " +
-//					"Query 1: ?x memberOf c1\n\t\t\t Query 2: ?x memberOf ?y";
+			String title = "Minimal cardinality contraint (1 *) expressions";
+			description = "\n\t\t\t This ontology is containing cardinality constraint expressions " +
+					"with a minimal cardinality of 1.\n\t\t\t " +
+					"The x-axis value of the graph indicates the number of cardinality constraint expressions." +
+					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 ofType (1 *) c1" +
+					"\n\t\t\t instance i1 memberOf c1 \n\t\t\t \t a1 hasValue i2" +
+					"\n\t\t\t instance i2 memberOf c1\n\t\t\t " +
+					"The following two queries are applied to it:\n\t\t\t " +
+					"Query 1: i1[a1 hasValue ?y]\n\t\t\t Query 2: ?x[?y hasValue ?z]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
 			
 			// write ontology file
@@ -1139,16 +1134,16 @@ public class BenchmarkOntologyGenerator {
 	 * Generate ontologies containing inverse attribute features like 
 	 * e.g.:
 	 * concept Woman
-	 *   hasHusband inverseOf(hasWife) ofType Man
+	 *   hasHusband inverseOf(hasWife) impliesType Man
 	 * concept Man
-	 *   hasWife ofType Woman
+	 *   hasWife impliesType Woman
 	 * instance Marge memberOf Woman
 	 * instance Homer memberOf Man
 	 *   hasWife hasValue Marge
 	 * 
 	 * Queries: 
-	 * - Homer[hasWife hasValue ?x]
-	 * - Homer[?x hasValue ?y]
+	 * - Marge[hasHusband hasValue ?x]
+	 * - Marge[?x hasValue ?y]
 	 * 
 	 * @throws IOException
 	 * @throws SynchronisationException
@@ -1176,7 +1171,6 @@ public class BenchmarkOntologyGenerator {
 			ontology.addConcept(concept2);
 			Attribute attribute1 = concept2.createAttribute(wsmoFactory.createIRI(ns, "a0"));
 			attribute1.addType(concept1);
-			attribute1.setConstraining(true);
 			
 			// add instances
 			Instance instance1 = wsmoFactory.createInstance(
@@ -1193,9 +1187,8 @@ public class BenchmarkOntologyGenerator {
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept1.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
 				attribute.addType(concept2);
-				attribute.setConstraining(true);
 				attribute.setInverseOf(attribute1.getIdentifier());
-				instance2.addAttributeValue(attribute.getIdentifier(), instance1);
+				instance2.addAttributeValue(attribute1.getIdentifier(), instance1);
 			}
 			
 			/*
@@ -1207,8 +1200,9 @@ public class BenchmarkOntologyGenerator {
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
 			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("i1[a1 hasValue ?x]"));
 			// add NFPs to query 1
-			String description = "";
-			String result1 = "";
+			String description = "This query will return exactly one result set, as it is querying " +
+					"for the value of one specific attribute.";
+			String result1 = "?x=i2";
 			addNFPs(query1, ATTR_VALUE, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
@@ -1217,8 +1211,9 @@ public class BenchmarkOntologyGenerator {
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
 			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("i1[?x hasValue ?y]"));
 			// add NFPs to query 2
-			description = "";
-			String result2 = "";
+			description = "This query will return a number of result sets equivalent to the " +
+					"amount of inverse attribute expressions in the ontology.";
+			String result2 = "?x=a" + amount[i] + ",?y=i2";
 			addNFPs(query2, ATTR_VALUE, description, result2);
 			ontology.addRelationInstance(query2);
 
@@ -1226,13 +1221,15 @@ public class BenchmarkOntologyGenerator {
 			 * add non functional properties to the ontology: title, description
 			 */
 			String title = "Inverse attribute feature";
-//			description = "\n\t\t\t This ontology is containing deep hierarchy expressions.\n\t\t\t " +
-//					"The x-axis value of the graph indicates the number of subconcept expressions." +
-//					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2 subConceptOf c1" +
-//					"\n\t\t\t concept c3 subConceptOf c2" +
-//					"\n\t\t\t instance i1 memberOf c1\n\t\t\t instance i2 memberOf c3\n\t\t\t " +
-//					"The following two queries are applied to it:\n\t\t\t " +
-//					"Query 1: ?x memberOf c1\n\t\t\t Query 2: ?x memberOf ?y";
+			description = "\n\t\t\t This ontology is containing inverse attribute expressions.\n\t\t\t " +
+					"The x-axis value of the graph indicates the number of inverse attribute and " +
+					"attribute value expressions." +
+					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 inverseOf(a2) impliesType c2" +
+					"\n\t\t\t concept c2 \n\t\t\t \t a2 impliesType c1" +
+					"\n\t\t\t instance i1 memberOf c1" +
+					"\n\t\t\t instance i2 memberOf c2 \n\t\t\t \t a2 hasValue i1 \n\t\t\t " +
+					"The following two queries are applied to it:\n\t\t\t " +
+					"Query 1: i1[a1 hasValue ?x]\n\t\t\t Query 2: i1[?x hasValue ?y]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
 			
 			// write ontology file
@@ -1253,7 +1250,7 @@ public class BenchmarkOntologyGenerator {
 	 * 
 	 * Queries: 
 	 * - MargeChild[hasAncestor hasValue ?x]
-	 * - ?x[hasAncestor hasValue ?y]
+	 * - ?x[?y hasValue ?z]
 	 * 
 	 * @throws IOException
 	 * @throws SynchronisationException
@@ -1313,42 +1310,38 @@ public class BenchmarkOntologyGenerator {
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
 			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("i1[a0 hasValue ?x]"));
 			// add NFPs to query 1
-			String description = "";
-			String result1 = "";
+			String description = "This query will return two result sets; it is querying " +
+					"for the value of one specific transitive attribute.";
+			String result1 = "?x=i3";
 			addNFPs(query1, ATTR_VALUE, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
 			r2.createParameter((byte) 0);
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
-			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("?x[a0 hasValue ?y]"));
+			query2.setParameterValue((byte) 0, dataFactory.createWsmlString(
+					"?x[" + ((IRI) attribute.getIdentifier()).getLocalName() + " hasValue ?y]"));
 			// add NFPs to query 2
-			description = "";
+			description = "This query will return a number of result set that is growing " +
+					"in a linear way with the amount of attribute value expressions in the " +
+					"ontology.";
 			String result2 = "";
 			addNFPs(query2, ATTR_VALUE, description, result2);
 			ontology.addRelationInstance(query2);
-			Relation r3 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query3"));
-			r3.createParameter((byte) 0);
-			RelationInstance query3 = wsmoFactory.createRelationInstance(r3);
-			query3.setParameterValue((byte) 0, dataFactory.createWsmlString(
-					"?x[" + ((IRI) attribute.getIdentifier()).getLocalName() + " hasValue ?y]"));
-			// add NFPs to query 3
-			description = "";
-			String result3 = "";
-			addNFPs(query3, ATTR_VALUE, description, result3);
-			ontology.addRelationInstance(query3);
-			
+
 			/*
 			 * add non functional properties to the ontology: title, description
 			 */
 			String title = "Transitive attribute feature";
-//			description = "\n\t\t\t This ontology is containing deep hierarchy expressions.\n\t\t\t " +
-//					"The x-axis value of the graph indicates the number of subconcept expressions." +
-//					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2 subConceptOf c1" +
-//					"\n\t\t\t concept c3 subConceptOf c2" +
-//					"\n\t\t\t instance i1 memberOf c1\n\t\t\t instance i2 memberOf c3\n\t\t\t " +
-//					"The following two queries are applied to it:\n\t\t\t " +
-//					"Query 1: ?x memberOf c1\n\t\t\t Query 2: ?x memberOf ?y";
+			description = "\n\t\t\t This ontology is containing transitive attribute expressions.\n\t\t\t " +
+					"The x-axis value of the graph indicates the number of transitive attribute and " +
+			"attribute value expressions." +
+			"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 transitive impliesType c1" +
+			"\n\t\t\t instance i1 \n\t\t\t \t a1 hasValue i2" +
+			"\n\t\t\t instance i2 \n\t\t\t \t a2 hasValue i3" +
+			"\n\t\t\t instance i3 \n\t\t\t " +
+			"The following two queries are applied to it:\n\t\t\t " +
+			"Query 1: i1[a1 hasValue ?x]\n\t\t\t Query 2: ?x[?y hasValue ?z]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
 			
 			// write ontology file
@@ -1360,7 +1353,7 @@ public class BenchmarkOntologyGenerator {
 	 * Generate ontologies containing symmetric attribute features like 
 	 * e.g.:
 	 * concept Human
-	 *   hasRelative symmetric ofType Human
+	 *   hasRelative symmetric impliesType Human
 	 * instance Marge
 	 *   hasRelative hasValue Homer
 	 * instance Homer
@@ -1393,7 +1386,6 @@ public class BenchmarkOntologyGenerator {
 			ontology.addConcept(concept);
 			Attribute attribute1 = concept.createAttribute(wsmoFactory.createIRI(ns, "a0"));
 			attribute1.addType(concept);
-			attribute1.setConstraining(true);
 			attribute1.setSymmetric(true);
 			
 			// add instances
@@ -1410,7 +1402,6 @@ public class BenchmarkOntologyGenerator {
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
 				attribute.addType(concept);
-				attribute.setConstraining(true);
 				attribute.setSymmetric(true);
 				instance1.addAttributeValue(attribute.getIdentifier(), instance2);
 			}
@@ -1424,43 +1415,37 @@ public class BenchmarkOntologyGenerator {
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
 			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("i2[a0 hasValue ?x]"));
 			// add NFPs to query 1
-			String description = "";
-			String result1 = "";
+			String description = "This query will return exactly one result set as it is querying " +
+					"for the value of one specific symmetric attribute.";
+			String result1 = "?x=i1";
 			addNFPs(query1, ATTR_VALUE, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
 			r2.createParameter((byte) 0);
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
-			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("?x[a0 hasValue ?y]"));
+			query2.setParameterValue((byte) 0, dataFactory.createWsmlString(
+					"?x[" + ((IRI) attribute.getIdentifier()).getLocalName() + " hasValue ?y]"));
+			ontology.addRelationInstance(query2);
 			// add NFPs to query 2
-			description = "";
-			String result2 = "";
+			description = "This query will return two result set as it is querying " +
+					"for the value of one specific symmetric attribute.";
+			String result2 = "?x=i2,?y=i1";
 			addNFPs(query2, ATTR_VALUE, description, result2);
 			ontology.addRelationInstance(query2);
-			Relation r3 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query3"));
-			r3.createParameter((byte) 0);
-			RelationInstance query3 = wsmoFactory.createRelationInstance(r3);
-			query3.setParameterValue((byte) 0, dataFactory.createWsmlString(
-					"?x[" + ((IRI) attribute.getIdentifier()).getLocalName() + " hasValue ?y]"));
-			ontology.addRelationInstance(query3);
-			// add NFPs to query 2
-			description = "";
-			String result3 = "";
-			addNFPs(query3, ATTR_VALUE, description, result3);
-			ontology.addRelationInstance(query3);
 
 			/*
 			 * add non functional properties to the ontology: title, description
 			 */
 			String title = "Symmetric attribute feature";
-//			description = "\n\t\t\t This ontology is containing deep hierarchy expressions.\n\t\t\t " +
-//					"The x-axis value of the graph indicates the number of subconcept expressions." +
-//					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2 subConceptOf c1" +
-//					"\n\t\t\t concept c3 subConceptOf c2" +
-//					"\n\t\t\t instance i1 memberOf c1\n\t\t\t instance i2 memberOf c3\n\t\t\t " +
-//					"The following two queries are applied to it:\n\t\t\t " +
-//					"Query 1: ?x memberOf c1\n\t\t\t Query 2: ?x memberOf ?y";
+			description = "\n\t\t\t This ontology is containing symmetric attribute expressions.\n\t\t\t " +
+					"The x-axis value of the graph indicates the number of symmetric attribute and " +
+					"attribute value expressions." +
+					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 symmetric impliesType c1" +
+					"\n\t\t\t instance i1 \n\t\t\t \t a1 hasValue i2" +
+					"\n\t\t\t instance i2 \n\t\t\t " +
+					"The following two queries are applied to it:\n\t\t\t " +
+					"Query 1: i1[a1 hasValue ?x]\n\t\t\t Query 2: ?x[a1 hasValue ?y]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
 			
 			// write ontology file
@@ -1472,7 +1457,7 @@ public class BenchmarkOntologyGenerator {
 	 * Generate ontologies containing reflexive attribute features like 
 	 * e.g.:
 	 * concept Human
-	 *   loves symmetric ofType Human
+	 *   loves reflexive impliesType Human
 	 * instance Homer
 	 * 
 	 * Queries: 
@@ -1501,10 +1486,6 @@ public class BenchmarkOntologyGenerator {
 			// add initial elements
 			Concept concept = wsmoFactory.createConcept(wsmoFactory.createIRI(ns, "c1"));
 			ontology.addConcept(concept);
-			Attribute attribute1 = concept.createAttribute(wsmoFactory.createIRI(ns, "a0"));
-			attribute1.addType(concept);
-			attribute1.setConstraining(true);
-			attribute1.setReflexive(true);
 			
 			// add instances
 			Instance instance1 = wsmoFactory.createInstance(
@@ -1516,7 +1497,6 @@ public class BenchmarkOntologyGenerator {
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
 				attribute.addType(concept);
-				attribute.setConstraining(true);
 				attribute.setReflexive(true);
 			}
 
@@ -1527,10 +1507,11 @@ public class BenchmarkOntologyGenerator {
 			Relation r1 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query1"));
 			r1.createParameter((byte) 0);
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
-			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("i1[a0 hasValue ?x]"));
+			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("i1[a1 hasValue ?x]"));
 			// add NFPs to query 1
-			String description = "";
-			String result1 = "";
+			String description = "This query will return exactly one result set as it is querying " +
+					"for the value of one specific reflexive attribute.";
+			String result1 = "?x=i1";
 			addNFPs(query1, ATTR_VALUE, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
@@ -1539,8 +1520,9 @@ public class BenchmarkOntologyGenerator {
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
 			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("i1[?x hasValue ?y]"));
 			// add NFPs to query 2
-			description = "";
-			String result2 = "";
+			description = "This query will return a number of result sets equivalent to the " +
+					"amount of reflexive attribute expressions in the ontology.";
+			String result2 = "?x=a" + amount[i] + ",?y=i1";
 			addNFPs(query2, ATTR_VALUE, description, result2);
 			ontology.addRelationInstance(query2);
 
@@ -1548,13 +1530,12 @@ public class BenchmarkOntologyGenerator {
 			 * add non functional properties to the ontology: title, description
 			 */
 			String title = "Reflexive attribute feature";
-//			description = "\n\t\t\t This ontology is containing deep hierarchy expressions.\n\t\t\t " +
-//					"The x-axis value of the graph indicates the number of subconcept expressions." +
-//					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2 subConceptOf c1" +
-//					"\n\t\t\t concept c3 subConceptOf c2" +
-//					"\n\t\t\t instance i1 memberOf c1\n\t\t\t instance i2 memberOf c3\n\t\t\t " +
-//					"The following two queries are applied to it:\n\t\t\t " +
-//					"Query 1: ?x memberOf c1\n\t\t\t Query 2: ?x memberOf ?y";
+			description = "\n\t\t\t This ontology is containing reflexive attribute expressions.\n\t\t\t " +
+					"The x-axis value of the graph indicates the number of reflexive attribute expressions." +
+					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 reflexive impliesType c1" +
+					"\n\t\t\t instance i1 \n\t\t\t " +
+					"The following two queries are applied to it:\n\t\t\t " +
+					"Query 1: i1[a1 hasValue ?x]\n\t\t\t Query 2: i1[?x hasValue ?y]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
 			
 			// write ontology file
@@ -1567,8 +1548,8 @@ public class BenchmarkOntologyGenerator {
 	 * stratified negation 
 	 * e.g.:
 	 * concept Human
-	 *   knows ofType Human
-	 *   distrust ofType Human	
+	 *   knows impliesType Human
+	 *   distrust impliesType Human	
 	 * instance Homer
 	 * axiom definedBy
 	 *   ?x[distrust hasValue ?y] :- naf ?x[knows hasValue ?y] 
@@ -1607,13 +1588,7 @@ public class BenchmarkOntologyGenerator {
 			// add instances
 			Instance instance1 = wsmoFactory.createInstance(
 					wsmoFactory.createIRI(ns, "i1"));
-			Instance instance2 = wsmoFactory.createInstance(
-					wsmoFactory.createIRI(ns, "i2"));
-			Instance instance3 = wsmoFactory.createInstance(
-					wsmoFactory.createIRI(ns, "i3"));
 			ontology.addInstance(instance1);
-			ontology.addInstance(instance2);
-			ontology.addInstance(instance3);
 
 			// add amount[i] number of logical expressions containing negation
 			Attribute attribute;
@@ -1628,10 +1603,8 @@ public class BenchmarkOntologyGenerator {
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept.createAttribute(wsmoFactory.createIRI(ns, "a" + j));
 				attribute.addType(concept);
-				attribute.setConstraining(true);
 				attribute = concept.createAttribute(wsmoFactory.createIRI(ns, "a" + (j+1)));
 				attribute.addType(concept);
-				attribute.setConstraining(true);
 				molecule1 = leFactory.createAttributeValue(leFactory.createVariable("?x"), 
 						wsmoFactory.createIRI(ns, "a" + j), leFactory.createVariable("?y"));
 				molecule2 = leFactory.createAttributeValue(leFactory.createVariable("?x"), 
@@ -1656,42 +1629,41 @@ public class BenchmarkOntologyGenerator {
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
 			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("i1[a0 hasValue ?x]"));
 			// add NFPs to query 1
-			String description = "";
-			String result1 = "";
+			String description = "This query will return exactly one result set; it is querying " +
+					"for the value of one specific attribute that gets a value as result of " +
+					"evaluation of the logical expression.";
+			String result1 = "?x=i1";
 			addNFPs(query1, ATTR_VALUE, description, result1);
 			ontology.addRelationInstance(query1);
 			// create query 2
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
 			r2.createParameter((byte) 0);
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
-			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("?x[a0 hasValue ?y]"));
+			query2.setParameterValue((byte) 0, dataFactory.createWsmlString(
+					"?x[a" + (amount[i]-1) + " hasValue ?y]"));
 			// add NFPs to query 2
-			description = "";
-			String result2 = "";
+			description = "This query will return a number of result sets that is equivalent to the " +
+					"amount of attribute definitions; it is querying " +
+					"for the value of one specific attribute that gets a value as result of " +
+					"evaluation of the logical expression.";
+			String result2 = "?x=i1,?y=i1";
 			addNFPs(query2, ATTR_VALUE, description, result2);
 			ontology.addRelationInstance(query2);
-			Relation r3 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query3"));
-			r3.createParameter((byte) 0);
-			RelationInstance query3 = wsmoFactory.createRelationInstance(r3);
-			query3.setParameterValue((byte) 0, dataFactory.createWsmlString(
-					"?x[a" + (amount[i]-1) + " hasValue ?y]"));
-			// add NFPs to query 3
-			description = "";
-			String result3 = "";
-			addNFPs(query3, ATTR_VALUE, description, result3);
-			ontology.addRelationInstance(query3);
 
 			/*
 			 * add non functional properties to the ontology: title, description
 			 */
 			String title = "Logical expressions with locally stratified negation";
-//			description = "\n\t\t\t This ontology is containing deep hierarchy expressions.\n\t\t\t " +
-//					"The x-axis value of the graph indicates the number of subconcept expressions." +
-//					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2 subConceptOf c1" +
-//					"\n\t\t\t concept c3 subConceptOf c2" +
-//					"\n\t\t\t instance i1 memberOf c1\n\t\t\t instance i2 memberOf c3\n\t\t\t " +
-//					"The following two queries are applied to it:\n\t\t\t " +
-//					"Query 1: ?x memberOf c1\n\t\t\t Query 2: ?x memberOf ?y";
+			description = "\n\t\t\t This ontology is containing logical expressions with " +
+					"locally stratified negation.\n\t\t\t " +
+					"The x-axis value of the graph indicates the number of logical expressions and " +
+					"of attribute expressions." +
+					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 impliesType c1" +
+					"\n\t\t\t \t a2 impliesType c1 \n\t\t\t instance i1 " +
+					"\n\t\t\t axiom definedBy \n\t\t\t \t ?x[a2 hasValue ?y] :- naf ?x[a1 hasValue ?y] " +
+					"and ?x memberOf c1 and ?y memberOf c1.\n\t\t\t" +
+					"The following two queries are applied to it:\n\t\t\t " +
+					"Query 1: i1[a2 hasValue ?x]\n\t\t\t Query 2: ?x[a2 hasValue ?y]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
 			
 			// write ontology file
@@ -1704,7 +1676,7 @@ public class BenchmarkOntologyGenerator {
 	 * stratified negation 
 	 * e.g.:
 	 * concept Human
-	 *   knows ofType Human
+	 *   knows impliesType Human
 	 * concept DistrustedPerson  
 	 * instance Homer
 	 * axiom definedBy
@@ -1742,36 +1714,27 @@ public class BenchmarkOntologyGenerator {
 			ontology.addConcept(concept2);
 			Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns, "ax1"));
 			ontology.addAxiom(axiom);
-			
-			// add instances
-			Instance instance1 = wsmoFactory.createInstance(
-					wsmoFactory.createIRI(ns, "i1"));
-			Instance instance2 = wsmoFactory.createInstance(
-					wsmoFactory.createIRI(ns, "i2"));
-			Instance instance3 = wsmoFactory.createInstance(
-					wsmoFactory.createIRI(ns, "i3"));
-			ontology.addInstance(instance1);
-			ontology.addInstance(instance2);
-			ontology.addInstance(instance3);
 
 			// add amount[i] number of logical expressions containing negation
 			Attribute attribute;
+			Instance instance;
 			MembershipMolecule memberMol1, memberMol2, memberMol3;
 			AttributeValueMolecule molecule;
 			NegationAsFailure naf;
 			Conjunction con1, con2;
 			LogicProgrammingRule lpRule;
 			for (int j = 0; j < amount[i]; j++) {
-				attribute = concept1.createAttribute(wsmoFactory.createIRI(ns, "a" + j));
+				attribute = concept1.createAttribute(wsmoFactory.createIRI(ns, "a" + (j+1)));
 				attribute.addType(concept1);
-				attribute.setConstraining(true);
+				instance = wsmoFactory.createInstance(wsmoFactory.createIRI(ns, "i" + (j+1)));
+				ontology.addInstance(instance);
 				/* create the following logical expression programmaticaly:
 				 * "?y memberOf c2 :- naf ?x[a" + j + " hasValue ?y] " +
 				 * "and ?x memberOf c2 and ?y memberOf c1" */ 
 				memberMol1 = leFactory.createMemberShipMolecule(leFactory.createVariable("?y"),
 						wsmoFactory.createIRI(ns, "c2"));
 				molecule = leFactory.createAttributeValue(leFactory.createVariable("?x"),
-						wsmoFactory.createIRI(ns, "a" + j), leFactory.createVariable("?y"));
+						wsmoFactory.createIRI(ns, "a" + (j+1)), leFactory.createVariable("?y"));
 				memberMol2 = leFactory.createMemberShipMolecule(leFactory.createVariable("?x"), 
 						wsmoFactory.createIRI(ns, "c2"));
 				memberMol3 = leFactory.createMemberShipMolecule(leFactory.createVariable("?y"), 
@@ -1792,32 +1755,27 @@ public class BenchmarkOntologyGenerator {
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
 			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("?x memberOf c2"));
 			// add NFPs to query 1
-			String description = "";
-			String result1 = "";
+			String description = "This query will return a number of result sets equivalent " +
+					"to the number of instances in the ontology, i.e. exactly one result set " +
+					"for this ontology.";
+			String result1 = "?x=i1";
 			addNFPs(query1, MEMBEROF, description, result1);
 			ontology.addRelationInstance(query1);
-			// create query 2
-			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
-			r2.createParameter((byte) 0);
-			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
-			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("?x memberOf ?y"));
-			// add NFPs to query 2
-			description = "";
-			String result2 = "";
-			addNFPs(query2, MEMBEROF, description, result2);
-			ontology.addRelationInstance(query2);
-			
+
 			/*
 			 * add non functional properties to the ontology: title, description
 			 */
 			String title = "Logical expressions with globally stratified negation";
-//			description = "\n\t\t\t This ontology is containing deep hierarchy expressions.\n\t\t\t " +
-//					"The x-axis value of the graph indicates the number of subconcept expressions." +
-//					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2 subConceptOf c1" +
-//					"\n\t\t\t concept c3 subConceptOf c2" +
-//					"\n\t\t\t instance i1 memberOf c1\n\t\t\t instance i2 memberOf c3\n\t\t\t " +
-//					"The following two queries are applied to it:\n\t\t\t " +
-//					"Query 1: ?x memberOf c1\n\t\t\t Query 2: ?x memberOf ?y";
+			description = "\n\t\t\t This ontology is containing logical expressions with " +
+					"globally stratified negation.\n\t\t\t " +
+					"The x-axis value of the graph indicates the number of logical expressions and " +
+					"of attribute and instance expressions." +
+					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 impliesType c1" +
+					"\n\t\t\t concept c2 \n\t\t\t instance i1 " +
+					"\n\t\t\t axiom definedBy \n\t\t\t \t ?x memberOf c2 :- naf ?x[a1 hasValue ?y] " +
+					"and ?x memberOf c1 and ?y memberOf c1.\n\t\t\t" +
+					"The following two queries are applied to it:\n\t\t\t " +
+					"Query 1: ?x memberOf c2";
 			ontology = addNFPs(ontology, title, description, amount[i]);
 			
 			// write ontology file
@@ -1835,7 +1793,7 @@ public class BenchmarkOntologyGenerator {
 	 * instance Lisa memberOf Human
 	 *   hasAge hasValue 14
 	 * axiom definedBy
-	 * 	 ?x[hasAge hasValue ?y] and ?y < 16 implies ?x memberOf Child .
+	 * 	 ?x[hasAge hasValue ?y] and (((?y*2)/4)+1) < 16 implies ?x memberOf Child .
 	 * 
 	 * Queries: 
 	 * - ?x memberOf Child
@@ -1869,6 +1827,11 @@ public class BenchmarkOntologyGenerator {
 			Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns, "ax1"));
 			ontology.addAxiom(axiom);
 
+			// add instance
+			Instance instance1 = wsmoFactory.createInstance(wsmoFactory.createIRI(ns, "i0"));
+			instance1.addAttributeValue(wsmoFactory.createIRI(ns, "a0"), 
+					dataFactory.createWsmlInteger("10"));
+			
 			// add amount[i] number of logical expressions containing built-ins
 			Instance instance;
 			AttributeValueMolecule molecule;
@@ -1927,32 +1890,29 @@ public class BenchmarkOntologyGenerator {
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
 			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("?x memberOf c2"));
 			// add NFPs to query 1
-			String description = "";
-			String result1 = "";
+			String description = "This query will return a number of result sets which is " +
+					"depending on the random factor at creating the logical expressions for " +
+					"the ontology. The maximal number of result sets is the number of " +
+					"instances in the ontology.";
+			String result1 = "?x=i0";
 			addNFPs(query1, MEMBEROF, description, result1);
 			ontology.addRelationInstance(query1);
-			// create query 2
-			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
-			r2.createParameter((byte) 0);
-			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
-			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("?x memberOf ?y"));
-			// add NFPs to query 2
-			description = "";
-			String result2 = "";
-			addNFPs(query2, MEMBEROF, description, result2);
-			ontology.addRelationInstance(query2);
 
 			/*
 			 * add non functional properties to the ontology: title, description
 			 */
 			String title = "Logical expressions with built-ins";
-//			description = "\n\t\t\t This ontology is containing deep hierarchy expressions.\n\t\t\t " +
-//					"The x-axis value of the graph indicates the number of subconcept expressions." +
-//					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t concept c2 subConceptOf c1" +
-//					"\n\t\t\t concept c3 subConceptOf c2" +
-//					"\n\t\t\t instance i1 memberOf c1\n\t\t\t instance i2 memberOf c3\n\t\t\t " +
-//					"The following two queries are applied to it:\n\t\t\t " +
-//					"Query 1: ?x memberOf c1\n\t\t\t Query 2: ?x memberOf ?y";
+			description = "\n\t\t\t This ontology is containing logical expressions with " +
+					"built-ins.\n\t\t\t " +
+					"The x-axis value of the graph indicates the number of logical expressions and " +
+					"of instances (with one attribute value per instance)." +
+					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 ofType _integer" +
+					"\n\t\t\t instance i1 memberOf c1 \n\t\t\t \t a1 hasValue 17" +
+					"\n\t\t\t instance i2 memberOf c1 \n\t\t\t \t a1 hasValue 14" +
+					"\n\t\t\t axiom definedBy \n\t\t\t \t ?x[a1 hasValue ?y] and ?y < 16 implies " +
+					"?x memberOf c2.\n\t\t\t " +
+					"The following two queries are applied to it:\n\t\t\t " +
+					"Query 1: ?x memberOf c2 \n\t\t\t Query 2: ?x memberOf ?y";
 			ontology = addNFPs(ontology, title, description, amount[i]);
 			
 			// write ontology file
@@ -2105,6 +2065,9 @@ public class BenchmarkOntologyGenerator {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.13  2007-06-21 07:52:12  hlausen
+ * more steps no iteration per step!
+ *
  * Revision 1.12  2007-06-21 07:48:19  hlausen
  * *** empty log message ***
  *
