@@ -301,8 +301,8 @@ public class TestPerformanceWithUseOfFeatures {
         performanceresults.writeAll(new File(directoryPath + path).getAbsolutePath());
         log.write(new File(directoryPath + path + "log.txt"));
     }
-    
-    Set<String> timedOutReasoner = new HashSet<String>();
+      //reasoner, {regist, query}
+    Map<String,Set<String>> timedOutReasoner = new HashMap<String, Set<String>>();
     
     private WSMLReasoner createReasoner(String theReasonerName, MyStringBuffer log) throws InconsistencyException{
         log.print("Creating reasoner ");
@@ -330,9 +330,12 @@ public class TestPerformanceWithUseOfFeatures {
     		MyStringBuffer log) throws ParserException, InconsistencyException {
         
     	PerformanceResult performanceresult = new PerformanceResult();
-    	if (timedOutReasoner.contains(theReasonerName)){
-    		log.println(theReasonerName+" has previously already timed out!!");
-    		return performanceresult;
+    	if (timedOutReasoner.containsKey(theReasonerName)){
+    		Set<String> detail = timedOutReasoner.get(theReasonerName);
+    		if (detail.contains(theQuery) || detail.contains("registration")){
+    			log.println(theReasonerName+" has previously already timed out!!");
+    			return performanceresult;
+    		}
     	}
         
         log.println("\n------------------------------------");
@@ -357,14 +360,15 @@ public class TestPerformanceWithUseOfFeatures {
         	if (counter > TIMELIMIT_REGISTRATION){
         		log.print("stopping registration thread due to timeout");
         		registrationThread.stop();
-        		timedOutReasoner.add(theReasonerName);
+        		addTimeOut(theReasonerName, "registration");
         		return performanceresult;
         	}
         	waitABit();
         	counter += WAIT_INTERVAL;
         }
        
-        for (int i=0; i<NO_OF_TESTRUNS && !timedOutReasoner.contains(theReasonerName);i++){
+        boolean ok = true;
+        for (int i=0; i<NO_OF_TESTRUNS && ok ;i++){
             QueryThread queryThread = new QueryThread(theOntology,reasoner,query, log);
             log.print("Executing query ");
             queryThread.start();
@@ -372,14 +376,16 @@ public class TestPerformanceWithUseOfFeatures {
             counter=0;
             while(queryThread.isAlive()){
 	            if (counter > TIMELIMIT_QUERY){
+	            	ok=false;
             		log.println("stopping reasoning thread due to timeout");
             		queryThread.stop();
-            		timedOutReasoner.add(theReasonerName);
+            		addTimeOut(theReasonerName, theQuery);
             	}
 	            waitABit();
             	counter += WAIT_INTERVAL;
             }
             long t2=queryThread.getDuration();
+            if (t2==-1) addTimeOut(theReasonerName, theQuery);
     	    performanceresult.addExecuteQuery(i, t2);
             log.println("(" + t2 + " ms)");
         }
@@ -393,6 +399,18 @@ public class TestPerformanceWithUseOfFeatures {
         log.println("------------------------------------");
         return performanceresult;
     }
+    
+    private void addTimeOut(String theReasonerName, String theQuery ){
+    	Set<String> detail;
+		if (timedOutReasoner.containsKey(theReasonerName)){
+			detail=timedOutReasoner.get(theReasonerName);
+		}else{
+			detail=new HashSet<String>();
+			timedOutReasoner.put(theReasonerName,detail);
+		}
+		detail.add(theQuery);
+    }
+    
     
     private void waitABit(){
     	synchronized (this) {
@@ -481,7 +499,7 @@ class RegistrationThread extends MyThread {
 		} catch (InconsistencyException e) {
 			log.println("error registering ontology "+((IRI)o.getIdentifier()).getLocalName());
 			log.println("  error detail: "+e);
-			throw new RuntimeException(e);
+			throw new RuntimeException(e.toString(),e);
 		}
 	}
 

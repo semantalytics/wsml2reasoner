@@ -284,7 +284,15 @@ public class BenchmarkOntologyGenerator {
 	public void genDeepSubconceptOntologies() 
 			throws IOException, SynchronisationException, InvalidModelException {
 		Ontology ontology = null;
+		
 		// reduce amounts of entities that shall be created for this ontology type
+		int[] amount = new int[15];
+		for (int i=0;i <amount.length;i++){
+			int t = i*20;
+			if (t==0) t=10;
+			amount[i]=t;
+		}
+
 		for (int i = 0; i < amount.length; i++) {	
 			// create default namespace
 			Namespace ns = wsmoFactory.createNamespace("", 
@@ -558,6 +566,13 @@ public class BenchmarkOntologyGenerator {
 	public void genInstanceANDdeepSubconceptOntologies() 
 			throws IOException, SynchronisationException, InvalidModelException {
 		Ontology ontology = null;
+		int[] amount = new int[15];
+		for (int i=0;i <amount.length;i++){
+			int t = i*20;
+			if (t==0) t=10;
+			amount[i]=t;
+		}
+		
 		for (int i = 0; i < amount.length; i++) {	
 			// create default namespace
 			Namespace ns = wsmoFactory.createNamespace("", 
@@ -1179,6 +1194,14 @@ public class BenchmarkOntologyGenerator {
 	public void genInverseAttributeOntologies() 
 			throws IOException, SynchronisationException, InvalidModelException {
 		Ontology ontology = null;
+		
+		int[] amount = new int[15];
+		for (int i=0;i <amount.length;i++){
+			int t = i*25;
+			if (t==0) t=10;
+			amount[i]=t;
+		}
+		
 		for (int i = 0; i < amount.length; i++) {	
 			// create default namespace
 			Namespace ns = wsmoFactory.createNamespace("", 
@@ -1396,6 +1419,14 @@ public class BenchmarkOntologyGenerator {
 	public void genSymmetricAttributeOntologies() 
 			throws IOException, SynchronisationException, InvalidModelException {
 		Ontology ontology = null;
+		
+		int[] amount = new int[15];
+		for (int i=0;i <amount.length;i++){
+			int t = i*75;
+			if (t==0) t=10;
+			amount[i]=t;
+		}
+		
 		for (int i = 0; i < amount.length; i++) {	
 			// create default namespace
 			Namespace ns = wsmoFactory.createNamespace("", 
@@ -2056,6 +2087,9 @@ public class BenchmarkOntologyGenerator {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.17  2007-06-21 11:32:59  nathalie
+ * *** empty log message ***
+ *
  * Revision 1.16  2007-06-21 11:25:05  nathalie
  * added query numbering to query names and fixed inconsistencies in minimal cardinality ontologies
  *
