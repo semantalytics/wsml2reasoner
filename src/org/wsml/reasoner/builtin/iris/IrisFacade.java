@@ -96,11 +96,11 @@ import org.wsmo.factory.WsmoFactory;
  * The wsmo4j interface for the iris reasoner.
  * </p>
  * <p>
- * $Id: IrisFacade.java,v 1.13 2007-06-22 07:58:50 richardpoettler Exp $
+ * $Id: IrisFacade.java,v 1.14 2007-06-22 11:44:55 nathalie Exp $
  * </p>
  * 
  * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class IrisFacade implements DatalogReasonerFacade {
 
@@ -810,8 +810,13 @@ public class IrisFacade implements DatalogReasonerFacade {
 		// TODO: the first index will be ignored, because in iris only queries
 		// with one literal are allowed at the moment, and so only one tuple
 		// will be returned.
-
-		final ITerm term = t.getTerm(i[1]);
+		final ITerm term;
+		if (t.getArity() == 1) {
+			term = t.getTerm(i[0]);
+		}
+		else {
+			term = t.getTerm(i[1]);
+		}
 		if (term instanceof IConstructedTerm) {
 			return getTermFromConstruct((IConstructedTerm) term, i, 2);
 		}
