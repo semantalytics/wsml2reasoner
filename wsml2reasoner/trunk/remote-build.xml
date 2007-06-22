@@ -36,9 +36,11 @@
 		<property file="pwd" />
 		<property name="shell.host" value="tools.deri.org" />
 		<property name="remote.snapshot.path" value="../snapshot/" />
-		<property name="remote.snapshot.wsmo.path" value="../snapshot/wsml2reasoner-wsmo/" />
 		<property name="remote.snapshot.dl.path" value="../snapshot/wsml2reasoner-dl/" />
+		<property name="remote.snapshot.dl.pellet.path" value="../snapshot/wsml2reasoner-dl/wsml2reasoner-dl-pellet/" />
 		<property name="remote.snapshot.datalog.path" value="../snapshot/wsml2reasoner-datalog/" />
+		<property name="remote.snapshot.datalog.iris.path" value="../snapshot/wsml2reasoner-datalog/wsml2reasoner-datalog-iris/" />
+		<property name="remote.snapshot.datalog.mins.path" value="../snapshot/wsml2reasoner-datalog/wsml2reasoner-datalog-mins/" />
 	</target>
 	
 	<!-- =================================================================== -->
@@ -64,6 +66,20 @@
 		<exclude name="*.DS_Store" />
 		<exclude name="build/*" />
 		<exclude name="ext/kaon2/*" />
+		<include name="**/*.*" />
+	</patternset>
+	
+	<patternset id="sdk-files">
+		<exclude name="CVS/*" />
+		<exclude name="*.DS_Store" />
+		<exclude name="bin/**" />
+		<exclude name="build/**" />
+		<exclude name="dist/**" />
+		<exclude name="ext/**" />
+		<exclude name="lib/ext/kaon2/**" />
+		<exclude name="pub/**" />
+		<exclude name="web/**" />
+		<excludesfile name="pwd" />
 		<include name="**/*.*" />
 	</patternset>
 	
@@ -121,7 +137,7 @@
 		<exclude name="example/IrisReasonerExample.java" />
 		<include name="**/*.*" />
 	</patternset>
-	
+			
 	<patternset id="wsmo-jars">
 		<exclude name="CVS/*" />
 		<exclude name="*.DS_Store" />
@@ -131,7 +147,9 @@
 	<patternset id="dl-jars">
 		<exclude name="CVS/*" />
 		<exclude name="*.DS_Store" />
+		<include name="ext/aterm/**"/>
 		<include name="ext/commons-logging/**"/>
+		<include name="ext/kaon/**"/>
 		<include name="ext/log4j/**"/>
 		<include name="ext/owl-api/**"/>
 		<include name="ext/relaxng/**"/>
@@ -142,7 +160,9 @@
 	<patternset id="dl-pellet-jars">
 		<exclude name="CVS/*" />
 		<exclude name="*.DS_Store" />
+		<include name="ext/aterm/**"/>
 		<include name="ext/commons-logging/**"/>
+		<include name="ext/kaon/**"/>
 		<include name="ext/log4j/**"/>
 		<include name="ext/owl-api/**"/>
 		<include name="ext/pellet/**"/>
@@ -157,6 +177,7 @@
 		<include name="ext/wsmo4j/**"/>
 		<include name="ext/iris/**"/>
 		<include name="ext/jgrapht/**"/>
+		<include name="ext/log4j/**"/>
 	</patternset>
 	
 	<patternset id="datalog-mins-jars">
@@ -165,7 +186,11 @@
 		<include name="ext/wsmo4j/**"/>
 		<include name="ext/mins/**"/>
 	</patternset>
-
+	
+	<path id="classpath">
+		<fileset dir="build/lib" includes="**/*.jar"/>
+	</path>
+				
 	<target name="clean-build-dirs" depends="init" description="Cleans the build directories">
 		<delete dir="${build.src}" />
 		<delete dir="${build.lib}" />
@@ -255,13 +280,13 @@
 	<target name="create-wsml2reasoner-wsmo-jar+libs" depends="compile" 
 		description="Creates wsml2reasoner-wsmo jar + libs">
 		<mkdir dir="${dist.complete}" />	
-		<jar jarfile="${dist.complete}/wsml2reasoner-wsmo-${DSTAMP}.jar">
+		<jar jarfile="${dist.complete}/wsml2reasoner-${DSTAMP}.jar">
 			<fileset dir="${build.src}" />
 			<fileset dir="${build.class}" />
 		</jar>
-		<copy file="${dist.complete}/wsml2reasoner-wsmo-${DSTAMP}.jar" todir="${remote.snapshot.wsmo.path}" 
+		<copy file="${dist.complete}/wsml2reasoner-${DSTAMP}.jar" todir="${remote.snapshot.path}" 
 			preservelastmodified="yes" includeEmptyDirs="no"/>
-		<copy file="${project.dir}/license.txt" todir="${remote.snapshot.wsmo.path}"/>
+		<copy file="${project.dir}/license.txt" todir="${remote.snapshot.path}"/>
 		<copy file="${project.dir}/license.txt" todir="${dist.complete}"/>
 		<copy todir="${dist.complete.lib}" preservelastmodified="yes" includeEmptyDirs="no">
 			<fileset dir="${build.lib}">
@@ -275,7 +300,7 @@
 		<copy file="${example.dir}/ReasonerExample.java" todir="${dist.complete.example}"/>
 		<copy file="${example.dir}/humanOntology.wsml" todir="${dist.complete.example}"/>
 		<copy file="${example.dir}/simpleOntology.wsml" todir="${dist.complete.example}"/>
-		<zip destfile="${remote.snapshot.wsmo.path}/wsml2reasoner-wsmo-${DSTAMP}.zip">
+		<zip destfile="${remote.snapshot.wsmo.path}/wsml2reasoner-${DSTAMP}.zip">
 			<fileset dir="${dist.complete}"/>
 		</zip>
 		<delete dir="${dist.complete}"/>
@@ -287,7 +312,7 @@
 		<copy todir="${dist.complete.src}" preservelastmodified="yes" includeEmptyDirs="no">
 			<fileset dir="${build.src}" />
 		</copy>
-		<zip destfile="${remote.snapshot.wsmo.path}/wsml2reasoner-wsmo-src-${DSTAMP}.zip">
+		<zip destfile="${remote.snapshot.wsmo.path}/wsml2reasoner-src-${DSTAMP}.zip">
 			<fileset dir="${dist.complete}"/>
 		</zip>
 		<delete dir="${dist.complete}"/>
