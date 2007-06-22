@@ -43,7 +43,9 @@ import org.deri.iris.api.IExecutor;
 import org.deri.iris.api.IProgram;
 import org.deri.iris.api.basics.IAtom;
 import org.deri.iris.api.basics.ILiteral;
+import org.deri.iris.api.basics.IPredicate;
 import org.deri.iris.api.basics.IQuery;
+import org.deri.iris.api.basics.IRule;
 import org.deri.iris.api.basics.ITuple;
 import org.deri.iris.api.terms.IConstructedTerm;
 import org.deri.iris.api.terms.IStringTerm;
@@ -94,11 +96,11 @@ import org.wsmo.factory.WsmoFactory;
  * The wsmo4j interface for the iris reasoner.
  * </p>
  * <p>
- * $Id: IrisFacade.java,v 1.12 2007-06-21 10:34:24 richardpoettler Exp $
+ * $Id: IrisFacade.java,v 1.13 2007-06-22 07:58:50 richardpoettler Exp $
  * </p>
  * 
  * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class IrisFacade implements DatalogReasonerFacade {
 
@@ -186,6 +188,10 @@ public class IrisFacade implements DatalogReasonerFacade {
 		if (q == null) {
 			throw new NullPointerException("The query must not be null");
 		}
+		if (!progs.containsKey(ontologyURI)) {
+			throw new IllegalArgumentException("A program with the uri '" + 
+					ontologyURI + "' has not been registered, yet.");
+		}
 
 		// constructing the query
 		final List<ILiteral> body = new ArrayList<ILiteral>(q.getLiterals()
@@ -213,25 +219,26 @@ public class IrisFacade implements DatalogReasonerFacade {
 				// creating and adding the new rule
 				progs.get(ontologyURI).addRule(BASIC.createRule(
 						BASIC.createHead(conjL), BASIC.createBody(body)));
+				rulesChanged.put(ontologyURI, true);
 				// creating and adding the query
 				conjQ = BASIC.createQuery(conjL);
 				conjunktiveQueries.get(ontologyURI).put(q, conjQ);
+				
 			}
 			query = conjQ;
 		} else { // this is a normal query
 			 query = BASIC.createQuery(body);
 		}
 
-		// update the executor, if there has been something changed
-		if (rulesChanged.get(ontologyURI)) { // if there are new rules -> translate them all
+		if (rulesChanged.get(ontologyURI)) { 
+			// if there are new rules -> translate them all
 			executor.put(ontologyURI, new Executor(
 					progs.get(ontologyURI), new ExpressionEvaluator()));
 		}
-		// FIXME needs to be checked out w.r.t LordOfRings example
-		//if (factsChanged || rulesChanged) { // if there are new facts or rules
-			// -> compute the fixed point
+		if (factsChanged.get(ontologyURI) || rulesChanged.get(ontologyURI)) { 
+			// if there are new facts or rules -> compute the fixed point
 			executor.get(ontologyURI).execute();
-		//}
+		}
 		rulesChanged.put(ontologyURI, false);
 		factsChanged.put(ontologyURI, false);
 
@@ -305,6 +312,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 		this.rulesChanged.put(ontologyURI, true);
 		this.progs.put(ontologyURI, p);
 		this.executor.put(ontologyURI, new Executor(p, new ExpressionEvaluator()));
+		this.conjunktiveQueries.put(ontologyURI, new HashMap<ConjunctiveQuery, IQuery>());
 	}
 
 	/**
@@ -857,5 +865,34 @@ public class IrisFacade implements DatalogReasonerFacade {
 		assert i.length == cur + 1 : "We got a non-constructed term, but further inedes";
 
 		return t;
+	}
+	
+	/**
+	 * Method to get a structured representation of a program.
+	 * @param p the program
+	 * @return the string representation
+	 */
+	private static String toString(final IProgram p) {
+		if (p == null) {
+			throw new NullPointerException("The program must not be null");
+		}
+		final String NL = System.getProperty("line.separator");
+		final StringBuilder buffer = new StringBuilder();
+		buffer.append("rules:").append(NL);
+		for (final IRule r : p.getRules()) {
+			buffer.append("\t").append(r).append(NL);
+		}
+		buffer.append("facts:").append(NL);
+		for (final IPredicate pred : p.getPredicates()) {
+			buffer.append("\t").append(pred).append(":").append(NL);
+			for (final ITuple t : p.getFacts(pred)) {
+				buffer.append("\t\t").append(t).append(NL);
+			}
+		}
+		buffer.append("queries:").append(NL);
+		for (final IQuery q : p.getQueries()) {
+			buffer.append("\t").append(q).append(NL);
+		}
+		return buffer.toString();
 	}
 }
