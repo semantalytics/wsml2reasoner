@@ -34,11 +34,11 @@ import org.wsml.reasoner.impl.WSMO4JManager;
  * The wsmo4j interface to and from TPTP
  * </p>
  * <p>
- * $Id: SpassPlusTFacade.java,v 1.2 2007-06-15 10:23:38 hlausen Exp $
+ * $Id: SpassPlusTFacade.java,v 1.3 2007-06-22 12:09:21 hlausen Exp $
  * </p>
  * 
  * @author Holger Lausen
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class SpassPlusTFacade extends FOLAbstractFacade {
 
@@ -183,6 +183,25 @@ public class SpassPlusTFacade extends FOLAbstractFacade {
 				"author({*[ Source   :]*}).\n" +
 				"status(unknown).\n" +
 				"description({*[ Refs     :]*}).\n" +
-				"end_of_list.\n";
+				"end_of_list.\n" +
+				"" +
+				"list_of_settings(SPASS).\"" +
+				"{*\n" +
+				"  set_flag(PDer,0).\n" +
+				"  set_flag(PEmptyClause,1).\n" +
+				"  set_flag(Splits,0).\n" +
+				"  set_flag(Sorts,0).\n" +
+				"  set_flag(RArith,1).\n" +
+				"  set_flag(IThI,2).\n" +
+				"  set_flag(IIOE,1).\n" +
+				"  set_flag(DocSplit,0).\n" +
+				"  set_flag(DocProof,0).\n" +
+				"  set_flag(DpcProver,2).\n" +
+				"  set_flag(DpcTheory,1).\n" +
+				"  set_precedence(plus,succ,times,greater,greatereq,less,lesseq).\n" +
+				"  set_TheorySym(greater,greatereq,less,lesseq,succ,minus,plus,times).\n#" +
+				"*}\n" +
+				"end_of_list.\n" +
+				"\n";
     }
 }
