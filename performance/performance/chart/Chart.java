@@ -106,6 +106,7 @@ public class Chart {
 					i.id=((IRI)r.getRelation().getIdentifier()).getLocalName();
 					i.title=firstNfpAsString(r, BenchmarkOntologyGenerator.DC_TITLE);
 					i.description=firstNfpAsString(r, BenchmarkOntologyGenerator.DC_DESCRIPTION);
+					i.query=r.getParameterValue((byte)0).toString();
 					ret.query.add(i);
 				}
 			}
@@ -153,6 +154,8 @@ public class Chart {
 					chart, 500, 300);
 			fw.append("<h2>"+name+"</h2>\n");
 			fw.append("<p>"+testQueryInfo.description+"</p>");
+			if (testQueryInfo.query!=null)
+				fw.append("<b>"+testQueryInfo.query+"</b>");
 			fw.append(createTable(dataset,dir,testInfo)+"\n");
 			fw.append("<img src=\""+csv.getName()+"-chart.jpg"+"\"><br>\n");
 
@@ -296,6 +299,7 @@ class TestInfo{
 }
 
 class TestQueryInfo{
+	String query;
 	String id;
 	String title;
 	String description;
