@@ -151,7 +151,7 @@ public class Chart {
 			JFreeChart chart = createChart(name,dataset);
 			ChartUtilities.saveChartAsJPEG(
 					new File(csv.getAbsolutePath()+"-chart.jpg"), 
-					chart, 500, 300);
+					chart, 650, 350);
 			fw.append("<h2>"+name+"</h2>\n");
 			fw.append("<p>"+testQueryInfo.description+"</p>");
 			if (testQueryInfo.query!=null)
@@ -258,8 +258,9 @@ public class Chart {
 			String[] data = results.get(reasoner);
 			for (int i = 1; i < data.length; i++) {
 				double time = Double.parseDouble(data[i]);
+				int count = Integer.parseInt((head[i].substring(2)));
 				if (time>0){
-					dataset.addValue((int)time,reasoner , head[i].substring(2));
+					dataset.addValue((int)time,reasoner , count+"");
 				}
 			}
 		}
