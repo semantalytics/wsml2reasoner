@@ -29,6 +29,7 @@ import static org.deri.iris.factory.Factory.TERM;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -96,11 +97,11 @@ import org.wsmo.factory.WsmoFactory;
  * The wsmo4j interface for the iris reasoner.
  * </p>
  * <p>
- * $Id: IrisFacade.java,v 1.15 2007-06-22 12:10:41 nathalie Exp $
+ * $Id: IrisFacade.java,v 1.16 2007-06-26 12:29:39 richardpoettler Exp $
  * </p>
  * 
  * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class IrisFacade implements DatalogReasonerFacade {
 
@@ -244,26 +245,15 @@ public class IrisFacade implements DatalogReasonerFacade {
 
 		// constructing the result set
 		final Set<ITuple> result = executor.get(ontologyURI).computeSubstitution(query);
-
 		final Set<Map<Variable, Term>> res = new HashSet<Map<Variable, Term>>();
-		final List<IVariable> qVars = query.getQueryVariables();
+		final Map<IVariable, Integer> positions = determineVarPositions(query);
 		for (final ITuple t : result) {
-			final Map<Variable, Term> prep = new HashMap<Variable, Term>();
-			for (final IVariable v : qVars) {
-				// convert the var to an wsml one
-				final Variable wsmlVar = (Variable) irisTermConverter(v);
-
-				// searching for the index of the term to extract from the tuple
-				final int[] idx = searchQueryForVar(query, v);
-				if (idx.length < 2) { // if the variable couldn't be found ->
-					// exception
-					throw new IllegalArgumentException(
-							"Couldn't find the variable (" + v + ") in query (" + q
-									+ ").");
-				}
-				prep.put(wsmlVar,irisTermConverter(getTermForTuple(t, idx)));
-			}	
-			res.add(prep);
+			final Map<Variable, Term> tmp = new HashMap<Variable, Term>();
+			for (final Map.Entry<IVariable, Integer> e : positions.entrySet()) {
+				tmp.put((Variable) irisTermConverter(e.getKey()), 
+						irisTermConverter(t.getTerm(e.getValue())));
+			}
+			res.add(tmp);
 		}
 
 		// BEHAVIOR IMITATIED FROM THE KAON FACADE
@@ -276,6 +266,120 @@ public class IrisFacade implements DatalogReasonerFacade {
 		}
 
 		return res;
+	}
+	
+	/**
+	 * Constructs a map at which indexes (columns (starting from 0)) to find the 
+	 * subsitutions for a given variable in the returned relation of the executor. 
+	 * @param q the query from where to gather the variables
+	 * @return the map holding the variable -&gt; index mappings
+	 * @throws NullPointerException if the query is <code>null</code>
+	 */
+	private static Map<IVariable, Integer> determineVarPositions(final IQuery q) {
+		if (q == null) {
+			throw new NullPointerException("The query must not be null");
+		}
+		final Map<IVariable, Integer> res = new HashMap<IVariable, Integer>();
+		for (final IVariable v : q.getQueryVariables()) {
+			res.put(v, termPos(q, v));
+		}
+		if (res.isEmpty()) {
+			return Collections.EMPTY_MAP;
+		}
+		// normalize the positions, so that they start from 0 and are in sequence
+		int j = 0;
+		for (int i = Collections.min(res.values()), max = Collections.max(res.values()); i <= max; i++) {
+			if (res.values().contains(i)) {
+				for (final Map.Entry<IVariable, Integer> e : res.entrySet()) {
+					if (e.getValue() == i) {
+						res.put(e.getKey(), j++);
+						break;
+					}
+				}
+			}
+		}
+		return res;
+	}
+	
+	/**
+	 * Searches a given query for the first occurence of a given term. Constructed 
+	 * terms don't count in the index, but the terms inside of an constructed 
+	 * term are.
+	 * @param stack the query where to search
+	 * @param needle the term for which to look for
+	 * @return the index of <code>needle</code> in <code>stack</code>
+	 * @throws NullPointerException if the stack is <code>null</code>
+	 * @throws NullPointerException if the needle is <code>null</code>
+	 */
+	private static int termPos(final IQuery stack, final ITerm needle) {
+		if (stack == null) {
+			throw new NullPointerException("The stack must not be null");
+		}
+		if (needle == null) {
+			throw new NullPointerException("The needle must not be null");
+		}
+		int pos = 0;
+		for (final ILiteral l : stack.getQueryLiterals()) {
+			for (final ITerm t : l.getTuple().getTerms()) {
+				if (needle.equals(t)) {
+					return pos;
+				} else if (t instanceof IConstructedTerm) {
+					final int[] res = termPos((IConstructedTerm) t, needle);
+					if (res[0] == -1) { // not found
+						pos += res[1];
+					} else { // found
+						return pos + res[1];
+					}
+				} else { 
+					pos++;
+				}
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * <p>
+	 * Searches a constructed term for a given term. This method does it's search
+	 * recursively.
+	 * </p>
+	 * <p>
+	 * The returned array consists of two fields: the position of the found term 
+	 * is written to index 0. it is -1 if the term couldn't be found. The index 1
+	 * only has another value than -1 if index 0 is -1. At index 1 there is written
+	 * how many terms are contained in this constructed term and it's sub terms.
+	 * </p>
+	 * @param stack the constructed term where to search
+	 * @param needle the term for which to look for
+	 * @return the position array
+	 * @throws NullPointerException if the stack is <code>null</code>
+	 * @throws NullPointerException if the needle is <code>null</code>
+	 * @see #termPos(IQuery, ITerm)
+	 */
+	private static int[] termPos(final IConstructedTerm stack, final ITerm needle) {
+		if (stack == null) {
+			throw new NullPointerException("The stack must not be null");
+		}
+		if (needle == null) {
+			throw new NullPointerException("The needle must not be null");
+		}
+		int pos = 0;
+		for (final ITerm t : stack.getParameters()) {
+			if (needle.equals(t)) {
+					return new int[]{pos, -1};
+			} else if (t instanceof IConstructedTerm) {
+				final int[] res = termPos((IConstructedTerm) t, needle);
+				if (res[0] == -1) { // not found
+					pos += res[1];
+				} else { // found
+					res[0] += pos;
+					return res;
+				}
+			} else {
+				pos++;
+			}
+		}
+		return new int[]{-1, pos};
 	}
 
 	public synchronized void register(String ontologyURI, Set<Rule> kb)
@@ -667,206 +771,6 @@ public class IrisFacade implements DatalogReasonerFacade {
 				(int) t.getRawOffset() % 3600000 / 60000 };
 	}
 
-	/**
-	 * <p>
-	 * Searches a query for the position of a given variable.
-	 * </p>
-	 * <p>
-	 * The returned index describes the path through the query to the given
-	 * variable. The first index is the literal and the second the term where
-	 * this variable is located. If the term is a constructed term, there migth
-	 * be further indexes describing the path through the constructed terms. An
-	 * empty array indicates that the variable couldn't be found.
-	 * </p>
-	 * <p>
-	 * An index always starts counting from 0
-	 * </p>
-	 * <p>
-	 * E.g. a returned index of {@code [2, 4, 3]} tells, that the variable is in
-	 * the third literal. There it is in the fifth term, which is a constructed
-	 * one, and there it is the fourth argument.
-	 * <p>
-	 * 
-	 * @param q
-	 *            the query where to search
-	 * @param v
-	 *            the variable for which to look for
-	 * @return the index array as described above
-	 * @throws NullPointerException
-	 *             if the query is {@code null}
-	 * @throws NullPointerException
-	 *             if the variable is {@code null}
-	 */
-	private static int[] searchQueryForVar(final IQuery q, final IVariable v) {
-		if (q == null) {
-			throw new NullPointerException("The query must not be null");
-		}
-		if (v == null) {
-			throw new NullPointerException("Variable must not be null");
-		}
-
-		int pos = 0;
-		for (final ILiteral l : q.getQueryLiterals()) {
-			int tPos = 0;
-			for (final ITerm t : l.getTuple().getTerms()) {
-				if (t instanceof IConstructedTerm) {
-					final int[] res = searchConstructForVar(
-							(IConstructedTerm) t, v);
-					if (res.length > 0) {
-						int[] ret = new int[res.length + 2];
-						ret[0] = pos;
-						ret[1] = tPos;
-						System.arraycopy(res, 0, ret, 2, res.length);
-						return ret;
-					}
-				} else if (t.equals(v)) {
-					return new int[] { pos, tPos };
-				}
-				tPos++;
-			}
-			pos++;
-		}
-
-		return new int[] {};
-	}
-
-	/**
-	 * <p>
-	 * Searches a constructed term for the position of a given variable.
-	 * </p>
-	 * <p>
-	 * For a explanation how the index is constructed, look at the
-	 * {@link #searchQueryForVar(IQuery, IVariable)} documentation.
-	 * </p>
-	 * 
-	 * @param c
-	 *            the constructed ther where to search through
-	 * @param v
-	 *            the variable for which to look for
-	 * @return the index describing where to find the variable
-	 * @throws NullPointerException
-	 *             if the constructed term is {@code null}
-	 * @throws NullPointerException
-	 *             if the variable is {@code null}
-	 * @see #searchQueryForVar(IQuery, IVariable)
-	 */
-	private static int[] searchConstructForVar(final IConstructedTerm c,
-			final IVariable v) {
-		if (c == null) {
-			throw new NullPointerException(
-					"The constructed term must not be null");
-		}
-		if (v == null) {
-			throw new NullPointerException("Variable must not be null");
-		}
-
-		int pos = 0;
-		for (final ITerm t : c.getParameters()) {
-			if (t instanceof IConstructedTerm) {
-				final int[] res = searchConstructForVar((IConstructedTerm) t, v);
-				if (res.length > 0) {
-					int[] ret = new int[res.length + 1];
-					ret[0] = pos;
-					System.arraycopy(res, 0, ret, 1, res.length);
-					return ret;
-				}
-			} else if (t.equals(v)) {
-				return new int[] { pos };
-			}
-			pos++;
-		}
-
-		return new int[] {};
-	}
-
-	/**
-	 * <p>
-	 * Retrieves the term of a tuple at a given index.
-	 * </p>
-	 * <p>
-	 * For a explanation how the index is constructed, look at the
-	 * {@link #searchQueryForVar(IQuery, IVariable)} documentation.
-	 * </p>
-	 * 
-	 * @param t
-	 *            the tuple from where to extract the term
-	 * @param i
-	 *            the index where to find the term
-	 * @return the extracted term
-	 * @throws NullPointerException
-	 *             if the tuple is {@code null}
-	 * @throws NullPointerException
-	 *             if the index is {@code null}
-	 * @see #searchQueryForVar(IQuery, IVariable)
-	 */
-	private static ITerm getTermForTuple(final ITuple t, final int[] i) {
-		if (t == null) {
-			throw new NullPointerException("The tuple must not be null");
-		}
-		if (i == null) {
-			throw new NullPointerException("The index must not be null");
-		}
-
-		// TODO: the first index will be ignored, because in iris only queries
-		// with one literal are allowed at the moment, and so only one tuple
-		// will be returned.
-		final ITerm term = t.getTerm(i[1]);
-
-		if (term instanceof IConstructedTerm) {
-			return getTermFromConstruct((IConstructedTerm) term, i, 2);
-		}
-		return term;
-	}
-
-	/**
-	 * <p>
-	 * Retrieves the term of a constructed term at a given index.
-	 * </p>
-	 * <p>
-	 * For a explanation how the index is constructed, look at the
-	 * {@link #searchQueryForVar(IQuery, IVariable)} documentation.
-	 * </p>
-	 * 
-	 * @param t
-	 *            the constructed term from where to extract the term
-	 * @param i
-	 *            the index where to find the term
-	 * @param cur
-	 *            the current possition in the index which should be handeled
-	 *            now.
-	 * @return the extracted term
-	 * @throws NullPointerException
-	 *             if the tuple is {@code null}
-	 * @throws NullPointerException
-	 *             if the index is {@code null}
-	 * @see #searchQueryForVar(IQuery, IVariable)
-	 */
-	private static ITerm getTermFromConstruct(final IConstructedTerm c,
-			final int[] i, final int cur) {
-		if (c == null) {
-			throw new NullPointerException(
-					"The constructed term must not be null");
-		}
-		if (i == null) {
-			throw new NullPointerException("The index must not be null");
-		}
-
-		final ITerm t = c.getParameter(i[cur]);
-
-		if (t instanceof IConstructedTerm) {
-			if (i.length == cur + 1) {
-				throw new IllegalArgumentException(
-						"We got a constructed term, but no further indexes.");
-			}
-			return getTermFromConstruct((IConstructedTerm) t, i, cur + 1);
-		}
-
-		// TODO: thorw exception?
-		assert i.length == cur + 1 : "We got a non-constructed term, but further inedes";
-
-		return t;
-	}
-	
 	/**
 	 * Method to get a structured representation of a program.
 	 * @param p the program
