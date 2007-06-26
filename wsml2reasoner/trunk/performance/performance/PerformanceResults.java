@@ -107,7 +107,12 @@ public class PerformanceResults {
                     		size++;
                     	}
                     }
-                    bw.write("," + (total/size));
+                    if ((total/size) == 0) {
+                    	bw.write(",-1");
+                    }
+                    else {
+                    	bw.write("," + (total/size));
+                    }
                 }
                 else{
                     bw.write(",-1");
