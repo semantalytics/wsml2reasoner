@@ -265,6 +265,7 @@ public class TestPerformanceWithUseOfFeatures {
         
         PerformanceResults performanceresults = new PerformanceResults();
         MyStringBuffer log = new MyStringBuffer();
+        MyStringBuffer resultLog = new MyStringBuffer();
         for (Ontology ontology : ontologies){
             if (ontology.listRelationInstances().isEmpty()){
                 log.println("WARNING: "+ontology.getIdentifier()+" has no queries defined\n");
@@ -282,7 +283,7 @@ public class TestPerformanceWithUseOfFeatures {
             for (int i = 0; i < reasonerNames.length; i++){      
                 for (Entry<String, String> query : queries.entrySet()){
                 	try{
-                		PerformanceResult result = executeQuery(query.getValue(), ontology,reasonerNames[i],log);
+                		PerformanceResult result = executeQuery(query.getValue(), ontology,reasonerNames[i],log, resultLog);
 	                    performanceresults.addReasonerPerformaceResult(
 	                            reasonerNames[i], 
 	                            ontology, 
@@ -300,6 +301,7 @@ public class TestPerformanceWithUseOfFeatures {
         }
         performanceresults.writeAll(new File(directoryPath + path).getAbsolutePath());
         log.write(new File(directoryPath + path + "log.txt"));
+        resultLog.write(new File(directoryPath + path + "resultLog.txt"));
     }
       //reasoner, {regist, query}
     Map<String,Set<String>> timedOutReasoner = new HashMap<String, Set<String>>();
@@ -327,7 +329,8 @@ public class TestPerformanceWithUseOfFeatures {
     		String theQuery,
     		Ontology theOntology, 
     		String theReasonerName,
-    		MyStringBuffer log) throws ParserException, InconsistencyException {
+    		MyStringBuffer log,
+    		MyStringBuffer resultLog) throws ParserException, InconsistencyException {
         
     	PerformanceResult performanceresult = new PerformanceResult();
     	if (timedOutReasoner.containsKey(theReasonerName)){
@@ -342,6 +345,10 @@ public class TestPerformanceWithUseOfFeatures {
         log.println("query = '" + theQuery + "'");
         log.println("ontology = '" + theOntology.getIdentifier() + "'");
         log.println("reasoner = '" + theReasonerName + "'");
+        resultLog.printlnLogFile("\n------------------------------------");
+        resultLog.printlnLogFile("query = '" + theQuery + "'");
+        resultLog.printlnLogFile("ontology = '" + theOntology.getIdentifier() + "'");
+        resultLog.printlnLogFile("reasoner = '" + theReasonerName + "'");
         
         WSMLReasoner reasoner = createReasoner(theReasonerName,log);
         if (reasoner==null){
@@ -369,7 +376,7 @@ public class TestPerformanceWithUseOfFeatures {
        
         boolean ok = true;
         for (int i=0; i<NO_OF_TESTRUNS && ok ;i++){
-            QueryThread queryThread = new QueryThread(theOntology,reasoner,query, log);
+            QueryThread queryThread = new QueryThread(theOntology,reasoner,query, log, resultLog);
             log.print("Executing query ");
             queryThread.start();
             waitUntilAlive(queryThread);
@@ -510,12 +517,14 @@ class QueryThread extends MyThread {
 	WSMLReasoner reasoner;
 	LogicalExpression query;
 	MyStringBuffer log;
+	MyStringBuffer resultLog;
 
-	QueryThread(Ontology o, WSMLReasoner reasoner,LogicalExpression query,MyStringBuffer log) {
+	QueryThread(Ontology o, WSMLReasoner reasoner,LogicalExpression query,MyStringBuffer log, MyStringBuffer resultLog) {
 		this.o = o;
 		this.reasoner = reasoner;
 		this.query=query;
 		this.log=log;
+		this.resultLog=resultLog;
 	}
 	long t2=-1;
 	public void run() {
@@ -523,9 +532,13 @@ class QueryThread extends MyThread {
 		    long t2_start = System.currentTimeMillis();
 		    Set<Map<Variable, Term>> result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
 		    log.print("  size: "+result.size());
+		    resultLog.printlnLogFile("Size of result set: "+result.size());
 		    if (!result.isEmpty()){
 		    	log.print(" sample: "+result.iterator().next());
-//		    	log.println("\n ALL: "+result+"\n");
+		    	resultLog.printlnLogFile("All results: \n");
+		    	for (Map<Variable, Term> map : result) {
+		    		resultLog.printlnLogFile(map + "");
+		    	}
 		    }
 	        long t2_end = System.currentTimeMillis();
 	        t2 = t2_end - t2_start;
@@ -545,10 +558,16 @@ class QueryThread extends MyThread {
 }
 
 class MyStringBuffer{
+	
 	StringBuffer log = new StringBuffer();
+	
 	public void println(String s){
 		log.append(s+"\n");
 		System.out.println(s);
+	}
+	
+	public void printlnLogFile(String s) {
+		log.append(s+"\n");
 	}
 	
 	public void print(String s){
@@ -556,6 +575,10 @@ class MyStringBuffer{
 		System.out.print(s);
 	}
 
+	public void printLogFile(String s){
+		log.append(s);
+	}
+	
 	public String toString(){
 		return log.toString();
 	}

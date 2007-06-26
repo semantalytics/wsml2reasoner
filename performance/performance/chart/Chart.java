@@ -137,6 +137,7 @@ public class Chart {
 		fw.append("<h1>"+testInfo.title+"</h1>");
 		fw.append("<p>"+replaceLineBreak(testInfo.description)+"</p>");
 		fw.append("<p><a href=\"log.txt\">log</a></p>");
+		fw.append("<p><a href=\"resultLog.txt\">results</a></p>");
 		
 		for (File csv : dir.listFiles(csvfilter)){
 			CategoryDataset dataset = createDataset(csv,testInfo);
