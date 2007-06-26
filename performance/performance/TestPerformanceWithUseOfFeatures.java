@@ -29,7 +29,7 @@ public class TestPerformanceWithUseOfFeatures {
     public static int TIMELIMIT_REGISTRATION = 40000;
     public static int WAIT_INTERVAL = 1000;
     
-    int evalmethod = 2;
+    int evalmethod = 3;
     
     
     String directoryPath = "performance/performance/results/";
