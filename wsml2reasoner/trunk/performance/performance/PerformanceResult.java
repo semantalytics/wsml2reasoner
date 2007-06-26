@@ -6,8 +6,8 @@ import java.util.Map;
 
 public class PerformanceResult {
     
-    private long registerOntology = 0;
-    private long deregisterOntology = 0;
+    private long registerOntology = -1;
+    private long deregisterOntology = -1;
     private Map <Integer, Long> executeQuery = new HashMap <Integer, Long> ();
 
     public Map <Integer, Long> getExecuteQuery() {
