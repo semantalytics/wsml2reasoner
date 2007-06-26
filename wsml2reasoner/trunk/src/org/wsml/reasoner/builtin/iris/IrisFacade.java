@@ -97,11 +97,11 @@ import org.wsmo.factory.WsmoFactory;
  * The wsmo4j interface for the iris reasoner.
  * </p>
  * <p>
- * $Id: IrisFacade.java,v 1.16 2007-06-26 12:29:39 richardpoettler Exp $
+ * $Id: IrisFacade.java,v 1.17 2007-06-26 17:03:36 nathalie Exp $
  * </p>
  * 
  * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class IrisFacade implements DatalogReasonerFacade {
 
@@ -174,6 +174,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 
 	public synchronized void deregister(String ontologyURI)
 			throws ExternalToolException {
+		((IProgram) progs.get(ontologyURI)).resetProgram(); 
 		progs.remove(ontologyURI);
 		executor.remove(ontologyURI);
 		conjunktiveQueries.remove(ontologyURI);
