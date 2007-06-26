@@ -259,7 +259,7 @@ public class Chart {
 			for (int i = 1; i < data.length; i++) {
 				double time = Double.parseDouble(data[i]);
 				int count = Integer.parseInt((head[i].substring(2)));
-				if (time>0){
+				if (time>=0){
 					dataset.addValue((int)time,reasoner , count+"");
 				}
 			}
