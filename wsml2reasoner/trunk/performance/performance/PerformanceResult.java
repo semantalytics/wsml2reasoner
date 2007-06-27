@@ -4,12 +4,23 @@ package performance;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.impl.BenchmarkHelper;
+
 public class PerformanceResult {
     
     private long registerOntology = -1;
     private long deregisterOntology = -1;
     private Map <Integer, Long> executeQuery = new HashMap <Integer, Long> ();
+    private BenchmarkHelper helper = null;
 
+    public PerformanceResult() {  	
+    }
+    
+    public PerformanceResult(WSMLReasoner reasoner) {
+    	this.helper = new BenchmarkHelper(reasoner);
+    }
+    
     public Map <Integer, Long> getExecuteQuery() {
         return executeQuery;
     }
@@ -44,4 +55,17 @@ public class PerformanceResult {
     public void setDeRegisterOntology(long theDeRegisterOntology) {
         this.deregisterOntology = theDeRegisterOntology;
     }
+
+	public long getConvertTime() {
+		return helper.getConvertTime();
+	}
+
+	public long getNormalizeTime() {
+		return helper.getNormalizationTime();
+	}
+
+	public long getOntologyConsistencyCheckTime() {
+		return helper.getConsistencyCheckTime();
+	}
+
 }
