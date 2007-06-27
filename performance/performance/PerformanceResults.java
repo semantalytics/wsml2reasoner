@@ -90,7 +90,7 @@ public class PerformanceResults {
     public void writeCSVLoadTime(File directory) throws IOException{
         List<IRI> sortedAllOntologiesInTest = getAllOntologiesInResultSorted();
         //Write ontology load time data
-        File loadTimeFile = new File(directory, "ALL-average-ontology-registration-times.csv");
+        File loadTimeFile = new File(directory, "ALL-average-ontology-0-registration-times.csv");
         BufferedWriter bw = new BufferedWriter(new FileWriter(loadTimeFile));
         bw.write("Reasoner," + toCommaDelimited(sortedAllOntologiesInTest) + "\n");
         for (String reasoner : performanceresults.keySet()){
@@ -103,7 +103,7 @@ public class PerformanceResults {
                     for (PerformanceResult performanceResult : values){
                     	long registerTime = performanceResult.getRegisterOntology();
                     	if (registerTime>0) {
-                    		total +=registerTime;
+                    		total += registerTime;
                     		size++;
                     	}
                     }
@@ -125,6 +125,129 @@ public class PerformanceResults {
         System.out.println("Written to: " + loadTimeFile.getAbsolutePath());
     }
 
+    public void writeCSVNormalizationTime(File directory) throws IOException{
+        List<IRI> sortedAllOntologiesInTest = getAllOntologiesInResultSorted();
+        //Write ontology load time data
+        File loadTimeFile = new File(directory, "ALL-average-ontology-1-normalization-times.csv");
+        BufferedWriter bw = new BufferedWriter(new FileWriter(loadTimeFile));
+        bw.write("Reasoner," + toCommaDelimited(sortedAllOntologiesInTest) + "\n");
+        for (String reasoner : performanceresults.keySet()){
+            bw.write(reasoner);
+            for (IRI id : sortedAllOntologiesInTest){
+                if (performanceresults.get(reasoner).containsKey(id)){
+                    Collection <PerformanceResult> values = performanceresults.get(reasoner).get(id).values();
+                    int total = 0;
+                    int size = values.size();
+                    boolean timedOut = false;
+                    for (PerformanceResult performanceResult : values){
+                    	long normalizationTime = performanceResult.getNormalizeTime();
+                    	if (normalizationTime == -1)
+                    		timedOut = true;
+                    	if (normalizationTime>0) {
+                    		total += normalizationTime;
+                    		size++;
+                    	}
+                    }
+                    if (timedOut) {
+                    	bw.write(",-1");
+                    }
+                    else {
+                    	bw.write("," + (total/size));
+                    }
+                }
+                else{
+                    bw.write(",-1");
+                }
+            }
+            bw.write("\n");
+        }
+        bw.flush();
+        bw.close();
+        System.out.println("Written to: " + loadTimeFile.getAbsolutePath());
+    }
+    
+    public void writeCSVConvertionTime(File directory) throws IOException{
+        List<IRI> sortedAllOntologiesInTest = getAllOntologiesInResultSorted();
+        //Write ontology load time data
+        File loadTimeFile = new File(directory, "ALL-average-ontology-2-convertion-times.csv");
+        BufferedWriter bw = new BufferedWriter(new FileWriter(loadTimeFile));
+        bw.write("Reasoner," + toCommaDelimited(sortedAllOntologiesInTest) + "\n");
+        for (String reasoner : performanceresults.keySet()){
+            bw.write(reasoner);
+            for (IRI id : sortedAllOntologiesInTest){
+                if (performanceresults.get(reasoner).containsKey(id)){
+                    Collection <PerformanceResult> values = performanceresults.get(reasoner).get(id).values();
+                    int total = 0;
+                    int size = values.size();
+                    boolean timedOut = false;
+                    for (PerformanceResult performanceResult : values){
+                    	long convertionTime = performanceResult.getConvertTime();
+                    	if (convertionTime == -1)
+                    		timedOut = true;
+                    	if (convertionTime>0) {
+                    		total += convertionTime;
+                    		size++;
+                    	}
+                    }
+                    if (timedOut) {
+                    	bw.write(",-1");
+                    }
+                    else {
+                    	bw.write("," + (total/size));
+                    }
+                }
+                else{
+                    bw.write(",-1");
+                }
+            }
+            bw.write("\n");
+        }
+        bw.flush();
+        bw.close();
+        System.out.println("Written to: " + loadTimeFile.getAbsolutePath());
+    }
+    
+    public void writeCSVConsistencyCheckTime(File directory) throws IOException{
+        List<IRI> sortedAllOntologiesInTest = getAllOntologiesInResultSorted();
+        //Write ontology load time data
+        File loadTimeFile = new File(directory, "ALL-average-ontology-3-consistencyCheck-times.csv");
+        BufferedWriter bw = new BufferedWriter(new FileWriter(loadTimeFile));
+        bw.write("Reasoner," + toCommaDelimited(sortedAllOntologiesInTest) + "\n");
+        for (String reasoner : performanceresults.keySet()){
+            bw.write(reasoner);
+            for (IRI id : sortedAllOntologiesInTest){
+                if (performanceresults.get(reasoner).containsKey(id)){
+                    Collection <PerformanceResult> values = performanceresults.get(reasoner).get(id).values();
+                    int total = 0;
+                    int size = values.size();
+                    boolean timedOut = false;
+                    for (PerformanceResult performanceResult : values){
+                    	long consistencyCheckTime = performanceResult.getOntologyConsistencyCheckTime();
+                    	if (consistencyCheckTime == -1)
+                    		timedOut = true;
+                    	if (consistencyCheckTime>0) {
+                    		total += consistencyCheckTime;
+                    		size++;
+                    	}
+                    }
+                    if (timedOut) {
+                    	bw.write(",-1");
+                    }
+                    else {
+                    	bw.write("," + (total/size));
+                    }
+                }
+                else{
+                    bw.write(",-1");
+                }
+            }
+            bw.write("\n");
+        }
+        bw.flush();
+        bw.close();
+        System.out.println("Written to: " + loadTimeFile.getAbsolutePath());
+    }
+    
     public void writeCSVQueryTimes(File directory) throws IOException{
 //    	 Write ontology query time data
         List <String> sortedAllQueriesInTest = getAllQueriesInResultSorted();
@@ -160,8 +283,11 @@ public class PerformanceResults {
     public void writeAll(String theDirectory) throws IOException, ParserException, InvalidModelException{
         File directory = new File(theDirectory);
         clearDirectory(directory);
-        writeCSVLoadTime(directory);
+//        writeCSVLoadTime(directory);
         writeCSVQueryTimes(directory);
+        writeCSVNormalizationTime(directory);
+        writeCSVConvertionTime(directory);
+        writeCSVConsistencyCheckTime(directory);
         
         new Chart().doChartsFromCSV(directory);
     }
