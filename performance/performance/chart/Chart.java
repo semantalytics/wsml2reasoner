@@ -142,10 +142,28 @@ public class Chart {
 		for (File csv : dir.listFiles(csvfilter)){
 			CategoryDataset dataset = createDataset(csv,testInfo);
 			TestQueryInfo testQueryInfo = findMatchingQueryInfo(testInfo,csv);
-			if (testQueryInfo == null){ //is the registration time
-				testQueryInfo = new TestQueryInfo();
-				testQueryInfo.title="Registration Times";
-				testQueryInfo.description="";
+			// is either normalization, convertion, consistency check or total registration time
+			if (testQueryInfo == null){ 
+				if (csv.getName().contains("normalization")) {
+					testQueryInfo = new TestQueryInfo();
+					testQueryInfo.title="Normalization Times";
+					testQueryInfo.description="";
+				}
+				else if (csv.getName().contains("convertion")) {
+					testQueryInfo = new TestQueryInfo();
+					testQueryInfo.title="Convertion Times";
+					testQueryInfo.description="";
+				}
+				else if (csv.getName().contains("consistencyCheck")) {
+					testQueryInfo = new TestQueryInfo();
+					testQueryInfo.title="Consistency Check Times";
+					testQueryInfo.description="";
+				}
+				else {
+					testQueryInfo = new TestQueryInfo();
+					testQueryInfo.title="Total registration Times";
+					testQueryInfo.description="";
+				}
 			}
 			String name = testQueryInfo.title;
 			System.out.println("processing: "+ name);
