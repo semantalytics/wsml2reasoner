@@ -49,23 +49,23 @@ public class TestPerformanceWithUseOfFeatures {
        
 //        ex.doTestRun();
         
-//    	ex.testSubconceptOntologies();
-//    	ex.testDeepSubconceptOntologies();
-//    	ex.testInstanceOntologies();
-//    	ex.testInstanceANDsubconceptOntologies();
-//    	ex.testInstanceANDdeepSubconceptOntologies();
-//    	ex.testOfTypeOntologies();
-//    	ex.testOfTypeANDsubconceptOntologies();
-//    	ex.testCardinality01Ontologies();
-//    	ex.testCardinality010Ontologies();
+    	ex.testSubconceptOntologies();
+    	ex.testDeepSubconceptOntologies();
+    	ex.testInstanceOntologies();
+    	ex.testInstanceANDsubconceptOntologies();
+    	ex.testInstanceANDdeepSubconceptOntologies();
+    	ex.testOfTypeOntologies();
+    	ex.testOfTypeANDsubconceptOntologies();
+    	ex.testCardinality01Ontologies();
+    	ex.testCardinality010Ontologies();
     	ex.testCardinality1maxOntologies();
-//    	ex.testInverseAttributeOntologies();
-//    	ex.testTransitiveAttributeOntologies();
-//    	ex.testSymmetricAttributeOntologies();
-//    	ex.testReflexiveAttributeOntologies();
-//    	ex.testLocallyStratifiedNegation();
-//    	ex.testGloballyStratifiedNegation();
-//    	ex.testBuiltInAttributeOntologies();
+    	ex.testInverseAttributeOntologies();
+    	ex.testTransitiveAttributeOntologies();
+    	ex.testSymmetricAttributeOntologies();
+    	ex.testReflexiveAttributeOntologies();
+    	ex.testLocallyStratifiedNegation();
+    	ex.testGloballyStratifiedNegation();
+    	ex.testBuiltInAttributeOntologies();
     }
 
     /**
@@ -332,12 +332,11 @@ public class TestPerformanceWithUseOfFeatures {
     		MyStringBuffer log,
     		MyStringBuffer resultLog) throws ParserException, InconsistencyException {
         
-    	PerformanceResult performanceresult = new PerformanceResult();
     	if (timedOutReasoner.containsKey(theReasonerName)){
     		Set<String> detail = timedOutReasoner.get(theReasonerName);
     		if (detail.contains(theQuery) || detail.contains("registration")){
     			log.println(theReasonerName+" has previously already timed out!!");
-    			return performanceresult;
+    			return new PerformanceResult(null);
     		}
     	}
         
@@ -351,14 +350,15 @@ public class TestPerformanceWithUseOfFeatures {
         resultLog.printlnLogFile("reasoner = '" + theReasonerName + "'");
         
         WSMLReasoner reasoner = createReasoner(theReasonerName,log);
+    	PerformanceResult performanceresult = new PerformanceResult(reasoner);
         if (reasoner==null){
-        	log.println("EROR could not create Reasoner");
+        	log.println("ERROR could not create Reasoner");
         	return performanceresult;
         }
     
         LogicalExpression query = new WSMO4JManager().getLogicalExpressionFactory().createLogicalExpression(theQuery, theOntology);
         
-        log.print("Registering Ontology ");
+        log.print("Registering Ontology (in total) ");
         RegistrationThread registrationThread = new RegistrationThread(theOntology,reasoner,performanceresult,log);
         registrationThread.start();
         long counter=0;
@@ -486,7 +486,7 @@ class RegistrationThread extends MyThread {
 	PerformanceResult performanceresult;
 	MyStringBuffer log;
 
-	RegistrationThread(Ontology o, WSMLReasoner reasoner,PerformanceResult performence, MyStringBuffer log) {
+	RegistrationThread(Ontology o, WSMLReasoner reasoner, PerformanceResult performence, MyStringBuffer log) {
 		this.o = o;
 		this.reasoner = reasoner;
 		this.performanceresult=performence;
@@ -502,6 +502,10 @@ class RegistrationThread extends MyThread {
 			long t1 = t1_end-t1_start;
 			log.println("(" + t1 + "ms)");
             performanceresult.setRegisterOntology(t1);
+            log.println("Ontology normalization time: " + performanceresult.getNormalizeTime() + "ms");
+            log.println("Ontology convertion time: " + performanceresult.getConvertTime() + "ms");
+            log.println("Ontology consistency check time: " + 
+            		performanceresult.getOntologyConsistencyCheckTime() + "ms");
             isFinished = true;
 		} catch (InconsistencyException e) {
 			log.println("error registering ontology "+((IRI)o.getIdentifier()).getLocalName());
