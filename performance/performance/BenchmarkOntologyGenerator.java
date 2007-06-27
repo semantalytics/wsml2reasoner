@@ -959,7 +959,8 @@ public class BenchmarkOntologyGenerator {
 			String title = "Maximal cardinality contraint (0 1) expressions";
 			description = "\n\t\t\t This ontology is containing cardinality constraint expressions " +
 					"with a maximal cardinality of 1.\n\n\t\t\t " +
-					"The x-axis value of the graph indicates the number of cardinality constraint expressions." +
+					"The x-axis value of the graph indicates the number of cardinality constraint and " +
+					"attribute value expressions." +
 					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 ofType (0 1) c1" +
 					"\n\t\t\t instance i1 memberOf c1 \n\t\t\t \t a1 hasValue i2" +
 					"\n\t\t\t instance i2 memberOf c1\n\n\t\t\t " +
@@ -1059,7 +1060,8 @@ public class BenchmarkOntologyGenerator {
 			String title = "Maximal cardinality contraint (0 10) expressions";
 			description = "\n\t\t\t This ontology is containing cardinality constraint expressions " +
 					"with a maximal cardinality of 10.\n\n\t\t\t " +
-					"The x-axis value of the graph indicates the number of cardinality constraint expressions." +
+					"The x-axis value of the graph indicates the number of cardinality constraint and " +
+					"attribute value expressions." +
 					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 ofType (0 10) c1" +
 					"\n\t\t\t instance i1 memberOf c1 \n\t\t\t \t a1 hasValue i2" +
 					"\n\t\t\t instance i2 memberOf c1\n\n\t\t\t " +
@@ -1159,7 +1161,8 @@ public class BenchmarkOntologyGenerator {
 			String title = "Minimal cardinality contraint (1 *) expressions";
 			description = "\n\t\t\t This ontology is containing cardinality constraint expressions " +
 					"with a minimal cardinality of 1.\n\n\t\t\t " +
-					"The x-axis value of the graph indicates the number of cardinality constraint expressions." +
+					"The x-axis value of the graph indicates the number of cardinality constraint and " +
+					"attribute value expressions." +
 					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 ofType (1 *) c1" +
 					"\n\t\t\t instance i1 memberOf c1 \n\t\t\t \t a1 hasValue i2" +
 					"\n\t\t\t instance i2 memberOf c1\n\n\t\t\t " +
@@ -2087,6 +2090,11 @@ public class BenchmarkOntologyGenerator {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.18  2007-06-22 12:10:42  hlausen
+ * customized the number of features accoring to difficulty
+ * added query to html result page
+ * time out specifc to each query and not global per ontology as before
+ *
  * Revision 1.17  2007-06-21 11:32:59  nathalie
  * *** empty log message ***
  *
