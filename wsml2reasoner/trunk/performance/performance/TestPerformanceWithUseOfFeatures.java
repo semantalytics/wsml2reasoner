@@ -49,23 +49,23 @@ public class TestPerformanceWithUseOfFeatures {
        
 //        ex.doTestRun();
         
-    	ex.testSubconceptOntologies();
-    	ex.testDeepSubconceptOntologies();
-    	ex.testInstanceOntologies();
-    	ex.testInstanceANDsubconceptOntologies();
-    	ex.testInstanceANDdeepSubconceptOntologies();
-    	ex.testOfTypeOntologies();
-    	ex.testOfTypeANDsubconceptOntologies();
-    	ex.testCardinality01Ontologies();
-    	ex.testCardinality010Ontologies();
+//    	ex.testSubconceptOntologies();
+//    	ex.testDeepSubconceptOntologies();
+//    	ex.testInstanceOntologies();
+//    	ex.testInstanceANDsubconceptOntologies();
+//    	ex.testInstanceANDdeepSubconceptOntologies();
+//    	ex.testOfTypeOntologies();
+//    	ex.testOfTypeANDsubconceptOntologies();
+//    	ex.testCardinality01Ontologies();
+//    	ex.testCardinality010Ontologies();
     	ex.testCardinality1maxOntologies();
-    	ex.testInverseAttributeOntologies();
-    	ex.testTransitiveAttributeOntologies();
-    	ex.testSymmetricAttributeOntologies();
-    	ex.testReflexiveAttributeOntologies();
-    	ex.testLocallyStratifiedNegation();
-    	ex.testGloballyStratifiedNegation();
-    	ex.testBuiltInAttributeOntologies();
+//    	ex.testInverseAttributeOntologies();
+//    	ex.testTransitiveAttributeOntologies();
+//    	ex.testSymmetricAttributeOntologies();
+//    	ex.testReflexiveAttributeOntologies();
+//    	ex.testLocallyStratifiedNegation();
+//    	ex.testGloballyStratifiedNegation();
+//    	ex.testBuiltInAttributeOntologies();
     }
 
     /**
