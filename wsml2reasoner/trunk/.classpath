@@ -21,7 +21,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/ext/owl-api/owl-api-econn/2006-04-27/api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ext/owl-api/owl-api-econn/2006-04-27/impl.jar"/>
 	<classpathentry kind="lib" path="lib/ext/wsmo4j/wsmlparser-20070411.jar"/>
-	<classpathentry kind="lib" path="lib/ext/mins/minsv0_2.jar"/>
 	<classpathentry kind="lib" path="lib/ext/jgrapht/jgrapht-jdk1.5-0.7.1.jar"/>
 	<classpathentry kind="lib" path="lib/ext/iris/iris-0.3.jar"/>
 	<classpathentry kind="lib" path="lib/ext/iris/iris-parser-0.3.jar"/>
@@ -32,5 +31,6 @@
 	<classpathentry kind="lib" path="lib/ext/JFreeChart/jcommon-1.0.10.jar"/>
 	<classpathentry kind="lib" path="lib/ext/JFreeChart/jfreechart-1.0.6.jar" sourcepath="lib/ext/JFreeChart/source.zip"/>
 	<classpathentry kind="lib" path="lib/ext/JFreeChart/swtgraphics2d.jar"/>
+	<classpathentry kind="lib" path="lib/ext/mins/mins_27_06_2007.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
