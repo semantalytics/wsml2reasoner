@@ -110,6 +110,12 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     
     private boolean disableConsitencyCheck = false;
 
+    private long normTime = -1;
+    
+    private long convTime = -1;
+    
+    private long consTime = -1;
+    
     public DatalogBasedWSMLReasoner(
             WSMLReasonerFactory.BuiltInReasoner builtInType,
             WSMO4JManager wsmoManager) {
@@ -126,7 +132,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             break;
         case IRIS:
         	builtInFacade = new IrisFacade(wsmoManager);
-        	disableConsitencyCheck = true;
+//        	disableConsitencyCheck = true;
         	break;
         default:
             throw new UnsupportedOperationException("Reasoning with "
@@ -150,6 +156,17 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     		allowImports = allowOntoImports;
     	}
 
+	protected long getNormalizationTime() {
+    	return normTime;
+    }
+    
+	protected long getConvertionTime() {
+    	return convTime;
+    }
+    
+	protected long getConsistencyCheckTime() {
+    	return consTime;
+    }
     
     protected Set<org.wsml.reasoner.Rule> convertOntology(Ontology o) {
 
@@ -157,6 +174,8 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 
         // TODO Check whether ontology import is currently handled
 
+        long normTime_start = System.currentTimeMillis();
+        
         // Convert conceptual syntax to logical expressions
         OntologyNormalizer normalizer = new AxiomatizationNormalizer(wsmoManager);
         normalizedOntology = normalizer.normalize(o);
@@ -190,14 +209,19 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             lExprs.addAll(((Axiom) a).listDefinitions());
         }
 //        System.out.println(lExprs);
+        
         p = wsml2datalog.transform(lExprs);
         p.addAll(wsml2datalog.generateAuxilliaryRules());
+
+        long normTime_end = System.currentTimeMillis();
+        normTime = normTime_end - normTime_start;
+        
         // System.out.println("datalog program:");
         // System.out.println(p);
         // System.out.println("-*");
         return p;
     }
-
+    
     public boolean isSatisfiable(IRI ontologyID) {
         IRI violationIRI = wsmoFactory
                 .createIRI(ConstraintReplacementNormalizer.VIOLATION_IRI);
@@ -498,9 +522,11 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 
     public void registerOntologies(Set<Ontology> ontologies) throws InconsistencyException {
         registerOntologiesNoVerification(ontologies);
+        long consTime_start = System.currentTimeMillis();
         // check satisfiability
         if (!disableConsitencyCheck){
 	        Set<ConsistencyViolation> errors = new HashSet<ConsistencyViolation>();
+	      
 	        for (Ontology o : ontologies) {
 	            IRI ontologyId = (IRI) o.getIdentifier();
 	            errors.addAll(checkConsistency(ontologyId));
@@ -514,7 +540,10 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 	            throw new InconsistencyException(errors);
 	        }
         }
+        long consTime_end = System.currentTimeMillis();
+        consTime = consTime_end - consTime_start;
     }
+    
 
     private void addAttributeOfTypeViolations(Set<ConsistencyViolation> errors,
             IRI ontologyId) throws InvalidModelException {
@@ -685,7 +714,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     protected Set<Map<Variable, Term>> internalExecuteQuery(IRI ontologyID,
             LogicalExpression query) throws DatalogException,
             org.wsml.reasoner.ExternalToolException {
-//    	System.out.println("query: " + query);
+//    	System.out.println("query: " + query);            
         Set<org.wsml.reasoner.ConjunctiveQuery> datalogQueries = convertQuery(query);
         Set<Map<Variable, Term>> result = new HashSet<Map<Variable, Term>>();
         for (ConjunctiveQuery datalogQuery : datalogQueries) {
@@ -776,6 +805,8 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             Set<org.wsml.reasoner.Rule> kb = new HashSet<org.wsml.reasoner.Rule>();
             kb.addAll(convertOntology(o));
 
+            long convTime_start = System.currentTimeMillis();
+            
             // Register the program at the built-in reasoner:
             try {
                 builtInFacade.register(ontologyUri, kb);
@@ -785,6 +816,9 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
                         "This set of ontologies could not have been registered at the built-in reasoner",
                         e);
             }
+            
+            long convTime_end = System.currentTimeMillis();
+            convTime = convTime_end - convTime_start;
         }
     }
 
