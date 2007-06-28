@@ -26,7 +26,7 @@ public class TestPerformanceWithUseOfFeatures {
 	//how often to repeat each query!
     public static int NO_OF_TESTRUNS = 1;
     public static int TIMELIMIT_QUERY = 20000;
-    public static int TIMELIMIT_REGISTRATION = 40000;
+    public static int TIMELIMIT_REGISTRATION = 120000;
     public static int WAIT_INTERVAL = 1000;
     
     int evalmethod = 3;
@@ -507,10 +507,10 @@ class RegistrationThread extends MyThread {
             log.println("Ontology consistency check time: " + 
             		performanceresult.getOntologyConsistencyCheckTime() + "ms");
             isFinished = true;
-		} catch (InconsistencyException e) {
+		} catch (Throwable e) {
 			log.println("error registering ontology "+((IRI)o.getIdentifier()).getLocalName());
 			log.println("  error detail: "+e);
-			throw new RuntimeException(e.toString(),e);
+//			throw new RuntimeException(e.toString(),e);
 		}
 	}
 
