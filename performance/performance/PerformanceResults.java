@@ -90,7 +90,7 @@ public class PerformanceResults {
     public void writeCSVLoadTime(File directory) throws IOException{
         List<IRI> sortedAllOntologiesInTest = getAllOntologiesInResultSorted();
         //Write ontology load time data
-        File loadTimeFile = new File(directory, "ALL-average-ontology-0-registration-times.csv");
+        File loadTimeFile = new File(directory, "3-ALL-average-ontology-registration-times.csv");
         BufferedWriter bw = new BufferedWriter(new FileWriter(loadTimeFile));
         bw.write("Reasoner," + toCommaDelimited(sortedAllOntologiesInTest) + "\n");
         for (String reasoner : performanceresults.keySet()){
@@ -128,7 +128,7 @@ public class PerformanceResults {
     public void writeCSVNormalizationTime(File directory) throws IOException{
         List<IRI> sortedAllOntologiesInTest = getAllOntologiesInResultSorted();
         //Write ontology load time data
-        File loadTimeFile = new File(directory, "ALL-average-ontology-1-normalization-times.csv");
+        File loadTimeFile = new File(directory, "0-ALL-average-ontology-normalization-times.csv");
         BufferedWriter bw = new BufferedWriter(new FileWriter(loadTimeFile));
         bw.write("Reasoner," + toCommaDelimited(sortedAllOntologiesInTest) + "\n");
         for (String reasoner : performanceresults.keySet()){
@@ -169,7 +169,7 @@ public class PerformanceResults {
     public void writeCSVConvertionTime(File directory) throws IOException{
         List<IRI> sortedAllOntologiesInTest = getAllOntologiesInResultSorted();
         //Write ontology load time data
-        File loadTimeFile = new File(directory, "ALL-average-ontology-2-convertion-times.csv");
+        File loadTimeFile = new File(directory, "1-ALL-average-ontology-convertion-times.csv");
         BufferedWriter bw = new BufferedWriter(new FileWriter(loadTimeFile));
         bw.write("Reasoner," + toCommaDelimited(sortedAllOntologiesInTest) + "\n");
         for (String reasoner : performanceresults.keySet()){
@@ -210,7 +210,7 @@ public class PerformanceResults {
     public void writeCSVConsistencyCheckTime(File directory) throws IOException{
         List<IRI> sortedAllOntologiesInTest = getAllOntologiesInResultSorted();
         //Write ontology load time data
-        File loadTimeFile = new File(directory, "ALL-average-ontology-3-consistencyCheck-times.csv");
+        File loadTimeFile = new File(directory, "2-ALL-average-ontology-consistencyCheck-times.csv");
         BufferedWriter bw = new BufferedWriter(new FileWriter(loadTimeFile));
         bw.write("Reasoner," + toCommaDelimited(sortedAllOntologiesInTest) + "\n");
         for (String reasoner : performanceresults.keySet()){
@@ -253,9 +253,9 @@ public class PerformanceResults {
         List <String> sortedAllQueriesInTest = getAllQueriesInResultSorted();
         List<IRI> sortedAllOntologiesInTest = getAllOntologiesInResultSorted();
         Collections.sort(sortedAllQueriesInTest);
-        
+        int i=0;
         for (String queryid : sortedAllQueriesInTest){
-        	File queryTimeFile = new File(directory, "average-ontology-"+queryid+"-times.csv");
+        	File queryTimeFile = new File(directory, "average-ontology-" + queryid + "-times.csv");
         	BufferedWriter bw = new BufferedWriter(new FileWriter(queryTimeFile));
         	bw.write("Reasoner," + toCommaDelimited(sortedAllOntologiesInTest) + "\n");
         	for (String reasoner : performanceresults.keySet()) {
