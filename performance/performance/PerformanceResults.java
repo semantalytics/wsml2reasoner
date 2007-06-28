@@ -255,7 +255,7 @@ public class PerformanceResults {
         Collections.sort(sortedAllQueriesInTest);
         int i=0;
         for (String queryid : sortedAllQueriesInTest){
-        	File queryTimeFile = new File(directory, "average-ontology-" + queryid + "-times.csv");
+        	File queryTimeFile = new File(directory, (i+4) + "-average-ontology-" + queryid + "-times.csv");
         	BufferedWriter bw = new BufferedWriter(new FileWriter(queryTimeFile));
         	bw.write("Reasoner," + toCommaDelimited(sortedAllOntologiesInTest) + "\n");
         	for (String reasoner : performanceresults.keySet()) {
