@@ -733,9 +733,9 @@ public class BenchmarkOntologyGenerator {
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
 			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("?x[?y hasValue ?z]"));
 			// add NFPs to query 2
-			description = "";
-			String result2 = "This query returns a number of result sets equivalent to the number " +
+			description = "This query returns a number of result sets equivalent to the number " +
 					"of attribute value expressions in the ontology.";
+			String result2 = "?x=i1,?y=a" + amount[i] + ",?z=i2";
 			addNFPs(query2, ATTR_VALUE_2, description, result2);
 			ontology.addRelationInstance(query2);
 
@@ -2090,6 +2090,9 @@ public class BenchmarkOntologyGenerator {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.20  2007-06-27 16:03:25  nathalie
+ * changed ontology nfps
+ *
  * Revision 1.19  2007-06-27 09:15:54  nathalie
  * small update in ontology descriptions
  *
