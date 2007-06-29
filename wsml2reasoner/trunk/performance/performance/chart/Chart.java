@@ -44,6 +44,7 @@ public class Chart {
 	
 	String replaceLineBreak(String str){
 		if (str==null) return "";
+		str = str.replace("\t", "&nbsp;&nbsp;&nbsp;");
 		return str.replace("\n", "<br/>");
 	}
 	
@@ -201,7 +202,7 @@ public class Chart {
 		for (Object row : data.getRowKeys()){
 			buf.append("<td>"+row+"</td>\n");
 		}
-		buf.append("<td>&nbps;</td>");
+		buf.append("<td>&nbsp;&nbsp;&nbsp;</td>");
 		buf.append("<td>concepts</td>");
 		buf.append("<td>instances</td>");
 		buf.append("<td>attributes</td>");
