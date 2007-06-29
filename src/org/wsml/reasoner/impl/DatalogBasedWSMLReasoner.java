@@ -522,9 +522,9 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 
     public void registerOntologies(Set<Ontology> ontologies) throws InconsistencyException {
         registerOntologiesNoVerification(ontologies);
-        long consTime_start = System.currentTimeMillis();
         // check satisfiability
         if (!disableConsitencyCheck){
+        	long consTime_start = System.currentTimeMillis();
 	        Set<ConsistencyViolation> errors = new HashSet<ConsistencyViolation>();
 	      
 	        for (Ontology o : ontologies) {
@@ -539,9 +539,9 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 	            deRegisterOntology(ids);
 	            throw new InconsistencyException(errors);
 	        }
+	        long consTime_end = System.currentTimeMillis();
+	        consTime = consTime_end - consTime_start;
         }
-        long consTime_end = System.currentTimeMillis();
-        consTime = consTime_end - consTime_start;
     }
     
 
