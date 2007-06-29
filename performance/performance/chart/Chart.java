@@ -27,10 +27,11 @@ public class Chart {
 	public static void main(String[] str) throws IOException, ParserException, InvalidModelException {
 		Chart c = new Chart();
 		
-		c.doChartsFromCSV(new File("performance/performance/results/subconcept"));
+//		c.doChartsFromCSV(new File("performance/20070629/results/subconcept"));
+//		System.exit(0);
 		
-		System.exit(0);
 		String base = "performance/performance/results/";
+		base ="performance/20070629/results/";
 		File f = new File(base);
 		File[] dirs = f.listFiles();
 		for (File dir:dirs){
@@ -39,7 +40,7 @@ public class Chart {
 			}
 		}
 		//make and index
-		c.writeGlobalIndex(base);
+//		c.writeGlobalIndex(base);
 	}
 	
 	String replaceLineBreak(String str){
@@ -123,22 +124,29 @@ public class Chart {
 	TestQueryInfo findMatchingQueryInfo(TestInfo testInfo, File csv){
 		String fileName = csv.getName();
 		for (TestQueryInfo i : testInfo.query){
-			System.out.println("checking "+fileName+" against id "+i.id);
+//			System.out.println("checking "+fileName+" against id "+i.id);
 			if (fileName.contains(i.id)) return i;
 		}
 		return null;
 	}
 	
 	public void doChartsFromCSV(File dir) throws IOException, ParserException, InvalidModelException{
-		FileWriter fw = new FileWriter(dir.getAbsolutePath()+"/index.html");
+		System.out.println("processing "+dir);
+		FileWriter fwhtml = new FileWriter(dir.getAbsolutePath()+"/index.html");
+		FileWriter fwtex = new FileWriter(dir.getAbsolutePath()+"/index.tex");
 		
 		TestInfo testInfo = getTestInfo(dir);
-		fw.append(HEAD);
-		fw.append("\n"+STARTCONTENT+"\n");
-		fw.append("<h1>"+testInfo.title+"</h1>");
-		fw.append("<p>"+replaceLineBreak(testInfo.description)+"</p>");
-		fw.append("<p><a href=\"log.txt\">log</a></p>");
-		fw.append("<p><a href=\"resultLog.txt\">results</a></p>");
+		//html header
+		fwhtml.append(HEAD);
+		fwhtml.append("\n"+STARTCONTENT+"\n");
+		fwhtml.append("<h1>"+testInfo.title+"</h1>");
+		fwhtml.append("<p>"+replaceLineBreak(testInfo.description)+"</p>");
+		fwhtml.append("<p><a href=\"log.txt\">log</a></p>");
+		fwhtml.append("<p><a href=\"resultLog.txt\">results</a></p>");
+		
+		//latex header
+		fwtex.append("\\pagebreak  \\subsection{"+testInfo.title+"}\n");
+		fwtex.append(convertToTex(testInfo.description));
 		
 		for (File csv : dir.listFiles(csvfilter)){
 			CategoryDataset dataset = createDataset(csv,testInfo);
@@ -166,37 +174,63 @@ public class Chart {
 					testQueryInfo.description="";
 				}
 			}
-			String name = testQueryInfo.title;
-			System.out.println("processing: "+ name);
-			JFreeChart chart = createChart(name,dataset);
-			ChartUtilities.saveChartAsJPEG(
-					new File(csv.getAbsolutePath()+"-chart.jpg"), 
+			JFreeChart chart = createChart(testQueryInfo.title,dataset);
+			ChartUtilities.saveChartAsPNG(
+					new File(csv.getAbsolutePath().replace(".csv", "-chart.png")), 
 					chart, 650, 350);
-			fw.append("<h2>"+name+"</h2>\n");
-			fw.append("<p>"+testQueryInfo.description+"</p>");
-			if (testQueryInfo.query!=null)
-				fw.append("<b>"+testQueryInfo.query+"</b>");
-			fw.append(createTable(dataset,dir,testInfo)+"\n");
-			fw.append("<img src=\""+csv.getName()+"-chart.jpg"+"\"><br>\n");
+			fwhtml.append("<h2>"+testQueryInfo.title+"</h2>\n");
+			fwhtml.append("<p>"+testQueryInfo.description+"</p>");
+			fwtex.append("\\pagebreak \\subsection{"+testQueryInfo.title+"}\n");
+			fwtex.append(testQueryInfo.description);
+			if (testQueryInfo.query!=null){
+				fwhtml.append("<b>"+testQueryInfo.query+"</b>");
+				fwtex.append("{\\tt "+testQueryInfo.query+"}");
+			}
+			fwhtml.append(createTableHtml(dataset,dir,testInfo)+"\n");
+			fwhtml.append("<img src=\""+csv.getName().replace(".csv", "-chart.png")+"\"><br>\n");
+			
+			
+			String[] segments = dir.getAbsolutePath().split("\\\\");
+			String folder = segments[segments.length-1];
+			
+			fwtex.append(createTableTex(dataset,dir,testInfo)+"\n");
+			fwtex.append("\\begin{figure}[h] \\center \n" +
+					"\\includegraphics[width=0.95\\textwidth]{"+
+					folder+"/"+csv.getName().replace(".csv", "-chart.png")+"}\\\n" +
+//					"\\caption{Internal Framework architecture}" +
+					"\\end{figure})");
 
 			
 		}
-		fw.append("\n"+ENDCONTENT+"\n");
-		fw.append(TAIL);
-		fw.flush();
-		fw.close();
+		fwhtml.append("\n"+ENDCONTENT+"\n");
+		fwhtml.append(TAIL);
+		fwhtml.flush();
+		fwhtml.close();
+		
+		fwtex.close();
 	}
+	
+	String convertToTex(String s){
+		if (s==null) return "";
+		s=s.replaceAll("\n", " ");
+		s=s.replaceAll("<b>", "{\\\\bf ");
+		s=s.replaceAll("</b>", "}");
+		s=s.replaceAll("_", "\\\\_");
+		return s;
+		
+	}
+	
 	
 	String findMatchingFileName(String col, File dir){
 		col = col.substring(2);
 		for (File f : dir.listFiles(wsmlfilter)){
-			System.out.println("checking "+f.getName()+" against "+col);
+//			System.out.println("checking "+f.getName()+" against "+col);
 			if (f.getName().contains(col)) return f.getName();
 		}
 		return null;
 	}
 	
-	private String createTable(CategoryDataset data, File dir, TestInfo info){
+	private String createTableHtml(CategoryDataset data, File dir, TestInfo info){
 		StringBuffer buf = new StringBuffer();
 		buf.append("<table><thead><tr><td>&nbsp;</td>\n");
 		for (Object row : data.getRowKeys()){
@@ -237,6 +271,52 @@ public class Chart {
 		
 		return buf.toString();
 	}
+	
+	private String createTableTex(CategoryDataset data, File dir, TestInfo info){
+		StringBuffer buf = new StringBuffer();
+		buf.append("\\begin{table}[h]\\scriptsize\n");
+		buf.append("\\begin{tabular}{|l|");
+		for (Object row : data.getRowKeys()){
+			buf.append("l|");
+		}
+		buf.append("l|l|l|l|l|}\n");
+		
+		
+		buf.append("\\hline\n & ");
+		
+		for (Object row : data.getRowKeys()){
+			buf.append(row +" & ");
+		}
+		buf.append(" & concepts & instances & attributes & terms ");
+		buf.append("\\\\\n");
+		buf.append("\\hline\n");
+
+		int i=0;
+		for (Object col : data.getColumnKeys()){
+			buf.append(col+" & ");
+			for (Object row : data.getRowKeys()){
+				Object value = data.getValue(row.toString(), col.toString());
+				if (value!=null) buf.append(((Double)value).intValue());
+				buf.append(" & ");
+			}
+			buf.append(" & ");
+			if (info.conceptsAmount.size()>i){
+				buf.append(info.conceptsAmount.get(i)+" & ");
+				buf.append(info.instancesAmount.get(i)+" & ");
+				buf.append(info.attributesAmount.get(i)+" & ");
+				buf.append(info.totalTermAmount.get(i)+" ");
+			}
+			buf.append("\\\\ \n");
+			i++;
+		}
+		buf.append("\\hline");
+		buf.append("\\end{tabular}");
+//		buf.append("\\caption{Translation of}");
+		buf.append("\\end{table}\n\n");
+		
+		return buf.toString();
+	}
+
 	
 	private JFreeChart createChart(String name, CategoryDataset data) throws IOException {
 		JFreeChart chart = ChartFactory
