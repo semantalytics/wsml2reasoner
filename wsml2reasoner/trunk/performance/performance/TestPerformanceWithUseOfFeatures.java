@@ -26,7 +26,7 @@ public class TestPerformanceWithUseOfFeatures {
 	//how often to repeat each query!
     public static int NO_OF_TESTRUNS = 1;
     public static int TIMELIMIT_QUERY = 20000;
-    public static int TIMELIMIT_REGISTRATION = 120000;
+    public static int TIMELIMIT_REGISTRATION = 60000;
     public static int WAIT_INTERVAL = 1000;
     
     int evalmethod = 3;
