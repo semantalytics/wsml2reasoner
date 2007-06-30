@@ -665,7 +665,7 @@ public class BenchmarkOntologyGenerator {
 	 * instance Bart memberOf Thing
 	 * 
 	 * Queries: 
-	 * - Homer[attr hasValue ?y]
+	 * - Homer[attr hasValue ?x]
 	 * - ?x[?y hasValue ?z]
 	 * 
 	 * @throws IOException
@@ -752,7 +752,7 @@ public class BenchmarkOntologyGenerator {
 					"\n\t\t\t instance i1 memberOf c2\n\t\t\t \t <b>a1 hasValue i2</b>" +
 					"\n\t\t\t instance i2 memberOf c1\n\n\t\t\t " +
 					"The following two queries are applied to it:\n\t\t\t " +
-					"Query 1: i1[a1 hasValue ?y] \n\t\t\t Query 2: ?x[?y hasValue ?z]";
+					"Query 1: i1[a1 hasValue ?x] \n\t\t\t Query 2: ?x[?y hasValue ?z]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
 			
 			// write ontology file
@@ -764,15 +764,15 @@ public class BenchmarkOntologyGenerator {
 	 * Generate ontologies containing simple hierarchy and constraining 
 	 * attribute value expressions like e.g.:
 	 * concept Human
-	 *   hasChild ofType Child
+	 *   hasChild ofType Human
 	 * concept Child subConceptOf Human
 	 * instance Homer memberOf Human
 	 *   hasChild hasValue Bart
 	 * instance Bart memberOf Child
 	 * 
 	 * Queries: 
-	 * - Homer[hasChild hasValue ?y] and ?y memberOf ?z
-	 * - ?x[?y hasValue ?z] and ?z memberOf ?w
+	 * - Homer[hasChild hasValue ?y]
+	 * - ?x[?y hasValue ?z]
 	 * 
 	 * @throws IOException
 	 * @throws SynchronisationException
@@ -816,7 +816,7 @@ public class BenchmarkOntologyGenerator {
 			Attribute attribute;
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept1.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
-				attribute.addType(concept2);
+				attribute.addType(concept1);
 				attribute.setConstraining(true);
 				instance1.addAttributeValue(attribute.getIdentifier(), instance2);
 			}
@@ -857,12 +857,12 @@ public class BenchmarkOntologyGenerator {
 					"hierarchy expressions.\n\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of constraining attribute " +
 					"and attribute value expressions." +
-					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t <b>a1 ofType c2</b>" +
+					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t <b>a1 ofType c1</b>" +
 					"\n\t\t\t concept c2 subConceptOf c1" +
 					"\n\t\t\t instance i1 memberOf c1 \n\t\t\t \t <b>a1 hasValue i2</b>" +
 					"\n\t\t\t instance i2 memberOf c2\n\n\t\t\t " +
 					"The following two queries are applied to it:\n\t\t\t " +
-					"Query 1: i1[a1 hasValue ?y]" +
+					"Query 1: i1[a1 hasValue ?x]" +
 					"\n\t\t\t Query 2: ?x[?y hasValue ?z]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
 			
@@ -874,13 +874,13 @@ public class BenchmarkOntologyGenerator {
 	/**
 	 * Generate ontologies containing cardinality constraints like e.g.:
 	 * concept Human
-	 *   isMarriedTo ofType (0 1) Human
+	 *   isMarriedTo impliesType (0 1) Human
 	 * instance Homer memberOf Human
 	 *   isMarriedTo hasValue Marge
 	 * instance Marge memberOf Human
 	 * 
 	 * Queries: 
-	 * - Homer[isMarriedTo hasValue ?y]
+	 * - Homer[isMarriedTo hasValue ?x]
 	 * - ?x[?y hasValue ?z]
 	 * 
 	 * @throws IOException
@@ -961,11 +961,11 @@ public class BenchmarkOntologyGenerator {
 					"with a maximal cardinality of 1.\n\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of cardinality constraint and " +
 					"attribute value expressions." +
-					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t <b>a1 ofType (0 1) c1</b>" +
+					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t <b>a1 impliesType (0 1) c1</b>" +
 					"\n\t\t\t instance i1 memberOf c1 \n\t\t\t \t <b>a1 hasValue i2</b>" +
 					"\n\t\t\t instance i2 memberOf c1\n\n\t\t\t " +
 					"The following two queries are applied to it:\n\t\t\t " +
-					"Query 1: i1[a1 hasValue ?y]\n\t\t\t Query 2: ?x[?y hasValue ?z]";
+					"Query 1: i1[a1 hasValue ?x]\n\t\t\t Query 2: ?x[?y hasValue ?z]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
 			
 			// write ontology file
@@ -976,13 +976,13 @@ public class BenchmarkOntologyGenerator {
 	/**
 	 * Generate ontologies containing cardinality constraints like  e.g.:
 	 * concept Human
-	 *   hasChild ofType (0 10) Human
+	 *   hasChild impliesType (0 10) Human
 	 * instance Homer memberOf Human
 	 *   hasChild hasValue Bart
 	 * instance Bart memberOf Human
 	 * 
 	 * Queries: 
-	 * - Homer[hasChild hasValue ?y]
+	 * - Homer[hasChild hasValue ?x]
 	 * - ?x[?y hasValue ?z]
 	 * 
 	 * @throws IOException
@@ -1035,7 +1035,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r1 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query1"));
 			r1.createParameter((byte) 0);
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
-			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("i1[a1 hasValue ?y]"));
+			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("i1[a1 hasValue ?x]"));
 			// add NFPs to query 1
 			String description = "This query will return exactly one result set, as it is querying " +
 					"for the value of one specific attribute.";
@@ -1062,11 +1062,11 @@ public class BenchmarkOntologyGenerator {
 					"with a maximal cardinality of 10.\n\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of cardinality constraint and " +
 					"attribute value expressions." +
-					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t <b>a1 ofType (0 10) c1</b>" +
+					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t <b>a1 impliesType (0 10) c1</b>" +
 					"\n\t\t\t instance i1 memberOf c1 \n\t\t\t \t <b>a1 hasValue i2</b>" +
 					"\n\t\t\t instance i2 memberOf c1\n\n\t\t\t " +
 					"The following two queries are applied to it:\n\t\t\t " +
-					"Query 1: i1[a1 hasValue ?y]\n\t\t\t Query 2: ?x[?y hasValue ?z]";
+					"Query 1: i1[a1 hasValue ?x]\n\t\t\t Query 2: ?x[?y hasValue ?z]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
 			
 			// write ontology file
@@ -1077,13 +1077,13 @@ public class BenchmarkOntologyGenerator {
 	/**
 	 * Generate ontologies containing cardinality constraints like e.g.:
 	 * concept Human
-	 *   hasRelative ofType (1 *) Human
+	 *   hasRelative impliesType (1 *) Human
 	 * instance Homer memberOf Human
 	 *   hasRelative hasValue Bart
 	 * instance Bart memberOf Human
 	 * 
 	 * Queries: 
-	 * - Homer[hasRelative hasValue ?y]
+	 * - Homer[hasRelative hasValue ?x]
 	 * - ?x[?y hasValue ?z]
 	 * 
 	 * @throws IOException
@@ -1163,11 +1163,11 @@ public class BenchmarkOntologyGenerator {
 					"with a minimal cardinality of 1.\n\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of cardinality constraint and " +
 					"attribute value expressions." +
-					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t <b>a1 ofType (1 *) c1</b>" +
+					"\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t <b>a1 impliesType (1 *) c1</b>" +
 					"\n\t\t\t instance i1 memberOf c1 \n\t\t\t \t <b>a1 hasValue i2</b>" +
 					"\n\t\t\t instance i2 memberOf c1\n\n\t\t\t " +
 					"The following two queries are applied to it:\n\t\t\t " +
-					"Query 1: i1[a1 hasValue ?y]\n\t\t\t Query 2: ?x[?y hasValue ?z]";
+					"Query 1: i1[a1 hasValue ?x]\n\t\t\t Query 2: ?x[?y hasValue ?z]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
 			
 			// write ontology file
@@ -1295,11 +1295,11 @@ public class BenchmarkOntologyGenerator {
 	 * e.g.:
 	 * concept Human
 	 *   hasAncestor transitive impliesType Human
-	 * instance MargeChild
+	 * instance MargeChild memberOf Human
 	 *   hasAncestor hasValue MargeMother
-	 * instance MargeMother
+	 * instance MargeMother memberOf Human
 	 *   hasAncestor hasValue MargeGrandMother
-	 * instance MargeGrandMother
+	 * instance MargeGrandMother memberOf Human
 	 * 
 	 * Queries: 
 	 * - MargeChild[hasAncestor hasValue ?x]
@@ -1334,10 +1334,13 @@ public class BenchmarkOntologyGenerator {
 			// add instances
 			Instance instance1 = wsmoFactory.createInstance(
 					wsmoFactory.createIRI(ns, "i1"));
+			instance1.addConcept(concept);
 			Instance instance2 = wsmoFactory.createInstance(
 					wsmoFactory.createIRI(ns, "i2"));
+			instance2.addConcept(concept);
 			Instance instance3 = wsmoFactory.createInstance(
 					wsmoFactory.createIRI(ns, "i3"));
+			instance3.addConcept(concept);
 			instance1.addAttributeValue(attribute1.getIdentifier(), instance2);
 			instance2.addAttributeValue(attribute1.getIdentifier(), instance3);
 			ontology.addInstance(instance1);
@@ -1373,12 +1376,12 @@ public class BenchmarkOntologyGenerator {
 			r2.createParameter((byte) 0);
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
 			query2.setParameterValue((byte) 0, dataFactory.createWsmlString(
-					"?x[" + ((IRI) attribute.getIdentifier()).getLocalName() + " hasValue ?y]"));
+					"?x[?y hasValue ?z]"));
 			// add NFPs to query 2
-			description = "This query will return a number of result set that is growing " +
-					"in a linear way with the amount of attribute value expressions in the " +
+			description = "This query will return a number of result sets equivalent to" +
+					" 3 times the amount of transitive attribute expressions in the " +
 					"ontology.";
-			String result2 = "";
+			String result2 = "?x=i1,?y=" + ((IRI) attribute.getIdentifier()).getLocalName() + ",?z=i3";
 			addNFPs(query2, ATTR_VALUE_2, description, result2);
 			ontology.addRelationInstance(query2);
 
@@ -1390,9 +1393,9 @@ public class BenchmarkOntologyGenerator {
 					"The x-axis value of the graph indicates the number of transitive attribute and " +
 			"attribute value expressions." +
 			"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t <b>a1 transitive impliesType c1</b>" +
-			"\n\t\t\t instance i1 \n\t\t\t \t <b>a1 hasValue i2</b>" +
-			"\n\t\t\t instance i2 \n\t\t\t \t <b>a2 hasValue i3</b>" +
-			"\n\t\t\t instance i3 \n\n\t\t\t " +
+			"\n\t\t\t instance i1 memberOf c1 \n\t\t\t \t <b>a1 hasValue i2</b>" +
+			"\n\t\t\t instance i2 memberOf c1 \n\t\t\t \t <b>a1 hasValue i3</b>" +
+			"\n\t\t\t instance i3 memberOf c1 \n\n\t\t\t " +
 			"The following two queries are applied to it:\n\t\t\t " +
 			"Query 1: i1[a1 hasValue ?x]\n\t\t\t Query 2: ?x[?y hasValue ?z]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
@@ -1407,13 +1410,13 @@ public class BenchmarkOntologyGenerator {
 	 * e.g.:
 	 * concept Human
 	 *   hasRelative symmetric impliesType Human
-	 * instance Marge
+	 * instance Marge memberOf Human
 	 *   hasRelative hasValue Homer
-	 * instance Homer
+	 * instance Homer memberOf Human
 	 * 
 	 * Queries: 
 	 * - Homer[hasRelative hasValue ?x]
-	 * - ?x[hasRelative hasValue ?y]
+	 * - ?x[?y hasValue ?z]
 	 * 
 	 * @throws IOException
 	 * @throws SynchronisationException
@@ -1452,8 +1455,10 @@ public class BenchmarkOntologyGenerator {
 			// add instances
 			Instance instance1 = wsmoFactory.createInstance(
 					wsmoFactory.createIRI(ns, "i1"));
+			instance1.addConcept(concept);
 			Instance instance2 = wsmoFactory.createInstance(
 					wsmoFactory.createIRI(ns, "i2"));
+			instance2.addConcept(concept);
 			instance1.addAttributeValue(attribute1.getIdentifier(), instance2);
 			ontology.addInstance(instance1);
 			ontology.addInstance(instance2);
@@ -1486,12 +1491,12 @@ public class BenchmarkOntologyGenerator {
 			r2.createParameter((byte) 0);
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
 			query2.setParameterValue((byte) 0, dataFactory.createWsmlString(
-					"?x[" + ((IRI) attribute.getIdentifier()).getLocalName() + " hasValue ?y]"));
+					"?x[?y hasValue ?z]"));
 			ontology.addRelationInstance(query2);
 			// add NFPs to query 2
-			description = "This query will return two result set as it is querying " +
-					"for the value of one specific symmetric attribute.";
-			String result2 = "?x=i2,?y=i1";
+			description = "This query will return a number of result sets equivalent to 2 " +
+					"times the number of symmetric attribute expressions.";
+			String result2 = "?x=i2,?y=a" + amount[i] + ",?z=i1";
 			addNFPs(query2, ATTR_VALUE_2, description, result2);
 			ontology.addRelationInstance(query2);
 
@@ -1503,10 +1508,10 @@ public class BenchmarkOntologyGenerator {
 					"The x-axis value of the graph indicates the number of symmetric attribute and " +
 					"attribute value expressions." +
 					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t <b>a1 symmetric impliesType c1</b>" +
-					"\n\t\t\t instance i1 \n\t\t\t \t <b>a1 hasValue i2</b>" +
-					"\n\t\t\t instance i2 \n\n\t\t\t " +
+					"\n\t\t\t instance i1 memberOf c1 \n\t\t\t \t <b>a1 hasValue i2</b>" +
+					"\n\t\t\t instance i2 memberOf c1 \n\n\t\t\t " +
 					"The following two queries are applied to it:\n\t\t\t " +
-					"Query 1: i1[a1 hasValue ?x]\n\t\t\t Query 2: ?x[a1 hasValue ?y]";
+					"Query 1: i1[a1 hasValue ?x]\n\t\t\t Query 2: ?x[?y hasValue ?z]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
 			
 			// write ontology file
@@ -1519,7 +1524,7 @@ public class BenchmarkOntologyGenerator {
 	 * e.g.:
 	 * concept Human
 	 *   loves reflexive impliesType Human
-	 * instance Homer
+	 * instance Homer memberOf Human
 	 * 
 	 * Queries: 
 	 * - Homer[loves hasValue ?x]
@@ -1551,6 +1556,7 @@ public class BenchmarkOntologyGenerator {
 			// add instances
 			Instance instance1 = wsmoFactory.createInstance(
 					wsmoFactory.createIRI(ns, "i1"));
+			instance1.addConcept(concept);
 			ontology.addInstance(instance1);
 
 			// add amount[i] number of reflexive attribute entities
@@ -1594,7 +1600,7 @@ public class BenchmarkOntologyGenerator {
 			description = "\n\t\t\t This ontology is containing reflexive attribute expressions.\n\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of reflexive attribute expressions." +
 					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t <b>a1 reflexive impliesType c1</b>" +
-					"\n\t\t\t instance i1 \n\n\t\t\t " +
+					"\n\t\t\t instance i1 memberOf c1\n\n\t\t\t " +
 					"The following two queries are applied to it:\n\t\t\t " +
 					"Query 1: i1[a1 hasValue ?x]\n\t\t\t Query 2: i1[?x hasValue ?y]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
@@ -1609,16 +1615,14 @@ public class BenchmarkOntologyGenerator {
 	 * stratified negation 
 	 * e.g.:
 	 * concept Human
-	 *   knows impliesType Human
-	 *   distrust impliesType Human	
-	 * instance Homer
+	 * instance Homer memberOf Human
 	 * axiom definedBy
 	 *   ?x[distrust hasValue ?y] :- naf ?x[knows hasValue ?y] 
 	 *   and ?x memberOf Human and ?y memberOf Human.
 	 * 
 	 * Queries: 
 	 * - Homer[distrust hasValue ?x]
-	 * - ?x[distrust hasValue ?y]
+	 * - ?x[?y hasValue ?z]
 	 * 
 	 * @throws IOException
 	 * @throws SynchronisationException
@@ -1649,10 +1653,10 @@ public class BenchmarkOntologyGenerator {
 			// add instances
 			Instance instance1 = wsmoFactory.createInstance(
 					wsmoFactory.createIRI(ns, "i1"));
+			instance1.addConcept(concept);
 			ontology.addInstance(instance1);
 
 			// add amount[i] number of logical expressions containing negation
-			Attribute attribute;
 			AttributeValueMolecule molecule1, molecule2;
 			MembershipMolecule memberMol1, memberMol2;
 			NegationAsFailure naf;
@@ -1662,14 +1666,10 @@ public class BenchmarkOntologyGenerator {
 			 * "?x[a" + j + " hasValue ?y] :- naf ?x[a" + (j+1) + " hasValue ?y] " +
 			 * "and ?x memberOf c1 and ?y memberOf c1" */
 			for (int j = 0; j < amount[i]; j++) {
-				attribute = concept.createAttribute(wsmoFactory.createIRI(ns, "a" + j));
-				attribute.addType(concept);
-				attribute = concept.createAttribute(wsmoFactory.createIRI(ns, "a" + (j+1)));
-				attribute.addType(concept);
 				molecule1 = leFactory.createAttributeValue(leFactory.createVariable("?x"), 
 						wsmoFactory.createIRI(ns, "a" + j), leFactory.createVariable("?y"));
 				molecule2 = leFactory.createAttributeValue(leFactory.createVariable("?x"), 
-						wsmoFactory.createIRI(ns, "a" + (j+1)), leFactory.createVariable("?y"));
+						wsmoFactory.createIRI(ns, "a" + (j+amount[i])), leFactory.createVariable("?y"));
 				memberMol1 = leFactory.createMemberShipMolecule(leFactory.createVariable("?x"), 
 						wsmoFactory.createIRI(ns, "c1"));
 				memberMol2 = leFactory.createMemberShipMolecule(leFactory.createVariable("?y"), 
@@ -1701,13 +1701,12 @@ public class BenchmarkOntologyGenerator {
 			r2.createParameter((byte) 0);
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
 			query2.setParameterValue((byte) 0, dataFactory.createWsmlString(
-					"?x[a" + (amount[i]-1) + " hasValue ?y]"));
+					"?x[?y hasValue ?z]"));
 			// add NFPs to query 2
 			description = "This query will return a number of result sets that is equivalent to the " +
-					"amount of attribute definitions; it is querying " +
-					"for the value of one specific attribute that gets a value as result of " +
-					"evaluation of the logical expression.";
-			String result2 = "?x=i1,?y=i1";
+					"amount of logical expressions. The queried values are resulting from the " +
+					"evaluation of the logical expressions.";
+			String result2 = "?x=i1,?y=a" + (amount[i]-1) + ",?z=i1";
 			addNFPs(query2, ATTR_VALUE_2, description, result2);
 			ontology.addRelationInstance(query2);
 
@@ -1719,12 +1718,12 @@ public class BenchmarkOntologyGenerator {
 					"locally stratified negation.\n\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of logical expressions and " +
 					"of attribute expressions." +
-					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t <b>a1 impliesType c1</b>" +
-					"\n\t\t\t \t <b>a2 impliesType c1</b> \n\t\t\t instance i1 " +
-					"\n\t\t\t axiom definedBy \n\t\t\t \t <b>?x[a2 hasValue ?y] :- naf ?x[a1 hasValue ?y] " +
+					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1" +
+					"\n\t\t\t instance i1 memberOf c1" +
+					"\n\t\t\t axiom definedBy \n\t\t\t \t <b>?x[a1 hasValue ?y] :- naf ?x[a2 hasValue ?y] " +
 					"and ?x memberOf c1 and ?y memberOf c1.</b>\n\n\t\t\t" +
 					"The following two queries are applied to it:\n\t\t\t " +
-					"Query 1: i1[a2 hasValue ?x]\n\t\t\t Query 2: ?x[a2 hasValue ?y]";
+					"Query 1: i1[a1 hasValue ?x]\n\t\t\t Query 2: ?x[?y hasValue ?z]";
 			ontology = addNFPs(ontology, title, description, amount[i]);
 			
 			// write ontology file
@@ -1737,7 +1736,6 @@ public class BenchmarkOntologyGenerator {
 	 * stratified negation 
 	 * e.g.:
 	 * concept Human
-	 *   knows impliesType Human
 	 * concept DistrustedPerson  
 	 * instance Homer
 	 * axiom definedBy
@@ -1746,7 +1744,6 @@ public class BenchmarkOntologyGenerator {
 	 * 
 	 * Queries: 
 	 * - ?x memberOf DistrustedPerson
-	 * - ?x memberOf ?y
 	 * 
 	 * @throws IOException
 	 * @throws SynchronisationException
@@ -1777,7 +1774,6 @@ public class BenchmarkOntologyGenerator {
 			ontology.addAxiom(axiom);
 
 			// add amount[i] number of logical expressions containing negation
-			Attribute attribute;
 			Instance instance;
 			MembershipMolecule memberMol1, memberMol2, memberMol3;
 			AttributeValueMolecule molecule;
@@ -1785,19 +1781,18 @@ public class BenchmarkOntologyGenerator {
 			Conjunction con1, con2;
 			LogicProgrammingRule lpRule;
 			for (int j = 0; j < amount[i]; j++) {
-				attribute = concept1.createAttribute(wsmoFactory.createIRI(ns, "a" + (j+1)));
-				attribute.addType(concept1);
 				instance = wsmoFactory.createInstance(wsmoFactory.createIRI(ns, "i" + (j+1)));
+				instance.addConcept(concept1);
 				ontology.addInstance(instance);
 				/* create the following logical expression programmaticaly:
-				 * "?y memberOf c2 :- naf ?x[a" + j + " hasValue ?y] " +
-				 * "and ?x memberOf c2 and ?y memberOf c1" */ 
+				 * "?y memberOf c2 :- naf ?x[a" + (j+1) + " hasValue ?y] " +
+				 * "and ?x memberOf c1 and ?y memberOf c1" */ 
 				memberMol1 = leFactory.createMemberShipMolecule(leFactory.createVariable("?y"),
 						wsmoFactory.createIRI(ns, "c2"));
 				molecule = leFactory.createAttributeValue(leFactory.createVariable("?x"),
 						wsmoFactory.createIRI(ns, "a" + (j+1)), leFactory.createVariable("?y"));
 				memberMol2 = leFactory.createMemberShipMolecule(leFactory.createVariable("?x"), 
-						wsmoFactory.createIRI(ns, "c2"));
+						wsmoFactory.createIRI(ns, "c1"));
 				memberMol3 = leFactory.createMemberShipMolecule(leFactory.createVariable("?y"), 
 						wsmoFactory.createIRI(ns, "c1"));
 				naf = leFactory.createNegationAsFailure(molecule);
@@ -1817,8 +1812,8 @@ public class BenchmarkOntologyGenerator {
 			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("?x memberOf c2"));
 			// add NFPs to query 1
 			String description = "This query will return a number of result sets equivalent " +
-					"to the number of instances in the ontology, i.e. exactly one result set " +
-					"for this ontology.";
+					"to the number of logical expressions, as well as instances and attribute " +
+					"expressions, in the ontology.";
 			String result1 = "?x=i1";
 			addNFPs(query1, MEMBEROF_1, description, result1);
 			ontology.addRelationInstance(query1);
@@ -1831,11 +1826,11 @@ public class BenchmarkOntologyGenerator {
 					"globally stratified negation.\n\n\t\t\t " +
 					"The x-axis value of the graph indicates the number of logical expressions and " +
 					"of attribute and instance expressions." +
-					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t <b>a1 impliesType c1</b>" +
-					"\n\t\t\t concept c2 \n\t\t\t <b>instance i1 </b>" +
-					"\n\t\t\t axiom definedBy \n\t\t\t \t <b>?x memberOf c2 :- naf ?x[a1 hasValue ?y] " +
+					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1" +
+					"\n\t\t\t concept c2 \n\t\t\t <b>instance i1 memberOf c1</b>" +
+					"\n\t\t\t axiom definedBy \n\t\t\t \t <b>?y memberOf c2 :- naf ?x[a1 hasValue ?y] " +
 					"and ?x memberOf c1 and ?y memberOf c1.</b>\n\n\t\t\t" +
-					"The following two queries are applied to it:\n\t\t\t " +
+					"The following query is applied to it:\n\t\t\t " +
 					"Query 1: ?x memberOf c2";
 			ontology = addNFPs(ontology, title, description, amount[i]);
 			
@@ -1858,7 +1853,6 @@ public class BenchmarkOntologyGenerator {
 	 * 
 	 * Queries: 
 	 * - ?x memberOf Child
-	 * - ?x memberOf ?y
 	 * 
 	 * @throws IOException
 	 * @throws SynchronisationException
@@ -1892,6 +1886,7 @@ public class BenchmarkOntologyGenerator {
 			Instance instance1 = wsmoFactory.createInstance(wsmoFactory.createIRI(ns, "i0"));
 			instance1.addAttributeValue(wsmoFactory.createIRI(ns, "a0"), 
 					dataFactory.createWsmlInteger("10"));
+			ontology.addInstance(instance1);
 			
 			// add amount[i] number of logical expressions containing built-ins
 			Instance instance;
@@ -1969,11 +1964,10 @@ public class BenchmarkOntologyGenerator {
 					"of instances (with one attribute value per instance)." +
 					"\n\n\t\t\t Ontology example: \n\t\t\t concept c1 \n\t\t\t \t a1 ofType _integer" +
 					"\n\t\t\t <b>instance i1 memberOf c1</b> \n\t\t\t \t <b>a1 hasValue 17</b>" +
-					"\n\t\t\t <b>instance i2 memberOf c1</b> \n\t\t\t \t <b>a1 hasValue 14</b>" +
-					"\n\t\t\t axiom definedBy \n\t\t\t \t <b>?x[a1 hasValue ?y] and ?y < 16 implies " +
-					"?x memberOf c2.</b>\n\n\t\t\t " +
-					"The following two queries are applied to it:\n\t\t\t " +
-					"Query 1: ?x memberOf c2 \n\t\t\t Query 2: ?x memberOf ?y";
+					"\n\t\t\t axiom definedBy \n\t\t\t \t <b>?x[a1 hasValue ?y] and (((?y*2)/4)+1) < 16" +
+					" implies ?x memberOf c2.</b>\n\n\t\t\t " +
+					"The following query is applied to it:\n\t\t\t " +
+					"Query 1: ?x memberOf c2";
 			ontology = addNFPs(ontology, title, description, amount[i]);
 			
 			// write ontology file
@@ -2090,6 +2084,9 @@ public class BenchmarkOntologyGenerator {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.21  2007-06-29 17:50:39  nathalie
+ * fixed error in description of one query and expected result
+ *
  * Revision 1.20  2007-06-27 16:03:25  nathalie
  * changed ontology nfps
  *
