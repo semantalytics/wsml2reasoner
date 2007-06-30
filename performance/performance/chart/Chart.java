@@ -31,7 +31,7 @@ public class Chart {
 //		System.exit(0);
 		
 		String base = "performance/performance/results/";
-		base ="performance/20070629/results/";
+//		base ="performance/20070629/results/";
 		File f = new File(base);
 		File[] dirs = f.listFiles();
 		for (File dir:dirs){
