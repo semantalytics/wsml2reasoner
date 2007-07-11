@@ -4,7 +4,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="performance"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="var" path="JUNIT_HOME/junit.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ext/pellet/pellet.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ext/relaxng/1.0/relaxngDatatype.jar"/>
@@ -22,15 +22,15 @@
 	<classpathentry exported="true" kind="lib" path="lib/ext/owl-api/owl-api-econn/2006-04-27/impl.jar"/>
 	<classpathentry kind="lib" path="lib/ext/wsmo4j/wsmlparser-20070411.jar"/>
 	<classpathentry kind="lib" path="lib/ext/jgrapht/jgrapht-jdk1.5-0.7.1.jar"/>
-	<classpathentry kind="lib" path="lib/ext/iris/iris-0.3.jar"/>
 	<classpathentry kind="lib" path="lib/ext/iris/iris-parser-0.3.jar"/>
-	<classpathentry kind="lib" path="lib/ext/kaon2/kaon2.jar"/>
 	<classpathentry kind="lib" path="lib/ext/wsmo4j/wsmo4j-20070417.jar"/>
 	<classpathentry kind="lib" path="lib/ext/JFreeChart/gnujaxp.jar"/>
 	<classpathentry kind="lib" path="lib/ext/JFreeChart/itext-2.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/ext/JFreeChart/jcommon-1.0.10.jar"/>
 	<classpathentry kind="lib" path="lib/ext/JFreeChart/jfreechart-1.0.6.jar" sourcepath="lib/ext/JFreeChart/source.zip"/>
 	<classpathentry kind="lib" path="lib/ext/JFreeChart/swtgraphics2d.jar"/>
-	<classpathentry kind="lib" path="lib/ext/mins/mins_27_06_2007.jar"/>
+	<classpathentry kind="lib" path="lib/ext/mins/mins_27_06_2007.jar" sourcepath="/mins"/>
+	<classpathentry kind="lib" path="lib/ext/kaon2/kaon2.jar"/>
+	<classpathentry kind="lib" path="lib/ext/iris/iris-20070711.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
