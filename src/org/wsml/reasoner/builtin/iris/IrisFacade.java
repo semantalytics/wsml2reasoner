@@ -69,6 +69,10 @@ import org.deri.iris.api.terms.concrete.IHexBinary;
 import org.deri.iris.api.terms.concrete.IIntegerTerm;
 import org.deri.iris.api.terms.concrete.IIri;
 import org.deri.iris.api.terms.concrete.ISqName;
+import org.deri.iris.builtins.IsBooleanBuiltin;
+import org.deri.iris.builtins.IsDecimalBuiltin;
+import org.deri.iris.builtins.IsIntegerBuiltin;
+import org.deri.iris.builtins.IsStringBuiltin;
 import org.deri.iris.evaluation.algebra.ExpressionEvaluator;
 import org.omwg.logicalexpression.Constants;
 import org.omwg.logicalexpression.terms.BuiltInConstructedTerm;
@@ -84,6 +88,7 @@ import org.wsml.reasoner.DatalogReasonerFacade;
 import org.wsml.reasoner.ExternalToolException;
 import org.wsml.reasoner.Literal;
 import org.wsml.reasoner.Rule;
+import org.wsml.reasoner.WSML2DatalogTransformer;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
@@ -97,11 +102,11 @@ import org.wsmo.factory.WsmoFactory;
  * The wsmo4j interface for the iris reasoner.
  * </p>
  * <p>
- * $Id: IrisFacade.java,v 1.17 2007-06-26 17:03:36 nathalie Exp $
+ * $Id: IrisFacade.java,v 1.18 2007-07-16 07:32:35 richardpoettler Exp $
  * </p>
  * 
  * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class IrisFacade implements DatalogReasonerFacade {
 
@@ -411,6 +416,10 @@ public class IrisFacade implements DatalogReasonerFacade {
 						BASIC.createHead(literal2Literal(r.getHead())),
 						BASIC.createBody(body)));
 			}
+		}
+		// add the wsml-member-of rules
+		for (final IRule r : getWsmlMemberOfRules()) {
+			p.addRule(r);
 		}
 		
 		this.factsChanged.put(ontologyURI, true);
@@ -770,6 +779,44 @@ public class IrisFacade implements DatalogReasonerFacade {
 		}
 		return new int[] { (int) t.getRawOffset() / 3600000,
 				(int) t.getRawOffset() % 3600000 / 60000 };
+	}
+	
+	/**
+	 * Returns the rules for the wsml-member-of rules.
+	 * @return the wsml-member-of rules
+	 */
+	private static Set<IRule> getWsmlMemberOfRules() {
+		final Set<IRule> res = new HashSet<IRule>();
+		final IPredicate WSML_MEBER_OF = 
+			BASIC.createPredicate(WSML2DatalogTransformer.PRED_MEMBER_OF, 2);
+		final IVariable X = TERM.createVariable("X");
+		final IVariable Y = TERM.createVariable("Y");
+		final IVariable Z = TERM.createVariable("Z");
+		final ILiteral hasValue = 
+			BASIC.createLiteral(true, 
+					BASIC.createPredicate(WSML2DatalogTransformer.PRED_HAS_VALUE, 3), 
+					BASIC.createTuple(Y, Z, X));
+		// rules for member of string
+		res.add(BASIC.createRule(
+				BASIC.createHead(BASIC.createLiteral(true, WSML_MEBER_OF, 
+						BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_STRING)))), 
+				BASIC.createBody(hasValue, BASIC.createLiteral(true, new IsStringBuiltin(X)))));
+		// rules for member of integer
+		res.add(BASIC.createRule(
+				BASIC.createHead(BASIC.createLiteral(true, WSML_MEBER_OF, 
+						BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_INTEGER)))), 
+				BASIC.createBody(hasValue, BASIC.createLiteral(true, new IsIntegerBuiltin(X)))));
+		// rules for member of decimal
+		res.add(BASIC.createRule(
+				BASIC.createHead(BASIC.createLiteral(true, WSML_MEBER_OF, 
+						BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_DECIMAL)))), 
+				BASIC.createBody(hasValue, BASIC.createLiteral(true, new IsDecimalBuiltin(X)))));
+		// rules for member of boolean
+		res.add(BASIC.createRule(
+				BASIC.createHead(BASIC.createLiteral(true, WSML_MEBER_OF,
+						BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_BOOLEAN)))),
+				BASIC.createBody(hasValue, BASIC.createLiteral(true, new IsBooleanBuiltin(X)))));
+		return res;
 	}
 
 	/**
