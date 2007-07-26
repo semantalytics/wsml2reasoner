@@ -161,7 +161,7 @@ public class MinsFacade implements DatalogReasonerFacade {
             }
             return result;
         } catch (UnsupportedFeatureException e) {
-            throw new ExternalToolException("MINS can not handle given query",
+            throw new ExternalToolException("MINS cannot handle given query",
                     e);
         }
     }
@@ -233,7 +233,7 @@ public class MinsFacade implements DatalogReasonerFacade {
         int no;
         Atom atom;
         Literal l;
-
+        
         if (r.isConstraint()) {
             System.err.append("Constraints should not apear  in translated Datalog Program" +
                     " "+r);
@@ -376,7 +376,7 @@ public class MinsFacade implements DatalogReasonerFacade {
             String type = val.getType().getIRI().toString();
             int arity = val.getArity();
             if (type.equals(WsmlDataType.WSML_BOOLEAN)) {
-                minsTerm = new BooleanTerm((Boolean)val.getValue());
+                minsTerm = new StringTerm(val.toString());
             } else if (type.equals(WsmlDataType.WSML_DATE)){
                 //MINS ONLY support 3 ints, variables to be handled :(
                 int year = ((BigInteger)val.getArgumentValue((byte)0).getValue()).intValue();
@@ -432,8 +432,7 @@ public class MinsFacade implements DatalogReasonerFacade {
      * @see DatalogReasonerFacade#deregister(String)
      */
     public void deregister(String ontologyURI) throws ExternalToolException {
-        registeredKbs.remove(ontologyURI);
-
+    	registeredKbs.remove(ontologyURI);
     }
 
     private void addDataTypeMemberShipRules(RuleSet rs) {
@@ -487,7 +486,8 @@ public class MinsFacade implements DatalogReasonerFacade {
                                 new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(
                                         0) }, new IsNum()) }));
 
-        // ?x memberOf wsml#boolean :- isString(?x) , ?x = "_boolean("true") REPLACED with ?x memberOf wsml#boolean :- ?x = org.deri.mins.terms.concrete.BooleanTerm[value=true]
+        // ?x memberOf wsml#boolean :- ?x = org.deri.mins.terms.concrete.BooleanTerm[value=true]
+        // REPLACED with ?x memberOf wsml#boolean :- isString(?x) , ?x = "_boolean("true")
         rs.addRule(new Rule(
                         new Head[] { new Head(memberOfNo,
                                 new org.deri.mins.terms.Term[] {
@@ -500,11 +500,11 @@ public class MinsFacade implements DatalogReasonerFacade {
                                         new org.deri.mins.terms.Term[] {
                                                 new org.deri.mins.terms.Variable(
                                                         0),
-                                                new BooleanTerm(//new StringTerm(
-                                                        "true") },//"_boolean(\"true\")") },
+                                                new StringTerm("_boolean(\"true\")") },
                                         new Equal()) }));
 
-        // ?x memberOf wsml#boolean :- isString(?x) , ?x = "_boolean("false") REPLACED with ?x memberOf wsml#boolean :- ?x = org.deri.mins.terms.concrete.BooleanTerm[value=false]
+        // ?x memberOf wsml#boolean :- ?x = org.deri.mins.terms.concrete.BooleanTerm[value=false]
+        // REPLACED with ?x memberOf wsml#boolean :- isString(?x) , ?x = "_boolean("false")
         rs.addRule(new Rule(
                         new Head[] { new Head(memberOfNo,
                                 new org.deri.mins.terms.Term[] {
@@ -517,8 +517,7 @@ public class MinsFacade implements DatalogReasonerFacade {
                                         new org.deri.mins.terms.Term[] {
                                                 new org.deri.mins.terms.Variable(
                                                         0),
-                                                new BooleanTerm(//new StringTerm(
-                                                        "false") },//"_boolean(\"false\")") }
+                                                  new StringTerm("_boolean(\"false\")") },
                                         new Equal()) }));
         
         // ?x memberOf _integer :- isConst(?x)
