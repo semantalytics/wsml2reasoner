@@ -93,8 +93,15 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
     private FixedModificationRules fixedRules;
     private Map<LogicalExpression,String> axiomIDs;
     
+    private Set<Ontology> importedOnotlogies;
+    
     private Set<Identifier> mentionedIRIs;
     
+    
+    public AxiomatizationNormalizer(WSMO4JManager wsmoManager,Set<Ontology> importedOnotlogies) {
+    	this(wsmoManager);
+    	this.importedOnotlogies = importedOnotlogies;
+    }
 
     public AxiomatizationNormalizer(WSMO4JManager wsmoManager) {
         leFactory = wsmoManager.getLogicalExpressionFactory();
@@ -127,21 +134,22 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
             }
         }
         
-        //change - handles imported onto
-        //boolean ontoEnabled = true;
-        //System.out.println(DatalogBasedWSMLReasoner.allowImports);
+       
         //0 = allow imports
         //1 = do not allow imports
         if(DatalogBasedWSMLReasoner.allowImports == 0){
 	        for(Ontology o: (Collection<Ontology>) ontology.listOntologies()){ 
-	        		Ontology tempOntology = normalize(o);
-	        		for (Axiom a: (Collection<Axiom>) tempOntology.listAxioms()){
-	        			try {
-							resultOntology.addAxiom(a);
-						} catch (InvalidModelException e) {
-							throw new RuntimeException(e);
-						}
-	        		}
+	        	if (importedOnotlogies.contains(o)) continue;
+	        	importedOnotlogies.add(o);
+	        	
+        		Ontology tempOntology = normalize(o);
+        		for (Axiom a: (Collection<Axiom>) tempOntology.listAxioms()){
+        			try {
+						resultOntology.addAxiom(a);
+					} catch (InvalidModelException e) {
+						throw new RuntimeException(e);
+					}
+        		}
 	        		
 	        }
         }
