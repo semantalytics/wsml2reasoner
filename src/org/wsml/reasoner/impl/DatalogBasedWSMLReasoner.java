@@ -175,8 +175,11 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 
         long normTime_start = System.currentTimeMillis();
         
+        //in order to keep track of cyclic imports
+        Set<Ontology> importedOntologies = new HashSet<Ontology>();
+        
         // Convert conceptual syntax to logical expressions
-        OntologyNormalizer normalizer = new AxiomatizationNormalizer(wsmoManager);
+        OntologyNormalizer normalizer = new AxiomatizationNormalizer(wsmoManager,importedOntologies);
         normalizedOntology = normalizer.normalize(o);
 //      System.out.println("\n-------\n Ontology after Normalization:\n" +
 //      WSMLNormalizationTest.serializeOntology(normalizedOntology));
