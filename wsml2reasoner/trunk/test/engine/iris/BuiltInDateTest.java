@@ -1,4 +1,4 @@
-package open.irisonly;
+package engine.iris;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -36,7 +36,7 @@ public class BuiltInDateTest extends BaseReasonerTest {
 		super.setUp();
 			
 		// get a reasoner
-		wsmlReasoner = BaseReasonerTest.getReasoner();
+		wsmlReasoner = BaseReasonerTest.reasoner = 
 		wsmoFactory = Factory.createWsmoFactory(null);
 		leFactory = Factory.createLogicalExpressionFactory(null);
 		parser = Factory.createParser(null);
