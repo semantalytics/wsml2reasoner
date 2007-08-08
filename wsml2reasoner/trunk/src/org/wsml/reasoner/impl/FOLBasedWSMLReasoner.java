@@ -172,9 +172,12 @@ public class FOLBasedWSMLReasoner implements WSMLFOLReasoner {
 
     public void registerOntology(Ontology ontology) throws InconsistencyException {
         Ontology ontologyAsExpressions;
-
+        
+        //in order to keep track of cyclic imports
+        Set<Ontology> importedOntologies = new HashSet<Ontology>();
+        
         // Convert conceptual syntax to logical expressions
-        OntologyNormalizer normalizer = new AxiomatizationNormalizer(wsmoManager);
+        OntologyNormalizer normalizer = new AxiomatizationNormalizer(wsmoManager, importedOntologies);
         ontologyAsExpressions = normalizer.normalize(ontology);
 
         normalizer = new MoleculeNormalizer(wsmoManager);

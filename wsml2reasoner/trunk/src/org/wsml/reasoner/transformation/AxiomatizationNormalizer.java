@@ -103,12 +103,11 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
     	this.importedOnotlogies = importedOnotlogies;
     }
 
-    public AxiomatizationNormalizer(WSMO4JManager wsmoManager) {
+    private AxiomatizationNormalizer(WSMO4JManager wsmoManager) {
         leFactory = wsmoManager.getLogicalExpressionFactory();
         wsmoFactory = wsmoManager.getWSMOFactory();
         fixedRules = new FixedModificationRules(wsmoManager);
         axiomIDs = new HashMap<LogicalExpression, String>();
-        
         mentionedIRIs = new HashSet<Identifier>();
         
     }
