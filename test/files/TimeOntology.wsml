@@ -1,7 +1,7 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
 namespace { _"webode://mccarthy.dia.fi.upm.es/Time_Eures_Ontology#" , 
-wsml _"http://www.wsmo.org/wsml/wsml-syntax#",
-JobOffOnt _"webode://mccarthy.dia.fi.upm.es/Job_Offer_Eures_Ontology#",
+	wsml _"http://www.wsmo.org/wsml/wsml-syntax#",
+	JobOffOnt _"webode://mccarthy.dia.fi.upm.es/Job_Offer_Eures_Ontology#",
 	JobSeeOnt _"webode://mccarthy.dia.fi.upm.es/Job_Seeker_Eures_Ontology#",
 	EduOnt _"webode://mccarthy.dia.fi.upm.es/Education_Eures_Ontology#" }
 

@@ -181,7 +181,7 @@ public class FOLBasedWSMLReasoner implements WSMLFOLReasoner {
         ontologyAsExpressions = normalizer.normalize(ontologyAsExpressions);
         
 //      System.out.println("\n-------\n Ontology after Normalization:\n" +
-//      WSMLNormalizationTest.serializeOntology(normalizedOntology));
+//      BaseNormalizationTest.serializeOntology(normalizedOntology));
 
         //TODO shall we handle constraints in some way?
         

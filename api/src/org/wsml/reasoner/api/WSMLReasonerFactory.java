@@ -200,11 +200,17 @@ public interface WSMLReasonerFactory {
      * @throws UnsupportedOperationException
      */
     public WSMLFlightReasoner createWSMLFlightReasoner()
-            throws UnsupportedOperationException;
+    	throws UnsupportedOperationException;
 
     public WSMLFOLReasoner createWSMLFOLReasoner()
-    throws UnsupportedOperationException;
+    	throws UnsupportedOperationException;
     
     public WSMLFOLReasoner createWSMLFOLReasoner(Map<String, Object> params)
-    throws UnsupportedOperationException;
+    	throws UnsupportedOperationException;
+    
+    public WSMLRuleReasoner createWSMLRuleReasoner()
+		throws UnsupportedOperationException;
+
+	public WSMLReasoner createWSMLRuleReasoner(Map<String, Object> params)
+		throws UnsupportedOperationException;;
 }

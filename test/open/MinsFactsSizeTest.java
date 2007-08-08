@@ -18,16 +18,16 @@
  */
 package open;
 
-import org.wsml.reasoner.api.WSMLReasonerFactory;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import reasoner.BaseReasonerTest;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
+
+import base.BaseReasonerTest;
 
 public class MinsFactsSizeTest extends BaseReasonerTest {
 
-    private static final String ONTOLOGY_FILE = "open/cardinality_1_max-00250-ontology.wsml";
+    private static final String ONTOLOGY_FILE = "files/cardinality_1_max-00250-ontology.wsml";
 
     public static void main(String[] args) {
         junit.textui.TestRunner.run(MinsFactsSizeTest.suite());
