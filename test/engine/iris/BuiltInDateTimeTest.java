@@ -1,4 +1,4 @@
-package open.irisonly;
+package engine.iris;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -45,7 +45,7 @@ public class BuiltInDateTimeTest extends BaseReasonerTest {
 	public void testRun() throws Exception {
 		// read test file and parse it 
        InputStream is = this.getClass().getClassLoader().getResourceAsStream(
-               "reasoner/flight/builtInDateTimeTest.wsml");
+               "files/builtInDateTimeTest.wsml");
        assertNotNull(is);
        // assuming first topentity in file is an ontology  
        ontology = (Ontology)parser.parse(new InputStreamReader(is))[0]; 
