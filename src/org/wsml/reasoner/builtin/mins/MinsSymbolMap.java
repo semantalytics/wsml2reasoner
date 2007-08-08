@@ -191,13 +191,12 @@ public class MinsSymbolMap {
                 throw new RuntimeException("Could not map MINS variable to WSML Term :(");
         return mins2wsml.get(variableNo);
     }
-    
     /*
     convert2wsml(Term) now handles function symbols --- not yet fully tested!!
     */
     
     public org.omwg.logicalexpression.terms.Term convertToWSML(Term term) throws UnsupportedFeatureException {
-        org.omwg.logicalexpression.terms.Term result = null;
+    	org.omwg.logicalexpression.terms.Term result = null;
     	if(term.isConstTerm()){
     		org.omwg.logicalexpression.terms.Term id = tool2wsmlConstants.get(((org.deri.mins.terms.ConstTerm)term).symbol);
     		if(term.pars==null || term.pars.length == 0) return id;
@@ -210,6 +209,16 @@ public class MinsSymbolMap {
     				(IRI)id,termList);
     		
     	}else if (term.isStringTerm()){
+    		// MINS returns boolean values as StringTerms instead of BooleanTerms
+    		if (term.toString().contains("boolean")) {
+    			if (term.toString().contains("true")) {
+    				return wsmoManager.getDataFactory().createWsmlBoolean(true);
+    			}
+    			else {
+	                return wsmoManager.getDataFactory().createWsmlBoolean(
+	                        false);
+    			}
+    		}
     	    return wsmoManager.getDataFactory().createWsmlString(((StringTerm)term).s);
         }else if (term.isNumTerm()){
             if (term instanceof IntegerTerm){
