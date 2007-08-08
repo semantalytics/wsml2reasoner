@@ -29,7 +29,7 @@ import junit.framework.TestSuite;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 
-import reasoner.BaseReasonerTest;
+import base.BaseReasonerTest;
 
 public class VariablePositionInTuple extends BaseReasonerTest {
 

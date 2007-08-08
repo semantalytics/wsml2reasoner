@@ -189,7 +189,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         }
 
         BuiltInReasoner reasoner = BuiltInReasoner.SPASS_PLUS_T;
-        if (!params.containsKey(PARAM_BUILT_IN_REASONER)){
+        if (params.containsKey(PARAM_BUILT_IN_REASONER)){
         	reasoner = (BuiltInReasoner)params.get(PARAM_BUILT_IN_REASONER);
         }
         
@@ -208,9 +208,39 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         }
         
         return new org.wsml.reasoner.impl.FOLBasedWSMLReasoner(
-    			(BuiltInReasoner)params.get(PARAM_BUILT_IN_REASONER),
+    			reasoner,
     			new WSMO4JManager(),
     			uri);
     }
 
+	public WSMLRuleReasoner createWSMLRuleReasoner() throws UnsupportedOperationException {
+		return createWSMLRuleReasoner(null);
+	}
+
+	public WSMLRuleReasoner createWSMLRuleReasoner(Map<String, Object> params) throws UnsupportedOperationException {
+        if (params == null) {
+            return new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
+                    BuiltInReasoner.MINS, new WSMO4JManager());
+        } else {
+            WSMO4JManager wsmoManager = extractWsmoManager(params);
+            BuiltInReasoner builtin = params
+                    .containsKey(PARAM_BUILT_IN_REASONER) ? (BuiltInReasoner) params
+                    .get(PARAM_BUILT_IN_REASONER)
+                    : BuiltInReasoner.MINS;
+            DatalogBasedWSMLReasoner dbwsmlr = new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
+                    builtin, wsmoManager);
+            
+            Object o = params.get(PARAM_EVAL_METHOD);
+            if (o!=null && o instanceof Integer){
+                dbwsmlr.setEvalMethod((Integer)o);
+            }
+            
+            o = params.get(PARAM_ALLOW_IMPORTS);
+            if (o!=null && o instanceof Integer){
+                dbwsmlr.setAllowImports((Integer)o);
+            }
+
+            return dbwsmlr;
+        }
+    }
 }

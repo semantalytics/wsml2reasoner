@@ -50,6 +50,7 @@ import org.wsml.reasoner.api.InternalReasonerException;
 import org.wsml.reasoner.api.WSMLCoreReasoner;
 import org.wsml.reasoner.api.WSMLFlightReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLRuleReasoner;
 import org.wsml.reasoner.api.inconsistency.AttributeTypeViolation;
 import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
@@ -93,7 +94,7 @@ import org.wsmo.wsml.ParserException;
  * @author Nathalie Steinmetz, DERI Innsbruck
  */
 public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
-        WSMLCoreReasoner {
+        WSMLCoreReasoner, WSMLRuleReasoner {
     
 	protected final static String WSML_RESULT_PREDICATE = "http://www.wsmo.org/reasoner/"
             + "wsml_query_result";
@@ -182,26 +183,26 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         OntologyNormalizer normalizer = new AxiomatizationNormalizer(wsmoManager,importedOntologies);
         normalizedOntology = normalizer.normalize(o);
 //      System.out.println("\n-------\n Ontology after Normalization:\n" +
-//      WSMLNormalizationTest.serializeOntology(normalizedOntology));
+//      BaseNormalizationTest.serializeOntology(normalizedOntology));
 
 
         // Convert constraints to support debugging
         normalizer = new ConstraintReplacementNormalizer(wsmoManager);
         normalizedOntology = normalizer.normalize(normalizedOntology);
 //        System.out.println("\n-------\n Ontology after constraints:\n" +
-//        WSMLNormalizationTest.serializeOntology(normalizedOntology));
+//        BaseNormalizationTest.serializeOntology(normalizedOntology));
 
         // Simplify axioms
         normalizer = new ConstructReductionNormalizer(wsmoManager);
         normalizedOntology = normalizer.normalize(normalizedOntology);
 //        System.out.println("\n-------\n Ontology after simplification:\n" +
-//        WSMLNormalizationTest.serializeOntology(normalizedOntology));
+//        BaseNormalizationTest.serializeOntology(normalizedOntology));
 
         // Apply Lloyd-Topor rules to get Datalog-compatible LEs
         normalizer = new LloydToporNormalizer(wsmoManager);
         normalizedOntology = normalizer.normalize(normalizedOntology);
 //        System.out.println("\n-------\n Ontology after Lloyd-Topor:\n" +
-//        WSMLNormalizationTest.serializeOntology(normalizedOntology));
+//        BaseNormalizationTest.serializeOntology(normalizedOntology));
         
         Set<org.wsml.reasoner.Rule> p;
         org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(

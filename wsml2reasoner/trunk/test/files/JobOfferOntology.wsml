@@ -13,7 +13,7 @@ namespace { _"webode://mccarthy.dia.fi.upm.es/Job_Offer_Eures_Ontology#" , wsml 
 
 ontology Job_Offer_Eures_Ontology
 
-/*
+
 importsOntology { GeoOnt#Geography_Eures_Ontology,
 	ComOnt#Competence_Eures_Ontology,
 	EcoActOnt#Economic_Activity_Eures_Ontology,
@@ -23,7 +23,6 @@ importsOntology { GeoOnt#Geography_Eures_Ontology,
 	LanOnt#Language_Eures_Ontology,
 	Time#Time_Eures_Ontology,
 	CompOnt#Compensation_Eures_Ontology }
-*/
 
 concept ICT_Vacancy subConceptOf Vacancy
 	has_job_category ofType (1) OccOnt#Computing_professionals__213

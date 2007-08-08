@@ -62,7 +62,7 @@ import uk.ac.man.cs.img.owl.validation.ValidatorLogger;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.17 $ $Date: 2007-04-26 17:39:14 $
+ * @version $Revision: 1.18 $ $Date: 2007-08-08 10:57:59 $
  */
 public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 
@@ -181,21 +181,21 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 				wsmoManager);
 		normalizedOntology = normalizer.normalize(ontology);
 //      System.out.println("\n-------\n Ontology after simplification:\n" +
-//      WSMLNormalizationTest.serializeOntology(normalizedOntology));
+//      BaseNormalizationTest.serializeOntology(normalizedOntology));
 
 		
 		// Convert conceptual syntax to logical expressions
 		normalizer = new AxiomatizationNormalizer(wsmoManager);
         normalizedOntology = normalizer.normalize(normalizedOntology);
 //      System.out.println("\n-------\n Ontology after simplification:\n" +
-//      WSMLNormalizationTest.serializeOntology(normalizedOntology));
+//      BaseNormalizationTest.serializeOntology(normalizedOntology));
         
         // Replace unnumbered anonymous identifiers and convert logical 
         // expressions
         normalizer = new WSMLDLLogExprNormalizer(wsmoManager);
 		normalizedOntology = normalizer.normalize(normalizedOntology);
 //      System.out.println("\n-------\n Ontology after simplification:\n" +
-//      WSMLNormalizationTest.serializeOntology(normalizedOntology));
+//      BaseNormalizationTest.serializeOntology(normalizedOntology));
         
         return normalizedOntology;
 	}
@@ -1395,6 +1395,9 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.17  2007-04-26 17:39:14  graham
+ * Fixed switch to new wsmo4j jars, switched to new IRIS (20070426) and jgrapht (v0.7.1) jars, and removed warning suppressions
+ *
  * Revision 1.16  2007/03/01 11:37:32  nathalie
  * updated DLBasedWSMLReasoner according to the new WSMLReasoner interface
  *

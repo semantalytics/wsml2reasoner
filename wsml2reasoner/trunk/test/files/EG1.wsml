@@ -17,16 +17,8 @@ namespace { _"webode://mccarthy.dia.fi.upm.es/eures/Job_Offer_Eures_Instances_On
 ontology EURES_Job_Offer_Ontology
 
 importsOntology { ComOnt#Competence_Eures_Ontology,
-	EcoActOnt#Economic_Activity_Eures_Ontology,
-	OccOnt#Occupation_Eures_Ontology,
-	EduOnt#Education_Eures_Ontology,
-	ComOnt#Competence_Eures_Ontology,
-	LabRegOnt#Labour_Regulatory_Eures_Ontology,
-	CompOnt#Compensation_Eures_Ontology,
-	JobOffOnt#Job_Offer_Eures_Ontology, 
-	GeoOnt#Geography_Eures_Ontology,
-	DrvOnt#Driving_License_Eures_Ontology,
-	LanOnt#Language_Eures_Ontology }
+	EcoActOnt#Economic_Activity_Eures_Ontology
+	}
 
 instance Organization_ZAV_im_Auftrag_131_27 memberOf JobOffOnt#Organization
 	Telephone hasValue "00492287131417"

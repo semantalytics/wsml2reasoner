@@ -29,12 +29,12 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 
-import reasoner.BaseReasonerTest;
+import base.BaseReasonerTest;
 
 public class InconsistencyTestWithFSymbol extends BaseReasonerTest {
     private static final String NS = "urn:functionsymbol#";
 
-    private static final String ONTOLOGY_FILE = "open/InconsistencyTestWithFSymbol.wsml";
+    private static final String ONTOLOGY_FILE = "files/InconsistencyTestWithFSymbol.wsml";
     
     public static void main(String[] args) {
         junit.textui.TestRunner.run(InconsistencyTestWithFSymbol.suite());

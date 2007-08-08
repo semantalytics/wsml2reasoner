@@ -18,6 +18,7 @@ import org.deri.iris.api.terms.IConstructedTerm;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
 import org.wsml.reasoner.Literal;
+import org.wsml.reasoner.builtin.iris.IrisFacade;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
@@ -27,11 +28,11 @@ import org.wsmo.factory.WsmoFactory;
  * Tests for the iris facade.
  * </p>
  * <p>
- * $Id: IrisFacadeTest.java,v 1.2 2007-04-25 15:55:07 graham Exp $
+ * $Id: IrisFacadeTest.java,v 1.3 2007-08-08 10:58:03 graham Exp $
  * </p>
  * 
  * @author Richard Pöttler, richard dot poettler at deri dot org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class IrisFacadeTest extends TestCase {
 
