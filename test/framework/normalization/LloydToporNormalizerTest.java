@@ -46,7 +46,7 @@ public class LloydToporNormalizerTest extends BaseNormalizationTest
     public void testNestedOperations() throws Exception
     {
         // read test ontology:
-        Ontology ontology = parseOntology("wsml2reasoner/normalization/lloyd-topor.wsml");
+        Ontology ontology = parseOntology("files/lloyd-topor.wsml");
 
         // normalize ontology with the LELloydToporNormalizer:
         Ontology normOnt = normalizer.normalize(ontology);

@@ -18,6 +18,8 @@
  */
 package framework.normalization;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,8 +42,10 @@ public class AnonymousIDReplacementTest extends BaseNormalizationTest
     protected void setUp() throws Exception
     {
         super.setUp();
+//      in order to keep track of cyclic imports
+        Set<Ontology> importedOntologies = new HashSet<Ontology>();
         WSMO4JManager wmsoManager = new WSMO4JManager();
-        axiomatizationNormalizer = new AxiomatizationNormalizer(wmsoManager);
+        axiomatizationNormalizer = new AxiomatizationNormalizer(wmsoManager, importedOntologies);
         reductionNormalizer = new ConstructReductionNormalizer(wmsoManager);
     }
 
