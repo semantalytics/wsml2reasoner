@@ -49,7 +49,7 @@ public class ConstructReductionNormalizerTest extends BaseNormalizationTest
     public void testNestedImplications() throws Exception
     {
         // read test ontology:
-        Ontology ontology = parseOntology("wsml2reasoner/normalization/constructs.wsml");
+        Ontology ontology = parseOntology("files/constructs.wsml");
 
         // normalize ontology with the LEConstructReductionNormalizer:
         Ontology normOnt = normalizer.normalize(ontology);
@@ -96,7 +96,7 @@ public class ConstructReductionNormalizerTest extends BaseNormalizationTest
     public void testNegationNormalization() throws Exception
     {
         // read test ontology:
-        Ontology ontology = parseOntology("wsml2reasoner/normalization/constructs.wsml");
+        Ontology ontology = parseOntology("files/constructs.wsml");
 
         // normalize ontology with the LEConstructReductionNormalizer:
         Ontology normOnt = normalizer.normalize(ontology);

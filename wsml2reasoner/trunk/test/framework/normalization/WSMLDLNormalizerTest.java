@@ -20,7 +20,9 @@ package framework.normalization;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import org.deri.wsmo4j.validator.WsmlDLValidator;
@@ -44,8 +46,10 @@ public class WSMLDLNormalizerTest extends BaseNormalizationTest {
 	
 	protected void setUp() throws Exception {
         super.setUp();
+        //in order to keep track of cyclic imports
+        Set<Ontology> importedOntologies = new HashSet<Ontology>();
         relTransformer = new Relation2AttributeNormalizer(new WSMO4JManager());
-        axiomTransformer = new AxiomatizationNormalizer(new WSMO4JManager());
+        axiomTransformer = new AxiomatizationNormalizer(new WSMO4JManager(), importedOntologies);
         logExprTransformer = new WSMLDLLogExprNormalizer(new WSMO4JManager());
 	}
 
@@ -59,7 +63,7 @@ public class WSMLDLNormalizerTest extends BaseNormalizationTest {
 	public void testPreProcessingSteps() throws Exception {
     	// read test file and parse it 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(
-                "wsml2reasoner/normalization/wsml2owlNormExample.wsml");
+                "files/wsml2owlNormExample.wsml");
         assertNotNull(is);
         Parser wsmlParser = Factory.createParser(null);
         // assuming first topentity in file is an ontology  
@@ -91,7 +95,7 @@ System.out.println(serializeOntology(normOnt)+"\n\n\n-------------\n\n\n");
 	public void testAnonIdTransformationss() throws Exception {
     	// read test file and parse it 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(
-                "wsml2reasoner/normalization/anonIds.wsml");
+                "files/anonIds.wsml");
         assertNotNull(is);
         Parser wsmlParser = Factory.createParser(null);
         // assuming first topentity in file is an ontology  
@@ -118,7 +122,7 @@ System.out.println(serializeOntology(normOnt)+"\n\n\n-------------\n\n\n");
 	public void testRelationTransformations() throws Exception {
     	// read test file and parse it 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(
-                "wsml2reasoner/normalization/relation2attribute.wsml");
+                "files/relation2attribute.wsml");
         assertNotNull(is);
         Parser wsmlParser = Factory.createParser(null);
         // assuming first topentity in file is an ontology  
@@ -145,7 +149,7 @@ System.out.println(serializeOntology(normOnt)+"\n\n\n-------------\n\n\n");
 	public void testDecompositionTransformations() throws Exception {
     	// read test file and parse it 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(
-                "wsml2reasoner/normalization/decomposition.wsml");
+                "files/decomposition.wsml");
         assertNotNull(is);
         Parser wsmlParser = Factory.createParser(null);
         // assuming first topentity in file is an ontology  
