@@ -1,4 +1,4 @@
-package org.wsml.reasoner.builtin.tptp;
+package org.wsml.reasoner.builtin.spass;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,14 +18,14 @@ import junit.framework.TestCase;
  * 
  * Checking if the String transformation is OK!
  */
-public class SPassTest extends TestCase{
+public class SpassTest extends TestCase{
     
     LogicalExpressionFactory leF = Factory.createLogicalExpressionFactory(null);
     WsmoFactory wsmoF = Factory.createWsmoFactory(null);
     Ontology nsContainer;
-    SpassPlusTFacade tptp = new SpassPlusTFacade(new WSMO4JManager(),"urn:foo");
+    SpassFacade tptp = new SpassFacade(new WSMO4JManager(),"urn:foo");
     
-    public SPassTest(){
+    public SpassTest(){
         IRI i = wsmoF.createIRI("foo:bar#");
         nsContainer = wsmoF.createOntology(i);
         nsContainer.setDefaultNamespace(i);
@@ -76,7 +76,7 @@ public class SPassTest extends TestCase{
     }
     
     public void testCollector() throws Exception{
-    	test("a. b(a).", " predicates (b,0)\\] ");
+    	test("a. b(a).", " predicates (b,0).] ");
     }
 
 }
