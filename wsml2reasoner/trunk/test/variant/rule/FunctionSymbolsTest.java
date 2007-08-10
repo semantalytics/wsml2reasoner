@@ -31,6 +31,7 @@ import junit.framework.TestSuite;
 
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
 
 import base.BaseReasonerTest;
 
@@ -43,7 +44,7 @@ import base.BaseReasonerTest;
  * Committed by $Author: graham $
  * 
  * $Source: /home/richi/temp/w2r/wsml2reasoner/test/variant/rule/FunctionSymbolsTest.java,v $, 
- * @version $Revision: 1.1 $ $Date: 2007-08-08 10:58:03 $
+ * @version $Revision: 1.2 $ $Date: 2007-08-10 17:20:19 $
  */
 
 public class FunctionSymbolsTest extends BaseReasonerTest {
@@ -60,6 +61,7 @@ public class FunctionSymbolsTest extends BaseReasonerTest {
         Test test = new junit.extensions.TestSetup(new TestSuite(
                 FunctionSymbolsTest.class)) {
             protected void setUp() throws Exception {
+            	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
                 setupScenario(ONTOLOGY_FILE);
             }
 

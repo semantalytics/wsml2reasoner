@@ -128,7 +128,8 @@ public class DLOntologyRegistrationTest extends TestCase {
 				"http://www.w3.org/2002/07/owl#Nothing")));
         for (Concept c : set) 
         	System.out.println(c.getIdentifier().toString());
-        assertTrue (set.size() == 18);
+        //assertTrue (set.size() == 18);
+        assertEquals(set.size(), 18);
                 
         // Ontology 2
 //        System.out.println(ontology2.getIdentifier().toString());

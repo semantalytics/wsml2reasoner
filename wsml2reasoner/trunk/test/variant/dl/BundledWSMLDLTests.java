@@ -13,11 +13,13 @@ public class BundledWSMLDLTests {
 	}
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test suite for the WSML-Core variant");
+		TestSuite suite = new TestSuite("Test suite for the WSML-DL variant");
 		//$JUnit-BEGIN$
-		suite.addTestSuite(SimpleInferenceTests.class);
-		suite.addTestSuite(CycleTests.class);
+		suite.addTestSuite(WSML2OWLTest.class);
+		suite.addTestSuite(DLSimpleInferenceTests.class);
+		suite.addTestSuite(WSMLDLNormalizerTest.class);
 		suite.addTestSuite(DLOntologyRegistrationTest.class);
+		suite.addTestSuite(CycleTests.class);
 		//$JUnit-END$
 		return suite;
 	}

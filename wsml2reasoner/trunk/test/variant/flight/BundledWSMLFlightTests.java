@@ -18,8 +18,8 @@ public class BundledWSMLFlightTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test suite for WSML-Flight variant");
 		//$JUnit-BEGIN$
-		BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
 		suite.addTestSuite(SatisfiablityTest.class);
+		suite.addTest(MaciejVTABug2.suite());
 		suite.addTest(MaciejVTABug.suite());
 		suite.addTest(SubConceptOfTest.suite());
 		suite.addTest(DogsworldTest.suite());

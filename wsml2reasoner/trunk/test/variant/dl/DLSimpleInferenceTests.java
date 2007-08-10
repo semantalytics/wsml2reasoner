@@ -43,12 +43,14 @@ import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
+import base.BaseReasonerTest;
+
 /**
  * 
  * @author Nathalie Steinmetz, DERI Innsbruck
  *
  */
-public class SimpleInferenceTests extends TestCase {
+public class DLSimpleInferenceTests extends BaseReasonerTest {
 
 	private WsmoFactory wsmoFactory = null;
 	
@@ -492,6 +494,9 @@ public class SimpleInferenceTests extends TestCase {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.1  2007-08-08 10:58:02  graham
+ * Second stage of refactoring unit tests
+ *
  * Revision 1.12  2007-03-01 11:41:11  nathalie
  * assembled tests for KAON2 and Pellet in one test file
  *
