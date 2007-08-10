@@ -3,6 +3,7 @@ package base;
 import variant.core.BundledWSMLCoreTests;
 import variant.dl.BundledWSMLDLTests;
 import variant.flight.BundledWSMLFlightTests;
+import variant.rule.BundledWSMLRuleTests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -18,6 +19,7 @@ public class RunVariantTests {
         suite.addTest(BundledWSMLCoreTests.suite());
         suite.addTest(BundledWSMLDLTests.suite());
         suite.addTest(BundledWSMLFlightTests.suite());
+        suite.addTest(BundledWSMLRuleTests.suite());
         // $JUnit-END$
         return suite;
     }

@@ -1,9 +1,9 @@
 package base;
 
+import engine.iris.BundledIrisTests;
+import engine.mins.BundledMinsTests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import engine.spassplust.BundledSpassPlusTTests;
-import engine.tptp.BundledTPTPTests;
 
 public class RunEngineTests {
 
@@ -12,10 +12,10 @@ public class RunEngineTests {
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite("Test suite for specific reasoning engines");
+        TestSuite suite = new TestSuite("Test suite for reasoning engines");
         // $JUnit-BEGIN$
-        suite.addTest(BundledTPTPTests.suite());
-        suite.addTest(BundledSpassPlusTTests.suite());
+        suite.addTest(BundledIrisTests.suite());
+        suite.addTest(BundledMinsTests.suite());        
         // $JUnit-END$
         return suite;
     }
