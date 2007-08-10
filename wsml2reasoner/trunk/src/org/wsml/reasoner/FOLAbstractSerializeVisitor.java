@@ -14,7 +14,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package org.wsml.reasoner.builtin.tptp;
+package org.wsml.reasoner;
 
 import java.util.*;
 
@@ -23,6 +23,8 @@ import org.deri.wsmo4j.logicalexpression.ConstantTransformer;
 import org.deri.wsmo4j.logicalexpression.terms.ConstructedTermImpl;
 import org.omwg.logicalexpression.*;
 import org.omwg.logicalexpression.terms.Term;
+import org.wsml.reasoner.builtin.tptp.TPTPSymbolMap;
+import org.wsml.reasoner.builtin.tptp.TPTPTermSerializer;
 import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 
@@ -30,13 +32,13 @@ import org.wsmo.common.TopEntity;
  * Default left to right depth first walker...
  *   
  * @author Holger Lausen
- * @version $Revision: 1.2 $ $Date: 2007-06-15 10:23:38 $
+ * @version $Revision: 1.1 $ $Date: 2007-08-10 09:44:49 $
  * @see org.omwg.logicalexpression.Visitor
  */
 public abstract class FOLAbstractSerializeVisitor implements Visitor {
-	Map<Term,Term> atoms2Rewrite = new HashMap<Term, Term>();
+	protected Map<Term,Term> atoms2Rewrite = new HashMap<Term, Term>();
    
-    Vector<String> stack;
+    protected Vector<String> stack;
     TPTPTermSerializer visitor;
 
     /**
@@ -96,7 +98,7 @@ public abstract class FOLAbstractSerializeVisitor implements Visitor {
      * @param expr Quantified Expression to be serialized, with operator EXISTS
      * @return String representing serialized Quantified Expression
      */
-    String helpQuantified(Quantified expr) {
+    protected String helpQuantified(Quantified expr) {
         String res = "";
         Set s = expr.listVariables();
         Iterator i = s.iterator();

@@ -14,7 +14,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package org.wsml.reasoner.builtin.tptp;
+package org.wsml.reasoner;
 
 import java.util.HashSet;
 import java.util.Set;

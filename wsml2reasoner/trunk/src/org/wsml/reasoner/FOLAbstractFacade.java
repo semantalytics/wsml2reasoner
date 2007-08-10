@@ -16,7 +16,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  */
-package org.wsml.reasoner.builtin.tptp;
+package org.wsml.reasoner;
 
 import java.io.*;
 import java.net.*;
@@ -24,9 +24,8 @@ import java.util.*;
 
 import org.apache.log4j.Logger;
 import org.omwg.logicalexpression.LogicalExpression;
-import org.wsml.reasoner.ExternalToolException;
-import org.wsml.reasoner.FOLReasonerFacade;
 import org.wsml.reasoner.api.WSMLFOLReasoner.EntailmentType;
+import org.wsml.reasoner.builtin.tptp.TPTPSymbolMap;
 import org.wsml.reasoner.impl.WSMO4JManager;
 
 /**
@@ -34,22 +33,22 @@ import org.wsml.reasoner.impl.WSMO4JManager;
  * The wsmo4j interface to and from TPTP
  * </p>
  * <p>
- * $Id: FOLAbstractFacade.java,v 1.2 2007-06-15 10:23:38 hlausen Exp $
+ * $Id: FOLAbstractFacade.java,v 1.1 2007-08-10 09:44:49 graham Exp $
  * </p>
  * 
  * @author Holger Lausen
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.1 $
  */ 
 public abstract class FOLAbstractFacade implements FOLReasonerFacade {
 
     private Logger log = Logger.getLogger(FOLAbstractFacade.class);
     WSMO4JManager wsmo4jmanager;
     String httpAddress;
-    Map<String,String> convertedOntologies = new HashMap<String, String>();
-    Map<String,TPTPSymbolMap> symbolMaps = new HashMap<String, TPTPSymbolMap>();
+    public Map<String,String> convertedOntologies = new HashMap<String, String>();
+    protected Map<String,TPTPSymbolMap> symbolMaps = new HashMap<String, TPTPSymbolMap>();
  
     static public String DERI_TPTP_REASONER="http://dev1.deri.at/dont-treat-this-service-to-hard";
-    static public String DERI_SPASS_PLUS_T_REASONER="http://dev1.deri.at/spass-plus-t";
+    static public String DERI_SPASS_REASONER="http://dev1.deri.at/spass-plus-t";
     
     public FOLAbstractFacade(WSMO4JManager manager, String endpoint){
         this.wsmo4jmanager=manager;
@@ -72,7 +71,7 @@ public abstract class FOLAbstractFacade implements FOLReasonerFacade {
         return results;
     }
     
-    String getConjecture(LogicalExpression le, TPTPSymbolMap map){
+    public String getConjecture(LogicalExpression le, TPTPSymbolMap map){
     	throw new RuntimeException("must be overwritten!");
     }
     
@@ -85,7 +84,7 @@ public abstract class FOLAbstractFacade implements FOLReasonerFacade {
         }
     }
     
-    EntailmentType invokeHttp(String stuff){
+    protected EntailmentType invokeHttp(String stuff){
             String data = encode("theory") + "="+ encode(stuff);
             URL url;
             EntailmentType result =EntailmentType.unkown;

@@ -14,25 +14,34 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package org.wsml.reasoner.builtin.tptp;
+package org.wsml.reasoner.builtin.spass;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import org.deri.wsmo4j.io.parser.wsml.TempVariable;
 import org.deri.wsmo4j.logicalexpression.terms.ConstructedTermImpl;
-import org.omwg.logicalexpression.*;
+import org.omwg.logicalexpression.Atom;
+import org.omwg.logicalexpression.Conjunction;
+import org.omwg.logicalexpression.Disjunction;
+import org.omwg.logicalexpression.Equivalence;
+import org.omwg.logicalexpression.ExistentialQuantification;
+import org.omwg.logicalexpression.Implication;
+import org.omwg.logicalexpression.InverseImplication;
+import org.omwg.logicalexpression.Negation;
+import org.omwg.logicalexpression.UniversalQuantification;
 import org.omwg.logicalexpression.terms.Term;
+import org.wsml.reasoner.FOLAbstractSerializeVisitor;
 import org.wsmo.common.IRI;
 
 /**
  * Default left to right depth first walker...
  *   
  * @author Holger Lausen
- * @version $Revision: 1.2 $ $Date: 2007-06-15 10:23:38 $
+ * @version $Revision: 1.1 $ $Date: 2007-08-10 09:44:49 $
  * @see org.omwg.logicalexpression.Visitor
  */
-public class SpassPlusTSerializeVisitor extends FOLAbstractSerializeVisitor {
+public class SpassSerializeVisitor extends FOLAbstractSerializeVisitor {
     
 
     /**

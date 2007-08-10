@@ -21,15 +21,24 @@ import java.util.Vector;
 
 import org.deri.wsmo4j.io.parser.wsml.TempVariable;
 import org.omwg.logicalexpression.Constants;
-import org.omwg.logicalexpression.terms.*;
-import org.omwg.ontology.*;
-import org.wsmo.common.*;
+import org.omwg.logicalexpression.terms.ConstructedTerm;
+import org.omwg.logicalexpression.terms.NumberedAnonymousID;
+import org.omwg.logicalexpression.terms.Term;
+import org.omwg.logicalexpression.terms.Visitor;
+import org.omwg.ontology.ComplexDataValue;
+import org.omwg.ontology.SimpleDataValue;
+import org.omwg.ontology.Variable;
+import org.omwg.ontology.WsmlDataType;
+import org.wsmo.common.IRI;
+import org.wsmo.common.Namespace;
+import org.wsmo.common.TopEntity;
+import org.wsmo.common.UnnumberedAnonymousID;
 
 
 /**
  *   
  * @author Holger Lausen
- * @version $Revision: 1.4 $ $Date: 2007-06-15 10:23:38 $
+ * @version $Revision: 1.5 $ $Date: 2007-08-10 09:44:49 $
  * @see org.omwg.logicalexpression.Visitor
  */
 public class TPTPTermSerializer implements Visitor{

@@ -16,7 +16,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  */
-package org.wsml.reasoner.builtin.tptp;
+package org.wsml.reasoner.builtin.spass;
 
 import java.util.*;
 
@@ -26,7 +26,10 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
 import org.wsml.reasoner.ExternalToolException;
+import org.wsml.reasoner.FOLAbstractFacade;
+import org.wsml.reasoner.PredicateAndFSymbolCollector;
 import org.wsml.reasoner.api.WSMLFOLReasoner.EntailmentType;
+import org.wsml.reasoner.builtin.tptp.TPTPSymbolMap;
 import org.wsml.reasoner.impl.WSMO4JManager;
 
 /**
@@ -34,20 +37,20 @@ import org.wsml.reasoner.impl.WSMO4JManager;
  * The wsmo4j interface to and from TPTP
  * </p>
  * <p>
- * $Id: SpassPlusTFacade.java,v 1.3 2007-06-22 12:09:21 hlausen Exp $
+ * $Id: SpassFacade.java,v 1.1 2007-08-10 09:44:49 graham Exp $
  * </p>
  * 
  * @author Holger Lausen
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.1 $
  */
-public class SpassPlusTFacade extends FOLAbstractFacade {
+public class SpassFacade extends FOLAbstractFacade {
 
-    Logger log = Logger.getLogger(SpassPlusTFacade.class);
+    Logger log = Logger.getLogger(SpassFacade.class);
     
     
     private PredicateAndFSymbolCollector collector = new PredicateAndFSymbolCollector();
 
-    public SpassPlusTFacade(WSMO4JManager manager, String endpoint){
+    public SpassFacade(WSMO4JManager manager, String endpoint){
     	super(manager, endpoint);
     }
 
@@ -75,8 +78,8 @@ public class SpassPlusTFacade extends FOLAbstractFacade {
     }
     
     @Override
-    String getConjecture(LogicalExpression le, TPTPSymbolMap map) {
-    	SpassPlusTSerializeVisitor les = new SpassPlusTSerializeVisitor();
+	public String getConjecture(LogicalExpression le, TPTPSymbolMap map) {
+    	SpassSerializeVisitor les = new SpassSerializeVisitor();
     	les.setSymbolMap(map);
     	String conjecture = "list_of_formulae(conjectures).\n";
     	le.accept(les);
@@ -93,7 +96,7 @@ public class SpassPlusTFacade extends FOLAbstractFacade {
     	kb += getSpassMetaDisc();
     	kb += "list_of_symbols.\n";
     	
-    	SpassPlusTSerializeVisitor les = new SpassPlusTSerializeVisitor();
+    	SpassSerializeVisitor les = new SpassSerializeVisitor();
         
     	String allAxioms ="";
         for (LogicalExpression le:expressions ){

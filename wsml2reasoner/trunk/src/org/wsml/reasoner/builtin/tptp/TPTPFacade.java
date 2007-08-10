@@ -18,12 +18,12 @@
  */
 package org.wsml.reasoner.builtin.tptp;
 
-import java.util.*;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.wsml.reasoner.ExternalToolException;
-import org.wsml.reasoner.api.WSMLFOLReasoner.EntailmentType;
+import org.wsml.reasoner.FOLAbstractFacade;
 import org.wsml.reasoner.impl.WSMO4JManager;
 
 /**
@@ -31,11 +31,11 @@ import org.wsml.reasoner.impl.WSMO4JManager;
  * The wsmo4j interface to and from TPTP
  * </p>
  * <p>
- * $Id: TPTPFacade.java,v 1.4 2007-06-15 10:23:38 hlausen Exp $
+ * $Id: TPTPFacade.java,v 1.5 2007-08-10 09:44:49 graham Exp $
  * </p>
  * 
  * @author Holger Lausen
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class TPTPFacade extends FOLAbstractFacade {
 
@@ -46,7 +46,7 @@ public class TPTPFacade extends FOLAbstractFacade {
     }
     
     @Override
-    String getConjecture(LogicalExpression le, TPTPSymbolMap map) {
+	public String getConjecture(LogicalExpression le, TPTPSymbolMap map) {
     	TPTPLESerializeVisitor les = new TPTPLESerializeVisitor();
     	les.setSymbolMap(map);
         le.accept(les);
