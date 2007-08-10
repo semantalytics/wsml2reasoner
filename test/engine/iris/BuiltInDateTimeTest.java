@@ -12,6 +12,8 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -27,6 +29,8 @@ public class BuiltInDateTimeTest extends BaseReasonerTest {
 	private LogicalExpressionFactory leFactory;
 	
 	private WSMLReasoner wsmlReasoner;
+	
+	private BuiltInReasoner previous;
 
 	private Parser parser;
 	   
@@ -36,6 +40,10 @@ public class BuiltInDateTimeTest extends BaseReasonerTest {
 		super.setUp();
 			
 		// get a reasoner
+		// currently set to IRIS since the other reasoning engines
+		// cannot yet handle such built-ins
+		previous = BaseReasonerTest.reasoner;
+		BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
 		wsmlReasoner = BaseReasonerTest.getReasoner();
 		wsmoFactory = Factory.createWsmoFactory(null);
 		leFactory = Factory.createLogicalExpressionFactory(null);
@@ -90,5 +98,13 @@ public class BuiltInDateTimeTest extends BaseReasonerTest {
 		
        wsmlReasoner.deRegisterOntology((IRI) ontology.getIdentifier());
 	}
+	
+    @Override
+    protected void tearDown() throws Exception {
+    	// TODO Auto-generated method stub
+    	super.tearDown();
+    	 previous = BaseReasonerTest.reasoner;
+    }
+
 	
 }
