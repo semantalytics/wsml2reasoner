@@ -15,7 +15,6 @@ public class BundledNormalizationTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test suite for normalization");
 		//$JUnit-BEGIN$
-		suite.addTestSuite(WSMLDLNormalizerTest.class);
 		suite.addTestSuite(DataValuesTest.class);
 		suite.addTestSuite(ConstructReductionNormalizerTest.class);
 		suite.addTestSuite(LloydToporNormalizerTest.class);

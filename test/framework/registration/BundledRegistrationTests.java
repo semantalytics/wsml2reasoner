@@ -13,7 +13,7 @@ public class BundledRegistrationTests {
 	}
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test suite for transformation");
+		TestSuite suite = new TestSuite("Test suite for registration");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(ReasonerCreationTest.class);
 		//$JUnit-END$

@@ -17,7 +17,6 @@ public class BundledTransformationTests {
 		TestSuite suite = new TestSuite("Test suite for transformation");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(DebugTransformationsTest.class);
-		suite.addTestSuite(WSML2OWLTest.class);
 		suite.addTestSuite(AnonymousIdUtilsTest.class);
 		//$JUnit-END$
 		return suite;

@@ -13,9 +13,10 @@ public class BundledDatatypeTests {
 	}
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test suite for transformation");
+		TestSuite suite = new TestSuite("Test suite for datatypes");
 		//$JUnit-BEGIN$
-		suite.addTest(AttributeRangeTest.suite());
+		suite.addTestSuite(AttributeRangeTest.class);
+		suite.addTestSuite(Boolean.class);
 		//$JUnit-END$
 		return suite;
 	}
