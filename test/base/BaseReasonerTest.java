@@ -39,6 +39,7 @@ import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
@@ -57,8 +58,8 @@ public class BaseReasonerTest extends TestCase {
     //CHANGE HERE TO CHECK DIFFERENT REASONERS!
     public static WSMLReasonerFactory.BuiltInReasoner reasoner =
 //    	WSMLReasonerFactory.BuiltInReasoner.KAON2;
-//    	WSMLReasonerFactory.BuiltInReasoner.IRIS;
-    	WSMLReasonerFactory.BuiltInReasoner.MINS;
+    	WSMLReasonerFactory.BuiltInReasoner.IRIS;
+//    	WSMLReasonerFactory.BuiltInReasoner.MINS;
     	
     //CHANGE HERE TO CHECK DIFFERENT EVALUATION METHODS-
     //IS ALSO SET FROM BUNDLED VARIANT TEST SUITES
@@ -92,10 +93,19 @@ public class BaseReasonerTest extends TestCase {
         //System.out.println("Eval Method: " + evalMethod);
         params.put(WSMLReasonerFactory.PARAM_EVAL_METHOD,evalMethod);
         params.put(WSMLReasonerFactory.PARAM_ALLOW_IMPORTS,allowImports);
-        // params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
-        // WSMLReasonerFactory.BuiltInReasoner.MINS);
-        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
-                .createWSMLFlightReasoner(params);
+        if(reasoner.equals(WSMLReasonerFactory.BuiltInReasoner.IRIS) |
+        		reasoner.equals(WSMLReasonerFactory.BuiltInReasoner.KAON2)){
+        	wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
+            	.createWSMLFlightReasoner(params);
+        	
+        } 
+        else if(reasoner.equals(WSMLReasonerFactory.BuiltInReasoner.MINS)){
+        	wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
+        		.createWSMLRuleReasoner(params);	
+        }
+        else if(reasoner.equals(WSMLReasonerFactory.BuiltInReasoner.PELLET))
+        	wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
+        		.createWSMLDLReasoner(params);
         return wsmlReasoner;
     }
     
@@ -228,4 +238,5 @@ public class BaseReasonerTest extends TestCase {
          }
          System.out.println("Ontology parsed");
     }
+
 }
