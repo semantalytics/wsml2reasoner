@@ -1,10 +1,9 @@
-package engine.spassplust;
+package engine.spass;
 
-import open.SpassPlusTTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-public class BundledSpassPlusTTests {
+public class BundledSpassTests {
 
 	/**
 	 * @param args
@@ -16,7 +15,7 @@ public class BundledSpassPlusTTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test suite for Spass Plus T engine");
 		//$JUnit-BEGIN$
-		suite.addTestSuite(SpassPlusTTest.class);
+		suite.addTestSuite(SpassEntailmentTest.class);
 		//$JUnit-END$
 		return suite;
 	}
