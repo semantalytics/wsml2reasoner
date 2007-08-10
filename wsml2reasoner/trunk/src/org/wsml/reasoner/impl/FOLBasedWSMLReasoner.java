@@ -19,21 +19,33 @@
 
 package org.wsml.reasoner.impl;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.*;
+import org.omwg.ontology.Axiom;
+import org.omwg.ontology.Concept;
+import org.omwg.ontology.Instance;
+import org.omwg.ontology.Ontology;
+import org.omwg.ontology.Variable;
 import org.wsml.reasoner.ExternalToolException;
 import org.wsml.reasoner.FOLReasonerFacade;
 import org.wsml.reasoner.api.WSMLFOLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
-import org.wsml.reasoner.builtin.tptp.SpassPlusTFacade;
+import org.wsml.reasoner.builtin.spass.SpassFacade;
 import org.wsml.reasoner.builtin.tptp.TPTPFacade;
-import org.wsml.reasoner.transformation.*;
-import org.wsml.reasoner.transformation.le.*;
+import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
+import org.wsml.reasoner.transformation.MoleculeNormalizer;
+import org.wsml.reasoner.transformation.OntologyNormalizer;
+import org.wsml.reasoner.transformation.le.FOLMoleculeDecompositionRules;
+import org.wsml.reasoner.transformation.le.LogicalExpressionNormalizer;
+import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -64,8 +76,8 @@ public class FOLBasedWSMLReasoner implements WSMLFOLReasoner {
         case TPTP:
             builtInFacade = new TPTPFacade(wsmoManager,uri);
             break;
-        case SPASS_PLUS_T:
-            builtInFacade = new SpassPlusTFacade(wsmoManager,uri);
+        case SPASS:
+            builtInFacade = new SpassFacade(wsmoManager,uri);
             break;
         default:
             throw new UnsupportedOperationException("Reasoning with "

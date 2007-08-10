@@ -19,14 +19,25 @@
 
 package org.wsml.reasoner.impl;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Vector;
 
 import org.deri.wsmo4j.validator.WsmlValidatorImpl;
 import org.omwg.ontology.Ontology;
-import org.wsml.reasoner.api.*;
+import org.wsml.reasoner.api.WSMLCoreReasoner;
+import org.wsml.reasoner.api.WSMLDLReasoner;
+import org.wsml.reasoner.api.WSMLFOLReasoner;
+import org.wsml.reasoner.api.WSMLFlightReasoner;
+import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLRuleReasoner;
 import org.wsml.reasoner.builtin.tptp.TPTPFacade;
 import org.wsmo.common.WSML;
-import org.wsmo.factory.*;
+import org.wsmo.factory.DataFactory;
+import org.wsmo.factory.Factory;
+import org.wsmo.factory.LogicalExpressionFactory;
+import org.wsmo.factory.WsmoFactory;
 import org.wsmo.validator.WsmlValidator;
 
 /**
@@ -188,7 +199,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         	params = new HashMap<String, Object>();
         }
 
-        BuiltInReasoner reasoner = BuiltInReasoner.SPASS_PLUS_T;
+        BuiltInReasoner reasoner = BuiltInReasoner.SPASS;
         if (params.containsKey(PARAM_BUILT_IN_REASONER)){
         	reasoner = (BuiltInReasoner)params.get(PARAM_BUILT_IN_REASONER);
         }
@@ -198,8 +209,8 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         	uri = (String) params.get(PARAM_EXTERNAL_REASONER_URI);
         }
         if (uri==null){
-        	if (reasoner==BuiltInReasoner.SPASS_PLUS_T){
-        		uri=TPTPFacade.DERI_SPASS_PLUS_T_REASONER;
+        	if (reasoner==BuiltInReasoner.SPASS){
+        		uri=TPTPFacade.DERI_SPASS_REASONER;
         	}else if (reasoner==BuiltInReasoner.TPTP){
         		uri=TPTPFacade.DERI_TPTP_REASONER;
         	}else{

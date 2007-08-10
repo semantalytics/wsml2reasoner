@@ -20,15 +20,32 @@ package org.wsml.reasoner.impl;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 import java.util.Map.Entry;
 
-import org.omwg.logicalexpression.*;
+import org.omwg.logicalexpression.AttributeValueMolecule;
+import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.MembershipMolecule;
+import org.omwg.logicalexpression.SubConceptMolecule;
 import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.*;
+import org.omwg.ontology.Concept;
+import org.omwg.ontology.DataValue;
+import org.omwg.ontology.Instance;
+import org.omwg.ontology.Ontology;
+import org.omwg.ontology.Variable;
 import org.semanticweb.owl.impl.model.OWLConcreteDataImpl;
 import org.semanticweb.owl.impl.model.OWLConcreteDataTypeImpl;
-import org.semanticweb.owl.model.*;
+import org.semanticweb.owl.model.OWLDataFactory;
+import org.semanticweb.owl.model.OWLDataValue;
+import org.semanticweb.owl.model.OWLDescription;
+import org.semanticweb.owl.model.OWLEntity;
+import org.semanticweb.owl.model.OWLException;
+import org.semanticweb.owl.model.OWLOntology;
 import org.semanticweb.owl.model.change.ChangeVisitor;
 import org.semanticweb.owl.util.OWLConnection;
 import org.semanticweb.owl.util.OWLManager;
@@ -36,7 +53,9 @@ import org.semanticweb.owl.validation.SpeciesValidator;
 import org.semanticweb.owl.validation.SpeciesValidatorReporter;
 import org.wsml.reasoner.ExternalToolException;
 import org.wsml.reasoner.WSMLDL2OWLTransformer;
-import org.wsml.reasoner.api.*;
+import org.wsml.reasoner.api.InternalReasonerException;
+import org.wsml.reasoner.api.WSMLDLReasoner;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.builtin.kaon2.Kaon2DLFacade;
@@ -47,7 +66,10 @@ import org.wsml.reasoner.transformation.dl.Relation2AttributeNormalizer;
 import org.wsml.reasoner.transformation.dl.WSMLDLLogExprNormalizer;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
-import org.wsmo.factory.*;
+import org.wsmo.factory.DataFactory;
+import org.wsmo.factory.Factory;
+import org.wsmo.factory.LogicalExpressionFactory;
+import org.wsmo.factory.WsmoFactory;
 import org.wsmo.validator.WsmlValidator;
 
 import uk.ac.man.cs.img.owl.validation.ValidatorLogger;
@@ -62,7 +84,7 @@ import uk.ac.man.cs.img.owl.validation.ValidatorLogger;
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.19 $ $Date: 2007-08-08 14:48:44 $
+ * @version $Revision: 1.20 $ $Date: 2007-08-10 09:45:55 $
  */
 public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 
@@ -184,21 +206,21 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 				wsmoManager);
 		normalizedOntology = normalizer.normalize(ontology);
 //      System.out.println("\n-------\n Ontology after simplification:\n" +
-//      BaseNormalizationTest.serializeOntology(normalizedOntology));
+//      BaseDLReasonerTest.serializeOntology(normalizedOntology));
 
 		
 		// Convert conceptual syntax to logical expressions
 		normalizer = new AxiomatizationNormalizer(wsmoManager, importedOntologies);
         normalizedOntology = normalizer.normalize(normalizedOntology);
 //      System.out.println("\n-------\n Ontology after simplification:\n" +
-//      BaseNormalizationTest.serializeOntology(normalizedOntology));
+//      BaseDLReasonerTest.serializeOntology(normalizedOntology));
         
         // Replace unnumbered anonymous identifiers and convert logical 
         // expressions
         normalizer = new WSMLDLLogExprNormalizer(wsmoManager);
 		normalizedOntology = normalizer.normalize(normalizedOntology);
 //      System.out.println("\n-------\n Ontology after simplification:\n" +
-//      BaseNormalizationTest.serializeOntology(normalizedOntology));
+//      BaseDLReasonerTest.serializeOntology(normalizedOntology));
         
         return normalizedOntology;
 	}
@@ -1398,6 +1420,9 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.19  2007-08-08 14:48:44  graham
+ * Additional parameter (importedOntologies) added to the AxiomatizationNormalizer constructor in order to handle cyclical imports
+ *
  * Revision 1.18  2007-08-08 10:57:59  graham
  * Second stage of refactoring unit tests
  *
