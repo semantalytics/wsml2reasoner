@@ -32,6 +32,8 @@ import org.wsmo.common.IRI;
 import org.wsmo.factory.Factory;
 import org.wsmo.wsml.Parser;
 
+import base.BaseReasonerTest;
+
 /**
  * This test shows the use of the DefaultWSMLReasonerFactory method 
  * createReasoner(). This method gets an ontology as parameter, checks 
@@ -40,7 +42,7 @@ import org.wsmo.wsml.Parser;
  * 
  * @author nathalie.steinmetz@deri.org
  */
-public class ReasonerCreationTest extends TestCase {
+public class ReasonerCreationTest extends BaseReasonerTest {
 
 	private WSMLReasoner wsmlReasoner;
 

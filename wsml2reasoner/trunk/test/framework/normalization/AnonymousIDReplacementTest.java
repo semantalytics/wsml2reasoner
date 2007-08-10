@@ -42,7 +42,7 @@ public class AnonymousIDReplacementTest extends BaseNormalizationTest
     protected void setUp() throws Exception
     {
         super.setUp();
-//      in order to keep track of cyclic imports
+        //in order to keep track of cyclic imports
         Set<Ontology> importedOntologies = new HashSet<Ontology>();
         WSMO4JManager wmsoManager = new WSMO4JManager();
         axiomatizationNormalizer = new AxiomatizationNormalizer(wmsoManager, importedOntologies);
@@ -80,7 +80,7 @@ public class AnonymousIDReplacementTest extends BaseNormalizationTest
         ontology.addInstance(arathorn);
         ontology.addAxiom(aragornLivesAx);
         ontology.addAxiom(arathornLivesAx);
-System.out.println(serializeOntology(ontology)+"\n\n\n-------------\n\n\n");
+        System.out.println(serializeOntology(ontology)+"\n\n\n-------------\n\n\n");
         
         // normalize ontology with the LEConstructReductionNormalizer:
         Ontology normOnt = axiomatizationNormalizer.normalize(ontology);
@@ -90,7 +90,7 @@ System.out.println(serializeOntology(ontology)+"\n\n\n-------------\n\n\n");
         // by means of regular expressions matched against serialized result
         // ontology:
         String normString = serializeOntology(normOnt);
-System.out.println(normString);
+        System.out.println(normString);
         Pattern pattern = Pattern.compile("Arathorn.*livesAt.*(anonymous.*).*and.*\\1.*memberOf.*Location", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(normString);
         assertTrue(matcher.find());
@@ -104,4 +104,6 @@ System.out.println(normString);
         LogicalExpression wrongExp = leFactory.createDisjunction(rightArg, leftArg);
         assertTrue(correctExp.equals(wrongExp));
     }
+    
+    
 }

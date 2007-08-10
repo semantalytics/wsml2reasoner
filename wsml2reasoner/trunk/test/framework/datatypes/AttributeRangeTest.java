@@ -20,11 +20,9 @@ package framework.datatypes;
 
 import java.io.FileReader;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.Factory;
@@ -45,7 +43,7 @@ import base.BaseReasonerTest;
  * 
  * @author
  * 
- * @version $Revision: 1.1 $ $Date: 2007-08-08 10:58:03 $
+ * @version $Revision: 1.2 $ $Date: 2007-08-10 17:17:50 $
  */
 public class AttributeRangeTest extends BaseReasonerTest {
     Parser parser;
@@ -58,7 +56,7 @@ public class AttributeRangeTest extends BaseReasonerTest {
         parser = Factory.createParser(null);
         leFactory = Factory.createLogicalExpressionFactory(null);
         dFactory = Factory.createDataFactory(null);
-        reasoner =  BaseReasonerTest.getReasoner();
+        reasoner =  null;
         wsmoFactory = Factory.createWsmoFactory(null);
     }
 
@@ -66,7 +64,7 @@ public class AttributeRangeTest extends BaseReasonerTest {
      * 
      * @throws Exception
      */
-    public void testAttributeRange() throws Exception {
+    public void attributeRange() throws Exception {
     	Ontology exampleOntology = loadOntology("test/files/AttributeRangeOntology.wsml");
     	try{
     		reasoner.registerOntology(exampleOntology);
@@ -96,13 +94,21 @@ public class AttributeRangeTest extends BaseReasonerTest {
 
     }
     
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(AttributeRangeTest.suite());
+    public void testAllReasoners() throws Exception{
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
+    	reasoner = BaseReasonerTest.getReasoner();
+    	attributeRange();
+    	
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
+    	reasoner = BaseReasonerTest.getReasoner();
+    	attributeRange();
+    	
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.KAON2;
+    	reasoner = BaseReasonerTest.getReasoner();
+    	attributeRange();
+    	
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.PELLET;
+    	reasoner = BaseReasonerTest.getReasoner();
+    	attributeRange();
     }
-
-    public static Test suite() {
-        Test test = new junit.extensions.TestSetup(new TestSuite(AttributeRangeTest.class)) {};
-        return test;
-    }
-
 }
