@@ -14,6 +14,7 @@ public class RunFacadeTests {
         // $JUnit-BEGIN$
         suite.addTest(org.wsml.reasoner.builtin.iris.IrisFacadeTest.suite());
         suite.addTestSuite(org.wsml.reasoner.builtin.tptp.TPTPTest.class);
+        suite.addTestSuite(org.wsml.reasoner.builtin.spass.SpassTest.class);
         // $JUnit-END$
         return suite;
     }
