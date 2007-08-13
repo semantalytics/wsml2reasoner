@@ -20,17 +20,18 @@ package engine.tptp;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import junit.framework.TestCase;
-
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.WSMLFOLReasoner;
 import org.wsml.reasoner.api.WSMLFOLReasoner.EntailmentType;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
-import org.wsmo.factory.*;
+import org.wsmo.factory.Factory;
+import org.wsmo.factory.LogicalExpressionFactory;
+import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
 import base.BaseReasonerTest;
@@ -46,15 +47,14 @@ import base.BaseReasonerTest;
  *
  * @author Rosi, Holger
  *
- * @version $Revision: 1.1 $ $Date: 2007-08-10 17:17:15 $
+ * @version $Revision: 1.2 $ $Date: 2007-08-13 15:17:42 $
  */
 public class TPTPEntailmentTest extends BaseReasonerTest {
 
     private WsmoFactory wsmoFactory = null;
     private LogicalExpressionFactory leFactory = null;
-    
     private WSMLFOLReasoner wsmlReasoner = null;
-
+    BuiltInReasoner previous;  
     private Parser parser = null; 
     
     
@@ -63,6 +63,7 @@ public class TPTPEntailmentTest extends BaseReasonerTest {
         WSMO4JManager wsmoManager = new WSMO4JManager();
         wsmoFactory = wsmoManager.getWSMOFactory();
         leFactory = wsmoManager.getLogicalExpressionFactory();
+        previous = BaseReasonerTest.reasoner;
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLFOLReasoner();
         parser = Factory.createParser(null);
     }
@@ -105,9 +106,8 @@ public class TPTPEntailmentTest extends BaseReasonerTest {
         ont.addAxiom(a);
         wsmlReasoner.registerOntology(ont);
         
-        
-        //FIXME some assertion to come
     }
+    
     
     
 }
