@@ -103,7 +103,7 @@ public class BuiltInDateTimeTest extends BaseReasonerTest {
     protected void tearDown() throws Exception {
     	// TODO Auto-generated method stub
     	super.tearDown();
-    	 previous = BaseReasonerTest.reasoner;
+    	BaseReasonerTest.reasoner = previous;
     }
 
 	

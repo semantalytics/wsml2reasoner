@@ -28,6 +28,7 @@ import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.WSMLFOLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLFOLReasoner.EntailmentType;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
@@ -51,16 +52,16 @@ import base.BaseReasonerTest;
  *
  * @author Rosi, Holger
  *
- * @version $Revision: 1.1 $ $Date: 2007-08-10 17:17:16 $
+ * @version $Revision: 1.2 $ $Date: 2007-08-13 15:17:43 $
  */
 public class SpassEntailmentTest extends BaseReasonerTest {
 
     private WsmoFactory wsmoFactory = null;
     private LogicalExpressionFactory leFactory = null;
-    
     private WSMLFOLReasoner wsmlReasoner = null;
-
+    BuiltInReasoner previous;
     private Parser parser = null; 
+    
     
     
     protected void setUp() throws Exception {
@@ -68,6 +69,7 @@ public class SpassEntailmentTest extends BaseReasonerTest {
         WSMO4JManager wsmoManager = new WSMO4JManager();
         wsmoFactory = wsmoManager.getWSMOFactory();
         leFactory = wsmoManager.getLogicalExpressionFactory();
+        previous = BaseReasonerTest.reasoner;
         Map<String,Object> m = new HashMap<String, Object>();
         m.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, 
         		WSMLReasonerFactory.BuiltInReasoner.SPASS);
@@ -164,4 +166,11 @@ public class SpassEntailmentTest extends BaseReasonerTest {
 //        assertEquals(EntailmentType.notEntailed, t);
     }
     
+    @Override
+    protected void tearDown() throws Exception {
+    	// TODO Auto-generated method stub
+    	super.tearDown();
+    	BaseReasonerTest.reasoner = previous;
+    	//System.gc();
+    }
 }
