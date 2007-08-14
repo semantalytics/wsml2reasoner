@@ -16,13 +16,10 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  */
-package framework.datatypes;
+package variant.flight;
 
 import java.util.Map;
 import java.util.Set;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
@@ -30,6 +27,7 @@ import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.Factory;
@@ -40,17 +38,15 @@ import org.wsmo.wsml.Parser;
 import base.BaseReasonerTest;
 
 /**
- * Currently does not work with MINS
- * 
+ * Currently does not work with PELLET (due to detected inconsistency)
  * <pre>
  *   Created on 20.04.2006
  *   Committed by $Author: graham $
- *   $Source: /home/richi/temp/w2r/wsml2reasoner/test/framework/datatypes/Boolean.java,v $,
  * </pre>
  * 
  * @author Holger lausen
  * 
- * @version $Revision: 1.1 $ $Date: 2007-08-10 17:17:50 $
+ * @version $Revision: 1.1 $ $Date: 2007-08-14 16:53:35 $
  */
 public class Boolean extends BaseReasonerTest {
     Parser parser;
@@ -58,15 +54,22 @@ public class Boolean extends BaseReasonerTest {
     DataFactory dFactory;
     WsmoFactory wsmoFactory;
     WSMLReasoner reasoner;
+    BuiltInReasoner previous;
     
     public void setUp(){
         parser = Factory.createParser(null);
         leFactory = Factory.createLogicalExpressionFactory(null);
         dFactory = Factory.createDataFactory(null);
+        previous = BaseReasonerTest.reasoner;
         reasoner =  BaseReasonerTest.getReasoner();
         wsmoFactory = Factory.createWsmoFactory(null);
     }
 
+    @Override
+    protected void tearDown() throws Exception {
+    	super.tearDown();
+    	BaseReasonerTest.reasoner = previous;
+    }
     /**
      * 
      * @throws Exception
@@ -77,8 +80,8 @@ public class Boolean extends BaseReasonerTest {
                 "ontology o1 \n" +
                 "axiom a definedBy \n" +
                 "a[f hasValue _boolean(\"false\")]. \n " +
-                "a[t hasValue _boolean(\"true\")]. \n " +
-                "a(?a) :- a[?a hasValue ?x] and ?x != _boolean(\"false\").  ";
+                "a[t hasValue _boolean(\"true\")].\n " +
+                "a(?a) :- a[?a hasValue ?x] and ?x != _boolean(\"false\"). ";
 
         Ontology o = (Ontology) parser.parse(new StringBuffer(test))[0];
         Set<Map<Variable, Term>> result = null;
@@ -110,7 +113,7 @@ public class Boolean extends BaseReasonerTest {
                 m.get(leFactory.createVariable("y"))); 
     }
     
-    public void testAllReasoners() throws Exception{
+    public void testFlightReasoners() throws Exception{
     	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
     	reasoner = BaseReasonerTest.getReasoner();
     	simpleBoolean();

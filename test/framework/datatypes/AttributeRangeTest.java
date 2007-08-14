@@ -23,6 +23,7 @@ import java.io.FileReader;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.Factory;
@@ -43,7 +44,7 @@ import base.BaseReasonerTest;
  * 
  * @author
  * 
- * @version $Revision: 1.2 $ $Date: 2007-08-10 17:17:50 $
+ * @version $Revision: 1.3 $ $Date: 2007-08-14 16:51:16 $
  */
 public class AttributeRangeTest extends BaseReasonerTest {
     Parser parser;
@@ -51,15 +52,23 @@ public class AttributeRangeTest extends BaseReasonerTest {
     DataFactory dFactory;
     WsmoFactory wsmoFactory;
     WSMLReasoner reasoner;
+    BuiltInReasoner previous;
     
     public void setUp(){
         parser = Factory.createParser(null);
         leFactory = Factory.createLogicalExpressionFactory(null);
         dFactory = Factory.createDataFactory(null);
+        previous = BaseReasonerTest.reasoner;
         reasoner =  null;
         wsmoFactory = Factory.createWsmoFactory(null);
     }
 
+    @Override
+    protected void tearDown() throws Exception {
+    	// TODO Auto-generated method stub
+    	super.tearDown();
+    	BaseReasonerTest.reasoner = previous;
+    }
     /**
      * 
      * @throws Exception

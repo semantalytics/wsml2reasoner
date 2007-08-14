@@ -22,41 +22,38 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
 
 import base.BaseReasonerTest;
 
 public class MaciejVTABug2 extends BaseReasonerTest {
 
     private static final String ONTOLOGY_FILE = "files/VTAServiceOntology2.wsml";
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(MaciejVTABug2.suite());
+    
+    @Override
+    protected void setUp() throws Exception {
+    	super.setUp();
+    	setupScenario(ONTOLOGY_FILE);
     }
-
-    public static Test suite() {
-        Test test = new junit.extensions.TestSetup(new TestSuite(
-                MaciejVTABug2.class)) {
-            protected void setUp() throws Exception {
-                setupScenario(ONTOLOGY_FILE);
-            }
-
-            protected void tearDown() throws Exception {
-                System.out.println("Finished!");
-            }
-        };
-        return test;
-    }
-
-    public void testStations() throws Exception {
+    public void memberOfQuery() throws Exception {
         String query = "?x memberOf station";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         performQuery(query, expected);
         System.out.println("Finished query.");
+    }
+    
+    public void testFlightReasoners() throws Exception{
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
+    	memberOfQuery();
+    	
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
+    	memberOfQuery();
+    	
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.KAON2;
+    	memberOfQuery();
+
     }
 
 }

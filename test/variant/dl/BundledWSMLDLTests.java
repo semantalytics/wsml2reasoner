@@ -15,6 +15,7 @@ public class BundledWSMLDLTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test suite for the WSML-DL variant");
 		//$JUnit-BEGIN$
+		suite.addTestSuite(DataValuesTest.class);
 		suite.addTestSuite(WSML2OWLTest.class);
 		suite.addTestSuite(DLSimpleInferenceTests.class);
 		suite.addTestSuite(WSMLDLNormalizerTest.class);

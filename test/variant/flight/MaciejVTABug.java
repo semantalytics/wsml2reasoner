@@ -23,11 +23,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
 
 import base.BaseReasonerTest;
 
@@ -37,25 +35,13 @@ public class MaciejVTABug extends BaseReasonerTest {
 
     private static final String ONTOLOGY_FILE = "files/VTAServiceOntology.wsml";
 
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(MaciejVTABug.suite());
+    @Override
+    protected void setUp() throws Exception {
+    	super.setUp();
+    	setupScenario(ONTOLOGY_FILE);
     }
 
-    public static Test suite() {
-        Test test = new junit.extensions.TestSetup(new TestSuite(
-                MaciejVTABug.class)) {
-            protected void setUp() throws Exception {
-                setupScenario(ONTOLOGY_FILE);
-            }
-
-            protected void tearDown() throws Exception {
-                System.out.println("Finished!");
-            }
-        };
-        return test;
-    }
-
-    public void testGalwayIsSource() throws Exception {
+    public void attributeValueQuery() throws Exception {
         String query = "?x[sourceLocBool hasValue t]";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -66,7 +52,7 @@ public class MaciejVTABug extends BaseReasonerTest {
         System.out.println("Finished query.");
     }
 
-    public void testStations() throws Exception {
+    public void memberOfQuery() throws Exception {
         String query = "?x memberOf station";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -79,6 +65,21 @@ public class MaciejVTABug extends BaseReasonerTest {
         expected.add(binding);
         performQuery(query, expected);
         System.out.println("Finished query.");
+    }
+    
+    public void testFlightReasoners() throws Exception{
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
+    	attributeValueQuery();
+    	memberOfQuery();
+    	
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
+    	attributeValueQuery();
+    	memberOfQuery();
+    	
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.KAON2;
+    	attributeValueQuery();
+    	memberOfQuery();
+
     }
 
 }

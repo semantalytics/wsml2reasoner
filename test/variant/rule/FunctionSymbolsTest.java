@@ -32,6 +32,7 @@ import junit.framework.TestSuite;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 
 import base.BaseReasonerTest;
 
@@ -44,7 +45,7 @@ import base.BaseReasonerTest;
  * Committed by $Author: graham $
  * 
  * $Source: /home/richi/temp/w2r/wsml2reasoner/test/variant/rule/FunctionSymbolsTest.java,v $, 
- * @version $Revision: 1.2 $ $Date: 2007-08-10 17:20:19 $
+ * @version $Revision: 1.3 $ $Date: 2007-08-14 16:53:36 $
  */
 
 public class FunctionSymbolsTest extends BaseReasonerTest {
@@ -52,6 +53,8 @@ public class FunctionSymbolsTest extends BaseReasonerTest {
     private static final String NS = "http://examples.com/ontologies/mytravel#";
 
     private static final String ONTOLOGY_FILE = "files/Travel.wsml";
+    
+    static BuiltInReasoner previous;
 
     public static void main(String[] args) {
         junit.textui.TestRunner.run(FunctionSymbolsTest.suite());
@@ -61,11 +64,13 @@ public class FunctionSymbolsTest extends BaseReasonerTest {
         Test test = new junit.extensions.TestSetup(new TestSuite(
                 FunctionSymbolsTest.class)) {
             protected void setUp() throws Exception {
+            	previous = BaseReasonerTest.reasoner;
             	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
                 setupScenario(ONTOLOGY_FILE);
             }
 
             protected void tearDown() throws Exception {
+            	BaseReasonerTest.reasoner = previous;
                 System.out.println("Finished!");
             }
         };

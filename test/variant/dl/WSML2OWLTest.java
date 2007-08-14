@@ -28,6 +28,7 @@ import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.semanticweb.owl.model.OWLOntology;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.impl.DLBasedWSMLReasoner;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.serializer.owl.OWLSerializer;
@@ -50,6 +51,8 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
 	
 	protected DLBasedWSMLReasoner dlReasoner;
 	
+	protected BuiltInReasoner previous;
+	
 	protected OWLSerializer serializer;
 	
 	protected HashMap<String, String> prefs; 
@@ -70,6 +73,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));
         axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom" + System.currentTimeMillis()));
         ontology.addAxiom(axiom);
+        previous = BaseReasonerTest.reasoner;
         dlReasoner = new DLBasedWSMLReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET, 
         		new WSMO4JManager());
         serializer = new OWLSerializerImpl();
@@ -82,6 +86,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         super.tearDown();
         ontology = null;
         owlOntology = null;
+        BaseReasonerTest.reasoner = previous;
         System.gc();
     }
     
@@ -572,6 +577,9 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.1  2007-08-10 17:20:18  graham
+ * Bundled and refactored variant specific tests
+ *
  * Revision 1.1  2007-08-08 10:58:02  graham
  * Second stage of refactoring unit tests
  *

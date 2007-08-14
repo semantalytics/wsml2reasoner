@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.Factory;
 import org.wsmo.wsml.Parser;
@@ -46,7 +47,7 @@ public class SatisfiablityTest extends BaseReasonerTest {
 		parser = Factory.createParser(null);
 	}
 	
-	public void testRun() throws Exception {
+	public void satisfiablity() throws Exception {
 		// read test file and parse it 
        InputStream is = this.getClass().getClassLoader().getResourceAsStream(
                "files/isSatisfiable.wsml");
@@ -63,9 +64,27 @@ public class SatisfiablityTest extends BaseReasonerTest {
 		wsmlReasoner.deRegisterOntology((IRI) ontology.getIdentifier());
 	}
 	
+    
+    public void testFlightReasoners() throws Exception{
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
+    	wsmlReasoner = BaseReasonerTest.getReasoner();
+    	satisfiablity();
+    	
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
+    	wsmlReasoner = BaseReasonerTest.getReasoner();
+    	satisfiablity();
+    	
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.KAON2;
+    	wsmlReasoner = BaseReasonerTest.getReasoner();
+    	satisfiablity();
+    }
+	
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.1  2007-08-08 10:57:58  graham
+ * Second stage of refactoring unit tests
+ *
  * Revision 1.2  2007-06-19 09:56:24  graham
  * intial steps to refactoring test suites
  *

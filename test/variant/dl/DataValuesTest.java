@@ -16,7 +16,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  */
-package framework.normalization;
+package variant.dl;
 
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -26,10 +26,15 @@ import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.semanticweb.owl.model.OWLOntology;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.impl.DLBasedWSMLReasoner;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.serializer.owl.OWLSerializer;
 import org.wsml.reasoner.serializer.owl.OWLSerializerImpl;
+
+import framework.normalization.BaseNormalizationTest;
+
+import base.BaseReasonerTest;
 
 
 /**
@@ -40,6 +45,8 @@ import org.wsml.reasoner.serializer.owl.OWLSerializerImpl;
 public class DataValuesTest extends BaseNormalizationTest {
 
 	protected DLBasedWSMLReasoner dlReasoner;
+	
+	protected BuiltInReasoner previous;
 	
 	protected OWLSerializer serializer;
 	
@@ -61,6 +68,7 @@ public class DataValuesTest extends BaseNormalizationTest {
         ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));
         axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom" + System.currentTimeMillis()));
         ontology.addAxiom(axiom);
+        previous = BaseReasonerTest.reasoner;
         dlReasoner = new DLBasedWSMLReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET, 
         		new WSMO4JManager());
         serializer = new OWLSerializerImpl();
@@ -71,6 +79,7 @@ public class DataValuesTest extends BaseNormalizationTest {
 
     protected void tearDown() throws Exception {
         super.tearDown();
+        BaseReasonerTest.reasoner = previous;
         ontology = null;
         owlOntology = null;
         System.gc();

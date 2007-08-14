@@ -29,6 +29,7 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -48,7 +49,7 @@ import base.BaseReasonerTest;
  * 
  * @author Holger lausen
  * 
- * @version $Revision: 1.1 $ $Date: 2007-08-08 10:57:58 $
+ * @version $Revision: 1.2 $ $Date: 2007-08-14 16:53:35 $
  */
 public class SubConceptOfTest extends BaseReasonerTest {
     Parser parser;
@@ -56,11 +57,11 @@ public class SubConceptOfTest extends BaseReasonerTest {
     WsmoFactory wsmoFactory;
     WSMLReasoner reasoner;
     
-    public void setUp(){
+    public void setUp() throws Exception{
+    	super.setUp();
         parser = Factory.createParser(null);
         leFactory = Factory.createLogicalExpressionFactory(null);
         wsmoFactory = Factory.createWsmoFactory(null);
-
         reasoner = BaseReasonerTest.getReasoner();
     }
 
@@ -88,7 +89,7 @@ public class SubConceptOfTest extends BaseReasonerTest {
 //        assertEquals(1,result.size());
 //    }
     
-    public void testConstraint() throws Exception {
+    public void constraintViolationCheck() throws Exception {
 
         String test = "namespace { _\"i:\"} \n" +
                 "ontology simpsons \n" +
@@ -116,13 +117,19 @@ public class SubConceptOfTest extends BaseReasonerTest {
         //assertEquals(1,result.size());
     }
     
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(SubConceptOfTest.suite());
+    public void testFlightReasoners() throws Exception{
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
+    	reasoner = BaseReasonerTest.getReasoner();
+    	constraintViolationCheck();
+    	
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
+    	reasoner = BaseReasonerTest.getReasoner();
+    	constraintViolationCheck();
+    	
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.KAON2;
+    	reasoner = BaseReasonerTest.getReasoner();
+    	constraintViolationCheck();
     }
 
-    public static Test suite() {
-        Test test = new junit.extensions.TestSetup(new TestSuite(SubConceptOfTest.class)) {};
-        return test;
-    }
 
 }

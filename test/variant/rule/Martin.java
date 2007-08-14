@@ -18,12 +18,8 @@
  */
 package variant.rule;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
@@ -31,7 +27,7 @@ import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
-import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
@@ -47,17 +43,21 @@ public class Martin extends BaseReasonerTest {
     LogicalExpressionFactory leFactory;
     WsmoFactory wsmoFactory;
     WSMLReasoner reasoner;
+    BuiltInReasoner previous;
     
     public void setUp(){
         parser = Factory.createParser(null);
-       
         leFactory = Factory.createLogicalExpressionFactory(null);
-        
         wsmoFactory = Factory.createWsmoFactory(null);
-        
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,WSMLReasonerFactory.BuiltInReasoner.MINS);
-        reasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLRuleReasoner(params);
+        previous = BaseReasonerTest.reasoner;
+        BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
+        reasoner = BaseReasonerTest.getReasoner();
+    }
+    
+    @Override
+    protected void tearDown() throws Exception {
+    	super.tearDown();
+    	BaseReasonerTest.reasoner = previous;
     }
 
     /**
@@ -85,15 +85,6 @@ public class Martin extends BaseReasonerTest {
     private String getOntHeader(){
     	return "namespace {_\"urn:foo\"} ontology bar"+System.currentTimeMillis()+" \n";
     }
-    
-    
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(Martin.suite());
-    }
-
-    public static Test suite() {
-        Test test = new junit.extensions.TestSetup(new TestSuite(Martin.class)) {};
-        return test;
-    }
+   
 
 }

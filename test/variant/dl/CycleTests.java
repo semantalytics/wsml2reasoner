@@ -7,10 +7,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import junit.framework.TestCase;
+
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.WSMLDLReasoner;
-import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
@@ -20,8 +21,6 @@ import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
 import base.BaseReasonerTest;
-
-import junit.framework.TestCase;
 
 public class CycleTests extends TestCase {
 
@@ -33,6 +32,8 @@ public class CycleTests extends TestCase {
 	
 	private WSMLDLReasoner wsmlReasoner = null;
 	
+	private BuiltInReasoner previous;
+	
 	private Parser parser = null;
 	
     private Map<String, Object> params = null;
@@ -41,6 +42,7 @@ public class CycleTests extends TestCase {
 		super.setUp();
 		WSMO4JManager wsmoManager = new WSMO4JManager();
         wsmoFactory = wsmoManager.getWSMOFactory();
+        previous = BaseReasonerTest.reasoner;
         wsmlReasoner = null;
 		parser = Factory.createParser(null);
 		params = new HashMap<String, Object>();
@@ -54,6 +56,7 @@ public class CycleTests extends TestCase {
         wsmlReasoner=null;
         parser=null;
         ontology=null;
+        BaseReasonerTest.reasoner = previous;
         System.gc();
     }
 	

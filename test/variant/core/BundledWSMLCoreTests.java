@@ -1,6 +1,5 @@
 package variant.core;
 
-import open.SimpleGraph2;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -16,7 +15,8 @@ public class BundledWSMLCoreTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test suite for the WSML-Core variant");
 		//$JUnit-BEGIN$
-		suite.addTest(SimpleGraph.suite());
+		suite.addTestSuite(SimpleGraph.class);
+		suite.addTestSuite(CyclicalImportsTest.class);
 		//$JUnit-END$
 		return suite;
 	}

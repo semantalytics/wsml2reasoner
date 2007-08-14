@@ -22,12 +22,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.WSMLReasoner;
-import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.Factory;
 import org.wsmo.wsml.Parser;
@@ -45,15 +44,25 @@ import base.BaseReasonerTest;
 public class ReasonerCreationTest extends BaseReasonerTest {
 
 	private WSMLReasoner wsmlReasoner;
+	
+	private BuiltInReasoner previous;
 
     private Parser parser; 
 	
 	protected void setUp() throws Exception {
 		super.setUp();
+		previous = BaseReasonerTest.reasoner;
 		parser = Factory.createParser(null);
 	}
 	
-	public void testReasonerCreation() throws Exception {
+	 @Override
+	protected void tearDown() throws Exception {
+		// TODO Auto-generated method stub
+		super.tearDown();
+		BaseReasonerTest.reasoner = previous;
+	}
+	
+	public void dlReasonerCreation() throws Exception {
 		
 		/*----------------------- register wsml dl ontology --------------------*/
 		
@@ -65,37 +74,63 @@ public class ReasonerCreationTest extends BaseReasonerTest {
         Ontology ontology = (Ontology)parser.parse(new InputStreamReader(is))[0]; 
 		
         // create wsml reasoner and register ontology
-        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLReasoner(ontology);
         wsmlReasoner.registerOntology(ontology); 
         
         System.out.println("\n--------------------------------------------------------------------");
-        System.out.println("DL Reasoning: instances ");
+        System.out.println("DL Reasoning: Registered - Instances ");
         System.out.println("--------------------------------------------------------------------");
         Set<Instance> set = wsmlReasoner.getAllInstances((IRI) ontology.getIdentifier());
         for (Instance instance : set) {
         	System.out.println(instance.getIdentifier().toString());
         }
         
-        /*--------------------- register wsml flight ontology -------------------*/
+        wsmlReasoner.deRegisterOntology((IRI) ontology.getIdentifier());
+        
+	}
+	
+	public void datalogReasonerCreation() throws Exception {
 		
-        // read test file and parse it 
-        is = this.getClass().getClassLoader().getResourceAsStream(
+		/*----------------------- register wsml dl ontology --------------------*/
+		
+		// read test file and parse it 
+        InputStream is = this.getClass().getClassLoader().getResourceAsStream(
                 "files/simpsons.wsml");
         assertNotNull(is);
         // assuming first topentity in file is an ontology  
-        ontology = (Ontology)parser.parse(new InputStreamReader(is))[0]; 
+        Ontology ontology = (Ontology)parser.parse(new InputStreamReader(is))[0]; 
 
         // create wsml reasoner and register ontology
-        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLReasoner(ontology);
+        //wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLReasoner(ontology);
         wsmlReasoner.registerOntology(ontology);       
         
         System.out.println("\n--------------------------------------------------------------------");
-        System.out.println("Datalog Reasoning: registered ");
+        System.out.println("Datalog Reasoning: Registered - Instances");
         System.out.println("--------------------------------------------------------------------");
-        set = wsmlReasoner.getAllInstances((IRI) ontology.getIdentifier());
+        Set<Instance> set = wsmlReasoner.getAllInstances((IRI) ontology.getIdentifier());
         for (Instance instance : set) {
         	System.out.println(instance.getIdentifier().toString());
         }
+        
+        wsmlReasoner.deRegisterOntology((IRI) ontology.getIdentifier());
 	}
+	
+    public void testReasonerCreation() throws Exception{
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
+    	wsmlReasoner = BaseReasonerTest.getReasoner();
+    	datalogReasonerCreation();
+    	
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
+    	wsmlReasoner = BaseReasonerTest.getReasoner();
+    	datalogReasonerCreation();
+    	
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.KAON2;
+    	wsmlReasoner = BaseReasonerTest.getReasoner();
+    	datalogReasonerCreation();
+//    	dlReasonerCreation();
+    	
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.PELLET;
+    	wsmlReasoner = BaseReasonerTest.getReasoner();
+    	dlReasonerCreation();
+    }
 	
 }

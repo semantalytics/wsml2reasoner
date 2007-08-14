@@ -16,7 +16,7 @@ public class BundledWSMLRuleTests {
 		TestSuite suite = new TestSuite("Test suite for WSML-Rule variant");
 		//$JUnit-BEGIN$
 		suite.addTest(FunctionSymbolsTest.suite());
-		suite.addTest(Martin.suite());
+		suite.addTestSuite(Martin.class);
 		//$JUnit-END$
 		return suite;
 	}
