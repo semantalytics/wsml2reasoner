@@ -23,13 +23,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLFlightReasoner;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsmo.common.IRI;
 
 import base.BaseReasonerTest;
@@ -37,26 +35,14 @@ import base.BaseReasonerTest;
 public class DogsworldTest extends BaseReasonerTest {
     private static final String NS = "urn:dogsworld#";
     private static final String ONTOLOGY_FILE = "files/dogsworld.wsml";
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(DogsworldTest.suite());
-    }
-
-    public static Test suite() {
-        Test test = new junit.extensions.TestSetup(new TestSuite(
-                DogsworldTest.class)) {
-            protected void setUp() throws Exception {
-                setupScenario(ONTOLOGY_FILE);
-             }
-
-            protected void tearDown() throws Exception {
-                System.out.println("Finished!");
-            }
-        };
-        return test;
+    
+    @Override
+    protected void setUp() throws Exception {
+    	super.setUp();
+    	setupScenario(ONTOLOGY_FILE);
     }
     
-    public void testSubconceptsOfMammal() throws Exception {
+    public void subconceptsOfMammal() throws Exception {
         String query = "?x subConceptOf Mammal";
         Set<Map<Variable,Term>> expected = new HashSet<Map<Variable,Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -71,16 +57,33 @@ public class DogsworldTest extends BaseReasonerTest {
         performQuery(query, expected);
     }
     
-    public void testConsistency() throws Exception {
+    public void consistencyChecker() throws Exception {
         assertTrue(((WSMLFlightReasoner)wsmlReasoner).isSatisfiable((IRI)o.getIdentifier()));
     }
 
 
 
-    public void testAnneCatOwner() throws Exception {
+    public void instanceRetrieval() throws Exception {
         String query = "Anne memberOf CatOwner";
         LogicalExpression qExpression = leFactory.createLogicalExpression(query, o);
         assertTrue(wsmlReasoner.executeGroundQuery((IRI)o.getIdentifier(), qExpression));
+    }
+    
+    public void testFlightReasoners() throws Exception{
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
+    	subconceptsOfMammal();
+    	consistencyChecker();
+    	instanceRetrieval();
+    	
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
+    	subconceptsOfMammal();
+    	consistencyChecker();
+    	instanceRetrieval();
+    	
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.KAON2;
+    	subconceptsOfMammal();
+    	consistencyChecker();
+    	instanceRetrieval();
     }
 
 }

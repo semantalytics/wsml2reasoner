@@ -57,6 +57,8 @@ public class DLSimpleInferenceTests extends BaseReasonerTest {
 	private LogicalExpressionFactory leFactory = null;
 
     private WSMLReasoner wsmlReasoner = null;
+    
+    private BuiltInReasoner previous;
 
     private Parser parser = null;
     
@@ -71,6 +73,7 @@ public class DLSimpleInferenceTests extends BaseReasonerTest {
 		WSMO4JManager wsmoManager = new WSMO4JManager();
         wsmoFactory = wsmoManager.getWSMOFactory();
         leFactory = wsmoManager.getLogicalExpressionFactory();
+        previous = BaseReasonerTest.reasoner;
         wsmlReasoner = null;
 		parser = Factory.createParser(null);
 		params = new HashMap<String, Object>();
@@ -85,6 +88,7 @@ public class DLSimpleInferenceTests extends BaseReasonerTest {
         wsmlReasoner=null;
         parser=null;
         ontology=null;
+        BaseReasonerTest.reasoner = previous;
         System.gc();
     }
 	
@@ -494,6 +498,9 @@ public class DLSimpleInferenceTests extends BaseReasonerTest {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.1  2007-08-10 17:20:19  graham
+ * Bundled and refactored variant specific tests
+ *
  * Revision 1.1  2007-08-08 10:58:02  graham
  * Second stage of refactoring unit tests
  *

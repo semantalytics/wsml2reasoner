@@ -16,7 +16,6 @@ public class BundledDatatypeTests {
 		TestSuite suite = new TestSuite("Test suite for datatypes");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(AttributeRangeTest.class);
-		suite.addTestSuite(Boolean.class);
 		//$JUnit-END$
 		return suite;
 	}

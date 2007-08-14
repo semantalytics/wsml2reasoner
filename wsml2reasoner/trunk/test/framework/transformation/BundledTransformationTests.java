@@ -1,6 +1,6 @@
 package framework.transformation;
 
-import framework.normalization.DataValuesTest;
+import variant.dl.DataValuesTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 

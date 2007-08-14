@@ -23,11 +23,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
 
 import base.BaseReasonerTest;
 
@@ -35,32 +33,25 @@ public class SimpleGraph extends BaseReasonerTest {
 
     private static final String NS = "http://www.example.org/example/#";
 
-    private static final String ONTOLOGY_FILE = "files/simple-graph.wsml";
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(SimpleGraph.suite());
+    private static final String ONTOLOGY_FILE = "test/files/simple-graph.wsml";
+    
+    @Override
+    protected void setUp() throws Exception {
+    	super.setUp();
+    	setupScenario(ONTOLOGY_FILE);
     }
-
-    public static Test suite() {
-        Test test = new junit.extensions.TestSetup(new TestSuite(
-                SimpleGraph.class)) {
-            protected void setUp() throws Exception {
-                setupScenario(ONTOLOGY_FILE);
-            }
-
-            protected void tearDown() throws Exception {
-                System.out.println("Finished!");
-            }
-        };
-        return test;
+    
+    @Override
+    protected void tearDown() throws Exception {
+    	// TODO Auto-generated method stub
+    	super.tearDown();
     }
-
     /**
      * MINS BUG HERE! if one rewrites the query to
      * path(?n,?y) and  ?y=f
      * @throws Exception
      */
-    public void testElementsConnectedWithF() throws Exception {
+    public void elementsConnectedWithF() throws Exception {
         String query = "path(?n,f)";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -92,7 +83,7 @@ public class SimpleGraph extends BaseReasonerTest {
 
     }
 
-    public void testConnectedPairs() throws Exception {
+    public void connectedPairs() throws Exception {
         String query = "path(?n1,?n2)";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         addTwoVariableResult(expected, "a", "a"); 
@@ -146,6 +137,24 @@ public class SimpleGraph extends BaseReasonerTest {
         binding.put(leFactory.createVariable("n2"), wsmoFactory.createIRI(NS
                 + v2value));
         expected.add(binding);
+    }
+    
+    public void testAllReasoners() throws Exception{
+//    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
+//    	elementsConnectedWithF();
+//    	connectedPairs();
+//    	
+//    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
+//    	elementsConnectedWithF();
+//    	connectedPairs();
+//    	
+//    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.KAON2;
+//    	elementsConnectedWithF();
+//    	connectedPairs();
+    	
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.PELLET;
+    	elementsConnectedWithF();
+    	connectedPairs();
     }
 
 }

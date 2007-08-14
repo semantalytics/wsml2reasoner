@@ -36,12 +36,16 @@ import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
+import base.BaseReasonerTest;
 
-public class DLOntologyRegistrationTest extends TestCase {
+
+public class DLOntologyRegistrationTest extends BaseReasonerTest {
 
 	private WsmoFactory wsmoFactory = null;
 	
     private WSMLReasoner wsmlReasoner = null;
+    
+    private BuiltInReasoner previous;
 
     private Parser parser = null; 
     
@@ -51,6 +55,7 @@ public class DLOntologyRegistrationTest extends TestCase {
 		super.setUp();
 		WSMO4JManager wsmoManager = new WSMO4JManager();
         wsmoFactory = wsmoManager.getWSMOFactory();
+        previous = BaseReasonerTest.reasoner;
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLDLReasoner();
 		parser = Factory.createParser(null);
 		params = new HashMap<String, Object>();
@@ -63,6 +68,7 @@ public class DLOntologyRegistrationTest extends TestCase {
         wsmoFactory=null;
         wsmlReasoner=null;
         parser=null;
+        BaseReasonerTest.reasoner = previous;
         System.gc();
     }
 	
