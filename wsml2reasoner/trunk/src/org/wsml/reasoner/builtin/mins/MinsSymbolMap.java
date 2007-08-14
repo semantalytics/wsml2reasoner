@@ -209,6 +209,7 @@ public class MinsSymbolMap {
     				(IRI)id,termList);
     		
     	}else if (term.isStringTerm()){
+    		// Although wsml2reasoner seems to send MINS BooleanTerms,
     		// MINS returns boolean values as StringTerms instead of BooleanTerms
     		if (term.toString().contains("boolean")) {
     			if (term.toString().contains("true")) {
@@ -231,13 +232,16 @@ public class MinsSymbolMap {
             }
             org.deri.mins.terms.NumTerm numTerm = (org.deri.mins.terms.NumTerm)term;
             return wsmoManager.getDataFactory().createWsmlDecimal(term.toString());
+            // Although wsml2reasoner seems to send MINS BooleanTerms,
+    		// MINS returns boolean values as StringTerms instead of BooleanTerms
+            // and this else if is never reached?
         }else if (term instanceof BooleanTerm){
             boolean value = ((BooleanTerm)term).getValue();
             return wsmoManager.getDataFactory().createWsmlBoolean(
                     value);
         }else 
-        System.err.println("ERROR UNKOWN MINS TERM: "+term+" "+term.getClass());
-        return wsmoManager.getDataFactory().createWsmlString("unkown");
+        System.err.println("ERROR - UNKNOWN MINS TERM: "+term+" "+term.getClass());
+        return wsmoManager.getDataFactory().createWsmlString("unknown");
         //throw new RuntimeException("Unknown Term Symbol:"+term);
     }
 }
