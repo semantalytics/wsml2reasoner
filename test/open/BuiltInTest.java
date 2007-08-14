@@ -31,6 +31,12 @@ import org.omwg.ontology.Variable;
 
 import base.BaseReasonerTest;
 
+/**
+ * Lots of problems....
+ * @author grahen
+ *
+ */
+
 public class BuiltInTest extends BaseReasonerTest {
     private static final String NS = "http://www.example.org#datatypes/";
 
@@ -73,6 +79,8 @@ public class BuiltInTest extends BaseReasonerTest {
      * there is somewhere a bug that does not distinguish in the
      * translation that test2 of arity 1 is a different predicate then test2
      * of arity 2
+     * 
+     * Test should perhaps be changed ~ shouldn't the expected result be 0?
      */
     public void testPreserveTypeAfterOperation2() throws Exception {
 
@@ -104,6 +112,10 @@ public class BuiltInTest extends BaseReasonerTest {
      * this does not work probably becuase mins does not evaluate the
      * Buildin for some reason....
      * @throws Exception
+     * 
+     * Shouldn't the result
+     * 
+     * 
      */
     public void testPreserveTypeAfterOperationwithPredicates() throws Exception {
 
