@@ -15,7 +15,6 @@ import junit.framework.TestSuite;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 
-import variant.flight.DogsworldTest;
 import base.BaseReasonerTest;
 
 /*
@@ -29,7 +28,7 @@ public class SubConceptOfSemanticsTest extends BaseReasonerTest {
     
    
     public static void main(String[] args) {
-        junit.textui.TestRunner.run(DogsworldTest.suite());
+        junit.textui.TestRunner.run(SubConceptOfSemanticsTest.suite());
     }
 
     public static Test suite() {
