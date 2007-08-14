@@ -27,10 +27,10 @@
 	<classpathentry kind="lib" path="lib/ext/JFreeChart/gnujaxp.jar"/>
 	<classpathentry kind="lib" path="lib/ext/JFreeChart/itext-2.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/ext/JFreeChart/jcommon-1.0.10.jar"/>
-	<classpathentry kind="lib" path="lib/ext/JFreeChart/jfreechart-1.0.6.jar" sourcepath="lib/ext/JFreeChart/source.zip"/>
+	<classpathentry kind="lib" path="lib/ext/JFreeChart/jfreechart-1.0.6.jar"/>
 	<classpathentry kind="lib" path="lib/ext/JFreeChart/swtgraphics2d.jar"/>
-	<classpathentry kind="lib" path="lib/ext/mins/mins_27_06_2007.jar" sourcepath="/mins"/>
 	<classpathentry kind="lib" path="lib/ext/kaon2/kaon2.jar"/>
 	<classpathentry kind="lib" path="lib/ext/iris/iris-20070716.jar"/>
+	<classpathentry kind="lib" path="C:/mins20070814.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

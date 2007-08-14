@@ -63,25 +63,25 @@ public class CyclicalImportsTest extends BaseReasonerTest {
         if (BaseReasonerTest.reasoner.equals(WSMLReasonerFactory.BuiltInReasoner.PELLET)){
         	int i = 0; //indicates DL instance retrieval
         	performDLQuery(i, concept, expected);
-        }
-        else performQuery(query, expected);
+        } else performQuery(query, expected);
+        
         System.out.println("Finished query.");
     }
     
     
     
     public void testAllReasoners() throws Exception{
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
-    	//cyclicalImports4Datalog();
-    	cyclicalImports();
-    	
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
-    	//cyclicalImports4Datalog();
-    	cyclicalImports();
-    	
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.KAON2;
-    	//cyclicalImports4Datalog();
-    	cyclicalImports();
+//    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
+//    	//cyclicalImports4Datalog();
+//    	cyclicalImports();
+//    	
+//    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
+//    	//cyclicalImports4Datalog();
+//    	cyclicalImports();
+//    	
+//    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.KAON2;
+//    	//cyclicalImports4Datalog();
+//    	cyclicalImports();
     	
     	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.PELLET;
     	cyclicalImports();
