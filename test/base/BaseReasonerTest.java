@@ -27,6 +27,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,6 +36,7 @@ import junit.framework.TestCase;
 import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
@@ -58,8 +60,8 @@ public class BaseReasonerTest extends TestCase {
     //CHANGE HERE TO CHECK DIFFERENT REASONERS!
     public static WSMLReasonerFactory.BuiltInReasoner reasoner =
 //    	WSMLReasonerFactory.BuiltInReasoner.KAON2;
-    	WSMLReasonerFactory.BuiltInReasoner.IRIS;
-//    	WSMLReasonerFactory.BuiltInReasoner.MINS;
+//    	WSMLReasonerFactory.BuiltInReasoner.IRIS;
+    	WSMLReasonerFactory.BuiltInReasoner.MINS;
     	
     //CHANGE HERE TO CHECK DIFFERENT EVALUATION METHODS-
     //IS ALSO SET FROM BUNDLED VARIANT TEST SUITES
@@ -93,6 +95,12 @@ public class BaseReasonerTest extends TestCase {
         //System.out.println("Eval Method: " + evalMethod);
         params.put(WSMLReasonerFactory.PARAM_EVAL_METHOD,evalMethod);
         params.put(WSMLReasonerFactory.PARAM_ALLOW_IMPORTS,allowImports);
+        
+        /**
+         * This IF should be changed:
+         * KAON2 can also handle DL reasoning
+         * DL reasoning should be handled by
+         */
         if(reasoner.equals(WSMLReasonerFactory.BuiltInReasoner.IRIS) |
         		reasoner.equals(WSMLReasonerFactory.BuiltInReasoner.KAON2)){
         	wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
@@ -169,8 +177,45 @@ public class BaseReasonerTest extends TestCase {
                     result, binding));
         }
     }
+    
+    protected void performDLQuery(int i, String concept, Set<Map<Variable, Term>> expected)
+    	throws Exception {
+    	switch(i){
+    	//0 = instance retrieval... ok, not really reasoning, but...
+    	case 0:
+    		Set<Instance> result = wsmlReasoner.getInstances((IRI) o.getIdentifier(), 
+    				wsmoFactory.createConcept(
+    				wsmoFactory.createIRI(concept)));
+    		System.out.println("Found < " + result.size()
+    		        + " > results to the query:");
+    		for (Instance instance : result){
+            	System.out.println(((IRI) instance.getIdentifier()).getLocalName().toString());
+    		}
+    		assertEquals(expected.size(), result.size());
+//    		for (Map<Variable, Term> binding : expected) {
+//    		    assertTrue("Result does not contain instance: " + binding.get(this), binding.containsValue(instance););
+//    		}
+    	}
+    }
+    
+//
+//    private boolean instanceCheckerDL(Set<Instance> result, Map<Variable, Term> binding) {
+//    	 boolean contains = false;
+//    	 for (Instance instance : result) {
+//             boolean containsAll = true;
+//             for (Term term : binding.keySet()) {
+//                 containsAll = (boolean)binding.get(term).equals(instance);
+//                 binding.containsValue(instance);
+//             }
+//             if (containsAll) {
+//                 contains = true;
+//                 break;
+//             }
+//         }
+//		return contains;
+//	}
 
-    /**
+	/**
      * Checks whether there is a binding in result which contains all of the
      * variable bindings of expected
      * 
