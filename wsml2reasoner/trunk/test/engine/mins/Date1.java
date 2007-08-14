@@ -53,7 +53,7 @@ import base.BaseReasonerTest;
  * 
  * @author Holger lausen
  * 
- * @version $Revision: 1.1 $ $Date: 2007-08-10 17:17:15 $
+ * @version $Revision: 1.2 $ $Date: 2007-08-14 16:50:40 $
  */
 public class Date1 extends BaseReasonerTest {
     Parser parser;
@@ -115,6 +115,35 @@ public class Date1 extends BaseReasonerTest {
         assertEquals(wsmoFactory.createIRI(ns+"a"),
                 m.get(leFactory.createVariable("a")));
     }
+    
+    public void testSimpleDate2() throws Exception {
+        String ns = "urn:datetest#";
+        String test = "namespace _\""+ns+"\" \n" +
+                "ontology o1 \n" +
+                "axiom a definedBy \n" +
+                "a(_date(2002,2,22)). \n " +
+                ""; 
+
+        Ontology o = (Ontology) parser.parse(new StringBuffer(test))[0];
+        Set<Map<Variable, Term>> result = null;
+        LogicalExpression query ;
+        reasoner.registerOntology(o);
+
+        query = leFactory.createLogicalExpression("a(?y)", o);
+        result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
+        assertEquals(1,result.size());
+        Map<Variable,Term> m =result.iterator().next();
+        System.out.println(m.get(leFactory.createVariable("y")));
+        assertEquals(dFactory.createDataValue(
+                (ComplexDataType)dFactory.createWsmlDataType(ComplexDataType.WSML_DATE), 
+                new SimpleDataValue[]{
+                        dFactory.createWsmlInteger("2002"),
+                        dFactory.createWsmlInteger("2"),
+                        dFactory.createWsmlInteger("22"),
+                }),
+                m.get(leFactory.createVariable("y")));
+    }
+    
     
     
     public static void main(String[] args) {
