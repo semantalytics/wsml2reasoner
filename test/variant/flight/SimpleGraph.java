@@ -16,7 +16,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  */
-package variant.core;
+package variant.flight;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,6 +26,7 @@ import java.util.Set;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 
 import base.BaseReasonerTest;
 
@@ -35,22 +36,22 @@ public class SimpleGraph extends BaseReasonerTest {
 
     private static final String ONTOLOGY_FILE = "test/files/simple-graph.wsml";
     
+    BuiltInReasoner previous;
+    
     @Override
     protected void setUp() throws Exception {
     	super.setUp();
     	setupScenario(ONTOLOGY_FILE);
+    	previous =  BaseReasonerTest.reasoner;     
     }
     
     @Override
     protected void tearDown() throws Exception {
-    	// TODO Auto-generated method stub
     	super.tearDown();
+    	resetReasoner(previous);
+        System.gc();
     }
-    /**
-     * MINS BUG HERE! if one rewrites the query to
-     * path(?n,?y) and  ?y=f
-     * @throws Exception
-     */
+  
     public void elementsConnectedWithF() throws Exception {
         String query = "path(?n,f)";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
@@ -140,21 +141,18 @@ public class SimpleGraph extends BaseReasonerTest {
     }
     
     public void testAllReasoners() throws Exception{
-//    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
-//    	elementsConnectedWithF();
-//    	connectedPairs();
-//    	
-//    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
-//    	elementsConnectedWithF();
-//    	connectedPairs();
-//    	
-//    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.KAON2;
-//    	elementsConnectedWithF();
-//    	connectedPairs();
-    	
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.PELLET;
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
     	elementsConnectedWithF();
     	connectedPairs();
+    	
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
+    	elementsConnectedWithF();
+    	connectedPairs();
+    	
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+    	elementsConnectedWithF();
+    	connectedPairs();
+
     }
 
 }

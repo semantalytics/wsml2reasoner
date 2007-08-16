@@ -32,9 +32,8 @@ import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.serializer.owl.OWLSerializer;
 import org.wsml.reasoner.serializer.owl.OWLSerializerImpl;
 
-import framework.normalization.BaseNormalizationTest;
-
 import base.BaseReasonerTest;
+import framework.normalization.BaseNormalizationTest;
 
 
 /**
@@ -79,7 +78,7 @@ public class DataValuesTest extends BaseNormalizationTest {
 
     protected void tearDown() throws Exception {
         super.tearDown();
-        BaseReasonerTest.reasoner = previous;
+        BaseReasonerTest.resetReasoner(previous);
         ontology = null;
         owlOntology = null;
         System.gc();

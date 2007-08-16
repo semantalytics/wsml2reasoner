@@ -1,11 +1,11 @@
 package base;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
 import variant.core.BundledWSMLCoreTests;
 import variant.dl.BundledWSMLDLTests;
 import variant.flight.BundledWSMLFlightTests;
 import variant.rule.BundledWSMLRuleTests;
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 public class RunVariantTests {
 

@@ -45,13 +45,13 @@ public class MaciejVTABug2 extends BaseReasonerTest {
     }
     
     public void testFlightReasoners() throws Exception{
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
     	memberOfQuery();
     	
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
     	memberOfQuery();
     	
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.KAON2;
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
     	memberOfQuery();
 
     }

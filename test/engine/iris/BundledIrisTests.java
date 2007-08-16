@@ -1,8 +1,5 @@
 package engine.iris;
 
-import org.wsml.reasoner.api.WSMLReasonerFactory;
-
-import base.BaseReasonerTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 

@@ -46,7 +46,7 @@ import base.BaseReasonerTest;
  * 
  * @author Holger lausen
  * 
- * @version $Revision: 1.1 $ $Date: 2007-08-14 16:53:35 $
+ * @version $Revision: 1.2 $ $Date: 2007-08-16 18:22:43 $
  */
 public class Boolean extends BaseReasonerTest {
     Parser parser;
@@ -68,7 +68,7 @@ public class Boolean extends BaseReasonerTest {
     @Override
     protected void tearDown() throws Exception {
     	super.tearDown();
-    	BaseReasonerTest.reasoner = previous;
+    	resetReasoner(previous);
     }
     /**
      * 
@@ -85,7 +85,8 @@ public class Boolean extends BaseReasonerTest {
 
         Ontology o = (Ontology) parser.parse(new StringBuffer(test))[0];
         Set<Map<Variable, Term>> result = null;
-        LogicalExpression query ;
+        LogicalExpression query;
+        reasoner = BaseReasonerTest.getReasoner();
         reasoner.registerOntology(o);
 
         query = leFactory.createLogicalExpression("a[f hasValue ?y]", o);
@@ -114,16 +115,13 @@ public class Boolean extends BaseReasonerTest {
     }
     
     public void testFlightReasoners() throws Exception{
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
-    	reasoner = BaseReasonerTest.getReasoner();
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+    	simpleBoolean();
+
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
     	simpleBoolean();
     	
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
-    	reasoner = BaseReasonerTest.getReasoner();
-    	simpleBoolean();
-    	
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.KAON2;
-    	reasoner = BaseReasonerTest.getReasoner();
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
     	simpleBoolean();
     }
 

@@ -26,6 +26,12 @@ public class DebugTransformationsTest extends BaseNormalizationTest
         debuggingNormalizer = new ConstraintReplacementNormalizer(wmsoManager);
 
     }
+    
+    @Override
+    protected void tearDown() throws Exception {
+    	super.tearDown();
+    }
+    
     public void testAxiomIDGeneration()
     {
         Ontology ontology = null;
@@ -41,11 +47,4 @@ public class DebugTransformationsTest extends BaseNormalizationTest
         normOnt = debuggingNormalizer.normalize(normOnt);
         System.out.println(serializeOntology(normOnt));
     }
-
-    public static void main(String[] args)
-    {
-        // TODO Auto-generated method stub
-
-    }
-
 }

@@ -1,9 +1,9 @@
 package base;
 
-import engine.iris.BundledIrisTests;
-import engine.mins.BundledMinsTests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import engine.iris.BundledIrisTests;
+import engine.mins.BundledMinsTests;
 
 public class RunEngineTests {
 

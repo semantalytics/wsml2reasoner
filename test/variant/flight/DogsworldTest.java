@@ -28,6 +28,7 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLFlightReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsmo.common.IRI;
 
 import base.BaseReasonerTest;
@@ -35,11 +36,20 @@ import base.BaseReasonerTest;
 public class DogsworldTest extends BaseReasonerTest {
     private static final String NS = "urn:dogsworld#";
     private static final String ONTOLOGY_FILE = "files/dogsworld.wsml";
+
+    BuiltInReasoner previous;
     
     @Override
     protected void setUp() throws Exception {
     	super.setUp();
     	setupScenario(ONTOLOGY_FILE);
+    	previous = BaseReasonerTest.reasoner;
+    }
+    
+    @Override
+    protected void tearDown() throws Exception {
+    	super.tearDown();
+    	resetReasoner(previous);
     }
     
     public void subconceptsOfMammal() throws Exception {
@@ -61,8 +71,6 @@ public class DogsworldTest extends BaseReasonerTest {
         assertTrue(((WSMLFlightReasoner)wsmlReasoner).isSatisfiable((IRI)o.getIdentifier()));
     }
 
-
-
     public void instanceRetrieval() throws Exception {
         String query = "Anne memberOf CatOwner";
         LogicalExpression qExpression = leFactory.createLogicalExpression(query, o);
@@ -70,17 +78,17 @@ public class DogsworldTest extends BaseReasonerTest {
     }
     
     public void testFlightReasoners() throws Exception{
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
     	subconceptsOfMammal();
     	consistencyChecker();
     	instanceRetrieval();
     	
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
     	subconceptsOfMammal();
     	consistencyChecker();
     	instanceRetrieval();
     	
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.KAON2;
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
     	subconceptsOfMammal();
     	consistencyChecker();
     	instanceRetrieval();

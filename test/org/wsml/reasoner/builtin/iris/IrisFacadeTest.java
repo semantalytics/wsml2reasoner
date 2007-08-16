@@ -7,9 +7,7 @@ package org.wsml.reasoner.builtin.iris;
 import java.util.Arrays;
 import java.util.TimeZone;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.deri.iris.api.factory.IBasicFactory;
 import org.deri.iris.api.factory.IConcreteFactory;
@@ -19,27 +17,39 @@ import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
 import org.wsml.reasoner.Literal;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
-import org.wsml.reasoner.builtin.iris.IrisFacade;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
+
+import base.BaseReasonerTest;
 
 /**
  * <p>
  * Tests for the iris facade.
  * </p>
  * <p>
- * $Id: IrisFacadeTest.java,v 1.4 2007-08-14 16:53:36 graham Exp $
+ * $Id: IrisFacadeTest.java,v 1.5 2007-08-16 18:22:43 graham Exp $
  * </p>
  * 
  * @author Richard Pöttler, richard dot poettler at deri dot org
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class IrisFacadeTest extends TestCase {
 	
-	public static Test suite() {
-		return new TestSuite(IrisFacadeTest.class, IrisFacadeTest.class
-				.getSimpleName());
+	BuiltInReasoner previous;
+	
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		previous = BaseReasonerTest.reasoner;
+		
+	}
+	
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		BaseReasonerTest.resetReasoner(previous);
+        System.gc();
 	}
 
 	public void testGetTZData() {

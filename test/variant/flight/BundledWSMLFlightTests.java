@@ -17,6 +17,7 @@ public class BundledWSMLFlightTests {
 		//$JUnit-BEGIN$
 		suite.addTestSuite(Boolean.class);
 		suite.addTestSuite(SatisfiablityTest.class);
+		suite.addTestSuite(SimpleGraph.class);
 		suite.addTestSuite(MaciejVTABug2.class);
 		suite.addTestSuite(MaciejVTABug.class);
 		suite.addTestSuite(SubConceptOfTest.class);

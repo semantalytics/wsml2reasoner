@@ -14,9 +14,10 @@ import base.BaseReasonerTest;
 
 public class CyclicalImportsTest extends BaseReasonerTest {
 	
-    private static final String ONTOLOGY_FILE = "test/files/CyclicalImports1.wsml";
+    private static final String ONTOLOGY_FILE = "files/CyclicalImports1.wsml";
     
     String ns = "http://here.comes.the.whistleman/CyclicalImports1#";
+    String ns2 = "http://here.comes.the.whistleman/CyclicalImports2#";
 
     BuiltInReasoner previous;
 
@@ -29,18 +30,31 @@ public class CyclicalImportsTest extends BaseReasonerTest {
 
     protected void tearDown() throws Exception {
     	super.tearDown();
-    	BaseReasonerTest.reasoner = previous;
+    	resetReasoner(previous);
+        System.gc();
     }
 
     public void cyclicalImports4Datalog() throws Exception {
         String query = "?x memberOf ?z";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
-        binding.put(leFactory.createVariable("x"),  wsmoFactory.createIRI("http://here.comes.the.whistleman/CyclicalImports2#Cy2i1"));
+        binding.put(leFactory.createVariable("x"),  wsmoFactory.createIRI(ns2 + "Cy2i1"));
         binding.put(leFactory.createVariable("z"),  wsmoFactory.createIRI(ns + "Master"));
         expected.add(binding);
         binding.put(leFactory.createVariable("x"),  wsmoFactory.createIRI(ns + "Cy1i1"));
-        binding.put(leFactory.createVariable("z"),  wsmoFactory.createIRI("http://here.comes.the.whistleman/CyclicalImports2#Slave"));
+        binding.put(leFactory.createVariable("z"),  wsmoFactory.createIRI(ns2 + "Slave"));
+        expected.add(binding);
+        binding.put(leFactory.createVariable("x"),  wsmoFactory.createIRI(ns + "RolandKirk"));
+        binding.put(leFactory.createVariable("z"),  wsmoFactory.createIRI(ns + "JazzMusician"));
+        expected.add(binding);
+        binding.put(leFactory.createVariable("x"),  wsmoFactory.createIRI(ns + "JohnScofield"));
+        binding.put(leFactory.createVariable("z"),  wsmoFactory.createIRI(ns + "JazzMusician"));
+        expected.add(binding);
+        binding.put(leFactory.createVariable("x"),  wsmoFactory.createIRI(ns2 + "KarlDenson"));
+        binding.put(leFactory.createVariable("z"),  wsmoFactory.createIRI(ns + "JazzMusician"));
+        expected.add(binding);
+        binding.put(leFactory.createVariable("x"),  wsmoFactory.createIRI(ns2 + "JohnMedeski"));
+        binding.put(leFactory.createVariable("z"),  wsmoFactory.createIRI(ns + "JazzMusician"));
         expected.add(binding);
         performQuery(query, expected);
         System.out.println("Finished query.");
@@ -63,7 +77,8 @@ public class CyclicalImportsTest extends BaseReasonerTest {
         if (BaseReasonerTest.reasoner.equals(WSMLReasonerFactory.BuiltInReasoner.PELLET)){
         	int i = 0; //indicates DL instance retrieval
         	performDLQuery(i, concept, expected);
-        } else performQuery(query, expected);
+        } 
+        else performQuery(query, expected);
         
         System.out.println("Finished query.");
     }
@@ -71,19 +86,19 @@ public class CyclicalImportsTest extends BaseReasonerTest {
     
     
     public void testAllReasoners() throws Exception{
-//    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
-//    	//cyclicalImports4Datalog();
-//    	cyclicalImports();
-//    	
-//    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
-//    	//cyclicalImports4Datalog();
-//    	cyclicalImports();
-//    	
-//    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.KAON2;
-//    	//cyclicalImports4Datalog();
-//    	cyclicalImports();
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+    	cyclicalImports4Datalog();
+    	cyclicalImports();
     	
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.PELLET;
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
+    	cyclicalImports4Datalog();
+    	cyclicalImports();
+    	
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+    	cyclicalImports4Datalog();
+    	cyclicalImports();
+    	
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET);
     	cyclicalImports();
     }
 }

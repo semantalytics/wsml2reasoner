@@ -13,6 +13,7 @@ import org.omwg.ontology.Concept;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.WSMLDLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
+import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
@@ -49,14 +50,15 @@ public class CycleTests extends TestCase {
 	}
 	
 	/**
-     * @see TestCase#tearDown()
+     * @throws InconsistencyException 
+	 * @see TestCase#tearDown()
      */
-    protected void tearDown(){
+    protected void tearDown() throws InconsistencyException{
         wsmoFactory=null;
         wsmlReasoner=null;
         parser=null;
         ontology=null;
-        BaseReasonerTest.reasoner = previous;
+        BaseReasonerTest.resetReasoner(previous);
         System.gc();
     }
 	

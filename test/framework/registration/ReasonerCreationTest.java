@@ -59,7 +59,7 @@ public class ReasonerCreationTest extends BaseReasonerTest {
 	protected void tearDown() throws Exception {
 		// TODO Auto-generated method stub
 		super.tearDown();
-		BaseReasonerTest.reasoner = previous;
+		resetReasoner(previous);
 	}
 	
 	public void dlReasonerCreation() throws Exception {
@@ -74,6 +74,7 @@ public class ReasonerCreationTest extends BaseReasonerTest {
         Ontology ontology = (Ontology)parser.parse(new InputStreamReader(is))[0]; 
 		
         // create wsml reasoner and register ontology
+        wsmlReasoner = BaseReasonerTest.getReasoner();
         wsmlReasoner.registerOntology(ontology); 
         
         System.out.println("\n--------------------------------------------------------------------");
@@ -99,8 +100,7 @@ public class ReasonerCreationTest extends BaseReasonerTest {
         // assuming first topentity in file is an ontology  
         Ontology ontology = (Ontology)parser.parse(new InputStreamReader(is))[0]; 
 
-        // create wsml reasoner and register ontology
-        //wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLReasoner(ontology);
+        wsmlReasoner = BaseReasonerTest.getReasoner();
         wsmlReasoner.registerOntology(ontology);       
         
         System.out.println("\n--------------------------------------------------------------------");
@@ -115,21 +115,17 @@ public class ReasonerCreationTest extends BaseReasonerTest {
 	}
 	
     public void testReasonerCreation() throws Exception{
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
-    	wsmlReasoner = BaseReasonerTest.getReasoner();
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
     	datalogReasonerCreation();
     	
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
-    	wsmlReasoner = BaseReasonerTest.getReasoner();
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
     	datalogReasonerCreation();
     	
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.KAON2;
-    	wsmlReasoner = BaseReasonerTest.getReasoner();
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
     	datalogReasonerCreation();
 //    	dlReasonerCreation();
     	
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.PELLET;
-    	wsmlReasoner = BaseReasonerTest.getReasoner();
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET);
     	dlReasonerCreation();
     }
 	

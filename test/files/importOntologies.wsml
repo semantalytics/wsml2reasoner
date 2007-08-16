@@ -5,7 +5,7 @@ and change the path name in importsOntology
 */
 
 
-wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-rule"
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
 
 namespace { _"http://www.importexample.org#",
       dc _"http://purl.org/dc/elements/1.1#"}
