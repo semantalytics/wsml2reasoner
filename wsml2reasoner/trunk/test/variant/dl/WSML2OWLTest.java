@@ -38,8 +38,6 @@ import org.wsmo.wsml.Parser;
 
 import base.BaseReasonerTest;
 
-import framework.normalization.BaseNormalizationTest;
-
 
 
 /**
@@ -86,7 +84,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         super.tearDown();
         ontology = null;
         owlOntology = null;
-        BaseReasonerTest.reasoner = previous;
+        BaseReasonerTest.resetReasoner(previous);
         System.gc();
     }
     
@@ -577,6 +575,9 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2007-08-14 16:53:35  graham
+ * Refactored to allow packaged/bundled unit tests (resets BaseReasonerTest.reasoner in tearDown method)
+ *
  * Revision 1.1  2007-08-10 17:20:18  graham
  * Bundled and refactored variant specific tests
  *

@@ -50,7 +50,7 @@ import base.BaseReasonerTest;
  * @author Nathalie Steinmetz, DERI Innsbruck
  *
  */
-public class DLSimpleInferenceTests extends BaseReasonerTest {
+public class DLSimpleInferenceTests extends TestCase {
 
 	private WsmoFactory wsmoFactory = null;
 	
@@ -80,15 +80,16 @@ public class DLSimpleInferenceTests extends BaseReasonerTest {
 	}
 	
 	/**
-     * @see TestCase#tearDown()
+     * @throws InconsistencyException 
+	 * @see TestCase#tearDown()
      */
-    protected void tearDown(){
+    protected void tearDown() throws InconsistencyException{
         leFactory=null;
         wsmoFactory=null;
         wsmlReasoner=null;
         parser=null;
         ontology=null;
-        BaseReasonerTest.reasoner = previous;
+        BaseReasonerTest.resetReasoner(previous);
         System.gc();
     }
 	
@@ -498,6 +499,9 @@ public class DLSimpleInferenceTests extends BaseReasonerTest {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2007-08-14 16:53:36  graham
+ * Refactored to allow packaged/bundled unit tests (resets BaseReasonerTest.reasoner in tearDown method)
+ *
  * Revision 1.1  2007-08-10 17:20:19  graham
  * Bundled and refactored variant specific tests
  *

@@ -1,11 +1,12 @@
 package base;
 
-import engine.spass.BundledSpassTests;
-import engine.tptp.BundledTPTPTests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import config.ImportOntologyTest;
+import engine.spass.BundledSpassTests;
+import engine.tptp.BundledTPTPTests;
 /**
- * Prior to running tests, 
+ * These tests are dependent upon certain configuration settings
  *
  * @author grahen
  *
@@ -18,10 +19,13 @@ public class RunConfiguredTests {
 
     public static Test suite() {
         TestSuite suite = new TestSuite("Test suite for wsml2reasoner tests with dependencies");
-        // $JUnit-BEGIN$
+        
+        //The following 2 suites are dependent upon a remote reasoner
         suite.addTest(BundledTPTPTests.suite());
         suite.addTest(BundledSpassTests.suite());
-        // $JUnit-END$
+        //Must specify the local path for locator
+        suite.addTestSuite(ImportOntologyTest.class);
+        
         return suite;
     }
 

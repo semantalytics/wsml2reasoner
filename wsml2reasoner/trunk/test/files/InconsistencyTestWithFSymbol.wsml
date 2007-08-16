@@ -6,8 +6,8 @@ ontology fsymbol
 
 
 //if you uncoment this some of the problems disapear
-//concept Concept
-//  attribute ofType OtherConcept
+concept Concept
+  attribute ofType OtherConcept
 
 axiom 
  definedBy

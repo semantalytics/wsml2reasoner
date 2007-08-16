@@ -21,9 +21,6 @@ package variant.flight;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
@@ -49,7 +46,7 @@ import base.BaseReasonerTest;
  * 
  * @author Holger lausen
  * 
- * @version $Revision: 1.2 $ $Date: 2007-08-14 16:53:35 $
+ * @version $Revision: 1.3 $ $Date: 2007-08-16 18:22:43 $
  */
 public class SubConceptOfTest extends BaseReasonerTest {
     Parser parser;
@@ -100,6 +97,8 @@ public class SubConceptOfTest extends BaseReasonerTest {
         
         Ontology ont = (Ontology) parser.parse(new StringBuffer(test))[0];
 
+        reasoner = BaseReasonerTest.getReasoner();
+        
         //String q = "?x memberOf a and ?x[c hasValue?y] and naf ?y memberOf test";
         String q = "?x memberOf super";
         LogicalExpression query = leFactory.createLogicalExpression(
@@ -119,15 +118,12 @@ public class SubConceptOfTest extends BaseReasonerTest {
     
     public void testFlightReasoners() throws Exception{
     	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
-    	reasoner = BaseReasonerTest.getReasoner();
     	constraintViolationCheck();
     	
     	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
-    	reasoner = BaseReasonerTest.getReasoner();
     	constraintViolationCheck();
     	
     	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.KAON2;
-    	reasoner = BaseReasonerTest.getReasoner();
     	constraintViolationCheck();
     }
 

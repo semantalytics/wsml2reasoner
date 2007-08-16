@@ -34,8 +34,6 @@ import org.wsml.reasoner.transformation.dl.WSMLDLLogExprNormalizer;
 import org.wsmo.factory.Factory;
 import org.wsmo.wsml.Parser;
 
-import framework.normalization.BaseNormalizationTest;
-
 public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
 
 	protected Relation2AttributeNormalizer relTransformer;

@@ -7,28 +7,43 @@ import java.util.regex.Pattern;
 
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Ontology;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
-import org.wsmo.factory.*;
+import org.wsmo.factory.Factory;
+import org.wsmo.factory.LogicalExpressionFactory;
+import org.wsmo.factory.WsmoFactory;
 
-import junit.framework.TestCase;
+import base.BaseReasonerTest;
 
 
 /**
  * 
  * Checking if the String transformation is OK!
  */
-public class TPTPTest extends TestCase{
+public class TPTPTest extends BaseReasonerTest{
     
     LogicalExpressionFactory leF = Factory.createLogicalExpressionFactory(null);
     WsmoFactory wsmoF = Factory.createWsmoFactory(null);
     Ontology nsContainer;
     TPTPFacade tptp = new TPTPFacade(new WSMO4JManager(),"urn:foo");
+    BuiltInReasoner previous;
     
     public TPTPTest(){
         IRI i = wsmoF.createIRI("foo:bar#");
         nsContainer = wsmoF.createOntology(i);
         nsContainer.setDefaultNamespace(i);
+    }
+    
+    protected void setUp() throws Exception {
+    	super.setUp();
+        previous =  BaseReasonerTest.reasoner;             
+     }
+
+    protected void tearDown() throws Exception {
+    	super.tearDown();
+    	resetReasoner(previous);
+        System.gc();
     }
     
     public void testatom() throws Exception{

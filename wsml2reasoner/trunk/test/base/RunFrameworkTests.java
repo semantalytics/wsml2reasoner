@@ -1,10 +1,10 @@
 package base;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 import framework.datatypes.BundledDatatypeTests;
 import framework.normalization.BundledNormalizationTests;
 import framework.registration.BundledRegistrationTests;
 import framework.transformation.BundledTransformationTests;
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 public class RunFrameworkTests {
 

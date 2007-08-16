@@ -16,7 +16,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  */
-package open;
+package config;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,15 +26,13 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.Factory;
@@ -46,50 +44,39 @@ import base.BaseReasonerTest;
 
 public class ImportOntologyTest extends BaseReasonerTest {
 
-    public static void main(String[] args) throws Exception {
-        junit.textui.TestRunner.run(ImportOntologyTest.suite());
+	BuiltInReasoner previous;
+
+    protected void setUp() throws Exception {
+    	super.setUp();
+        previous =  BaseReasonerTest.reasoner;             
+     }
+
+    protected void tearDown() throws Exception {
+    	super.tearDown();
+    	resetReasoner(previous);
+        System.gc();
     }
-
-    public static Test suite() {
-        Test test = new junit.extensions.TestSetup(new TestSuite(ImportOntologyTest.class)) {};
-        return test;
+    
+    public void importOntology() throws Exception {
+        String ns = "http://www.importtester.org#";
+        String ONTOLOGY_FILE = "test/files/simpleImportTest.wsml";
+        String query = "?x memberOf c";
+        String concept = ns + "c";
+        
+        setupScenario(ONTOLOGY_FILE);
+        
+        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
+        Map<Variable, Term> binding = new HashMap<Variable, Term>();
+        binding.put(leFactory.createVariable("x"),  wsmoFactory.createIRI(ns + "i1"));
+        expected.add(binding);
+        binding.put(leFactory.createVariable("x"),  wsmoFactory.createIRI(ns + "i2"));
+        expected.add(binding);
+        if (BaseReasonerTest.reasoner.equals(WSMLReasonerFactory.BuiltInReasoner.PELLET)){
+        	int i = 0; //indicates DL instance retrieval
+        	performDLQuery(i, concept, expected);
+        } 
+        else performQuery(query, expected);
     }
-
-    public void testImportOntologyTest() throws Exception {
-        String ns = "http://ex1.org#";
-        String test = "namespace _\""+ns+"\" \n" +
-                "ontology o1 \n" +
-                "importsOntology o2 \n" +
-                "concept c \n" +
-                "instance i1 memberOf c \n " +
-                "ontology o2 \n" +
-                "instance i2 memberOf c \n ";
-        
-        
-        wsmoManager = new WSMO4JManager();
-
-        leFactory = wsmoManager.getLogicalExpressionFactory();
-
-        wsmoFactory = wsmoManager.getWSMOFactory();
-
-        dataFactory = wsmoManager.getDataFactory();
-        
-        Parser wsmlparserimpl = org.wsmo.factory.Factory.createParser(null);
-        
-        Ontology ontology = (Ontology) wsmlparserimpl.parse(new StringBuffer(test))[0];
-        
-        LogicalExpression query = leFactory.createLogicalExpression(
-                "?x memberOf c", ontology);
-        WSMLReasoner reasoner = BaseReasonerTest.getReasoner();
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put(WSMLReasonerFactory.PARAM_ALLOW_IMPORTS, 1);
-        Set<Map<Variable, Term>> result = null;
-        reasoner.registerOntology(ontology);
-        result = reasoner.executeQuery((IRI) ontology.getIdentifier(), query);
-        assertEquals(2, result.size());
-        reasoner.deRegisterOntology((IRI) ontology.getIdentifier());
-        
-        }
     
     
     /**
@@ -101,9 +88,11 @@ public class ImportOntologyTest extends BaseReasonerTest {
      * A sample ontology (that satisfies test) to copy to your local disk
      * can be found commented out in importOnotologies.wsml
      * 
+     * Should be re-written to work with DL
+     * 
      * @throws Exception
      */
-   public void testImportOntologyTestWithLocator() throws Exception {
+   public void importOntologyWithLocator() throws Exception {
 
 
 	   Parser wsmlParser = org.wsmo.factory.Factory.createParser(null);
@@ -158,4 +147,39 @@ public class ImportOntologyTest extends BaseReasonerTest {
         assertEquals(2, result.size());
         reasoner.registerOntology(ontology);
     }
+    
+    public void testAllReasoners() throws Exception{
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+    	importOntology();
+    	importOntologyWithLocator();
+    	
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
+    	importOntology();
+    	importOntologyWithLocator();
+    	
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+    	importOntology();
+    	importOntologyWithLocator();
+    	
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET);
+    	importOntology();
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }

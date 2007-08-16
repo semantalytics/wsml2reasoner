@@ -27,7 +27,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,7 +40,6 @@ import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
-import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
@@ -59,9 +57,9 @@ public class BaseReasonerTest extends TestCase {
 
     //CHANGE HERE TO CHECK DIFFERENT REASONERS!
     public static WSMLReasonerFactory.BuiltInReasoner reasoner =
-//    	WSMLReasonerFactory.BuiltInReasoner.KAON2;
+    	WSMLReasonerFactory.BuiltInReasoner.KAON2;
 //    	WSMLReasonerFactory.BuiltInReasoner.IRIS;
-    	WSMLReasonerFactory.BuiltInReasoner.MINS;
+//    	WSMLReasonerFactory.BuiltInReasoner.MINS;
     	
     //CHANGE HERE TO CHECK DIFFERENT EVALUATION METHODS-
     //IS ALSO SET FROM BUNDLED VARIANT TEST SUITES
@@ -91,8 +89,7 @@ public class BaseReasonerTest extends TestCase {
     public static WSMLReasoner getReasoner(){
         // Create reasoner
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,reasoner);
-        //System.out.println("Eval Method: " + evalMethod);
+        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,reasoner);  
         params.put(WSMLReasonerFactory.PARAM_EVAL_METHOD,evalMethod);
         params.put(WSMLReasonerFactory.PARAM_ALLOW_IMPORTS,allowImports);
         
@@ -111,22 +108,39 @@ public class BaseReasonerTest extends TestCase {
         	wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
         		.createWSMLRuleReasoner(params);	
         }
-        else if(reasoner.equals(WSMLReasonerFactory.BuiltInReasoner.PELLET))
+        else if(reasoner.equals(WSMLReasonerFactory.BuiltInReasoner.PELLET)){
         	wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
         		.createWSMLDLReasoner(params);
+        }
+        
         return wsmlReasoner;
     }
     
-    protected static void setupScenario(String ontologyFile) throws IOException, ParserException, InvalidModelException, InconsistencyException {
-        // Set up factories for creating WSML elements
-
-        wsmoManager = new WSMO4JManager();
+    public static void resetReasoner(WSMLReasonerFactory.BuiltInReasoner b) throws InconsistencyException{
+    	System.gc();
+    	reasoner = b;
+    	//setUpFactories();
+    	wsmlReasoner = getReasoner();
+    	if(o != null){
+    		wsmlReasoner.registerOntology(o);
+    	}
+    }
+    
+    protected static void setUpFactories(){
+//    	 Set up factories for creating WSML elements
+    	wsmoManager = new WSMO4JManager();
 
         leFactory = wsmoManager.getLogicalExpressionFactory();
 
         wsmoFactory = wsmoManager.getWSMOFactory();
 
         dataFactory = wsmoManager.getDataFactory();
+    	
+    }
+
+    protected static void setupScenario(String ontologyFile) throws IOException, ParserException, InvalidModelException, InconsistencyException {
+       
+    	setUpFactories();
 
         // Set up serializer
 
@@ -173,7 +187,7 @@ public class BaseReasonerTest extends TestCase {
         }
         assertEquals(expected.size(), result.size());
         for (Map<Variable, Term> binding : expected) {
-            assertTrue("Result does not contain binding " + binding, include(
+            assertTrue("Engine: " + reasoner + "- Result does not contain binding " + binding, include(
                     result, binding));
         }
     }
@@ -181,39 +195,36 @@ public class BaseReasonerTest extends TestCase {
     protected void performDLQuery(int i, String concept, Set<Map<Variable, Term>> expected)
     	throws Exception {
     	switch(i){
-    	//0 = instance retrieval... ok, not really reasoning, but...
+    	//0 = instance retrieval - per concept
     	case 0:
+    		System.out.println("\n\nStarting DL reasoner - " +
+    				"retrieving all instances of concept " + concept);
+    	    System.out.println("\n\nExpecting " + expected.size() + " results...");
     		Set<Instance> result = wsmlReasoner.getInstances((IRI) o.getIdentifier(), 
     				wsmoFactory.createConcept(
     				wsmoFactory.createIRI(concept)));
     		System.out.println("Found < " + result.size()
     		        + " > results to the query:");
     		for (Instance instance : result){
-            	System.out.println(((IRI) instance.getIdentifier()).getLocalName().toString());
+    			System.out.println("(" + (++i) + ") -- " + instance.getIdentifier().toString() );
+//    			assertTrue("Result does not contain instance: " + instance.getIdentifier().toString(), result.contains(instance));
     		}
     		assertEquals(expected.size(), result.size());
-//    		for (Map<Variable, Term> binding : expected) {
-//    		    assertTrue("Result does not contain instance: " + binding.get(this), binding.containsValue(instance););
-//    		}
+    		for (Map<Variable, Term> binding : expected) {
+    		    assertTrue("Result does not contain instance: " + binding, instanceCheckerDL(result, binding));
+    		}
     	}
     }
     
-//
-//    private boolean instanceCheckerDL(Set<Instance> result, Map<Variable, Term> binding) {
-//    	 boolean contains = false;
-//    	 for (Instance instance : result) {
-//             boolean containsAll = true;
-//             for (Term term : binding.keySet()) {
-//                 containsAll = (boolean)binding.get(term).equals(instance);
-//                 binding.containsValue(instance);
-//             }
-//             if (containsAll) {
-//                 contains = true;
-//                 break;
-//             }
-//         }
-//		return contains;
-//	}
+
+    private boolean instanceCheckerDL(Set<Instance> result, Map<Variable, Term> binding) {
+    	 for (Instance instance : result) {
+             if (binding.values().contains(instance.getIdentifier())){
+            	 return true;
+             }
+         }
+		return false;
+	}
 
 	/**
      * Checks whether there is a binding in result which contains all of the
@@ -265,11 +276,11 @@ public class BaseReasonerTest extends TestCase {
             InputStream is = new BaseReasonerTest().getClass().getClassLoader()
                     .getResourceAsStream(location);
             // System.out.println();
-            assertNotNull("Could not Load file from class path: " + location,
+            assertNotNull("Could not load file from class path: " + location,
                     is);
             ontoReader = new InputStreamReader(is);
         }
-        assertNotNull("Could not Load file from file system: " + location,
+        assertNotNull("Could not load file from file system: " + location,
                 ontoReader);
         return ontoReader;
     }

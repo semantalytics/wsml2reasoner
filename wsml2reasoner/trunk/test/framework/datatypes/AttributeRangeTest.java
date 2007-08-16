@@ -44,7 +44,7 @@ import base.BaseReasonerTest;
  * 
  * @author
  * 
- * @version $Revision: 1.3 $ $Date: 2007-08-14 16:51:16 $
+ * @version $Revision: 1.4 $ $Date: 2007-08-16 18:22:43 $
  */
 public class AttributeRangeTest extends BaseReasonerTest {
     Parser parser;
@@ -65,9 +65,8 @@ public class AttributeRangeTest extends BaseReasonerTest {
 
     @Override
     protected void tearDown() throws Exception {
-    	// TODO Auto-generated method stub
     	super.tearDown();
-    	BaseReasonerTest.reasoner = previous;
+    	resetReasoner(previous);
     }
     /**
      * 
@@ -76,6 +75,7 @@ public class AttributeRangeTest extends BaseReasonerTest {
     public void attributeRange() throws Exception {
     	Ontology exampleOntology = loadOntology("test/files/AttributeRangeOntology.wsml");
     	try{
+    		reasoner = BaseReasonerTest.getReasoner();
     		reasoner.registerOntology(exampleOntology);
     		assertTrue(true);
     	}
@@ -104,20 +104,16 @@ public class AttributeRangeTest extends BaseReasonerTest {
     }
     
     public void testAllReasoners() throws Exception{
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
-    	reasoner = BaseReasonerTest.getReasoner();
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
     	attributeRange();
     	
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
-    	reasoner = BaseReasonerTest.getReasoner();
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
     	attributeRange();
     	
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.KAON2;
-    	reasoner = BaseReasonerTest.getReasoner();
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
     	attributeRange();
     	
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.PELLET;
-    	reasoner = BaseReasonerTest.getReasoner();
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET);
     	attributeRange();
     }
 }

@@ -41,9 +41,6 @@ public class SatisfiablityTest extends BaseReasonerTest {
    
 	protected void setUp() throws Exception {
 		super.setUp();
-		
-		// get A reasoner
-		wsmlReasoner = BaseReasonerTest.getReasoner();
 		parser = Factory.createParser(null);
 	}
 	
@@ -55,7 +52,9 @@ public class SatisfiablityTest extends BaseReasonerTest {
        // assuming first topentity in file is an ontology  
        ontology = (Ontology)parser.parse(new InputStreamReader(is))[0]; 
 
-       // register ontology at the wsml reasoner
+       //register ontology at the wsml reasoner
+       //get A reasoner
+       wsmlReasoner = BaseReasonerTest.getReasoner();
        wsmlReasoner.registerOntology(ontology);       
        
 		// test ontology satisfiability
@@ -66,22 +65,22 @@ public class SatisfiablityTest extends BaseReasonerTest {
 	
     
     public void testFlightReasoners() throws Exception{
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
-    	wsmlReasoner = BaseReasonerTest.getReasoner();
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
     	satisfiablity();
     	
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
-    	wsmlReasoner = BaseReasonerTest.getReasoner();
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
     	satisfiablity();
     	
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.KAON2;
-    	wsmlReasoner = BaseReasonerTest.getReasoner();
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
     	satisfiablity();
     }
 	
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2007-08-14 16:53:35  graham
+ * Refactored to allow packaged/bundled unit tests (resets BaseReasonerTest.reasoner in tearDown method)
+ *
  * Revision 1.1  2007-08-08 10:57:58  graham
  * Second stage of refactoring unit tests
  *

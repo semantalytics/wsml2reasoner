@@ -15,7 +15,6 @@ public class BundledWSMLCoreTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test suite for the WSML-Core variant");
 		//$JUnit-BEGIN$
-		suite.addTestSuite(SimpleGraph.class);
 		suite.addTestSuite(CyclicalImportsTest.class);
 		//$JUnit-END$
 		return suite;
