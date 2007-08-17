@@ -47,31 +47,31 @@ public class TestPerformance1 {
      * loads an Ontology and performs sample query
      */
     public void doTestRun() throws Exception {
-//        Ontology o0001 = loadOntology("performance/simple-0001-ontology.wsml");
-//        Ontology o0002 = loadOntology("performance/simple-0002-ontology.wsml");
-//        Ontology o0010 = loadOntology("performance/simple-0010-ontology.wsml");
-//        Ontology o0020 = loadOntology("performance/simple-0020-ontology.wsml");
-//        Ontology o0030 = loadOntology("performance/simple-0030-ontology.wsml");
-//        Ontology o0040 = loadOntology("performance/simple-0040-ontology.wsml");
-//        Ontology o0050 = loadOntology("performance/simple-0050-ontology.wsml");
-//        Ontology o0060 = loadOntology("performance/simple-0060-ontology.wsml");
-//        Ontology o0070 = loadOntology("performance/simple-0070-ontology.wsml");
-//        Ontology o0080 = loadOntology("performance/simple-0080-ontology.wsml");
-//        Ontology o0090 = loadOntology("performance/simple-0090-ontology.wsml");
-        Ontology o0100 = loadOntology("performance/simple-0100-ontology.wsml");
-//        Ontology o0200 = loadOntology("performance/simple-0200-ontology.wsml");
-//        Ontology o0300 = loadOntology("performance/simple-0300-ontology.wsml");
-//        Ontology o0400 = loadOntology("performance/simple-0400-ontology.wsml");
-//        Ontology o0500 = loadOntology("performance/simple-0500-ontology.wsml");
-//        Ontology o0600 = loadOntology("performance/simple-0600-ontology.wsml");
-//        Ontology o0700 = loadOntology("performance/simple-0700-ontology.wsml");
-//        Ontology o0800 = loadOntology("performance/simple-0800-ontology.wsml");
-//        Ontology o0900 = loadOntology("performance/simple-0900-ontology.wsml");
-//        Ontology o1000 = loadOntology("performance/simple-1000-ontology.wsml");
+        Ontology o0001 = loadOntology("performance/ontologies/simple/simple-0001-ontology.wsml");
+//        Ontology o0002 = loadOntology("performance/ontologies/simple/simple-0002-ontology.wsml");
+        Ontology o0010 = loadOntology("performance/ontologies/simple/simple-0010-ontology.wsml");
+        Ontology o0020 = loadOntology("performance/ontologies/simple/simple-0020-ontology.wsml");
+//        Ontology o0030 = loadOntology("performance/ontologies/simple/simple-0030-ontology.wsml");
+//        Ontology o0040 = loadOntology("performance/ontologies/simple/simple-0040-ontology.wsml");
+//        Ontology o0050 = loadOntology("performance/ontologies/simple/simple-0050-ontology.wsml");
+//        Ontology o0060 = loadOntology("performance/ontologies/simple/simple-0060-ontology.wsml");
+//        Ontology o0070 = loadOntology("performance/ontologies/simple/simple-0070-ontology.wsml");
+//        Ontology o0080 = loadOntology("performance/ontologies/simple/simple-0080-ontology.wsml");
+//        Ontology o0090 = loadOntology("performance/ontologies/simple/simple-0090-ontology.wsml");
+//        Ontology o0100 = loadOntology("performance/ontologies/simple/simple-0100-ontology.wsml");
+//        Ontology o0200 = loadOntology("performance/ontologies/simple/simple-0200-ontology.wsml");
+//        Ontology o0300 = loadOntology("performance/ontologies/simple/simple-0300-ontology.wsml");
+//        Ontology o0400 = loadOntology("performance/ontologies/simple/simple-0400-ontology.wsml");
+//        Ontology o0500 = loadOntology("performance/ontologies/simple/simple-0500-ontology.wsml");
+//        Ontology o0600 = loadOntology("performance/ontologies/simple/simple-0600-ontology.wsml");
+//        Ontology o0700 = loadOntology("performance/ontologies/simple/simple-0700-ontology.wsml");
+//        Ontology o0800 = loadOntology("performance/ontologies/simple/simple-0800-ontology.wsml");
+//        Ontology o0900 = loadOntology("performance/ontologies/simple/simple-0900-ontology.wsml");
+//        Ontology o1000 = loadOntology("performance/ontologies/simple/simple-1000-ontology.wsml");
         boolean printResults = false;
         
-        String[] reasonerNames = new String[]{"IRIS"};
-        Ontology[] ontologies = new Ontology[]{o0100};
+        String[] reasonerNames = new String[]{"MINS", "IRIS"};
+        Ontology[] ontologies = new Ontology[]{o0001, o0010, o0020};//, o0030, o0040, o0050, o0060, o0070, o0080, o0090, o0100, o0200, o0300, o0400, o0500, o0600, o0700, o0800, o0900, o1000};
         String[] queries = new String[]{"?x memberOf ?y"};
         
         PerformanceResults performanceresults = new PerformanceResults();
@@ -82,12 +82,10 @@ public class TestPerformance1 {
                 }
             }
         }
-        performanceresults.writeAll(new File("test/performance/results/").getAbsolutePath());
+        performanceresults.writeAll(new File("performance/performance/results/").getAbsolutePath());
     }
 
     private PerformanceResult executeQuery(String theQuery, Ontology theOntology, String theReasonerName, boolean thePrintResults) throws ParserException, InconsistencyException {
-        PerformanceResult performanceresult = new PerformanceResult();
-        
         System.out.println("------------------------------------");
         System.out.println("query = '" + theQuery + "'");
         System.out.println("ontology = '" + theOntology.getIdentifier() + "'");
@@ -109,6 +107,8 @@ public class TestPerformance1 {
         long t0 = t0_end - t0_start;
         System.out.println("(" + t0 + "ms)");
         
+        PerformanceResult performanceresult = new PerformanceResult(reasoner);
+        
         if (reasoner != null){
             LogicalExpression query = new WSMO4JManager().getLogicalExpressionFactory().createLogicalExpression(theQuery, theOntology);
             
@@ -121,7 +121,7 @@ public class TestPerformance1 {
             System.out.println("(" + t1 + "ms)");
             
             Set<Map<Variable, Term>> result = null;
-            int j = 1;
+            int j = 10;
             for (int i = 0; i < j; i++){
                 System.out.print("Executing query " + i + " of " + j + " ");
                 long t2_start = System.currentTimeMillis();

@@ -1,6 +1,7 @@
 package performance;
 
 import java.io.*;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -255,7 +256,7 @@ public class PerformanceResults {
         Collections.sort(sortedAllQueriesInTest);
         int i=0;
         for (String queryid : sortedAllQueriesInTest){
-        	File queryTimeFile = new File(directory, (i+4) + "-average-ontology-" + queryid + "-times.csv");
+        	File queryTimeFile = new File(directory, (i+4) + "-average-ontology-" + URLEncoder.encode(queryid) + "-times.csv");
         	BufferedWriter bw = new BufferedWriter(new FileWriter(queryTimeFile));
         	bw.write("Reasoner," + toCommaDelimited(sortedAllOntologiesInTest) + "\n");
         	for (String reasoner : performanceresults.keySet()) {
