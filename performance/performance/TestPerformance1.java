@@ -4,7 +4,9 @@ package performance;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -47,31 +49,34 @@ public class TestPerformance1 {
      * loads an Ontology and performs sample query
      */
     public void doTestRun() throws Exception {
-        Ontology o0001 = loadOntology("performance/ontologies/simple/simple-0001-ontology.wsml");
-//        Ontology o0002 = loadOntology("performance/ontologies/simple/simple-0002-ontology.wsml");
-        Ontology o0010 = loadOntology("performance/ontologies/simple/simple-0010-ontology.wsml");
-        Ontology o0020 = loadOntology("performance/ontologies/simple/simple-0020-ontology.wsml");
-//        Ontology o0030 = loadOntology("performance/ontologies/simple/simple-0030-ontology.wsml");
-//        Ontology o0040 = loadOntology("performance/ontologies/simple/simple-0040-ontology.wsml");
-//        Ontology o0050 = loadOntology("performance/ontologies/simple/simple-0050-ontology.wsml");
-//        Ontology o0060 = loadOntology("performance/ontologies/simple/simple-0060-ontology.wsml");
-//        Ontology o0070 = loadOntology("performance/ontologies/simple/simple-0070-ontology.wsml");
-//        Ontology o0080 = loadOntology("performance/ontologies/simple/simple-0080-ontology.wsml");
-//        Ontology o0090 = loadOntology("performance/ontologies/simple/simple-0090-ontology.wsml");
-//        Ontology o0100 = loadOntology("performance/ontologies/simple/simple-0100-ontology.wsml");
-//        Ontology o0200 = loadOntology("performance/ontologies/simple/simple-0200-ontology.wsml");
-//        Ontology o0300 = loadOntology("performance/ontologies/simple/simple-0300-ontology.wsml");
-//        Ontology o0400 = loadOntology("performance/ontologies/simple/simple-0400-ontology.wsml");
-//        Ontology o0500 = loadOntology("performance/ontologies/simple/simple-0500-ontology.wsml");
-//        Ontology o0600 = loadOntology("performance/ontologies/simple/simple-0600-ontology.wsml");
-//        Ontology o0700 = loadOntology("performance/ontologies/simple/simple-0700-ontology.wsml");
-//        Ontology o0800 = loadOntology("performance/ontologies/simple/simple-0800-ontology.wsml");
-//        Ontology o0900 = loadOntology("performance/ontologies/simple/simple-0900-ontology.wsml");
-//        Ontology o1000 = loadOntology("performance/ontologies/simple/simple-1000-ontology.wsml");
+    	
+    	List <Ontology> wsmo4jOntologies = new ArrayList<Ontology>();
+    	
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0001-ontology.wsml"));
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0002-ontology.wsml"));
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0010-ontology.wsml"));
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0020-ontology.wsml"));
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0030-ontology.wsml"));
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0040-ontology.wsml"));
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0050-ontology.wsml"));
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0060-ontology.wsml"));
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0070-ontology.wsml"));
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0080-ontology.wsml"));
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0090-ontology.wsml"));
+    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0100-ontology.wsml"));
+    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0200-ontology.wsml"));
+    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0300-ontology.wsml"));
+    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0400-ontology.wsml"));
+    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0500-ontology.wsml"));
+    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0600-ontology.wsml"));
+    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0700-ontology.wsml"));
+    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0800-ontology.wsml"));
+    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0900-ontology.wsml"));
+    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-1000-ontology.wsml"));
         boolean printResults = false;
         
         String[] reasonerNames = new String[]{"MINS", "IRIS"};
-        Ontology[] ontologies = new Ontology[]{o0001, o0010, o0020};//, o0030, o0040, o0050, o0060, o0070, o0080, o0090, o0100, o0200, o0300, o0400, o0500, o0600, o0700, o0800, o0900, o1000};
+        Ontology[] ontologies = wsmo4jOntologies.toArray( new Ontology[]{});
         String[] queries = new String[]{"?x memberOf ?y"};
         
         PerformanceResults performanceresults = new PerformanceResults();
