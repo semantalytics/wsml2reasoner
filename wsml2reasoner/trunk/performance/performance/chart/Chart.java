@@ -2,6 +2,7 @@ package performance.chart;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URLEncoder;
 import java.util.*;
 
 import javax.swing.ImageIcon;
@@ -170,7 +171,7 @@ public class Chart {
 				}
 				else {
 					testQueryInfo = new TestQueryInfo();
-					testQueryInfo.title="Total registration Times";
+					testQueryInfo.title="Average Query Time";
 					testQueryInfo.description="";
 				}
 			}
@@ -187,7 +188,7 @@ public class Chart {
 				fwtex.append("{\\tt "+testQueryInfo.query+"}");
 			}
 			fwhtml.append(createTableHtml(dataset,dir,testInfo)+"\n");
-			fwhtml.append("<img src=\""+csv.getName().replace(".csv", "-chart.png")+"\"><br>\n");
+			fwhtml.append("<img src=\""+URLEncoder.encode(csv.getName()).replace(".csv", "-chart.png")+"\"><br>\n");
 			
 			
 			String[] segments = dir.getAbsolutePath().split("\\\\");
@@ -221,8 +222,8 @@ public class Chart {
 	}
 	
 	
-	String findMatchingFileName(String col, File dir){
-		col = col.substring(2);
+	public String findMatchingFileName(String col, File dir){
+//		col = col.substring(2);
 		for (File f : dir.listFiles(wsmlfilter)){
 //			System.out.println("checking "+f.getName()+" against "+col);
 			if (f.getName().contains(col)) return f.getName();
@@ -358,7 +359,7 @@ public class Chart {
 			String[] data = results.get(reasoner);
 			for (int i = 1; i < data.length; i++) {
 				double time = Double.parseDouble(data[i]);
-				int count = Integer.parseInt((head[i].substring(2)));
+				int count = Integer.parseInt((head[i].substring(1)));
 				if (time>=0){
 					dataset.addValue((int)time,reasoner , count+"");
 				}
