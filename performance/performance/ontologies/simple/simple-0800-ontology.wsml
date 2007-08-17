@@ -1,5 +1,5 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
-namespace { _"http://www.simple0800-ontology.com#"
+namespace { _"http://www.simple-0800-ontology.com#"
 }
 
 ontology o800
