@@ -31,6 +31,6 @@
 	<classpathentry kind="lib" path="lib/ext/JFreeChart/swtgraphics2d.jar"/>
 	<classpathentry kind="lib" path="lib/ext/kaon2/kaon2.jar"/>
 	<classpathentry kind="lib" path="lib/ext/iris/iris-20070716.jar"/>
-	<classpathentry kind="lib" path="C:/mins20070814.jar"/>
+	<classpathentry kind="lib" path="lib/ext/mins/mins20070820.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
