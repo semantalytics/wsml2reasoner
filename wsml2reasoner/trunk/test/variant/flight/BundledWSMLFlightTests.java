@@ -15,7 +15,6 @@ public class BundledWSMLFlightTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test suite for WSML-Flight variant");
 		//$JUnit-BEGIN$
-		suite.addTestSuite(Boolean.class);
 		suite.addTestSuite(SatisfiablityTest.class);
 		suite.addTestSuite(SimpleGraph.class);
 		suite.addTestSuite(MaciejVTABug2.class);
