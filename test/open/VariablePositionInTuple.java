@@ -28,6 +28,8 @@ import junit.framework.TestSuite;
 
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 
 import base.BaseReasonerTest;
 
@@ -37,28 +39,25 @@ public class VariablePositionInTuple extends BaseReasonerTest {
 
     private static final String ONTOLOGY_FILE = "files/variablePositionInTuple.wsml";
 
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(VariablePositionInTuple.suite());
+
+    BuiltInReasoner previous;
+    
+    @Override
+    protected void setUp() throws Exception {
+    	super.setUp();
+    	setupScenario(ONTOLOGY_FILE);
+    	previous = BaseReasonerTest.reasoner;
     }
-
-    public static Test suite() {
-        Test test = new junit.extensions.TestSetup(new TestSuite(
-                VariablePositionInTuple.class)) {
-            protected void setUp() throws Exception {
-                setupScenario(ONTOLOGY_FILE);
-            }
-
-            protected void tearDown() throws Exception {
-                System.out.println("Finished!");
-            }
-        };
-        return test;
+    
+    @Override
+    protected void tearDown() throws Exception {
+    	super.tearDown();
+    	resetReasoner(previous);
     }
-
     /**
      * @throws Exception
      */
-    public void testVariablePosition() throws Exception {
+    public void variablePosition() throws Exception {
         String query = "i1[a1 hasValue ?x]";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -68,4 +67,17 @@ public class VariablePositionInTuple extends BaseReasonerTest {
         performQuery(query, expected);
         System.out.println("Finished query.");
     }
+    
+    public void testFlightReasoners() throws Exception{
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+    	variablePosition();
+    	
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
+    	variablePosition();
+    	
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+    	variablePosition();
+    }
+    
+    
 }
