@@ -9,8 +9,7 @@ import base.BaseReasonerTest;
 
 public class MinsInstanceRetrieval extends BaseReasonerTest {
 	
-    private static final String NS = "urn:dogsworld#";
-    private static final String ONTOLOGY_FILE = "files/dogsworld.wsml";
+	private static final String ONTOLOGY_FILE = "files/dogsworld.wsml";
 
     BuiltInReasoner previous;
     

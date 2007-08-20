@@ -46,7 +46,7 @@ import org.wsmo.wsml.Serializer;
  * 
  * @author Holger Lausen, DERI Innsbruck
  */
-public class CyclicalImports {
+public class LotsOfImports {
     
     int evalmethod = 3;
     WSMO4JManager wsmoManager = new WSMO4JManager();
@@ -69,7 +69,7 @@ public class CyclicalImports {
         	System.out.println ("XSB");
     	}
     	else {
-	        CyclicalImports ex = new CyclicalImports();
+	        LotsOfImports ex = new LotsOfImports();
 	        try {
 	            ex.doTestRun(args[0]);
 	            System.exit(0);

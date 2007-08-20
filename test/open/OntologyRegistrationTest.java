@@ -15,6 +15,8 @@ import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.InternalReasonerException;
 import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
@@ -36,12 +38,26 @@ public class OntologyRegistrationTest extends BaseReasonerTest {
 
     private Parser parser; 
 
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(OntologyRegistrationTest.class);
+    BuiltInReasoner previous;
+    
+    @Override
+    protected void setUp()throws Exception {
+    	super.setUp();
+    	previous = BaseReasonerTest.reasoner;
+    	WSMO4JManager wsmoManager = new WSMO4JManager();
+    	leFactory = wsmoManager.getLogicalExpressionFactory();
+    	wsmoFactory = wsmoManager.getWSMOFactory();
+    	wsmlReasoner =  BaseReasonerTest.getReasoner();
+ 		parser = Factory.createParser(null);
+    }
+    
+    @Override
+    protected void tearDown() throws Exception {
+    	super.tearDown();
+    	resetReasoner(previous);
     }
 
-    
-    public void testOntologyRegistration() throws Exception {
+    public void ontologyRegistration() throws Exception {
 
         Ontology o1 = wsmoFactory.createOntology(wsmoFactory
                 .createIRI("urn:test1"));
@@ -117,22 +133,11 @@ public class OntologyRegistrationTest extends BaseReasonerTest {
 
     private Set<Map<Variable, Term>> executeQuery(String query, Ontology o)
             throws Exception {
-        // LogicalExpression qExpression = leFactory.createLogicalExpression(
-        // "_\"urn:test:xxx\"()", o);
         LogicalExpression qExpression = leFactory.createLogicalExpression(
                 query, o);
         return wsmlReasoner.executeQuery((IRI) o.getIdentifier(), qExpression);
     }
-
-    @Override
-    protected void setUp() throws Exception {
-        WSMO4JManager wsmoManager = new WSMO4JManager();
-        leFactory = wsmoManager.getLogicalExpressionFactory();
-        wsmoFactory = wsmoManager.getWSMOFactory();
-        wsmlReasoner =  BaseReasonerTest.getReasoner();
-		parser = Factory.createParser(null);
-    }
-
+    
     /* This triggers a bug in MINS where it gets confused about
      * the indexing of an array. It's occurs when we register and deregister ontologies
      * in particular sequences. It's one of these bugs that are not easy to track down and
@@ -140,7 +145,7 @@ public class OntologyRegistrationTest extends BaseReasonerTest {
      * This piece of code will fail on the registration of o14 most of the time, but if you
      * run it enough time then you'll see it also fail on o13 and others.
      */
-    public void testIntenseOntologyRegistration() throws Exception {
+    public void intenseOntologyRegistration() throws Exception {
         wsmlReasoner = BaseReasonerTest.getReasoner(); 		
 		String path = "test/files" + File.separator;
 
@@ -173,5 +178,19 @@ public class OntologyRegistrationTest extends BaseReasonerTest {
 		wsmlReasoner.registerOntologies(ontos);
 		wsmlReasoner.deRegisterOntology(iris);
 	}
+	
+    public void testFlightReasoners() throws Exception{
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+    	ontologyRegistration();
+    	intenseOntologyRegistration();
+    	
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
+    	ontologyRegistration();
+    	intenseOntologyRegistration();
+    	
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+    	ontologyRegistration();
+    	intenseOntologyRegistration();
+    }
 
 }

@@ -15,6 +15,7 @@ public class BundledMinsTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test suite for MINS engine");
 		//$JUnit-BEGIN$
+		suite.addTestSuite(MinsFactsSizeTest.class);
 		suite.addTest(Date1.suite());
 		suite.addTest(IRITest.suite());
 		//$JUnit-END$

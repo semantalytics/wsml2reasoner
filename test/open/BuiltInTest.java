@@ -23,11 +23,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 
 import base.BaseReasonerTest;
 
@@ -42,25 +41,22 @@ public class BuiltInTest extends BaseReasonerTest {
 
     private static final String ONTOLOGY_FILE = "files/datatypes.wsml";
     
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(BuiltInTest.suite());
-    }
-
-    public static Test suite() {
-        Test test = new junit.extensions.TestSetup(new TestSuite(
-                BuiltInTest.class)) {
-            protected void setUp() throws Exception {
-                setupScenario(ONTOLOGY_FILE);
-            }
-
-            protected void tearDown() throws Exception {
-                System.out.println("Finished!");
-            }
-        };
-        return test;
+   BuiltInReasoner previous;
+    
+    @Override
+    protected void setUp() throws Exception {
+    	super.setUp();
+    	setupScenario(ONTOLOGY_FILE);
+    	previous = BaseReasonerTest.reasoner;
     }
     
-    public void testPreserveTypeAfterOperationWithConcepts() throws Exception {
+    @Override
+    protected void tearDown() throws Exception {
+    	super.tearDown();
+    	resetReasoner(previous);
+    }
+    
+    public void preserveTypeAfterOperationWithConcepts() throws Exception {
         String query = "?x[value hasValue ?y] memberOf Miles";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -82,7 +78,7 @@ public class BuiltInTest extends BaseReasonerTest {
      * 
      * Test should perhaps be changed ~ shouldn't the expected result be 0?
      */
-    public void testPreserveTypeAfterOperation2() throws Exception {
+    public void preserveTypeAfterOperation2() throws Exception {
 
         String query = "test2(?y)";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
@@ -95,7 +91,7 @@ public class BuiltInTest extends BaseReasonerTest {
     }
 
     
-    public void testPreserveType() throws Exception {
+    public void preserveType() throws Exception {
 
         String query = "tuple1(?x,?y)";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
@@ -117,7 +113,7 @@ public class BuiltInTest extends BaseReasonerTest {
      * 
      * 
      */
-    public void testPreserveTypeAfterOperationwithPredicates() throws Exception {
+    public void preserveTypeAfterOperationwithPredicates() throws Exception {
 
         String query = "test2(?x,?y)";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
@@ -128,4 +124,26 @@ public class BuiltInTest extends BaseReasonerTest {
         performQuery(query, expected);
         System.out.println("Finished query.");
     }    
+    
+    public void testFlightReasoners() throws Exception{
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+    	preserveType();
+    	preserveTypeAfterOperation2();
+    	preserveTypeAfterOperationWithConcepts();
+    	preserveTypeAfterOperationwithPredicates();
+    	
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
+    	preserveType();
+    	preserveTypeAfterOperation2();
+    	preserveTypeAfterOperationWithConcepts();
+    	preserveTypeAfterOperationwithPredicates();
+    	
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+    	preserveType();
+    	preserveTypeAfterOperation2();
+    	preserveTypeAfterOperationWithConcepts();
+    	preserveTypeAfterOperationwithPredicates();
+    	
+    }
+    
 }

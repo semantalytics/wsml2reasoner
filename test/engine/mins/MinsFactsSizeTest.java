@@ -16,29 +16,33 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  */
-package open;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+package engine.mins;
 
 import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 
 import base.BaseReasonerTest;
 
 public class MinsFactsSizeTest extends BaseReasonerTest {
 
     private static final String ONTOLOGY_FILE = "files/cardinality_1_max-00250-ontology.wsml";
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(MinsFactsSizeTest.suite());
-    }
-
-    public static Test suite() {
-        Test test = new junit.extensions.TestSetup(new TestSuite(
-        		MinsFactsSizeTest.class)) {
-        };
-        return test;
-    }
+    
+    BuiltInReasoner previous;
+     
+     @Override
+     protected void setUp() throws Exception {
+     	super.setUp();
+     	setupScenario(ONTOLOGY_FILE);
+     	previous = BaseReasonerTest.reasoner;
+     	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
+     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
+     }
+     
+     @Override
+     protected void tearDown() throws Exception {
+     	super.tearDown();
+     	resetReasoner(previous);
+     }
 
     /**
      * This test does pass is meant to show an ArrayIndexOutOfBoundsError in 
@@ -50,9 +54,7 @@ public class MinsFactsSizeTest extends BaseReasonerTest {
      * 
      * @throws Exception
      */
-    public void testMinsFactsSize() throws Exception {
-    	
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;   	
+    public void testMinsFactsSize() throws Exception {	
     	setupScenario(ONTOLOGY_FILE);
     }
 	
