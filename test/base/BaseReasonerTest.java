@@ -57,9 +57,9 @@ public class BaseReasonerTest extends TestCase {
 
     //CHANGE HERE TO CHECK DIFFERENT REASONERS!
     public static WSMLReasonerFactory.BuiltInReasoner reasoner =
-    	WSMLReasonerFactory.BuiltInReasoner.KAON2;
+//    	WSMLReasonerFactory.BuiltInReasoner.KAON2;
 //    	WSMLReasonerFactory.BuiltInReasoner.IRIS;
-//    	WSMLReasonerFactory.BuiltInReasoner.MINS;
+    	WSMLReasonerFactory.BuiltInReasoner.MINS;
     	
     //CHANGE HERE TO CHECK DIFFERENT EVALUATION METHODS-
     //IS ALSO SET FROM BUNDLED VARIANT TEST SUITES
@@ -117,7 +117,6 @@ public class BaseReasonerTest extends TestCase {
     }
     
     public static void resetReasoner(WSMLReasonerFactory.BuiltInReasoner b) throws InconsistencyException{
-    	System.gc();
     	reasoner = b;
     	//setUpFactories();
     	wsmlReasoner = getReasoner();
@@ -169,7 +168,7 @@ public class BaseReasonerTest extends TestCase {
     protected void performQuery(String query, Set<Map<Variable, Term>> expected)
             throws Exception {
         System.out.println("\n\nStarting reasoner with query '" + query + "'");
-        System.out.println("\n\nExpecting " + expected.size() + " results...");
+        System.out.println("\n\nExpecting " + expected.size() + " result(s)...");
         LogicalExpression qExpression = leFactory.createLogicalExpression(
                 query, o);
         System.out.println("WSML Query LE:");
@@ -185,7 +184,7 @@ public class BaseReasonerTest extends TestCase {
         for (Map<Variable, Term> vBinding : result) {
             System.out.println("(" + (++i) + ") -- " + vBinding.toString());
         }
-        assertEquals(expected.size(), result.size());
+        assertEquals("Engine: " + reasoner + " ", expected.size(), result.size());
         for (Map<Variable, Term> binding : expected) {
             assertTrue("Engine: " + reasoner + "- Result does not contain binding " + binding, include(
                     result, binding));
@@ -199,7 +198,7 @@ public class BaseReasonerTest extends TestCase {
     	case 0:
     		System.out.println("\n\nStarting DL reasoner - " +
     				"retrieving all instances of concept " + concept);
-    	    System.out.println("\n\nExpecting " + expected.size() + " results...");
+    	    System.out.println("\n\nExpecting " + expected.size() + " result(s)...");
     		Set<Instance> result = wsmlReasoner.getInstances((IRI) o.getIdentifier(), 
     				wsmoFactory.createConcept(
     				wsmoFactory.createIRI(concept)));
@@ -209,9 +208,10 @@ public class BaseReasonerTest extends TestCase {
     			System.out.println("(" + (++i) + ") -- " + instance.getIdentifier().toString() );
 //    			assertTrue("Result does not contain instance: " + instance.getIdentifier().toString(), result.contains(instance));
     		}
-    		assertEquals(expected.size(), result.size());
+    		assertEquals("Engine: " + reasoner + " ", expected.size(), result.size());
     		for (Map<Variable, Term> binding : expected) {
-    		    assertTrue("Result does not contain instance: " + binding, instanceCheckerDL(result, binding));
+    		    assertTrue("Engine: " + reasoner + " - Result does not contain instance: " +
+    		    		binding, instanceCheckerDL(result, binding));
     		}
     	}
     }

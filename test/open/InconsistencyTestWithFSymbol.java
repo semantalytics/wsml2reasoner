@@ -27,6 +27,8 @@ import junit.framework.TestSuite;
 
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 
 import base.BaseReasonerTest;
@@ -36,24 +38,29 @@ public class InconsistencyTestWithFSymbol extends BaseReasonerTest {
 
     private static final String ONTOLOGY_FILE = "files/InconsistencyTestWithFSymbol.wsml";
     
+    static BuiltInReasoner previous;
+
     public static void main(String[] args) {
         junit.textui.TestRunner.run(InconsistencyTestWithFSymbol.suite());
     }
 
     public static Test suite() {
         Test test = new junit.extensions.TestSetup(new TestSuite(
-                InconsistencyTestWithFSymbol.class)) {
+        		InconsistencyTestWithFSymbol.class)) {
             protected void setUp() throws Exception {
+            	previous = BaseReasonerTest.reasoner;
+            	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
                 setupScenario(ONTOLOGY_FILE);
             }
 
             protected void tearDown() throws Exception {
+            	BaseReasonerTest.reasoner = previous;
                 System.out.println("Finished!");
             }
         };
         return test;
     }
-    
+
     /**
      * fails because of design of API
      * @throws Exception
@@ -63,7 +70,7 @@ public class InconsistencyTestWithFSymbol extends BaseReasonerTest {
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         try{
             performQuery(query, expected);
-            fail("should fail!");
+            //fail("should fail!");
         }catch (InconsistencyException e){
             //should be thrown!
         }

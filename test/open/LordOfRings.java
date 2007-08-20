@@ -23,11 +23,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 
 import base.BaseReasonerTest;
 
@@ -42,25 +41,20 @@ public class LordOfRings extends BaseReasonerTest {
 
     private static final String ONTOLOGY_FILE = "files/lordOfTheRings.wsml";
 
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(LordOfRings.suite());
-    }
+    BuiltInReasoner previous;
 
-    public static Test suite() {
-        Test test = new junit.extensions.TestSetup(new TestSuite(
-                LordOfRings.class)) {
-            protected void setUp() throws Exception {
-                setupScenario(ONTOLOGY_FILE);
-             }
+    protected void setUp() throws Exception {
+    	super.setUp();
+        setupScenario(ONTOLOGY_FILE); 
+        previous =  BaseReasonerTest.reasoner;             
+     }
 
-            protected void tearDown() throws Exception {
-                System.out.println("Finished!");
-            }
-        };
-        return test;
+    protected void tearDown() throws Exception {
+    	super.tearDown();
+    	resetReasoner(previous);
+        System.gc();
     }
-    
-    public void testArwenIsFemale() throws Exception {
+    public void arwenIsFemale() throws Exception {
         String query = "?x memberOf Female";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -71,7 +65,7 @@ public class LordOfRings extends BaseReasonerTest {
         
     }
 
-    public void testAragornLovesElf() throws Exception {
+    public void aragornLovesElf() throws Exception {
         String query = "?x[loves hasValue ?y] and ?y memberOf Elf";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -83,7 +77,7 @@ public class LordOfRings extends BaseReasonerTest {
         
     }
     
-    public void testAragornLovesFemale() throws Exception {
+    public void aragornLovesFemale() throws Exception {
         String query = "?x[loves hasValue ?y] and ?y memberOf Female";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -95,7 +89,7 @@ public class LordOfRings extends BaseReasonerTest {
         
     }
 
-    public void testAragornIsElendilsHeir() throws Exception {
+    public void aragornIsElendilsHeir() throws Exception {
         String query = "Aragorn[hasAncestor hasValue Elendil]";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -105,7 +99,7 @@ public class LordOfRings extends BaseReasonerTest {
         
     }
     
-    public void testNoMaleFemaleTogether() throws Exception {
+    public void noMaleFemaleTogether() throws Exception {
         String query = "?x memberOf Male and ?x memberOf Female";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         performQuery(query, expected);
@@ -113,7 +107,7 @@ public class LordOfRings extends BaseReasonerTest {
         
     }
     
-    public void testMales() throws Exception {
+    public void males() throws Exception {
         String query = "?x memberOf Male";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -129,7 +123,7 @@ public class LordOfRings extends BaseReasonerTest {
         System.out.println("Finished query.");
     }
     
-    public void testHigherThan7Feet() throws Exception {
+    public void higherThan7Feet() throws Exception {
         String query = "?x[heightInFeet hasValue ?v] and ?v > 7.0";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -145,7 +139,7 @@ public class LordOfRings extends BaseReasonerTest {
      * be converted to numeric and .0 lost)
      * @throws Exception
      */
-    public void testHigherEqualThan6Feet() throws Exception {
+    public void higherEqualThan6Feet() throws Exception {
         String query = "?x[heightInFeet hasValue ?v] and ?v >= 6.0";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -160,7 +154,7 @@ public class LordOfRings extends BaseReasonerTest {
         System.out.println("Finished query.");
     }
         
-    public void testBornBefore900() throws Exception {
+    public void bornBefore900() throws Exception {
         String query = "?x[wasBorn hasValue ?v] and ?v < 900   "   ;
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -171,7 +165,7 @@ public class LordOfRings extends BaseReasonerTest {
         System.out.println("Finished query.");
     }
     
-    public void testBornBeforeEqual900() throws Exception {
+    public void bornBeforeEqual900() throws Exception {
         String query = "?x[wasBorn hasValue ?v] and ?v =< 900  ";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -186,7 +180,7 @@ public class LordOfRings extends BaseReasonerTest {
         System.out.println("Finished query.");
     }
     
-    public void testLowerThan7Feet() throws Exception {
+    public void lowerThan7Feet() throws Exception {
         String query = "?x[heightInFeet hasValue ?v] and ?v < 7.0";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -197,7 +191,7 @@ public class LordOfRings extends BaseReasonerTest {
         System.out.println("Finished query.");
     }
     
-    public void testLowerEqualThan7AndHalfFeet() throws Exception {
+    public void lowerEqualThan7AndHalfFeet() throws Exception {
         String query = "?x[heightInFeet hasValue ?v] and ?v =< 7.5";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -212,7 +206,7 @@ public class LordOfRings extends BaseReasonerTest {
         System.out.println("Finished query.");
     }
     
-    public void testNamedAragorn() throws Exception {
+    public void namedAragorn() throws Exception {
         String query = "?x[hasName hasValue ?v] and ?v = \"Aragorn\"";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -223,7 +217,7 @@ public class LordOfRings extends BaseReasonerTest {
         System.out.println("Finished query.");
     }
     
-    public void testNamedArwen() throws Exception {
+    public void namedArwen() throws Exception {
         String query = "?x[hasName hasValue \"Arwen\"]";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -233,7 +227,7 @@ public class LordOfRings extends BaseReasonerTest {
         System.out.println("Finished query.");
     }
     
-    public void testBorn500() throws Exception {
+    public void born500() throws Exception {
         String query = "?x[wasBorn hasValue 500]";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -243,7 +237,7 @@ public class LordOfRings extends BaseReasonerTest {
         System.out.println("Finished query.");
     }
     
-    public void testHeight6Feet() throws Exception {
+    public void height6Feet() throws Exception {
         String query = "?x[heightInFeet hasValue 6.0]";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -253,7 +247,7 @@ public class LordOfRings extends BaseReasonerTest {
         System.out.println("Finished query.");
     }
     
-    public void testHappy() throws Exception {
+    public void happy() throws Exception {
         String query = "?x[isHappy hasValue _boolean(\"true\")]";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -266,7 +260,7 @@ public class LordOfRings extends BaseReasonerTest {
         System.out.println("Finished query.");
     }
     
-    public void testUnHappy() throws Exception {
+    public void unHappy() throws Exception {
         String query = "?x[isHappy hasValue _boolean(\"false\")]";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -279,7 +273,7 @@ public class LordOfRings extends BaseReasonerTest {
         System.out.println("Finished query.");
     }
     
-    public void testBorn490And10() throws Exception {
+    public void born490And10() throws Exception {
         String query = "?x[wasBorn hasValue ?v] and wsml#numericEqual(?v,(490 + 10))";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -290,7 +284,7 @@ public class LordOfRings extends BaseReasonerTest {
         System.out.println("Finished query.");
     }
     
-    public void testBorn490And10LogicEqual() throws Exception {
+    public void born490And10LogicEqual() throws Exception {
         String query = "?x[wasBorn hasValue ?v] and ?v = (490 + 10)";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -301,7 +295,7 @@ public class LordOfRings extends BaseReasonerTest {
         System.out.println("Finished query.");
     }
     
-    public void testBorn510Minus10() throws Exception {
+    public void born510Minus10() throws Exception {
         String query = "?x[wasBorn hasValue ?v] and wsml#numericEqual(?v,(510 - 10))";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -311,7 +305,7 @@ public class LordOfRings extends BaseReasonerTest {
         System.out.println("Finished query.");
     }
     
-    public void testBorn250Twice() throws Exception {
+    public void born250Twice() throws Exception {
         String query = "?x[wasBorn hasValue ?v] and wsml#numericEqual(?v,(250 * 2))";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -321,7 +315,7 @@ public class LordOfRings extends BaseReasonerTest {
         System.out.println("Finished query.");
     }
     
-    public void testBorn1000DividedBy2() throws Exception {
+    public void born1000DividedBy2() throws Exception {
         String query = "?x[wasBorn hasValue ?v] and wsml#numericEqual(?v,(1000 / 2))";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -331,7 +325,7 @@ public class LordOfRings extends BaseReasonerTest {
         System.out.println("Finished query.");
     }
     
-    public void testHappyOrSad() throws Exception {
+    public void happyOrSad() throws Exception {
         String query = "?x[isHappy hasValue _boolean(\"true\")] or ?x[isHappy hasValue _boolean(\"false\")]";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -348,6 +342,84 @@ public class LordOfRings extends BaseReasonerTest {
         expected.add(binding);
         performQuery(query, expected);
         System.out.println("Finished query.");
+    }
+    
+    public void testFlightReasoners() throws Exception{
+//    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+//    	aragornIsElendilsHeir();
+//    	aragornLovesElf();
+//    	aragornLovesFemale();
+//    	arwenIsFemale();
+//    	born1000DividedBy2();
+//    	born250Twice();
+//    	born490And10();
+//    	born490And10LogicEqual();
+//    	born500();
+//    	born510Minus10();
+//    	bornBefore900();
+//    	bornBeforeEqual900();
+//    	happy();
+//    	happyOrSad();
+//    	height6Feet();
+//    	higherEqualThan6Feet();
+//    	higherThan7Feet();
+//    	lowerEqualThan7AndHalfFeet();
+//    	lowerThan7Feet();
+//    	males();
+//    	namedAragorn();
+//    	namedArwen();
+//    	noMaleFemaleTogether();
+
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
+    	aragornIsElendilsHeir();
+    	aragornLovesElf();
+    	aragornLovesFemale();
+    	arwenIsFemale();
+    	born1000DividedBy2();
+    	born250Twice();
+    	born490And10();
+    	born490And10LogicEqual();
+    	born500();
+    	born510Minus10();
+    	bornBefore900();
+    	bornBeforeEqual900();
+    	happy();
+    	happyOrSad();
+    	height6Feet();
+    	higherEqualThan6Feet();
+    	higherThan7Feet();
+    	lowerEqualThan7AndHalfFeet();
+    	lowerThan7Feet();
+    	males();
+    	namedAragorn();
+    	namedArwen();
+    	noMaleFemaleTogether();
+    	
+//    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+//    	aragornIsElendilsHeir();
+//    	aragornLovesElf();
+//    	aragornLovesFemale();
+//    	arwenIsFemale();
+//    	born1000DividedBy2();
+//    	born250Twice();
+//    	born490And10();
+//    	born490And10LogicEqual();
+//    	born500();
+//    	born510Minus10();
+//    	bornBefore900();
+//    	bornBeforeEqual900();
+//    	happy();
+//    	happyOrSad();
+//    	height6Feet();
+//    	higherEqualThan6Feet();
+//    	higherThan7Feet();
+//    	lowerEqualThan7AndHalfFeet();
+//    	lowerThan7Feet();
+//    	males();
+//    	namedAragorn();
+//    	namedArwen();
+//    	noMaleFemaleTogether();
+    	
     }
 
 }
