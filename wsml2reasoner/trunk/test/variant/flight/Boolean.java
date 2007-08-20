@@ -16,7 +16,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  */
-package open;
+package variant.flight;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,7 +39,7 @@ import base.BaseReasonerTest;
  * 
  * @author Holger lausen
  * 
- * @version $Revision: 1.3 $ $Date: 2007-08-20 12:15:34 $
+ * @version $Revision: 1.4 $ $Date: 2007-08-20 13:52:37 $
  */
 public class Boolean extends BaseReasonerTest {
 //    Parser parser;
@@ -126,8 +126,8 @@ public class Boolean extends BaseReasonerTest {
 //    }
     
     public void testFlightReasoners() throws Exception{
-//    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
-//    	simplerBoolean();
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+    	simplerBoolean();
 
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
     	simplerBoolean();
