@@ -38,7 +38,6 @@ import org.deri.mins.Substitution;
 import org.deri.mins.api.DBInterface;
 import org.deri.mins.builtins.BuiltinBody;
 import org.deri.mins.builtins.BuiltinConfig;
-import org.deri.mins.builtins.Equal;
 import org.deri.mins.builtins.IsBoolean;
 import org.deri.mins.builtins.IsConst;
 import org.deri.mins.builtins.IsInteger;
@@ -154,19 +153,25 @@ public class MinsFacade implements DatalogReasonerFacade {
 		               if (!(wsmlVariable instanceof TempVariable))
 		                   varBinding.put(wsmlVariable, wsmlTerm);
 		           }
-//                    if (!(a.terms[i] instanceof Variable) &&
-//                    	(!(a.terms[i].toString().contains("boolean")))){
-//                        Variable wsmlVariable = symbTransfomer.convertToWSML(i,
-//                                q);
-//                        Term wsmlTerm = symbTransfomer
-//                                .convertToWSML(a.terms[i]);
-//                        if (!(wsmlVariable instanceof TempVariable))
-//                            varBinding.put(wsmlVariable, wsmlTerm);
-//                    }
                 }
-                result.add(varBinding);
-                logger.info("Added new variable binding to result set: "
+                
+        		// BEHAVIOR IMITATIED FROM THE KAON FACADE
+        		// if there are no variables in the query, fill it with as many empty
+        		// map objects as the result size
+//        		if (query.isBuiltIn()) {
+//        			for (int i = 0, max = varBinding.size(); i < max; i++) {
+//        				result.add(new HashMap<Variable, Term>());
+//        			}
+//        		}
+//        		result.add(varBinding);
+//                logger.info("Added new variable binding to result set: "
+//                        + varBinding);
+        		
+                if(!varBinding.isEmpty()){
+                	result.add(varBinding);
+                	logger.info("Added new variable binding to result set: "
                         + varBinding);
+                }
                 a = s.Next();
             }
             return result;
@@ -386,7 +391,14 @@ public class MinsFacade implements DatalogReasonerFacade {
             String type = val.getType().getIRI().toString();
             int arity = val.getArity();
             if (type.equals(WsmlDataType.WSML_BOOLEAN)) {
-                minsTerm = new StringTerm(val.toString());
+//            	System.out.println(val.getValue().toString());
+            	if(val.toString().contains("true")){
+            		minsTerm = new BooleanTerm(true);
+            	}
+            	else {
+            		minsTerm = new BooleanTerm(false);
+            	}
+        
             } else if (type.equals(WsmlDataType.WSML_DATE)){
                 //MINS ONLY support 3 ints, variables to be handled :(
                 int year = ((BigInteger)val.getArgumentValue((byte)0).getValue()).intValue();
@@ -510,7 +522,7 @@ public class MinsFacade implements DatalogReasonerFacade {
                                         new org.deri.mins.terms.Variable(
                                                 0),
                                         new BooleanTerm(//new StringTerm(
-                                                "true") },//"_boolean(\"false\")") }
+                                                true) },//"_boolean(\"false\")") }
                                 new IsBoolean()) }));
 
         // ?x memberOf wsml#boolean :- isString(?x) , ?x = "_boolean("false") REPLACED with ?x memberOf wsml#boolean :- ?x = org.deri.mins.terms.concrete.BooleanTerm[value=false]
@@ -527,7 +539,7 @@ public class MinsFacade implements DatalogReasonerFacade {
                                     new org.deri.mins.terms.Variable(
                                             0),
                                     new BooleanTerm(//new StringTerm(
-                                            "false") },//"_boolean(\"false\")") }
+                                             false) },//"_boolean(\"false\")") }
                             new IsBoolean()) }));
         
 //        // ?x memberOf wsml#boolean :- ?x = org.deri.mins.terms.concrete.BooleanTerm[value=true]

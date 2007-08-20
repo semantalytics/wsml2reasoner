@@ -111,16 +111,23 @@ public class MinsSymbolMap {
         minsBuiltIn2No.put(Constants.INEQUAL, 6);
 
         minsBuiltinFunc.put(Constants.NUMERIC_EQUAL, new Equal());
-        minsBuiltIn2No.put(Constants.NUMERIC_EQUAL, 6);
+        minsBuiltIn2No.put(Constants.NUMERIC_EQUAL, 7);
         
         minsBuiltinFunc.put(Constants.NUMERIC_INEQUAL, new Equal());
-        minsBuiltIn2No.put(Constants.NUMERIC_INEQUAL, 6);
+        minsBuiltIn2No.put(Constants.NUMERIC_INEQUAL, 7);
         
         minsBuiltinFunc.put(Constants.STRING_EQUAL, new Equal());
-        minsBuiltIn2No.put(Constants.STRING_EQUAL, 6);
-
+        minsBuiltIn2No.put(Constants.STRING_EQUAL, 8);
+        
         minsBuiltinFunc.put(Constants.STRING_INEQUAL, new Equal());
-        minsBuiltIn2No.put(Constants.STRING_INEQUAL, 6);
+        minsBuiltIn2No.put(Constants.STRING_INEQUAL, 8);
+
+//        minsBuiltinFunc.put(Constants.UNIV_TRUE, new BuiltinFunc());
+//        minsBuiltIn2No.put(Constants.UNIV_TRUE, 9);
+//        
+//        minsBuiltinFunc.put(Constants.UNIV_FALSE, new BuiltinFunc());
+//        minsBuiltIn2No.put(Constants.UNIV_FALSE, 9);
+        
     }
     
     public int convertToTool(org.wsml.reasoner.Literal literal){
@@ -196,7 +203,7 @@ public class MinsSymbolMap {
     */
     
     public org.omwg.logicalexpression.terms.Term convertToWSML(Term term) throws UnsupportedFeatureException {
-    	org.omwg.logicalexpression.terms.Term result = null;
+    	//org.omwg.logicalexpression.terms.Term result = null;
     	if(term.isConstTerm()){
     		org.omwg.logicalexpression.terms.Term id = tool2wsmlConstants.get(((org.deri.mins.terms.ConstTerm)term).symbol);
     		if(term.pars==null || term.pars.length == 0) return id;
@@ -211,15 +218,14 @@ public class MinsSymbolMap {
     	}else if (term.isStringTerm()){
     		// Although wsml2reasoner seems to send MINS BooleanTerms,
     		// MINS returns boolean values as StringTerms instead of BooleanTerms
-    		if (term.toString().contains("boolean")) {
-    			if (term.toString().contains("true")) {
-    				return wsmoManager.getDataFactory().createWsmlBoolean(true);
-    			}
-    			else {
-	                return wsmoManager.getDataFactory().createWsmlBoolean(
-	                        false);
-    			}
-    		}
+//    		if (term.toString().contains("boolean")) {
+//    			if (term.toString().contains("true")) {
+//    				return wsmoManager.getDataFactory().createWsmlBoolean(true);
+//    			}
+//    			else {
+//	                return wsmoManager.getDataFactory().createWsmlBoolean(false);
+//    			}
+//    		}
     	    return wsmoManager.getDataFactory().createWsmlString(((StringTerm)term).s);
         }else if (term.isNumTerm()){
             if (term instanceof IntegerTerm){
@@ -230,15 +236,13 @@ public class MinsSymbolMap {
                 DateTerm date = (DateTerm) term;
                 return wsmoManager.getDataFactory().createWsmlDate(date.cal);
             }
-            org.deri.mins.terms.NumTerm numTerm = (org.deri.mins.terms.NumTerm)term;
+//            org.deri.mins.terms.NumTerm numTerm = (org.deri.mins.terms.NumTerm)term;
             return wsmoManager.getDataFactory().createWsmlDecimal(term.toString());
             // Although wsml2reasoner seems to send MINS BooleanTerms,
     		// MINS returns boolean values as StringTerms instead of BooleanTerms
             // and this else if is never reached?
-        }else if (term instanceof BooleanTerm){
-            boolean value = ((BooleanTerm)term).getValue();
-            return wsmoManager.getDataFactory().createWsmlBoolean(
-                    value);
+        }else if (term.isBooleanTerm()){
+            return wsmoManager.getDataFactory().createWsmlBoolean(((BooleanTerm)term).getValue());
         }else 
         System.err.println("ERROR - UNKNOWN MINS TERM: "+term+" "+term.getClass());
         return wsmoManager.getDataFactory().createWsmlString("unknown");
