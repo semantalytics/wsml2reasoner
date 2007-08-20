@@ -22,9 +22,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
@@ -33,33 +30,27 @@ import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 
 import base.BaseReasonerTest;
 
-public class InconsistencyTestWithFSymbol extends BaseReasonerTest {
-    private static final String NS = "urn:functionsymbol#";
+public class MinsInconsistencyTestWithFSymbol extends BaseReasonerTest {
 
-    private static final String ONTOLOGY_FILE = "files/InconsistencyTestWithFSymbol.wsml";
+    private static final String ONTOLOGY_FILE = "files/MinsInconsistencyTestWithFSymbol.wsml";
     
-    static BuiltInReasoner previous;
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(InconsistencyTestWithFSymbol.suite());
+   BuiltInReasoner previous;
+    
+    @Override
+    protected void setUp() throws Exception {
+    	super.setUp();
+    	setupScenario(ONTOLOGY_FILE);
+    	previous = BaseReasonerTest.reasoner;
+    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
     }
-
-    public static Test suite() {
-        Test test = new junit.extensions.TestSetup(new TestSuite(
-        		InconsistencyTestWithFSymbol.class)) {
-            protected void setUp() throws Exception {
-            	previous = BaseReasonerTest.reasoner;
-            	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
-                setupScenario(ONTOLOGY_FILE);
-            }
-
-            protected void tearDown() throws Exception {
-            	BaseReasonerTest.reasoner = previous;
-                System.out.println("Finished!");
-            }
-        };
-        return test;
+    
+    @Override
+    protected void tearDown() throws Exception {
+    	super.tearDown();
+    	resetReasoner(previous);
     }
+    
 
     /**
      * fails because of design of API
