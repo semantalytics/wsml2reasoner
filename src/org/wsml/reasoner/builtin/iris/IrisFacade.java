@@ -89,6 +89,7 @@ import org.wsml.reasoner.ExternalToolException;
 import org.wsml.reasoner.Literal;
 import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.WSML2DatalogTransformer;
+import org.wsml.reasoner.api.InternalReasonerException;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
@@ -102,11 +103,11 @@ import org.wsmo.factory.WsmoFactory;
  * The wsmo4j interface for the iris reasoner.
  * </p>
  * <p>
- * $Id: IrisFacade.java,v 1.18 2007-07-16 07:32:35 richardpoettler Exp $
+ * $Id: IrisFacade.java,v 1.19 2007-08-21 17:42:49 nathalie Exp $
  * </p>
  * 
  * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class IrisFacade implements DatalogReasonerFacade {
 
@@ -196,7 +197,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 			throw new NullPointerException("The query must not be null");
 		}
 		if (!progs.containsKey(ontologyURI)) {
-			throw new IllegalArgumentException("A program with the uri '" + 
+			throw new InternalReasonerException("A program with the uri '" + 
 					ontologyURI + "' has not been registered, yet.");
 		}
 
