@@ -70,6 +70,8 @@ import org.deri.iris.api.terms.concrete.IIntegerTerm;
 import org.deri.iris.api.terms.concrete.IIri;
 import org.deri.iris.api.terms.concrete.ISqName;
 import org.deri.iris.builtins.IsBooleanBuiltin;
+import org.deri.iris.builtins.IsDateBuiltin;
+import org.deri.iris.builtins.IsDateTimeBuiltin;
 import org.deri.iris.builtins.IsDecimalBuiltin;
 import org.deri.iris.builtins.IsIntegerBuiltin;
 import org.deri.iris.builtins.IsStringBuiltin;
@@ -103,11 +105,11 @@ import org.wsmo.factory.WsmoFactory;
  * The wsmo4j interface for the iris reasoner.
  * </p>
  * <p>
- * $Id: IrisFacade.java,v 1.19 2007-08-21 17:42:49 nathalie Exp $
+ * $Id: IrisFacade.java,v 1.20 2007-08-22 15:58:52 nathalie Exp $
  * </p>
  * 
  * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public class IrisFacade implements DatalogReasonerFacade {
 
@@ -468,7 +470,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 			terms.add(wsmoTermConverter(t));
 		}
 
-		final String sym = l.getPredicateUri();
+		final String sym = l.getPredicateUri();		
 		// checking whether the predicate is a builtin
 		if (sym.equals(Constants.EQUAL) || 
 				sym.equals(Constants.NUMERIC_EQUAL) || 
@@ -817,6 +819,16 @@ public class IrisFacade implements DatalogReasonerFacade {
 				BASIC.createHead(BASIC.createLiteral(true, WSML_MEBER_OF,
 						BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_BOOLEAN)))),
 				BASIC.createBody(hasValue, BASIC.createLiteral(true, new IsBooleanBuiltin(X)))));
+		// rules for member of date
+		res.add(BASIC.createRule(
+				BASIC.createHead(BASIC.createLiteral(true, WSML_MEBER_OF,
+						BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_DATE)))),
+				BASIC.createBody(hasValue, BASIC.createLiteral(true, new IsDateBuiltin(X)))));
+		// rules for member of dateTime
+		res.add(BASIC.createRule(
+				BASIC.createHead(BASIC.createLiteral(true, WSML_MEBER_OF,
+						BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_DATETIME)))),
+				BASIC.createBody(hasValue, BASIC.createLiteral(true, new IsDateTimeBuiltin(X)))));
 		return res;
 	}
 
