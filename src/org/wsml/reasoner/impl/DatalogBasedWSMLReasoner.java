@@ -681,12 +681,13 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             String id = violation.get(i).toString();
             if (AnonymousIdUtils.isAnonymousIri(id)){
                 errors.add(new UnNamedUserConstraintViolation(ontologyId));
-                return;
             }
-            id = id.substring(0,id.indexOf(AnonymousIdUtils.NAMED_AXIOM_SUFFIX));
-            IRI iri = wsmoFactory.createIRI(id);
-            axiom =wsmoFactory.getAxiom(iri);
-            errors.add(new NamedUserConstraintViolation(ontologyId, axiom));
+            else {
+	            id = id.substring(0,id.indexOf(AnonymousIdUtils.NAMED_AXIOM_SUFFIX));
+	            IRI iri = wsmoFactory.createIRI(id);
+	            axiom =wsmoFactory.getAxiom(iri);
+	            errors.add(new NamedUserConstraintViolation(ontologyId, axiom));
+            }
         }
     }
 
@@ -706,7 +707,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         Set<Map<Variable, Term>> violations = executeQuery(ontologyId, atom);
         for (int k = 0; k < violations.size(); k++) {
             // Construct error object
-            errors.add(new UserConstraintViolation(ontologyId));
+            errors.add(new UnNamedUserConstraintViolation(ontologyId));
         }
     }
 
