@@ -44,23 +44,16 @@ import base.BaseReasonerTest;
  * 
  * @author
  * 
- * @version $Revision: 1.4 $ $Date: 2007-08-16 18:22:43 $
+ * @version $Revision: 1.5 $ $Date: 2007-08-23 08:47:47 $
  */
 public class AttributeRangeTest extends BaseReasonerTest {
-    Parser parser;
-    LogicalExpressionFactory leFactory;
-    DataFactory dFactory;
-    WsmoFactory wsmoFactory;
-    WSMLReasoner reasoner;
     BuiltInReasoner previous;
     
-    public void setUp(){
-        parser = Factory.createParser(null);
-        leFactory = Factory.createLogicalExpressionFactory(null);
-        dFactory = Factory.createDataFactory(null);
-        previous = BaseReasonerTest.reasoner;
-        reasoner =  null;
-        wsmoFactory = Factory.createWsmoFactory(null);
+    public void setUp() throws Exception{
+    	super.setUp();
+    	setupScenario("files/AttributeRangeOntology.wsml");
+    	previous = BaseReasonerTest.reasoner;
+        
     }
 
     @Override
@@ -73,34 +66,7 @@ public class AttributeRangeTest extends BaseReasonerTest {
      * @throws Exception
      */
     public void attributeRange() throws Exception {
-    	Ontology exampleOntology = loadOntology("test/files/AttributeRangeOntology.wsml");
-    	try{
-    		reasoner = BaseReasonerTest.getReasoner();
-    		reasoner.registerOntology(exampleOntology);
-    		assertTrue(true);
-    	}
-    	catch (Exception e){
-    		e.printStackTrace();
-    		assertTrue(false);
-    	}
-    }
-    
-    private Ontology loadOntology(String file) {
-        try {
-            final TopEntity[] identifiable = parser
-                    .parse(new FileReader(file));
-            if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {
-                return (Ontology) identifiable[0];
-            } else {
-                System.out.println("First Element of file no ontology ");
-                return null;
-            }
-
-        } catch (Exception e) {
-            System.out.println("Unable to parse ontology: " + e.getMessage());
-            return null;
-        }
-
+    	setupScenario("files/AttributeRangeOntology.wsml");
     }
     
     public void testAllReasoners() throws Exception{

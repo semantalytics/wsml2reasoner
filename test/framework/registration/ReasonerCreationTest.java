@@ -115,18 +115,18 @@ public class ReasonerCreationTest extends BaseReasonerTest {
 	}
 	
     public void testReasonerCreation() throws Exception{
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
-    	datalogReasonerCreation();
-    	
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
-    	datalogReasonerCreation();
-    	
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
-    	datalogReasonerCreation();
+//    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+//    	datalogReasonerCreation();
+//    	
+//    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
+//    	datalogReasonerCreation();
+//    	
+//    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+//    	datalogReasonerCreation();
 //    	dlReasonerCreation();
     	
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET);
-    	dlReasonerCreation();
+//    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET);
+//    	dlReasonerCreation();
     }
 	
 }

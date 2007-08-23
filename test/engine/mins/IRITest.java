@@ -51,7 +51,7 @@ import base.BaseReasonerTest;
  * 
  * @author Holger lausen
  * 
- * @version $Revision: 1.1 $ $Date: 2007-08-10 17:17:15 $
+ * @version $Revision: 1.2 $ $Date: 2007-08-23 08:47:47 $
  */
 public class IRITest extends BaseReasonerTest {
     Parser parser;
@@ -115,7 +115,7 @@ public class IRITest extends BaseReasonerTest {
     protected void tearDown() throws Exception {
     	// TODO Auto-generated method stub
     	super.tearDown();
-    	BaseReasonerTest.reasoner = previous;
+    	resetReasoner(previous);
     	//System.gc();
     }
 
