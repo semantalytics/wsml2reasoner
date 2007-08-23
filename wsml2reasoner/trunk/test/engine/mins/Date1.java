@@ -53,7 +53,7 @@ import base.BaseReasonerTest;
  * 
  * @author Holger lausen
  * 
- * @version $Revision: 1.2 $ $Date: 2007-08-14 16:50:40 $
+ * @version $Revision: 1.3 $ $Date: 2007-08-23 08:47:47 $
  */
 public class Date1 extends BaseReasonerTest {
     Parser parser;
@@ -159,8 +159,7 @@ public class Date1 extends BaseReasonerTest {
     protected void tearDown() throws Exception {
     	// TODO Auto-generated method stub
     	super.tearDown();
-    	BaseReasonerTest.reasoner = previous;
-    	//System.gc();
+    	resetReasoner(previous);
     }
 
 

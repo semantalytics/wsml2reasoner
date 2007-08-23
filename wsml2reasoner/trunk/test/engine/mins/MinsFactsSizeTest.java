@@ -34,7 +34,6 @@ public class MinsFactsSizeTest extends BaseReasonerTest {
      	super.setUp();
      	setupScenario(ONTOLOGY_FILE);
      	previous = BaseReasonerTest.reasoner;
-     	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
      	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
      }
      
