@@ -18,24 +18,14 @@
  */
 package framework.datatypes;
 
-import java.io.FileReader;
-
-import org.omwg.ontology.Ontology;
-import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
-import org.wsmo.common.TopEntity;
-import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.Factory;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
-import org.wsmo.wsml.Parser;
 
 import base.BaseReasonerTest;
 
 /**
  * Interface or class description
- * 
+ * \
  * <pre>
  *   Created on 20.04.2006
  *   Committed by $Author: graham $
@@ -44,7 +34,7 @@ import base.BaseReasonerTest;
  * 
  * @author
  * 
- * @version $Revision: 1.5 $ $Date: 2007-08-23 08:47:47 $
+ * @version $Revision: 1.6 $ $Date: 2007-08-24 09:59:59 $
  */
 public class AttributeRangeTest extends BaseReasonerTest {
     BuiltInReasoner previous;

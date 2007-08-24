@@ -32,7 +32,7 @@ import base.BaseReasonerTest;
 
 public class MinsInconsistencyTestWithFSymbol extends BaseReasonerTest {
 
-    private static final String ONTOLOGY_FILE = "files/MinsInconsistencyTestWithFSymbol.wsml";
+    private static final String ONTOLOGY_FILE = "files/InconsistencyTestWithFSymbol.wsml";
     
    BuiltInReasoner previous;
     
@@ -41,7 +41,6 @@ public class MinsInconsistencyTestWithFSymbol extends BaseReasonerTest {
     	super.setUp();
     	setupScenario(ONTOLOGY_FILE);
     	previous = BaseReasonerTest.reasoner;
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
     }
     
@@ -61,7 +60,7 @@ public class MinsInconsistencyTestWithFSymbol extends BaseReasonerTest {
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         try{
             performQuery(query, expected);
-            //fail("should fail!");
+            fail("should fail!");
         }catch (InconsistencyException e){
             //should be thrown!
         }

@@ -1,9 +1,9 @@
 package base;
 
+import variant.core.CyclicalImportsTest;
+import variant.flight.OntologyRegistrationTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import variant.flight.SimpleGraph;
-import framework.datatypes.AttributeRangeTest;
 /**
  * Prior to running tests, 
  *
@@ -19,9 +19,9 @@ public class BundleProblems {
 
     public static Test suite() {
         TestSuite suite = new TestSuite("Test suite for wsml2reasoner (all tests)");
-        // $JUnit-BEGIN$
-        suite.addTestSuite(AttributeRangeTest.class);
-    	suite.addTestSuite(SimpleGraph.class);
+        // $JUnit-BEGIN$ 
+        suite.addTest(RunEngineTests.suite());
+        suite.addTestSuite(OntologyRegistrationTest.class);
         // $JUnit-END$
         return suite;
     }

@@ -1,11 +1,10 @@
-package open;
+package variant.flight;
 
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Set;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
@@ -13,10 +12,12 @@ import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
 import base.BaseReasonerTest;
@@ -27,19 +28,36 @@ import base.BaseReasonerTest;
  * <pre>
  *   Created on 20.04.2006
  *   Committed by $Author: graham $
- *   $Source: /home/richi/temp/w2r/wsml2reasoner/test/open/RegisterMultipleTimes.java,v $,
+ *   $Source: /home/richi/temp/w2r/wsml2reasoner/test/variant/flight/RegisterMultipleTimes.java,v $,
  * </pre>
  * 
  * @author Holger lausen, Martin Tanler
  * 
- * @version $Revision: 1.1 $ $Date: 2007-08-08 10:57:59 $
+ * @version $Revision: 1.1 $ $Date: 2007-08-24 09:59:58 $
  */
 public class RegisterMultipleTimes  extends BaseReasonerTest  {
-    String FILE = "RegisterMultipleTimes.wsml";
-    Parser parser;
-    LogicalExpressionFactory leFactory;
-    WsmoFactory wsmoFactory;
+	
+	Parser parser = org.wsmo.factory.Factory.createParser(null);
+//	LogicalExpressionFactory leFactory = Factory.createLogicalExpressionFactory(null);
+	
     WSMLReasoner reasoner;
+    BuiltInReasoner previous;
+    
+    String file1 = "files/RegisterMultipleTimes1.wsml";
+    String file2 = "files/RegisterMultipleTimes2.wsml";
+    
+    @Override
+    protected void setUp() throws Exception {
+    	super.setUp();
+    	setUpFactories();
+    	previous = BaseReasonerTest.reasoner;
+    }
+    
+    @Override
+    protected void tearDown() throws Exception {
+    	super.tearDown();
+    	resetReasoner(previous);
+    }
 
     /**
      * This test failed since WSMO4J uses statics in its default factory
@@ -48,30 +66,29 @@ public class RegisterMultipleTimes  extends BaseReasonerTest  {
      * 
      * @throws Exception
      */
-    public void testClearDeregistration() throws Exception {
-
-        FileReader f = new FileReader(RegisterMultipleTimes.class.getResource(FILE).toURI()
-                .getPath());
-        Ontology[] ont = new Ontology[2];
-        TopEntity[] topEntity = parser.parse(f);
-        ont[0] = (Ontology) topEntity[0];
-        ont[1] = (Ontology) topEntity[1];
-
+    public void clearDeregistration() throws Exception {
+    	reasoner = BaseReasonerTest.getReasoner();
+    	InputStream is = this.getClass().getClassLoader().getResourceAsStream(file1);
+    	assertNotNull(is);
+    	Ontology ont0 =(Ontology)parser.parse(new InputStreamReader(is))[0]; 
+    	InputStream is1 = this.getClass().getClassLoader().getResourceAsStream(file2);
+    	assertNotNull(is1);
+    	Ontology ont1 =(Ontology)parser.parse(new InputStreamReader(is1))[0]; 
         LogicalExpression query = leFactory.createLogicalExpression(
-                "?x memberOf ?y", ont[0]);
+                "?x memberOf ?y", ont0);
 
         Set<Map<Variable, Term>> result = null;
         for (int i = 0; i < 50; i++) {
             // ///////////ONTOLOGY 0
-            reasoner.registerOntology(ont[0]);
-            result = reasoner.executeQuery((IRI) ont[0].getIdentifier(), query);
-            reasoner.deRegisterOntology((IRI) ont[0].getIdentifier());
+            reasoner.registerOntology(ont0);
+            result = reasoner.executeQuery((IRI) ont0.getIdentifier(), query);
+            reasoner.deRegisterOntology((IRI) ont0.getIdentifier());
             assertEquals("failed in run:"+i,1,result.size());
 
             // ///////////ONTOLOGY 1
-            reasoner.registerOntology(ont[1]);
-            result = reasoner.executeQuery((IRI) ont[1].getIdentifier(), query);
-            reasoner.deRegisterOntology((IRI) ont[1].getIdentifier());
+            reasoner.registerOntology(ont1);
+            result = reasoner.executeQuery((IRI) ont1.getIdentifier(), query);
+            reasoner.deRegisterOntology((IRI) ont1.getIdentifier());
             assertEquals("failed in run:"+i,1, result.size());
 
         }
@@ -82,7 +99,8 @@ public class RegisterMultipleTimes  extends BaseReasonerTest  {
      * 
      * @throws Exception
      */
-    public void testRemoveInstances() throws Exception {
+    public void removeInstances() throws Exception {
+    	reasoner = BaseReasonerTest.getReasoner();
         String ns = "http://ex1.org#";
         String test = "namespace _\""+ns+"\" \n" +
                 "ontology o1 \n" +
@@ -121,14 +139,18 @@ public class RegisterMultipleTimes  extends BaseReasonerTest  {
 
     }
     
-    
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(RegisterMultipleTimes.suite());
-    }
-
-    public static Test suite() {
-        Test test = new junit.extensions.TestSetup(new TestSuite(RegisterMultipleTimes.class)) {};
-        return test;
+    public void testFlightReasoners() throws Exception{
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+    	clearDeregistration();
+    	removeInstances();
+    	
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
+        clearDeregistration();
+    	removeInstances();
+    	
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+      	clearDeregistration();
+    	removeInstances();
     }
 
 }
