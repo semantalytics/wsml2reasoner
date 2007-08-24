@@ -15,6 +15,7 @@ public class BundledWSMLRuleTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test suite for WSML-Rule variant");
 		//$JUnit-BEGIN$
+		suite.addTestSuite(MinsInconsistencyTestWithFSymbol.class);
 		suite.addTest(FunctionSymbolsTest.suite());
 		suite.addTestSuite(Martin.class);
 		//$JUnit-END$

@@ -18,8 +18,6 @@
  */
 package variant.flight;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -27,16 +25,9 @@ import java.util.Map.Entry;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
-import org.omwg.ontology.Ontology;
-import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
-import org.wsmo.factory.Factory;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
-import org.wsmo.wsml.Parser;
 
 import base.BaseReasonerTest;
 
@@ -656,6 +647,9 @@ public void basicInferences() throws Exception {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.1  2007-08-24 09:59:58  graham
+ * Updated to new iris snapshot (20070823)
+ *
  * Revision 1.1  2007-08-08 10:57:59  graham
  * Second stage of refactoring unit tests
  *

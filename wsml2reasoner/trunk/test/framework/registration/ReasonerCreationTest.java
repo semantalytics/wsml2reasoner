@@ -25,7 +25,6 @@ import java.util.Set;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.WSMLReasoner;
-import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.Factory;

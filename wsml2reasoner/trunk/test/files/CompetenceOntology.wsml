@@ -1,6 +1,6 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
 namespace { _"webode://mccarthy.dia.fi.upm.es/Competence_Eures_Ontology#" , wsml _"http://www.wsmo.org/wsml/wsml-syntax#" ,
-	
+	 Time _"webode://mccarthy.dia.fi.upm.es/Time_Eures_Ontology#",
 	JobSeeOnt _"webode://mccarthy.dia.fi.upm.es/Job_Seeker_Eures_Ontology#",
 	JobOffOnt _"webode://mccarthy.dia.fi.upm.es/Job_Offer_Eures_Ontology#"}
 
@@ -15,3 +15,7 @@ concept Competence
 	is_competence_of_Candidacy ofType (0 *) JobSeeOnt#Candidacy
 	is_associated_with_Vacancy ofType (0 *) JobOffOnt#Vacancy
 
+instance FourthInstance memberOf Time#DateTimeDescription
+	day hasValue 02
+	month hasValue 08
+	year hasValue 2007

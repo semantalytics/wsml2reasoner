@@ -1,6 +1,5 @@
 package variant.flight;
 
-import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
@@ -15,9 +14,6 @@ import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsmo.common.IRI;
-import org.wsmo.common.TopEntity;
-import org.wsmo.factory.Factory;
-import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.wsml.Parser;
 
 import base.BaseReasonerTest;
@@ -33,7 +29,7 @@ import base.BaseReasonerTest;
  * 
  * @author Holger lausen, Martin Tanler
  * 
- * @version $Revision: 1.1 $ $Date: 2007-08-24 09:59:58 $
+ * @version $Revision: 1.2 $ $Date: 2007-08-24 16:26:13 $
  */
 public class RegisterMultipleTimes  extends BaseReasonerTest  {
 	
