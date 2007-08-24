@@ -19,6 +19,7 @@
 package org.wsml.reasoner.builtin.mins;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -38,7 +39,7 @@ import org.deri.mins.Substitution;
 import org.deri.mins.api.DBInterface;
 import org.deri.mins.builtins.BuiltinBody;
 import org.deri.mins.builtins.BuiltinConfig;
-import org.deri.mins.builtins.IsBoolean;
+import org.deri.mins.builtins.Equal;
 import org.deri.mins.builtins.IsConst;
 import org.deri.mins.builtins.IsInteger;
 import org.deri.mins.builtins.IsNum;
@@ -46,7 +47,6 @@ import org.deri.mins.builtins.IsString;
 import org.deri.mins.terms.ConstTerm;
 import org.deri.mins.terms.NumTerm;
 import org.deri.mins.terms.StringTerm;
-import org.deri.mins.terms.concrete.BooleanTerm;
 import org.deri.mins.terms.concrete.DateTerm;
 import org.deri.mins.terms.concrete.IntegerTerm;
 import org.deri.wsmo4j.io.parser.wsml.TempVariable;
@@ -155,23 +155,29 @@ public class MinsFacade implements DatalogReasonerFacade {
 		           }
                 }
                 
-        		// BEHAVIOR IMITATIED FROM THE KAON FACADE
-        		// if there are no variables in the query, fill it with as many empty
-        		// map objects as the result size
-//        		if (query.isBuiltIn()) {
-//        			for (int i = 0, max = varBinding.size(); i < max; i++) {
-//        				result.add(new HashMap<Variable, Term>());
-//        			}
-//        		}
-//        		result.add(varBinding);
-//                logger.info("Added new variable binding to result set: "
-//                        + varBinding);
-        		
-                if(!varBinding.isEmpty()){
-                	result.add(varBinding);
-                	logger.info("Added new variable binding to result set: "
-                        + varBinding);
+                // This if catches the {http://www.wsmo.org/wsml/wsml-syntax#boolean, _boolean("true/false")} 
+		    	// binding which is always unnecessarily returned from MINS
+                if (varBinding.keySet().size() == 2){
+                	List <Term> vals = new ArrayList <Term> (varBinding.values());
+                	
+                	String key = "http://www.wsmo.org/wsml/wsml-syntax#boolean";
+                	String btrue = "_boolean(\"true\")";
+                	String bfalse = "_boolean(\"false\")";
+                	
+                	String v0 = vals.get(0).toString();
+                	String v1 = vals.get(1).toString();
+                	
+                	if (!((v0.equals(key) && (v1.equals(btrue) || v1.equals(bfalse))) || 
+                	      (v1.equals(key) && (v0.equals(btrue) || v0.equals(bfalse))))){
+                		result.add(varBinding);
+                	}
                 }
+                else{
+                	result.add(varBinding);
+                }
+                
+                logger.info("Added new variable binding to result set: "
+                        + varBinding);
                 a = s.Next();
             }
             return result;
@@ -391,14 +397,7 @@ public class MinsFacade implements DatalogReasonerFacade {
             String type = val.getType().getIRI().toString();
             int arity = val.getArity();
             if (type.equals(WsmlDataType.WSML_BOOLEAN)) {
-//            	System.out.println(val.getValue().toString());
-            	if(val.toString().contains("true")){
-            		minsTerm = new BooleanTerm(true);
-            	}
-            	else {
-            		minsTerm = new BooleanTerm(false);
-            	}
-        
+                minsTerm = new StringTerm(val.toString());
             } else if (type.equals(WsmlDataType.WSML_DATE)){
                 //MINS ONLY support 3 ints, variables to be handled :(
                 int year = ((BigInteger)val.getArgumentValue((byte)0).getValue()).intValue();
@@ -507,75 +506,41 @@ public class MinsFacade implements DatalogReasonerFacade {
                                 false,
                                 new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(
                                         0) }, new IsNum()) }));
-        
-        // ?x memberOf wsml#boolean :- isString(?x) , ?x = "_boolean("true") REPLACED with ?x memberOf wsml#boolean :- ?x = org.deri.mins.terms.concrete.BooleanTerm[value=true]
-        rs.addRule(new Rule(
-                new Head[] { new Head(memberOfNo,
-                        new org.deri.mins.terms.Term[] {
-                                new org.deri.mins.terms.Variable(0),
-                                new ConstTerm(booleanNo) }) },
-                new Body[] {
-                        new BuiltinBody(
-                                10,
-                                false,
-                                new org.deri.mins.terms.Term[] {
-                                        new org.deri.mins.terms.Variable(
-                                                0),
-                                        new BooleanTerm(//new StringTerm(
-                                                true) },//"_boolean(\"false\")") }
-                                new IsBoolean()) }));
 
-        // ?x memberOf wsml#boolean :- isString(?x) , ?x = "_boolean("false") REPLACED with ?x memberOf wsml#boolean :- ?x = org.deri.mins.terms.concrete.BooleanTerm[value=false]
+        // ?x memberOf wsml#boolean :- ?x = org.deri.mins.terms.concrete.BooleanTerm[value=true]
+        // REPLACED with ?x memberOf wsml#boolean :- isString(?x) , ?x = "_boolean("true")
         rs.addRule(new Rule(
-                new Head[] { new Head(memberOfNo,
-                        new org.deri.mins.terms.Term[] {
-                            new org.deri.mins.terms.Variable(0),
-                            new ConstTerm(booleanNo) }) },
-                new Body[] {
-                        new BuiltinBody(
-                            11,
-                            false,
-                            new org.deri.mins.terms.Term[] {
-                                    new org.deri.mins.terms.Variable(
-                                            0),
-                                    new BooleanTerm(//new StringTerm(
-                                             false) },//"_boolean(\"false\")") }
-                            new IsBoolean()) }));
+                        new Head[] { new Head(memberOfNo,
+                                new org.deri.mins.terms.Term[] {
+                                        new org.deri.mins.terms.Variable(0),
+                                        new ConstTerm(booleanNo) }) },
+                        new Body[] {
+                                new BuiltinBody(
+                                        6,
+                                        false,
+                                        new org.deri.mins.terms.Term[] {
+                                                new org.deri.mins.terms.Variable(
+                                                        0),
+                                                new StringTerm("_boolean(\"true\")") },
+                                        new Equal()) }));
+
+        // ?x memberOf wsml#boolean :- ?x = org.deri.mins.terms.concrete.BooleanTerm[value=false]
+        // REPLACED with ?x memberOf wsml#boolean :- isString(?x) , ?x = "_boolean("false")
+        rs.addRule(new Rule(
+                        new Head[] { new Head(memberOfNo,
+                                new org.deri.mins.terms.Term[] {
+                                        new org.deri.mins.terms.Variable(0),
+                                        new ConstTerm(booleanNo) }) },
+                        new Body[] {
+                                new BuiltinBody(
+                                        6,
+                                        false,
+                                        new org.deri.mins.terms.Term[] {
+                                                new org.deri.mins.terms.Variable(
+                                                        0),
+                                                  new StringTerm("_boolean(\"false\")") },
+                                        new Equal()) }));
         
-//        // ?x memberOf wsml#boolean :- ?x = org.deri.mins.terms.concrete.BooleanTerm[value=true]
-//        // REPLACED with ?x memberOf wsml#boolean :- isString(?x) , ?x = "_boolean("true")
-//        rs.addRule(new Rule(
-//                        new Head[] { new Head(memberOfNo,
-//                                new org.deri.mins.terms.Term[] {
-//                                        new org.deri.mins.terms.Variable(0),
-//                                        new ConstTerm(booleanNo) }) },
-//                        new Body[] {
-//                                new BuiltinBody(
-//                                        6,
-//                                        false,
-//                                        new org.deri.mins.terms.Term[] {
-//                                                new org.deri.mins.terms.Variable(
-//                                                        0),
-//                                                new StringTerm("_boolean(\"true\")") },
-//                                        new Equal()) }));
-//
-//        // ?x memberOf wsml#boolean :- ?x = org.deri.mins.terms.concrete.BooleanTerm[value=false]
-//        // REPLACED with ?x memberOf wsml#boolean :- isString(?x) , ?x = "_boolean("false")
-//        rs.addRule(new Rule(
-//                        new Head[] { new Head(memberOfNo,
-//                                new org.deri.mins.terms.Term[] {
-//                                        new org.deri.mins.terms.Variable(0),
-//                                        new ConstTerm(booleanNo) }) },
-//                        new Body[] {
-//                                new BuiltinBody(
-//                                        6,
-//                                        false,
-//                                        new org.deri.mins.terms.Term[] {
-//                                                new org.deri.mins.terms.Variable(
-//                                                        0),
-//                                                  new StringTerm("_boolean(\"false\")") },
-//                                        new Equal()) }));
-//        
         // ?x memberOf _integer :- isConst(?x)
         rs.addRule(new Rule(
                 new Head[] { new Head(memberOfNo,
