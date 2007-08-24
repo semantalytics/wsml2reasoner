@@ -16,28 +16,31 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  */
-package open;
+package variant.flight;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
+import org.omwg.ontology.WsmlDataType;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
+import org.wsmo.common.IRI;
 
 import base.BaseReasonerTest;
 
+import com.ontotext.wsmo4j.ontology.SimpleDataValueImpl;
+
 /**
- * Lots of problems....
  * @author grahen
  *
  */
 
-public class BuiltInTest extends BaseReasonerTest {
-    private static final String NS = "http://www.example.org#datatypes/";
+public class PreserveTypeTests extends BaseReasonerTest {
 
     private static final String ONTOLOGY_FILE = "files/datatypes.wsml";
     
@@ -56,19 +59,6 @@ public class BuiltInTest extends BaseReasonerTest {
     	resetReasoner(previous);
     }
     
-    public void preserveTypeAfterOperationWithConcepts() throws Exception {
-        String query = "?x[value hasValue ?y] memberOf Miles";
-        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
-        Map<Variable, Term> binding = new HashMap<Variable, Term>();
-        binding.put(leFactory.createVariable("x"), 
-                wsmoFactory.createIRI(NS+"miles"));
-        binding.put(leFactory.createVariable("y"), 
-                dataFactory.createWsmlDecimal("10.0"));
-        expected.add(binding);
-        performQuery(query, expected);
-        System.out.println("Finished query.");
-    }
-    
     public void preserveType() throws Exception {
 
         String query = "tuple1(?x,?y)";
@@ -82,15 +72,26 @@ public class BuiltInTest extends BaseReasonerTest {
         performQuery(query, expected);
         System.out.println("Finished query.");
     }
-    /**
-     * this does not work probably becuase mins does not evaluate the
-     * Buildin for some reason....
-     * @throws Exception
-     * 
-     * Shouldn't the result ---
-     * 
-     * 
-     */
+    
+    
+    //This test ensures that decimal equations result in decimals
+    public void preserveTypeAfterOperationWithConcepts() throws Exception {
+        String query = "?x[value hasValue ?y] memberOf Miles";
+        LogicalExpression qExpression = leFactory.createLogicalExpression(
+                query, o);
+        logExprSerializer.serialize(qExpression);
+        
+        Set<Map<Variable, Term>> result = wsmlReasoner.executeQuery((IRI) o
+                .getIdentifier(), qExpression);
+        
+        for (Map<Variable, Term> binding : result) {
+        	SimpleDataValueImpl shouldBeDecimal = (SimpleDataValueImpl) 
+        		binding.get(leFactory.createVariable("y"));	
+        	assertTrue(shouldBeDecimal.getType().toString().equals(WsmlDataType.WSML_DECIMAL));
+        }
+        System.out.println("Finished query.");
+    }
+    
     public void preserveTypeAfterOperationwithPredicates() throws Exception {
 
         String query = "test2(?x, mi)";
@@ -105,19 +106,18 @@ public class BuiltInTest extends BaseReasonerTest {
     
     public void testFlightReasoners() throws Exception{
     	
-    	//Due to unsafe rules
-//    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
-//    	preserveType();
-//    	preserveTypeAfterOperation2();
-//    	preserveTypeAfterOperationWithConcepts();
-//    	preserveTypeAfterOperationwithPredicates();
-//    	
+    	
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+    	preserveType();
+    	preserveTypeAfterOperationWithConcepts();
+    	preserveTypeAfterOperationwithPredicates();
+    	
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
-//    	preserveType();
-//    	preserveTypeAfterOperation2();
-//    	preserveTypeAfterOperationWithConcepts();
-//    	preserveTypeAfterOperationwithPredicates();
-//    	
+    	preserveType();
+    	preserveTypeAfterOperationWithConcepts();
+    	//MINS does not pass
+    	//preserveTypeAfterOperationwithPredicates();
+
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
     	preserveType();
     	preserveTypeAfterOperationWithConcepts();

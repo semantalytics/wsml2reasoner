@@ -1,4 +1,4 @@
-wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-rule"
 
 namespace {_"urn:functionsymbol#"}
  

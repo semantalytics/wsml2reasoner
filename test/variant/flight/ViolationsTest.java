@@ -16,24 +16,15 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  */
-package open;
+package variant.flight;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
-import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Concept;
-import org.omwg.ontology.Instance;
-import org.omwg.ontology.Ontology;
 import org.omwg.ontology.SimpleDataType;
 import org.omwg.ontology.SimpleDataValue;
-import org.omwg.ontology.Variable;
 import org.omwg.ontology.WsmlDataType;
-import org.wsml.reasoner.api.InternalReasonerException;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.api.inconsistency.AttributeTypeViolation;
@@ -44,11 +35,8 @@ import org.wsml.reasoner.api.inconsistency.MinCardinalityViolation;
 import org.wsml.reasoner.api.inconsistency.NamedUserConstraintViolation;
 import org.wsml.reasoner.api.inconsistency.UnNamedUserConstraintViolation;
 import org.wsml.reasoner.api.inconsistency.UserConstraintViolation;
-import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsmo.common.IRI;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.Factory;
-import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
 import base.BaseReasonerTest;
@@ -58,7 +46,6 @@ import base.BaseReasonerTest;
  */
 
 public class ViolationsTest extends BaseReasonerTest {
-    private static final String NS = "urn:bad#";
 
     private static final String ONTOLOGY_FILE = "files/bad.wsml";
 
@@ -173,13 +160,6 @@ public class ViolationsTest extends BaseReasonerTest {
 //        }
 
     }
-
-    private Set<Map<Variable, Term>> executeQuery(String query, Ontology o)
-            throws ParserException {
-        LogicalExpression qExpression = leFactory.createLogicalExpression(
-                query, o);
-        return wsmlReasoner.executeQuery((IRI) o.getIdentifier(), qExpression);
-    }
     
     public void testAllReasoners() throws Exception{
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
@@ -190,13 +170,10 @@ public class ViolationsTest extends BaseReasonerTest {
     	violations();
     	System.gc();
     	
-//    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
-//    	violations();
-//    	System.gc();
-//    	
-//    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET);
-//    	violations();
-//    	System.gc();
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+    	violations();
+    	System.gc();
+
     }
     
 

@@ -86,16 +86,16 @@ public class LotsOfImports {
     public void doTestRun(String reasoningEngine) throws Exception {
 //    	Ontology exampleOntology =  loadOntology("test/files/JobOfferOntology1.wsml");
     	Ontology exampleOntology = loadOntology("test/files/EG1.wsml");
-    	Ontology importedOntology1 = loadOntology("test/files/CompensationOntology.wsml");
+//    	Ontology importedOntology1 = loadOntology("test/files/CompensationOntology.wsml");
     	Ontology importedOntology2 = loadOntology("test/files/CompetenceOntology.wsml");
-    	Ontology importedOntology3 = loadOntology("test/files/DrivingLicenseOntology.wsml");
-    	Ontology importedOntology4 = loadOntology("test/files/EconomicActivityOntology.wsml");
-    	Ontology importedOntology5 = loadOntology("test/files/EducationOntology.wsml");
-    	Ontology importedOntology6 = loadOntology("test/files/GeographyOntology.wsml");
-    	Ontology importedOntology7 = loadOntology("test/files/JobOfferOntology.wsml");
-    	Ontology importedOntology8 = loadOntology("test/files/JobSeekerOntology.wsml");
-    	Ontology importedOntology9 = loadOntology("test/files/LabourRegulatoryOntology.wsml");
-    	Ontology importedOntology10 = loadOntology("test/files/LanguageOntology.wsml");
+//    	Ontology importedOntology3 = loadOntology("test/files/DrivingLicenseOntology.wsml");
+//    	Ontology importedOntology4 = loadOntology("test/files/EconomicActivityOntology.wsml");
+//    	Ontology importedOntology5 = loadOntology("test/files/EducationOntology.wsml");
+//    	Ontology importedOntology6 = loadOntology("test/files/GeographyOntology.wsml");
+//    	Ontology importedOntology7 = loadOntology("test/files/JobOfferOntology.wsml");
+//    	Ontology importedOntology8 = loadOntology("test/files/JobSeekerOntology.wsml");
+//    	Ontology importedOntology9 = loadOntology("test/files/LabourRegulatoryOntology.wsml");
+//    	Ontology importedOntology10 = loadOntology("test/files/LanguageOntology.wsml");
         
         if (exampleOntology == null)
             return;

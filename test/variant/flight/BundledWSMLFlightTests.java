@@ -17,11 +17,14 @@ public class BundledWSMLFlightTests {
 		//$JUnit-BEGIN$
 		suite.addTestSuite(SimpleGraph.class);
 		suite.addTestSuite(OntologyRegistrationTest.class);
+		suite.addTestSuite(PreserveTypeTests.class);
 		suite.addTestSuite(SubConceptOfTest.class);
 		suite.addTestSuite(SimpleInferenceTests.class);
 		suite.addTestSuite(Boolean.class);
 		suite.addTestSuite(SatisfiablityTest.class);
 		suite.addTestSuite(MaciejVTABug2.class);
+		suite.addTestSuite(ViolationsTest.class);
+		suite.addTestSuite(VariablePositionInTuple.class);
 		suite.addTestSuite(LordOfRings.class);
 		suite.addTestSuite(MaciejVTABug.class);
 		suite.addTestSuite(SubConceptOfSemanticsTest.class);

@@ -6,7 +6,7 @@
   with certain properties.
 */
 
-wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
 
 namespace {_"http://www.example.org/example/#",
     dc _"http://purl.org/dc/elements/1.1#",
@@ -16,7 +16,7 @@ ontology _"http://www.example.org/example/test?blabla=blabla.blabla"
    
 nonFunctionalProperties
     dc#title hasValue "Simple Graph Ontology"
-    wsml#version hasValue "$Revision: 1.1 $"
+    wsml#version hasValue "$Revision: 1.2 $"
 endNonFunctionalProperties
 
 axiom fact

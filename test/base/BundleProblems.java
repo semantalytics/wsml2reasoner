@@ -1,9 +1,8 @@
 package base;
 
-import variant.core.CyclicalImportsTest;
-import variant.flight.OntologyRegistrationTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import variant.flight.OntologyRegistrationTest;
 /**
  * Prior to running tests, 
  *

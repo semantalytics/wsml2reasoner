@@ -26,6 +26,12 @@ importsOntology { GeoOnt#Geography_Eures_Ontology,
 	Time#Time_Eures_Ontology,
 	CompOnt#Compensation_Eures_Ontology }
 	
+instance FifthInstance memberOf Time#DateTimeDescription
+	day hasValue 02
+	month hasValue 08
+	year hasValue 2007
+
+	
 
 
 
