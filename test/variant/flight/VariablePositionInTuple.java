@@ -16,15 +16,12 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  */
-package open;
+package variant.flight;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;

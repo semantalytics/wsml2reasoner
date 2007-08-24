@@ -1,4 +1,4 @@
-package open;
+package variant.flight;
 
 import java.io.File;
 import java.io.FileReader;
@@ -47,7 +47,6 @@ public class OntologyRegistrationTest extends BaseReasonerTest {
     	WSMO4JManager wsmoManager = new WSMO4JManager();
     	leFactory = wsmoManager.getLogicalExpressionFactory();
     	wsmoFactory = wsmoManager.getWSMOFactory();
-    	wsmlReasoner =  BaseReasonerTest.getReasoner();
  		parser = Factory.createParser(null);
     }
     
@@ -55,10 +54,13 @@ public class OntologyRegistrationTest extends BaseReasonerTest {
     protected void tearDown() throws Exception {
     	super.tearDown();
     	resetReasoner(previous);
+    	System.gc();
     }
 
     public void ontologyRegistration() throws Exception {
 
+    	wsmlReasoner = null;
+    	wsmlReasoner =  BaseReasonerTest.getReasoner();
         Ontology o1 = wsmoFactory.createOntology(wsmoFactory
                 .createIRI("urn:test1"));
         Atom a1 = leFactory.createAtom(wsmoFactory.createIRI("urn:test:a1"),
@@ -183,14 +185,17 @@ public class OntologyRegistrationTest extends BaseReasonerTest {
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
     	ontologyRegistration();
     	intenseOntologyRegistration();
+    	System.gc();    	
     	
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
     	ontologyRegistration();
     	intenseOntologyRegistration();
+    	System.gc();
     	
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
     	ontologyRegistration();
     	intenseOntologyRegistration();
+    	System.gc();
     }
 
 }

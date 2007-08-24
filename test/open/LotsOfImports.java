@@ -100,7 +100,7 @@ public class LotsOfImports {
         if (exampleOntology == null)
             return;
         LogicalExpressionFactory leFactory = new WSMO4JManager()
-                .getLogicalExpressionFactory();
+                .getLogicalExpressionFactory();	
 
         String queryString = "?x memberOf Time#DateTimeDescription";
 

@@ -16,7 +16,8 @@ namespace { _"webode://mccarthy.dia.fi.upm.es/eures/Job_Offer_Eures_Instances_On
 
 ontology EURES_Job_Offer_Ontology
 
-importsOntology { ComOnt#Competence_Eures_Ontology,
+importsOntology { 
+//ComOnt#Competence_Eures_Ontology
 	EcoActOnt#Economic_Activity_Eures_Ontology
 	}
 

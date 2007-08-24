@@ -121,7 +121,7 @@ public class BaseReasonerTest extends TestCase {
     	//setUpFactories();
     	wsmlReasoner = getReasoner();
     	if(o != null){
-    		wsmlReasoner.registerOntology(o);
+    		wsmlReasoner.registerOntologyNoVerification(o);
     	}
     }
     
@@ -164,7 +164,7 @@ public class BaseReasonerTest extends TestCase {
         System.out.println("Registering ontology");
         wsmlReasoner.registerOntology(o);
     }
-
+   
     protected void performQuery(String query, Set<Map<Variable, Term>> expected)
             throws Exception {
         System.out.println("\n\nStarting reasoner with query '" + query + "'");

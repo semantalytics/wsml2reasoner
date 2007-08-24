@@ -87,7 +87,7 @@ public class DogsworldTest extends BaseReasonerTest {
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
     	subconceptsOfMammal();
     	consistencyChecker();
-//    	instanceRetrieval();
+    	instanceRetrieval();
     	
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
     	subconceptsOfMammal();

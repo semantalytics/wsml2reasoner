@@ -16,7 +16,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  */
-package open;
+package variant.flight;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -52,7 +52,6 @@ public class LordOfRings extends BaseReasonerTest {
     protected void tearDown() throws Exception {
     	super.tearDown();
     	resetReasoner(previous);
-        System.gc();
     }
     public void arwenIsFemale() throws Exception {
         String query = "?x memberOf Female";
@@ -345,30 +344,30 @@ public class LordOfRings extends BaseReasonerTest {
     }
     
     public void testFlightReasoners() throws Exception{
-//    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
-//    	aragornIsElendilsHeir();
-//    	aragornLovesElf();
-//    	aragornLovesFemale();
-//    	arwenIsFemale();
-//    	born1000DividedBy2();
-//    	born250Twice();
-//    	born490And10();
-//    	born490And10LogicEqual();
-//    	born500();
-//    	born510Minus10();
-//    	bornBefore900();
-//    	bornBeforeEqual900();
-//    	happy();
-//    	happyOrSad();
-//    	height6Feet();
-//    	higherEqualThan6Feet();
-//    	higherThan7Feet();
-//    	lowerEqualThan7AndHalfFeet();
-//    	lowerThan7Feet();
-//    	males();
-//    	namedAragorn();
-//    	namedArwen();
-//    	noMaleFemaleTogether();
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+    	aragornIsElendilsHeir();
+    	aragornLovesElf();
+    	aragornLovesFemale();
+    	arwenIsFemale();
+    	born1000DividedBy2();
+    	born250Twice();
+    	born490And10();
+    	born490And10LogicEqual();
+    	born500();
+    	born510Minus10();
+    	bornBefore900();
+    	bornBeforeEqual900();
+    	happy();
+    	happyOrSad();
+    	height6Feet();
+    	higherEqualThan6Feet();
+    	higherThan7Feet();
+    	lowerEqualThan7AndHalfFeet();
+    	lowerThan7Feet();
+    	males();
+    	namedAragorn();
+    	namedArwen();
+    	noMaleFemaleTogether();
 
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
     	aragornIsElendilsHeir();
@@ -395,30 +394,30 @@ public class LordOfRings extends BaseReasonerTest {
     	namedArwen();
     	noMaleFemaleTogether();
     	
-//    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
-//    	aragornIsElendilsHeir();
-//    	aragornLovesElf();
-//    	aragornLovesFemale();
-//    	arwenIsFemale();
-//    	born1000DividedBy2();
-//    	born250Twice();
-//    	born490And10();
-//    	born490And10LogicEqual();
-//    	born500();
-//    	born510Minus10();
-//    	bornBefore900();
-//    	bornBeforeEqual900();
-//    	happy();
-//    	happyOrSad();
-//    	height6Feet();
-//    	higherEqualThan6Feet();
-//    	higherThan7Feet();
-//    	lowerEqualThan7AndHalfFeet();
-//    	lowerThan7Feet();
-//    	males();
-//    	namedAragorn();
-//    	namedArwen();
-//    	noMaleFemaleTogether();
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+    	aragornIsElendilsHeir();
+    	aragornLovesElf();
+    	aragornLovesFemale();
+    	arwenIsFemale();
+    	born1000DividedBy2();
+    	born250Twice();
+    	born490And10();
+    	born490And10LogicEqual();
+    	born500();
+    	born510Minus10();
+    	bornBefore900();
+    	bornBeforeEqual900();
+    	happy();
+    	happyOrSad();
+    	height6Feet();
+    	higherEqualThan6Feet();
+    	higherThan7Feet();
+    	lowerEqualThan7AndHalfFeet();
+    	lowerThan7Feet();
+    	males();
+    	namedAragorn();
+    	namedArwen();
+    	noMaleFemaleTogether();
     	
     }
 

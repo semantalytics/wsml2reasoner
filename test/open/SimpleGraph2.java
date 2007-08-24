@@ -23,11 +23,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 
 import base.BaseReasonerTest;
 
@@ -37,24 +36,20 @@ public class SimpleGraph2 extends BaseReasonerTest {
 
     private static final String ONTOLOGY_FILE = "files/simple-graph2.wsml";
 
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(SimpleGraph2.suite());
+    BuiltInReasoner previous;
+    
+    @Override
+    protected void setUp() throws Exception {
+    	super.setUp();
+    	setupScenario(ONTOLOGY_FILE);
+    	previous = BaseReasonerTest.reasoner;
     }
-
-    public static Test suite() {
-        Test test = new junit.extensions.TestSetup(new TestSuite(
-                SimpleGraph2.class)) {
-            protected void setUp() throws Exception {
-                setupScenario(ONTOLOGY_FILE);
-            }
-
-            protected void tearDown() throws Exception {
-                System.out.println("Finished!");
-            }
-        };
-        return test;
+    
+    @Override
+    protected void tearDown() throws Exception {
+    	super.tearDown();
+    	resetReasoner(previous);
     }
-
     /**
      * MINS BUG HERE! if one rewrites the query to
      * path(?n,?y) and  ?y=f
@@ -63,7 +58,7 @@ public class SimpleGraph2 extends BaseReasonerTest {
      * 
      * @throws Exception
      */
-    public void testElementsConnectedWithF() throws Exception {
+    public void elementsConnectedWithF() throws Exception {
         String query = "path(?n,f)";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
@@ -100,7 +95,7 @@ public class SimpleGraph2 extends BaseReasonerTest {
      * 
      * @throws Exception
      */
-    public void testScElementsOnADirecteCircleWithF() throws Exception {
+    public void scElementsOnADirecteCircleWithF() throws Exception {
 
         // composedRule(?n,?f) impliedBy scElement(?n) and path(?n,?f) and path(?f,?n).
         String query = "composedRule(?n,f)";
@@ -122,4 +117,18 @@ public class SimpleGraph2 extends BaseReasonerTest {
         System.out.println("Finished query.");
     }
 
+    
+    public void testFlightReasoners() throws Exception{
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+    	elementsConnectedWithF();
+    	scElementsOnADirecteCircleWithF();
+    	
+//    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
+//    	elementsConnectedWithF();
+//    	scElementsOnADirecteCircleWithF();
+    	
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+    	elementsConnectedWithF();
+//    	scElementsOnADirecteCircleWithF();
+    }
 }

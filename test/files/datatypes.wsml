@@ -8,8 +8,8 @@ axiom
     
 axiom
   definedBy
-    test2(12.0,mi).
-    test2(?x,km) :- ?x = (?y/1.6) and test2(?y,mi).  
+    test2(12.0,km).
+    test2(?x,mi) :- ?x = (?y/1.6) and test2(?y,km).  
     
 axiom km2mi
   definedBy 
