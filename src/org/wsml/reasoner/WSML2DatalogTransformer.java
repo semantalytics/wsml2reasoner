@@ -217,6 +217,23 @@ public class WSML2DatalogTransformer {
         result.add(new Rule(head, body));
 
         /*
+         * inheritence of attributes
+         */ 
+        // otype(?c1,?a1,?c2) <- otype(?c3,?a1,?c2) and sco(?c1,?c3)
+        body = new LinkedList<Literal>();
+        head = new Literal(true, PRED_OF_TYPE, vConcept, vAttribute, vConcept2);
+        body.add(new Literal(true, PRED_OF_TYPE, vConcept3, vAttribute, vConcept2));
+        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept3));
+        result.add(new Rule(head, body));
+        
+        // itype(?c1,?a1,?c2) <- itype(?c3,?a1,?c2) and sco(?c1,?c3)
+        body = new LinkedList<Literal>();
+        head = new Literal(true, PRED_IMPLIES_TYPE, vConcept, vAttribute, vConcept2);
+        body.add(new Literal(true, PRED_IMPLIES_TYPE, vConcept3, vAttribute, vConcept2));
+        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept3));
+        result.add(new Rule(head, body));
+        
+        /*
          *  Rules for: 
          *  - getting all direct subConcepts of a specific concepts 
          *  - getting all direct concepts a specific instance is member of
