@@ -70,6 +70,8 @@ import org.deri.iris.api.terms.concrete.IIntegerTerm;
 import org.deri.iris.api.terms.concrete.IIri;
 import org.deri.iris.api.terms.concrete.ISqName;
 import org.deri.iris.builtins.IsBooleanBuiltin;
+import org.deri.iris.builtins.IsDateBuiltin;
+import org.deri.iris.builtins.IsDateTimeBuiltin;
 import org.deri.iris.builtins.IsDecimalBuiltin;
 import org.deri.iris.builtins.IsIntegerBuiltin;
 import org.deri.iris.builtins.IsStringBuiltin;
@@ -89,6 +91,7 @@ import org.wsml.reasoner.ExternalToolException;
 import org.wsml.reasoner.Literal;
 import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.WSML2DatalogTransformer;
+import org.wsml.reasoner.api.InternalReasonerException;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
@@ -104,11 +107,11 @@ import org.deri.iris.dbstorage.ProgramFactory;
  * The wsmo4j interface for the iris reasoner.
  * </p>
  * <p>
- * $Id: IrisDbFacade.java,v 1.1 2007-09-03 15:43:54 faccaf Exp $
+ * $Id: IrisDbFacade.java,v 1.2 2007-09-03 16:14:47 faccaf Exp $
  * </p>
  * 
  * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class IrisDbFacade implements DatalogReasonerFacade {
 	
@@ -203,7 +206,7 @@ public class IrisDbFacade implements DatalogReasonerFacade {
 			throw new NullPointerException("The query must not be null");
 		}
 		if (!progs.containsKey(ontologyURI)) {
-			throw new IllegalArgumentException("A program with the uri '" + 
+			throw new InternalReasonerException("A program with the uri '" + 
 					ontologyURI + "' has not been registered, yet.");
 		}
 
@@ -823,6 +826,16 @@ public class IrisDbFacade implements DatalogReasonerFacade {
 				BASIC.createHead(BASIC.createLiteral(true, WSML_MEBER_OF,
 						BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_BOOLEAN)))),
 				BASIC.createBody(hasValue, BASIC.createLiteral(true, new IsBooleanBuiltin(X)))));
+				// rules for member of date
+		res.add(BASIC.createRule(
+				BASIC.createHead(BASIC.createLiteral(true, WSML_MEBER_OF,
+						BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_DATE)))),
+				BASIC.createBody(hasValue, BASIC.createLiteral(true, new IsDateBuiltin(X)))));
+		// rules for member of dateTime
+		res.add(BASIC.createRule(
+				BASIC.createHead(BASIC.createLiteral(true, WSML_MEBER_OF,
+						BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_DATETIME)))),
+				BASIC.createBody(hasValue, BASIC.createLiteral(true, new IsDateTimeBuiltin(X)))));		
 		return res;
 	}
 
