@@ -65,6 +65,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         WsmoFactory wsmoFactory;
         LogicalExpressionFactory leFactory;
         DataFactory dataFactory;
+        String dbConf;
         wsmoFactory = params.containsKey(PARAM_WSMO_FACTORY) ? (WsmoFactory) params
                 .get(PARAM_WSMO_FACTORY)
                 : Factory.createWsmoFactory(null);
@@ -74,7 +75,10 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         dataFactory = params.containsKey(PARAM_DATA_FACTORY) ? (DataFactory) params
                 .get(PARAM_DATA_FACTORY)
                 : Factory.createDataFactory(null);
-        return new WSMO4JManager(wsmoFactory, leFactory, dataFactory);
+        dbConf = params.containsKey(PARAM_DB_CONF_FILE) ? (String) params
+                .get(PARAM_DB_CONF_FILE)
+                : "";
+        return new WSMO4JManager(wsmoFactory, leFactory, dataFactory, dbConf);
     }
 
     public WSMLReasoner createWSMLReasoner(Map<String, Object> params, Ontology ontology) {
