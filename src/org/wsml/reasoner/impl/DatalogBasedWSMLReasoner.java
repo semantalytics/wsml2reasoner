@@ -59,6 +59,7 @@ import org.wsml.reasoner.api.inconsistency.MinCardinalityViolation;
 import org.wsml.reasoner.api.inconsistency.NamedUserConstraintViolation;
 import org.wsml.reasoner.api.inconsistency.UnNamedUserConstraintViolation;
 import org.wsml.reasoner.api.inconsistency.UserConstraintViolation;
+import org.wsml.reasoner.builtin.iris.IrisDbFacade;
 import org.wsml.reasoner.builtin.iris.IrisFacade;
 import org.wsml.reasoner.builtin.kaon2.Kaon2Facade;
 import org.wsml.reasoner.builtin.mins.MinsFacade;
@@ -133,6 +134,9 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             break;
         case IRIS:
         	builtInFacade = new IrisFacade(wsmoManager);
+        	break;
+        case IRISDB:
+        	builtInFacade = new IrisDbFacade(wsmoManager);
         	break;
         default:
             throw new UnsupportedOperationException("Reasoning with "
