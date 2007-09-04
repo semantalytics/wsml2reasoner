@@ -107,11 +107,11 @@ import org.deri.iris.dbstorage.ProgramFactory;
  * The wsmo4j interface for the iris reasoner.
  * </p>
  * <p>
- * $Id: IrisDbFacade.java,v 1.2 2007-09-03 16:14:47 faccaf Exp $
+ * $Id: IrisDbFacade.java,v 1.3 2007-09-04 09:45:49 faccaf Exp $
  * </p>
  * 
  * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class IrisDbFacade implements DatalogReasonerFacade {
 	
@@ -615,8 +615,7 @@ public class IrisDbFacade implements DatalogReasonerFacade {
 			}
 			return CONCRETE.createDuration(Integer.parseInt(m.group(1)),
 					Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3)),
-					Integer.parseInt(m.group(4)), Integer.parseInt(m.group(5)),
-					Integer.parseInt(m.group(6)));
+					Integer.parseInt(m.group(4)));
 		} else if (t.equals(WsmlDataType.WSML_FLOAT)) {
 			return CONCRETE.createFloat(Float.parseFloat(v.getValue()
 					.toString()));
@@ -744,7 +743,7 @@ public class IrisDbFacade implements DatalogReasonerFacade {
 					.getValue());
 		} else if (t instanceof IDuration) {
 			final IDuration dt = (IDuration) t;
-			return DATA_FACTORY.createWsmlDuration(dt.getYear(), dt.getMonth(),
+			return DATA_FACTORY.createWsmlDuration(0, 0,
 					dt.getDay(), dt.getHour(), dt.getMinute(), dt.getSecond());
 		} else if (t instanceof IFloatTerm) {
 			return DATA_FACTORY.createWsmlFloat((Float) ((IFloatTerm) t)
