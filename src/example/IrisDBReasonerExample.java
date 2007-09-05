@@ -81,6 +81,8 @@ public class IrisDBReasonerExample {
         Map dbParams = new HashMap();
        
         // modify parameter with the correct settings of your database
+        // and remember to import the JDBC driver in the class path
+        // e.g. you can find postgres driver at http://jdbc.postgresql.org/
         
         dbParams.put("DB_URL", "jdbc:postgresql://localhost:5432/reasonerTest");
         dbParams.put("DB_CLASS", "org.postgresql.Driver");
