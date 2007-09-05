@@ -28,11 +28,11 @@ import base.BaseReasonerTest;
  * Tests for the iris facade.
  * </p>
  * <p>
- * $Id: IrisFacadeTest.java,v 1.5 2007-08-16 18:22:43 graham Exp $
+ * $Id: IrisFacadeTest.java,v 1.6 2007-09-05 22:10:03 faccaf Exp $
  * </p>
  * 
  * @author Richard Pöttler, richard dot poettler at deri dot org
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class IrisFacadeTest extends TestCase {
 	
@@ -144,7 +144,7 @@ public class IrisFacadeTest extends TestCase {
 				.createDouble(3.1415d)));
 		// test duration
 		assertEquals(DF.createWsmlDuration(5, 3, 5, 12, 16, 11), IF
-				.irisTermConverter(CF.createDuration(5, 3, 5, 12, 16, 11)));
+				.irisTermConverter(CF.createDuration(5, 12, 16, 11)));
 		// test float
 		assertEquals(DF.createWsmlFloat("3.1415"), IF.irisTermConverter(CF
 				.createFloat(3.1415f)));
@@ -238,7 +238,7 @@ public class IrisFacadeTest extends TestCase {
 		assertEquals(CF.createDouble(1.3498), IrisFacade.dataValueConverter(DF
 				.createWsmlDouble("1.3498")));
 		// test duration
-		assertEquals(CF.createDuration(2007, 1, 8, 13, 15, 22), IrisFacade
+		assertEquals(CF.createDuration(8, 13, 15, 22), IrisFacade
 				.dataValueConverter(DF.createWsmlDuration(2007, 1, 8, 13, 15,
 						22)));
 		// test float
