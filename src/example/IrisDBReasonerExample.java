@@ -68,29 +68,33 @@ public class IrisDBReasonerExample {
      * loads an Ontology and performs sample query
      */
     public void doTestRun() throws Exception {
-    	Ontology exampleOntology = loadOntology("example/simpleOntology.wsml");
-    	//Ontology exampleOntology = loadOntology("example/simpleOntology2.wsml");
-    	//Ontology exampleOntology = loadOntology("example/valid_wsml_flight_test.wsml");
-    	//Ontology exampleOntology = loadOntology("example/nobel.wsml");
-        if (exampleOntology == null)
+    	Ontology exampleOntology = loadOntology("example/simpleOntology2.wsml");
+    	if (exampleOntology == null)
             return;
         LogicalExpressionFactory leFactory = new WSMO4JManager()
                 .getLogicalExpressionFactory();
 
-        //String queryString = "?z[?x hasValue ?y]";
         String queryString = "?x memberOf ?y";
 
         LogicalExpression query = leFactory.createLogicalExpression(
                 queryString, exampleOntology);
-
+        Map dbParams = new HashMap();
+       
+        // modify parameter with the correct settings of your database
+        
+        dbParams.put("DB_URL", "jdbc:postgresql://localhost:5432/reasonerTest");
+        dbParams.put("DB_CLASS", "org.postgresql.Driver");
+        dbParams.put("DB_USER", "postgres");
+        dbParams.put("DB_PASSWORD", "1qazxsw2");
+        
         // get A reasoner
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
                 WSMLReasonerFactory.BuiltInReasoner.IRISDB);
         params.put(WSMLReasonerFactory.PARAM_EVAL_METHOD,
                 new Integer(evalmethod));
-        params.put(WSMLReasonerFactory.PARAM_DB_CONF_FILE,
-        		"conf1.properties");
+        params.put(WSMLReasonerFactory.PARAM_DB_CONF,
+        		dbParams);
         WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
                 .createWSMLFlightReasoner(params);
 

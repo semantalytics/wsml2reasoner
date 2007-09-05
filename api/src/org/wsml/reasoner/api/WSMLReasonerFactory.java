@@ -54,7 +54,7 @@ public interface WSMLReasonerFactory {
     
     public String PARAM_EXTERNAL_REASONER_URI = "ENDPOINT";
     
-    public String PARAM_DB_CONF_FILE = "Database configuration file";
+    public String PARAM_DB_CONF = "Database Configuration Map";
 
     public enum BuiltInReasoner {
         KAON2, MINS, PELLET, XSB, IRIS, IRISDB, TPTP, SPASS
