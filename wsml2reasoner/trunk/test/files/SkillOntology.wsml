@@ -1,37 +1,27 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
-namespace { _"webode://mccarthy.dia.fi.upm.es/Skill_Eures_Ontology#" , wsml _"http://www.wsmo.org/wsml/wsml-syntax#" ,
-	Com _"webode://mccarthy.dia.fi.upm.es/Competence_Eures_Ontology#",
-	JobSeeOnt _"webode://mccarthy.dia.fi.upm.es/Job_Seeker_Eures_Ontology#"
-	}
+namespace { _"webode://mccarthy.dia.fi.upm.es/Skill_Ontology#" , wsml _"http://www.wsmo.org/wsml/wsml-syntax#",
+	Com _"webode://mccarthy.dia.fi.upm.es/Competence_Ontology#"
+}
 
-ontology Skill_Eures_Ontology
-
+ontology Skill_Ontology
 
 importsOntology { 
-	Com#Competence_Eures_Ontology,
-	JobSeeOnt#Job_Seeker_Eures_Ontology
+	Com#Competence_Ontology
 	 }
-
 
 concept Skill subConceptOf Com#Competence
 	Name ofType (1) _string
 	Description ofType (1) _string
 	Certified ofType (0 1) _boolean
-	is_associated_with_Objective ofType JobSeeOnt#Objective // jrr
+	weigth ofType (0 1) _float 
+
+axiom weigth_in_0_1
+	definedBy
+	!- ?x[?v hasValue weigth] memberOf Skill and
+		(?v<0 or ?v>1).
 
 
-concept Social_Skill subConceptOf Skill
-
-concept Organisational_Skill subConceptOf Skill
-
-concept Technical_Skill subConceptOf Skill
-
-concept Artistic_Skill subConceptOf Skill
-
-concept Other_Skill subConceptOf Skill
-
-concept ICT_Skill subConceptOf Skill // computer skills
-
+concept ICT_Skill subConceptOf Skill
 
 concept A__hardware_certificate subConceptOf ICT_Skill
 
@@ -2074,3 +2064,4 @@ axiom Systems_administration definedBy
 axiom direct_instance definedBy
 	di(?x, ?T) :- ?x memberOf ?T and naf(ndi(?x, ?T)).
 	ndi(?x, ?T) :- ?x memberOf ?T and ?subT subConceptOf ?T and ?x memberOf ?subT.
+	

@@ -1,13 +1,13 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
-namespace { _"webode://mccarthy.dia.fi.upm.es/Geography_Eures_Ontology#" , wsml _"http://www.wsmo.org/wsml/wsml-syntax#" ,
-	JobOffOnt _"webode://mccarthy.dia.fi.upm.es/Job_Offer_Eures_Ontology#",
-	JobSeeOnt _"webode://mccarthy.dia.fi.upm.es/Job_Seeker_Eures_Ontology#"}
+namespace { _"webode://mccarthy.dia.fi.upm.es/Geography_Ontology#" , wsml _"http://www.wsmo.org/wsml/wsml-syntax#" ,
+	JobOffOnt _"webode://mccarthy.dia.fi.upm.es/Job_Offer_Ontology#",
+	JobSeeOnt _"webode://mccarthy.dia.fi.upm.es/Job_Seeker_Ontology#"}
 
-ontology Geography_Eures_Ontology
+ontology Geography_Ontology
 
 
-importsOntology { JobOffOnt#Job_Offer_Eures_Ontology,
-	JobSeeOnt#Job_Seeker_Eures_Ontology }
+importsOntology { JobOffOnt#Job_Offer_Ontology,
+	JobSeeOnt#Job_Seeker_Ontology }
 
 
 concept Continent subConceptOf Location
@@ -21,7 +21,7 @@ concept Country subConceptOf Location
 	Code ofType (1) _string
 	is_located_in_Continent ofType (0 1) Continent
 	has_region_Region ofType (0 *) Region
-	is_nation_of_Job_Seeker ofType (0 *) JobSeeOnt#Job_Seeker
+	is_nation_of_Job_Seeker ofType (0 *) JobSeeOnt#Candidacy
 	is_residence_of_Job_Seeker ofType (0 *) JobSeeOnt#Job_Seeker
 
 concept Location
@@ -31,7 +31,7 @@ concept Location
 concept Region subConceptOf Location
 	Name ofType (1) _string
 	Description ofType (1) _string
-	is_located_in_Country ofType (1 *) Country
+	is_located_in_Country ofType (0 *) Country
 
 instance ZIMBABWE__ZW memberOf Country
 	Code hasValue "ZW"

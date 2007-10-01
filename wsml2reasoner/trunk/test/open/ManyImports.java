@@ -46,7 +46,6 @@ public class ManyImports extends BaseReasonerTest {
     	parseThis(getReaderForFile("files/JobSeekerOntology.wsml"));
     	parseThis(getReaderForFile("files/JobOfferOntology.wsml"));
     	parseThis(getReaderForFile("files/CompetenceOntology.wsml"));
-    	setupScenario(topOntology);
     	previous = BaseReasonerTest.reasoner;
     	
     }
@@ -97,11 +96,11 @@ public class ManyImports extends BaseReasonerTest {
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
     	basicTest();
     	
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
-    	basicTest();
+//    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
+//    	basicTest();
     	
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
-    	basicTest();
+//    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+//    	basicTest();
     }
     
 }

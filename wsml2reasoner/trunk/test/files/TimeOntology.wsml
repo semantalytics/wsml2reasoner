@@ -1,16 +1,19 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
-namespace { _"webode://mccarthy.dia.fi.upm.es/Time_Eures_Ontology#" , 
-	wsml _"http://www.wsmo.org/wsml/wsml-syntax#",
-	JobOffOnt _"webode://mccarthy.dia.fi.upm.es/Job_Offer_Eures_Ontology#",
-	JobSeeOnt _"webode://mccarthy.dia.fi.upm.es/Job_Seeker_Eures_Ontology#",
-	EduOnt _"webode://mccarthy.dia.fi.upm.es/Education_Eures_Ontology#" }
+namespace { _"webode://mccarthy.dia.fi.upm.es/Time_Ontology#" , 
+wsml _"http://www.wsmo.org/wsml/wsml-syntax#",
+JobOffOnt _"webode://mccarthy.dia.fi.upm.es/Job_Offer_Ontology#",
+JobSeeOnt _"webode://mccarthy.dia.fi.upm.es/Job_Seeker_Ontology#",
+EduOnt _"webode://mccarthy.dia.fi.upm.es/Education_Ontology#"
+ }
 
-ontology Time_Eures_Ontology
 
-importsOntology { JobOffOnt#Job_Offer_Eures_Ontology,
-	JobSeeOnt#Job_Seeker_Eures_Ontology,
-	EduOnt#Education_Eures_Ontology
+ontology Time_Ontology
+
+importsOntology { JobOffOnt#Job_Offer_Ontology,
+	JobSeeOnt#Job_Seeker_Ontology,
+	EduOnt#Education_Ontology
 	 }
+
 
 concept DateTimeDescription
 	day ofType (0 1) _integer
@@ -22,17 +25,17 @@ concept DateTimeDescription
 	timeZone ofType (0 1) TimeZone
 	unitType ofType (1 1) TemporalUnit
 	week ofType (0 1) _integer
+	month ofType (0 1) _integer
 	year ofType (0 1) _integer
-	// inversas nuevas
 	is_publication_date_of_JV ofType JobOffOnt#Job_Vacancy
-	//is_date_of_fixed_date ofType JobOffOnt#Fixed_date
+	is_date_of_fixed_date ofType JobOffOnt#Fixed_date
 	is_begin_date_of_Candidacy ofType JobSeeOnt#Candidacy
-	//is_end_date_of_Candidacy ofType JobSeeOnt#Candidacy
+	is_end_date_of_Candidacy ofType JobSeeOnt#Candidacy
 	is_birth_of_JS ofType JobSeeOnt#Job_Seeker
 	is_begin_date_of_OWE ofType JobSeeOnt#Offered_Work_Experience
 	is_end_date_of_OWE ofType JobSeeOnt#Offered_Work_Experience
 	is_end_date_of_Education ofType EduOnt#Education 
-	is_begin_date_of_Education ofType EduOnt#Education
+	is_begin_date_of_Education ofType EduOnt#Education 
 	
 concept DayOfWeek
 
@@ -63,9 +66,11 @@ concept DurationDescription
 	seconds ofType (0 1) _float	
 	weeks ofType (0 1) _float
 	years ofType (0 1) _float
+	is_duration_of_vacancy ofType JobOffOnt#Vacancy
 
 concept Year subConceptOf DurationDescription
 	years ofType (1 1) _float
+	is_years_of_w_exp ofType JobOffOnt#Requested_Work_Experience
 
 concept TemporalEntity
 	before ofType (0 *) TemporalEntity
@@ -74,48 +79,22 @@ concept TemporalEntity
 	hasDurationDescription ofType (0 *) DurationDescription
 	hasEnd ofType (0 *) Instant
 	
-//instance A memberOf TemporalEntity
-//	before hasValue B
-//
-//instance B memberOf TemporalEntity
-//	before hasValue B
-
-axiom BeforeInverseofAfter1
+axiom BeforeInverseofAfter
 	definedBy
 	?x[before hasValue ?y] :- ?y[after hasValue ?x].
-	
-axiom BeforeInverseofAfter2
-	definedBy
-	?x[after hasValue ?y] :- ?y[before hasValue ?x].
-	
+	?x[after hasValue ?y] :- ?y[before hasValue ?x].	
+
 axiom BeforeIsTransitive // so "after" too
 	definedBy
 	?x[before hasValue ?z] :- ?x[before hasValue ?y] and ?y[before hasValue ?z].
 	
-//relation after
 
-//relation before	
-//inverseOf after
-//	domain ofType TemporalEntity
-//	range ofType TemporalEntity
-	
-//relation intervalBefore subRelationOf before
-//	domain ofType ProperInterval
-//	range ofType ProperInterval
-
-axiom ExhaustiveTaxonomyTemporalEnt1     
+axiom ExhaustiveTaxonomyTemporalEnt     
      definedBy 
-           ?x memberOf Instant 
-  :- (?x memberOf TemporalEntity
-  and
-naf ?x memberOf Interval). 
-
-axiom ExhaustiveTaxonomyTemporalEnt2     
-     definedBy 
-           ?x memberOf Interval 
-  :- (?x memberOf TemporalEntity
-  and
-naf ?x memberOf Instant). 
+     ?x memberOf Instant :-
+       (?x memberOf TemporalEntity and naf ?x memberOf Interval). 
+	 ?x memberOf Interval :-
+  	   (?x memberOf TemporalEntity and naf ?x memberOf Instant).
 
 
 axiom ExhaustiveTemporalUnitSet     
@@ -152,7 +131,8 @@ concept ProperInterval subConceptOf Interval
 	intervalStarts ofType (0 *) ProperInterval
 
 concept DateTimeInterval subConceptOf ProperInterval
-	hasDateTimeDescription ofType (0 *) DateTimeDescription
+	hasDateTimeDescription ofType (2) DateTimeDescription
+	is_dateinterval_of_Interval ofType JobOffOnt#Interval
 
 concept TemporalUnit
 

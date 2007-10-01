@@ -171,61 +171,61 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 	protected long getConsistencyCheckTime() {
     	return consTime;
     }
-    
-    protected Set<org.wsml.reasoner.Rule> convertOntology(Ontology o) {
-
-        Ontology normalizedOntology;
-
-        // TODO Check whether ontology import is currently handled
-
-        long normTime_start = System.currentTimeMillis();
-        
-        //in order to keep track of cyclic imports
-        Set<Ontology> importedOntologies = new HashSet<Ontology>();
-        
-        // Convert conceptual syntax to logical expressions
-        OntologyNormalizer normalizer = new AxiomatizationNormalizer(wsmoManager,importedOntologies);
-        normalizedOntology = normalizer.normalize(o);
-//      System.out.println("\n-------\n Ontology after Normalization:\n" +
-//      BaseNormalizationTest.serializeOntology(normalizedOntology));
-
-
-        // Convert constraints to support debugging
-        normalizer = new ConstraintReplacementNormalizer(wsmoManager);
-        normalizedOntology = normalizer.normalize(normalizedOntology);
-//        System.out.println("\n-------\n Ontology after constraints:\n" +
-//        BaseNormalizationTest.serializeOntology(normalizedOntology));
-
-        // Simplify axioms
-        normalizer = new ConstructReductionNormalizer(wsmoManager);
-        normalizedOntology = normalizer.normalize(normalizedOntology);
-//        System.out.println("\n-------\n Ontology after simplification:\n" +
-//        BaseNormalizationTest.serializeOntology(normalizedOntology));
-
-        // Apply Lloyd-Topor rules to get Datalog-compatible LEs
-        normalizer = new LloydToporNormalizer(wsmoManager);
-        normalizedOntology = normalizer.normalize(normalizedOntology);
-//        System.out.println("\n-------\n Ontology after Lloyd-Topor:\n" +
-//        BaseNormalizationTest.serializeOntology(normalizedOntology));
-        
-        Set<org.wsml.reasoner.Rule> p;
-        org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
-                wsmoManager);
-        Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
-        for (Object a : normalizedOntology.listAxioms()) {
-            lExprs.addAll(((Axiom) a).listDefinitions());
-        }
-//        System.out.println(lExprs);
-        
-        p = wsml2datalog.transform(lExprs);
-        p.addAll(wsml2datalog.generateAuxilliaryRules());
-
-        long normTime_end = System.currentTimeMillis();
-        normTime = normTime_end - normTime_start;
-        
-        // System.out.println("datalog program:");
-        // System.out.println(p);
-        // System.out.println("-*");
+  
+    protected Set<org.wsml.reasoner.Rule> convertOntology(Ontology o, Set<Ontology> processedOntologies) {
+    	Set<org.wsml.reasoner.Rule> p = new HashSet <org.wsml.reasoner.Rule> ();
+    	if (!processedOntologies.contains(o)){
+    		System.out.println(o.getIdentifier());
+	        Ontology normalizedOntology;
+	
+	        // TODO Check whether ontology import is currently handled
+	
+	        long normTime_start = System.currentTimeMillis();
+	        
+	        
+	        // Convert conceptual syntax to logical expressions
+	        OntologyNormalizer normalizer = new AxiomatizationNormalizer(wsmoManager, processedOntologies);
+	        normalizedOntology = normalizer.normalize(o);
+	//      System.out.println("\n-------\n Ontology after Normalization:\n" +
+	//      BaseNormalizationTest.serializeOntology(normalizedOntology));
+	
+	
+	        // Convert constraints to support debugging
+	        normalizer = new ConstraintReplacementNormalizer(wsmoManager);
+	        normalizedOntology = normalizer.normalize(normalizedOntology);
+	//        System.out.println("\n-------\n Ontology after constraints:\n" +
+	//        BaseNormalizationTest.serializeOntology(normalizedOntology));
+	
+	        // Simplify axioms
+	        normalizer = new ConstructReductionNormalizer(wsmoManager);
+	        normalizedOntology = normalizer.normalize(normalizedOntology);
+	//        System.out.println("\n-------\n Ontology after simplification:\n" +
+	//        BaseNormalizationTest.serializeOntology(normalizedOntology));
+	
+	        // Apply Lloyd-Topor rules to get Datalog-compatible LEs
+	        normalizer = new LloydToporNormalizer(wsmoManager);
+	        normalizedOntology = normalizer.normalize(normalizedOntology);
+	//        System.out.println("\n-------\n Ontology after Lloyd-Topor:\n" +
+	//        BaseNormalizationTest.serializeOntology(normalizedOntology));
+	        
+	        org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
+	                wsmoManager);
+	        Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
+	        for (Object a : normalizedOntology.listAxioms()) {
+	            lExprs.addAll(((Axiom) a).listDefinitions());
+	        }
+	//        System.out.println(lExprs);
+	        
+	        p = wsml2datalog.transform(lExprs);
+	        p.addAll(wsml2datalog.generateAuxilliaryRules());
+	
+	        long normTime_end = System.currentTimeMillis();
+	        normTime = normTime_end - normTime_start;
+	        
+	        // System.out.println("datalog program:");
+	        // System.out.println(p);
+	        // System.out.println("-*");
+    	}
         return p;
     }
     
@@ -807,11 +807,15 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     public void registerOntologiesNoVerification(Set<Ontology> ontologies) {
         // TODO Do some extra checking to make sure that ontologies which
         // are imported are converted before ontologies which import them
+
+    	Set<Ontology> importedOntologies = new HashSet<Ontology>();
         for (Ontology o : ontologies) {
+        	
             // convert the ontology to Datalog Program:
             String ontologyUri = o.getIdentifier().toString();
             Set<org.wsml.reasoner.Rule> kb = new HashSet<org.wsml.reasoner.Rule>();
-            kb.addAll(convertOntology(o));
+            
+			kb.addAll(convertOntology(o, importedOntologies));
 
             long convTime_start = System.currentTimeMillis();
             
