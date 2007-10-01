@@ -1,15 +1,15 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
-namespace { _"webode://mccarthy.dia.fi.upm.es/Language_Eures_Ontology#" , wsml _"http://www.wsmo.org/wsml/wsml-syntax#" ,
-	Com _"webode://mccarthy.dia.fi.upm.es/Competence_Eures_Ontology#",
-	JobOffOnt _"webode://mccarthy.dia.fi.upm.es/Job_Offer_Eures_Ontology#",
-	JobSeeOnt _"webode://mccarthy.dia.fi.upm.es/Job_Seeker_Eures_Ontology#"}
+namespace { _"webode://mccarthy.dia.fi.upm.es/Language_Ontology#" , wsml _"http://www.wsmo.org/wsml/wsml-syntax#" ,
+	Com _"webode://mccarthy.dia.fi.upm.es/Competence_Ontology#",
+	JobOffOnt _"webode://mccarthy.dia.fi.upm.es/Job_Offer_Ontology#",
+	JobSeeOnt _"webode://mccarthy.dia.fi.upm.es/Job_Seeker_Ontology#"}
 
-ontology Language_Eures_Ontology
+ontology Language_Ontology
 
 
-importsOntology { JobOffOnt#Job_Offer_Eures_Ontology,
-	Com#Competence_Eures_Ontology,
-	JobSeeOnt#Job_Seeker_Eures_Ontology }
+importsOntology { JobOffOnt#Job_Offer_Ontology,
+	Com#Competence_Ontology,
+	JobSeeOnt#Job_Seeker_Ontology }
 
 
 concept Language
@@ -1988,7 +1988,6 @@ instance B1 memberOf Language_Level
 
 instance A2 memberOf Language_Level
 	Name hasValue "A2"
-
 
 
 // axioms for reverse relationships

@@ -11,7 +11,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/ext/commons-logging/1.1/commons-logging-1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ext/aterm/1.6/aterm-java-1.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ext/xsdlib/xsdlib.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/ext/log4j/1.2.7/log4j.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ext/interprolog.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ext/kaon/1.2.9/rdfapi.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ext/owl-api/1.4.3/abstractparser.jar"/>
@@ -30,7 +29,8 @@
 	<classpathentry kind="lib" path="lib/ext/JFreeChart/swtgraphics2d.jar"/>
 	<classpathentry kind="lib" path="lib/ext/kaon2/kaon2.jar"/>
 	<classpathentry kind="lib" path="lib/ext/mins/mins20070820.jar"/>
-	<classpathentry kind="lib" path="lib/ext/iris/iris-20070906.jar"/>
-	<classpathentry kind="lib" path="lib/ext/iris/iris-parser-20070906.jar"/>
+	<classpathentry kind="lib" path="lib/ext/iris/iris-0.4.jar"/>
+	<classpathentry kind="lib" path="lib/ext/iris/iris-parser-0.4.jar"/>
+	<classpathentry kind="lib" path="lib/ext/log4j/log4j-1.2.14.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

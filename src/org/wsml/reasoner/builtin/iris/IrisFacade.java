@@ -105,11 +105,11 @@ import org.wsmo.factory.WsmoFactory;
  * The wsmo4j interface for the iris reasoner.
  * </p>
  * <p>
- * $Id: IrisFacade.java,v 1.21 2007-09-03 14:25:09 richardpoettler Exp $
+ * $Id: IrisFacade.java,v 1.22 2007-10-01 12:15:15 graham Exp $
  * </p>
  * 
  * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class IrisFacade implements DatalogReasonerFacade {
 
@@ -608,7 +608,8 @@ public class IrisFacade implements DatalogReasonerFacade {
 			}
 			return CONCRETE.createDuration(Integer.parseInt(m.group(1)),
 					Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3)),
-					Integer.parseInt(m.group(4)));
+					Integer.parseInt(m.group(4)), Integer.parseInt(m.group(5)),
+					Integer.parseInt(m.group(6)));
 		} else if (t.equals(WsmlDataType.WSML_FLOAT)) {
 			return CONCRETE.createFloat(Float.parseFloat(v.getValue()
 					.toString()));

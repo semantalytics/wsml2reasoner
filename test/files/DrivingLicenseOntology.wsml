@@ -1,12 +1,12 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
-namespace { _"webode://mccarthy.dia.fi.upm.es/Driving_License_Eures_Ontology#" , wsml _"http://www.wsmo.org/wsml/wsml-syntax#" ,
-	ComOnt _"webode://mccarthy.dia.fi.upm.es/Competence_Eures_Ontology#"
+namespace { _"webode://mccarthy.dia.fi.upm.es/Driving_License_Ontology#" , wsml _"http://www.wsmo.org/wsml/wsml-syntax#" ,
+	ComOnt _"webode://mccarthy.dia.fi.upm.es/Competence_Ontology#"
 	}
 
-ontology Driving_License_Eures_Ontology
+ontology Driving_License_Ontology
 
 
-importsOntology { ComOnt#Competence_Eures_Ontology }
+importsOntology { ComOnt#Competence_Ontology }
 
 
 concept Driving_License subConceptOf ComOnt#Competence
@@ -54,7 +54,7 @@ instance C memberOf Driving_License
 	Name hasValue "C"
 
 instance B memberOf Driving_License
-	Description hasValue "Car with up to 8 passengers; lorry up to 3.5 tons"    //bvt
+	Description hasValue "Car with up to 8 passengers, lorry up to 3.5 tons"
 	Name hasValue "B"
 
 instance A memberOf Driving_License
