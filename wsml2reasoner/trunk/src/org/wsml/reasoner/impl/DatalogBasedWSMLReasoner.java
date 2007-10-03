@@ -35,11 +35,9 @@ import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Axiom;
-import org.omwg.ontology.ComplexDataType;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
-import org.omwg.ontology.SimpleDataType;
 import org.omwg.ontology.Type;
 import org.omwg.ontology.Variable;
 import org.omwg.ontology.WsmlDataType;
@@ -60,7 +58,6 @@ import org.wsml.reasoner.api.inconsistency.MaxCardinalityViolation;
 import org.wsml.reasoner.api.inconsistency.MinCardinalityViolation;
 import org.wsml.reasoner.api.inconsistency.NamedUserConstraintViolation;
 import org.wsml.reasoner.api.inconsistency.UnNamedUserConstraintViolation;
-import org.wsml.reasoner.api.inconsistency.UserConstraintViolation;
 import org.wsml.reasoner.builtin.iris.IrisDbFacade;
 import org.wsml.reasoner.builtin.iris.IrisFacade;
 import org.wsml.reasoner.builtin.kaon2.Kaon2Facade;
@@ -85,8 +82,6 @@ import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
-
-import framework.normalization.BaseNormalizationTest;
 
 /**
  * A prototypical implementation of a reasoner for WSML Core and WSML Flight.
