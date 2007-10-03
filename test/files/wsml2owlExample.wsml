@@ -11,7 +11,9 @@ ontology _"http://www.example.org/ontologies/example"
     hasFather impliesType Man
     hasWeight ofType {_decimal, _integer}
     hasBirthday ofType _date    
+  
   concept Person subConceptOf Human
+  
   concept Woman subConceptOf{Human}
     nfp dc#relation hasValue "disjoint to Man" endnfp  
 
