@@ -35,9 +35,11 @@ import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Axiom;
+import org.omwg.ontology.ComplexDataType;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
+import org.omwg.ontology.SimpleDataType;
 import org.omwg.ontology.Type;
 import org.omwg.ontology.Variable;
 import org.omwg.ontology.WsmlDataType;
@@ -83,6 +85,8 @@ import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
+
+import framework.normalization.BaseNormalizationTest;
 
 /**
  * A prototypical implementation of a reasoner for WSML Core and WSML Flight.
@@ -180,14 +184,17 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 	        // TODO Check whether ontology import is currently handled
 	
 	        long normTime_start = System.currentTimeMillis();
-	        
+	            
+	        // handle inherited attributes
+	        normalizedOntology = handleAttributeInheritance(o);   
+//	        System.out.println("\n-------\n Ontology after Normalization:\n" +
+//	        BaseNormalizationTest.serializeOntology(normalizedOntology));
 	        
 	        // Convert conceptual syntax to logical expressions
 	        OntologyNormalizer normalizer = new AxiomatizationNormalizer(wsmoManager, processedOntologies);
-	        normalizedOntology = normalizer.normalize(o);
+	        normalizedOntology = normalizer.normalize(normalizedOntology);
 	//      System.out.println("\n-------\n Ontology after Normalization:\n" +
 	//      BaseNormalizationTest.serializeOntology(normalizedOntology));
-	
 	
 	        // Convert constraints to support debugging
 	        normalizer = new ConstraintReplacementNormalizer(wsmoManager);
@@ -226,6 +233,60 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 	        // System.out.println("-*");
     	}
         return p;
+    }
+    
+    /*
+     * Add all attributes of superconcepts to the subconcepts
+     */
+    private Ontology handleAttributeInheritance(Ontology ontology) {
+    	for (Concept concept : ontology.listConcepts()) {
+    		// process superconcepts:
+            for (Concept superconcept : concept.listSuperConcepts()) {
+            	// handle inherited attributes
+	            Set<Attribute> superAttr = superconcept.listAttributes();
+	            for (Attribute a : superAttr) {
+	            	Attribute attribute;
+					try {
+						attribute = concept.createAttribute(a.getIdentifier());
+						// process range types:
+						for (Type type : (Set<Type>) a.listTypes()) {
+							attribute.addType(type);
+							// create an appropriate molecule per range type:
+							if (a.isConstraining()) {
+								attribute.setConstraining(true);
+							}
+						}
+	                
+		                // process attribute properties:
+		                if (a.isReflexive()) {
+		                    attribute.setReflexive(true);
+		                }
+		                if (a.isSymmetric()) {
+		                    attribute.setSymmetric(true);
+		                }
+		                if (a.isTransitive()) {
+		                    attribute.setTransitive(true);
+		                }
+		                Identifier inverseAttribute = a.getInverseOf();
+		                if (inverseAttribute != null) {
+		                    attribute.setInverseOf(inverseAttribute);
+		                }
+	                
+		                // process cardinality constraints:
+		                if (a.getMinCardinality() > 0) {
+		                   attribute.setMinCardinality(a.getMinCardinality());
+		                }
+		                if (a.getMaxCardinality() < Integer.MAX_VALUE) {
+		                    attribute.setMaxCardinality(a.getMaxCardinality());
+		                }
+					} catch (InvalidModelException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	            }
+            }
+    	}
+    	return ontology;
     }
     
     public boolean isSatisfiable(IRI ontologyID) {
