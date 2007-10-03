@@ -45,6 +45,9 @@ import org.wsmo.wsml.Serializer;
  * Usage Example for the wsml2Reasoner Framework
  * 
  * @author Holger Lausen, DERI Innsbruck
+ * 
+ * Rewrite to accomodate dl reasoners -- Graham
+ * 
  */
 public class ReasonerExample {
     
