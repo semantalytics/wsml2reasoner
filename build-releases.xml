@@ -29,7 +29,7 @@
 		<property name="dist.wsml2reasoner-datalog" value="${dist}/wsml2reasoner-datalog" />	
 		<property name="dist.wsml2reasoner-datalog-iris" value="${dist.wsml2reasoner-datalog}/wsml2reasoner-datalog-iris" />	
 		<property name="dist.wsml2reasoner-datalog-mins" value="${dist.wsml2reasoner-datalog}/wsml2reasoner-datalog-mins" />	
-		<property name="deploy.version" value="0_4" />
+		<property name="deploy.version" value="${DSTAMP}" />
 	
 		<property name="javadoc.dir" location="${basedir}/javadoc" />
 		
@@ -270,7 +270,6 @@
 	
 	<target name="create-wsml2reasoner-sdk" depends="real-clean, create-dirs" 
 		description="Creates complete wsml2reasoner (including tests) for developers">
-		<copy file="${basedir}/" todir="${dist.complete}"/>
 		<echo file="${dist.complete}/version.txt">${deploy.version}</echo>
 		<copy todir="${dist.complete}" preservelastmodified="yes" includeEmptyDirs="no">
 			<fileset dir="${basedir}">
@@ -290,7 +289,7 @@
 			<fileset dir="${build.src}" />
 			<fileset dir="${build.class}" />
 		</jar>
-		<copy file="${basedir}/license.txt" todir="${dist.complete}"/>
+		<copy file="${basedir}/license-lgpl.txt" todir="${dist.complete}"/>
 		<echo file="${dist.complete}/version.txt">${deploy.version}</echo>
 		<copy todir="${dist.complete.lib}" preservelastmodified="yes" includeEmptyDirs="no">
 			<fileset dir="${build.lib}">
