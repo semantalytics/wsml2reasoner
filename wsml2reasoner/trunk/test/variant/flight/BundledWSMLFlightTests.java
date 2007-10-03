@@ -15,21 +15,22 @@ public class BundledWSMLFlightTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test suite for WSML-Flight variant");
 		//$JUnit-BEGIN$
-		suite.addTestSuite(SimpleGraph.class);
-		suite.addTestSuite(OntologyRegistrationTest.class);
-		suite.addTestSuite(PreserveTypeTests.class);
-		suite.addTestSuite(SubConceptOfTest.class);
-		suite.addTestSuite(SimpleInferenceTests.class);
-		suite.addTestSuite(Boolean.class);
-		suite.addTestSuite(SatisfiablityTest.class);
-		suite.addTestSuite(MaciejVTABug2.class);
 		suite.addTestSuite(ViolationsTest.class);
-		suite.addTestSuite(VariablePositionInTuple.class);
+		suite.addTestSuite(PreserveTypeTests.class);
+		suite.addTestSuite(Boolean.class);
 		suite.addTestSuite(LordOfRings.class);
-		suite.addTestSuite(MaciejVTABug.class);
-		suite.addTestSuite(SubConceptOfSemanticsTest.class);
+		suite.addTestSuite(MaciejVTABug2.class);
 		suite.addTestSuite(DogsworldTest.class);
+		suite.addTestSuite(MaciejVTABug.class);
+		suite.addTestSuite(OntologyRegistrationTest.class);
+		suite.addTestSuite(AttributeInheritanceTest.class);
+		suite.addTestSuite(SubConceptOfSemanticsTest.class);
+		suite.addTestSuite(SimpleInferenceTests.class);
+		suite.addTestSuite(VariablePositionInTuple.class);
+		suite.addTestSuite(SubConceptOfTest.class);
 		suite.addTestSuite(RegisterMultipleTimes.class);
+		suite.addTestSuite(SimpleGraph.class);
+		suite.addTestSuite(SatisfiablityTest.class);
 		//$JUnit-END$
 		return suite;
 	}
