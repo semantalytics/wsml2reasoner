@@ -73,19 +73,18 @@ import org.wsmo.factory.WsmoFactory;
 import org.wsmo.validator.WsmlValidator;
 
 import uk.ac.man.cs.img.owl.validation.ValidatorLogger;
-import variant.dl.BaseDLReasonerTest;
 
 /**
  * A prototypical implementation of a WSML-DL reasoner.
  *
  * <pre>
  *  Created on July 3rd, 2006
- *  Committed by $Author: nathalie $
+ *  Committed by $Author: graham $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/impl/DLBasedWSMLReasoner.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.21 $ $Date: 2007-10-03 14:17:38 $
+ * @version $Revision: 1.22 $ $Date: 2007-10-03 16:33:45 $
  */
 public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 
@@ -1421,6 +1420,9 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.21  2007-10-03 14:17:38  nathalie
+ * added needed import
+ *
  * Revision 1.20  2007-08-10 09:45:55  graham
  * renamed spass_plus_t to spass
  *
