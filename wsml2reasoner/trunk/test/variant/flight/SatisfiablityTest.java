@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.Factory;
 import org.wsmo.wsml.Parser;
@@ -39,11 +40,20 @@ public class SatisfiablityTest extends BaseReasonerTest {
    
    private Ontology ontology;
    
+   BuiltInReasoner previous;
+   
 	protected void setUp() throws Exception {
 		super.setUp();
+		previous = BaseReasonerTest.reasoner;
 		parser = Factory.createParser(null);
 	}
 	
+    @Override
+    protected void tearDown() throws Exception {
+    	super.tearDown();
+    	resetReasoner(previous);
+    }
+    
 	public void satisfiablity() throws Exception {
 		// read test file and parse it 
        InputStream is = this.getClass().getClassLoader().getResourceAsStream(
@@ -78,6 +88,9 @@ public class SatisfiablityTest extends BaseReasonerTest {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.3  2007-08-16 18:22:43  graham
+ * Further unsuccessfull refactoring
+ *
  * Revision 1.2  2007-08-14 16:53:35  graham
  * Refactored to allow packaged/bundled unit tests (resets BaseReasonerTest.reasoner in tearDown method)
  *

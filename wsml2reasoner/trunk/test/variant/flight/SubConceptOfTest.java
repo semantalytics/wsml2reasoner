@@ -27,6 +27,7 @@ import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -46,13 +47,14 @@ import base.BaseReasonerTest;
  * 
  * @author Holger lausen
  * 
- * @version $Revision: 1.3 $ $Date: 2007-08-16 18:22:43 $
+ * @version $Revision: 1.4 $ $Date: 2007-10-03 15:45:58 $
  */
 public class SubConceptOfTest extends BaseReasonerTest {
     Parser parser;
     LogicalExpressionFactory leFactory;
     WsmoFactory wsmoFactory;
     WSMLReasoner reasoner;
+    BuiltInReasoner previous;
     
     public void setUp() throws Exception{
     	super.setUp();
@@ -60,7 +62,14 @@ public class SubConceptOfTest extends BaseReasonerTest {
         leFactory = Factory.createLogicalExpressionFactory(null);
         wsmoFactory = Factory.createWsmoFactory(null);
         reasoner = BaseReasonerTest.getReasoner();
+        previous = BaseReasonerTest.reasoner;
     }
+    
+    protected void tearDown() throws Exception {
+    	super.tearDown();
+    	resetReasoner(previous);
+    }
+
 
 //    public void testSubcumption() throws Exception {
 //
