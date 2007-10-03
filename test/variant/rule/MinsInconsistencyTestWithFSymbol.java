@@ -49,7 +49,6 @@ public class MinsInconsistencyTestWithFSymbol extends BaseReasonerTest {
     	resetReasoner(previous);
     }
     
-
     /**
      * fails because of design of API
      * @throws Exception

@@ -105,8 +105,6 @@ public class PreserveTypeTests extends BaseReasonerTest {
     }    
     
     public void testFlightReasoners() throws Exception{
-    	
-    	
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
     	preserveType();
     	preserveTypeAfterOperationWithConcepts();
