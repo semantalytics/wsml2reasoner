@@ -242,15 +242,6 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                     superconceptID));
             
             mentionedIRIs.add(superconceptID);
-            
-            //TODO - handle inherited attributes
-            
-//            // inheritance of attributes
-//            Set<Attribute> superAttr = superconcept.listAttributes();
-//            for (Attribute a : superAttr) {
-//            	resultExpressions.addAll(normalizeConceptAttribute(conceptID,
-//                        a));
-//            }
         }
 
         // process attributes:
