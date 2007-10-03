@@ -175,7 +175,6 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     protected Set<org.wsml.reasoner.Rule> convertOntology(Ontology o, Set<Ontology> processedOntologies) {
     	Set<org.wsml.reasoner.Rule> p = new HashSet <org.wsml.reasoner.Rule> ();
     	if (!processedOntologies.contains(o)){
-    		System.out.println(o.getIdentifier());
 	        Ontology normalizedOntology;
 	
 	        // TODO Check whether ontology import is currently handled

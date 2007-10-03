@@ -18,11 +18,13 @@
  */
 package open;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
@@ -37,15 +39,12 @@ import base.BaseReasonerTest;
  */
 public class ManyImports extends BaseReasonerTest {
 	
-    String topOntology = "files/EG1.wsml";
+    //String topOntology = "files/EG1.wsml";
     BuiltInReasoner previous;
     
     @Override
     protected void setUp() throws Exception {
     	super.setUp();
-    	parseThis(getReaderForFile("files/JobSeekerOntology.wsml"));
-    	parseThis(getReaderForFile("files/JobOfferOntology.wsml"));
-    	parseThis(getReaderForFile("files/CompetenceOntology.wsml"));
     	previous = BaseReasonerTest.reasoner;
     	
     }
@@ -61,43 +60,52 @@ public class ManyImports extends BaseReasonerTest {
      * loads an Ontology and performs sample query
      */
     public void basicTest() throws Exception {
-//    	Ontology exampleOntology =  loadOntology("test/files/JobOfferOntology1.wsml");
+    	
+    	parseThis(getReaderForFile("files/CompensationOntology.wsml"));
+    	parseThis(getReaderForFile("files/CompetenceOntology.wsml"));
+    	parseThis(getReaderForFile("files/DrivingLicenseOntology.wsml"));
+    	parseThis(getReaderForFile("files/EconomicActivityOntology.wsml"));    	
+    	parseThis(getReaderForFile("files/EducationOntology.wsml"));
+    	parseThis(getReaderForFile("files/GeographyOntology.wsml"));
+    	parseThis(getReaderForFile("files/JobOfferOntology.wsml"));    	
+    	parseThis(getReaderForFile("files/LanguageOntology.wsml"));
+    	parseThis(getReaderForFile("files/LabourRegulatoryOntology.wsml"));
     	
 //    	Ontology importedOntology1 = loadOntology("test/files/CompensationOntology.wsml");
     	
-//    	Ontology importedOntology3 = loadOntology("test/files/DrivingLicenseOntology.wsml");
-//    	Ontology importedOntology4 = loadOntology("test/files/EconomicActivityOntology.wsml");
-//    	Ontology importedOntology5 = loadOntology("test/files/EducationOntology.wsml");
-//    	Ontology importedOntology6 = loadOntology("test/files/GeographyOntology.wsml");
-//    	Ontology importedOntology7 = loadOntology("test/files/JobOfferOntology.wsml");
-//    	Ontology importedOntology8 = loadOntology("test/files/JobSeekerOntology.wsml");
-//    	Ontology importedOntology9 = loadOntology("test/files/LabourRegulatoryOntology.wsml");
-//    	Ontology importedOntology10 = loadOntology("test/files/LanguageOntology.wsml");
+//    	"test/files/DrivingLicenseOntology.wsml");
+//    	"test/files/EconomicActivityOntology.wsml");
+//    	"test/files/EducationOntology.wsml");
+//    	"test/files/GeographyOntology.wsml");
+//    	"test/files/JobOfferOntology.wsml");
+//    "test/files/JobSeekerOntology.wsml");
+//    	"test/files/LabourRegulatoryOntology.wsml");
+//    	"test/files/LanguageOntology.wsml");
       
-        String query = "?x memberOf Time#DateTimeDescription";
-        LogicalExpression qExpression = leFactory.createLogicalExpression(
-                query, o);
-        logExprSerializer.serialize(qExpression);
-        
-        Set<Map<Variable, Term>> result = wsmlReasoner.executeQuery((IRI) o
-                .getIdentifier(), qExpression);
-        
-        System.out.println("Found < " + result.size()
-                + " > results to the query:");
-        int i = 0;
-        for (Map<Variable, Term> vBinding : result) {
-            System.out.println("(" + (++i) + ") -- " + vBinding.toString());
-        }
-        assertEquals(5 , result.size());
-        System.out.println("Done.");
+//        String query = "?x memberOf Time#DateTimeDescription";
+//        LogicalExpression qExpression = leFactory.createLogicalExpression(
+//                query, o);
+//        logExprSerializer.serialize(qExpression);
+//        
+//        Set<Map<Variable, Term>> result = wsmlReasoner.executeQuery((IRI) o
+//                .getIdentifier(), qExpression);
+//        
+//        System.out.println("Found < " + result.size()
+//                + " > results to the query:");
+//        int i = 0;
+//        for (Map<Variable, Term> vBinding : result) {
+//            System.out.println("(" + (++i) + ") -- " + vBinding.toString());
+//        }
+//        assertEquals(5 , result.size());
+//        System.out.println("Done.");
     }
     
     public void testFlightReasoners() throws Exception{
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
-    	basicTest();
-    	
-//    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
+//    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
 //    	basicTest();
+    	
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
+    	basicTest();
     	
 //    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
 //    	basicTest();
