@@ -70,7 +70,7 @@ import org.wsml.reasoner.serializer.owl.OWLSerializerImpl;
  *
  * @author Nathalie Steinmetz, DERI Innsbruck;
  * 		   Holger Lausen, DERI Innsbruck
- * @version $Revision: 1.9 $ $Date: 2007-06-18 16:03:05 $
+ * @version $Revision: 1.10 $ $Date: 2007-11-07 16:26:26 $
  */
 public class Kaon2DLFacade implements DLReasonerFacade {
 
@@ -525,14 +525,16 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 			// check for direct concepts that are equivalent to indirect concepts
 			Set<Set> allConcepts = allTypesOf(ontologyURI, individual);
 			for (Set<OWLEntity> allEntities : allConcepts) {
+				Set<OWLEntity> toBeRemoved = new HashSet<OWLEntity>();
 				allEntities.removeAll(entitySet);
 				for (OWLEntity entity : allEntities) {
 					for (OWLEntity ent : entitySet) {
 						if(isEquivalentClass(ontologyURI, (OWLDescription)entity, (OWLDescription)ent) ) {
-							entitySet.remove(ent);
+							toBeRemoved.add(ent);
 						}
 					}
 				}
+				entitySet.removeAll(toBeRemoved);
 			}
 			
 			resultSet.add(entitySet);
@@ -1431,6 +1433,9 @@ public class Kaon2DLFacade implements DLReasonerFacade {
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.9  2007-06-18 16:03:05  nathalie
+ * updated kaon2dl facade to support latest kaon2 version
+ *
  * Revision 1.8  2007-06-16 12:57:45  nathalie
  * small change in exception handling that enables using the latest stable kaon2.jar from 2007-06-11
  *
