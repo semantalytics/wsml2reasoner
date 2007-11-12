@@ -554,4 +554,14 @@ public class MinsFacade implements DatalogReasonerFacade {
                             0) }, new IsConst()) }));
     }
 
+	public boolean checkQueryContainment(ConjunctiveQuery query1,
+			ConjunctiveQuery query2, String ontologyURI){
+		throw new UnsupportedOperationException("This method is not implemented");
+	}
+	
+	public Set<Map<Variable, Term>> getQueryContainment(ConjunctiveQuery query1,
+			ConjunctiveQuery query2, String ontologyURI){
+		throw new UnsupportedOperationException("This method is not implemented");
+	}
+
 }

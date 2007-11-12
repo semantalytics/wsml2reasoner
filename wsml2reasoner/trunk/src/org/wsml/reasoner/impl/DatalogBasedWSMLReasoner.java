@@ -117,6 +117,8 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     
     private long consTime = -1;
     
+    private Set<Map<Variable, Term>> queryContainmentResult = null;
+    
     public DatalogBasedWSMLReasoner(
             WSMLReasonerFactory.BuiltInReasoner builtInType,
             WSMO4JManager wsmoManager) {
@@ -347,6 +349,61 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return bindings;
     }
 
+    public boolean checkQueryContainment(LogicalExpression query1, 
+    		LogicalExpression query2, IRI ontologyID) {
+    	
+    	// create a logical expression visitor that checks whether the queries 
+    	// contain disjunctions, negations or built-ins
+    	QueryContainmentHelper helper = new QueryContainmentHelper();
+    	query1.accept(helper);
+    	query2.accept(helper);
+    	    	
+    	// convert logical expressions to conjunctive queries
+    	Set<org.wsml.reasoner.ConjunctiveQuery> datalogQueries1 = convertQuery(query1);
+    	Set<org.wsml.reasoner.ConjunctiveQuery> datalogQueries2 = convertQuery(query2);
+    	
+    	boolean result = false;
+    	
+    	// check whether query1 is contained within query2
+        for (ConjunctiveQuery datalogQuery1 : datalogQueries1) {
+        	for (ConjunctiveQuery datalogQuery2 : datalogQueries2) {
+        		result = builtInFacade.checkQueryContainment(
+        				datalogQuery1, datalogQuery2, ontologyID.toString());
+        	}
+        }
+        return result;
+    }
+    
+    public Set<Map<Variable, Term>> getQueryContainment(LogicalExpression 
+    		query1, LogicalExpression query2, IRI ontologyID) {
+    	
+    	// create a logical expression visitor that checks whether the queries 
+    	// contain disjunctions, negations or built-ins
+    	QueryContainmentHelper helper = new QueryContainmentHelper();
+    	query1.accept(helper);
+    	query2.accept(helper);
+    	    	
+    	// convert logical expressions to conjunctive queries
+    	Set<org.wsml.reasoner.ConjunctiveQuery> datalogQueries1 = convertQuery(query1);
+    	Set<org.wsml.reasoner.ConjunctiveQuery> datalogQueries2 = convertQuery(query2);
+    	
+    	// build set for query containment variable mapping result
+    	queryContainmentResult = new HashSet<Map<Variable, Term>>();
+    	
+    	// check whether query1 is contained within query2
+        for (ConjunctiveQuery datalogQuery1 : datalogQueries1) {
+        	for (ConjunctiveQuery datalogQuery2 : datalogQueries2) {
+	            try {
+					queryContainmentResult.addAll(builtInFacade.getQueryContainment(
+							datalogQuery1, datalogQuery2, ontologyID.toString()));
+				} catch (ExternalToolException e) {
+					throw new InternalReasonerException(e);
+				}
+        	}
+        }
+        return queryContainmentResult;
+    }
+    
     public Set<Concept> getConcepts(IRI ontologyID, Instance instance) {
         // build membership query:
         Term instanceID = wsmoFactory.createIRI(instance.getIdentifier()
@@ -791,20 +848,17 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             org.omwg.logicalexpression.LogicalExpression q) {
         org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
                 wsmoManager);
-
+                
         List<Term> params = new LinkedList<Term>();
         LogicalExpressionVariableVisitor varVisitor = new LogicalExpressionVariableVisitor();
         q.accept(varVisitor);
         params.addAll(varVisitor.getFreeVariables(q));
         Atom rHead = leFactory.createAtom(wsmoFactory
                 .createIRI(WSML_RESULT_PREDICATE), params);
-        // System.out.println("Query head:" + rHead);
 
         LogicalExpressionNormalizer moleculeNormalizer = new OnePassReplacementNormalizer(
                 new MoleculeDecompositionRules(wsmoManager), wsmoManager);
-        // System.out.println("Q before molecule normalization: " + q);
         q = moleculeNormalizer.normalize(q);
-        // System.out.println("Q after molecule normalization: " + q);
 
         org.omwg.logicalexpression.LogicalExpression resultDefRule = leFactory
                 .createInverseImplication(rHead, q);
@@ -822,7 +876,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             p.addAll(wsml2datalog.transform(query));
         }
 
-        // System.out.println("Query as program:" + p);
+//         System.out.println("Query as program:" + p);
         // if (p.size() != 1)
         // throw new IllegalArgumentException("Could not transform query " + q);
 

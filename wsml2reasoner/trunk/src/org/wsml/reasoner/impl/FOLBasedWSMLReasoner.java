@@ -400,4 +400,15 @@ public class FOLBasedWSMLReasoner implements WSMLFOLReasoner {
 	public Set<IRI> getDirectSuperRelations(IRI ontologyID, Identifier attributeId) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
+
+	public boolean checkQueryContainment(LogicalExpression query1,
+			LogicalExpression query2, IRI ontologyID) {
+		throw new UnsupportedOperationException("This method is not implemented");
+	}
+	
+	public Set<Map<Variable, Term>> getQueryContainment(LogicalExpression query1,
+			LogicalExpression query2, IRI ontologyID) {
+		throw new UnsupportedOperationException("This method is not implemented");
+	}
+	
 }

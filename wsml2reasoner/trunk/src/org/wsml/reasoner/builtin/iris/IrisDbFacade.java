@@ -39,6 +39,7 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.deri.iris.EvaluationException;
 import org.deri.iris.Executor;
 import org.deri.iris.api.IExecutor;
 import org.deri.iris.api.IProgram;
@@ -107,11 +108,11 @@ import org.deri.iris.dbstorage.ProgramFactory;
  * The wsmo4j interface for the iris reasoner.
  * </p>
  * <p>
- * $Id: IrisDbFacade.java,v 1.4 2007-10-01 12:15:15 graham Exp $
+ * $Id: IrisDbFacade.java,v 1.5 2007-11-12 16:59:46 nathalie Exp $
  * </p>
  * 
  * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class IrisDbFacade implements DatalogReasonerFacade {
 	
@@ -211,6 +212,7 @@ public class IrisDbFacade implements DatalogReasonerFacade {
 		}
 
 		// constructing the query
+		final List<ILiteral> head = new ArrayList<ILiteral>(1);
 		final List<ILiteral> body = new ArrayList<ILiteral>(q.getLiterals()
 				.size());
 		// converting the literals of the query
@@ -226,16 +228,17 @@ public class IrisDbFacade implements DatalogReasonerFacade {
 				// getting all variables
 				final Set<IVariable> vars = new HashSet<IVariable>();
 				for (final ILiteral l : body) {
-					vars.addAll(l.getTuple().getAllVariables());
+					vars.addAll(l.getAtom().getTuple().getAllVariables());
 				}
 				// creating the new predicate and literal
 				final ILiteral conjL = BASIC.createLiteral(true, 
 						BASIC.createPredicate("_replacement_" + q.hashCode(), 
 								vars.size()), 
 						BASIC.createTuple(new ArrayList<ITerm>(vars)));
+				head.add(conjL);
 				// creating and adding the new rule
 				progs.get(ontologyURI).addRule(BASIC.createRule(
-						BASIC.createHead(conjL), BASIC.createBody(body)));
+						head, body));
 				rulesChanged.put(ontologyURI, true);
 				// creating and adding the query
 				conjQ = BASIC.createQuery(conjL);
@@ -254,20 +257,29 @@ public class IrisDbFacade implements DatalogReasonerFacade {
 		}
 		if (factsChanged.get(ontologyURI) || rulesChanged.get(ontologyURI)) { 
 			// if there are new facts or rules -> compute the fixed point
-			executor.get(ontologyURI).execute();
+			try {
+				executor.get(ontologyURI).execute();
+			} catch (EvaluationException e) {
+				new ExternalToolException(e.getMessage());
+			}
 		}
 		rulesChanged.put(ontologyURI, false);
 		factsChanged.put(ontologyURI, false);
 
 		// constructing the result set
-		final Set<ITuple> result = executor.get(ontologyURI).computeSubstitution(query);
+		Set<ITuple> result;
+		try {
+			result = executor.get(ontologyURI).computeSubstitution(query);
+		} catch (EvaluationException e1) {
+			throw new ExternalToolException(e1.getMessage());
+		}
 		final Set<Map<Variable, Term>> res = new HashSet<Map<Variable, Term>>();
 		final Map<IVariable, Integer> positions = determineVarPositions(query);
 		for (final ITuple t : result) {
 			final Map<Variable, Term> tmp = new HashMap<Variable, Term>();
 			for (final Map.Entry<IVariable, Integer> e : positions.entrySet()) {
 				tmp.put((Variable) irisTermConverter(e.getKey()), 
-						irisTermConverter(t.getTerm(e.getValue())));
+						irisTermConverter(t.get(e.getValue())));
 			}
 			res.add(tmp);
 		}
@@ -275,7 +287,7 @@ public class IrisDbFacade implements DatalogReasonerFacade {
 		// BEHAVIOR IMITATIED FROM THE KAON FACADE
 		// if there are no variables in the query, fill it with as many empty
 		// map objects as the result size
-		if (query.getQueryVariables().isEmpty()) {
+		if (query.getVariables().isEmpty()) {
 			for (int i = 0, max = result.size(); i < max; i++) {
 				res.add(new HashMap<Variable, Term>());
 			}
@@ -296,7 +308,7 @@ public class IrisDbFacade implements DatalogReasonerFacade {
 			throw new NullPointerException("The query must not be null");
 		}
 		final Map<IVariable, Integer> res = new HashMap<IVariable, Integer>();
-		for (final IVariable v : q.getQueryVariables()) {
+		for (final IVariable v : q.getVariables()) {
 			res.put(v, termPos(q, v));
 		}
 		if (res.isEmpty()) {
@@ -335,8 +347,8 @@ public class IrisDbFacade implements DatalogReasonerFacade {
 			throw new NullPointerException("The needle must not be null");
 		}
 		int pos = 0;
-		for (final ILiteral l : stack.getQueryLiterals()) {
-			for (final ITerm t : l.getTuple().getTerms()) {
+		for (final ILiteral l : stack.getLiterals()) {
+			for (final ITerm t : l.getAtom().getTuple()) {
 				if (needle.equals(t)) {
 					return pos;
 				} else if (t instanceof IConstructedTerm) {
@@ -416,15 +428,16 @@ public class IrisDbFacade implements DatalogReasonerFacade {
 			if (r.isFact()) { // the rule is a fact
 				p.addFact(literal2Atom(r.getHead()));
 			} else { // the rule is an ordinary rule
+				final List<ILiteral> head = new ArrayList<ILiteral>(1);
 				final List<ILiteral> body = new ArrayList<ILiteral>(r.getBody()
 						.size());
+				// converting the head of the rule
+				head.add(literal2Literal(r.getHead()));
 				// converting the body of the rule
 				for (final Literal l : r.getBody()) {
 					body.add(literal2Literal(l));
 				}
-				p.addRule(BASIC.createRule(
-						BASIC.createHead(literal2Literal(r.getHead())),
-						BASIC.createBody(body)));
+				p.addRule(BASIC.createRule(head, body));
 			}
 		}
 		// add the wsml-member-of rules
@@ -806,36 +819,56 @@ public class IrisDbFacade implements DatalogReasonerFacade {
 			BASIC.createLiteral(true, 
 					BASIC.createPredicate(WSML2DatalogTransformer.PRED_HAS_VALUE, 3), 
 					BASIC.createTuple(Y, Z, X));
+		final List<ILiteral> body = new ArrayList<ILiteral>();
+		final List<ILiteral> head = new ArrayList<ILiteral>();
 		// rules for member of string
-		res.add(BASIC.createRule(
-				BASIC.createHead(BASIC.createLiteral(true, WSML_MEBER_OF, 
-						BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_STRING)))), 
-				BASIC.createBody(hasValue, BASIC.createLiteral(true, new IsStringBuiltin(X)))));
+		head.add(BASIC.createLiteral(true, WSML_MEBER_OF, 
+				BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_STRING))));
+		body.add(hasValue);
+		body.add(BASIC.createLiteral(true, new IsStringBuiltin(X)));
+		res.add(BASIC.createRule(head, body));
+		head.clear();
+		body.clear();
 		// rules for member of integer
-		res.add(BASIC.createRule(
-				BASIC.createHead(BASIC.createLiteral(true, WSML_MEBER_OF, 
-						BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_INTEGER)))), 
-				BASIC.createBody(hasValue, BASIC.createLiteral(true, new IsIntegerBuiltin(X)))));
+		head.add(BASIC.createLiteral(true, WSML_MEBER_OF, 
+				BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_INTEGER))));
+		body.add(hasValue);
+		body.add(BASIC.createLiteral(true, new IsIntegerBuiltin(X)));
+		res.add(BASIC.createRule(head, body));
+		head.clear();
+		body.clear();
 		// rules for member of decimal
-		res.add(BASIC.createRule(
-				BASIC.createHead(BASIC.createLiteral(true, WSML_MEBER_OF, 
-						BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_DECIMAL)))), 
-				BASIC.createBody(hasValue, BASIC.createLiteral(true, new IsDecimalBuiltin(X)))));
+		head.add(BASIC.createLiteral(true, WSML_MEBER_OF, 
+				BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_DECIMAL))));
+		body.add(hasValue);
+		body.add(BASIC.createLiteral(true, new IsDecimalBuiltin(X)));
+		res.add(BASIC.createRule(head, body));
+		head.clear();
+		body.clear();
 		// rules for member of boolean
-		res.add(BASIC.createRule(
-				BASIC.createHead(BASIC.createLiteral(true, WSML_MEBER_OF,
-						BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_BOOLEAN)))),
-				BASIC.createBody(hasValue, BASIC.createLiteral(true, new IsBooleanBuiltin(X)))));
-				// rules for member of date
-		res.add(BASIC.createRule(
-				BASIC.createHead(BASIC.createLiteral(true, WSML_MEBER_OF,
-						BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_DATE)))),
-				BASIC.createBody(hasValue, BASIC.createLiteral(true, new IsDateBuiltin(X)))));
+		head.add(BASIC.createLiteral(true, WSML_MEBER_OF, 
+				BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_BOOLEAN))));
+		body.add(hasValue);
+		body.add(BASIC.createLiteral(true, new IsBooleanBuiltin(X)));
+		res.add(BASIC.createRule(head, body));
+		head.clear();
+		body.clear();
+		// rules for member of date
+		head.add(BASIC.createLiteral(true, WSML_MEBER_OF, 
+				BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_DATE))));
+		body.add(hasValue);
+		body.add(BASIC.createLiteral(true, new IsDateBuiltin(X)));
+		res.add(BASIC.createRule(head, body));
+		head.clear();
+		body.clear();
 		// rules for member of dateTime
-		res.add(BASIC.createRule(
-				BASIC.createHead(BASIC.createLiteral(true, WSML_MEBER_OF,
-						BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_DATETIME)))),
-				BASIC.createBody(hasValue, BASIC.createLiteral(true, new IsDateTimeBuiltin(X)))));		
+		head.add(BASIC.createLiteral(true, WSML_MEBER_OF, 
+				BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_DATETIME))));
+		body.add(hasValue);
+		body.add(BASIC.createLiteral(true, new IsDateTimeBuiltin(X)));
+		res.add(BASIC.createRule(head, body));
+		head.clear();
+		body.clear();	
 		return res;
 	}
 
@@ -867,4 +900,15 @@ public class IrisDbFacade implements DatalogReasonerFacade {
 		}
 		return buffer.toString();
 	}
+
+	public boolean checkQueryContainment(ConjunctiveQuery query1,
+			ConjunctiveQuery query2, String ontologyURI) {
+		throw new UnsupportedOperationException("This method is not implemented");
+	}
+	
+	public Set<Map<Variable, Term>> getQueryContainment(ConjunctiveQuery query1,
+			ConjunctiveQuery query2, String ontologyURI) {
+		throw new UnsupportedOperationException("This method is not implemented");
+	}
+	
 }

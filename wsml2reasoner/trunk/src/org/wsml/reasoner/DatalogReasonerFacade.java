@@ -66,6 +66,8 @@ public interface DatalogReasonerFacade {
      * 
      * @param q
      *            the query to be evaluated.
+     * @param ontologyURI
+     *            the orginal logical ontology URI
      * @return a set of variable bindings (map with variables as keys, and the
      *         bindings: IRIs or DataValues as values)
      * @throws ExternalToolException
@@ -74,5 +76,37 @@ public interface DatalogReasonerFacade {
      */
     public Set<Map<Variable, Term>> evaluate(ConjunctiveQuery q,
             String ontologyURI) throws ExternalToolException;
+    
+    /**
+     * Checks whether query1 is contained within query2.
+     * 
+     * @param query1
+     *            the query that may be contained within query2.
+     * @param query2
+     * 			  the query that may contain query1.
+     * @param ontologyURI
+     *            the orginal logical ontology URI
+     * @return true when query1 is contained within query2, false otherwise.
+     */
+    public boolean checkQueryContainment(ConjunctiveQuery query1,
+    		ConjunctiveQuery query2, String ontologyURI);
+    
+    /**
+     * Checks whether query1 is contained within query2 and returns the 
+     * resulting variable mapping
+     * 
+     * @param query1
+     *            the query that may be contained within query2.
+     * @param query2
+     * 			  the query that may contain query1.
+     * @param ontologyURI
+     *            the orginal logical ontology URI
+     * @return a set of variable bindings (map with variables as keys, and the
+     *         bindings: IRIs or DataValues as values)
+     * @throws ExternalToolException 
+     */
+    public Set<Map<Variable, Term>> getQueryContainment(ConjunctiveQuery query1,
+    		ConjunctiveQuery query2, String ontologyURI) 
+    		throws ExternalToolException;
 
 }

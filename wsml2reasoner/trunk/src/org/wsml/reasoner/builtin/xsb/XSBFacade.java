@@ -39,7 +39,7 @@ import com.declarativa.interprolog.TermModel;
 /**
  * Package: package org.wsml.reasoner.datalog.wrapper.mins;
  * 
- * Author: Holger Lausen, DERI Innsbruck $Date: 2006-12-20 14:06:01 $
+ * Author: Holger Lausen, DERI Innsbruck $Date: 2007-11-12 16:59:44 $
  */
 public class XSBFacade implements DatalogReasonerFacade {
     private Logger logger = Logger.getLogger("org.wsml.reasoner.builtin.xsb.XSBFacade");
@@ -218,4 +218,14 @@ public class XSBFacade implements DatalogReasonerFacade {
         registeredKbs.remove(ontologyURI);
 
     }
+
+	public boolean checkQueryContainment(ConjunctiveQuery query1,
+			ConjunctiveQuery query2, String ontologyURI){
+		throw new UnsupportedOperationException("This method is not implemented");
+	}
+
+	public Set<Map<Variable, Term>> getQueryContainment(ConjunctiveQuery query1,
+			ConjunctiveQuery query2, String ontologyURI) {
+		throw new UnsupportedOperationException("This method is not implemented");
+	}
 }
