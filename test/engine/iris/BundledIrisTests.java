@@ -16,6 +16,7 @@ public class BundledIrisTests {
 		TestSuite suite = new TestSuite("Test suite for IRIS engine");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(BuiltInDateTimeTest.class);
+		suite.addTestSuite(QueryContainmentTest.class);
 		//$JUnit-END$
 		return suite;
 	}
