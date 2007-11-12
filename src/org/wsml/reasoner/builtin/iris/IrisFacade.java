@@ -39,6 +39,7 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.deri.iris.EvaluationException;
 import org.deri.iris.Executor;
 import org.deri.iris.api.IExecutor;
 import org.deri.iris.api.IProgram;
@@ -48,6 +49,7 @@ import org.deri.iris.api.basics.IPredicate;
 import org.deri.iris.api.basics.IQuery;
 import org.deri.iris.api.basics.IRule;
 import org.deri.iris.api.basics.ITuple;
+import org.deri.iris.api.storage.IMixedDatatypeRelation;
 import org.deri.iris.api.terms.IConstructedTerm;
 import org.deri.iris.api.terms.IStringTerm;
 import org.deri.iris.api.terms.ITerm;
@@ -76,6 +78,7 @@ import org.deri.iris.builtins.IsDecimalBuiltin;
 import org.deri.iris.builtins.IsIntegerBuiltin;
 import org.deri.iris.builtins.IsStringBuiltin;
 import org.deri.iris.evaluation.algebra.ExpressionEvaluator;
+import org.deri.iris.querycontainment.QueryContainment;
 import org.omwg.logicalexpression.Constants;
 import org.omwg.logicalexpression.terms.BuiltInConstructedTerm;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
@@ -105,11 +108,11 @@ import org.wsmo.factory.WsmoFactory;
  * The wsmo4j interface for the iris reasoner.
  * </p>
  * <p>
- * $Id: IrisFacade.java,v 1.22 2007-10-01 12:15:15 graham Exp $
+ * $Id: IrisFacade.java,v 1.23 2007-11-12 16:59:47 nathalie Exp $
  * </p>
  * 
  * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class IrisFacade implements DatalogReasonerFacade {
 
@@ -138,7 +141,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 	 * <li>value = the literal uesd to substitute the query</li>
 	 * </ul>
 	 */
-	private Map<String, Map<ConjunctiveQuery, IQuery>> conjunktiveQueries = 
+	private Map<String, Map<ConjunctiveQuery, IQuery>> conjunctiveQueries = 
 		new HashMap<String, Map<ConjunctiveQuery, IQuery>>();
 	
 	/**
@@ -169,7 +172,16 @@ public class IrisFacade implements DatalogReasonerFacade {
 	 * </ul>
 	 */
 	private final Map<String, IExecutor> executor = new HashMap<String, IExecutor>();
+	
+	private QueryContainment queryCont = null;
+	
+	private IQuery containedQuery = null;
+	
 
+	/* Map that contains the variable mapping from the query containment check */
+	private Map<IPredicate, IMixedDatatypeRelation> QCResult = 
+		new HashMap<IPredicate, IMixedDatatypeRelation>();
+	
 	public IrisFacade(final WSMO4JManager m) {
 		DATA_FACTORY = m.getDataFactory();
 		WSMO_FACTORY = m.getWSMOFactory();
@@ -185,7 +197,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 		((IProgram) progs.get(ontologyURI)).resetProgram(); 
 		progs.remove(ontologyURI);
 		executor.remove(ontologyURI);
-		conjunktiveQueries.remove(ontologyURI);
+		conjunctiveQueries.remove(ontologyURI);
 		rulesChanged.remove(ontologyURI);
 		factsChanged.remove(ontologyURI);
 	}
@@ -204,6 +216,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 		}
 
 		// constructing the query
+		final List<ILiteral> head = new ArrayList<ILiteral>(1);
 		final List<ILiteral> body = new ArrayList<ILiteral>(q.getLiterals()
 				.size());
 		// converting the literals of the query
@@ -214,25 +227,25 @@ public class IrisFacade implements DatalogReasonerFacade {
 		// creating the query
 		final IQuery query;
 		if (body.size() > 1) { // we got an conjunctive query -> replace it
-			IQuery conjQ = conjunktiveQueries.get(ontologyURI).get(q);
+			IQuery conjQ = conjunctiveQueries.get(ontologyURI).get(q);
 			if (conjQ == null) { // this query was never replaced before
 				// getting all variables
 				final Set<IVariable> vars = new HashSet<IVariable>();
 				for (final ILiteral l : body) {
-					vars.addAll(l.getTuple().getAllVariables());
+					vars.addAll(l.getAtom().getTuple().getAllVariables());
 				}
 				// creating the new predicate and literal
-				final ILiteral conjL = BASIC.createLiteral(true, 
+				head.add(BASIC.createLiteral(true, 
 						BASIC.createPredicate("_replacement_" + q.hashCode(), 
 								vars.size()), 
-						BASIC.createTuple(new ArrayList<ITerm>(vars)));
+						BASIC.createTuple(new ArrayList<ITerm>(vars))));
 				// creating and adding the new rule
 				progs.get(ontologyURI).addRule(BASIC.createRule(
-						BASIC.createHead(conjL), BASIC.createBody(body)));
+						head, body));
 				rulesChanged.put(ontologyURI, true);
 				// creating and adding the query
-				conjQ = BASIC.createQuery(conjL);
-				conjunktiveQueries.get(ontologyURI).put(q, conjQ);
+				conjQ = BASIC.createQuery(head);
+				conjunctiveQueries.get(ontologyURI).put(q, conjQ);
 				
 			}
 			query = conjQ;
@@ -247,20 +260,29 @@ public class IrisFacade implements DatalogReasonerFacade {
 		}
 		if (factsChanged.get(ontologyURI) || rulesChanged.get(ontologyURI)) { 
 			// if there are new facts or rules -> compute the fixed point
-			executor.get(ontologyURI).execute();
+			try {
+				executor.get(ontologyURI).execute();
+			} catch (EvaluationException e) {
+				new ExternalToolException(e.getMessage());
+			}
 		}
 		rulesChanged.put(ontologyURI, false);
 		factsChanged.put(ontologyURI, false);
 
 		// constructing the result set
-		final Set<ITuple> result = executor.get(ontologyURI).computeSubstitution(query);
+		Set<ITuple> result;
+		try {
+			result = executor.get(ontologyURI).computeSubstitution(query);
+		} catch (EvaluationException e1) {
+			throw new ExternalToolException(e1.getMessage());
+		}
 		final Set<Map<Variable, Term>> res = new HashSet<Map<Variable, Term>>();
 		final Map<IVariable, Integer> positions = determineVarPositions(query);
 		for (final ITuple t : result) {
 			final Map<Variable, Term> tmp = new HashMap<Variable, Term>();
 			for (final Map.Entry<IVariable, Integer> e : positions.entrySet()) {
 				tmp.put((Variable) irisTermConverter(e.getKey()), 
-						irisTermConverter(t.getTerm(e.getValue())));
+						irisTermConverter(t.get(e.getValue())));
 			}
 			res.add(tmp);
 		}
@@ -268,13 +290,155 @@ public class IrisFacade implements DatalogReasonerFacade {
 		// BEHAVIOR IMITATIED FROM THE KAON FACADE
 		// if there are no variables in the query, fill it with as many empty
 		// map objects as the result size
-		if (query.getQueryVariables().isEmpty()) {
+		if (query.getVariables().isEmpty()) {
 			for (int i = 0, max = result.size(); i < max; i++) {
 				res.add(new HashMap<Variable, Term>());
 			}
 		}
 
 		return res;
+	}
+	
+	public synchronized boolean checkQueryContainment(ConjunctiveQuery query1, 
+			ConjunctiveQuery query2, String ontologyURI) {
+		if (ontologyURI == null) {
+			throw new NullPointerException("The ontology uri must not be null");
+		}
+		if (query1 == null || query2 == null) {
+			throw new NullPointerException("The queries must not be null");
+		}
+		if (!progs.containsKey(ontologyURI)) {
+			throw new InternalReasonerException("A program with the uri '" + 
+					ontologyURI + "' has not been registered, yet.");
+		}
+
+		// constructing query 1, the query to be frozen in IRIS 
+		final List<ILiteral> head = new ArrayList<ILiteral>(1);
+		final List<ILiteral> body = new ArrayList<ILiteral>(
+				query1.getLiterals().size());
+		
+		// converting the literals of the query
+		for (final Literal l : query1.getLiterals()) {
+			body.add(literal2Literal(l));
+		}
+		
+		// creating the query
+		final IQuery iQuery1;
+		// if we have a conjunctive query -> replace it
+		if (body.size() > 1) {
+			
+			// check whether this query has already been replaced
+			IQuery conjQ = conjunctiveQueries.get(ontologyURI).get(query1);
+			if (conjQ == null) {
+				
+				// getting all variables
+				final Set<IVariable> vars = new HashSet<IVariable>();
+				for (final ILiteral l : body) {
+					vars.addAll(l.getAtom().getTuple().getAllVariables());
+				}
+				
+				// Each body element needs to be frozen.
+				// For each body element a rule with the former body element in the head 
+				// and a replacement body is added to the knowledge base.
+				List<ILiteral> replacedBody = new ArrayList<ILiteral>(1);
+				replacedBody.add(BASIC.createLiteral(true, 
+						BASIC.createPredicate("_replacement_" + query1.hashCode(), vars.size()), 
+						BASIC.createTuple(new ArrayList<ITerm>(vars))));
+				conjQ = BASIC.createQuery(replacedBody);
+				for (ILiteral lit : body) {
+					head.add(lit);
+					// creating and adding the new rule
+					progs.get(ontologyURI).addRule(BASIC.createRule(head, replacedBody));
+					rulesChanged.put(ontologyURI, true);
+					conjunctiveQueries.get(ontologyURI).put(query1, conjQ);
+					head.clear();
+				}
+			}
+			iQuery1 = conjQ;
+		} else { // this is a normal query
+			iQuery1 = BASIC.createQuery(body);
+		}
+
+		// constructing query 2 
+		final List<ILiteral> head2 = new ArrayList<ILiteral>(1);
+		final List<ILiteral> body2 = new ArrayList<ILiteral>(
+				query2.getLiterals().size());
+		
+		// converting the literals of the query
+		for (final Literal l : query2.getLiterals()) {
+			body2.add(literal2Literal(l));
+		}
+		
+		// creating the query
+		final IQuery iQuery2;
+		// if we have a conjunctive query -> replace it
+		if (body2.size() > 1) { 
+			
+			// check whether this query has already been replaced
+			IQuery conjQ = conjunctiveQueries.get(ontologyURI).get(query2);
+			if (conjQ == null) {
+				
+				// getting all variables
+				final Set<IVariable> vars = new HashSet<IVariable>();
+				for (final ILiteral l : body2) {
+					vars.addAll(l.getAtom().getTuple().getAllVariables());
+				}
+				
+				// creating the new predicate and literal
+				final ILiteral conjL = BASIC.createLiteral(true, 
+						BASIC.createPredicate("_replacement_" + query2.hashCode(), 
+								vars.size()), 
+						BASIC.createTuple(new ArrayList<ITerm>(vars)));
+				head2.add(conjL);
+				// creating and adding the new rule
+				progs.get(ontologyURI).addRule(BASIC.createRule(
+						head2, body2));
+				rulesChanged.put(ontologyURI, true);
+				// creating and adding the query
+				conjQ = BASIC.createQuery(conjL);
+				conjunctiveQueries.get(ontologyURI).put(query2, conjQ);
+				
+			}
+			iQuery2 = conjQ;
+		// if it is a query with only one body literal
+		} else { 
+			iQuery2 = BASIC.createQuery(body2);
+		}
+		containedQuery = iQuery2;	
+
+		// doing the query containment check
+		queryCont = new QueryContainment(progs.get(ontologyURI));
+		boolean check = false;
+		try {
+			check = queryCont.checkQueryContainment(iQuery1, iQuery2);
+		} catch (Exception e) {
+			new ExternalToolException(e.getMessage());
+		}
+
+		return check;
+	}
+	
+	public synchronized Set<Map<Variable, Term>> getQueryContainment(
+			ConjunctiveQuery query1, ConjunctiveQuery query2, String ontologyURI) 
+			throws ExternalToolException {
+		// check query containment and get IRIS result set
+		if (checkQueryContainment(query1, query2, ontologyURI))
+			QCResult = queryCont.getContainmentMappings();
+		
+		// constructing the result set to return
+		final Set<Map<Variable, Term>> result = new HashSet<Map<Variable, Term>>();
+		final Map<IVariable, Integer> positions = determineVarPositions(containedQuery);
+		for (Map.Entry<IPredicate, IMixedDatatypeRelation> entry : QCResult.entrySet()) {
+			for (final ITuple t : entry.getValue()) {
+				final Map<Variable, Term> tmp = new HashMap<Variable, Term>();
+				for (final Map.Entry<IVariable, Integer> e : positions.entrySet()) {
+					tmp.put((Variable) irisTermConverter(e.getKey()), 
+							irisTermConverter(t.get(e.getValue())));
+				}
+				result.add(tmp);
+			}
+		}	
+		return result;
 	}
 	
 	/**
@@ -289,7 +453,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 			throw new NullPointerException("The query must not be null");
 		}
 		final Map<IVariable, Integer> res = new HashMap<IVariable, Integer>();
-		for (final IVariable v : q.getQueryVariables()) {
+		for (final IVariable v : q.getVariables()) {
 			res.put(v, termPos(q, v));
 		}
 		if (res.isEmpty()) {
@@ -328,8 +492,9 @@ public class IrisFacade implements DatalogReasonerFacade {
 			throw new NullPointerException("The needle must not be null");
 		}
 		int pos = 0;
-		for (final ILiteral l : stack.getQueryLiterals()) {
-			for (final ITerm t : l.getTuple().getTerms()) {
+		for (final ILiteral l : stack.getLiterals()) {
+			//TODO see whether there appears a problem here! (getTuple.getTerms before)
+			for (final ITerm t : l.getAtom().getTuple()) {
 				if (needle.equals(t)) {
 					return pos;
 				} else if (t instanceof IConstructedTerm) {
@@ -409,15 +574,16 @@ public class IrisFacade implements DatalogReasonerFacade {
 			if (r.isFact()) { // the rule is a fact
 				p.addFact(literal2Atom(r.getHead()));
 			} else { // the rule is an ordinary rule
+				final List<ILiteral> head = new ArrayList<ILiteral>(1);
 				final List<ILiteral> body = new ArrayList<ILiteral>(r.getBody()
 						.size());
+				// converting the head of the rule
+				head.add(literal2Literal(r.getHead()));
 				// converting the body of the rule
 				for (final Literal l : r.getBody()) {
 					body.add(literal2Literal(l));
 				}
-				p.addRule(BASIC.createRule(
-						BASIC.createHead(literal2Literal(r.getHead())),
-						BASIC.createBody(body)));
+				p.addRule(BASIC.createRule(head, body));
 			}
 		}
 		// add the wsml-member-of rules
@@ -429,7 +595,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 		this.rulesChanged.put(ontologyURI, true);
 		this.progs.put(ontologyURI, p);
 		this.executor.put(ontologyURI, new Executor(p, new ExpressionEvaluator()));
-		this.conjunktiveQueries.put(ontologyURI, new HashMap<ConjunctiveQuery, IQuery>());
+		this.conjunctiveQueries.put(ontologyURI, new HashMap<ConjunctiveQuery, IQuery>());
 	}
 
 	/**
@@ -799,36 +965,56 @@ public class IrisFacade implements DatalogReasonerFacade {
 			BASIC.createLiteral(true, 
 					BASIC.createPredicate(WSML2DatalogTransformer.PRED_HAS_VALUE, 3), 
 					BASIC.createTuple(Y, Z, X));
+		final List<ILiteral> body = new ArrayList<ILiteral>();
+		final List<ILiteral> head = new ArrayList<ILiteral>();
 		// rules for member of string
-		res.add(BASIC.createRule(
-				BASIC.createHead(BASIC.createLiteral(true, WSML_MEBER_OF, 
-						BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_STRING)))), 
-				BASIC.createBody(hasValue, BASIC.createLiteral(true, new IsStringBuiltin(X)))));
+		head.add(BASIC.createLiteral(true, WSML_MEBER_OF, 
+				BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_STRING))));
+		body.add(hasValue);
+		body.add(BASIC.createLiteral(true, new IsStringBuiltin(X)));
+		res.add(BASIC.createRule(head, body));
+		head.clear();
+		body.clear();
 		// rules for member of integer
-		res.add(BASIC.createRule(
-				BASIC.createHead(BASIC.createLiteral(true, WSML_MEBER_OF, 
-						BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_INTEGER)))), 
-				BASIC.createBody(hasValue, BASIC.createLiteral(true, new IsIntegerBuiltin(X)))));
+		head.add(BASIC.createLiteral(true, WSML_MEBER_OF, 
+				BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_INTEGER))));
+		body.add(hasValue);
+		body.add(BASIC.createLiteral(true, new IsIntegerBuiltin(X)));
+		res.add(BASIC.createRule(head, body));
+		head.clear();
+		body.clear();
 		// rules for member of decimal
-		res.add(BASIC.createRule(
-				BASIC.createHead(BASIC.createLiteral(true, WSML_MEBER_OF, 
-						BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_DECIMAL)))), 
-				BASIC.createBody(hasValue, BASIC.createLiteral(true, new IsDecimalBuiltin(X)))));
+		head.add(BASIC.createLiteral(true, WSML_MEBER_OF, 
+				BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_DECIMAL))));
+		body.add(hasValue);
+		body.add(BASIC.createLiteral(true, new IsDecimalBuiltin(X)));
+		res.add(BASIC.createRule(head, body));
+		head.clear();
+		body.clear();
 		// rules for member of boolean
-		res.add(BASIC.createRule(
-				BASIC.createHead(BASIC.createLiteral(true, WSML_MEBER_OF,
-						BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_BOOLEAN)))),
-				BASIC.createBody(hasValue, BASIC.createLiteral(true, new IsBooleanBuiltin(X)))));
+		head.add(BASIC.createLiteral(true, WSML_MEBER_OF, 
+				BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_BOOLEAN))));
+		body.add(hasValue);
+		body.add(BASIC.createLiteral(true, new IsBooleanBuiltin(X)));
+		res.add(BASIC.createRule(head, body));
+		head.clear();
+		body.clear();
 		// rules for member of date
-		res.add(BASIC.createRule(
-				BASIC.createHead(BASIC.createLiteral(true, WSML_MEBER_OF,
-						BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_DATE)))),
-				BASIC.createBody(hasValue, BASIC.createLiteral(true, new IsDateBuiltin(X)))));
+		head.add(BASIC.createLiteral(true, WSML_MEBER_OF, 
+				BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_DATE))));
+		body.add(hasValue);
+		body.add(BASIC.createLiteral(true, new IsDateBuiltin(X)));
+		res.add(BASIC.createRule(head, body));
+		head.clear();
+		body.clear();
 		// rules for member of dateTime
-		res.add(BASIC.createRule(
-				BASIC.createHead(BASIC.createLiteral(true, WSML_MEBER_OF,
-						BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_DATETIME)))),
-				BASIC.createBody(hasValue, BASIC.createLiteral(true, new IsDateTimeBuiltin(X)))));
+		head.add(BASIC.createLiteral(true, WSML_MEBER_OF, 
+				BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_DATETIME))));
+		body.add(hasValue);
+		body.add(BASIC.createLiteral(true, new IsDateTimeBuiltin(X)));
+		res.add(BASIC.createRule(head, body));
+		head.clear();
+		body.clear();
 		return res;
 	}
 

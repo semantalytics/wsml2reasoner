@@ -79,12 +79,12 @@ import uk.ac.man.cs.img.owl.validation.ValidatorLogger;
  *
  * <pre>
  *  Created on July 3rd, 2006
- *  Committed by $Author: graham $
+ *  Committed by $Author: nathalie $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/impl/DLBasedWSMLReasoner.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.22 $ $Date: 2007-10-03 16:33:45 $
+ * @version $Revision: 1.23 $ $Date: 2007-11-12 16:59:43 $
  */
 public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 
@@ -1211,6 +1211,16 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 			LogicalExpression query) {
 		throw new UnsupportedOperationException();
 	}
+	
+	public boolean checkQueryContainment(LogicalExpression query1,
+			LogicalExpression query2, IRI ontologyID) {
+		throw new UnsupportedOperationException("This method is not implemented");
+	}
+	
+	public Set<Map<Variable, Term>> getQueryContainment(LogicalExpression query1,
+			LogicalExpression query2, IRI ontologyID) {
+		throw new UnsupportedOperationException("This method is not implemented");
+	}
 
 	/**
 	 * This method checks whether a given query (without variables) is true or 
@@ -1420,6 +1430,9 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.22  2007-10-03 16:33:45  graham
+ * removed incorrect imports
+ *
  * Revision 1.21  2007-10-03 14:17:38  nathalie
  * added needed import
  *

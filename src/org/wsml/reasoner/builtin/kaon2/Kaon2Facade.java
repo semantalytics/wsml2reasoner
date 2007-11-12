@@ -629,4 +629,15 @@ public class Kaon2Facade implements DatalogReasonerFacade {
         }
     }
 
+	public boolean checkQueryContainment(ConjunctiveQuery query1,
+			ConjunctiveQuery query2, String ontologyURI) {
+		throw new UnsupportedOperationException("This method is not implemented");
+	}
+	
+	public Set<Map<org.omwg.ontology.Variable, org.omwg.logicalexpression.terms.Term>> 
+			getQueryContainment(ConjunctiveQuery query1,
+					ConjunctiveQuery query2, String ontologyURI) {
+		throw new UnsupportedOperationException("This method is not implemented");
+	}
+
 }

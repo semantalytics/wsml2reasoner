@@ -69,6 +69,57 @@ public interface WSMLReasoner {
 
     public void deRegisterOntology(Set<IRI> ontologyIDs);
 
+    /**
+     * This method checks for query containment, i.e. it checks 
+     * for whether one query is contained within another query. The 
+     * query containment is checked using the 'Frozen Facts' algorithm
+     * (This algorithm is presented in Ramakrishnan, R., Y. Sagiv, 
+     * J. D. Ullman and M. Y. Vardi (1989). Proof-Tree Transformation 
+     * Theorems and their Applications. 8th ACM Symposium on Principles 
+     * of Database Systems, pp. 172 - 181, Philadelphia) within the 
+     * reasoning engine IRIS.
+     * </p>
+     * <p>
+     * The query containment check can only be performed over positive 
+     * queries that do not contain built-ins and disjunctions.
+     * </p>
+     * <p>
+     * Example: <br />
+     * In the following Query1 is contained within Query2:<br />
+     * Program: vehicle(?x) :- car(?x).<br />
+     * Query1: car(?x).<br />
+     * Query2: vehicle(?x).<br />
+     * </p>
+     * 
+     * @param query1
+     *            the query that may be contained within query2.
+     * @param query2
+     * 			  the query that may contain query1.
+     * @param ontologyID
+     *            the orginal logical ontology URI
+     * @return true if query1 is contained within query2, false otherwise.
+     */
+    public boolean checkQueryContainment(LogicalExpression query1, 
+    		LogicalExpression query2, IRI ontologyID);
+    
+    /**
+     * Check whether query1 is contained within query2 and return the 
+     * resulting variable mapping.
+     * 
+     * @param query1
+     *            the query that may be contained within query2.
+     * @param query2
+     * 			  the query that may contain query1.
+     * @param ontologyID
+     *            the orginal logical ontology URI
+     * @return Set containing the resulting variable mapping, mapping 
+     * 			  variables to terms
+     * @see WSMLReasoner#checkQueryContainment(LogicalExpression, 
+     * 			  LogicalExpression, IRI)
+     */
+    public Set<Map<Variable, Term>> getQueryContainment(LogicalExpression 
+    		query1, LogicalExpression query2, IRI ontologyID);
+    
     public boolean executeGroundQuery(IRI ontologyID, LogicalExpression query);
 
     public Set<Map<Variable, Term>> executeQuery(IRI ontologyID,
