@@ -108,11 +108,11 @@ import org.wsmo.factory.WsmoFactory;
  * The wsmo4j interface for the iris reasoner.
  * </p>
  * <p>
- * $Id: IrisFacade.java,v 1.23 2007-11-12 16:59:47 nathalie Exp $
+ * $Id: IrisFacade.java,v 1.24 2007-11-13 17:36:11 nathalie Exp $
  * </p>
  * 
  * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class IrisFacade implements DatalogReasonerFacade {
 
@@ -421,6 +421,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 	public synchronized Set<Map<Variable, Term>> getQueryContainment(
 			ConjunctiveQuery query1, ConjunctiveQuery query2, String ontologyURI) 
 			throws ExternalToolException {
+		QCResult.clear();
 		// check query containment and get IRIS result set
 		if (checkQueryContainment(query1, query2, ontologyURI))
 			QCResult = queryCont.getContainmentMappings();
