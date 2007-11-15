@@ -27,7 +27,7 @@ public class BundledWSMLFlightTests {
 		suite.addTestSuite(SubConceptOfSemanticsTest.class);
 		suite.addTestSuite(SimpleInferenceTests.class);
 		suite.addTestSuite(VariablePositionInTuple.class);
-		suite.addTestSuite(SubConceptOfTest.class);
+		suite.addTestSuite(ConstraintViolationCheck.class);
 		suite.addTestSuite(RegisterMultipleTimes.class);
 		suite.addTestSuite(SimpleGraph.class);
 		suite.addTestSuite(SatisfiablityTest.class);
