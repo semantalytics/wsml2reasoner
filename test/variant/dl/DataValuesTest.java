@@ -188,7 +188,7 @@ public class DataValuesTest extends BaseNormalizationTest {
 		serializer.serialize(owlOntology, writer, prefs);
 //		System.out.println(writer.toString());
 		assertTrue(writer.toString().contains(
-				"value(b:hasLocation a:testOntology))"));
+				"value(a:hasLocation b:testOntology))"));
         axiom.removeDefinition(le);
     }
     
