@@ -189,14 +189,16 @@ public class WSML2DatalogTransformer {
         body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept2));
         body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept2, vConcept3));
         result.add(new Rule(head, body));
-
+        
+    
+        //memberOf(instance, concept2) <- memberOf(instance, concept), subConceptOf(concept, concept2)
         body = new LinkedList<Literal>();
         head = new Literal(true, PRED_MEMBER_OF, vInstance, vConcept2);
         body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept));
         body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept2));
         result.add(new Rule(head, body));
 
-        // reflexivity: sco(?c,?c) :- ?c is an IRI that explicitly occures in the ontology
+        // reflexivity: sco(?c,?c) :- ?c is an IRI that explicitly occurs in the ontology
         // (i.e. concepts, relations, attr, instances, 
         // but does not denote a datatype or datatype value)    
         body = new LinkedList<Literal>();

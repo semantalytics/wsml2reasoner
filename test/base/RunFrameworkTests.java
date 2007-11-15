@@ -13,7 +13,7 @@ public class RunFrameworkTests {
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite("Test suite for framework (generic tests)");
+        TestSuite suite = new TestSuite("Test suite for generic framework tests");
         // $JUnit-BEGIN$
         suite.addTest(BundledNormalizationTests.suite());
         suite.addTest(BundledTransformationTests.suite());
