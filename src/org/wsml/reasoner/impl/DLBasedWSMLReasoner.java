@@ -18,6 +18,7 @@
  */
 package org.wsml.reasoner.impl;
 
+import java.lang.reflect.Constructor;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.GregorianCalendar;
@@ -58,7 +59,6 @@ import org.wsml.reasoner.api.WSMLDLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
-import org.wsml.reasoner.builtin.kaon2.Kaon2DLFacade;
 import org.wsml.reasoner.builtin.pellet.PelletFacade;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
@@ -79,12 +79,12 @@ import uk.ac.man.cs.img.owl.validation.ValidatorLogger;
  *
  * <pre>
  *  Created on July 3rd, 2006
- *  Committed by $Author: nathalie $
+ *  Committed by $Author: graham $
  *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/impl/DLBasedWSMLReasoner.java,v $,
  * </pre>
  *
  * @author Nathalie Steinmetz, DERI Innsbruck
- * @version $Revision: 1.23 $ $Date: 2007-11-12 16:59:43 $
+ * @version $Revision: 1.24 $ $Date: 2007-11-19 19:20:10 $
  */
 public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 
@@ -119,14 +119,10 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		dataFactory = this.wsmoManager.getDataFactory();
 		switch (builtInType) {
 			case PELLET:
-				builtInFacade = new PelletFacade();
+				builtInFacade = createFacade( "org.wsml.reasoner.builtin.pellet.PelletFacade");
 				break;
 			case KAON2:
-				try {
-					builtInFacade = new Kaon2DLFacade();
-				} catch (OWLException e) {
-					throw new InternalReasonerException(e);
-				}
+				builtInFacade = createFacade( "org.wsml.reasoner.builtin.kaon2.Kaon2DLFacade");
 				break;
 			default:
 				throw new UnsupportedOperationException("Reasoning with "
@@ -145,6 +141,21 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 	 * 			valid
 	 */
 	
+    private org.wsml.reasoner.DLReasonerFacade createFacade( String className)
+    {
+    	Class<?> facade;
+    	Constructor<?> constructor;
+		try {
+			facade = Class.forName( className );
+			constructor = facade.getConstructor();
+			return (org.wsml.reasoner.DLReasonerFacade) constructor.newInstance();
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+		}
+    }
+    
     public OWLOntology convertOntology(Ontology ontology) {
 		SpeciesValidator owlValidator = null;
 		
@@ -1430,6 +1441,9 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 }
 /*
  * $Log: not supported by cvs2svn $
+ * Revision 1.23  2007-11-12 16:59:43  nathalie
+ * added query containment task and updated framework to IRIS 0.5
+ *
  * Revision 1.22  2007-10-03 16:33:45  graham
  * removed incorrect imports
  *

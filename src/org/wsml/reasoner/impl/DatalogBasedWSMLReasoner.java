@@ -19,6 +19,7 @@
 
 package org.wsml.reasoner.impl;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -58,11 +59,7 @@ import org.wsml.reasoner.api.inconsistency.MaxCardinalityViolation;
 import org.wsml.reasoner.api.inconsistency.MinCardinalityViolation;
 import org.wsml.reasoner.api.inconsistency.NamedUserConstraintViolation;
 import org.wsml.reasoner.api.inconsistency.UnNamedUserConstraintViolation;
-import org.wsml.reasoner.builtin.iris.IrisDbFacade;
-import org.wsml.reasoner.builtin.iris.IrisFacade;
-import org.wsml.reasoner.builtin.kaon2.Kaon2Facade;
 import org.wsml.reasoner.builtin.mins.MinsFacade;
-import org.wsml.reasoner.builtin.xsb.XSBFacade;
 import org.wsml.reasoner.transformation.AnonymousIdUtils;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.ConstraintReplacementNormalizer;
@@ -125,19 +122,19 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         this.wsmoManager = wsmoManager;
         switch (builtInType) {
         case KAON2:
-            builtInFacade = new Kaon2Facade(wsmoManager);
+        	builtInFacade = createFacade( "org.wsml.reasoner.builtin.kaon2.Kaon2Facade", wsmoManager);
             break;
         case MINS:
-            builtInFacade = new MinsFacade(wsmoManager);
+        	builtInFacade = createFacade( "org.wsml.reasoner.builtin.mins.MinsFacade", wsmoManager);
             break;
         case XSB:
-            builtInFacade = new XSBFacade(wsmoManager);
+        	builtInFacade = createFacade( "org.wsml.reasoner.builtin.xsb.XSBFacade", wsmoManager);
             break;
         case IRIS:
-        	builtInFacade = new IrisFacade(wsmoManager);
+        	builtInFacade = createFacade( "org.wsml.reasoner.builtin.iris.IrisFacade", wsmoManager);
         	break;
         case IRISDB:
-        	builtInFacade = new IrisDbFacade(wsmoManager);
+        	builtInFacade = createFacade( "org.wsml.reasoner.builtin.iris.IrisDbFacade", wsmoManager);
         	break;
         default:
             throw new UnsupportedOperationException("Reasoning with "
@@ -146,7 +143,24 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         wsmoFactory = this.wsmoManager.getWSMOFactory();
         leFactory = this.wsmoManager.getLogicalExpressionFactory();
     }
-    
+
+    //Method added to avoid compilation errors after 
+    //removing KAON2 facade and jars
+    private org.wsml.reasoner.DatalogReasonerFacade createFacade( String className, WSMO4JManager wsmoManager)
+    {
+    	Class<?> facade;
+    	Constructor<?> constructor;
+		try {
+			facade = Class.forName( className );
+			constructor = facade.getConstructor( WSMO4JManager.class );
+			return (org.wsml.reasoner.DatalogReasonerFacade) constructor.newInstance( wsmoManager );
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+		}
+    }
+
     public void setDisableConsitencyCheck(boolean check){
         this.disableConsitencyCheck = check;
     }
