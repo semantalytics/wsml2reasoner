@@ -4,8 +4,26 @@ namespace { _"http://simple#"
 
 ontology simpson
 
-concept Human
+concept StrangeHuman subConceptOf Human
+ age ofType _integer
+ hasParent impliesType Alien
 
+concept Man subConceptOf Human
+	
 instance Marge memberOf Human
-
+ age hasValue 17
+	
 instance Graham memberOf Man
+
+axiom inferedUsedConcept definedBy
+?h memberOf Human and 
+?h[age hasValue ?v] and  
+?v < 40 implies
+?v memberOf NiceAge.
+
+
+
+
+
+
+

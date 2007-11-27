@@ -84,10 +84,13 @@ public class DLOntologyRegistrationTest extends BaseReasonerTest {
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLDLReasoner(params);
         doTestMultipleOntologies();
         System.gc();
+        
         // KAON2
-        params.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, BuiltInReasoner.KAON2);
-        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLDLReasoner(params);
-        doTestMultipleOntologies();
+        if (base.BaseReasonerTest.exists("org.wsml.reasoner.builtin.kaon2.Kaon2DLFacade")) { 
+	        params.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, BuiltInReasoner.KAON2);
+	        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLDLReasoner(params);
+	        doTestMultipleOntologies();
+        }
 	}
 
 	public void doTestMultipleOntologies() throws Exception {

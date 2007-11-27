@@ -144,9 +144,11 @@ public class RegisterMultipleTimes  extends BaseReasonerTest  {
         clearDeregistration();
     	removeInstances();
     	
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
-      	clearDeregistration();
-    	removeInstances();
+    	if (exists("org.wsml.reasoner.builtin.kaon2.Kaon2Facade")) { 
+    		resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+    		clearDeregistration();
+    		removeInstances();
+    
+    	}
     }
-
 }

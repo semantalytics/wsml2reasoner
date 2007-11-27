@@ -294,5 +294,16 @@ public class BaseReasonerTest extends TestCase {
          }
          System.out.println("Ontology parsed");
     }
+    
+    public static boolean exists (String className)
+    {
+    	try {
+    		Class.forName (className);
+    		return true;
+    	}
+    	catch (ClassNotFoundException exception) {
+    		return false;
+    	}
+    }
 
 }

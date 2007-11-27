@@ -86,10 +86,11 @@ public class MaciejVTABug extends BaseReasonerTest {
     	attributeValueQuery();
     	memberOfQuery();
     	
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
-    	attributeValueQuery();
-    	memberOfQuery();
-
+    	if (exists("org.wsml.reasoner.builtin.kaon2.Kaon2Facade")) { 
+    		resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+    	   	attributeValueQuery();
+    	   	memberOfQuery();
+    	}
     }
 
 }

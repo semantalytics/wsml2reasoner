@@ -72,9 +72,10 @@ public class VariablePositionInTuple extends BaseReasonerTest {
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
     	variablePosition();
     	
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
-    	variablePosition();
+    	if (exists("org.wsml.reasoner.builtin.kaon2.Kaon2Facade")) { 
+    		resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+    		variablePosition();
+    	}
     }
-    
-    
+  
 }

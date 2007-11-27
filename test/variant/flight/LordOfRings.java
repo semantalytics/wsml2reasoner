@@ -394,30 +394,32 @@ public class LordOfRings extends BaseReasonerTest {
     	namedArwen();
     	noMaleFemaleTogether();
     	
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
-    	aragornIsElendilsHeir();
-    	aragornLovesElf();
-    	aragornLovesFemale();
-    	arwenIsFemale();
-    	born1000DividedBy2();
-    	born250Twice();
-    	born490And10();
-    	born490And10LogicEqual();
-    	born500();
-    	born510Minus10();
-    	bornBefore900();
-    	bornBeforeEqual900();
-    	happy();
-    	happyOrSad();
-    	height6Feet();
-    	higherEqualThan6Feet();
-    	higherThan7Feet();
-    	lowerEqualThan7AndHalfFeet();
-    	lowerThan7Feet();
-    	males();
-    	namedAragorn();
-    	namedArwen();
-    	noMaleFemaleTogether();
+    	if (exists("org.wsml.reasoner.builtin.kaon2.Kaon2Facade")) { 
+    		resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+    	   	aragornIsElendilsHeir();
+	    	aragornLovesElf();
+	    	aragornLovesFemale();
+	    	arwenIsFemale();
+	    	born1000DividedBy2();
+	    	born250Twice();
+	    	born490And10();
+	    	born490And10LogicEqual();
+	    	born500();
+	    	born510Minus10();
+	    	bornBefore900();
+	    	bornBeforeEqual900();
+	    	happy();
+	    	happyOrSad();
+	    	height6Feet();
+	    	higherEqualThan6Feet();
+	    	higherThan7Feet();
+	    	lowerEqualThan7AndHalfFeet();
+	    	lowerThan7Feet();
+	    	males();
+	    	namedAragorn();
+	    	namedArwen();
+	    	noMaleFemaleTogether();
+    	}
     	
     }
 

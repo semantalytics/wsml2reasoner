@@ -142,9 +142,10 @@ public class Boolean extends BaseReasonerTest {
     	simplerBoolean();
     	simpleBoolean();
    	
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
-    	simplerBoolean();
-    	simpleBoolean();
+    	if (exists("org.wsml.reasoner.builtin.kaon2.Kaon2Facade")) { 
+    		resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+    	   	simplerBoolean();
+    	   	simpleBoolean();
+       	}
     }
-
 }

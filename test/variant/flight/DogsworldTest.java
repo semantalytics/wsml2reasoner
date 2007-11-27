@@ -89,10 +89,11 @@ public class DogsworldTest extends BaseReasonerTest {
     	consistencyChecker();
     	instanceRetrieval();
     	
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
-    	subconceptsOfMammal();
-    	consistencyChecker();
-    	instanceRetrieval();
+    	if (exists("org.wsml.reasoner.builtin.kaon2.Kaon2Facade")) { 
+    		resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+    		subconceptsOfMammal();
+    		consistencyChecker();
+    		instanceRetrieval();
+       	}
     }
-
 }

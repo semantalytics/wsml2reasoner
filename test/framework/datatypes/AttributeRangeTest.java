@@ -66,10 +66,12 @@ public class AttributeRangeTest extends BaseReasonerTest {
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
     	attributeRange();
     	
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
-    	attributeRange();
-    	
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET);
     	attributeRange();
+    	
+    	if (exists("org.wsml.reasoner.builtin.kaon2.Kaon2Facade")) { 
+    		resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+    		attributeRange();
+    	}
     }
 }

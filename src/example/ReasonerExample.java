@@ -84,13 +84,13 @@ public class ReasonerExample {
      * loads an Ontology and performs sample query
      */
     public void doTestRun(String reasoningEngine) throws Exception {
-        Ontology exampleOntology = loadOntology("example/simpleOntology.wsml");
+        Ontology exampleOntology = loadOntology("files/dogsworld2.wsml");
         if (exampleOntology == null)
             return;
         LogicalExpressionFactory leFactory = new WSMO4JManager()
                 .getLogicalExpressionFactory();
 
-        String queryString = "?x memberOf ?y";
+        String queryString = "?x subConceptOf strange";
 
         LogicalExpression query = leFactory.createLogicalExpression(
                 queryString, exampleOntology);

@@ -157,12 +157,14 @@ public class ImportOntologyTest extends BaseReasonerTest {
     	importOntology();
     	importOntologyWithLocator();
     	
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
-    	importOntology();
-    	importOntologyWithLocator();
-    	
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET);
     	importOntology();
+    	
+    	if (exists("org.wsml.reasoner.builtin.kaon2.Kaon2Facade")){ 
+    		resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+        	importOntology();
+        	importOntologyWithLocator();
+    	}
     }
     
     

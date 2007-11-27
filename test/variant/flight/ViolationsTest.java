@@ -170,11 +170,12 @@ public class ViolationsTest extends BaseReasonerTest {
     	violations();
     	System.gc();
     	
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
-    	violations();
-    	System.gc();
+    	if (exists("org.wsml.reasoner.builtin.kaon2.Kaon2Facade")) { 
+    		resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+    		violations();
+    		System.gc();
+    	}
 
     }
     
-
 }

@@ -81,10 +81,12 @@ public class SatisfiablityTest extends BaseReasonerTest {
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
     	satisfiablity();
     	
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
-    	satisfiablity();
+    	if (exists("org.wsml.reasoner.builtin.kaon2.Kaon2Facade")) {
+    		resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+    	  	satisfiablity();
+    
+    	}
     }
-	
 }
 /*
  * $Log: not supported by cvs2svn $

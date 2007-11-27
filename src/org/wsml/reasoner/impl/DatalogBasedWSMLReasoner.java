@@ -897,16 +897,33 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         Set<ConjunctiveQuery> result = new HashSet<ConjunctiveQuery>();
 
         for (Rule rule : p) {
-            if (!rule.getHead().getPredicateUri().equals(WSML_RESULT_PREDICATE))
-                throw new IllegalArgumentException("Could not transform query "
-                        + q);
-
-            List<Literal> body = new LinkedList<Literal>();
-
-            for (Literal l : rule.getBody()) {
-                body.add(l);
-            }
-            result.add(new org.wsml.reasoner.ConjunctiveQuery(body));
+            
+        	if (rule.getHead().getPredicateUri().equals(WSML_RESULT_PREDICATE)){
+            
+	            List<Literal> body = new LinkedList<Literal>();
+	
+	            for (Literal l : rule.getBody()) {
+	                body.add(l);
+	            }
+	            result.add(new org.wsml.reasoner.ConjunctiveQuery(body));
+        	} else {
+        		//TODO we need to add these rules to the datalog programm
+        		// and remove all of them after the query evaluation is finished!
+        		
+        		// problem wrt impl. right now> would require to change the DATALOG PROGRAM
+        		// for each query! which is bad if one precomputes the model for a program
+        		// an materializes the result, since the materializtion needs to be done all
+        		// the time again and again. 
+        		// CurrentlY this does not fit to our reasoner implementation. 
+        		
+        		// This means the following QUERY does not retrieve the correct answer>
+        		// ?- ?x subConceptOf SomeConceptThatIsNOTintheOntology
+        		// as answers we would get the empty set, but should get one tuple
+        		// (SomeConceptThatIsNOTintheOntology)
+        		
+        		
+        		
+        	}
         }
         return result;
     }

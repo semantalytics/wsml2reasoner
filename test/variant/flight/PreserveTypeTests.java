@@ -116,11 +116,12 @@ public class PreserveTypeTests extends BaseReasonerTest {
     	//MINS does not pass
     	//preserveTypeAfterOperationwithPredicates();
 
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
-    	preserveType();
-    	preserveTypeAfterOperationWithConcepts();
-    	preserveTypeAfterOperationwithPredicates();
-    	
+    	if (exists("org.wsml.reasoner.builtin.kaon2.Kaon2Facade")) { 
+    		resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+    		preserveType();
+    		preserveTypeAfterOperationWithConcepts();
+    		preserveTypeAfterOperationwithPredicates();
+    	}
     }
     
 }

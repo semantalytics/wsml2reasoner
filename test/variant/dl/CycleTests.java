@@ -81,10 +81,13 @@ public class CycleTests extends TestCase {
         params.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, BuiltInReasoner.PELLET);
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLDLReasoner(params);
         doCycleTests();
+        
         // KAON2
-        params.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, BuiltInReasoner.KAON2);
-        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLDLReasoner(params);
-        doCycleTests();
+        if (base.BaseReasonerTest.exists("org.wsml.reasoner.builtin.kaon2.Kaon2DLFacade")) { 
+	        params.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, BuiltInReasoner.KAON2);
+	        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLDLReasoner(params);
+	        doCycleTests();
+        }
     }
 	
 	public void doCycleTests() throws Exception {
