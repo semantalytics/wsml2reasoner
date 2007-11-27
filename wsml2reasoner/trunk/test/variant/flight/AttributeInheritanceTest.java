@@ -96,10 +96,11 @@ public class AttributeInheritanceTest extends BaseReasonerTest {
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
     	attributeInheritanceTest();
    	
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
-    	attributeInheritanceTest();
+    	if (exists("org.wsml.reasoner.builtin.kaon2.Kaon2Facade")) { 
+    		resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+    		attributeInheritanceTest();
+    	}
     }
-	
 }
 /*
  * $Log: not supported by cvs2svn $

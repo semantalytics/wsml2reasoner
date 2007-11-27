@@ -57,13 +57,13 @@ public class MaciejVTABug2 extends BaseReasonerTest {
     public void testFlightReasoners() throws Exception{
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
     	memberOfQuery();
-    	
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
-    	memberOfQuery();
-    	
+       	
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
     	memberOfQuery();
-
+    	
+    	if (exists("org.wsml.reasoner.builtin.kaon2.Kaon2Facade")) { 
+    		resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+    		memberOfQuery();
+    	}
     }
-
 }

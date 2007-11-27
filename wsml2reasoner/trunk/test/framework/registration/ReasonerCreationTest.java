@@ -120,10 +120,12 @@ public class ReasonerCreationTest extends BaseReasonerTest {
 //    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
 //    	datalogReasonerCreation();
 //    	
-//    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
-//    	datalogReasonerCreation();
-//    	dlReasonerCreation();
-    	
+//    	if (exists("org.wsml.reasoner.builtin.kaon2.Kaon2Facade")) { 
+//    		resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+//    		datalogReasonerCreation();
+//    		dlReasonerCreation();
+//    	}
+//    	
 //    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET);
 //    	dlReasonerCreation();
     }

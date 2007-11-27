@@ -206,7 +206,7 @@ public class WSMLDL2OWLTransformer implements Visitor{
 
 	public void visitAtom(Atom expr) {
         //ignore
-        if (expr.getIdentifier().toString().equals(WSML2DatalogTransformer.PRED_DECLARED_IRI)){
+        if (expr.getIdentifier().toString().equals(WSML2DatalogTransformer.PRED_KNOWN_CONCEPT)){
             return;
         }
 

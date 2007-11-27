@@ -30,7 +30,7 @@ public class CyclicalImportsTest extends BaseReasonerTest {
 
     protected void tearDown() throws Exception {
     	super.tearDown();
-    	resetReasoner(previous);
+    	BaseReasonerTest.resetReasoner(previous);
         System.gc();
     }
 
@@ -90,15 +90,17 @@ public class CyclicalImportsTest extends BaseReasonerTest {
     	cyclicalImports4Datalog();
     	cyclicalImports();
     	
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
-    	cyclicalImports4Datalog();
-    	cyclicalImports();
-    	
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
-    	cyclicalImports4Datalog();
-    	cyclicalImports();
-    	
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET);
-    	cyclicalImports();
+//    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
+//    	cyclicalImports4Datalog();
+//    	cyclicalImports();
+//    	    	
+//    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET);
+//    	cyclicalImports();
+//    	
+//    	if (exists("org.wsml.reasoner.builtin.kaon2.Kaon2Facade")) { 
+//    		resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+//    	   	cyclicalImports4Datalog();
+//    	   	cyclicalImports();
+//    	}
     }
 }

@@ -33,6 +33,7 @@ import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.InternalReasonerException;
 import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
@@ -107,13 +108,16 @@ public class DLSimpleInferenceTests extends TestCase {
         ontology = (Ontology)parser.parse(new InputStreamReader(is))[0]; 
         ns = ontology.getDefaultNamespace().getIRI().toString();
         // Pellet
-        params.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, BuiltInReasoner.PELLET);
-        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLDLReasoner(params);
+        base.BaseReasonerTest.resetReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET);
+        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLDLReasoner();
         doTestAll();
+        
         // KAON2
-        params.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, BuiltInReasoner.KAON2);
-        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLDLReasoner(params);
-        doTestAll();
+        if (base.BaseReasonerTest.exists("org.wsml.reasoner.builtin.kaon2.Kaon2DLFacade")) { 
+        	base.BaseReasonerTest.resetReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET);
+        	wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLDLReasoner();
+        	doTestAll();
+        }
         
         /*
          * Do test with inconsistent ontology with Pellet and KAON2
@@ -129,10 +133,13 @@ public class DLSimpleInferenceTests extends TestCase {
         params.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, BuiltInReasoner.PELLET);
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLDLReasoner(params);
         doTestInconsistentOntology();
+       
         // KAON2
-        params.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, BuiltInReasoner.KAON2);
-        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLDLReasoner(params);
-        doTestInconsistentOntology();
+        if (base.BaseReasonerTest.exists("org.wsml.reasoner.builtin.kaon2.Kaon2DLFacade")) { 
+        	params.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, BuiltInReasoner.KAON2);
+        	wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLDLReasoner(params);
+        	doTestInconsistentOntology();
+        }
     }
     
 	public void doTestAll() throws Exception {		

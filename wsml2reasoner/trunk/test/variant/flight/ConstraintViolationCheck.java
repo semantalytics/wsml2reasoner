@@ -126,15 +126,16 @@ public class ConstraintViolationCheck extends BaseReasonerTest {
     }
     
     public void testFlightReasoners() throws Exception{
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
+
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
     	constraintViolationCheck();
     	
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
     	constraintViolationCheck();
     	
-    	BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.KAON2;
-    	constraintViolationCheck();
+    	if (base.BaseReasonerTest.exists("org.wsml.reasoner.builtin.kaon2.Kaon2Facade")) { 
+    		resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+    		constraintViolationCheck();
+    	}
     }
-
-
 }

@@ -192,10 +192,12 @@ public class OntologyRegistrationTest extends BaseReasonerTest {
     	intenseOntologyRegistration();
     	System.gc();
     	
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
-    	ontologyRegistration();
-    	intenseOntologyRegistration();
-    	System.gc();
+    	if (exists("org.wsml.reasoner.builtin.kaon2.Kaon2Facade")) { 
+    		resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+    	   	ontologyRegistration();
+    	   	intenseOntologyRegistration();
+    	   	System.gc();
+    	}
     }
 
 }

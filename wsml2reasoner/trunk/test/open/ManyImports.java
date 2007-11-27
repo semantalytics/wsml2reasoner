@@ -107,7 +107,7 @@ public class ManyImports extends BaseReasonerTest {
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
     	basicTest();
     	
-//    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+//    	if (exists("org.wsml.reasoner.builtin.kaon2.Kaon2Facade")) { resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
 //    	basicTest();
     }
     
