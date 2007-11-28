@@ -56,7 +56,7 @@ import org.wsml.reasoner.ExternalToolException;
 import org.wsml.reasoner.WSMLDL2OWLTransformer;
 import org.wsml.reasoner.api.InternalReasonerException;
 import org.wsml.reasoner.api.WSMLDLReasoner;
-import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.builtin.pellet.PelletFacade;
@@ -111,7 +111,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 	protected WSMLDL2OWLTransformer transformer = null;
 	
 	 
-	public DLBasedWSMLReasoner(WSMLReasonerFactory.BuiltInReasoner builtInType,
+	public DLBasedWSMLReasoner(BuiltInReasoner builtInType,
 			WSMO4JManager wsmoManager) {
 		this.wsmoManager = wsmoManager;
 		wsmoFactory = this.wsmoManager.getWSMOFactory();
@@ -119,10 +119,11 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		dataFactory = this.wsmoManager.getDataFactory();
 		switch (builtInType) {
 			case PELLET:
-				builtInFacade = createFacade( "org.wsml.reasoner.builtin.pellet.PelletFacade");
+				builtInFacade = createFacade(builtInType.getFacadeClass());
 				break;
 			case KAON2:
-				builtInFacade = createFacade( "org.wsml.reasoner.builtin.kaon2.Kaon2DLFacade");
+			case KAON2DL:
+				builtInFacade = createFacade(BuiltInReasoner.KAON2DL.getFacadeClass());
 				break;
 			default:
 				throw new UnsupportedOperationException("Reasoning with "

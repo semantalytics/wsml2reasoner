@@ -44,6 +44,7 @@ import org.omwg.ontology.Variable;
 import org.omwg.ontology.WsmlDataType;
 import org.wsml.reasoner.ConjunctiveQuery;
 import org.wsml.reasoner.DatalogException;
+import org.wsml.reasoner.DatalogReasonerFacade;
 import org.wsml.reasoner.ExternalToolException;
 import org.wsml.reasoner.Literal;
 import org.wsml.reasoner.Rule;
@@ -120,39 +121,32 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             WSMLReasonerFactory.BuiltInReasoner builtInType,
             WSMO4JManager wsmoManager) {
         this.wsmoManager = wsmoManager;
-        switch (builtInType) {
-        case KAON2:
-        	builtInFacade = createFacade( "org.wsml.reasoner.builtin.kaon2.Kaon2Facade", wsmoManager);
-            break;
-        case MINS:
-        	builtInFacade = createFacade( "org.wsml.reasoner.builtin.mins.MinsFacade", wsmoManager);
-            break;
-        case XSB:
-        	builtInFacade = createFacade( "org.wsml.reasoner.builtin.xsb.XSBFacade", wsmoManager);
-            break;
-        case IRIS:
-        	builtInFacade = createFacade( "org.wsml.reasoner.builtin.iris.IrisFacade", wsmoManager);
-        	break;
-        case IRISDB:
-        	builtInFacade = createFacade( "org.wsml.reasoner.builtin.iris.IrisDbFacade", wsmoManager);
-        	break;
-        default:
-            throw new UnsupportedOperationException("Reasoning with "
-                    + builtInType.toString() + " is not supported yet!");
+        
+        if (builtInType.getFacadeClass() != null) {
+        	builtInFacade = createFacade(builtInType.getFacadeClass(), wsmoManager);
+        } else {
+        	throw new UnsupportedOperationException("Reasoning with " 
+        			+ builtInType.toString() + " is not supported yet! "
+        			+ "The facade class is not specified.");
         }
         wsmoFactory = this.wsmoManager.getWSMOFactory();
         leFactory = this.wsmoManager.getLogicalExpressionFactory();
     }
 
-    //Method added to avoid compilation errors after 
-    //removing KAON2 facade and jars
-    private org.wsml.reasoner.DatalogReasonerFacade createFacade( String className, WSMO4JManager wsmoManager)
-    {
-    	Class<?> facade;
-    	Constructor<?> constructor;
+    /**
+     * Instantiates a new facade using reflection. The facade must have a 
+     * constructor taking a <code>WSMO4JManager<code>.
+     * @param className the class of the facade
+     * @param wsmoManager the manager to pass to the constructor
+     * @return the newly instantiated facade
+     */
+    private DatalogReasonerFacade createFacade( String className, WSMO4JManager wsmoManager) {
+    	assert className != null: "The class name must not be null";
+    	assert wsmoManager != null: "The manager must not be null";
+    	
 		try {
-			facade = Class.forName( className );
-			constructor = facade.getConstructor( WSMO4JManager.class );
+			final Class<?> facade = Class.forName(className);
+			final Constructor<?> constructor = facade.getConstructor(WSMO4JManager.class);
 			return (org.wsml.reasoner.DatalogReasonerFacade) constructor.newInstance( wsmoManager );
 		} catch (Throwable e) {
 			// TODO Auto-generated catch block
