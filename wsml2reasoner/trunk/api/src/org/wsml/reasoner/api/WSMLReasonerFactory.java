@@ -56,8 +56,44 @@ public interface WSMLReasonerFactory {
     
     public String PARAM_DB_CONF = "Database Configuration Map";
 
+    /**
+     * Enum to select which reasoner to take. This enum also holds informations 
+     * about those reasoners.
+     */
     public enum BuiltInReasoner {
-        KAON2, MINS, PELLET, XSB, IRIS, IRISDB, TPTP, SPASS
+    	
+		KAON2("org.wsml.reasoner.builtin.kaon2.Kaon2Facade"),
+		KAON2DL("org.wsml.reasoner.builtin.kaon2.Kaon2DLFacade"),
+		MINS("org.wsml.reasoner.builtin.mins.MinsFacade"),
+		PELLET("org.wsml.reasoner.builtin.pellet.PelletFacade"),
+		XSB("org.wsml.reasoner.builtin.xsb.XSBFacade"),
+		IRIS("org.wsml.reasoner.builtin.iris.IrisFacade"),
+		IRISDB("org.wsml.reasoner.builtin.iris.IrisDbFacade"),
+		TPTP("org.wsml.reasoner.builtin.tptp.TPTPFacade"),
+		SPASS("org.wsml.reasoner.builtin.spass.SpassFacade");
+		
+		/** 
+		 * <p>
+		 * The facade class for this reasoner.
+		 * </p>
+		 */
+		private final String facadeclazz;
+		
+		/**
+		 * Constructs a new enum entry.
+		 * @param facadeclazz class for the facade containing a proper constructor
+		 */
+		BuiltInReasoner(final String facadeclazz) {
+			this.facadeclazz = facadeclazz;
+		}
+		
+		/**
+		 * Returns the facade class.
+		 * @return the facade class
+		 */
+		public String getFacadeClass() {
+			return facadeclazz;
+		}
     };
 
     /**

@@ -38,6 +38,7 @@ import org.semanticweb.owl.model.OWLOntology;
 import org.semanticweb.owl.model.OWLProperty;
 import org.wsml.reasoner.DLReasonerFacade;
 import org.wsml.reasoner.ExternalToolException;
+import org.wsml.reasoner.impl.WSMO4JManager;
 
 /**
  * Integrates the PELLET reasoner system into the WSML-DL reasoner framework.
@@ -65,6 +66,14 @@ public class PelletFacade implements DLReasonerFacade {
     public PelletFacade() {
         super();
         registeredOntologies = new HashMap<String, Reasoner>();
+    }
+    
+    /**
+     * Creates a new pellet based facade.
+     * @param m the wsmo4j manager
+     */
+    public PelletFacade(final WSMO4JManager m) {
+    	this();
     }
 
     /**
