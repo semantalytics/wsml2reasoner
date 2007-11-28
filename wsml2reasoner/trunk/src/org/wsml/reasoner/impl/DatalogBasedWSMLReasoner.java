@@ -20,6 +20,7 @@
 package org.wsml.reasoner.impl;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -121,14 +122,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             WSMLReasonerFactory.BuiltInReasoner builtInType,
             WSMO4JManager wsmoManager) {
         this.wsmoManager = wsmoManager;
-        
-        if (builtInType.getFacadeClass() != null) {
-        	builtInFacade = createFacade(builtInType.getFacadeClass(), wsmoManager);
-        } else {
-        	throw new UnsupportedOperationException("Reasoning with " 
-        			+ builtInType.toString() + " is not supported yet! "
-        			+ "The facade class is not specified.");
-        }
+        builtInFacade = createFacade(builtInType.getFacadeClass(), wsmoManager);
         wsmoFactory = this.wsmoManager.getWSMOFactory();
         leFactory = this.wsmoManager.getLogicalExpressionFactory();
     }
@@ -139,19 +133,38 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
      * @param className the class of the facade
      * @param wsmoManager the manager to pass to the constructor
      * @return the newly instantiated facade
+     * @throws InternalReasonerException if something went wrong while 
+     * instantiating the reasoner
      */
-    private DatalogReasonerFacade createFacade( String className, WSMO4JManager wsmoManager) {
-    	assert className != null: "The class name must not be null";
-    	assert wsmoManager != null: "The manager must not be null";
+    private DatalogReasonerFacade createFacade(final String className, 
+    		final WSMO4JManager wsmoManager) 
+    		throws InternalReasonerException {
+		assert className != null: "The class name must not be null";
+		assert wsmoManager != null: "The manager must not be null";
+    	
+    	final String illegal_constructor_msg = "Couldn't use the constructor " 
+    		+ "for " + className + " taking a WSMO4JManager";
     	
 		try {
 			final Class<?> facade = Class.forName(className);
 			final Constructor<?> constructor = facade.getConstructor(WSMO4JManager.class);
-			return (org.wsml.reasoner.DatalogReasonerFacade) constructor.newInstance( wsmoManager );
-		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new RuntimeException(e.getMessage());
+			return (DatalogReasonerFacade) constructor.newInstance(wsmoManager);
+		} catch (NullPointerException e) {
+			throw new InternalReasonerException(illegal_constructor_msg, e);
+		} catch (ClassNotFoundException e) {
+			throw new InternalReasonerException(illegal_constructor_msg, e);
+		} catch (SecurityException e) {
+			throw new InternalReasonerException(illegal_constructor_msg, e);
+		} catch (NoSuchMethodException e) {
+			throw new InternalReasonerException(illegal_constructor_msg, e);
+		} catch (IllegalArgumentException e) {
+			throw new InternalReasonerException(illegal_constructor_msg, e);
+		} catch (InstantiationException e) {
+			throw new InternalReasonerException(illegal_constructor_msg, e);
+		} catch (IllegalAccessException e) {
+			throw new InternalReasonerException(illegal_constructor_msg, e);
+		} catch (InvocationTargetException e) {
+			throw new InternalReasonerException(illegal_constructor_msg, e);
 		}
     }
 

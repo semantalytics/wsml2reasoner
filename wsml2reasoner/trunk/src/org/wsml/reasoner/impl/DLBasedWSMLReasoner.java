@@ -19,6 +19,7 @@
 package org.wsml.reasoner.impl;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.GregorianCalendar;
@@ -52,6 +53,7 @@ import org.semanticweb.owl.util.OWLConnection;
 import org.semanticweb.owl.util.OWLManager;
 import org.semanticweb.owl.validation.SpeciesValidator;
 import org.semanticweb.owl.validation.SpeciesValidatorReporter;
+import org.wsml.reasoner.DLReasonerFacade;
 import org.wsml.reasoner.ExternalToolException;
 import org.wsml.reasoner.WSMLDL2OWLTransformer;
 import org.wsml.reasoner.api.InternalReasonerException;
@@ -88,7 +90,7 @@ import uk.ac.man.cs.img.owl.validation.ValidatorLogger;
  */
 public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 
-	protected org.wsml.reasoner.DLReasonerFacade builtInFacade = null;
+	protected DLReasonerFacade builtInFacade = null;
 	
 	protected WsmoFactory wsmoFactory = null;
 
@@ -132,6 +134,42 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 	    } 
 
 	/**
+	 * Instantiates a new reasoner facade of the given class. The facade must 
+	 * have a constructor taking no arguments.
+	 * @param className the class of the facade
+	 * @return the newly instantiated facade
+     * @throws InternalReasonerException if something went wrong while 
+     * instantiating the reasoner
+	 */
+    private DLReasonerFacade createFacade(String className) 
+    		throws InternalReasonerException {
+    	assert className != null: "The classname must not be null";
+    	
+    	final String illegal_constructor_msg = "Couldn't use the constructor " 
+    		+ "for " + className + " taking no arguments";
+    	
+		try {
+			final Class<?> facade = Class.forName(className);
+			final Constructor<?> constructor = facade.getConstructor();
+			return (org.wsml.reasoner.DLReasonerFacade) constructor.newInstance();
+		} catch (SecurityException e) {
+			throw new InternalReasonerException(illegal_constructor_msg, e);
+		} catch (IllegalArgumentException e) {
+			throw new InternalReasonerException(illegal_constructor_msg, e);
+		} catch (ClassNotFoundException e) {
+			throw new InternalReasonerException(illegal_constructor_msg, e);
+		} catch (NoSuchMethodException e) {
+			throw new InternalReasonerException(illegal_constructor_msg, e);
+		} catch (InstantiationException e) {
+			throw new InternalReasonerException(illegal_constructor_msg, e);
+		} catch (IllegalAccessException e) {
+			throw new InternalReasonerException(illegal_constructor_msg, e);
+		} catch (InvocationTargetException e) {
+			throw new InternalReasonerException(illegal_constructor_msg, e);
+		}
+    }
+    
+	/**
 	 * Method to convert a WSML ontology to an OWL ontology. The given 
 	 * WSML-DL ontology is first checked for validity, then normalized and 
 	 * finally translated to OWL DL.
@@ -141,23 +179,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 	 * @throws RuntimeException in the case the given WSML-DL ontology is not
 	 * 			valid
 	 */
-	
-    private org.wsml.reasoner.DLReasonerFacade createFacade( String className)
-    {
-    	Class<?> facade;
-    	Constructor<?> constructor;
-		try {
-			facade = Class.forName( className );
-			constructor = facade.getConstructor();
-			return (org.wsml.reasoner.DLReasonerFacade) constructor.newInstance();
-		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new RuntimeException(e.getMessage());
-		}
-    }
-    
-    public OWLOntology convertOntology(Ontology ontology) {
+   public OWLOntology convertOntology(Ontology ontology) {
 		SpeciesValidator owlValidator = null;
 		
 		// check if given WSML-DL ontology is valid
