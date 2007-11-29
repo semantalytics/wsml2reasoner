@@ -61,7 +61,6 @@ import org.wsml.reasoner.api.inconsistency.MaxCardinalityViolation;
 import org.wsml.reasoner.api.inconsistency.MinCardinalityViolation;
 import org.wsml.reasoner.api.inconsistency.NamedUserConstraintViolation;
 import org.wsml.reasoner.api.inconsistency.UnNamedUserConstraintViolation;
-import org.wsml.reasoner.builtin.mins.MinsFacade;
 import org.wsml.reasoner.transformation.AnonymousIdUtils;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.ConstraintReplacementNormalizer;
@@ -188,12 +187,6 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     public void setDisableConsitencyCheck(boolean check){
         this.disableConsitencyCheck = check;
     }
-    
-    public void setEvalMethod(int method){
-        if (builtInFacade instanceof MinsFacade){
-            ((MinsFacade)builtInFacade).evaluationMethod=method;
-        }
-      }
     
 	public void setAllowImports(int allowOntoImports){
     		allowImports = allowOntoImports;

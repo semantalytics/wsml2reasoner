@@ -63,6 +63,7 @@ import org.wsml.reasoner.Literal;
 import org.wsml.reasoner.UnsupportedFeatureException;
 import org.wsml.reasoner.WSML2DatalogTransformer;
 import org.wsml.reasoner.api.InternalReasonerException;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.WsmoFactory;
@@ -111,6 +112,12 @@ public class MinsFacade implements DatalogReasonerFacade {
         this.wsmoManager = wsmoManager;
         this.symbTransfomer = new MinsSymbolMap(wsmoManager);
         logger.setLevel(Level.OFF);
+        
+        // setting the eval method
+        final Object evalMethod = config.get(WSMLReasonerFactory.PARAM_EVAL_METHOD);
+        if ((evalMethod != null) && (evalMethod instanceof Integer)) {
+        	evaluationMethod = (Integer) evalMethod;
+        }
     }
 
     /**

@@ -171,12 +171,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
             DatalogBasedWSMLReasoner dbwsmlr = new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
                     builtin, wsmoManager, params);
             
-            Object o = params.get(PARAM_EVAL_METHOD);
-            if (o!=null && o instanceof Integer){
-                dbwsmlr.setEvalMethod((Integer)o);
-            }
-            
-            o = params.get(PARAM_ALLOW_IMPORTS);
+            Object o = params.get(PARAM_ALLOW_IMPORTS);
             if (o!=null && o instanceof Integer){
                 dbwsmlr.setAllowImports((Integer)o);
             }
@@ -241,12 +236,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
             DatalogBasedWSMLReasoner dbwsmlr = new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
                     builtin, wsmoManager, params);
             
-            Object o = params.get(PARAM_EVAL_METHOD);
-            if (o!=null && o instanceof Integer){
-                dbwsmlr.setEvalMethod((Integer)o);
-            }
-            
-            o = params.get(PARAM_ALLOW_IMPORTS);
+            Object o = params.get(PARAM_ALLOW_IMPORTS);
             if (o!=null && o instanceof Integer){
                 dbwsmlr.setAllowImports((Integer)o);
             }
