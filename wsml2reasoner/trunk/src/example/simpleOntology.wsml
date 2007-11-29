@@ -2,24 +2,12 @@ wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
 namespace { _"http://simple#"
 }
 
-ontology simpson
+ontology simple
 
-concept StrangeHuman subConceptOf Human
- age ofType _integer
- hasParent impliesType Alien
-
-concept Man subConceptOf Human
-	
-instance Marge memberOf Human
- age hasValue 17
+concept Man
 	
 instance Graham memberOf Man
 
-axiom inferedUsedConcept definedBy
-?h memberOf Human and 
-?h[age hasValue ?v] and  
-?v < 40 implies
-?v memberOf NiceAge.
 
 
 
