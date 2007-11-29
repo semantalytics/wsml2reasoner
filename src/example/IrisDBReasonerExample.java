@@ -31,6 +31,7 @@ import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.builtin.iris.IrisDbFacade;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
@@ -95,8 +96,7 @@ public class IrisDBReasonerExample {
                 WSMLReasonerFactory.BuiltInReasoner.IRISDB);
         params.put(WSMLReasonerFactory.PARAM_EVAL_METHOD,
                 new Integer(evalmethod));
-        params.put(WSMLReasonerFactory.PARAM_DB_CONF,
-        		dbParams);
+        params.put(IrisDbFacade.DB_CONF, dbParams);
         WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
                 .createWSMLFlightReasoner(params);
 

@@ -1,8 +1,5 @@
 package org.wsml.reasoner.impl;
 
-import java.util.Hashtable;
-import java.util.Map;
-
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -16,26 +13,19 @@ public class WSMO4JManager {
 
     private DataFactory dataFactory;
     
-    private Map DBConf;
-
     public WSMO4JManager() {
         this(Factory.createWsmoFactory(null), Factory
                 .createLogicalExpressionFactory(null), Factory
-                .createDataFactory(null),new Hashtable());
+                .createDataFactory(null));
     }
 
     public WSMO4JManager(WsmoFactory wsmoFactory,
-            LogicalExpressionFactory leFactory, DataFactory dataFactory, Map dbConf2) {
+            LogicalExpressionFactory leFactory, DataFactory dataFactory) {
         this.wsmoFactory = wsmoFactory;
         this.leFactory = leFactory;
         this.dataFactory = dataFactory;
-        this.DBConf = dbConf2;
     }
     
-    public Map getDBConf(){
-    	return DBConf;
-    }
-
     public WsmoFactory getWSMOFactory() {
         return wsmoFactory;
     }
