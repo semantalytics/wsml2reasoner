@@ -75,12 +75,51 @@ import org.wsmo.factory.WsmoFactory;
  * Keller, DERI Innsbruck, Date $Date$
  */
 public class MinsFacade implements DatalogReasonerFacade {
+	
+	/**
+	 * The evaluation strategy to use for this facade. <b>From the old 
+	 * documentation it says, that <code>WELL_FOUNDED</code> would be the 
+	 * only one which works.</b>
+	 */
+	public enum EvaluationMethod {
+		NAIVE(0),
+		DYN_FILTERING(1), 
+		WELL_FOUNDED_WITH_ALTERNATE_FIXEDPOINT(2), 
+		WELL_FOUNDED(3);
+		
+		final int method;
+		
+		EvaluationMethod(final int method) {
+			this.method = method;
+		}
+		
+		/**
+		 * Returns the method accepted by mins.
+		 * @return the mins evaluation method
+		 */
+		public int getMethod() {
+			return method;
+		}
+		
+		/**
+		 * Tries to determine the <code>EvaluationMethod<code> for a given value.
+		 * @param method the value which would be passed to the mins reasoner 
+		 * as evaluation method
+		 * @return the <code>EvaluationMethod</code>
+		 * @throws IllegalArgumentException if no method could be found.
+		 */
+		public static EvaluationMethod getMethod(final int method) {
+			for (final EvaluationMethod m : EvaluationMethod.values()) {
+				if (method == m.getMethod()) {
+					return m;
+				}
+			}
+			throw new IllegalArgumentException("Couldn't find a method for " + method);
+		}
+	}
+	
     private Logger logger = Logger
             .getLogger("org.wsml.reasoner.wsmlcore.wrapper.mins");
-
-    private final static String PRED_CONSTRAINT = "mins-constraint";
-
-    private Map<String, ConjunctiveQuery> constraints2Queries = new HashMap<String, ConjunctiveQuery>();
 
     /**
      * Here we store a MINS Engine which contains the compiled KB for each
@@ -92,16 +131,7 @@ public class MinsFacade implements DatalogReasonerFacade {
 
     private MinsSymbolMap symbTransfomer;
     
-    /*
-     * 0: Naive Evaluation (only stratifight prorgams)<BR> 
-     * 1: Dynamic Filtering Evaluation (only stratifight prorgams)<BR> 
-     * 2: Wellfounded  Evaluation with alternating fixed point (juergen says works)<BR> 
-     * 3: Wellfounded Evaluation (juergen says probably buggy!)
-     * 
-     * 3 IS the only one that works! Probably the numbers are 
-     * mixed up or Jrgen does not like us
-     */
-    public int evaluationMethod = 3;
+    public EvaluationMethod evaluationMethod = EvaluationMethod.WELL_FOUNDED_WITH_ALTERNATE_FIXEDPOINT;
 
     /**
      * Creates a facade object that allows to invoke the MINS rule system for
@@ -113,10 +143,12 @@ public class MinsFacade implements DatalogReasonerFacade {
         this.symbTransfomer = new MinsSymbolMap(wsmoManager);
         logger.setLevel(Level.OFF);
         
-        // setting the eval method
-        final Object evalMethod = config.get(WSMLReasonerFactory.PARAM_EVAL_METHOD);
-        if ((evalMethod != null) && (evalMethod instanceof Integer)) {
-        	evaluationMethod = (Integer) evalMethod;
+        // setting the evaluation method
+        final Object evaluationMethod = config.get(WSMLReasonerFactory.PARAM_EVAL_METHOD);
+        if ((evaluationMethod != null) && (evaluationMethod instanceof Integer)) {
+        	this.evaluationMethod = EvaluationMethod.getMethod((Integer) evaluationMethod);
+        } else if ((evaluationMethod != null) && (evaluationMethod instanceof EvaluationMethod)) {
+        	this.evaluationMethod = (EvaluationMethod) evaluationMethod;
         }
     }
 
@@ -138,7 +170,7 @@ public class MinsFacade implements DatalogReasonerFacade {
             Rule query = translateQuery(q, minsEngine);
 
             logger.info("Starting MINS evaluation");
-            minsEngine.setEvaluationMethod(evaluationMethod);
+            minsEngine.setEvaluationMethod(evaluationMethod.getMethod());
             minsEngine.evaluate();
             minsEngine.evalQueries();
 
