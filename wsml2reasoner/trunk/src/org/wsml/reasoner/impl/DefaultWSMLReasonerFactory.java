@@ -20,7 +20,6 @@
 package org.wsml.reasoner.impl;
 
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 import java.util.Vector;
 
@@ -66,7 +65,6 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         WsmoFactory wsmoFactory;
         LogicalExpressionFactory leFactory;
         DataFactory dataFactory;
-        Map dbConf;
         wsmoFactory = params.containsKey(PARAM_WSMO_FACTORY) ? (WsmoFactory) params
                 .get(PARAM_WSMO_FACTORY)
                 : Factory.createWsmoFactory(null);
@@ -76,10 +74,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         dataFactory = params.containsKey(PARAM_DATA_FACTORY) ? (DataFactory) params
                 .get(PARAM_DATA_FACTORY)
                 : Factory.createDataFactory(null);
-        dbConf = params.containsKey(PARAM_DB_CONF) ? (Map) params
-                .get(PARAM_DB_CONF)
-                : new Hashtable();
-        return new WSMO4JManager(wsmoFactory, leFactory, dataFactory, dbConf);
+        return new WSMO4JManager(wsmoFactory, leFactory, dataFactory);
     }
 
     public WSMLReasoner createWSMLReasoner(Map<String, Object> params, Ontology ontology) {

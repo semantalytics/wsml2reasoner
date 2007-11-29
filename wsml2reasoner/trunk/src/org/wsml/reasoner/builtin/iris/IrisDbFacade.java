@@ -23,7 +23,6 @@ package org.wsml.reasoner.builtin.iris;
 import static org.deri.iris.factory.Factory.BASIC;
 import static org.deri.iris.factory.Factory.BUILTIN;
 import static org.deri.iris.factory.Factory.CONCRETE;
-//import static org.deri.iris.factory.Factory.PROGRAM;
 import static org.deri.iris.factory.Factory.TERM;
 
 import java.math.BigDecimal;
@@ -116,8 +115,13 @@ import org.deri.iris.dbstorage.ProgramFactory;
  */
 public class IrisDbFacade implements DatalogReasonerFacade {
 	
+	/** 
+	 * This is the key value this facade will look for to determine the 
+	 * database configuration for iris. 
+	 */
+    public static final String DB_CONF = "iris.db.configuration";
+    
 	/** db program factory **/
-	
 	private static ProgramFactory PROGRAM = (ProgramFactory)ProgramFactory.getInstance();
 
 	/** Factory to create the DataValues. */
@@ -181,7 +185,7 @@ public class IrisDbFacade implements DatalogReasonerFacade {
 		DATA_FACTORY = m.getDataFactory();
 		WSMO_FACTORY = m.getWSMOFactory();
 		LOGIC_FACTORY = m.getLogicalExpressionFactory();
-		PROGRAM.setDbConfigurationFile(m.getDBConf());
+		PROGRAM.setDbConfigurationFile((Map) config.get(DB_CONF));
 	}
 
 	public IrisDbFacade() {

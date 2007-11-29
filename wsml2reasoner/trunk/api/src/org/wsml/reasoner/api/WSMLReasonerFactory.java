@@ -54,8 +54,6 @@ public interface WSMLReasonerFactory {
     
     public String PARAM_EXTERNAL_REASONER_URI = "ENDPOINT";
     
-    public String PARAM_DB_CONF = "Database Configuration Map";
-
     /**
      * Enum to select which reasoner to take. This enum also holds informations 
      * about those reasoners.
