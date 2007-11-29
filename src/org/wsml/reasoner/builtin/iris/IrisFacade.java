@@ -178,18 +178,18 @@ public class IrisFacade implements DatalogReasonerFacade {
 	private IQuery containedQuery = null;
 	
 
-	/* Map that contains the variable mapping from the query containment check */
+	/** Map that contains the variable mapping from the query containment check. */
 	private Map<IPredicate, IMixedDatatypeRelation> QCResult = 
 		new HashMap<IPredicate, IMixedDatatypeRelation>();
 	
-	public IrisFacade(final WSMO4JManager m) {
+	public IrisFacade(final WSMO4JManager m, final Map<String, Object> config) {
 		DATA_FACTORY = m.getDataFactory();
 		WSMO_FACTORY = m.getWSMOFactory();
 		LOGIC_FACTORY = m.getLogicalExpressionFactory();
 	}
 
 	public IrisFacade() {
-		this(new WSMO4JManager());
+		this(new WSMO4JManager(), null);
 	}
 
 	public synchronized void deregister(String ontologyURI)

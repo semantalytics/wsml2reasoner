@@ -52,8 +52,8 @@ import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.api.InternalReasonerException;
 import org.wsml.reasoner.api.WSMLCoreReasoner;
 import org.wsml.reasoner.api.WSMLFlightReasoner;
-import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLRuleReasoner;
+import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.api.inconsistency.AttributeTypeViolation;
 import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
@@ -118,11 +118,26 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     
     private Set<Map<Variable, Term>> queryContainmentResult = null;
     
-    public DatalogBasedWSMLReasoner(
-            WSMLReasonerFactory.BuiltInReasoner builtInType,
-            WSMO4JManager wsmoManager) {
+    /**
+     * Constructs a new Reasoner.
+     * @param builtInType the underlying reasoner to use
+     * @param wsmoManager the wsmo4j manager to use
+     * @param config additional configuration for the facade
+     * @throws IllegalArgumentException if the <code>builtInType</code> is <code>null</code>
+     * @throws IllegalArgumentException if the wsml4j manager is <code>null</code>
+     */
+    public DatalogBasedWSMLReasoner(final BuiltInReasoner builtInType, 
+    		final WSMO4JManager wsmoManager, 
+    		final Map<String, Object> config) {
+    	if (builtInType == null) {
+    		throw new IllegalArgumentException("The facade type must not be null");
+    	}
+    	if (wsmoManager == null) {
+    		throw new IllegalArgumentException("The WSMO4JManager must not be null");
+    	}
+    	
+    	builtInFacade = createFacade(builtInType.getFacadeClass(), wsmoManager, config);
         this.wsmoManager = wsmoManager;
-        builtInFacade = createFacade(builtInType.getFacadeClass(), wsmoManager);
         wsmoFactory = this.wsmoManager.getWSMOFactory();
         leFactory = this.wsmoManager.getLogicalExpressionFactory();
     }
@@ -132,23 +147,25 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
      * constructor taking a <code>WSMO4JManager<code>.
      * @param className the class of the facade
      * @param wsmoManager the manager to pass to the constructor
+     * @param config the additional configuration for the facade
      * @return the newly instantiated facade
      * @throws InternalReasonerException if something went wrong while 
      * instantiating the reasoner
      */
     private DatalogReasonerFacade createFacade(final String className, 
-    		final WSMO4JManager wsmoManager) 
+    		final WSMO4JManager wsmoManager,
+    		final Map<String, Object> config) 
     		throws InternalReasonerException {
 		assert className != null: "The class name must not be null";
 		assert wsmoManager != null: "The manager must not be null";
     	
     	final String illegal_constructor_msg = "Couldn't use the constructor " 
-    		+ "for " + className + " taking a WSMO4JManager";
+    		+ "for " + className + " taking a WSMO4JManager and a Map";
     	
 		try {
 			final Class<?> facade = Class.forName(className);
-			final Constructor<?> constructor = facade.getConstructor(WSMO4JManager.class);
-			return (DatalogReasonerFacade) constructor.newInstance(wsmoManager);
+			final Constructor<?> constructor = facade.getConstructor(WSMO4JManager.class, Map.class);
+			return (DatalogReasonerFacade) constructor.newInstance(wsmoManager, config);
 		} catch (NullPointerException e) {
 			throw new InternalReasonerException(illegal_constructor_msg, e);
 		} catch (ClassNotFoundException e) {

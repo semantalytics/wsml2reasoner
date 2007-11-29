@@ -177,7 +177,7 @@ public class IrisDbFacade implements DatalogReasonerFacade {
 	 */
 	private final Map<String, IExecutor> executor = new HashMap<String, IExecutor>();
 
-	public IrisDbFacade(final WSMO4JManager m) {
+	public IrisDbFacade(final WSMO4JManager m, final Map<String, Object> config) {
 		DATA_FACTORY = m.getDataFactory();
 		WSMO_FACTORY = m.getWSMOFactory();
 		LOGIC_FACTORY = m.getLogicalExpressionFactory();
@@ -185,7 +185,7 @@ public class IrisDbFacade implements DatalogReasonerFacade {
 	}
 
 	public IrisDbFacade() {
-		this(new WSMO4JManager());
+		this(new WSMO4JManager(), null);
 	}
 
 	public synchronized void deregister(String ontologyURI)

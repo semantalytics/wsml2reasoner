@@ -94,7 +94,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
 						new WSMO4JManager());
 			else if (variant.equals(WSML.WSML_CORE) || variant.equals(WSML.WSML_FLIGHT)) {
 				return new DatalogBasedWSMLReasoner(BuiltInReasoner.KAON2, 
-						new WSMO4JManager());
+						new WSMO4JManager(), params);
 			}
 		}
 		else {
@@ -110,7 +110,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
 				BuiltInReasoner builtin = params.containsKey(PARAM_BUILT_IN_REASONER) 
 	            		? (BuiltInReasoner) params.get(PARAM_BUILT_IN_REASONER)
 	            				: BuiltInReasoner.KAON2;
-	            return new DatalogBasedWSMLReasoner(builtin, wsmoManager);
+	            return new DatalogBasedWSMLReasoner(builtin, wsmoManager, params);
 			}	
 		}
     	throw new RuntimeException("Reasoning is not yet supported for WSML-FULL!");
@@ -124,7 +124,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
             throws UnsupportedOperationException {
         if (params == null) {
             return new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
-                    BuiltInReasoner.KAON2, new WSMO4JManager());
+                    BuiltInReasoner.KAON2, new WSMO4JManager(), params);
         } else {
             WSMO4JManager wsmoManager = extractWsmoManager(params);
             BuiltInReasoner builtin = params
@@ -132,7 +132,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
                     .get(PARAM_BUILT_IN_REASONER)
                     : BuiltInReasoner.KAON2;
             return new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
-                    builtin, wsmoManager);
+                    builtin, wsmoManager, params);
         }
     }
 
@@ -166,7 +166,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
             throws UnsupportedOperationException {
         if (params == null) {
             return new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
-                    BuiltInReasoner.KAON2, new WSMO4JManager());
+                    BuiltInReasoner.KAON2, new WSMO4JManager(), params);
         } else {
             WSMO4JManager wsmoManager = extractWsmoManager(params);
             BuiltInReasoner builtin = params
@@ -174,7 +174,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
                     .get(PARAM_BUILT_IN_REASONER)
                     : BuiltInReasoner.KAON2;
             DatalogBasedWSMLReasoner dbwsmlr = new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
-                    builtin, wsmoManager);
+                    builtin, wsmoManager, params);
             
             Object o = params.get(PARAM_EVAL_METHOD);
             if (o!=null && o instanceof Integer){
@@ -236,7 +236,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
 	public WSMLRuleReasoner createWSMLRuleReasoner(Map<String, Object> params) throws UnsupportedOperationException {
         if (params == null) {
             return new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
-                    BuiltInReasoner.MINS, new WSMO4JManager());
+                    BuiltInReasoner.MINS, new WSMO4JManager(), params);
         } else {
             WSMO4JManager wsmoManager = extractWsmoManager(params);
             BuiltInReasoner builtin = params
@@ -244,7 +244,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
                     .get(PARAM_BUILT_IN_REASONER)
                     : BuiltInReasoner.MINS;
             DatalogBasedWSMLReasoner dbwsmlr = new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
-                    builtin, wsmoManager);
+                    builtin, wsmoManager, params);
             
             Object o = params.get(PARAM_EVAL_METHOD);
             if (o!=null && o instanceof Integer){
