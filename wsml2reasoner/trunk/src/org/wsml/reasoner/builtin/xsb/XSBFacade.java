@@ -58,7 +58,7 @@ public class XSBFacade implements DatalogReasonerFacade {
      * Creates a facade object that allows to invoke the MINS rule system for
      * performing query evaluation tasks.
      */
-    public XSBFacade(WSMO4JManager wsmoManager) {
+    public XSBFacade(WSMO4JManager wsmoManager, final Map<String, Object> config) {
         super();
         this.wsmoManager = wsmoManager;
         this.symbTransfomer = new XSBSymbolMap(wsmoManager);

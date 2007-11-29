@@ -72,7 +72,7 @@ public class PelletFacade implements DLReasonerFacade {
      * Creates a new pellet based facade.
      * @param m the wsmo4j manager
      */
-    public PelletFacade(final WSMO4JManager m) {
+    public PelletFacade(final WSMO4JManager m, final Map<String, Object> config) {
     	this();
     }
 

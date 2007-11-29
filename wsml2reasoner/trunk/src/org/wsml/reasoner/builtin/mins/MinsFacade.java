@@ -106,7 +106,7 @@ public class MinsFacade implements DatalogReasonerFacade {
      * Creates a facade object that allows to invoke the MINS rule system for
      * performing query evaluation tasks.
      */
-    public MinsFacade(WSMO4JManager wsmoManager) {
+    public MinsFacade(WSMO4JManager wsmoManager, final Map<String, Object> config) {
         super();
         this.wsmoManager = wsmoManager;
         this.symbTransfomer = new MinsSymbolMap(wsmoManager);
