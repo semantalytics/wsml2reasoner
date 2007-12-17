@@ -56,7 +56,7 @@ public class AttributeRangeTest extends BaseReasonerTest {
      * @throws Exception
      */
     public void attributeRange() throws Exception {
-    	setupScenario("files/AttributeRangeOntology.wsml");
+    	setUp();
     }
     
     public void testAllReasoners() throws Exception{
