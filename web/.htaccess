@@ -1,5 +1,12 @@
-RewriteEngine On
-RewriteBase /wsml2reasoner/
+Options -Indexes
+
+RewriteEngine on
+
+RewriteCond %{REQUEST_FILENAME} !-f 
+RewriteCond %{REQUEST_FILENAME} !-d 
+RewriteCond %{REQUEST_FILENAME} !-l
+RewriteRule .* index.php
+
 RewriteRule DIPFactSheet.html http://cvs.deri.org/cgi-bin/viewcvs.cgi/*checkout*/wsml2reasoner/web/DIPFactSheet.html [P]
 RewriteRule DIPlogo.gif http://cvs.deri.org/cgi-bin/viewcvs.cgi/*checkout*/wsml2reasoner/web/DIPlogo.gif [P]
 RewriteRule dip.css http://cvs.deri.org/cgi-bin/viewcvs.cgi/*checkout*/wsml2reasoner/web/dip.css [P]
