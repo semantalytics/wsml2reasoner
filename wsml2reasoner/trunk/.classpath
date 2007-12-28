@@ -32,5 +32,6 @@
 	<classpathentry kind="lib" path="lib/ext/wsmo/WSML-grammar-20070417.jar"/>
 	<classpathentry kind="lib" path="lib/ext/wsmo/wsmo4j-0.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/ext/wsmo/wsmo-api-0.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/ext/sql-interface/hsqldb.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
