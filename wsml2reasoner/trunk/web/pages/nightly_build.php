@@ -10,7 +10,7 @@ resources are available in the <a href="snapshot">snapshot</a> directory.</p>
 	<li><a href="/snapshot/junit_report">test results</a></li>
 -->
 	<li>The files available in the snapshot are:<br><br>
-	<div style="width:37em; background-color:#eee;border:1px black solid;">
+	<div style="width:50em; background-color:#eee;border:1px black solid;">
 	
 	<?
 		$lines = file('http://tools.deri.org/wsml2reasoner/snapshot/');

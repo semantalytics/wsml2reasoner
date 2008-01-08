@@ -5,7 +5,10 @@
 	<!-- Initialization                                                -->
 	<!-- =================================================================== -->
 	<target name="init">
+		<!-- For standard build/releases -->
 		<tstamp />
+		<property name="deploy.version" value="${DSTAMP}" />
+			
 		<property name="target.vm" value="1.5" />
 		<property name="src.dir" value="${basedir}/src" />
 		<property name="api-src.dir" value="${basedir}/api/src/" />
@@ -18,20 +21,20 @@
 		<property name="build.lib" value="${build}/lib" />
 		<property name="build.class" value="${build}/class" />
 		<property name="dist" value="${basedir}/dist" />
-		<property name="dist.lib" value="${dist}/lib" />
-		<property name="dist.example" value="${dist}/example" />
-		<property name="dist.src" value="${dist}/src" />
-		<property name="dist.complete.test" value="${dist.complete}/test" />
-		<property name="dist.complete.example" value="${dist.complete}/example" />
+		
+		<!-- For javadoc -->
 		<property name="javadoc.dir" location="${basedir}/javadoc" />
+		
+		<!-- For unit tests -->
 		<property name="testresults.dir" location="${basedir}/test-results" />
 		<property name="file.test" value="base.RunAllStandardTests.java" />
-		<property name="deploy.version" value="${DSTAMP}" />
 		
 		
-		<!-- For updating remote snapshot -->
+		<!-- For checking out project -->
 		<property name="cvs.user" value="graham"/>
 		<property name="cvs.path" value=":ext:${cvs.user}@cvs.deri.at:/usr/local/cvsroot" />
+		
+		<!-- For updating remote snapshot -->
 		<property name="shell.host" value="tools.deri.org" />
 		<property name="remote.snapshot.path" value="/var/www/html/tools_deri_org/wsml2reasoner/snapshot/" />
 		<property name="remote.snapshot.path.wsmo" value="${remote.snapshot.path}/wsml2reasoner-wsmo/" />
@@ -43,54 +46,17 @@
 	<!-- =================================================================== -->
 
 	<patternset id="source-files">
-		<exclude name=".svn" />
-		<exclude name="*.DS_Store" />
 		<exclude name="build/*" />
-		<include name="**/*.*" />
-	</patternset>
-		
-	<patternset id="all-jars">
-		<exclude name=".svn" />
-		<exclude name="*.DS_Store" />
-		<exclude name="build/*" />
-		<include name="**/*.*" />
+		<include name="**/*.java" />
 	</patternset>
 			
+	<patternset id="gpl-jars">
+		<exclude name="lib/ext/kaon2-reasoner/" />
+	</patternset>
+		
 	<patternset id="lgpl-jars">
-		<exclude name="CVS/*" />
-		<exclude name="*.DS_Store" />
 		<exclude name="lib/ext/kaon2-reasoner/" />
 		<exclude name="lib/ext/mins-reasoner/" />
-	</patternset>
-	
-	<patternset id="gpl-jars">
-		<exclude name="CVS/*" />
-		<exclude name="*.DS_Store" />
-		<exclude name="lib/ext/kaon2-reasoner/" />
-	</patternset>
-	
-	<!--Currently, DL and Pellet jars are the same
-		until we integrate another DL reasoner -->
-	
-	<patternset id="pellet-jars">
-		<exclude name="CVS/*" />
-		<exclude name="*.DS_Store" />
-		<include name="ext/minimal-libs/**"/>
-		<include name="ext/pellet-reasoner/**"/>
-	</patternset>
-	
-	<patternset id="iris-jars">
-		<exclude name="CVS/*" />
-		<exclude name="*.DS_Store" />
-		<include name="ext/minimal-libs/wsmo4j/"/>
-		<include name="ext/iris-reasoner/"/>
-	</patternset>
-	
-	<patternset id="mins-jars">
-		<exclude name="CVS/*" />
-		<exclude name="*.DS_Store" />
-		<include name="ext/minimal-libs/wsmo4j/"/>
-		<include name="ext/mins-reasoner/"/>
 	</patternset>
 	
 	<patternset id="sdk-files">
@@ -106,20 +72,9 @@
 		<include name="**/*.*" />
 	</patternset>
 	
-	<patternset id="lgpl-packages">
-		<exclude name= "**/mins/"/>
-	</patternset>
-	
-	<patternset id="dl-files">
-		<exclude name="CVS/*" />
-		<exclude name="*.DS_Store" />
-		<exclude name="example/IrisDBReasonerExample.java" />
-		<exclude name="example/IrisReasonerExample.java" />
-		<exclude name="example/Kaon2ReasonerExample.java" />
-		<exclude name="example/MinsReasonerExample.java" />
-		<exclude name="example/ReasonerExample.java" />
-		<exclude name="example/humanOntology.wsml" />
-		<include name="**/*.*" />
+	<patternset id="gpl-examples">
+		<exclude name="**/example/Kaon2ReasonerExample.*" />
+		<exclude name="**/example/Kaon2DLReasonerExample.*" />
 	</patternset>
 	
 	<patternset id="lgpl-examples">
@@ -128,61 +83,13 @@
 		<exclude name="**/example/MinsReasonerExample.*" />
 	</patternset>
 	
-	<patternset id="datalog-files">
-		<exclude name="CVS/*" />
-		<exclude name="*.DS_Store" />	
-		<exclude name="example/Kaon2DLReasonerExample.java" />
-		<exclude name="example/PelletReasonerExample.java" />
-		<exclude name="example/wsml2owlExample.wsml" />
-		<include name="**/*.*" />
+	<patternset id="lgpl-packages">
+		<exclude name= "**/mins/"/>
 	</patternset>
-	
-	<patternset id="pellet-files">
-		<exclude name="CVS/*" />
-		<exclude name="*.DS_Store" />
-		<exclude name="example/IrisDBReasonerExample.java" />
-		<exclude name="example/IrisReasonerExample.java" />
-		<exclude name="example/Kaon2DLReasonerExample.java" />
-		<exclude name="example/Kaon2ReasonerExample.java" />
-		<exclude name="example/MinsReasonerExample.java" />
-		<exclude name="example/ReasonerExample.java" />
-		<exclude name="example/humanOntology.wsml" />
-		<include name="**/*.*" />
-	</patternset>
-		
-	<patternset id="iris-files">
-		<exclude name="CVS/*" />
-		<exclude name="*.DS_Store" />
-		<exclude name="example/Kaon2DLReasonerExample.java" />
-		<exclude name="example/Kaon2ReasonerExample.java" />
-		<exclude name="example/MinsReasonerExample.java" />
-		<exclude name="example/PelletReasonerExample.java" />
-		<exclude name="example/wsml2owlExample.wsml" />
-		<include name="**/*.*" />
-	</patternset>
-	
-	<patternset id="mins-files">
-		<exclude name="CVS/*" />
-		<exclude name="*.DS_Store" />
-		<exclude name="example/IrisDBReasonerExample.java" />
-		<exclude name="example/IrisReasonerExample.java" />
-		<exclude name="example/Kaon2DLReasonerExample.java" />
-		<exclude name="example/Kaon2ReasonerExample.java" />
-		<exclude name="example/PelletReasonerExample.java" />
-		<exclude name="example/wsml2owlExample.wsml" />
-		<include name="**/*.*" />
-	</patternset>
-
-
-	<path id="classpath">
-		<fileset dir="build/lib" includes="**/*.jar"/>
-	</path>
 			
-	<target name="clean-dist-dir" depends="init" description="Cleans the dist directory">
-		<delete includeemptydirs="true">
-			<fileset dir="${dist}" includes="**/*"/>
-		</delete>
-	</target>
+	<path id="classpath">
+		<pathelement location ="${build.lib}" />
+	</path>
 	
 	<target name="clean-build-dirs" depends="init" description="Cleans the build directories">
 		<delete dir="${build.src}" />
@@ -191,13 +98,9 @@
 	</target>
 	
 	<target name="remove-build-dir" depends="clean-build-dirs" description="Removes build dir">
-		<delete dir="${build}" />
+		<delete dir="${build}" />	
 	</target>
-	
-	<target name="clean-all" depends="clean-dist-dir,
-		remove-build-dir" description="Cleans everything">
-	</target>
-	
+
 	<target name="create-dirs" depends="init" description="Creates the build directories">
 		<mkdir dir="${build}" />
 		<mkdir dir="${build.src}" />
@@ -205,9 +108,7 @@
 		<mkdir dir="${build.class}" />
 		<mkdir dir="${dist}" />
 	</target>
-	
-	
-	
+
 	<target name="compile" depends="remove-build-dir, create-dirs" 
 		description="Compiles wsml2reasoner framework">
 		<copy todir="${build.src}" preservelastmodified="yes" includeEmptyDirs="no">
@@ -219,9 +120,7 @@
 			</fileset>
 		</copy>
 		<copy todir="${build.lib}" preservelastmodified="yes" includeEmptyDirs="no">
-			<fileset dir="${lib.dir}/">
-				<patternset refid="all-jars" />
-			</fileset>
+			<fileset dir="${lib.dir}"/>
 		</copy>
 		<javac srcdir="${build.src}" destdir="${build.class}" 
 				debug="on" optimize="off" deprecation="off" target="1.5" nowarn="on">
@@ -255,9 +154,13 @@
 	
 	<target name="create-gpl-jar" depends="compile" description="Creates wsml2reasoner jar - basic">
 		<mkdir dir="${dist}" />
-		<jar jarfile="${dist}/wsml2reasoner-${deploy.version}.jar">
-			<fileset dir="${build.src}" />
-			<fileset dir="${build.class}" />
+		<jar jarfile="${dist}/wsml2reasoner_gpl-${deploy.version}.jar">
+			<fileset dir="${build.src}">
+				<patternset refid="gpl-examples"/>
+			</fileset>
+			<fileset dir="${build.class}">
+				<patternset refid="gpl-examples"/>
+			</fileset>
 		</jar>
 	</target>
 	
@@ -275,9 +178,9 @@
 		</jar>
 	</target>
 				
-	<target name="create-wsml2reasoner_complete" depends="get-kaon2-jars, create-gpl-jar" 
+	<target name="create-wsml2reasoner_noncommercial" depends="get-kaon2-jars, create-gpl-jar" 
 		description="Creates wsml2reasoner noncommercial version (including KAON2 jars)">
-		<zip destfile="${dist}/wsml2reasoner_complete-${deploy.version}.zip">
+		<zip destfile="${dist}/wsml2reasoner_noncommercial-${deploy.version}.zip">
 			<fileset dir="${dist}" includes ="wsml2reasoner-${deploy.version}.jar"/>
 			<fileset dir="${build}" includes ="lib/"/>
 			<fileset dir="${build.src}" includes ="example/"/>
@@ -285,9 +188,9 @@
 	</target>
 
 	
-	<target name="create-wsml2reasoner_complete_src" depends="compile" 
+	<target name="create-wsml2reasoner_noncommercial_src" depends="compile" 
 		description="Creates wsml2reasoner noncommercial version (including KAON2 jars)">
-		<zip destfile="${dist}/wsml2reasoner_complete_src-${deploy.version}.zip">
+		<zip destfile="${dist}/wsml2reasoner_noncommercial_src-${deploy.version}.zip">
 			<fileset dir="${build}" includes ="lib/" />
 			<fileset dir="${build}" includes ="src/"/>
 		</zip>
@@ -350,283 +253,50 @@
 				<fileset dir="${build}" includes ="lib/">
 					<patternset refid="gpl-jars"/>
 				</fileset>
-				<fileset dir="${build}" includes ="src/"  excludes = "**/mins/, example/" />
+				<fileset dir="${build}" includes ="src/"  excludes = "example/" />
 				<fileset dir="${basedir}" includes ="license-gpl.txt" />
 			</zip>
 		</target>
 	
-	<target name="create-wsml2reasoner-jar+libs+example" depends="create-wsml2reasoner_lgpl" 
-		description="Zips wsml2reasoner-wsmo jar, libs, and example">
-		<copy file="${example.dir}/ReasonerExample.java" todir="${dist.complete.example}"/>
-		<copy file="${example.dir}/humanOntology.wsml" todir="${dist.complete.example}"/>
-		<copy file="${example.dir}/simpleOntology.wsml" todir="${dist.complete.example}"/>
-		<zip destfile="${dist}/wsml2reasoner-lgpl-${deploy.version}.zip">
-			<fileset dir="${dist.complete}"/>
-		</zip>
-		<delete dir="${dist.complete}"/>
-	</target>
-	
-	<target name="create-wsml2reasoner-src" depends="create-wsml2reasoner_lgpl" 
-		description="Creates/zips wsml2reasoner src with minimal (wsmo) jars)">
-		<mkdir dir="${dist.complete.src}" />
-		<copy todir="${dist.complete.src}" preservelastmodified="yes" includeEmptyDirs="no">
-			<fileset dir="${build.src}" />
-		</copy>
-		<zip destfile="${dist}/wsml2reasoner-src-lgpl-${deploy.version}.zip">
-			<fileset dir="${dist.complete}"/>
-		</zip>
-		<delete dir="${dist.complete}"/>
-	</target>
-	
-	<target name="create-wsml2reasoner-dl-jar+libs" depends="compile" 
-		description="Creates wsml2reasoner-dl jar + libs">
-		<mkdir dir="${dist.complete}" />	
-		<jar jarfile="${dist.complete}/wsml2reasoner-dl-${deploy.version}.jar">
-			<fileset dir="${build.src}" />
-			<fileset dir="${build.class}" />
-		</jar>
-		<copy file="${basedir}/license-lgpl.txt" todir="${dist.complete}"/>
-		<copy todir="${dist.complete.lib}" preservelastmodified="yes" includeEmptyDirs="no">
-			<fileset dir="${build.lib}">
-				<!--Currently, DL and Pellet jars are the same
-				until we integrate another DL reasoner -->
-				<patternset refid="pellet-jars" />
-			</fileset>
-		</copy>
-	</target>
-	
-	<target name="create-wsml2reasoner-dl-jar+libs+example" depends="create-wsml2reasoner-dl-jar+libs" 
-		description="Zips wsml2reasoner-dl jar, libs, and example">
-		<copy file="${example.dir}/PelletReasonerExample.java" todir="${dist.complete.example}"/>
-		<copy file="${example.dir}/wsml2owlExample.wsml" todir="${dist.complete.example}"/>
-		<copy file="${example.dir}/simpleOntology.wsml" todir="${dist.complete.example}"/>
-		<zip destfile="${dist}/wsml2reasoner-dl-lgpl-${deploy.version}.zip">
-			<fileset dir="${dist.complete}"/>
-		</zip>
-		<delete dir="${dist.complete}"/>
-	</target>
-	
-	<target name="create-wsml2reasoner-dl-src" depends="create-wsml2reasoner-dl-jar+libs" 
-			description="Creates/zips wsml2reasoner src with dl jars)">
-		<mkdir dir="${dist.complete.src}" />
-		<copy todir="${dist.complete.src}" preservelastmodified="yes" includeEmptyDirs="no">
-			<fileset dir="${build.src}">
-				<patternset refid="dl-files" />	
-			</fileset>
-		</copy>
-		<zip destfile="${dist}/wsml2reasoner-dl-src-lgpl-${deploy.version}.zip">
-			<fileset dir="${dist.complete}"/>
-		</zip>
-		<delete dir="${dist.complete}"/>
-	</target>
-	
-	<target name="create-wsml2reasoner-pellet-jar+libs" depends="compile" 
-		description="Creates wsml2reasoner-pellet jar + libs">
-		<mkdir dir="${dist.complete}" />	
-		<jar jarfile="${dist.complete}/wsml2reasoner-pellet-${deploy.version}.jar">
-			<fileset dir="${build.src}" />
-			<fileset dir="${build.class}" />
-		</jar>
-		<copy file="${basedir}/license-lgpl.txt" todir="${dist.complete}"/>
-		<copy todir="${dist.complete.lib}" preservelastmodified="yes" includeEmptyDirs="no">
-			<fileset dir="${build.lib}">
-				<patternset refid="pellet-jars" />
-			</fileset>
-		</copy>
-	</target>
-	
-	<target name="create-wsml2reasoner-pellet-jar+libs+example" depends="create-wsml2reasoner-pellet-jar+libs" 
-		description="Zips wsml2reasoner-pellet jar, libs, and example">
-		<copy file="${example.dir}/PelletReasonerExample.java" todir="${dist.complete.example}"/>
-		<copy file="${example.dir}/wsml2owlExample.wsml" todir="${dist.complete.example}"/>
-		<copy file="${example.dir}/simpleOntology.wsml" todir="${dist.complete.example}"/>
-		<zip destfile="${dist}/wsml2reasoner-pellet-lgpl-${deploy.version}.zip">
-			<fileset dir="${dist.complete}"/>
-		</zip>
-		<delete dir="${dist.complete}"/>
-	</target>
-	
-	<target name="create-wsml2reasoner-pellet-src" depends="create-wsml2reasoner-pellet-jar+libs" 
-		description="Creates/zips wsml2reasoner src with pellet jars)">
-		<mkdir dir="${dist.complete.src}" />
-		<copy todir="${dist.complete.src}" preservelastmodified="yes" includeEmptyDirs="no">
-			<fileset dir="${build.src}">
-				<patternset refid="pellet-files" />	
-			</fileset>
-		</copy>
-		<zip destfile="${dist}/wsml2reasoner-pellet-src-lgpl-${deploy.version}.zip">
-			<fileset dir="${dist.complete}"/>
-		</zip>
-		<delete dir="${dist.complete}"/>
-	</target>
-	
-	<target name="create-wsml2reasoner-datalog-jar+libs" depends="compile" 
-		description="Creates wsml2reasoner-datalog jar + libs">
-		<mkdir dir="${dist.complete}" />	
-		<jar jarfile="${dist.complete}/wsml2reasoner-datalog-${deploy.version}.jar">
-			<fileset dir="${build.src}" />
-			<fileset dir="${build.class}" />
-		</jar>
-		<copy file="${basedir}/license-lgpl.txt" todir="${dist.complete}"/>
-		<copy todir="${dist.complete.lib}" preservelastmodified="yes" includeEmptyDirs="no">
-			<fileset dir="${build.lib}">
-				<patternset refid="minimal-wsmo-jars" />
-			</fileset>
-		</copy>
-	</target>
-	
-	<target name="create-wsml2reasoner-datalog-jar+libs+example" depends="create-wsml2reasoner-datalog-jar+libs" 
-		description="Zips wsml2reasoner-datalog jar, libs, and example">
-		<copy file="${example.dir}/ReasonerExample.java" todir="${dist.complete.example}"/>
-		<copy file="${example.dir}/humanOntology.wsml" todir="${dist.complete.example}"/>
-		<copy file="${example.dir}/simpleOntology.wsml" todir="${dist.complete.example}"/>
-		<zip destfile="${dist}/wsml2reasoner-datalog-lgpl-${deploy.version}.zip">
-			<fileset dir="${dist.complete}"/>
-		</zip>
-		<delete dir="${dist.complete}"/>
-	</target>
-		
-	<target name="create-wsml2reasoner-datalog-src" depends="create-wsml2reasoner-datalog-jar+libs" 
-		description="Creates/zips wsml2reasoner src with datalog jars)">
-		<mkdir dir="${dist.complete.src}" />
-		<copy todir="${dist.complete.src}" preservelastmodified="yes" includeEmptyDirs="no">
-			<fileset dir="${build.src}">
-				<patternset refid="datalog-files" />	
-			</fileset>
-		</copy>
-		<zip destfile="${dist}/wsml2reasoner-datalog-src-lgpl-${deploy.version}.zip">
-			<fileset dir="${dist.complete}"/>
-		</zip>
-		<delete dir="${dist.complete}"/>
-	</target>
-	
-	<target name="create-wsml2reasoner-iris-jar+libs" depends="compile" 
-		description="Creates wsml2reasoner-datalog-iris jar + libs">
-		<mkdir dir="${dist.complete}" />	
-		<jar jarfile="${dist.complete}/wsml2reasoner-datalog-iris-${deploy.version}.jar">
-			<fileset dir="${build.src}" />
-			<fileset dir="${build.class}" />
-		</jar>
-		<copy file="${basedir}/license-lgpl.txt" todir="${dist.complete}"/>
-		<copy todir="${dist.complete.lib}" preservelastmodified="yes" includeEmptyDirs="no">
-			<fileset dir="${build.lib}">
-				<patternset refid="iris-jars" />
-			</fileset>
-		</copy>
-	</target>
-	
-	<target name="create-wsml2reasoner-iris-jar+libs+example" depends="create-wsml2reasoner-iris-jar+libs" 
-		description="Zips wsml2reasoner-iris jar, libs, and example">
-		<copy file="${example.dir}/ReasonerExample.java" todir="${dist.complete.example}"/>
-		<copy file="${example.dir}/IrisDBReasonerExample.java" todir="${dist.complete.example}"/>
-		<copy file="${example.dir}/IrisReasonerExample.java" todir="${dist.complete.example}"/>
-		<copy file="${example.dir}/humanOntology.wsml" todir="${dist.complete.example}"/>
-		<copy file="${example.dir}/simpleOntology.wsml" todir="${dist.complete.example}"/>
-		<zip destfile="${dist}/wsml2reasoner-iris-lgpl-${deploy.version}.zip">
-			<fileset dir="${dist.complete}"/>
-		</zip>
-		<delete dir="${dist.complete}"/>
-	</target>
-	
-	<target name="create-wsml2reasoner-iris-src" depends="create-wsml2reasoner-iris-jar+libs" 
-		description="Creates/zips wsml2reasoner src with iris jars)">
-		<mkdir dir="${dist.complete.src}" />
-		<copy todir="${dist.complete.src}" preservelastmodified="yes" includeEmptyDirs="no">
-			<fileset dir="${build.src}">
-				<patternset refid="iris-files" />	
-			</fileset>
-		</copy>
-		<zip destfile="${dist}/wsml2reasoner-iris-src-lgpl-${deploy.version}.zip">
-			<fileset dir="${dist.complete}"/>
-		</zip>
-		<delete dir="${dist.complete}"/>
-	</target>
-	
-	<target name="create-wsml2reasoner-mins-jar+libs" depends="compile" 
-		description="Creates wsml2reasoner-mins jar + libs">
-		<mkdir dir="${dist.complete}" />	
-		<jar jarfile="${dist.complete}/wsml2reasoner-mins-${deploy.version}.jar">
-			<fileset dir="${build.src}" />
-			<fileset dir="${build.class}" />
-		</jar>
-		<copy file="${basedir}/license-gpl.txt" todir="${dist.complete}"/>
-		<copy todir="${dist.complete.lib}" preservelastmodified="yes" includeEmptyDirs="no">
-			<fileset dir="${build.lib}">
-				<patternset refid="mins-jars" />
-			</fileset>
-		</copy>
-	</target>
-	
-	<target name="create-wsml2reasoner-mins-jar+libs+example" depends="create-wsml2reasoner-mins-jar+libs" 
-		description="Zips wsml2reasoner-datalog jar, libs, and example">
-		<copy file="${example.dir}/ReasonerExample.java" todir="${dist.complete.example}"/>
-		<copy file="${example.dir}/MinsReasonerExample.java" todir="${dist.complete.example}"/>
-		<copy file="${example.dir}/humanOntology.wsml" todir="${dist.complete.example}"/>
-		<copy file="${example.dir}/simpleOntology.wsml" todir="${dist.complete.example}"/>
-		<zip destfile="${dist}/wsml2reasoner-mins-gpl-${deploy.version}.zip">
-			<fileset dir="${dist.complete}"/>
-		</zip>
-		<delete dir="${dist.complete}"/>
-	</target>
-	
-	<target name="create-wsml2reasoner-mins-src" depends="create-wsml2reasoner-mins-jar+libs" 
-		description="Creates/zips wsml2reasoner src with mins jars)">
-		<mkdir dir="${dist.complete.src}" />
-		<copy todir="${dist.complete.src}" preservelastmodified="yes" includeEmptyDirs="no">
-			<fileset dir="${build.src}">
-				<patternset refid="mins-files" />	
-			</fileset>
-		</copy>
-		<zip destfile="${dist}/wsml2reasoner-mins-src-gpl-${deploy.version}.zip">
-			<fileset dir="${dist.complete}"/>
-		</zip>
-		<delete dir="${dist.complete}"/>
-	</target>
-	<!--
-	
-	<target name="create-wsml2reasoner-releases-bins" depends="compile, 
-		create-wsml2reasoner_complete, 
-		create-wsml2reasoner_complete_src, 
-		create-wsml2reasoner_sdk,
-		create-wsml2reasoner_lgpl" 
+	<target name="create-wsml2reasoner-releases-bins" depends= 
+		"create-wsml2reasoner_noncommercial, 
+		create-wsml2reasoner_lgpl,
+		create-wsml2reasoner_gpl"
 		description="Creates/zips wsml2reasoner bins">
 	</target>
-	<target name="create-wsml2reasoner-releases-bins" depends="compile, 
-		create-wsml2reasoner-noncom-jar+libs+example, 
-		create-wsml2reasoner-mins-jar+libs+example, 
-		create-wsml2reasoner-iris-jar+libs+example,
-		create-wsml2reasoner-datalog-jar+libs+example, 
-		create-wsml2reasoner-dl-jar+libs+example,
-		create-wsml2reasoner-pellet-jar+libs+example, 
-		create-wsml2reasoner-jar+libs+example" 
-		description="Creates/zips wsml2reasoner bins)">
-	</target>
 	
-	<target name="create-wsml2reasoner-releases-srcs" depends="create-wsml2reasoner-noncom-src, create-wsml2reasoner-mins-src, 
-		create-wsml2reasoner-iris-src, create-wsml2reasoner-datalog-src, create-wsml2reasoner-dl-src,
-		create-wsml2reasoner-pellet-src, create-wsml2reasoner-src" description="Creates/zips wsml2reasoner srcs">
+	<target name="create-wsml2reasoner-releases-srcs" depends=
+		"create-wsml2reasoner_noncommercial_src, 
+		create-wsml2reasoner_lgpl_src,
+		create-wsml2reasoner_gpl_src, 
+		create-wsml2reasoner_sdk"
+		description="Creates/zips wsml2reasoner srcs">
 	</target>
-	
-	<target name="create-wsml2reasoner-releases" depends="create-wsml2reasoner-releases-bins,create-wsml2reasoner-releases-srcs" 
-		description="Creates/zips wsml2reasoner)">
+
+	<target name="release" depends=
+		"create-javadoc,
+		create-wsml2reasoner-releases-bins,
+		create-wsml2reasoner-releases-srcs" 
+		description="Creates/zips wsml2reasoner releases">
 	</target>
-	-->
 
 	<target name="create-javadoc" depends="compile" description="Produces javadoc">
 		<delete dir="${javadoc.dir}" />
 		<mkdir dir="${javadoc.dir}" />
 		<javadoc destdir="${javadoc.dir}"
-             classpathref="classpath"
+             classpathref ="classpath"
              author="true"
              version="true"
              use="true"
-             windowtitle="WSML2Reasoner Framework">
+			 link="http://java.sun.com/j2se/1.5.0/docs/api/"
+			 windowtitle = "WSML2Reasoner Framework">
 			<fileset dir="${build.src}">
 				<include name="**/*.java" />
 			</fileset>
 			<doctitle><![CDATA[<h1>WSML2Reasoner Framework</h1>]]></doctitle>
-		<bottom>
-			<![CDATA[<i>Copyright &#169; 2005 University of Innsbruck, Austria; FZI, Germany. All Rights Reserved.</i>]]></bottom>
+			<bottom>
+				<![CDATA[<i>Copyright &#169; 2005 University of Innsbruck, Austria; FZI, Germany. All Rights Reserved.</i>]]>
+			</bottom>
 			<tag name="TODO" scope="all" description="To do:" />
 		</javadoc>
 	</target>
@@ -685,15 +355,14 @@
 		<input message="Password for ${shell.host}:" addproperty="ssh.password" />
 	</target>
 
-	<!-- Redo these
 	
 	<target name="update_remote_snapshot_wsml2reasoner"
-		depends="create-wsml2reasoner-noncom-jar+libs"
+		depends="create-wsml2reasoner_gpl"
         description="Updates wsml2reasoner (jar + src) snapshot on tools.deri.org">
 
 		<sshexec host="${shell.host}"
         	username="${ssh.user}"
-            password="${ssh.password}"x`		
+            password="${ssh.password}"		
             trust="yes"
             command="rm -f ${remote.snapshot.path}/wsml2reasoner*" />
 		
@@ -712,7 +381,7 @@
 	</target>
 	
 	<target name="update_remote_snapshot_wsml2reasoner-wsmo"
-		depends="create-wsml2reasoner-jar+libs"
+		depends="create-wsml2reasoner_gpl"
         description="Updates wsml2reasoner-minimal (wsmo jar+lib+example) snapshot on tools.deri.org">
 		
 		<sshexec host="${shell.host}"
@@ -747,22 +416,18 @@
 			<fileset dir="${javadoc.dir}" />
 		</scp>
 	</target>
-  -->
-    <path id="all">
-        <fileset dir="${basedir}/lib" includes="**/*.jar"/>
-    </path>
-
+		
     <target name="performence-create-benchmark-files" depends="init">
-        <javac srcdir="${basedir}/performance" destdir="${build.class}" classpathref="all" classpath="${build.class}" />
-        <java  classname="performance.BenchmarkOntologyGenerator" classpathref="all" classpath="${build.class}" jvmargs="-Xmx 1024"/>
+        <javac srcdir="${basedir}/performance" destdir="${build.class}" classpathref="classpath" classpath="${build.class}" />
+        <java  classname="performance.BenchmarkOntologyGenerator" classpathref="classpath" classpath="${build.class}" jvmargs="-Xmx 1024"/>
     </target>
   
     <target name="performence-run-benchmark" depends="init">
-        <java  classname="performance.TestPerformanceWithUseOfFeatures" classpathref="all" classpath="${build.class}" jvmargs="-Xmx 1024"/>
+        <java  classname="performance.TestPerformanceWithUseOfFeatures" classpathref="classpath" classpath="${build.class}" jvmargs="-Xmx 1024"/>
     </target>
 
     <target name="performence-run-chart" depends="init">
-        <java  classname="performance.chart.Chart" classpathref="all" classpath="${build.class}" jvmargs="-Xmx 1024"/>
+        <java  classname="performance.chart.Chart" classpathref="classpath" classpath="${build.class}" jvmargs="-Xmx 1024"/>
     </target>
   
 </project>
