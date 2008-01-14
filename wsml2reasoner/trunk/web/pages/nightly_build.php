@@ -1,14 +1,9 @@
 <h1>Nightly Build</h1>
 
 <p>We are running an automated build process once a day. All generated
-resources are available in the <a href="snapshot">snapshot</a> directory.</p>
+resources are available in the snapshot directory below.</p>
 
-<p>For your convenience the build process includes:</p>
 <ul>
-<!--
-	<li><a href="/snapshot/javadoc">java doc</a></li>
-	<li><a href="/snapshot/junit_report">test results</a></li>
--->
 	<li>The files available in the snapshot are:<br><br>
 	<div style="width:50em; background-color:#eee;border:1px black solid;">
 	
