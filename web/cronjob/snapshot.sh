@@ -1,7 +1,7 @@
 # Setup
 #DIR=/var/www/html/iris-reasoner_org/ant/iris
 DIR=/var/www/html/tools_deri_org/wsml2reasoner/nightly-build/wsml2reasoner
-export ANT_HOME=/home/barryb/apache-ant-1.7.0
+export ANT_HOME=/home/grahamh/apache-ant-1.7.0
 
 echo ====================================================================
 echo WSML2Reasoner daily build script
