@@ -48,6 +48,7 @@
 	<patternset id="source-files">
 		<exclude name="build/*" />
 		<include name="**/*.java" />
+		<include name="**/example/*.wsml" />
 	</patternset>
 			
 	<patternset id="gpl-jars">
@@ -73,17 +74,22 @@
 	</patternset>
 	
 	<patternset id="gpl-examples">
+		<include name="example/*.wsml" />
+		<include name="example/*.java" />
 		<exclude name="**/example/Kaon2ReasonerExample.*" />
 		<exclude name="**/example/Kaon2DLReasonerExample.*" />
 	</patternset>
 	
 	<patternset id="lgpl-examples">
-		<exclude name="**/example/Kaon2ReasonerExample.*" />
-		<exclude name="**/example/Kaon2DLReasonerExample.*" />
-		<exclude name="**/example/MinsReasonerExample.*" />
+		<include name="example/*.wsml" />
+		<include name="example/*.java" />
+		<exclude name="example/Kaon2ReasonerExample.*" />
+		<exclude name="example/Kaon2DLReasonerExample.*" />
+		<exclude name="example/MinsReasonerExample.*" />
 	</patternset>
 	
 	<patternset id="lgpl-packages">
+		<include name= "**/*.*" />
 		<exclude name= "**/mins/"/>
 	</patternset>
 			
@@ -168,12 +174,12 @@
 		<mkdir dir="${dist}" />
 		<jar jarfile="${dist}/wsml2reasoner_lgpl-${deploy.version}.jar">
 			<fileset dir="${build.src}">
-				<patternset refid="lgpl-packages"/>
 				<patternset refid="lgpl-examples"/>
+				<patternset refid="lgpl-packages"/>
 			</fileset>
 			<fileset dir="${build.class}">
-				<patternset refid="lgpl-packages"/>
 				<patternset refid="lgpl-examples"/>
+				<patternset refid="lgpl-packages"/>
 			</fileset>
 		</jar>
 	</target>
@@ -324,6 +330,7 @@
 	
 	<target name="get-kaon2-jars"  depends="init"
           description="Downloads necessary KAON2 + Facades jar">
+		<delete dir="${lib.kaon2}" />
 		<mkdir dir="${lib.kaon2}"/>
 		<mkdir dir="${lib.kaon2}/kaon2/"/>
 		<get src="http://tools.deri.org/wsml2reasoner/ext/wsml2reasoner-ext-kaon2.jar"
@@ -338,6 +345,7 @@
 	
 	<target name="get-kaon2-jars-with-confirmation"  depends="init, confirm-kaon2-usage"
           description="Downloads necessary KAON2 + Facades jar">
+		<delete dir="${lib.kaon2}" />
 		<mkdir dir="${lib.kaon2}"/>
 		<mkdir dir="${lib.kaon2}/kaon2/"/>
 		<get src="http://tools.deri.org/wsml2reasoner/ext/wsml2reasoner-ext-kaon2.jar"
