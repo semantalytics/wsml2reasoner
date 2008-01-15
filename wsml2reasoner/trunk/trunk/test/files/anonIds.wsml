@@ -1,0 +1,25 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-dl"
+
+namespace { _"http://www.example.org/ontologies/example#",
+  dc  _"http://purl.org/dc/elements/1.1#"}
+
+ontology _"http://www.example.org/ontologies/example"  
+  
+  concept _# subConceptOf {Human}
+  
+  concept _#
+    nfp dc#description hasValue "nfp test" endnfp
+  
+  concept _# subConceptOf _#
+  
+  concept Woman subConceptOf _#
+    nfp dc#relation hasValue "disjoint to Man" endnfp
+    
+  concept _#
+    hasName impliesType _string
+      nfp dc#description hasValue "attr nfp test" endnfp
+      
+  instance bla memberOf _#
+    hasName hasValue "Anna"
+  
+  instance _#

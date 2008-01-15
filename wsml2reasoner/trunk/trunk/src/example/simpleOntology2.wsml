@@ -1,0 +1,17 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
+namespace { _"http://simple#"
+}
+
+ontology simpson
+
+concept Human
+ hasDate ofType _date
+ hasName ofType _string
+
+instance Marge memberOf Human
+ hasName hasValue "marge"
+ hasDate hasValue _date(1976,08,15)
+
+instance Graham memberOf Man
+ hasDate hasValue _date(1976,08,16)
+ hasName hasValue "Graham"

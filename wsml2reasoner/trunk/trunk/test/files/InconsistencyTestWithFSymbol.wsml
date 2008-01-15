@@ -1,0 +1,19 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-rule"
+
+namespace {_"urn:functionsymbol#"}
+ 
+ontology fsymbol
+
+
+//if you uncoment this some of the problems disapear
+concept Concept
+  attribute ofType OtherConcept
+
+axiom 
+ definedBy
+  Concept[attribute ofType OtherConcept].
+  f(a)[attribute hasValue 10] memberOf Concept.
+  f[attribute hasValue 10] memberOf Concept.
+  
+  
+  
