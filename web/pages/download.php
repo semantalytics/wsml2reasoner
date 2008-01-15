@@ -16,7 +16,7 @@
 			if (str_contains($line,"<table>")) $content=true;
 			if (str_contains($line,"<address>")) $content=false;
 			if ($content) {
-			 	echo ereg_replace("href=\"/?([^/][^\"]+)", "href=\"/wsml2reasoner/releases/v0_6\\1", $line);	
+			 	echo ereg_replace("href=\"/?([^/][^\"]+)", "href=\"/wsml2reasoner/releases/v0_6/\\1", $line);	
 			}
 		}
 		
@@ -46,5 +46,5 @@ function str_contains($haystack, $needle, $ignoreCase = false) {
 <p>Source code, trackers, and further technical documentation can be found at <a href="http://sourceforge.net/projects/wsml2reasoner/">sourceforge</a>.</p>
 
 <h1>Daily Snapshot</h1>
-<p>We also offer a <a href="http://tools.deri.org/wsml2reasoner/snapshot">daily snapshot</a>.
+<p>We also offer a <a href="nightly_build">daily snapshot</a>.
 </p>
