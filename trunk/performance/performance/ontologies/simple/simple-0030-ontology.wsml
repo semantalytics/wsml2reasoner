@@ -1,0 +1,40 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
+namespace { _"http://www.simple-0030-ontology.com#"
+}
+
+ontology o30
+
+concept c1
+
+concept c2 subConceptOf c1
+
+instance i1 memberOf c2
+instance i2 memberOf c2
+instance i3 memberOf c2
+instance i4 memberOf c2
+instance i5 memberOf c2
+instance i6 memberOf c2
+instance i7 memberOf c2
+instance i8 memberOf c2
+instance i9 memberOf c2
+instance i10 memberOf c2
+instance i11 memberOf c2
+instance i12 memberOf c2
+instance i13 memberOf c2
+instance i14 memberOf c2
+instance i15 memberOf c2
+instance i16 memberOf c2
+instance i17 memberOf c2
+instance i18 memberOf c2
+instance i19 memberOf c2
+instance i20 memberOf c2
+instance i21 memberOf c2
+instance i22 memberOf c2
+instance i23 memberOf c2
+instance i24 memberOf c2
+instance i25 memberOf c2
+instance i26 memberOf c2
+instance i27 memberOf c2
+instance i28 memberOf c2
+instance i29 memberOf c2
+instance i30 memberOf c2

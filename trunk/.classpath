@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="api/src"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="src" path="performance"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/ext/iris-reasoner/jgrapht/jgrapht-jdk1.5-0.7.1.jar"/>
+	<classpathentry kind="lib" path="lib/ext/pellet-reasoner/pellet/pellet.jar"/>
+	<classpathentry kind="lib" path="lib/ext/pellet-reasoner/xsdlib/xsdlib.jar"/>
+	<classpathentry kind="lib" path="lib/ext/pellet-reasoner/aterm/1.6/aterm-java-1.6.jar"/>
+	<classpathentry kind="lib" path="lib/ext/pellet-reasoner/commons-logging/1.1/commons-logging-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/ext/pellet-reasoner/kaon/1.2.9/rdfapi.jar"/>
+	<classpathentry kind="lib" path="lib/ext/pellet-reasoner/owl-api/1.4.3/abstractparser.jar"/>
+	<classpathentry kind="lib" path="lib/ext/pellet-reasoner/owl-api/1.4.3/io.jar"/>
+	<classpathentry kind="lib" path="lib/ext/pellet-reasoner/owl-api/1.4.3/rdfparser.jar"/>
+	<classpathentry kind="lib" path="lib/ext/pellet-reasoner/owl-api/1.4.3/validation.jar"/>
+	<classpathentry kind="lib" path="lib/ext/pellet-reasoner/owl-api/owl-api-econn/2006-04-27/api.jar"/>
+	<classpathentry kind="lib" path="lib/ext/pellet-reasoner/owl-api/owl-api-econn/2006-04-27/impl.jar"/>
+	<classpathentry kind="lib" path="lib/ext/pellet-reasoner/relaxng/1.0/relaxngDatatype.jar"/>
+	<classpathentry kind="lib" path="lib/ext/performance-tests/JFreeChart/gnujaxp.jar"/>
+	<classpathentry kind="lib" path="lib/ext/performance-tests/JFreeChart/itext-2.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/ext/performance-tests/JFreeChart/jcommon-1.0.10.jar"/>
+	<classpathentry kind="lib" path="lib/ext/performance-tests/JFreeChart/jfreechart-1.0.6.jar"/>
+	<classpathentry kind="lib" path="lib/ext/performance-tests/JFreeChart/swtgraphics2d.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
+	<classpathentry kind="lib" path="lib/ext/xsb-system/interprolog.jar"/>
+	<classpathentry kind="lib" path="lib/ext/log4j/log4j-1.2.14.jar"/>
+	<classpathentry kind="lib" path="lib/ext/mins-reasoner/mins-v0_3.jar"/>
+	<classpathentry kind="lib" path="lib/ext/wsmo/WSML-grammar-20070417.jar"/>
+	<classpathentry kind="lib" path="lib/ext/wsmo/wsmo4j-0.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/ext/wsmo/wsmo-api-0.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/ext/sql-interface/hsqldb.jar"/>
+	<classpathentry kind="lib" path="lib/ext/iris-reasoner/iris/iris-0.5.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
