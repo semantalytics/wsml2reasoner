@@ -54,7 +54,7 @@ In addition to the facades which provide an interface (and implementation) to th
 2.1</a>&nbsp;&nbsp;Releases</h3>
 The are four basic release variants in accord to included reasoning engine library license agreements. The actual core WSML2Reasoner code base is LGPL.
 <ul>
-	<li><a href="license">LGPL</a> - This <a href="download">release</a> includes the standard LGPL libraries and packages required for WSML2Reasoner, regardless of which underlying reasoning engine is choosen. In addtion to these core libraries, the IRIS and PELLET libraries are included.
+	<li><a href="license">LGPL</a> - This <a href="download">release</a> includes the standard LGPL libraries and packages required for WSML2Reasoner, regardless of which underlying reasoning engine is chosen. In addtion to these core libraries, the IRIS and PELLET libraries are included.
 	</li>
 	<li><a href="license">GPL</a>  - In addition to the LGPL libraries and packages, this <a href="download">release</a> includes the MINS jar.</li>
 	<li>Non-commercial - In addition to the GPL libraries and packages, this release includes the KAON2 libraries and packages, which are available free of charge for universities for noncommecial academic usage (national laboratories are not considered universities). For commercial purposes, there is a commercial version of KAON2 called <a href="http://www.ontoprise.de/ontobrokerowl">OntoBroker OWL</a>. By downloading KAON2, you accept these license agreements.
