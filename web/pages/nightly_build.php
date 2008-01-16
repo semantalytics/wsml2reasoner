@@ -16,7 +16,7 @@ resources are available in the snapshot directory below.</p>
 			if (str_contains($line,"<table>")) $content=true;
 			if (str_contains($line,"<address>")) $content=false;
 			if ($content) {
-			 	echo ereg_replace("href=\"/?([^/][^\"]+)", "href=\"/snapshot/\\1", $line);	
+			 	echo ereg_replace("href=\"/?([^/][^\"]+)", "href=\"/wsml2reasoner/snapshot/\\1", $line);	
 			}
 		}
 		
