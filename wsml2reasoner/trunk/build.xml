@@ -1,5 +1,5 @@
 	
-<project name="WSML2Reasoner Framework" default="create-gpl-jar" basedir="." >
+<project name="WSML2Reasoner Framework" default="create-lgpl-jar" basedir="." >
 
 	<!-- =================================================================== -->
 	<!-- Initialization                                                -->
@@ -69,20 +69,34 @@
 		<exclude name="ext/**" />
 		<exclude name="pub/**" />
 		<exclude name="web/**" />
+		<exclude name="javadoc/**" />
 		<!--<excludesfile name="pwd" />-->
 		<include name="**/*.*" />
 	</patternset>
 	
 	<patternset id="gpl-examples">
-		<include name="example/*.wsml" />
-		<include name="example/*.java" />
+		<include name="**/*.*" />
 		<exclude name="**/example/Kaon2ReasonerExample.*" />
 		<exclude name="**/example/Kaon2DLReasonerExample.*" />
 	</patternset>
 	
 	<patternset id="lgpl-examples">
-		<include name="example/*.wsml" />
-		<include name="example/*.java" />
+		<include name="**/*.*" />
+		<exclude name="example/Kaon2ReasonerExample.*" />
+		<exclude name="example/Kaon2DLReasonerExample.*" />
+		<exclude name="example/MinsReasonerExample.*" />
+	</patternset>
+	
+	<patternset id="gpl-release">
+		<include name="**/example/*.wsml" />
+		<include name="**/example/*.java" />
+		<exclude name="**/example/Kaon2ReasonerExample.*" />
+		<exclude name="**/example/Kaon2DLReasonerExample.*" />
+	</patternset>
+	
+	<patternset id="lgpl-release">
+		<include name="**/example/*.wsml" />
+		<include name="**/example/*.java" />
 		<exclude name="example/Kaon2ReasonerExample.*" />
 		<exclude name="example/Kaon2DLReasonerExample.*" />
 		<exclude name="example/MinsReasonerExample.*" />
@@ -158,7 +172,7 @@
 		</junitreport>
 	</target>
 	
-	<target name="create-gpl-jar" depends="compile" description="Creates wsml2reasoner jar - basic">
+	<target name="create-gpl-jar" depends="compile" description="Creates wsml2reasoner gpl jar">
 		<mkdir dir="${dist}" />
 		<jar jarfile="${dist}/wsml2reasoner_gpl-${deploy.version}.jar">
 			<fileset dir="${build.src}">
@@ -220,7 +234,7 @@
 				<patternset refid="lgpl-jars"/>
 			</fileset>
 			<fileset dir="${build.src}" includes ="example/">
-				<patternset refid="lgpl-examples" />
+				<patternset refid="lgpl-release" />
 			</fileset>
 			<fileset dir="${basedir}" includes ="license-lgpl.txt" />
 		</zip>
@@ -247,7 +261,7 @@
 					<patternset refid="gpl-jars"/>
 				</fileset>
 				<fileset dir="${build.src}" includes ="example/">
-					<patternset refid="gpl-examples" />
+					<patternset refid="gpl-release" />
 				</fileset>
 				<fileset dir="${basedir}" includes ="license-gpl.txt" />
 			</zip>
