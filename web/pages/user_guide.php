@@ -18,7 +18,7 @@ This guide is not only for software developers who are integrating WSML2Reasoner
 <div class="p">
      <h3><a name="tth_sEc1.3">
 1.3</a>&nbsp;&nbsp;Scope</h3>
-The document is intended to be a 'non-technical' guide for the basic usage of the WSML2Reasoner API. For a more technical description of the internal implementations, we refer the user to <a href="publications"><em>A Reasoning Framework for Rule-Based WSML</em></a>.
+This document is intended to be a 'non-technical' guide for the basic usage of the WSML2Reasoner API. For a more technical description of the internal implementations, we refer the user to <a href="publications"><em>A Reasoning Framework for Rule-Based WSML</em></a>.
 </div>
 
 <div class="p">
@@ -29,7 +29,7 @@ The document is intended to be a 'non-technical' guide for the basic usage of th
 <div class="p">
      <h3><a name="tth_sEc2.1">
 2.1</a>&nbsp;&nbsp;Function</h3>
-The WSML2Reasoner framework performs a variety of functions that ultimately (and optimally) translate a WSML ontology into the appropriate syntax of a specified underlying reasoning engine. Depending on the variant of the WSML ontology, and concurrently the desired reasoning tasks to be performed, the user must specify which reasoning engine he or she wishes to use.
+The WSML2Reasoner framework performs a variety of functions that ultimately - and optimally - translate a WSML ontology into the appropriate syntax of a specified underlying reasoning engine. Depending on the variant of the WSML ontology, and concurrently the desired reasoning tasks to be performed, the user must specify which reasoning engine he or she wishes to use.
 </div>
 
 <div class="p">
@@ -41,22 +41,22 @@ Each reasoning engine implemented within the WSML2Reasoner framework requires a 
 <div class="p">
      <h3><a name="tth_sEc2.3">
 2.3</a>&nbsp;&nbsp;Extensions</h3>
-In addition to the facades which provide an interface (and implementation) to the underlying reason engines, the WSML2Reasoner query extensions (such as the SQL interface for the WSML-Flight-A query language) provide an alternative interface whereby reasoning tasks can be achieved with an alternative query syntax. For more infomation, please refer to section XXXXX.
+In addition to the facades which provide an interface for, and implementation of, the underlying reasoning engines, the WSML2Reasoner query extensions (such as the SQL interface for the WSML-Flight-A query language) provide an alternative interface whereby reasoning tasks can be achieved with an alternative query syntax. For more infomation, please refer to section <a href="tth_sEc4">4</a>.
 </div>
 
 <div class="p">
- <h2><a name="tth_sEc2">
-2</a>&nbsp;&nbsp;Getting Started</h2>
+ <h2><a name="tth_sEc3">
+3</a>&nbsp;&nbsp;Getting Started</h2>
 </div>
 
 <div class="p">
-     <h3><a name="tth_sEc2.1">
-2.1</a>&nbsp;&nbsp;Releases</h3>
+     <h3><a name="tth_sEc3.1">
+3.1</a>&nbsp;&nbsp;Releases</h3>
 The are four basic release variants in accord to included reasoning engine library license agreements. The actual core WSML2Reasoner code base is LGPL.
 <ul>
-	<li><a href="license">LGPL</a> - This <a href="download">release</a> includes the standard LGPL libraries and packages required for WSML2Reasoner, regardless of which underlying reasoning engine is chosen. In addtion to these core libraries, the IRIS and PELLET libraries are included.
+	<li><a href="license">LGPL</a> - This <a href="http://tools.deri.org/wsml2reasoner/releases/v0_6/wsml2reasoner_lgpl-v0_6.zip">release</a> includes the standard LGPL libraries and packages required for WSML2Reasoner, regardless of which underlying reasoning engine is chosen. In addtion to these core libraries, the IRIS and PELLET libraries are included.
 	</li>
-	<li><a href="license">GPL</a>  - In addition to the LGPL libraries and packages, this <a href="download">release</a> includes the MINS jar.</li>
+	<li><a href="license">GPL</a>  - In addition to the LGPL libraries and packages, this <a href="http://tools.deri.org/wsml2reasoner/releases/v0_6/wsml2reasoner_gpl-v0_6.zip">release</a> includes the MINS jar.</li>
 	<li>Non-commercial - In addition to the GPL libraries and packages, this release includes the KAON2 libraries and packages, which are available free of charge for universities for noncommecial academic usage (national laboratories are not considered universities). For commercial purposes, there is a commercial version of KAON2 called <a href="http://www.ontoprise.de/ontobrokerowl">OntoBroker OWL</a>. By downloading KAON2, you accept these license agreements.
 	</li>
 	<li>SDK - This release is an uncompiled version of the entire WSML2Reasoner project. It includes all GPL files, as well as several other additional libraries that are currently being tested, but have yet to reach a mature, stable level necessary for a proper release. The SDK should also be considered a non-commercial release.
@@ -65,7 +65,7 @@ The are four basic release variants in accord to included reasoning engine libra
 
 
 
-<h2><a name="tth_sEc1">1</a>&nbsp;&nbsp;WSML2Reasoner Query Extensions</h2>
+<h2><a name="tth_sEc4">4</a>&nbsp;&nbsp;WSML2Reasoner Query Extensions</h2>
 
 <h3>Purpose of the SQL Interface Extension/WSML-Flight-A Query Language</h3>
 

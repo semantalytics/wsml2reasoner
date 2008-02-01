@@ -36,9 +36,9 @@ The framework's flexible architecture allows for easy integration of existing ex
 		<li>Semi-naive with magic sets and sideways information passing strategy (SIPS)</li>
 </ul>
 </p>
-<p>To learn more about the theoretical results that the reasoner is based upon have a look at the <a href="http://iris-reasoner.org/foundations">theoretical results (ext. link)</a>. 
+<p>To learn more about the fundamental algorithms that the reasoner is based upon have a look at the <a href="http://iris-reasoner.org/foundations">theoretical results</a>. 
 </p>
-<p>The IRIS libraries are included in the LGPL <a href="dowload">release</a>. For further information, please visit the IRIS <a href="http://iris-reasoner.org/">website</a>.
+<p>The IRIS libraries are included in the LGPL <a href="download">release</a>. For further information, please visit the IRIS <a href="http://iris-reasoner.org/">website</a>.
 </p>
 <h3>KAON2 - (WSML-Core, WSML-Flight, WSML-DL)</h3>
 <p>
@@ -61,7 +61,7 @@ A detailed (and quite lengthy) technical presentation of all algorithms is given
 
 <h3>MINS - (WSML-Core, WSML-Flight, WSML-Rule)</h3>
 <p>
-<a href="http://tools.deri.org/mins/">MINS</a> is a reasoner for Datalog programs with negation and function symbols which supports well-founded semantics. MINS stands for Mins Is Not Silri. It is based on <a href="../http://ontobroker.semanticweb.org/silri/">SILRI</a>, an inference engine developed by J&uuml;rgen Angele and Stefan Decker (Institute AIFB, University of Karlsruhe). Currently MINS supports the following evaluation methods:
+<a href="http://tools.deri.org/mins/">MINS</a> is a reasoner for Datalog programs with negation and function symbols which supports well-founded semantics. MINS stands for Mins Is Not Silri. It is based on <a href="http://ontobroker.semanticweb.org/silri/">SILRI</a>, an inference engine developed by J&uuml;rgen Angele and Stefan Decker (Institute AIFB, University of Karlsruhe). Currently MINS supports the following evaluation methods:
 <ol>
 	<li>Naive evaluation (for stratified programs)</li>
 	<li>Dynamic Filtering evaluation (for stratified programs)</li>
@@ -70,7 +70,7 @@ A detailed (and quite lengthy) technical presentation of all algorithms is given
 </ol>
 All evaluation methods can handle negated rules too. 
 </p>
-<p>The MINS libraries are included in the GPL <a href="dowload">release</a>. For further information, please visit the MINS <a href="http://tools.deri.org/mins/">website</a>.
+<p>The MINS libraries are included in the GPL <a href="download">release</a>. For further information, please visit the MINS <a href="http://tools.deri.org/mins/">website</a>.
 </p>
 
 <h3>PELLET - (WSML-Core, WSML-DL)</h3>
@@ -79,5 +79,5 @@ All evaluation methods can handle negated rules too.
 <p>Pellet provides standard and cutting-edge <a href="http://pellet.owldl.com/features/">reasoning services</a>. It also incorporates various optimization techniques described in the DL literature and contains several novel optimizations for nominals, conjunctive query answering, and incremental reasoning. There's more detailed information about the architecture of the system and its features in the <a href="http://pellet.owldl.com/docs/">Pellet Documentation</a>.
 </p>
 
-<p>Pellet is integrated into the WSML2Reasoner framework in order to provide DL reasoning support for WSML-DL ontologies (via translation from WSML-DL to OWL-DL). The Pellet libraries are included in the LGPL <a href="dowload">release</a>. For further information, please visit the Pellet <a href="http://pellet.owldl.com/">website</a>.
+<p>Pellet is integrated into the WSML2Reasoner framework in order to provide DL reasoning support for WSML-DL ontologies (via translation from WSML-DL to OWL-DL). The Pellet libraries are included in the LGPL <a href="download">release</a>. For further information, please visit the Pellet <a href="http://pellet.owldl.com/">website</a>.
 </p>

@@ -1,9 +1,8 @@
 <style type="text/css">ul{margin-top:-20px;}</style>
 
 
-<h1>Download</h1>
+<h1>Releases</h1>
 <div class="p">
-     <h3>Releases</h3>
 <p>
 The are four basic release variants in accord to included reasoning engine library license agreements. The actual core WSML2Reasoner code base is LGPL.
 <ul>
