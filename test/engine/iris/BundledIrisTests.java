@@ -17,6 +17,7 @@ public class BundledIrisTests {
 		//$JUnit-BEGIN$
 		suite.addTestSuite(BuiltInDateTimeTest.class);
 		suite.addTestSuite(QueryContainmentTest.class);
+		suite.addTestSuite(DataSourceTest.class);
 		//$JUnit-END$
 		return suite;
 	}

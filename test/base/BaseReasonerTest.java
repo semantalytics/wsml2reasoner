@@ -85,13 +85,31 @@ public class BaseReasonerTest extends TestCase {
     protected static WSMO4JManager wsmoManager = null;
     
     protected static Parser wsmlparserimpl = org.wsmo.factory.Factory.createParser(null);
-    
+
+    /**
+     * Instantiates a new reasoner with a default configuration
+     * @return the newly instantiated reasoner
+     */
     public static WSMLReasoner getReasoner(){
-        // Create reasoner
+    	return getReasoner(null);
+    }
+
+    /**
+     * Instantiates a new reasoner with a given configuration.
+     * @param config configuration with which to overwrite the default one
+     * @return the newly instantiated reasoner
+     */
+    public static WSMLReasoner getReasoner(final Map<String, Object> config) {
+		// Create reasoner
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,reasoner);  
         params.put(WSMLReasonerFactory.PARAM_EVAL_METHOD,evalMethod);
         params.put(WSMLReasonerFactory.PARAM_ALLOW_IMPORTS,allowImports);
+        
+        // overwrite the default configuration
+        if (config != null) {
+        	params.putAll(config);
+        }
         
         /**
          * This IF should be changed:
@@ -137,7 +155,34 @@ public class BaseReasonerTest extends TestCase {
     	
     }
 
-    protected static void setupScenario(String ontologyFile) throws IOException, ParserException, InvalidModelException, InconsistencyException {
+    /**
+     * Instantiated a new reasoner and loads a given ontology file.
+     * @param ontologyFile the ontologyfile to load
+     * @throws IOException
+     * @throws ParserException
+     * @throws InvalidModelException
+     * @throws InconsistencyException
+     */
+    protected static void setupScenario(final String ontologyFile)
+			throws IOException, ParserException, InvalidModelException,
+			InconsistencyException {
+		setupScenario(ontologyFile, null);
+	}
+
+    /**
+	 * Instantiated a new reasoner with a given configuration and loads a given
+	 * ontology file.
+	 * 
+	 * @param ontologyFile the ontologyfile to load
+	 * @param config configuration for the reasoner with which to overwrite the default one
+	 * @throws IOException
+	 * @throws ParserException
+	 * @throws InvalidModelException
+	 * @throws InconsistencyException
+	 */
+    protected static void setupScenario(final String ontologyFile,
+			final Map<String, Object> config) throws IOException,
+			ParserException, InvalidModelException, InconsistencyException {
        
     	setUpFactories();
 
@@ -158,7 +203,7 @@ public class BaseReasonerTest extends TestCase {
         System.out.println(sw.toString());
         System.out.println("--------------\n\n");
 
-        wsmlReasoner = getReasoner();
+        wsmlReasoner = getReasoner(config);
         
         // Register ontology
         System.out.println("Registering ontology");
