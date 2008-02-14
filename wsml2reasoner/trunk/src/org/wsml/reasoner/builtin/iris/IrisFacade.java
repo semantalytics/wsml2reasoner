@@ -26,6 +26,8 @@ import static org.deri.iris.factory.Factory.TERM;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -36,6 +38,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.deri.iris.EvaluationException;
+import org.deri.iris.Configuration;
+import org.deri.iris.KnowledgeBaseFactory;
+import org.deri.iris.facts.IDataSource;
+import org.deri.iris.storage.IRelation;
+import org.deri.iris.api.IKnowledgeBase;
 import org.deri.iris.api.basics.IAtom;
 import org.deri.iris.api.basics.ILiteral;
 import org.deri.iris.api.basics.IPredicate;
@@ -70,7 +77,7 @@ import org.deri.iris.builtins.IsDecimalBuiltin;
 import org.deri.iris.builtins.IsIntegerBuiltin;
 import org.deri.iris.builtins.IsStringBuiltin;
 import org.deri.iris.querycontainment.QueryContainment;
-import org.deri.mins.api.IProgram;
+
 import org.omwg.logicalexpression.Constants;
 import org.omwg.logicalexpression.terms.BuiltInConstructedTerm;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
@@ -86,7 +93,10 @@ import org.wsml.reasoner.ExternalToolException;
 import org.wsml.reasoner.Literal;
 import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.WSML2DatalogTransformer;
+import org.wsml.reasoner.api.ExternalDataSource;
 import org.wsml.reasoner.api.InternalReasonerException;
+import org.wsml.reasoner.api.ExternalDataSource.HasValue;
+import org.wsml.reasoner.api.ExternalDataSource.MemberOf;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
@@ -108,6 +118,13 @@ import org.wsmo.factory.WsmoFactory;
  */
 public class IrisFacade implements DatalogReasonerFacade {
 
+	/** 
+	 * This is the key value this facade will look for to get the external 
+	 * data source. The value for this Map.Entry should be a map containing 
+	 * <code>ontologyUri(String)->Collection&lt;ExternalDatasource&gt;</code>.
+	 */
+	public static final String EXTERNAL_DATA_SOURCE = "iris.external.source";
+
 	/** Factory to create the DataValues. */
 	private final DataFactory DATA_FACTORY;
 
@@ -122,7 +139,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 			.compile("P(\\d{4})Y(\\d{1,2})M(\\d{1,2})DT(\\d{1,2})H(\\d{1,2})M(\\d{1,2})S");
 
 	/** Map storing all the uri <-> program mappings. */
-	private final Map<String, org.deri.iris.api.IKnowledgeBase> progs = new HashMap<String, org.deri.iris.api.IKnowledgeBase>();
+	private final Map<String, IKnowledgeBase> progs = new HashMap<String, IKnowledgeBase>();
 
 	/** 
 	 * Map to determine whether a rule for a conjunctive query in a program was 
@@ -135,7 +152,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 	 */
 	private Map<String, Map<ConjunctiveQuery, IQuery>> conjunctiveQueries = 
 		new HashMap<String, Map<ConjunctiveQuery, IQuery>>();
-	
+
 	/**
 	 * Records whether the ontology changed since the last calculation of the
 	 * fixed point.
@@ -164,10 +181,27 @@ public class IrisFacade implements DatalogReasonerFacade {
 	/** Map that contains the variable mapping from the query containment check. */
 	private org.deri.iris.storage.IRelation QCResult = null;
 	
+	/**
+	 * Map containing all the ontology-&gt;datasources mappings.
+	 * <ul>
+	 * <li>key = ontology uri</li>
+	 * <li>value = data sources to use for this ontology</li>
+	 * </ul>
+	 */
+	private final Map<String, Collection<ExternalDataSource>> sources;
+
 	public IrisFacade(final WSMO4JManager m, final Map<String, Object> config) {
 		DATA_FACTORY = m.getDataFactory();
 		WSMO_FACTORY = m.getWSMOFactory();
 		LOGIC_FACTORY = m.getLogicalExpressionFactory();
+		
+		// retrieving the data source
+		final Object ds = (config != null) ? config.get(EXTERNAL_DATA_SOURCE) : null;
+		if ((ds != null) && (ds instanceof Map)) {
+			sources = (Map<String, Collection<ExternalDataSource>>) ds;
+		} else {
+			sources = Collections.EMPTY_MAP;
+		}
 	}
 
 	public IrisFacade() {
@@ -324,6 +358,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 		
 		Map<IPredicate, org.deri.iris.storage.IRelation> facts = new HashMap<IPredicate, org.deri.iris.storage.IRelation>();
 		List<IRule> rules = new ArrayList<IRule>();
+		final Configuration conf = new Configuration();
 		
 		// translating all the rules
 		for (final Rule r : kb) {
@@ -355,10 +390,15 @@ public class IrisFacade implements DatalogReasonerFacade {
 		for (final IRule r : getWsmlMemberOfRules()) {
 			rules.add(r);
 		}
+		// add the data sources
+		final Collection<ExternalDataSource> ds = sources.get(ontologyURI);
+		if (ds != null) {
+			for (final ExternalDataSource ext : ds) {
+				conf.mExternalDataSources.add(new IrisDataSource(ext));
+			}
+		}
 		
-		final org.deri.iris.api.IKnowledgeBase newKb =
-			org.deri.iris.KnowledgeBaseFactory.createKnowledgeBase( facts, rules );
-		
+		final IKnowledgeBase newKb = KnowledgeBaseFactory.createKnowledgeBase(facts, rules, conf);
 		
 		this.factsChanged.put(ontologyURI, true);
 		this.rulesChanged.put(ontologyURI, true);
@@ -787,33 +827,50 @@ public class IrisFacade implements DatalogReasonerFacade {
 	}
 
 	/**
-	 * Method to get a structured representation of a program.
-	 * @param p the program
-	 * @return the string representation
+	 * Wrapper for the w2r datasource to the iris datasource.
+	 * @author Richard Pöttler (richard dot poettler at sti2 dot at)
 	 */
-	//TODO: Re-add once a IKnowledgeBase.toString() method is added to IRIS
-//	private static String toString(final IKnowledgeBase kb) {
-//		if (kb == null) {
-//			throw new NullPointerException("The program must not be null");
-//		}
-//		final String NL = System.getProperty("line.separator");
-//		final StringBuilder buffer = new StringBuilder();
-//		buffer.append("rules:").append(NL);
-//		for (final IRule r : kb.getRules()) {
-//			buffer.append("\t").append(r).append(NL);
-//		}
-//		buffer.append("facts:").append(NL);
-//		for (final IPredicate pred : kb. getPredicates()) {
-//			buffer.append("\t").append(pred).append(":").append(NL);
-//			for (final ITuple t : p.getFacts(pred)) {
-//				buffer.append("\t\t").append(t).append(NL);
-//			}
-//		}
-//		buffer.append("queries:").append(NL);
-//		for (final IQuery q : p.getQueries()) {
-//			buffer.append("\t").append(q).append(NL);
-//		}
-//		return buffer.toString();
-//	}
+	private class IrisDataSource implements IDataSource {
 
+		/** Predicate for the iris memeber-of facts. */
+		private final IPredicate memberOf = 
+			BASIC.createPredicate(WSML2DatalogTransformer.PRED_MEMBER_OF, 2);
+
+		/** Predicate for the iris has-value facts. */
+		private final IPredicate hasValue = 
+			BASIC.createPredicate(WSML2DatalogTransformer.PRED_HAS_VALUE, 3);
+
+		/** Datasource from where to get the values from. */
+		private final ExternalDataSource source;
+
+		public IrisDataSource(final ExternalDataSource source) {
+			if (source == null) {
+				throw new IllegalArgumentException("The source must not be null");
+			}
+			this.source = source;
+		}
+
+		public void get(IPredicate p, ITuple from, ITuple to, IRelation r) {
+			// TODO: from and to can't be used by iris atm, so we leave it out for the moment
+			if (p == null) {
+				throw new IllegalArgumentException("The predicate must not be null");
+			}
+			if (r == null) {
+				throw new IllegalArgumentException("The relation must not be null");
+			}
+
+			if (p.equals(memberOf)) {
+				for (final MemberOf mo : source.memberOf(null, null)) {
+					r.add(BASIC.createTuple(wsmoTermConverter(mo.getId()), 
+							wsmoTermConverter(mo.getConcept())));
+				}
+			} else if (p.equals(hasValue)) {
+				for (final HasValue hv : source.hasValue(null, null, null)) {
+					r.add(BASIC.createTuple(wsmoTermConverter(hv.getId()), 
+							wsmoTermConverter(hv.getName()), 
+							wsmoTermConverter(hv.getValue())));
+				}
+			}
+		}
+	}
 }
