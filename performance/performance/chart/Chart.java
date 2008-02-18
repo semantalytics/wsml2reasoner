@@ -34,12 +34,14 @@ public class Chart {
 		String base = "performance/performance/results/";
 //		base ="performance/20070629/results/";
 		File f = new File(base);
-		File[] dirs = f.listFiles();
-		for (File dir:dirs){
-			if (dir.isDirectory()){
-				c.doChartsFromCSV(dir);
-			}
-		}
+		c.doChartsFromCSV(f);
+
+//		File[] dirs = f.listFiles();
+//		for (File dir:dirs){
+//			if (dir.isDirectory()){
+//				c.doChartsFromCSV(dir);
+//			}
+//		}
 		//make and index
 //		c.writeGlobalIndex(base);
 	}
@@ -159,7 +161,7 @@ public class Chart {
 					testQueryInfo.title="Normalization Times";
 					testQueryInfo.description="";
 				}
-				else if (csv.getName().contains("convertion")) {
+				else if (csv.getName().contains("conversion")) {
 					testQueryInfo = new TestQueryInfo();
 					testQueryInfo.title="Convertion Times";
 					testQueryInfo.description="";
@@ -320,17 +322,30 @@ public class Chart {
 
 	
 	private JFreeChart createChart(String name, CategoryDataset data) throws IOException {
-		JFreeChart chart = ChartFactory
-				.createLineChart3D(
-						name, // Title
-						"", // X-Axis label
-						"Time in ms", // Y-Axis label
-						data, // Dataset
-						PlotOrientation.VERTICAL, // orientation
-						true, // Show legend
-						true, // tooltips
-						false // urls
-				);
+		JFreeChart chart;
+		if( data.getColumnCount() == 1 )
+			chart = ChartFactory.createBarChart(
+							name, // Title
+							"", // X-Axis label
+							"Time in ms", // Y-Axis label
+							data, // Dataset
+							PlotOrientation.VERTICAL, // orientation
+							true, // Show legend
+							true, // tooltips
+							false // urls
+			);
+		else
+			chart = ChartFactory.createLineChart3D(
+							name, // Title
+							"", // X-Axis label
+							"Time in ms", // Y-Axis label
+							data, // Dataset
+							PlotOrientation.VERTICAL, // orientation
+							true, // Show legend
+							true, // tooltips
+							false // urls
+					);
+		
 
 		BufferedImage image = chart.createBufferedImage(500, 300);
 		JLabel lblChart = new JLabel();
@@ -359,9 +374,10 @@ public class Chart {
 			String[] data = results.get(reasoner);
 			for (int i = 1; i < data.length; i++) {
 				double time = Double.parseDouble(data[i]);
-				int count = Integer.parseInt((head[i].substring(1)));
+				//int count = Integer.parseInt((head[i].substring(1)));
 				if (time>=0){
-					dataset.addValue((int)time,reasoner , count+"");
+//					dataset.addValue((int)time,reasoner , count+"");
+					dataset.addValue((int)time,reasoner , head[i]);
 				}
 			}
 		}
