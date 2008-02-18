@@ -285,10 +285,10 @@ public class PerformanceResults {
         File directory = new File(theDirectory);
         clearDirectory(directory);
 //        writeCSVLoadTime(directory);
-        writeCSVQueryTimes(directory);
         writeCSVNormalizationTime(directory);
         writeCSVConvertionTime(directory);
         writeCSVConsistencyCheckTime(directory);
+        writeCSVQueryTimes(directory);
         
         new Chart().doChartsFromCSV(directory);
     }

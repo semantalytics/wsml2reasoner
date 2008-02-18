@@ -1,0 +1,282 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"webode://mccarthy.dia.fi.upm.es/Job_Seeker_Eures_Ontology#" , wsml _"http://www.wsmo.org/wsml/wsml-syntax#" ,
+	GeoOnt _"webode://mccarthy.dia.fi.upm.es/Geography_Eures_Ontology#",
+	LabRegOnt _"webode://mccarthy.dia.fi.upm.es/Labour_Regulatory_Eures_Ontology#",
+	OccOnt _"webode://mccarthy.dia.fi.upm.es/Occupation_Eures_Ontology#",
+	EduOnt _"webode://mccarthy.dia.fi.upm.es/Education_Eures_Ontology#",
+	LanOnt _"webode://mccarthy.dia.fi.upm.es/Language_Eures_Ontology#",
+	
+	ComOnt _"webode://mccarthy.dia.fi.upm.es/Competence_Eures_Ontology#",
+	EcoActOnt _"webode://mccarthy.dia.fi.upm.es/Economic_Activity_Eures_Ontology#",
+	Time _"webode://mccarthy.dia.fi.upm.es/Time_Eures_Ontology#", 
+	CompOnt _"webode://mccarthy.dia.fi.upm.es/Compensation_Eures_Ontology#",
+	SkillOnt _"webode://mccarthy.dia.fi.upm.es/Skill_Eures_Ontology#",
+	dc _"http://purl.org/dc/elements/1.1/"}
+
+ontology Job_Seeker_Eures_Ontology
+
+
+importsOntology { GeoOnt#Geography_Eures_Ontology,
+	ComOnt#Competence_Eures_Ontology,
+	EcoActOnt#Economic_Activity_Eures_Ontology,
+	EduOnt#Education_Eures_Ontology,
+	OccOnt#Occupation_Eures_Ontology,
+	LanOnt#Language_Eures_Ontology,
+	LabRegOnt#Labour_Regulatory_Eures_Ontology,
+	Time#Time_Eures_Ontology,
+	CompOnt#Compensation_Eures_Ontology }
+
+
+
+axiom LanguageProfConstraint   
+	 nonFunctionalProperties
+          dc#description hasValue 
+          "A Candidacy (Job Seeker) has just one language proficiency for a given language"
+     endNonFunctionalProperties  
+     definedBy 
+          !- ?x[has_competence hasValue ?c1] memberOf Candidacy and
+          	 ?c1 memberOf LanOnt#Language_Proficiency and
+          	 ?x[has_competence hasValue ?c2] memberOf Candidacy and
+          	 ?c2 memberOf LanOnt#Language_Proficiency and
+          	 ?c1[LanOnt#related_language hasValue ?l1] and
+  		  	 ?c2[LanOnt#related_language hasValue ?l1] 
+  		  and ?c1!=?c2.
+
+
+axiom ObjectiveConstraint   
+	 nonFunctionalProperties
+          dc#description hasValue 
+          "It is not possible that a candidacy (job seeker) has a pair of objectives under 
+          the same constraints except for the salary constraints, that is, the 
+          same activity sector, work condition, location and job category, but 
+          different max or min salary."
+     endNonFunctionalProperties  
+     definedBy 
+          !- ?x[has_objective hasValue ?o1] memberOf Candidacy and          	
+          	 ?x[has_objective hasValue ?o2] memberOf Candidacy and          	
+          	 	?o1[Town hasValue ?t] and
+			 	?o1[has_work_condition hasValue ?wc] and
+				?o1[has_contract_type hasValue ?ct] and
+				?o1[has_location hasValue ?l] and
+				?o1[has_job_category hasValue ?jc] and				
+				?o1[has_activity_sector hasValue ?as] and
+				?o1[has_compensation hasValue ?c1] and
+					?c1[Type hasValue ?t] and
+					?c1[Bonus hasValue ?b] and
+					?c1[has_currency hasValue ?hc] and
+				
+  		  		?o2[Town hasValue ?t] and
+			 	?o2[has_work_condition hasValue ?wc] and
+				?o2[has_contract_type hasValue ?ct] and
+				?o2[has_location hasValue ?l] and
+				?o2[has_job_category hasValue ?jc] and				
+				?o2[has_activity_sector hasValue ?as] and
+				?o2[has_compensation hasValue ?c2] and
+					?c2[Type hasValue ?t] and
+					?c2[Bonus hasValue ?b] and
+					?c2[has_currency hasValue ?hc]
+			and naf(				
+				?c1[Max_Amount hasValue ?mxa] and
+				?c1[Min_Amount hasValue ?mia] and
+							
+				?c2[Max_Amount hasValue ?mxa] and
+				?c2[Min_Amount hasValue ?mia]).
+			 
+
+
+concept ICT_Objective subConceptOf Objective
+	has_job_category ofType (1) OccOnt#Computing_professionals__213
+
+concept Job_Seeker
+	Town ofType (1) _string
+	Telephone ofType (0 1) _string
+	References ofType (0 *) _string
+	Hobbies ofType (0 *) _string
+	Gender ofType (1) _string
+	//Full_Name ofType (1) _string
+	Fax ofType (0 1) _string
+	email ofType (0 1) _string
+	Date_of_Birth ofType (1) Time#DateTimeDescription
+	Address ofType (1) _string
+	
+	resides_in ofType (1) GeoOnt#Country
+	has_candidacy ofType (1) Candidacy	
+	
+	// jrr
+	Mobile ofType (0 1) _string
+	Post_Code ofType (0 1) _string
+	Messenger_address ofType (0 1) _string
+	First_Name ofType (1) _string
+	Last_Name ofType (1) _string  
+
+
+concept Candidacy	
+	has_education ofType EduOnt#Education
+	has_mother_tongue ofType (0 1) LanOnt#Language	
+	has_objective ofType Objective
+	has_work_experience ofType Offered_Work_Experience
+	belongs_to ofType (1) Job_Seeker
+	has_competence ofType (1 *) CompOnt#Competence // skills, languages and driving licences
+	//has_professional_affiliation ofType (0 *) OccOnt#Occupation 
+	//has_available_car ofType (0 1) _boolean 
+	//has_flexibility_to_car ofType (0 1) _boolean 
+	has_nationality_from ofType (0 2) GeoOnt#Country
+	//End_date ofType (0 1) Time#DateTimeDescription 
+	Begin_date ofType (0 1) Time#DateTimeDescription // from Additional condition of employment
+
+
+concept Objective // Desired occupation + Desired location of employment + Additional condition of employment
+	//Town ofType (0 1) _string
+	//has_work_condition ofType (0 1) LabRegOnt#Work_Condition
+	//has_contract_type ofType (0 1) LabRegOnt#Contract_Type
+	has_location ofType (0 1) GeoOnt#Location
+	has_job_category ofType (0 1) OccOnt#Occupation
+	has_occupation_qualifications ofType SkillOnt#Skill // jrr
+	belongs_to ofType (1) Candidacy
+	has_activity_sector ofType (0 1) EcoActOnt#Sector
+	has_compensation ofType (0 1) ComOnt#Compensation
+
+concept Offered_Work_Experience	
+	Name_of_the_Employer ofType (1) _string
+	Main_activities ofType (1 *) _string
+	End_Date ofType (1) Time#DateTimeDescription
+	Begin_Date ofType (1) Time#DateTimeDescription
+	Address_of_the_Employer ofType (1) _string
+	has_job_category ofType (1) OccOnt#Occupation
+	belongs_to ofType (1) Candidacy
+	has_activity_sector ofType (1) EcoActOnt#Sector
+
+
+// axioms for reverse relationships
+
+axiom has_education_is_education_of
+definedBy
+	?x[has_education hasValue ?y] memberOf Candidacy :- ?y[EduOnt#is_education_of hasValue ?x] memberOf EduOnt#Education.
+	?x[EduOnt#is_education_of hasValue ?y] memberOf EduOnt#Education :- ?y[has_education hasValue ?x] memberOf Candidacy.
+
+axiom has_mother_tongue_is_mother_tongue_of_Candidacy
+definedBy
+	?x[has_mother_tongue hasValue ?y] memberOf Candidacy :- ?y[LanOnt#is_mother_tongue_of_Candidacy hasValue ?x] memberOf LanOnt#Language.
+	?x[LanOnt#is_mother_tongue_of_Candidacy hasValue ?y] memberOf LanOnt#Language :- ?y[has_mother_tongue hasValue ?x] memberOf Candidacy.
+
+axiom speaks_is_spoken_by_Candidacy
+definedBy
+	?x[speaks hasValue ?y] memberOf Candidacy :- ?y[LanOnt#is_spoken_by_Candidacy hasValue ?x] memberOf LanOnt#Language.
+	?x[LanOnt#is_spoken_by_Candidacy hasValue ?y] memberOf LanOnt#Language :- ?y[speaks hasValue ?x] memberOf Candidacy.
+
+axiom has_objective_belongs_to
+definedBy
+	?x[has_objective hasValue ?y] memberOf Candidacy :- ?y[belongs_to hasValue ?x] memberOf Objective.
+	?x[belongs_to hasValue ?y] memberOf Objective :- ?y[has_objective hasValue ?x] memberOf Candidacy.
+
+axiom has_work_experience_belongs_to
+definedBy
+	?x[has_work_experience hasValue ?y] memberOf Candidacy :- ?y[belongs_to hasValue ?x] memberOf Offered_Work_Experience.
+	?x[belongs_to hasValue ?y] memberOf Offered_Work_Experience :- ?y[has_work_experience hasValue ?x] memberOf Candidacy.
+
+axiom belongs_to_has_candidacy
+definedBy
+	?x[belongs_to hasValue ?y] memberOf Candidacy :- ?y[has_candidacy hasValue ?x] memberOf Job_Seeker.
+	?x[has_candidacy hasValue ?y] memberOf Job_Seeker :- ?y[belongs_to hasValue ?x] memberOf Candidacy.
+
+axiom has_competence_is_competence_of_Candidacy
+definedBy
+	?x[has_competence hasValue ?y] memberOf Candidacy :- ?y[CompOnt#is_competence_of_Candidacy hasValue ?x] memberOf CompOnt#Competence.
+	?x[CompOnt#is_competence_of_Candidacy hasValue ?y] memberOf CompOnt#Competence :- ?y[has_competence hasValue ?x] memberOf Candidacy.
+
+//axiom has_professional_affiliation_is_associated_with_Candidacy
+//definedBy
+//	?x[has_professional_affiliation hasValue ?y] memberOf Candidacy :- ?y[OccOnt#is_associated_with_Candidacy hasValue ?x] memberOf OccOnt#Occupation.
+//	?x[OccOnt#is_associated_with_Candidacy hasValue ?y] memberOf OccOnt#Occupation :- ?y[has_professional_affiliation hasValue ?x] memberOf Candidacy.
+
+axiom has_nationality_from_is_nation_of_Job_Seeker
+definedBy
+	?x[has_nationality_from hasValue ?y] memberOf Candidacy :- ?y[GeoOnt#is_nation_of_Job_Seeker hasValue ?x] memberOf GeoOnt#Country.
+	?x[GeoOnt#is_nation_of_Job_Seeker hasValue ?y] memberOf GeoOnt#Country :- ?y[has_nationality_from hasValue ?x] memberOf Candidacy.
+
+//axiom End_date_is_end_date_of_Candidacy
+//definedBy
+//	?x[End_date hasValue ?y] memberOf Candidacy :- ?y[Time#is_end_date_of_Candidacy hasValue ?x] memberOf Time#DateTimeDescription.
+//	?x[Time#is_end_date_of_Candidacy hasValue ?y] memberOf Time#DateTimeDescription :- ?y[End_date hasValue ?x] memberOf Candidacy.
+
+axiom Begin_date_is_begin_date_of_Candidacy
+definedBy
+	?x[Begin_date hasValue ?y] memberOf Candidacy :- ?y[Time#is_begin_date_of_Candidacy hasValue ?x] memberOf Time#DateTimeDescription.
+	?x[Time#is_end_begin_of_Candidacy hasValue ?y] memberOf Time#DateTimeDescription :- ?y[Begin_date hasValue ?x] memberOf Candidacy.
+
+axiom has_job_category_is_associated_with_ICT_Objective
+definedBy
+	?x[has_job_category hasValue ?y] memberOf ICT_Objective :- ?y[OccOnt#is_associated_with_ICT_Objective hasValue ?x] memberOf OccOnt#Computing_professionals__213.
+	?x[OccOnt#is_associated_with_ICT_Objective hasValue ?y] memberOf OccOnt#Computing_professionals__213 :- ?y[has_job_category hasValue ?x] memberOf ICT_Objective.
+
+axiom Date_of_Birth_is_birth_of_JS
+definedBy
+	?x[Date_of_Birth hasValue ?y] memberOf Job_Seeker :- ?y[Time#is_birth_of_JS hasValue ?x] memberOf Time#DateTimeDescription.
+	?x[Time#is_birth_of_JS hasValue ?y] memberOf Time#DateTimeDescription :- ?y[Date_of_Birth hasValue ?x] memberOf Job_Seeker.
+
+axiom resides_in_is_residence_of_Job_Seeker
+definedBy
+	?x[resides_in hasValue ?y] memberOf Job_Seeker :- ?y[GeoOnt#is_residence_of_Job_Seeker hasValue ?x] memberOf GeoOnt#Country.
+	?x[GeoOnt#is_residence_of_Job_Seeker hasValue ?y] memberOf GeoOnt#Country :- ?y[resides_in hasValue ?x] memberOf Job_Seeker.
+
+axiom marital_status_is_marital_status_of
+definedBy
+	?x[marital_status hasValue ?y] memberOf Job_Seeker :- ?y[is_marital_status_of hasValue ?x] memberOf Marital_Status.
+	?x[is_marital_status_of hasValue ?y] memberOf Marital_Status :- ?y[marital_status hasValue ?x] memberOf Job_Seeker.
+
+//axiom has_work_condition_is_associated_to_Objective
+//definedBy
+//	?x[has_work_condition hasValue ?y] memberOf Objective :- ?y[LabRegOnt#is_associated_to_Objective hasValue ?x] memberOf LabRegOnt#Work_Condition.
+//	?x[LabRegOnt#is_associated_to_Objective hasValue ?y] memberOf LabRegOnt#Work_Condition :- ?y[has_work_condition hasValue ?x] memberOf Objective.
+
+//axiom has_contract_type_is_associated_to_Objective
+//definedBy
+//	?x[has_contract_type hasValue ?y] memberOf Objective :- ?y[LabRegOnt#is_associated_to_Objective hasValue ?x] memberOf LabRegOnt#Contract_Type.
+//	?x[LabRegOnt#is_associated_to_Objective hasValue ?y] memberOf LabRegOnt#Contract_Type :- ?y[has_contract_type hasValue ?x] memberOf Objective.
+
+axiom has_location_is_location_of_Objective
+definedBy
+	?x[has_location hasValue ?y] memberOf Objective :- ?y[GeoOnt#is_location_of_Objective hasValue ?x] memberOf GeoOnt#Location.
+	?x[GeoOnt#is_location_of_Objective hasValue ?y] memberOf GeoOnt#Location :- ?y[has_location hasValue ?x] memberOf Objective.
+
+axiom has_job_category_is_associated_with_Objective
+definedBy
+	?x[has_job_category hasValue ?y] memberOf Objective :- ?y[OccOnt#is_associated_with_Objective hasValue ?x] memberOf OccOnt#Occupation.
+	?x[OccOnt#is_associated_with_Objective hasValue ?y] memberOf OccOnt#Occupation :- ?y[has_job_category hasValue ?x] memberOf Objective.
+
+
+axiom has_occupation_qualifications_is_associated_with_Objective
+definedBy
+	?x[has_occupation_qualifications hasValue ?y] memberOf Objective :- ?y[SkillOnt#is_associated_with_Objective hasValue ?x] memberOf SkillOnt#Skill.
+	?x[SkillOnt#is_associated_with_Objective hasValue ?y] memberOf SkillOnt#Skill :- ?y[has_occupation_qualifications hasValue ?x] memberOf Objective.
+
+
+axiom has_activity_sector_is_associated_with_Objective
+definedBy
+	?x[has_activity_sector hasValue ?y] memberOf Objective :- ?y[EcoActOnt#is_associated_with_Objective hasValue ?x] memberOf EcoActOnt#Sector.
+	?x[EcoActOnt#is_associated_with_Objective hasValue ?y] memberOf EcoActOnt#Sector :- ?y[has_activity_sector hasValue ?x] memberOf Objective.
+
+axiom has_compensation_is_associated_to_Objective
+definedBy
+	?x[has_compensation hasValue ?y] memberOf Objective :- ?y[ComOnt#is_associated_to_Objective hasValue ?x] memberOf ComOnt#Compensation.
+	?x[ComOnt#is_associated_to_Objective hasValue ?y] memberOf ComOnt#Compensation :- ?y[has_compensation hasValue ?x] memberOf Objective.
+
+axiom End_Date_is_end_date_of_OWE
+definedBy
+	?x[End_Date hasValue ?y] memberOf Offered_Work_Experience :- ?y[Time#is_end_date_of_OWE hasValue ?x] memberOf Time#DateTimeDescription.
+	?x[Time#is_end_date_of_OWE hasValue ?y] memberOf Time#DateTimeDescription :- ?y[End_Date hasValue ?x] memberOf Offered_Work_Experience.
+
+axiom Begin_Date_is_begin_date_of_OWE
+definedBy
+	?x[Begin_Date hasValue ?y] memberOf Offered_Work_Experience :- ?y[Time#is_begin_date_of_OWE hasValue ?x] memberOf Time#DateTimeDescription.
+	?x[Time#is_begin_date_of_OWE hasValue ?y] memberOf Time#DateTimeDescription :- ?y[Begin_Date hasValue ?x] memberOf Offered_Work_Experience.
+
+axiom has_job_category_is_associated_with_Offered_Work_Experience
+definedBy
+	?x[has_job_category hasValue ?y] memberOf Offered_Work_Experience :- ?y[OccOnt#is_associated_with_Offered_Work_Experience hasValue ?x] memberOf OccOnt#Occupation.
+	?x[OccOnt#is_associated_with_Offered_Work_Experience hasValue ?y] memberOf OccOnt#Occupation :- ?y[has_job_category hasValue ?x] memberOf Offered_Work_Experience.
+
+axiom has_activity_sector_is_associated_with_Offered_Work_Experience
+definedBy
+	?x[has_activity_sector hasValue ?y] memberOf Offered_Work_Experience :- ?y[EcoActOnt#is_associated_with_Offered_Work_Experience hasValue ?x] memberOf EcoActOnt#Sector.
+	?x[EcoActOnt#is_associated_with_Offered_Work_Experience hasValue ?y] memberOf EcoActOnt#Sector :- ?y[has_activity_sector hasValue ?x] memberOf Offered_Work_Experience.

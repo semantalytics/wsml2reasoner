@@ -1,0 +1,42 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"webode://mccarthy.dia.fi.upm.es/Labour_Regulatory_Eures_Ontology#" , wsml _"http://www.wsmo.org/wsml/wsml-syntax#" ,
+	JobOffOnt _"webode://mccarthy.dia.fi.upm.es/Job_Offer_Eures_Ontology#",
+	JobSeeOnt _"webode://mccarthy.dia.fi.upm.es/Job_Seeker_Eures_Ontology#",
+	Time _"webode://mccarthy.dia.fi.upm.es/Time_Eures_Ontology#"}
+
+ontology Labour_Regulatory_Eures_Ontology
+
+
+importsOntology { JobOffOnt#Job_Offer_Eures_Ontology,
+	JobSeeOnt#Job_Seeker_Eures_Ontology,
+	Time#Time_Eures_Ontology }
+
+
+concept Contract_Type
+	Name ofType (1) _string
+	Description ofType (0 1) _string
+	is_associated_with_Vacancy ofType (0 *) JobOffOnt#Vacancy
+	is_associated_to_Objective ofType (0 *) JobSeeOnt#Objective
+
+concept Work_Condition
+	execution_time ofType (0 1) Time#DurationDescription 
+	hours_week ofType (0 1) Time#DurationDescription  	
+	relocation_required ofType (0 1) JobOffOnt#boolean 
+	is_associated_with_Vacancy ofType (0 *) JobOffOnt#Vacancy
+	is_associated_to_Objective ofType (0 *) JobSeeOnt#Objective
+
+instance PERMANENT_PARTTIME  memberOf Contract_Type
+	Name hasValue "PERMANENT + PART-TIME"	
+
+instance PERMANENT_FULLTIME  memberOf Contract_Type
+	Name hasValue "PERMANENT + FULL-TIME"
+
+instance TEMPORARY_PARTTIME  memberOf Contract_Type
+	Name hasValue "TEMPORARY + PART-TIME"	
+
+instance TEMPORARY_FULLTIME  memberOf Contract_Type
+	Name hasValue "TEMPORARY + FULL-TIME"
+	
+instance Traineeship memberOf Contract_Type
+	Name hasValue "Traineeship"	
+

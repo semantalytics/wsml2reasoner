@@ -28,6 +28,9 @@ import org.wsmo.wsml.ParserException;
 
 public class TestPerformance1 {
 
+	/** How often to repeat the query to get a good average. */
+	public static final int QUERY_REPETITION_COUNT = 4;
+	
     int evalmethod = 2;
 
     /**
@@ -63,6 +66,7 @@ public class TestPerformance1 {
 //    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0070-ontology.wsml"));
 //    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0080-ontology.wsml"));
 //    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0090-ontology.wsml"));
+    	/*
     	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0100-ontology.wsml"));
     	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0200-ontology.wsml"));
     	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0300-ontology.wsml"));
@@ -73,9 +77,112 @@ public class TestPerformance1 {
     	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0800-ontology.wsml"));
     	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-0900-ontology.wsml"));
     	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-1000-ontology.wsml"));
-        boolean printResults = false;
-        
-        String[] reasonerNames = new String[]{"MINS", "IRIS"};
+    	*/
+
+    	// Finds bug in IRIS GlobolStratifier??? Maybe just inefficient with 11,621 rules!
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/EconomicActivityOntology.wsml"));
+    	
+    	
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/EducationOntology.wsml"));
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/EG1.wsml"));
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/GeographyOntology.wsml"));
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/JobOfferOntology.wsml"));
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/JobSeekerOntology.wsml"));
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/LabourRegulatoryOntology.wsml"));
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/LanguageOntology.wsml"));
+
+    	// Null pointer exception
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/checkboolean.wsml"));
+
+    	// Consistency check violation with MINS
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/GeographyOntology.wsml"));
+//		wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/JobOfferOntology.wsml"));
+//		wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/EducationOntology.wsml"));
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/LabourRegulatoryOntology.wsml"));
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/CompensationOntology.wsml"));
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/DrivingLicenseOntology.wsml"));
+    	
+
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/EG1.wsml"));
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/JobSeekerOntology.wsml"));
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/LanguageOntology.wsml"));
+//    	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/CompetenceOntology.wsml"));
+
+    	String[] reasonerNames = new String[ 0 ];
+    	
+    	switch( 1 )
+    	{
+    	case 98:	// nobel
+//    		reasonerNames = new String[]{"IRIS", "KAON", "MINS"};
+    		reasonerNames = new String[]{"MINS", "IRIS", "KAON"};
+    		
+    		wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/nobel.wsml"));
+    		break;
+
+    	case 99:	// For testing Chart
+    		reasonerNames = new String[]{"KAON", "IRIS"};
+    		
+    		wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/LanguageOntology.wsml"));
+        	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/DrivingLicenseOntology.wsml"));
+    		break;
+    		
+    	case 0:	// For IRIS
+    		reasonerNames = new String[]{"IRIS"};
+    		
+        	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/EconomicActivityOntology.wsml"));
+
+//        	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/EG1.wsml"));
+//    		wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/LanguageOntology.wsml"));
+//        	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/DrivingLicenseOntology.wsml"));
+//        	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/JobSeekerOntology.wsml"));
+//        	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/CompetenceOntology.wsml"));
+//        	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/GeographyOntology.wsml"));
+        	break;
+        	
+    	case 1: // For KAON and IRIS
+    		reasonerNames = new String[]{"KAON", "IRIS"};
+    		
+//        	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/EG1.wsml"));
+    		wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/LanguageOntology.wsml"));
+        	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/DrivingLicenseOntology.wsml"));
+        	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/JobSeekerOntology.wsml"));
+        	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/CompetenceOntology.wsml"));
+        	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/GeographyOntology.wsml"));
+        	break;
+
+    	case 2: // For KAON, IRIS and MINS
+    		reasonerNames = new String[]{"KAON", "MINS", "IRIS" };
+    		
+    		// WEIRD!!!!!!!!
+//        	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/EG1.wsml"));
+//    		wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/LanguageOntology.wsml")); // MINS STALLS
+//        	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/DrivingLicenseOntology.wsml")); // MINS Consitency violation
+        	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/JobSeekerOntology.wsml"));
+        	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/CompetenceOntology.wsml"));
+        	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/simple-1000-ontology.wsml"));
+        	break;
+        	
+    	case 3: // For MINS
+    		reasonerNames = new String[]{ "MINS" };
+//        	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/GeographyOntology.wsml")); // Inconsistency
+        	break;
+
+    	case 5: // For KAON, IRIS and MINS
+    		reasonerNames = new String[]{"KAON", "MINS", "IRIS" };
+    		
+    		// WEIRD!!!!!!!!
+// 1       	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/EG1.wsml"));	// Can only be loaded alone
+// 2       	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/JobSeekerOntology.wsml"));
+// 3       	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/CompetenceOntology.wsml"));
+//    		wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/LanguageOntology.wsml")); // MINS inconsistency
+//        	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/DrivingLicenseOntology.wsml")); // MINS Consitency violation
+//        	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/GeographyOntology.wsml")); // Consistency violation
+//        	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/EducationOntology.wsml")); // Consistency violation
+        	break;
+    	}
+
+    	boolean printResults = false;
+       
         Ontology[] ontologies = wsmo4jOntologies.toArray( new Ontology[]{});
         String[] queries = new String[]{"?x memberOf ?y"};
         
@@ -126,7 +233,7 @@ public class TestPerformance1 {
             System.out.println("(" + t1 + "ms)");
             
             Set<Map<Variable, Term>> result = null;
-            int j = 10;
+            int j = QUERY_REPETITION_COUNT;
             for (int i = 0; i < j; i++){
                 System.out.print("Executing query " + i + " of " + j + " ");
                 long t2_start = System.currentTimeMillis();
@@ -176,13 +283,13 @@ public class TestPerformance1 {
                 return (Ontology) identifiable[0];
             }
             else {
-                System.out.println("First Element of file no ontology ");
+                System.out.println("First Element of file '" + file + "' is NOT an ontology ");
                 return null;
             }
 
         }
         catch (Exception e) {
-            System.out.println("Unable to parse ontology: " + e.getMessage());
+            System.out.println("Unable to parse ontology from file ': " + file + "' - " + e.getMessage());
             return null;
         }
     }
