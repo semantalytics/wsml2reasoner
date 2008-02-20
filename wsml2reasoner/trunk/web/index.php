@@ -70,8 +70,9 @@ if( !file_exists( $filelocation ) ) {
     
     <div class="sideBox LHS">
       <div>services</div>
-        <a href="http://tools.deri.org/wsml/rule-reasoner/">online demo</a>
-		<a href="http://tools.deri.org/wsml/rule-reasoner/v0.1/services/ruleReasoner?wsdl">web service</a>
+        <!--<a href="http://tools.deri.org/wsml/rule-reasoner/">online demo</a>-->
+		<a href="demos">online demo</a>
+		<a href="services">web service</a>
 		<!--
         <a href="source">source code</a>
         
