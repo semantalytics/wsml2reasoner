@@ -47,7 +47,7 @@ The framework's flexible architecture allows for easy integration of existing ex
 <a href="http://owl.man.ac.uk/factplusplus/">FaCT++</a>,
 <a href="http://www.racer-systems.com/">RACER</a>,
 <a href="http://www.bell-labs.com/user/pfps/dlp/">DLP</a> or
-<a href="http://www.mindswap.org/2003/pellet/index.shtml">Pellet</a>,
+<a href="http://pellet.owldl.com/">Pellet</a>,
 KAON2 does not implement the tableaux calculus. Rather, reasoning in KAON2 is implemented by
 novel algorithms which reduce a SHIQ(D) knowledge base to a disjunctive datalog program.
 For an overview of these algorithms, please refer to <a href="http://kaon2.semanticweb.org/#kr-paper"><em>Reducing SHIQ- Descrption Logic to Disjunctive Datalog Programs</em></a>.

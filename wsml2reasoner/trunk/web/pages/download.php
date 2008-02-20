@@ -6,22 +6,22 @@
 <p>
 The are four basic release variants in accord to included reasoning engine library license agreements. The actual core WSML2Reasoner code base is LGPL.
 <ul>
-	<li><a href="http://tools.deri.org/wsml2reasoner/releases/v0_6/wsml2reasoner_lgpl-v0_6.zip">LGPL</a> - This release includes the standard LGPL libraries and packages required for WSML2Reasoner, regardless of which underlying reasoning engine is chosen. In addtion to these core libraries, the IRIS and PELLET libraries are included. A single WSML2Reasoner <a href="http://tools.deri.org/wsml2reasoner/releases/v0_6/wsml2reasoner_lgpl-v0_6.jar">jar</a> (without the necessary libraries) is also provided.  
+	<li><a href="http://tools.deri.org/wsml2reasoner/releases/v0_6/wsml2reasoner_lgpl-v0_6_1_1.zip">LGPL</a> - This release includes the standard LGPL libraries and packages required for WSML2Reasoner, regardless of which underlying reasoning engine is chosen. In addition to these core libraries, the IRIS and PELLET libraries are included. A single WSML2Reasoner <a href="http://tools.deri.org/wsml2reasoner/releases/v0_6/wsml2reasoner_lgpl-v0_6_1.jar">jar</a> (without the necessary libraries) is also provided.  
 	</li>
-	<li><a href="http://tools.deri.org/wsml2reasoner/releases/v0_6/wsml2reasoner_gpl-v0_6.zip">GPL</a>  - In addition to the LGPL libraries and packages, this release includes the MINS jar. A single WSML2Reasoner <a href="http://tools.deri.org/wsml2reasoner/releases/v0_6/wsml2reasoner_gpl-v0_6.jar">jar</a> (without the necessary libraries) is also provided.</li>
-	<li><a href="http://tools.deri.org/wsml2reasoner/releases/v0_6/wsml2reasoner_noncommercial-v0_6.zip">Non-commercial</a> - In addition to the GPL libraries and packages, this release includes the KAON2 libraries and packages, which are available free of charge for universities for noncommecial academic usage (national laboratories are not considered universities). For commercial purposes, there is a commercial version of KAON2 called <a href="http://www.ontoprise.de/ontobrokerowl">OntoBroker OWL</a>. By downloading KAON2, you accept these license agreements.
+	<li><a href="http://tools.deri.org/wsml2reasoner/releases/v0_6/wsml2reasoner_gpl-v0_6_1.zip">GPL</a>  - In addition to the LGPL libraries and packages, this release includes the MINS jar. A single WSML2Reasoner <a href="http://tools.deri.org/wsml2reasoner/releases/v0_6/wsml2reasoner_gpl-v0_6_1.jar">jar</a> (without the necessary libraries) is also provided.</li>
+	<li><a href="http://tools.deri.org/wsml2reasoner/releases/v0_6/wsml2reasoner_noncommercial-v0_6_1.zip">Non-commercial</a> - In addition to the GPL libraries and packages, this release includes the KAON2 libraries and packages, which are available free of charge for universities for noncommecial academic usage (national laboratories are not considered universities). For commercial purposes, there is a commercial version of KAON2 called <a href="http://www.ontoprise.de/ontobrokerowl">OntoBroker OWL</a>. By downloading KAON2, you accept these license agreements.
 	</li>
-	<li><a href="http://tools.deri.org/wsml2reasoner/releases/v0_6/wsml2reasoner_sdk-v0_6.zip">SDK</a> - This release is an uncompiled version of the entire WSML2Reasoner project. It includes all GPL files plus test files, as well as several other additional libraries that are currently being tested, but have yet to reach a mature, stable level necessary for a proper release. The SDK should also be considered a non-commercial release.
+	<li><a href="http://tools.deri.org/wsml2reasoner/releases/v0_6/wsml2reasoner_sdk-v0_6_1.zip">SDK</a> - This release is an uncompiled version of the entire WSML2Reasoner project. It includes all GPL files plus test files, as well as several other additional libraries that are currently being tested, but have yet to reach a mature, stable level necessary for a proper release. The SDK should also be considered a non-commercial release.
 	</li>
 </ul>
 </p>
 </div>
 <div>
-Below are the current <b>0.6</b> release variants, including source code distributions (_src):<br><br>
+Below are the current <b>0.6.1</b> release variants, including source code distributions (_src):<br><br>
 	<div style="width:50em; background-color:#eee;border:1px black solid;">
 	
 	<?
-		$lines = file('http://tools.deri.org/wsml2reasoner/releases/v0_6/');
+		$lines = file('http://tools.deri.org/wsml2reasoner/releases/v0_6_1/');
 		// Loop through our array, show HTML source as HTML source; and line numbers too.
 		$content=false;
 		foreach ($lines as $line_num => $line) {
@@ -29,7 +29,7 @@ Below are the current <b>0.6</b> release variants, including source code distrib
 			if (str_contains($line,"<table>")) $content=true;
 			if (str_contains($line,"<address>")) $content=false;
 			if ($content) {
-			 echo ereg_replace("href=\"/?([^/][^\"]+)", "href=\"/wsml2reasoner/releases/v0_6/\\1", $line);	
+			 echo ereg_replace("href=\"/?([^/][^\"]+)", "href=\"/wsml2reasoner/releases/v0_6_1/\\1", $line);	
 			}
 		}
 		
