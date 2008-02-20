@@ -103,7 +103,6 @@
 	</patternset>
 	
 	<patternset id="lgpl-packages">
-		<include name= "**/*.*" />
 		<exclude name= "**/mins/"/>
 	</patternset>
 			
