@@ -68,9 +68,9 @@ public class SatisfiablityTest extends BaseReasonerTest {
        wsmlReasoner.registerOntology(ontology);       
        
 		// test ontology satisfiability
-		assertTrue(wsmlReasoner.isSatisfiable((IRI) ontology.getIdentifier()));
+		assertTrue(wsmlReasoner.isSatisfiable());
 		
-		wsmlReasoner.deRegisterOntology((IRI) ontology.getIdentifier());
+		wsmlReasoner.deRegister();
 	}
 	
     

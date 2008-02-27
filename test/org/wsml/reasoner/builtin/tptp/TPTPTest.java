@@ -51,9 +51,9 @@ public class TPTPTest extends BaseReasonerTest{
             "subConceptof(_\"urn:/Foo\",  Animal)",nsContainer);
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
-        tptp.register("abc", set);
+        tptp.register(set);
 
-        String fol = tptp.convertedOntologies.get("abc");
+        String fol = tptp.convertedOntology;
         assertTrue(fol.contains("subConceptof(foo,animal)"));
         
 //        Pattern pattern = Pattern.compile("c.*\\[.*r1.*hasValue.*v1.*\\].*and.*c.*\\[.*r3.*hasValue.*v3.*].*and.*c.*\\[.*r2.*hasValue.*v2.*\\].*", Pattern.DOTALL);
@@ -68,9 +68,9 @@ public class TPTPTest extends BaseReasonerTest{
             " implies subConceptof(?x,?z)) ",nsContainer);
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
-        tptp.register("abc", set);
+        tptp.register(set);
 
-        String fol = tptp.convertedOntologies.get("abc");
+        String fol = tptp.convertedOntology;
 //        System.out.println(fol);
 
         Pattern pattern = Pattern.compile("! \\[Z,Y,X\\] :"+
@@ -85,9 +85,9 @@ public class TPTPTest extends BaseReasonerTest{
             "a and b or c ",nsContainer);
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
-        tptp.register("abc", set);
+        tptp.register( set);
         
-        String fol = tptp.convertedOntologies.get("abc");
+        String fol = tptp.convertedOntology;
 //        System.out.println(fol);
         Pattern pattern = Pattern.compile(
                 "\\(\\(\\(a.*&.*b\\).*|.*c\\)\\)");
@@ -100,10 +100,10 @@ public class TPTPTest extends BaseReasonerTest{
             "a or neg a",nsContainer);
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
-        tptp.register("abc", set);
+        tptp.register( set);
 
 
-        String fol = tptp.convertedOntologies.get("abc");
+        String fol = tptp.convertedOntology;
 //      System.out.println(fol);
         Pattern pattern = Pattern.compile(
                   "a.*|.*\\~.*a");
@@ -117,9 +117,9 @@ public class TPTPTest extends BaseReasonerTest{
             "a(f(b(c,d,e)))",nsContainer);
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
-        tptp.register("abc", set);
+        tptp.register( set);
         
-        String fol = tptp.convertedOntologies.get("abc");
+        String fol = tptp.convertedOntology;
       
         assertTrue(fol.contains("(a(f(b(c,d,e)"));
 

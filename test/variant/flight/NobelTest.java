@@ -255,8 +255,7 @@ public class NobelTest {
 		LogicalExpression query = this.leFactory.createLogicalExpression(
 				queryString, o);
 		// Executes query request
-		Set<Map<Variable, Term>> result = reasoner.executeQuery((IRI) o
-				.getIdentifier(), query);
+		Set<Map<Variable, Term>> result = reasoner.executeQuery(query);
 
 		return result;
 	}

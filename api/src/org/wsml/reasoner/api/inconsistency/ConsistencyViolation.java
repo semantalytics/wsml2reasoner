@@ -7,23 +7,15 @@ import org.omwg.ontology.Instance;
 import org.omwg.ontology.Type;
 import org.omwg.ontology.Value;
 import org.omwg.ontology.WsmlDataType;
-import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 
 public class ConsistencyViolation {
-    
-    private IRI ontologyIRI;
 
-    public IRI getOntologyIRI() {
-        return ontologyIRI;
-    }
-
-    public ConsistencyViolation(IRI ontologyIRI) {
-        this.ontologyIRI = ontologyIRI;
+    public ConsistencyViolation() {
     }
     
     public String toString(){
-        return "ConsitencyViolation at ontology: " + ontologyIRI.toString();
+        return "Consitency Violation!!";
     }
     
     protected static String toString(Type t, TopEntity te){

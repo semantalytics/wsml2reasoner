@@ -6,8 +6,6 @@ import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Type;
-import org.omwg.ontology.Value;
-import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 
 public class AttributeTypeViolation extends ConsistencyViolation {
@@ -38,16 +36,16 @@ public class AttributeTypeViolation extends ConsistencyViolation {
         return violatingValue;
     }
 
-    public AttributeTypeViolation(IRI ontologyIri, Instance instance, Term violatingValue, Attribute attribute, Type expectedType) {
-        super(ontologyIri);
+    public AttributeTypeViolation(Instance instance, Term violatingValue, Attribute attribute, Type expectedType) {
+        super();
         this.instance = instance;
         this.violatingValue = violatingValue;
         this.attribute = attribute;
         this.expectedType = expectedType;
     }
 
-    public AttributeTypeViolation(Ontology ontology, ConstructedTerm ctInstance, Term violatingValue, Attribute attribute, Type expectedType) {
-        super((IRI)ontology.getIdentifier());
+    public AttributeTypeViolation(ConstructedTerm ctInstance, Term violatingValue, Attribute attribute, Type expectedType) {
+        super();
         this.ctInstance = ctInstance;
         this.violatingValue = violatingValue;
         this.attribute = attribute;

@@ -1,12 +1,10 @@
 package org.wsml.reasoner.api.inconsistency;
 
-import org.wsmo.common.IRI;
 
 public class UnNamedUserConstraintViolation extends UserConstraintViolation {
 
-
-    public UnNamedUserConstraintViolation(IRI ontologyIri) {
-        super(ontologyIri);
+    public UnNamedUserConstraintViolation() {
+        super();
     }
 
     public String toString(){

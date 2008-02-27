@@ -33,6 +33,7 @@ import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
+import org.wsmo.common.Entity;
 
 public class AnonymousIDReplacementTest extends BaseNormalizationTest
 {
@@ -45,7 +46,7 @@ public class AnonymousIDReplacementTest extends BaseNormalizationTest
         //in order to keep track of cyclic imports
         Set<Ontology> importedOntologies = new HashSet<Ontology>();
         WSMO4JManager wmsoManager = new WSMO4JManager();
-        axiomatizationNormalizer = new AxiomatizationNormalizer(wmsoManager, importedOntologies);
+        axiomatizationNormalizer = new AxiomatizationNormalizer(wmsoManager);
         reductionNormalizer = new ConstructReductionNormalizer(wmsoManager);
     }
 
@@ -83,13 +84,33 @@ public class AnonymousIDReplacementTest extends BaseNormalizationTest
         System.out.println(serializeOntology(ontology)+"\n\n\n-------------\n\n\n");
         
         // normalize ontology with the LEConstructReductionNormalizer:
-        Ontology normOnt = axiomatizationNormalizer.normalize(ontology);
-        normOnt = reductionNormalizer.normalize(normOnt);
+        Set <Entity> entities = new HashSet <Entity>();
+    	entities.addAll(ontology.listConcepts());
+    	entities.addAll(ontology.listInstances());
+    	entities.addAll(ontology.listRelations());
+    	entities.addAll(ontology.listRelationInstances());
+    	entities.addAll(ontology.listAxioms());
+        
+        Set <Entity> entitiesAsAxioms = axiomatizationNormalizer.normalizeEntities(entities);
+        
+        Set <Axiom> axioms = new HashSet <Axiom> ();
+        for (Entity e : entities){
+        	if (e instanceof Axiom){
+        		axioms.add((Axiom) e);
+        	}
+        }
+        
+        axioms = reductionNormalizer.normalizeAxioms(axioms);
+        
+        Ontology o = wsmoFactory.createOntology( wsmoFactory.createIRI( "http://www.AnonymousIDReplacementTestOntology.com" ) );
+        for (Axiom a : axioms){
+        	o.addAxiom(a);
+        }
 
         // test whether produced expression is correct
         // by means of regular expressions matched against serialized result
         // ontology:
-        String normString = serializeOntology(normOnt);
+        String normString = serializeOntology(o);
         System.out.println(normString);
         Pattern pattern = Pattern.compile("Arathorn.*livesAt.*(anonymous.*).*and.*\\1.*memberOf.*Location", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(normString);

@@ -28,7 +28,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.AttributeConstraintMolecule;
 import org.omwg.logicalexpression.AttributeInferenceMolecule;
@@ -54,7 +53,6 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.DataValue;
-import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.omwg.ontology.WsmlDataType;
 import org.semanticweb.owl.model.OWLAnd;
@@ -153,13 +151,13 @@ public class WSMLDL2OWLTransformer implements Visitor{
      * @throws OWLException
      */
     
-	public OWLOntology transform(Ontology ontology) 
+	public OWLOntology transform(Set <Axiom> theAxioms) 
 			throws OWLException {
 
     	// Collect all logical expressions from all axioms into one Set
         Set<LogicalExpression> logExprs = new LinkedHashSet
         		<LogicalExpression>();
-        for (Object axiom : ontology.listAxioms()) {
+        for (Object axiom : theAxioms) {
             logExprs.addAll(((Axiom) axiom).listDefinitions());
         }
         

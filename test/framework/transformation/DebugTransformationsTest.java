@@ -3,11 +3,15 @@ package framework.transformation;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.ConstraintReplacementNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
+import org.wsmo.common.Entity;
+import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.common.exception.SynchronisationException;
 
 import framework.normalization.BaseNormalizationTest;
 
@@ -22,7 +26,7 @@ public class DebugTransformationsTest extends BaseNormalizationTest
         //in order to keep track of cyclic imports
         Set<Ontology> importedOntologies = new HashSet<Ontology>();
         WSMO4JManager wmsoManager = new WSMO4JManager();
-        axiomatizationNormalizer = new AxiomatizationNormalizer(wmsoManager, importedOntologies);
+        axiomatizationNormalizer = new AxiomatizationNormalizer(wmsoManager);
         debuggingNormalizer = new ConstraintReplacementNormalizer(wmsoManager);
 
     }
@@ -32,7 +36,7 @@ public class DebugTransformationsTest extends BaseNormalizationTest
     	super.tearDown();
     }
     
-    public void testAxiomIDGeneration()
+    public void testAxiomIDGeneration() throws SynchronisationException, InvalidModelException
     {
         Ontology ontology = null;
         try
@@ -43,8 +47,30 @@ public class DebugTransformationsTest extends BaseNormalizationTest
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        Ontology normOnt = axiomatizationNormalizer.normalize(ontology);
-        normOnt = debuggingNormalizer.normalize(normOnt);
-        System.out.println(serializeOntology(normOnt));
+        
+        Set <Entity> entities = new HashSet <Entity>();
+    	entities.addAll(ontology.listConcepts());
+    	entities.addAll(ontology.listInstances());
+    	entities.addAll(ontology.listRelations());
+    	entities.addAll(ontology.listRelationInstances());
+    	entities.addAll(ontology.listAxioms());
+        
+    	Set <Entity> entitiesAsAxioms = axiomatizationNormalizer.normalizeEntities( entities );
+    	
+    	Set <Axiom> axioms = new HashSet <Axiom> ();
+        for (Entity e : entities){
+        	if (e instanceof Axiom){
+        		axioms.add((Axiom) e);
+        	}
+        }
+    	
+        axioms = debuggingNormalizer.normalizeAxioms(axioms);
+        
+        Ontology o = wsmoFactory.createOntology( wsmoFactory.createIRI( "http://www.AnonymousIDReplacementTestOntology.com" ) );
+        for (Axiom a : axioms){
+        	o.addAxiom(a);
+        }
+        
+        System.out.println(serializeOntology(o));
     }
 }

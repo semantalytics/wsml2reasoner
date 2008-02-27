@@ -77,14 +77,14 @@ public class RegisterMultipleTimes  extends BaseReasonerTest  {
         for (int i = 0; i < 50; i++) {
             // ///////////ONTOLOGY 0
             reasoner.registerOntology(ont0);
-            result = reasoner.executeQuery((IRI) ont0.getIdentifier(), query);
-            reasoner.deRegisterOntology((IRI) ont0.getIdentifier());
+            result = reasoner.executeQuery(query);
+            reasoner.deRegister();
             assertEquals("failed in run:"+i,1,result.size());
 
             // ///////////ONTOLOGY 1
             reasoner.registerOntology(ont1);
-            result = reasoner.executeQuery((IRI) ont1.getIdentifier(), query);
-            reasoner.deRegisterOntology((IRI) ont1.getIdentifier());
+            result = reasoner.executeQuery(query);
+            reasoner.deRegister();
             assertEquals("failed in run:"+i,1, result.size());
 
         }
@@ -116,8 +116,8 @@ public class RegisterMultipleTimes  extends BaseReasonerTest  {
             Set<Map<Variable, Term>> result = null;
             // with 2 instances
             reasoner.registerOntology(o);
-            result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
-            reasoner.deRegisterOntology((IRI) o.getIdentifier());
+            result = reasoner.executeQuery(query);
+            reasoner.deRegister();
             assertEquals("failure in run "+i ,2,o.listInstances().size());
             assertEquals("failure in run "+i ,2,result.size());
             
@@ -125,8 +125,8 @@ public class RegisterMultipleTimes  extends BaseReasonerTest  {
             o.removeInstance(instance);
             // with 1 instance
             reasoner.registerOntology(o);
-            result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
-            reasoner.deRegisterOntology((IRI) o.getIdentifier());
+            result = reasoner.executeQuery(query);
+            reasoner.deRegister();
             assertEquals("failure in run "+i ,1,o.listInstances().size());
             assertEquals("failure in run "+i ,1,result.size());
             o.addInstance(instance);

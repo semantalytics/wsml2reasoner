@@ -98,39 +98,34 @@ public class CycleTests extends TestCase {
         
         // test getSubConcepts
 		Set<Concept> set = new HashSet<Concept>();
-		set = wsmlReasoner.getSubConcepts((IRI) ontology.getIdentifier(),  
-				ontology.findConcept(wsmoFactory.createIRI(ns + "place")));
+		set = wsmlReasoner.getSubConcepts(ontology.findConcept(wsmoFactory.createIRI(ns + "place")));
 //		for (Concept concept : set)
 //			System.out.println(concept.getIdentifier().toString());
 		assertTrue(set.size() == 5);
 		   
         // test getDirectSubConcepts
-		set = wsmlReasoner.getDirectSubConcepts((IRI) ontology.getIdentifier(),  
-				ontology.findConcept(wsmoFactory.createIRI(ns + "place")));
+		set = wsmlReasoner.getDirectSubConcepts(ontology.findConcept(wsmoFactory.createIRI(ns + "place")));
 //		for (Concept concept : set)
 //			System.out.println(concept.getIdentifier().toString());
 		assertTrue(set.size() == 3);
 		
 		// test getSuperConcepts
 		set.clear();
-		set = wsmlReasoner.getSuperConcepts((IRI) ontology.getIdentifier(), 
-				ontology.findConcept(wsmoFactory.createIRI(ns + "place")));
+		set = wsmlReasoner.getSuperConcepts(ontology.findConcept(wsmoFactory.createIRI(ns + "place")));
 //		for (Concept concept : set)
 //			System.out.println(concept.getIdentifier().toString());
 		assertTrue(set.size() == 3);
 		
 		// test getDirectSuperConcepts
 		set.clear();
-		set = wsmlReasoner.getDirectSuperConcepts((IRI) ontology.getIdentifier(), 
-				ontology.findConcept(wsmoFactory.createIRI(ns + "place")));
+		set = wsmlReasoner.getDirectSuperConcepts(ontology.findConcept(wsmoFactory.createIRI(ns + "place")));
 //		for (Concept concept : set)
 //			System.out.println(concept.getIdentifier().toString());
 		assertTrue(set.size() == 1);
         
 		// test getDirectConceptsOf
 		set.clear();
-		set = wsmlReasoner.getDirectConcepts((IRI) ontology.getIdentifier(), 
-				ontology.findInstance(wsmoFactory.createIRI(ns + "springfield_elementary")));
+		set = wsmlReasoner.getDirectConcepts(ontology.findInstance(wsmoFactory.createIRI(ns + "springfield_elementary")));
 //		for (Concept concept : set)
 //			System.out.println(concept.getIdentifier().toString());
 		assertTrue(set.size() == 1);

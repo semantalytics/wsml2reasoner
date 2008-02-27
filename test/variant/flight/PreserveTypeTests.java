@@ -81,8 +81,7 @@ public class PreserveTypeTests extends BaseReasonerTest {
                 query, o);
         logExprSerializer.serialize(qExpression);
         
-        Set<Map<Variable, Term>> result = wsmlReasoner.executeQuery((IRI) o
-                .getIdentifier(), qExpression);
+        Set<Map<Variable, Term>> result = wsmlReasoner.executeQuery(qExpression);
         
         for (Map<Variable, Term> binding : result) {
         	SimpleDataValueImpl shouldBeDecimal = (SimpleDataValueImpl) 

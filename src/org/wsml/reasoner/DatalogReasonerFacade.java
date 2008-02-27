@@ -48,7 +48,7 @@ public interface DatalogReasonerFacade {
      * @throws ExternalToolException
      *             if some exception happens during ontology registration
      */
-    public void register(String ontologyURI, Set<Rule> kb)
+    public void register(Set<Rule> kb)
             throws ExternalToolException;
 
     /**
@@ -59,7 +59,7 @@ public interface DatalogReasonerFacade {
      * @throws ExternalToolException
      *             if exception happens during ontology removal
      */
-    public void deregister(String ontologyURI) throws ExternalToolException;
+    public void deregister() throws ExternalToolException;
 
     /**
      * Evaluates a given query on a particular external tool.
@@ -74,8 +74,7 @@ public interface DatalogReasonerFacade {
      *             in case that some error occurs during the execution of the
      *             query
      */
-    public Set<Map<Variable, Term>> evaluate(ConjunctiveQuery q,
-            String ontologyURI) throws ExternalToolException;
+    public Set<Map<Variable, Term>> evaluate(ConjunctiveQuery q) throws ExternalToolException;
     
     /**
      * Checks whether query1 is contained within query2.
@@ -89,7 +88,7 @@ public interface DatalogReasonerFacade {
      * @return true when query1 is contained within query2, false otherwise.
      */
     public boolean checkQueryContainment(ConjunctiveQuery query1,
-    		ConjunctiveQuery query2, String ontologyURI);
+    		ConjunctiveQuery query2);
     
     /**
      * Checks whether query1 is contained within query2 and returns the 
@@ -106,7 +105,7 @@ public interface DatalogReasonerFacade {
      * @throws ExternalToolException 
      */
     public Set<Map<Variable, Term>> getQueryContainment(ConjunctiveQuery query1,
-    		ConjunctiveQuery query2, String ontologyURI) 
+    		ConjunctiveQuery query2) 
     		throws ExternalToolException;
 
 }

@@ -80,7 +80,7 @@ public class BuiltInDateTimeTest extends BaseReasonerTest {
        System.out.println(qExpression.toString());
        System.out.println("\n\nExpecting " + expected.size() + " results...\n");
        Set<Map<Variable, Term>> result = wsmlReasoner.executeQuery(
-    		   (IRI) ontology.getIdentifier(), qExpression);
+    		   qExpression);
        System.out.println("Found < " + result.size() + " > results to the query:\n");
       
        // assert that expected result set size equals actual result set size
@@ -96,7 +96,7 @@ public class BuiltInDateTimeTest extends BaseReasonerTest {
        assertTrue(resultSet.contains(nsp + "Anna"));
        assertTrue(resultSet.contains(nsp + "Chris"));
 		
-       wsmlReasoner.deRegisterOntology((IRI) ontology.getIdentifier());
+       wsmlReasoner.deRegister();
 	}
 	
     @Override

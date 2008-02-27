@@ -94,7 +94,7 @@ public class DataValuesTest extends BaseNormalizationTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		System.out.println(writer.toString());
 		assertTrue(writer.toString().contains(
@@ -112,7 +112,7 @@ public class DataValuesTest extends BaseNormalizationTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		System.out.println(writer.toString());
 		assertTrue(writer.toString().contains(
@@ -130,7 +130,7 @@ public class DataValuesTest extends BaseNormalizationTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		System.out.println(writer.toString());
 		assertTrue(writer.toString().contains(
@@ -148,7 +148,7 @@ public class DataValuesTest extends BaseNormalizationTest {
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		System.out.println(writer.toString());
 		assertTrue(writer.toString().contains(
@@ -166,7 +166,7 @@ public class DataValuesTest extends BaseNormalizationTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		System.out.println(writer.toString());
 		assertTrue(writer.toString().contains(
@@ -184,7 +184,7 @@ public class DataValuesTest extends BaseNormalizationTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		System.out.println(writer.toString());
 		assertTrue(writer.toString().contains(
@@ -204,7 +204,7 @@ public class DataValuesTest extends BaseNormalizationTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		System.out.println(writer.toString());
 		assertTrue(writer.toString().contains(
@@ -222,7 +222,7 @@ public class DataValuesTest extends BaseNormalizationTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		System.out.println(writer.toString());
 		assertTrue(writer.toString().contains(
@@ -240,7 +240,7 @@ public class DataValuesTest extends BaseNormalizationTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		System.out.println(writer.toString());
 		assertTrue(writer.toString().contains(
@@ -258,7 +258,7 @@ public class DataValuesTest extends BaseNormalizationTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		System.out.println(writer.toString());
 		assertTrue(writer.toString().contains(
@@ -276,7 +276,7 @@ public class DataValuesTest extends BaseNormalizationTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		System.out.println(writer.toString());
 		assertTrue(writer.toString().contains(
@@ -294,7 +294,7 @@ public class DataValuesTest extends BaseNormalizationTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		System.out.println(writer.toString());
 		assertTrue(writer.toString().contains(
@@ -312,7 +312,7 @@ public class DataValuesTest extends BaseNormalizationTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		System.out.println(writer.toString());
 		assertTrue(writer.toString().contains(
@@ -330,7 +330,7 @@ public class DataValuesTest extends BaseNormalizationTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		System.out.println(writer.toString());
 		assertTrue(writer.toString().contains(
@@ -348,7 +348,7 @@ public class DataValuesTest extends BaseNormalizationTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		System.out.println(writer.toString());
 		assertTrue(writer.toString().contains(
@@ -366,7 +366,7 @@ public class DataValuesTest extends BaseNormalizationTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		System.out.println(writer.toString());
 		assertTrue(writer.toString().contains(
@@ -384,7 +384,7 @@ public class DataValuesTest extends BaseNormalizationTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		System.out.println(writer.toString());
 		assertTrue(writer.toString().contains(
@@ -402,7 +402,7 @@ public class DataValuesTest extends BaseNormalizationTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		System.out.println(writer.toString());
 		assertTrue(writer.toString().contains(
@@ -420,7 +420,7 @@ public class DataValuesTest extends BaseNormalizationTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		System.out.println(writer.toString());
 		assertTrue(writer.toString().contains(
@@ -438,7 +438,7 @@ public class DataValuesTest extends BaseNormalizationTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		System.out.println(writer.toString());
 		assertTrue(writer.toString().contains(
@@ -456,7 +456,7 @@ public class DataValuesTest extends BaseNormalizationTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		System.out.println(writer.toString());
 		assertTrue(writer.toString().contains(
@@ -474,7 +474,7 @@ public class DataValuesTest extends BaseNormalizationTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		System.out.println(writer.toString());
 		assertTrue(writer.toString().contains(

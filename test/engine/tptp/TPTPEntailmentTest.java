@@ -77,20 +77,20 @@ public class TPTPEntailmentTest extends BaseReasonerTest {
         LogicalExpression conjecture = leFactory.createLogicalExpression(
                 "Lisa[hasAncestor hasValue GrandPa]",ont);
         EntailmentType result = wsmlReasoner.checkEntailment(
-                (IRI)ont.getIdentifier(), conjecture);
+                conjecture);
         assertEquals(EntailmentType.entailed, result);
         
         
         conjecture = leFactory.createLogicalExpression(
                 "exists ?x (?x[hasChild hasValue someChild])",ont);
         result = wsmlReasoner.checkEntailment(
-                (IRI)ont.getIdentifier(), conjecture);
+                conjecture);
         assertEquals(EntailmentType.entailed, result);
         
         conjecture = leFactory.createLogicalExpression(
                 "exists ?x (March[hasChild hasValue ?x])",ont);
         result = wsmlReasoner.checkEntailment(
-                (IRI)ont.getIdentifier(), conjecture);
+                conjecture);
         assertEquals(EntailmentType.entailed, result);
     }
     

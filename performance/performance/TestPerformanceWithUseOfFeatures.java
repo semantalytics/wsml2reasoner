@@ -399,7 +399,7 @@ public class TestPerformanceWithUseOfFeatures {
         
         log.print("Deregistering Ontology ");
         long t3_start = System.currentTimeMillis();
-        reasoner.deRegisterOntology((IRI) theOntology.getIdentifier());
+        reasoner.deRegister();
         long t3_end = System.currentTimeMillis();
         long t3 = t3_end - t3_start;
         log.println("(" + t3 + "ms)");
@@ -534,7 +534,7 @@ class QueryThread extends MyThread {
 	public void run() {
 		try{
 		    long t2_start = System.currentTimeMillis();
-		    Set<Map<Variable, Term>> result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
+		    Set<Map<Variable, Term>> result = reasoner.executeQuery(query);
 		    log.print("  size: "+result.size());
 		    resultLog.printlnLogFile("Size of result set: "+result.size());
 		    if (!result.isEmpty()){

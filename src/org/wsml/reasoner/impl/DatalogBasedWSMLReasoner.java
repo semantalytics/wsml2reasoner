@@ -30,7 +30,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
@@ -74,6 +73,7 @@ import org.wsml.reasoner.transformation.le.MoleculeDecompositionRules;
 import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
 import org.wsml.reasoner.transformation.le.TopDownLESplitter;
 import org.wsml.reasoner.transformation.le.TransformationRule;
+import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.exception.InvalidModelException;
@@ -105,7 +105,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 
     protected WSMO4JManager wsmoManager;
     
-    public static int allowImports = 0;
+    private int allowImports = 0;
     
     private boolean disableConsitencyCheck = false;
 
@@ -189,8 +189,8 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     }
     
 	public void setAllowImports(int allowOntoImports){
-    		allowImports = allowOntoImports;
-    	}
+		this.allowImports = allowOntoImports;
+	}
 
 	protected long getNormalizationTime() {
     	return normTime;
@@ -204,173 +204,162 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     	return consTime;
     }
   
-    protected Set<org.wsml.reasoner.Rule> convertOntology(Ontology o, Set<Ontology> processedOntologies) {
+    protected Set<org.wsml.reasoner.Rule> convertEntities(Set <Entity> theEntities) {
     	Set<org.wsml.reasoner.Rule> p = new HashSet <org.wsml.reasoner.Rule> ();
-    	if (!processedOntologies.contains(o)){
-	        Ontology normalizedOntology;
-	
-	        // TODO Check whether ontology import is currently handled
-	
-	        long normTime_start = System.currentTimeMillis();
-	            
-	        // handle inherited attributes
-	        normalizedOntology = handleAttributeInheritance(o);   
-//	        System.out.println("\n-------\n Ontology after Normalization:\n" +
-//	        BaseNormalizationTest.serializeOntology(normalizedOntology));
-	        
-	        // Convert conceptual syntax to logical expressions
-	        OntologyNormalizer normalizer = new AxiomatizationNormalizer(wsmoManager, processedOntologies);
-	        normalizedOntology = normalizer.normalize(normalizedOntology);
-	//      System.out.println("\n-------\n Ontology after Normalization:\n" +
-	//      BaseNormalizationTest.serializeOntology(normalizedOntology));
-	
-	        // Convert constraints to support debugging
-	        normalizer = new ConstraintReplacementNormalizer(wsmoManager);
-	        normalizedOntology = normalizer.normalize(normalizedOntology);
-	//        System.out.println("\n-------\n Ontology after constraints:\n" +
-	//        BaseNormalizationTest.serializeOntology(normalizedOntology));
-	
-	        // Simplify axioms
-	        normalizer = new ConstructReductionNormalizer(wsmoManager);
-	        normalizedOntology = normalizer.normalize(normalizedOntology);
-	//        System.out.println("\n-------\n Ontology after simplification:\n" +
-	//        BaseNormalizationTest.serializeOntology(normalizedOntology));
-	
-	        // Apply Lloyd-Topor rules to get Datalog-compatible LEs
-	        normalizer = new LloydToporNormalizer(wsmoManager);
-	        normalizedOntology = normalizer.normalize(normalizedOntology);
-	//        System.out.println("\n-------\n Ontology after Lloyd-Topor:\n" +
-	//        BaseNormalizationTest.serializeOntology(normalizedOntology));
-	        
-	        org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
-	                wsmoManager);
-	        Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
-	        for (Object a : normalizedOntology.listAxioms()) {
-	            lExprs.addAll(((Axiom) a).listDefinitions());
-	        }
-	//        System.out.println(lExprs);
-	        
-	        p = wsml2datalog.transform(lExprs);
-	        p.addAll(wsml2datalog.generateAuxilliaryRules());
-	
-	        long normTime_end = System.currentTimeMillis();
-	        normTime = normTime_end - normTime_start;
-	        
-	        // System.out.println("datalog program:");
-	        // System.out.println(p);
-	        // System.out.println("-*");
-    	}
+
+        long normTime_start = System.currentTimeMillis();  
+        
+        Set <Entity> entities = handleAttributeInheritance(theEntities);
+        
+        // Convert conceptual syntax to logical expressions
+        OntologyNormalizer normalizer = new AxiomatizationNormalizer(wsmoManager);
+        entities = normalizer.normalizeEntities(entities);
+
+        Set <Axiom> axioms = new HashSet <Axiom> ();
+        for (Entity e : entities){
+        	if (e instanceof Axiom){
+        		axioms.add((Axiom) e);
+        	}
+        }
+        
+        // Convert constraints to support debugging
+        normalizer = new ConstraintReplacementNormalizer(wsmoManager);
+        axioms = normalizer.normalizeAxioms(axioms);
+
+        // Simplify axioms
+        normalizer = new ConstructReductionNormalizer(wsmoManager);
+        axioms = normalizer.normalizeAxioms(axioms);
+
+        // Apply Lloyd-Topor rules to get Datalog-compatible LEs
+        normalizer = new LloydToporNormalizer(wsmoManager);
+        axioms = normalizer.normalizeAxioms(axioms);
+        
+        org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
+                wsmoManager);
+        Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
+        for (Axiom a : axioms) {
+            lExprs.addAll(a.listDefinitions());
+        }
+//        System.out.println(lExprs);
+        
+        p = wsml2datalog.transform(lExprs);
+        p.addAll(wsml2datalog.generateAuxilliaryRules());
+
+        long normTime_end = System.currentTimeMillis();
+        normTime = normTime_end - normTime_start;
+        
+        // System.out.println("datalog program:");
+        // System.out.println(p);
+        // System.out.println("-*");
+    	
+        for (Rule r : p){
+        	System.out.println(r);
+        }
+        
         return p;
     }
     
     /*
      * Add all attributes of superconcepts to the subconcepts
      */
-    private Ontology handleAttributeInheritance(Ontology ontology) {
-    	for (Concept concept : ontology.listConcepts()) {
-    		// process superconcepts:
-            for (Concept superconcept : concept.listSuperConcepts()) {
-            	// handle inherited attributes
-	            Set<Attribute> superAttr = superconcept.listAttributes();
-	            for (Attribute a : superAttr) {
-	            	Attribute attribute;
-					try {
-						attribute = concept.createAttribute(a.getIdentifier());
-						// process range types:
-						for (Type type : (Set<Type>) a.listTypes()) {
-							attribute.addType(type);
-							// create an appropriate molecule per range type:
-							if (a.isConstraining()) {
-								attribute.setConstraining(true);
-							}
-						}
-	                
-		                // process attribute properties:
-		                if (a.isReflexive()) {
-		                    attribute.setReflexive(true);
-		                }
-		                if (a.isSymmetric()) {
-		                    attribute.setSymmetric(true);
-		                }
-		                if (a.isTransitive()) {
-		                    attribute.setTransitive(true);
-		                }
-		                Identifier inverseAttribute = a.getInverseOf();
-		                if (inverseAttribute != null) {
-		                    attribute.setInverseOf(inverseAttribute);
-		                }
-	                
-		                // process cardinality constraints:
-		                if (a.getMinCardinality() > 0) {
-		                   attribute.setMinCardinality(a.getMinCardinality());
-		                }
-		                if (a.getMaxCardinality() < Integer.MAX_VALUE) {
-		                    attribute.setMaxCardinality(a.getMaxCardinality());
-		                }
-					} catch (InvalidModelException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-	            }
-            }
+    private Set <Entity> handleAttributeInheritance(Set <Entity> theEntities) {
+    	Set <Entity> result = new HashSet <Entity> ();
+    	
+    	for (Entity e : theEntities){
+    		if (e instanceof Concept){
+    			Concept concept = (Concept) e;
+    			// process superconcepts:
+                for (Concept superconcept : concept.listSuperConcepts()) {
+                	// handle inherited attributes
+    	            Set<Attribute> superAttr = superconcept.listAttributes();
+    	            for (Attribute a : superAttr) {
+    	            	Attribute attribute;
+    					try {
+    						attribute = concept.createAttribute(a.getIdentifier());
+    						// process range types:
+    						for (Type type : (Set<Type>) a.listTypes()) {
+    							attribute.addType(type);
+    							// create an appropriate molecule per range type:
+    							if (a.isConstraining()) {
+    								attribute.setConstraining(true);
+    							}
+    						}
+    	                
+    		                // process attribute properties:
+    		                if (a.isReflexive()) {
+    		                    attribute.setReflexive(true);
+    		                }
+    		                if (a.isSymmetric()) {
+    		                    attribute.setSymmetric(true);
+    		                }
+    		                if (a.isTransitive()) {
+    		                    attribute.setTransitive(true);
+    		                }
+    		                Identifier inverseAttribute = a.getInverseOf();
+    		                if (inverseAttribute != null) {
+    		                    attribute.setInverseOf(inverseAttribute);
+    		                }
+    	                
+    		                // process cardinality constraints:
+    		                if (a.getMinCardinality() > 0) {
+    		                   attribute.setMinCardinality(a.getMinCardinality());
+    		                }
+    		                if (a.getMaxCardinality() < Integer.MAX_VALUE) {
+    		                    attribute.setMaxCardinality(a.getMaxCardinality());
+    		                }
+    					} catch (InvalidModelException ex) {
+    						ex.printStackTrace();
+    					}
+    	            }
+                }
+                result.add(concept);
+    		}
+    		else {
+    			result.add(e);
+    		}
     	}
-    	return ontology;
+    	return result;
     }
     
-    public boolean isSatisfiable(IRI ontologyID) {
+    public boolean isSatisfiable() {
         IRI violationIRI = wsmoFactory
                 .createIRI(ConstraintReplacementNormalizer.VIOLATION_IRI);
         Atom violation = leFactory.createAtom(violationIRI,
                 Collections.EMPTY_LIST);
-        boolean result = executeGroundQuery(ontologyID, violation) ? false
+        boolean result = executeGroundQuery(violation) ? false
                 : true;
         return result;
     }
 
-    public void deRegisterOntology(IRI ontologyID) {
-        Set<IRI> ontologySingletonSet = new HashSet<IRI>();
-        ontologySingletonSet.add(ontologyID);
-        deRegisterOntology(ontologySingletonSet);
-    }
-
-    public void deRegisterOntology(Set<IRI> ontologyIDs) {
-        // TODO Later we need a method which accepts a set of ontology IDs on
-        // the DatalogFacade
-        for (IRI id : ontologyIDs) {
-            try {
-                builtInFacade.deregister(id.toString());
-            } catch (org.wsml.reasoner.ExternalToolException e) {
-                e.printStackTrace();
-                throw new IllegalArgumentException(
-                        "This set of ontologies could not have been deregistered at the built-in reasoner",
-                        e);
-            }
-
+    public void deRegister() {
+        try {
+            builtInFacade.deregister();
+        } catch (org.wsml.reasoner.ExternalToolException e) {
+            e.printStackTrace();
         }
     }
 
-    public boolean entails(IRI ontologyID, LogicalExpression expression) {
-        return executeGroundQuery(ontologyID, expression);
+    public boolean entails(LogicalExpression expression) {
+        return executeGroundQuery(expression);
     }
 
-    public boolean entails(IRI ontologyID, Set<LogicalExpression> expressions) {
+    public boolean entails(Set<LogicalExpression> expressions) {
         for (LogicalExpression e : expressions) {
-            if (!executeGroundQuery(ontologyID, e))
+            if (!executeGroundQuery(e))
                 return false;
         }
         return true;
     }
 
-    public boolean executeGroundQuery(IRI ontologyID, LogicalExpression query) {
-        return executeQuery(ontologyID, query).size() != 0;
+    public boolean executeGroundQuery(LogicalExpression query) {
+        return executeQuery(query).size() != 0;
     }
 
-    public Set<Map<Variable, Term>> executeQuery(IRI ontologyID,
-            LogicalExpression query) {
+    public Set<Map<Variable, Term>> executeQuery(LogicalExpression query) {
         // execute query:
         Set<Map<Variable, Term>> bindings = null;
         try {
-            bindings = internalExecuteQuery(ontologyID, query);
+            bindings = internalExecuteQuery(query);
         } catch (DatalogException e) {
             throw new InternalReasonerException(e);
         } catch (ExternalToolException e) {
@@ -380,8 +369,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return bindings;
     }
 
-    public boolean checkQueryContainment(LogicalExpression query1, 
-    		LogicalExpression query2, IRI ontologyID) {
+    public boolean checkQueryContainment(LogicalExpression query1, LogicalExpression query2) {
     	
     	// create a logical expression visitor that checks whether the queries 
     	// contain disjunctions, negations or built-ins
@@ -398,15 +386,13 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     	// check whether query1 is contained within query2
         for (ConjunctiveQuery datalogQuery1 : datalogQueries1) {
         	for (ConjunctiveQuery datalogQuery2 : datalogQueries2) {
-        		result = builtInFacade.checkQueryContainment(
-        				datalogQuery1, datalogQuery2, ontologyID.toString());
+        		result = builtInFacade.checkQueryContainment(datalogQuery1, datalogQuery2);
         	}
         }
         return result;
     }
     
-    public Set<Map<Variable, Term>> getQueryContainment(LogicalExpression 
-    		query1, LogicalExpression query2, IRI ontologyID) {
+    public Set<Map<Variable, Term>> getQueryContainment(LogicalExpression query1, LogicalExpression query2) {
     	
     	// create a logical expression visitor that checks whether the queries 
     	// contain disjunctions, negations or built-ins
@@ -425,8 +411,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         for (ConjunctiveQuery datalogQuery1 : datalogQueries1) {
         	for (ConjunctiveQuery datalogQuery2 : datalogQueries2) {
 	            try {
-					queryContainmentResult.addAll(builtInFacade.getQueryContainment(
-							datalogQuery1, datalogQuery2, ontologyID.toString()));
+					queryContainmentResult.addAll(builtInFacade.getQueryContainment(datalogQuery1, datalogQuery2));
 				} catch (ExternalToolException e) {
 					throw new InternalReasonerException(e);
 				}
@@ -435,7 +420,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return queryContainmentResult;
     }
     
-    public Set<Concept> getConcepts(IRI ontologyID, Instance instance) {
+    public Set<Concept> getConcepts(Instance instance) {
         // build membership query:
         Term instanceID = wsmoFactory.createIRI(instance.getIdentifier()
                 .toString());
@@ -446,7 +431,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // submit query to reasoner:
         Set<Map<Variable, Term>> bindings;
         try {
-            bindings = internalExecuteQuery(ontologyID, query);
+            bindings = internalExecuteQuery(query);
         } catch (DatalogException e) {
             throw new InternalReasonerException();
         } catch (ExternalToolException e) {
@@ -462,7 +447,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return concepts;
     }
 
-    public Set<Instance> getInstances(IRI ontologyID, Concept concept) {
+    public Set<Instance> getInstances(Concept concept) {
         // build query:
         Term conceptID = wsmoFactory.createIRI(concept.getIdentifier()
                 .toString());
@@ -473,7 +458,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // submit query to reasoner:
         Set<Map<Variable, Term>> bindings;
         try {
-            bindings = internalExecuteQuery(ontologyID, query);
+            bindings = internalExecuteQuery(query);
         } catch (DatalogException e) {
             throw new InternalReasonerException();
         } catch (ExternalToolException e) {
@@ -490,7 +475,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return instances;
     }
 
-    public Set<Concept> getSubConcepts(IRI ontologyID, Concept concept) {
+    public Set<Concept> getSubConcepts(Concept concept) {
         // build query:
         Term conceptID = wsmoFactory.createIRI(concept.getIdentifier()
                 .toString());
@@ -501,7 +486,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // submit query to reasoner:
         Set<Map<Variable, Term>> bindings;
         try {
-            bindings = internalExecuteQuery(ontologyID, query);
+            bindings = internalExecuteQuery(query);
         } catch (DatalogException e) {
             throw new InternalReasonerException();
         } catch (ExternalToolException e) {
@@ -521,7 +506,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return concepts;
     }
 
-    public Set<Concept> getDirectSubConcepts(IRI ontologyID, Concept concept) {	
+    public Set<Concept> getDirectSubConcepts(Concept concept) {	
     	// build query:
         Term conceptID = concept.getIdentifier();
         LogicalExpression query = null;
@@ -531,7 +516,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 					org.wsml.reasoner.WSML2DatalogTransformer.PRED_DIRECT_SUBCONCEPT + 
 					"\"(?x, _\"" + conceptID.toString() + "\")");
 			// submit query to reasoner:
-            bindings = internalExecuteQuery(ontologyID, query);
+            bindings = internalExecuteQuery(query);
         } catch (DatalogException e) {
             throw new InternalReasonerException();
         } catch (ExternalToolException e) {
@@ -553,7 +538,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return concepts;
 	}
     
-    public Set<Concept> getSuperConcepts(IRI ontologyID, Concept concept) {
+    public Set<Concept> getSuperConcepts(Concept concept) {
         // build query:
         Term conceptID = wsmoFactory.createIRI(concept.getIdentifier()
                 .toString());
@@ -564,7 +549,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // submit query to reasoner:
         Set<Map<Variable, Term>> bindings;
         try {
-            bindings = internalExecuteQuery(ontologyID, query);
+            bindings = internalExecuteQuery(query);
         } catch (DatalogException e) {
             throw new InternalReasonerException();
         } catch (ExternalToolException e) {
@@ -584,7 +569,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return concepts;
     }
 
-    public Set<Concept> getDirectSuperConcepts(IRI ontologyID, Concept concept) {
+    public Set<Concept> getDirectSuperConcepts(Concept concept) {
     	// build query:
         Term conceptID = concept.getIdentifier();
         LogicalExpression query = null;
@@ -595,7 +580,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 					"\"(_\"" + conceptID.toString() + "\", ?x)");
 			
 			// submit query to reasoner:
-            bindings = internalExecuteQuery(ontologyID, query);
+            bindings = internalExecuteQuery(query);
         } catch (DatalogException e) {
             throw new InternalReasonerException();
         } catch (ExternalToolException e) {
@@ -617,7 +602,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return concepts;
 	}
     
-    public boolean isMemberOf(IRI ontologyID, Instance instance, Concept concept) {
+    public boolean isMemberOf(Instance instance, Concept concept) {
         // build query:
         Term conceptID = wsmoFactory.createIRI(concept.getIdentifier()
                 .toString());
@@ -629,7 +614,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // submit query to reasoner:
         Set<Map<Variable, Term>> bindings;
         try {
-            bindings = internalExecuteQuery(ontologyID, query);
+            bindings = internalExecuteQuery(query);
         } catch (DatalogException e) {
             throw new InternalReasonerException();
         } catch (ExternalToolException e) {
@@ -640,8 +625,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return bindings.size() != 0;
     }
 
-    public boolean isSubConceptOf(IRI ontologyID, Concept subConcept,
-            Concept superConcept) {
+    public boolean isSubConceptOf(Concept subConcept, Concept superConcept) {
         // build query:
         Term superconceptID = wsmoFactory.createIRI(superConcept
                 .getIdentifier().toString());
@@ -653,7 +637,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // / submit query to reasoner:
         Set<Map<Variable, Term>> bindings;
         try {
-            bindings = internalExecuteQuery(ontologyID, query);
+            bindings = internalExecuteQuery(query);
         } catch (DatalogException e) {
             throw new InternalReasonerException();
         } catch (ExternalToolException e) {
@@ -671,22 +655,31 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     }
 
     public void registerOntologies(Set<Ontology> ontologies) throws InconsistencyException {
-        registerOntologiesNoVerification(ontologies);
-        // check satisfiability
-        if (!disableConsitencyCheck){
+    	if(allowImports == 0){
+    		ontologies = getAllOntologies(ontologies);
+    	}
+    	
+    	
+    	Set <Entity> entities = new HashSet <Entity>();
+        for (Ontology o : ontologies) {
+        	entities.addAll(o.listConcepts());
+        	entities.addAll(o.listInstances());
+        	entities.addAll(o.listRelations());
+        	entities.addAll(o.listRelationInstances());
+        	entities.addAll(o.listAxioms());
+        }
+        registerEntities(entities);
+    }
+    
+    public void registerEntities(Set<Entity> theEntities) throws InconsistencyException{
+    	registerEntitiesNoVerification(theEntities);
+    	if (!disableConsitencyCheck){
         	long consTime_start = System.currentTimeMillis();
 	        Set<ConsistencyViolation> errors = new HashSet<ConsistencyViolation>();
-	      
-	        for (Ontology o : ontologies) {
-	            IRI ontologyId = (IRI) o.getIdentifier();
-	            errors.addAll(checkConsistency(ontologyId));
-	        }
+	        errors.addAll(checkConsistency());
+	   
 	        if (errors.size() > 0) {
-	            Set<IRI> ids = new HashSet<IRI>();
-	            for (Ontology o : ontologies) {
-	                ids.add((IRI) o.getIdentifier());
-	            }
-	            deRegisterOntology(ids);
+	            deRegister();
 	            throw new InconsistencyException(errors);
 	        }
 	        long consTime_end = System.currentTimeMillis();
@@ -695,8 +688,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     }
     
 
-    private void addAttributeOfTypeViolations(Set<ConsistencyViolation> errors,
-            IRI ontologyId) throws InvalidModelException {
+    private void addAttributeOfTypeViolations(Set<ConsistencyViolation> errors) throws InvalidModelException {
         // ATTR_OFTYPE(instance,value,concept, attribute,violated_type)
 
         Variable i = leFactory.createVariable("i");
@@ -716,7 +708,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         params.add(t);
         Atom atom = leFactory.createAtom(atomId, params);
 
-        Set<Map<Variable, Term>> violations = executeQuery(ontologyId, atom);
+        Set<Map<Variable, Term>> violations = executeQuery(atom);
         for (Map<Variable, Term> violation : violations) {
             // Construct error object
             
@@ -741,18 +733,16 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 
             if (violation.get(i) instanceof Identifier){
             	Instance instance = wsmoFactory.getInstance((IRI) violation.get(i));            
-            	errors.add(new AttributeTypeViolation(ontologyId, instance, rawValue,
-                    attribute, type));
+            	errors.add(new AttributeTypeViolation(instance, rawValue, attribute, type));
             }
             if (violation.get(i) instanceof ConstructedTerm){
-            	errors.add(new AttributeTypeViolation(wsmoFactory.getOntology(ontologyId), (ConstructedTerm)violation.get(i), rawValue, attribute, type));
+            	errors.add(new AttributeTypeViolation((ConstructedTerm)violation.get(i), rawValue, attribute, type));
             }
         }
 
     }
 
-    private void addMinCardinalityViolations(Set<ConsistencyViolation> errors,
-            IRI ontologyId) throws InvalidModelException {
+    private void addMinCardinalityViolations(Set<ConsistencyViolation> errors) throws InvalidModelException {
         // MIN_CARD(instance, concept, attribute)
 
         Variable i = leFactory.createVariable("i");
@@ -768,20 +758,17 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         params.add(a);
         Atom atom = leFactory.createAtom(atomId, params);
 
-        Set<Map<Variable, Term>> violations = executeQuery(ontologyId, atom);
+        Set<Map<Variable, Term>> violations = executeQuery(atom);
         for (Map<Variable, Term> violation : violations) {
             // Construct error object
             //Instance instance = wsmoFactory.getInstance((Identifier) violation.get(i));
             Concept concept = wsmoFactory.getConcept((Identifier) violation.get(c));
-            Attribute attribute = (Attribute) concept.findAttributes(
-                    (Identifier) violation.get(a)).iterator().next();
-            errors.add(new MinCardinalityViolation(ontologyId, violation.get(i),
-                    attribute, wsmoFactory.getOntology(ontologyId)));
+            Attribute attribute = (Attribute) concept.findAttributes((Identifier) violation.get(a)).iterator().next();
+            errors.add(new MinCardinalityViolation(violation.get(i), attribute, concept.getOntology()));
         }
     }
 
-    private void addMaxCardinalityViolations(Set<ConsistencyViolation> errors,
-            IRI ontologyId) throws InvalidModelException {
+    private void addMaxCardinalityViolations(Set<ConsistencyViolation> errors) throws InvalidModelException {
         // MAX_CARD(instance, concept, attribute)
 
         Variable i = leFactory.createVariable("i");
@@ -797,20 +784,17 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         params.add(a);
         Atom atom = leFactory.createAtom(atomId, params);
 
-        Set<Map<Variable, Term>> violations = executeQuery(ontologyId, atom);
+        Set<Map<Variable, Term>> violations = executeQuery(atom);
         for (Map<Variable, Term> violation : violations) {
             // Construct error object
             //Instance instance = wsmoFactory.getInstance((IRI) violation.get(i));
             Concept concept = wsmoFactory.getConcept((IRI) violation.get(c));
-            Attribute attribute = (Attribute) concept.findAttributes(
-                    (IRI) violation.get(a)).iterator().next();
-            errors.add(new MaxCardinalityViolation(ontologyId, violation.get(i),
-                    attribute, wsmoFactory.getOntology(ontologyId)));
+            Attribute attribute = (Attribute) concept.findAttributes((IRI) violation.get(a)).iterator().next();
+            errors.add(new MaxCardinalityViolation(violation.get(i), attribute, concept.getOntology()));
         }
     }
 
-    private void addNamedUserViolations(Set<ConsistencyViolation> errors,
-            IRI ontologyId) throws InvalidModelException {
+    private void addNamedUserViolations(Set<ConsistencyViolation> errors) throws InvalidModelException {
         // NAMED_USER(axiom)
 
         Variable i = leFactory.createVariable("i");
@@ -822,24 +806,23 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         params.add(i);
         Atom atom = leFactory.createAtom(atomId, params);
 
-        Set<Map<Variable, Term>> violations = executeQuery(ontologyId, atom);
+        Set<Map<Variable, Term>> violations = executeQuery(atom);
         for (Map<Variable, Term> violation : violations) {
             Axiom axiom = null;
             String id = violation.get(i).toString();
             if (AnonymousIdUtils.isAnonymousIri(id)){
-                errors.add(new UnNamedUserConstraintViolation(ontologyId));
+                errors.add(new UnNamedUserConstraintViolation());
             }
             else {
 	            id = id.substring(0,id.indexOf(AnonymousIdUtils.NAMED_AXIOM_SUFFIX));
 	            IRI iri = wsmoFactory.createIRI(id);
 	            axiom =wsmoFactory.getAxiom(iri);
-	            errors.add(new NamedUserConstraintViolation(ontologyId, axiom));
+	            errors.add(new NamedUserConstraintViolation(axiom));
             }
         }
     }
 
-    private void addUnNamedUserViolations(Set<ConsistencyViolation> errors,
-            IRI ontologyId) throws InvalidModelException {
+    private void addUnNamedUserViolations(Set<ConsistencyViolation> errors) throws InvalidModelException {
         // UNNAMED_USER(axiom)
 
         Variable i = leFactory.createVariable("i");
@@ -851,10 +834,10 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         params.add(i);
         Atom atom = leFactory.createAtom(atomId, params);
 
-        Set<Map<Variable, Term>> violations = executeQuery(ontologyId, atom);
+        Set<Map<Variable, Term>> violations = executeQuery(atom);
         for (int k = 0; k < violations.size(); k++) {
             // Construct error object
-            errors.add(new UnNamedUserConstraintViolation(ontologyId));
+            errors.add(new UnNamedUserConstraintViolation());
         }
     }
 
@@ -862,15 +845,11 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         throw new UnsupportedOperationException("Method not implemented yet!");
     }
 
-    protected Set<Map<Variable, Term>> internalExecuteQuery(IRI ontologyID,
-            LogicalExpression query) throws DatalogException,
-            org.wsml.reasoner.ExternalToolException {
-//    	System.out.println("query: " + query);            
+    protected Set<Map<Variable, Term>> internalExecuteQuery(LogicalExpression query) throws DatalogException, org.wsml.reasoner.ExternalToolException {
         Set<org.wsml.reasoner.ConjunctiveQuery> datalogQueries = convertQuery(query);
         Set<Map<Variable, Term>> result = new HashSet<Map<Variable, Term>>();
         for (ConjunctiveQuery datalogQuery : datalogQueries) {
-            result.addAll(builtInFacade.evaluate(datalogQuery, ontologyID
-                    .toString()));
+            result.addAll(builtInFacade.evaluate(datalogQuery));
         }
         return result;
     }
@@ -945,15 +924,15 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return result;
     }
 
-    public Set<ConsistencyViolation> checkConsistency(IRI ontologyId) {
+    public Set<ConsistencyViolation> checkConsistency() {
         Set<ConsistencyViolation> errors = new HashSet<ConsistencyViolation>();
-        if (!isSatisfiable(ontologyId)) {
+        if (!isSatisfiable()) {
             try {
-                addAttributeOfTypeViolations(errors, ontologyId);
-                addMinCardinalityViolations(errors, ontologyId);
-                addMaxCardinalityViolations(errors, ontologyId);
-                addNamedUserViolations(errors, ontologyId);
-                addUnNamedUserViolations(errors, ontologyId);
+                addAttributeOfTypeViolations(errors);
+                addMinCardinalityViolations(errors);
+                addMaxCardinalityViolations(errors);
+                addNamedUserViolations(errors);
+                addUnNamedUserViolations(errors);
             } catch (InvalidModelException e) {
                 throw new InternalReasonerException(e);
             }
@@ -961,43 +940,56 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return errors;
     }
 
-    public void registerOntologiesNoVerification(Set<Ontology> ontologies) {
-        // TODO Do some extra checking to make sure that ontologies which
-        // are imported are converted before ontologies which import them
+    public void registerEntitiesNoVerification(Set<Entity> theEntities) {	
+        Set<org.wsml.reasoner.Rule> kb = new HashSet<org.wsml.reasoner.Rule>();
+        
+		kb.addAll(convertEntities(theEntities));
 
-    	Set<Ontology> importedOntologies = new HashSet<Ontology>();
-        for (Ontology o : ontologies) {
-        	
-            // convert the ontology to Datalog Program:
-            String ontologyUri = o.getIdentifier().toString();
-            Set<org.wsml.reasoner.Rule> kb = new HashSet<org.wsml.reasoner.Rule>();
-            
-			kb.addAll(convertOntology(o, importedOntologies));
-
-            long convTime_start = System.currentTimeMillis();
-            
-            // Register the program at the built-in reasoner:
-            try {
-                builtInFacade.register(ontologyUri, kb);
-            } catch (org.wsml.reasoner.ExternalToolException e) {
-                e.printStackTrace();
-                throw new IllegalArgumentException(
-                        "This set of ontologies could not have been registered at the built-in reasoner",
-                        e);
-            }
-            
-            long convTime_end = System.currentTimeMillis();
-            convTime = convTime_end - convTime_start;
+        long convTime_start = System.currentTimeMillis();
+        
+        // Register the program at the built-in reasoner:
+        try {
+            builtInFacade.register(kb);
+        } catch (org.wsml.reasoner.ExternalToolException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException(
+                    "This set of ontologies could not have been registered at the built-in reasoner",
+                    e);
         }
+        
+        long convTime_end = System.currentTimeMillis();
+        convTime = convTime_end - convTime_start;
     }
 
-    public void registerOntologyNoVerification(Ontology ontology) {
-        Set<Ontology> ontologySingletonSet = new HashSet<Ontology>();
-        ontologySingletonSet.add(ontology);
-        registerOntologiesNoVerification(ontologySingletonSet);
+    private Set<Ontology> getAllOntologies(Set <Ontology> ontologies){
+    	Set <Ontology> result = new HashSet <Ontology> ();
+    	for (Ontology o : ontologies){
+    		result.add(o);
+    		getAllOntologies(o, result);
+    	}
+    	return result;
     }
 
-	public Set<Concept> getAllConcepts(IRI ontologyID) {
+	private void getAllOntologies( Ontology o, Set <Ontology> ontologies){
+	    for (Ontology imported : o.listOntologies()){
+	    	if (!ontologies.contains( imported )){
+	    		ontologies.add(imported);
+	    		getAllOntologies(imported, ontologies);
+	    	}
+	    }
+    }
+
+	public void registerOntologyNoVerification(Ontology ontology) {
+    	Set <Entity> entities = new HashSet <Entity> ();
+		entities.addAll(ontology.listConcepts());
+    	entities.addAll(ontology.listInstances());
+    	entities.addAll(ontology.listRelations());
+    	entities.addAll(ontology.listRelationInstances());
+    	entities.addAll(ontology.listAxioms());
+        registerEntitiesNoVerification(entities);
+    }
+
+	public Set<Concept> getAllConcepts() {
 		// build membership query:
         Term instanceVariable = leFactory.createVariable("z");
 		Term conceptVariable1 = leFactory.createVariable("x");
@@ -1008,7 +1000,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // submit query to reasoner:
         Set<Map<Variable, Term>> bindings;
         try {
-            bindings = internalExecuteQuery(ontologyID, query);
+            bindings = internalExecuteQuery(query);
         } catch (DatalogException e) {
             throw new InternalReasonerException();
         } catch (ExternalToolException e) {
@@ -1031,7 +1023,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         
         // submit query to reasoner:
         try {
-            bindings = internalExecuteQuery(ontologyID, query);
+            bindings = internalExecuteQuery(query);
         } catch (DatalogException e) {
             throw new InternalReasonerException();
         } catch (ExternalToolException e) {
@@ -1058,7 +1050,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         
         // submit query to reasoner:
         try {
-            bindings = internalExecuteQuery(ontologyID, query);
+            bindings = internalExecuteQuery(query);
         } catch (DatalogException e) {
             throw new InternalReasonerException();
         } catch (ExternalToolException e) {
@@ -1087,7 +1079,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         
         // submit query to reasoner:
         try {
-            bindings = internalExecuteQuery(ontologyID, query);
+            bindings = internalExecuteQuery(query);
         } catch (DatalogException e) {
             throw new InternalReasonerException();
         } catch (ExternalToolException e) {
@@ -1110,8 +1102,8 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
             }
         }
         
-        Set<Instance> tmpInst = getAllInstances(ontologyID);
-        Set<IRI> tmpAttr = getAllAttributes(ontologyID);
+        Set<Instance> tmpInst = getAllInstances();
+        Set<IRI> tmpAttr = getAllAttributes();
         Set<Concept> tmpConc = new HashSet<Concept>(concepts.size());
         for (Concept concept : concepts) {
         	tmpConc.add(concept);
@@ -1134,7 +1126,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return concepts;
 	}
 
-	public Set<Instance> getAllInstances(IRI ontologyID) {
+	public Set<Instance> getAllInstances() {
 		// build membership query:
 		Term instanceVariable = leFactory.createVariable("x");
 		Term variable = leFactory.createVariable("y");
@@ -1145,7 +1137,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 		// submit query to reasoner:
 		Set<Map<Variable, Term>> bindings;
 		try {
-			bindings = internalExecuteQuery(ontologyID, query);
+			bindings = internalExecuteQuery(query);
 		} catch (DatalogException e) {
 			throw new InternalReasonerException();
 		} catch (ExternalToolException e) {
@@ -1167,7 +1159,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         
         // submit query to reasoner:
         try {
-            bindings = internalExecuteQuery(ontologyID, query);
+            bindings = internalExecuteQuery(query);
         } catch (DatalogException e) {
             throw new InternalReasonerException();
         } catch (ExternalToolException e) {
@@ -1193,7 +1185,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 		return instances;
 	}
 
-	public Set<IRI> getAllAttributes(IRI ontologyID) {
+	public Set<IRI> getAllAttributes() {
 		// build query for extracting constraining attributes:
 		Term instanceVariable = leFactory.createVariable("x");
 		Term attributeVariable = leFactory.createVariable("y");
@@ -1204,7 +1196,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 		// submit query to reasoner:
 		Set<Map<Variable, Term>> bindings;
 		try {
-			bindings = internalExecuteQuery(ontologyID, query);
+			bindings = internalExecuteQuery(query);
 		} catch (DatalogException e) {
 			throw new InternalReasonerException();
 		} catch (ExternalToolException e) {
@@ -1224,7 +1216,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 		
 		// submit query to reasoner:
 		try {
-			bindings = internalExecuteQuery(ontologyID, query);
+			bindings = internalExecuteQuery(query);
 		} catch (DatalogException e) {
 			throw new InternalReasonerException();
 		} catch (ExternalToolException e) {
@@ -1243,7 +1235,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 		
 		// submit query to reasoner:
 		try {
-			bindings = internalExecuteQuery(ontologyID, query);
+			bindings = internalExecuteQuery(query);
 		} catch (DatalogException e) {
 			throw new InternalReasonerException();
 		} catch (ExternalToolException e) {
@@ -1258,7 +1250,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 		return attributes;
 	}
 
-	public Set<IRI> getAllConstraintAttributes(IRI ontologyID) {
+	public Set<IRI> getAllConstraintAttributes() {
 		// build query:
 		Term instanceVariable = leFactory.createVariable("x");
 		Term attributeVariable = leFactory.createVariable("y");
@@ -1269,7 +1261,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 		// submit query to reasoner:
 		Set<Map<Variable, Term>> bindings;
 		try {
-			bindings = internalExecuteQuery(ontologyID, query);
+			bindings = internalExecuteQuery(query);
 		} catch (DatalogException e) {
 			throw new InternalReasonerException();
 		} catch (ExternalToolException e) {
@@ -1285,7 +1277,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 		return attributes;
 	}
 
-	public Set<IRI> getAllInferenceAttributes(IRI ontologyID) {
+	public Set<IRI> getAllInferenceAttributes() {
 		// build query:
 		Term instanceVariable = leFactory.createVariable("x");
 		Term attributeVariable = leFactory.createVariable("y");
@@ -1296,7 +1288,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 		// submit query to reasoner:
 		Set<Map<Variable, Term>> bindings;
 		try {
-			bindings = internalExecuteQuery(ontologyID, query);
+			bindings = internalExecuteQuery(query);
 		} catch (DatalogException e) {
 			throw new InternalReasonerException();
 		} catch (ExternalToolException e) {
@@ -1312,18 +1304,18 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 		return attributes;
 	}
 
-	public Set<Concept> getEquivalentConcepts(IRI ontologyID, Concept concept) {
+	public Set<Concept> getEquivalentConcepts(Concept concept) {
 		throw new UnsupportedOperationException(
 				"Equivalence queries are not supported in Datalog");
 	}
 
-	public boolean isEquivalentConcept(IRI ontologyID, Concept concept1, 
+	public boolean isEquivalentConcept(Concept concept1, 
 			Concept concept2) {
 		throw new UnsupportedOperationException(
 				"Equivalence queries are not supported in Datalog");
 	}
 
-	public Set<Concept> getDirectConcepts(IRI ontologyID, Instance instance) {
+	public Set<Concept> getDirectConcepts(Instance instance) {
         // build query:
         Term instanceID = instance.getIdentifier();
         LogicalExpression query = null;
@@ -1333,7 +1325,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 					org.wsml.reasoner.WSML2DatalogTransformer.PRED_DIRECT_CONCEPT + 
 					"\"(_\"" + instanceID.toString() + "\", ?x)");
 			// submit query to reasoner:
-            bindings = internalExecuteQuery(ontologyID, query);
+            bindings = internalExecuteQuery(query);
         } catch (DatalogException e) {
             throw new InternalReasonerException();
         } catch (ExternalToolException e) {
@@ -1351,7 +1343,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return concepts;
 	}
 
-	public Set<Concept> getConceptsOf(IRI ontologyID, Identifier attributeId) {
+	public Set<Concept> getConceptsOf(Identifier attributeId) {
         // build query:
 		Term instanceVariable = leFactory.createVariable("x");
 		Term valueVariable = leFactory.createVariable("y");
@@ -1366,7 +1358,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // submit query to reasoner:
         Set<Map<Variable, Term>> bindings;
         try {
-            bindings = internalExecuteQuery(ontologyID, query);
+            bindings = internalExecuteQuery(query);
         } catch (DatalogException e) {
             throw new InternalReasonerException();
         } catch (ExternalToolException e) {
@@ -1383,38 +1375,38 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 	}
 
 	
-	public Set<IRI> getSubRelations(IRI ontologyID, Identifier attributeId) {
+	public Set<IRI> getSubRelations(Identifier attributeId) {
 		throw new UnsupportedOperationException(
 		"This method is not implemented for Datalog");
 	}
 	
-	public Set<IRI> getDirectSubRelations(IRI ontologyID, Identifier attributeId) {
+	public Set<IRI> getDirectSubRelations(Identifier attributeId) {
 		throw new UnsupportedOperationException(
 				"This method is not implemented for Datalog");
 	}
 
 	
-	public Set<IRI> getSuperRelations(IRI ontologyID, Identifier attributeId) {
+	public Set<IRI> getSuperRelations(Identifier attributeId) {
 		throw new UnsupportedOperationException(
 				"This method is not implemented for Datalog");
 	}
 	
-	public Set<IRI> getDirectSuperRelations(IRI ontologyID, Identifier attributeId) {
+	public Set<IRI> getDirectSuperRelations(Identifier attributeId) {
 		throw new UnsupportedOperationException(
 				"This method is not implemented for Datalog");
 	}
 
-	public Set<IRI> getEquivalentRelations(IRI ontologyID, Identifier attributeId) {
+	public Set<IRI> getEquivalentRelations(Identifier attributeId) {
 		throw new UnsupportedOperationException(
 				"Equivalence queries are not supported in Datalog");
 	}
 
-	public Set<IRI> getInverseRelations(IRI ontologyID, Identifier attributeId) {
+	public Set<IRI> getInverseRelations(Identifier attributeId) {
 		throw new UnsupportedOperationException(
 		"Queries for inverse relations are not supported in Datalog");
 	}
 	
-	public Set<IRI> getRangesOfInferingAttribute(IRI ontologyID, Identifier attributeId) {
+	public Set<IRI> getRangesOfInferingAttribute(Identifier attributeId) {
         // build query:
 		Term instanceVariable = leFactory.createVariable("x");
 		Term valueVariable = leFactory.createVariable("y");
@@ -1424,7 +1416,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // submit query to reasoner:
         Set<Map<Variable, Term>> bindings;
         try {
-            bindings = internalExecuteQuery(ontologyID, query);
+            bindings = internalExecuteQuery(query);
         } catch (DatalogException e) {
             throw new InternalReasonerException();
         } catch (ExternalToolException e) {
@@ -1440,8 +1432,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return iris;
 	}
 
-	public Set<IRI> getRangesOfConstraintAttribute(IRI ontologyID, 
-			Identifier attributeId) {
+	public Set<IRI> getRangesOfConstraintAttribute(Identifier attributeId) {
         // build query:
 		Term instanceVariable = leFactory.createVariable("x");
 		Term valueVariable = leFactory.createVariable("y");
@@ -1451,7 +1442,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // submit query to reasoner:
         Set<Map<Variable, Term>> bindings;
         try {
-            bindings = internalExecuteQuery(ontologyID, query);
+            bindings = internalExecuteQuery(query);
         } catch (DatalogException e) {
             throw new InternalReasonerException();
         } catch (ExternalToolException e) {
@@ -1467,8 +1458,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return iris;
 	}
 
-	public Map<IRI, Set<Term>> getInferingAttributeValues(IRI ontologyID, 
-			Instance instance) {
+	public Map<IRI, Set<Term>> getInferingAttributeValues(Instance instance) {
         // build query:
 		Term attributeVariable = leFactory.createVariable("x");
 		Term valueVariable = leFactory.createVariable("y");
@@ -1484,7 +1474,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // submit query to reasoner:
         Set<Map<Variable, Term>> bindings;
         try {
-            bindings = internalExecuteQuery(ontologyID, query);
+            bindings = internalExecuteQuery(query);
         } catch (DatalogException e) {
             throw new InternalReasonerException();
         } catch (ExternalToolException e) {
@@ -1512,8 +1502,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return results;
 	}
 
-	public Map<IRI, Set<Term>> getConstraintAttributeValues(IRI ontologyID, 
-			Instance instance) {
+	public Map<IRI, Set<Term>> getConstraintAttributeValues(Instance instance) {
         // build query:
 		Term attributeVariable = leFactory.createVariable("x");
 		Term valueVariable = leFactory.createVariable("y");
@@ -1529,7 +1518,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // submit query to reasoner:
         Set<Map<Variable, Term>> bindings;
         try {
-            bindings = internalExecuteQuery(ontologyID, query);
+            bindings = internalExecuteQuery(query);
         } catch (DatalogException e) {
             throw new InternalReasonerException();
         } catch (ExternalToolException e) {
@@ -1557,8 +1546,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return results;
 	}
 
-	public Map<Instance, Set<Term>> getInferingAttributeInstances(IRI ontologyID, 
-			Identifier attributeId) {
+	public Map<Instance, Set<Term>> getInferingAttributeInstances(Identifier attributeId) {
         // build query:
 		Term valueVariable = leFactory.createVariable("x");
 		Term valueVariable2 = leFactory.createVariable("z");
@@ -1574,7 +1562,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // submit query to reasoner:
         Set<Map<Variable, Term>> bindings;
         try {
-            bindings = internalExecuteQuery(ontologyID, query);
+            bindings = internalExecuteQuery(query);
         } catch (DatalogException e) {
             throw new InternalReasonerException();
         } catch (ExternalToolException e) {
@@ -1604,8 +1592,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return results;
 	}
 
-	public Map<Instance, Set<Term>> getConstraintAttributeInstances(
-			IRI ontologyID, Identifier attributeId) {
+	public Map<Instance, Set<Term>> getConstraintAttributeInstances(Identifier attributeId) {
         // build query:
 		Term valueVariable = leFactory.createVariable("x");
 		Term valueVariable2 = leFactory.createVariable("z");
@@ -1621,7 +1608,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // submit query to reasoner:
         Set<Map<Variable, Term>> bindings;
         try {
-            bindings = internalExecuteQuery(ontologyID, query);
+            bindings = internalExecuteQuery(query);
         } catch (DatalogException e) {
             throw new InternalReasonerException();
         } catch (ExternalToolException e) {
@@ -1651,8 +1638,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return results;
 	}
 
-	public Set getInferingAttributeValues(IRI ontologyID, 
-			Instance subject, Identifier attributeId) {
+	public Set getInferingAttributeValues(Instance subject, Identifier attributeId) {
         // build query:
 		Term instanceId = wsmoFactory.createIRI(subject.getIdentifier()
                 .toString());
@@ -1669,7 +1655,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // submit query to reasoner:
         Set<Map<Variable, Term>> bindings;
         try {
-            bindings = internalExecuteQuery(ontologyID, query);
+            bindings = internalExecuteQuery(query);
         } catch (DatalogException e) {
             throw new InternalReasonerException();
         } catch (ExternalToolException e) {
@@ -1690,8 +1676,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return values;
 	}
 
-	public Set<String> getConstraintAttributeValues(IRI ontologyID, 
-			Instance subject, Identifier attributeId) {
+	public Set<String> getConstraintAttributeValues(Instance subject, Identifier attributeId) {
         // build query:
 		Term instanceId = wsmoFactory.createIRI(subject.getIdentifier()
                 .toString());
@@ -1708,7 +1693,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // submit query to reasoner:
         Set<Map<Variable, Term>> bindings;
         try {
-            bindings = internalExecuteQuery(ontologyID, query);
+            bindings = internalExecuteQuery(query);
         } catch (DatalogException e) {
             throw new InternalReasonerException();
         } catch (ExternalToolException e) {

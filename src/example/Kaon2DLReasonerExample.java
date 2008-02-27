@@ -94,34 +94,33 @@ public class Kaon2DLReasonerExample {
 
         // print out if the registered ontology is satisfiable
         System.out.println("\n----------------------\n");
-        System.out.println("Ontology is consistent: " + reasoner.isSatisfiable(
-        		(IRI) exampleOntology.getIdentifier()));	
+        System.out.println("Ontology is consistent: " + reasoner.isSatisfiable());	
         
         // print out if a specified concept is satisfiable
         System.out.println("\n----------------------\n");
         String le = "";
         System.out.println("Is concept \"Machine\" satisfiable? " + 
-        		reasoner.entails((IRI) exampleOntology.getIdentifier(), 
+        		reasoner.entails( 
         				leFactory.createLogicalExpression("Machine", exampleOntology)));
         
         // print out if a specified logical expression is satisfiable
         System.out.println("\n----------------------\n");
         le = "?x memberOf Pet and ?x memberOf DomesticAnimal.";
         System.out.println("Is the following logical expression satisfiable? \n\"" + le +
-        		"\" \n" + reasoner.entails((IRI) exampleOntology.getIdentifier(), 
+        		"\" \n" + reasoner.entails( 
         				leFactory.createLogicalExpression(le, exampleOntology)));
         
         // print out if a specified logical expression is satisfiable
         System.out.println("\n----------------------\n");
         le = "?x memberOf Man and ?x memberOf Woman."; 
         System.out.println("Is the following logical expression satisfiable? \n\"" + le +
-        		"\" \n" + reasoner.entails((IRI) exampleOntology.getIdentifier(), 
+        		"\" \n" + reasoner.entails( 
         				leFactory.createLogicalExpression(le, exampleOntology)));
         
         // get all instances of woman concept
         System.out.println("\n----------------------\n");
         System.out.println("Get all instances of concept Woman:");
-		Set<Instance> set = reasoner.getInstances((IRI) exampleOntology.getIdentifier(), 
+		Set<Instance> set = reasoner.getInstances( 
 				wsmoFactory.createConcept(
 				wsmoFactory.createIRI(ns + "Woman")));
         for (Instance instance : set) 
@@ -131,7 +130,7 @@ public class Kaon2DLReasonerExample {
         System.out.println("\n----------------------\n");
         System.out.println("All information about instance Mary:");
         Set<Entry<IRI, Set<Term>>> entrySet = reasoner.getInferingAttributeValues(
-        		(IRI) exampleOntology.getIdentifier(), 
+        		 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Mary"))).entrySet();
 		for (Entry<IRI, Set<Term>> entry : entrySet) {
 			System.out.println(entry.getKey().getLocalName().toString());
@@ -140,7 +139,7 @@ public class Kaon2DLReasonerExample {
 				System.out.println("   value: " + ((IRI) value).getLocalName().toString());
 		}
 		Set<Entry<IRI, Set<Term>>> entrySetTerm = reasoner.getConstraintAttributeValues(
-				(IRI) exampleOntology.getIdentifier(), 
+				 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Mary"))).entrySet();
 		for (Entry<IRI, Set<Term>> entry : entrySetTerm) {
 			System.out.println(entry.getKey().getLocalName().toString());

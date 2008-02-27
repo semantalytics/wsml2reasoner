@@ -23,10 +23,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
-import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.DisjunctionPullRules;
 import org.wsml.reasoner.transformation.le.ImplicationReductionRules;
@@ -35,7 +33,7 @@ import org.wsml.reasoner.transformation.le.MoleculeDecompositionRules;
 import org.wsml.reasoner.transformation.le.NegationPushRules;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
 import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
-import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.common.Entity;
 import org.wsmo.factory.WsmoFactory;
 
 public class ConstructReductionNormalizer implements OntologyNormalizer {
@@ -66,11 +64,15 @@ public class ConstructReductionNormalizer implements OntologyNormalizer {
         anonymousIdTranslator = new AnonymousIdTranslator(wsmoFactory);
     }
 
-    public Ontology normalize(Ontology ontology) {
+    public Set <Entity> normalizeEntities(Collection <Entity> theEntities) {
+    	throw new UnsupportedOperationException();
+    }
+    
+    public Set <Axiom> normalizeAxioms(Collection <Axiom> theAxioms){
+    	Set <Axiom> result = new HashSet <Axiom> ();
         // gather logical expressions from axioms in ontology:
         Set<LogicalExpression> expressions = new HashSet<LogicalExpression>();
-        Set<Axiom> axioms = (Set<Axiom>) ontology.listAxioms();
-        for (Axiom axiom : axioms) {
+        for (Axiom axiom : theAxioms) {
             expressions.addAll((Collection<LogicalExpression>) axiom.listDefinitions());
         }
 
@@ -80,29 +82,12 @@ public class ConstructReductionNormalizer implements OntologyNormalizer {
             anonymousIdTranslator.setScope(expression);
             resultExp.add(leNormalizer.normalize(expression));
         }
-
-        // create new ontology containing the resulting logical expressions:
-        String resultIRI = ontology.getIdentifier() + "-as-axioms";
-        Ontology resultOnt = wsmoFactory.createOntology(wsmoFactory.createIRI(resultIRI));
-        
-        //delete old axioms (wsmo4j statics :(
-        for (Axiom a: (Set<Axiom>)resultOnt.listAxioms()){
-            try {
-                a.setOntology(null);
-            } catch (InvalidModelException e) {
-                e.printStackTrace();
-            }
-        }
         
         Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
         for (LogicalExpression expression : resultExp) {
             axiom.addDefinition(expression);
         }
-        try {
-            resultOnt.addAxiom(axiom);
-        } catch (InvalidModelException e) {
-            e.printStackTrace();
-        }
-        return resultOnt;
+        result.add(axiom);
+        return result;
     }
 }

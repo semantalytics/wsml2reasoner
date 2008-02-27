@@ -147,45 +147,45 @@ public class DLSimpleInferenceTests extends TestCase {
         wsmlReasoner.registerOntology(ontology);       
         
 		// test ontology satisfiability
-		assertTrue(wsmlReasoner.isSatisfiable((IRI) ontology.getIdentifier()));
+		assertTrue(wsmlReasoner.isSatisfiable());
 		
 		// test logicalExpressionIsNotConsistent with a concept
-		assertFalse(wsmlReasoner.entails((IRI) ontology.getIdentifier(),
+		assertFalse(wsmlReasoner.entails(
 				leFactory.createLogicalExpression("Machine.", ontology)));
 		
 		// test logicalExpressionIsConsistent with a concept
-		assertTrue(wsmlReasoner.entails((IRI) ontology.getIdentifier(),
+		assertTrue(wsmlReasoner.entails(
 				leFactory.createLogicalExpression("Woman.", ontology)));
 		
 		// test logicalExpressionIsNotConsistent with a MembershipMolecule
-		assertFalse(wsmlReasoner.entails((IRI) ontology.getIdentifier(), 
+		assertFalse(wsmlReasoner.entails( 
 				leFactory.createLogicalExpression("?x memberOf Machine.", 
 						ontology)));
 		
 		// test logicalExpressionIsConsistent with a MembershipMolecule
-		assertTrue(wsmlReasoner.entails((IRI) ontology.getIdentifier(), 
+		assertTrue(wsmlReasoner.entails( 
 				leFactory.createLogicalExpression("?x memberOf Woman.", 
 						ontology)));
 		
 		// test logicalExpressionIsConsistent with a Conjunction
-		assertTrue(wsmlReasoner.entails((IRI) ontology.getIdentifier(), 
+		assertTrue(wsmlReasoner.entails( 
 				leFactory.createLogicalExpression("?x memberOf Pet " +
 						"and ?x memberOf DomesticAnimal.", ontology)));
-		assertTrue(wsmlReasoner.entails((IRI) ontology.getIdentifier(), 
+		assertTrue(wsmlReasoner.entails( 
 				leFactory.createLogicalExpression("Mary memberOf " +
 						"Woman and Jack memberOf Child.", ontology)));
-		assertTrue(wsmlReasoner.executeGroundQuery((IRI) ontology.getIdentifier(), 
+		assertTrue(wsmlReasoner.executeGroundQuery( 
 				leFactory.createLogicalExpression("Mary memberOf " +
 						"Woman and Jack memberOf Child.", ontology)));
 		
 		// test logicalExpressionIsNotConsistent with a Conjunction
-		assertFalse(wsmlReasoner.entails((IRI) ontology.getIdentifier(), 
+		assertFalse(wsmlReasoner.entails( 
 				leFactory.createLogicalExpression("?x memberOf Man " +
 				"and ?x memberOf Woman.", ontology)));
 		
 		// test logicalExpression not supported for consistency check
 		try {
-			wsmlReasoner.entails((IRI) ontology.getIdentifier(), 
+			wsmlReasoner.entails( 
 					leFactory.createLogicalExpression(
 							"?x[hasAge hasValue 33].", ontology));
 			fail("Should fail because this logical expression is not " +
@@ -195,7 +195,7 @@ public class DLSimpleInferenceTests extends TestCase {
 		};
 		
 		// test getAllConcepts
-		Set<Concept> set = wsmlReasoner.getAllConcepts((IRI) ontology.getIdentifier());
+		Set<Concept> set = wsmlReasoner.getAllConcepts();
 //		for (Concept concept : set) 
 //			System.out.println(concept.getIdentifier().toString());
 		set.remove(wsmoFactory.createConcept(wsmoFactory.createIRI(
@@ -205,34 +205,34 @@ public class DLSimpleInferenceTests extends TestCase {
 		assertTrue(set.size() == 18);
 		
 		// test getAllInstances
-		Set<Instance> set2 = wsmlReasoner.getAllInstances((IRI) ontology.getIdentifier());
+		Set<Instance> set2 = wsmlReasoner.getAllInstances();
 //		for (Instance instance : set2) 
 //			System.out.println(instance.getIdentifier().toString());
 		assertTrue(set2.size() == 10);
 		
 		// test getAllAttributes
-		Set<IRI> set3 = wsmlReasoner.getAllAttributes((IRI) ontology.getIdentifier());
+		Set<IRI> set3 = wsmlReasoner.getAllAttributes();
 //		for (IRI attributeId : set3) 
 //			System.out.println(attributeId.toString());
 		assertTrue(set3.size() == 20);
 		
 		// test getAllConstraintAttributes
 		set3.clear();
-		set3 = wsmlReasoner.getAllConstraintAttributes((IRI) ontology.getIdentifier());
+		set3 = wsmlReasoner.getAllConstraintAttributes();
 //		for (IRI attributeId : set3) 
 //			System.out.println(attributeId.toString());
 		assertTrue(set3.size() == 4);
 		
 		// test getAllInferenceAttributes
 		set3.clear();
-		set3 = wsmlReasoner.getAllInferenceAttributes((IRI) ontology.getIdentifier());
+		set3 = wsmlReasoner.getAllInferenceAttributes();
 //		for (IRI attributeId : set3) 
 //			System.out.println(attributeId.toString());
 		assertTrue(set3.size() == 16);
 		
 		// test getSubConcepts
 		set.clear();
-		set = wsmlReasoner.getSubConcepts((IRI) ontology.getIdentifier(),  
+		set = wsmlReasoner.getSubConcepts(  
 				wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "Human")));
 //		for (Concept concept : set)
 //			System.out.println(concept.getIdentifier().toString());
@@ -240,7 +240,7 @@ public class DLSimpleInferenceTests extends TestCase {
 		
 		// test getSuperConcepts
 		set.clear();
-		set = wsmlReasoner.getSuperConcepts((IRI) ontology.getIdentifier(), 
+		set = wsmlReasoner.getSuperConcepts( 
 				wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "Human")));
 //		for (Concept concept : set)
 //			System.out.println(concept.getIdentifier().toString());
@@ -248,56 +248,56 @@ public class DLSimpleInferenceTests extends TestCase {
 		
 		// test getEquivalentConcepts
 		set.clear();
-		set = wsmlReasoner.getEquivalentConcepts((IRI) ontology.getIdentifier(), 
+		set = wsmlReasoner.getEquivalentConcepts( 
 				wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "Human")));
 //		for (Concept concept : set)
 //			System.out.println(concept.getIdentifier().toString());
 		assertTrue(set.size() == 1);
 		
 		// test isEquivalentConcept
-		assertTrue(wsmlReasoner.isEquivalentConcept((IRI) ontology.getIdentifier(), 
+		assertTrue(wsmlReasoner.isEquivalentConcept( 
 				wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "Human")),
 				wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "Person"))));
 		
 		// test isNotEquivalentConcept
-		assertFalse(wsmlReasoner.isEquivalentConcept((IRI) ontology.getIdentifier(), 
+		assertFalse(wsmlReasoner.isEquivalentConcept( 
 				wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "Human")),
 				wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "Animal"))));
 		
 		// test isSubConceptOf
 		assertTrue(wsmlReasoner.isSubConceptOf(
-				(IRI) ontology.getIdentifier(), 
+				 
 				wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "Woman")), 
 				wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "Human"))));
-		assertTrue(wsmlReasoner.executeGroundQuery((IRI) ontology.getIdentifier(),
+		assertTrue(wsmlReasoner.executeGroundQuery(
 				leFactory.createLogicalExpression("Woman subConceptOf Human.", 
 						ontology)));
 		
 		// test isNotSubConceptOf
 		assertFalse(wsmlReasoner.isSubConceptOf(
-				(IRI) ontology.getIdentifier(), 
+				 
 				wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "Animal")), 
 				wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "Human"))));
 		
 		// test isMemberOf
 		assertTrue(wsmlReasoner.isMemberOf(
-				(IRI) ontology.getIdentifier(), 
+				 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Mary")), 
 				wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "Woman"))));
-		assertTrue(wsmlReasoner.executeGroundQuery((IRI) ontology.getIdentifier(),
+		assertTrue(wsmlReasoner.executeGroundQuery(
 				leFactory.createLogicalExpression("Mary memberOf Woman.", 
 						ontology)));
 		
 		// test isNotMemberOf
 		assertFalse(wsmlReasoner.isMemberOf(
-				(IRI) ontology.getIdentifier(), 
+				 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Mary")), 
 				wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "Child"))));
 		
 		// test direct conceptsOf
 		set.clear();
 		set = wsmlReasoner.getDirectConcepts(
-				(IRI) ontology.getIdentifier(), 
+				 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Mary")));
 //		for(Concept concept : set)
 //			System.out.println(concept.getIdentifier().toString());
@@ -306,7 +306,7 @@ public class DLSimpleInferenceTests extends TestCase {
 		// test allConceptsOf
 		set.clear();
 		set = wsmlReasoner.getConcepts(
-				(IRI) ontology.getIdentifier(), 
+				 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Mary")));
 //		for(Concept concept : set)
 //			System.out.println(concept.getIdentifier().toString());
@@ -315,7 +315,7 @@ public class DLSimpleInferenceTests extends TestCase {
 		// test allInstancesOf
 		set2.clear();
 		set2 = wsmlReasoner.getInstances(
-				(IRI) ontology.getIdentifier(), 
+				 
 				wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "Woman")));
 //		for(Instance instance : set2)
 //			System.out.println(instance.getIdentifier().toString());
@@ -323,7 +323,7 @@ public class DLSimpleInferenceTests extends TestCase {
 		
 		// test getSubRelationOf
 		set3.clear();
-		set3 = wsmlReasoner.getSubRelations((IRI) ontology.getIdentifier(), 
+		set3 = wsmlReasoner.getSubRelations( 
 				wsmoFactory.createIRI(ns + "hasParent"));
 //		for (IRI attributeId : set3)
 //			System.out.println(attributeId.toString());
@@ -331,7 +331,7 @@ public class DLSimpleInferenceTests extends TestCase {
 		
 		// test getSuperRelationOf
 		set3.clear();
-		set3 = wsmlReasoner.getSuperRelations((IRI) ontology.getIdentifier(), 
+		set3 = wsmlReasoner.getSuperRelations( 
 				wsmoFactory.createIRI(ns + "hasMother"));
 //		for (IRI attributeId : set3)
 //			System.out.println(attributeId.toString());
@@ -339,7 +339,7 @@ public class DLSimpleInferenceTests extends TestCase {
 		
 		// test EquivalentRelations
 		set3.clear();
-		set3 = wsmlReasoner.getEquivalentRelations((IRI) ontology.getIdentifier(), 
+		set3 = wsmlReasoner.getEquivalentRelations( 
 				wsmoFactory.createIRI(ns + "hasHolder"));
 //		for (IRI attributeId : set3)
 //			System.out.println(attributeId.toString());
@@ -347,7 +347,7 @@ public class DLSimpleInferenceTests extends TestCase {
 		
 		// test InverseRelations
 		set3.clear();
-		set3 = wsmlReasoner.getInverseRelations((IRI) ontology.getIdentifier(), 
+		set3 = wsmlReasoner.getInverseRelations( 
 				wsmoFactory.createIRI(ns + "hasChild"));
 //		for (IRI attributeId : set3)
 //			System.out.println(attributeId.toString());
@@ -355,7 +355,7 @@ public class DLSimpleInferenceTests extends TestCase {
 	
 		// test getConceptsOfAttribute
 		set.clear();
-		set = wsmlReasoner.getConceptsOf((IRI) ontology.getIdentifier(), 
+		set = wsmlReasoner.getConceptsOf( 
 				wsmoFactory.createIRI(ns + "isFatherOf"));
 //		for (Concept concept : set)
 //			System.out.println(concept.getIdentifier().toString());
@@ -363,7 +363,7 @@ public class DLSimpleInferenceTests extends TestCase {
 		
 		// test getRangesOfInferingAttribute
 		set3.clear();
-		set3 = wsmlReasoner.getRangesOfInferingAttribute((IRI) ontology.getIdentifier(), 
+		set3 = wsmlReasoner.getRangesOfInferingAttribute( 
 				wsmoFactory.createIRI(ns + "isFatherOf"));
 //		for (Identifier rangeId : set3)
 //			System.out.println(rangeId.toString());
@@ -371,7 +371,7 @@ public class DLSimpleInferenceTests extends TestCase {
 		
 		// test getRangesOfConstraintAttribute
 		set3.clear();
-		set3 = wsmlReasoner.getRangesOfConstraintAttribute((IRI) ontology.getIdentifier(), 
+		set3 = wsmlReasoner.getRangesOfConstraintAttribute( 
 				wsmoFactory.createIRI(ns + "hasWeight"));
 //		for (Identifier rangeId : set3)
 //			System.out.println(rangeId.toString());
@@ -379,7 +379,7 @@ public class DLSimpleInferenceTests extends TestCase {
 		
 		// test getValuesOfInferingAttribute of a specified instance
 		Set<Entry<IRI, Set<Term>>> entrySet = wsmlReasoner.getInferingAttributeValues(
-				(IRI) ontology.getIdentifier(), 
+				 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Mary"))).entrySet();
 		for (Entry<IRI, Set<Term>> entry : entrySet) {
 //			System.out.println(entry.getKey().getLocalName().toString());
@@ -391,7 +391,7 @@ public class DLSimpleInferenceTests extends TestCase {
 		
 		// test getValuesOfConstraintAttribute of a specified instance
         Set <Entry<IRI, Set<Term>>> entrySetTerm = 
-				wsmlReasoner.getConstraintAttributeValues((IRI) ontology.getIdentifier(), 
+				wsmlReasoner.getConstraintAttributeValues( 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Mary"))).entrySet();
 		for (Entry<IRI, Set<Term>> entry : entrySetTerm) {
 //			System.out.println(entry.getKey().getLocalName().toString());
@@ -403,7 +403,7 @@ public class DLSimpleInferenceTests extends TestCase {
 		
 		// test get instances and values of a specified infering attribute
 		Set<Entry<Instance, Set<Term>>> entrySet2 = wsmlReasoner.
-				getInferingAttributeInstances((IRI) ontology.getIdentifier(), 
+				getInferingAttributeInstances( 
 				wsmoFactory.createIRI(ns + "hasChild")).entrySet();
 		for (Entry<Instance, Set<Term>> entry : entrySet2) {
 //			System.out.println(((IRI) entry.getKey().getIdentifier()).getLocalName().toString());
@@ -415,7 +415,7 @@ public class DLSimpleInferenceTests extends TestCase {
 		
 		// test get instances and values of a specified constraint attribute
         Set<Entry<Instance, Set<Term>>> entrySetTerm2 = wsmlReasoner.getConstraintAttributeInstances(
-				(IRI) ontology.getIdentifier(), 
+				 
 				wsmoFactory.createIRI(ns + "ageOfHuman")).entrySet();
 		for (Entry<Instance, Set<Term>> entry : entrySetTerm2) {
 //			System.out.println(((IRI) entry.getKey().getIdentifier()).getLocalName().toString());
@@ -426,54 +426,54 @@ public class DLSimpleInferenceTests extends TestCase {
 		assertTrue(entrySetTerm2.size() == 3);
 		
 		// test isInstanceHavingInferingAttributeValue
-		assertTrue(wsmlReasoner.executeGroundQuery((IRI) ontology.getIdentifier(),
+		assertTrue(wsmlReasoner.executeGroundQuery(
 				leFactory.createLogicalExpression("Mary [hasChild hasValue Jack].", 
 						ontology)));
 		
 		// test isInstanceNotHavingInferingAttributeValue
-		assertFalse(wsmlReasoner.executeGroundQuery((IRI) ontology.getIdentifier(), 
+		assertFalse(wsmlReasoner.executeGroundQuery( 
 				leFactory.createLogicalExpression("Mary [hasChild hasValue Bob].", 
 						ontology)));
 		
 		// test isInstanceHavingConstraintAttributeValue
-		assertTrue(wsmlReasoner.executeGroundQuery((IRI) ontology.getIdentifier(), 
+		assertTrue(wsmlReasoner.executeGroundQuery( 
 				leFactory.createLogicalExpression("Mary [hasName hasValue " +
 						"\"Mary Jones\"].", ontology)));
 		
 		// test isInstanceNotHavingConstraintAttributeValue
-		assertFalse(wsmlReasoner.executeGroundQuery((IRI) ontology.getIdentifier(), 
+		assertFalse(wsmlReasoner.executeGroundQuery( 
 				leFactory.createLogicalExpression("Mary [hasWeight hasValue 60].", 
 						ontology)));
 		
 		// test getInferingAttributeValue
 		assertTrue(wsmlReasoner.getInferingAttributeValues(
-				(IRI) ontology.getIdentifier(), 
+				 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Mary")),
 				wsmoFactory.createIRI(ns + "hasChild")).contains( 
 					wsmoFactory.createIRI(ns + "Jack")));
 		
 		// test getInferingAttributeValue false
 		assertFalse(wsmlReasoner.getInferingAttributeValues(
-				(IRI) ontology.getIdentifier(), 
+				 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Mary")),
 				wsmoFactory.createIRI(ns + "hasChild")).contains( 
 					wsmoFactory.createIRI(ns + "Bob")));
 
 		// test getConstraintAttributeValue
 		assertTrue(wsmlReasoner.getConstraintAttributeValues(
-				(IRI) ontology.getIdentifier(), 
+				 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Mary")),
 				wsmoFactory.createIRI(ns + "ageOfHuman")).contains("33"));
 		
 		// test getConstraintAttributeValue false
 		assertFalse(wsmlReasoner.getConstraintAttributeValues(
-				(IRI) ontology.getIdentifier(), 
+				 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Mary")),
 				wsmoFactory.createIRI(ns + "ageOfHuman")).contains("40"));
 		
 		// test getInferingAttributeValues
 		Set set4 = wsmlReasoner.getInferingAttributeValues(
-				(IRI) ontology.getIdentifier(), 
+				 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Clare")),
 				wsmoFactory.createIRI(ns + "hasChild"));
 //		for(Object iri : set4)
@@ -482,14 +482,14 @@ public class DLSimpleInferenceTests extends TestCase {
 
 		// test getConstraintAttributeValues
 		set4 = wsmlReasoner.getConstraintAttributeValues(
-				(IRI) ontology.getIdentifier(), 
+				 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Mary")),
 				wsmoFactory.createIRI(ns + "hasWeight"));
 //		for(Object dataValue : set4)
 //			System.out.println(dataValue);
 		assertTrue(set4.size() == 1);
 		
-		wsmlReasoner.deRegisterOntology((IRI) ontology.getIdentifier());
+		wsmlReasoner.deRegister();
 	}
 	
 	// test inconsistent ontology

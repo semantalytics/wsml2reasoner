@@ -101,7 +101,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
 //        System.out.println(serializeOntology(ontology)+"\n\n\n-------------\n\n\n");
 		
 		// transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		serializer.serialize(owlOntology, writer);
 		System.out.println(writer.toString());
@@ -118,7 +118,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
 //        axiom.addDefinition(le);
 //        
 //        // transform ontology to OWL ontology
-//		owlOntology = dlReasoner.convertOntology(ontology);
+//		owlOntology = dlReasoner.createOWLOntology(ontology);
 //		serializer.serialize(owlOntology, writer, prefs);
 ////		serializer.serialize(owlOntology, writer);
 //		System.out.println(writer.toString());
@@ -136,7 +136,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		serializer.serialize(owlOntology, writer);
 		System.out.println(writer.toString());
@@ -155,7 +155,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		serializer.serialize(owlOntology, writer);
 		System.out.println(writer.toString());
@@ -174,7 +174,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		serializer.serialize(owlOntology, writer);
 		System.out.println(writer.toString());
@@ -193,7 +193,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		serializer.serialize(owlOntology, writer);
 		System.out.println(writer.toString());
@@ -212,7 +212,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		serializer.serialize(owlOntology, writer);
 		System.out.println(writer.toString());
@@ -231,7 +231,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		serializer.serialize(owlOntology, writer);
 		System.out.println(writer.toString());
@@ -250,7 +250,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		serializer.serialize(owlOntology, writer);
 		System.out.println(writer.toString());
@@ -270,7 +270,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		serializer.serialize(owlOntology, writer);
 		System.out.println(writer.toString());
@@ -289,7 +289,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		serializer.serialize(owlOntology, writer);
 		System.out.println(writer.toString());
@@ -308,7 +308,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		serializer.serialize(owlOntology, writer);
 		System.out.println(writer.toString());
@@ -327,7 +327,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		serializer.serialize(owlOntology, writer);
 		System.out.println(writer.toString());
@@ -346,7 +346,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		serializer.serialize(owlOntology, writer);
 		System.out.println(writer.toString());
@@ -366,7 +366,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
 //        axiom.addDefinition(le);
 //        
 //        // transform ontology to OWL ontology
-//		owlOntology = dlReasoner.convertOntology(ontology);
+//		owlOntology = dlReasoner.createOWLOntology(ontology);
 //		serializer.serialize(owlOntology, writer, prefs);
 ////		serializer.serialize(owlOntology, writer);
 //		System.out.println(writer.toString());
@@ -386,7 +386,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		serializer.serialize(owlOntology, writer);
 		System.out.println(writer.toString());
@@ -405,7 +405,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		serializer.serialize(owlOntology, writer);
 		System.out.println(writer.toString());
@@ -424,7 +424,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		serializer.serialize(owlOntology, writer);
 		System.out.println(writer.toString());
@@ -444,7 +444,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		serializer.serialize(owlOntology, writer);
 		System.out.println(writer.toString());
@@ -464,7 +464,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		serializer.serialize(owlOntology, writer);
 		System.out.println(writer.toString());
@@ -484,7 +484,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		serializer.serialize(owlOntology, writer);
 		System.out.println(writer.toString());
@@ -503,7 +503,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		serializer.serialize(owlOntology, writer);
 		System.out.println(writer.toString());
@@ -523,7 +523,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		serializer.serialize(owlOntology, writer);
 		System.out.println(writer.toString());
@@ -544,7 +544,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		serializer.serialize(owlOntology, writer);
 		System.out.println(writer.toString());
@@ -564,7 +564,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         axiom.addDefinition(le);
         
         // transform ontology to OWL ontology
-		owlOntology = dlReasoner.convertOntology(ontology);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
 		serializer.serialize(owlOntology, writer, prefs);
 //		serializer.serialize(owlOntology, writer);
 		System.out.println(writer.toString());

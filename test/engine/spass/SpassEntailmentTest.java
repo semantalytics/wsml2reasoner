@@ -87,20 +87,20 @@ public class SpassEntailmentTest extends BaseReasonerTest {
         LogicalExpression conjecture = leFactory.createLogicalExpression(
                 "Lisa[hasAncestor hasValue GrandPa]",ont);
         EntailmentType result = wsmlReasoner.checkEntailment(
-                (IRI)ont.getIdentifier(), conjecture);
+                conjecture);
         assertEquals(EntailmentType.entailed, result);
         
         
         conjecture = leFactory.createLogicalExpression(
                 "exists ?x (?x[hasChild hasValue someChild])",ont);
         result = wsmlReasoner.checkEntailment(
-                (IRI)ont.getIdentifier(), conjecture);
+                conjecture);
         assertEquals(EntailmentType.entailed, result);
         
         conjecture = leFactory.createLogicalExpression(
                 "exists ?x (March[hasChild hasValue ?x])",ont);
         result = wsmlReasoner.checkEntailment(
-                (IRI)ont.getIdentifier(), conjecture);
+                conjecture);
         assertEquals(EntailmentType.entailed, result);
     }
     
@@ -118,12 +118,12 @@ public class SpassEntailmentTest extends BaseReasonerTest {
         LogicalExpression conjecture = leFactory.createLogicalExpression(
                 "exists ?x (?x[b hasValue c]).",ont);
         EntailmentType t;
-        t = wsmlReasoner.checkEntailment(iri, conjecture);
+        t = wsmlReasoner.checkEntailment(conjecture);
         assertEquals(EntailmentType.entailed, t);
         
         conjecture = leFactory.createLogicalExpression(
                 "f[b hasValue d]",ont);
-        t = wsmlReasoner.checkEntailment(iri, conjecture);
+        t = wsmlReasoner.checkEntailment(conjecture);
         assertEquals(EntailmentType.notEntailed, t);
     }
     static int i;
@@ -152,12 +152,12 @@ public class SpassEntailmentTest extends BaseReasonerTest {
     	
     	conjecture= leFactory.createLogicalExpression(
                 "22 > 2",ont);
-        t = wsmlReasoner.checkEntailment((IRI)ont.getIdentifier(), conjecture);
+        t = wsmlReasoner.checkEntailment(conjecture);
         assertEquals(EntailmentType.entailed, t);
     	
     	conjecture= leFactory.createLogicalExpression(
                 "hv(i,(6+6)).",ont);
-        t = wsmlReasoner.checkEntailment((IRI)ont.getIdentifier(), conjecture);
+        t = wsmlReasoner.checkEntailment(conjecture);
         assertEquals(EntailmentType.entailed, t);
         
 //        conjecture = leFactory.createLogicalExpression(
