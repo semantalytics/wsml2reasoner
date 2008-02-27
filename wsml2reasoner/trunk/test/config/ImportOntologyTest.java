@@ -137,7 +137,7 @@ public class ImportOntologyTest extends BaseReasonerTest {
         params.put(WSMLReasonerFactory.PARAM_ALLOW_IMPORTS, 0);
         Set<Map<Variable, Term>> result = null;
         reasoner.registerOntology(ontology);
-        result = reasoner.executeQuery((IRI) ontology.getIdentifier(), query);
+        result = reasoner.executeQuery(query);
         System.out.println("Result:");
         for (Map<Variable, Term> vt : result){
         	for(Variable v : vt.keySet()){

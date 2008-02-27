@@ -24,7 +24,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Axiom;
@@ -46,6 +45,7 @@ import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsml.reasoner.transformation.le.FOLMoleculeDecompositionRules;
 import org.wsml.reasoner.transformation.le.LogicalExpressionNormalizer;
 import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
+import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -90,7 +90,7 @@ public class FOLBasedWSMLReasoner implements WSMLFOLReasoner {
     /**
      * 
      */
-    public List<EntailmentType> checkEntailment(IRI ontologyID, List<LogicalExpression> conjectures) {
+    public List<EntailmentType> checkEntailment(List<LogicalExpression> conjectures) {
         
         LogicalExpressionNormalizer moleculeNormalizer = new OnePassReplacementNormalizer(
                 new FOLMoleculeDecompositionRules(wsmoManager), wsmoManager);
@@ -106,23 +106,23 @@ public class FOLBasedWSMLReasoner implements WSMLFOLReasoner {
         
         
         
-        return builtInFacade.checkEntailment(ontologyID.toString(), newconjectures);
+        return builtInFacade.checkEntailment(newconjectures);
     }
 
     /* (non-Javadoc)
      * @see org.wsml.reasoner.api.WSMLFOLReasoner#checkEntailment(org.wsmo.common.IRI, org.omwg.logicalexpression.LogicalExpression)
      */
-    public EntailmentType checkEntailment(IRI ontologyID, LogicalExpression conjectures) {
+    public EntailmentType checkEntailment(LogicalExpression conjectures) {
         List<LogicalExpression> l = new ArrayList<LogicalExpression>();
         l.add(conjectures);
-        List<EntailmentType> result = checkEntailment(ontologyID, l);
+        List<EntailmentType> result = checkEntailment(l);
         return result.get(0);
     }
 
     /* (non-Javadoc)
      * @see org.wsml.reasoner.api.WSMLReasoner#checkConsistency(org.wsmo.common.IRI)
      */
-    public Set<ConsistencyViolation> checkConsistency(IRI ontologyID) {
+    public Set<ConsistencyViolation> checkConsistency() {
         
         //not sure actually... TODO: CHECK ME!
         //should not be a consisteny violation anyway
@@ -132,37 +132,34 @@ public class FOLBasedWSMLReasoner implements WSMLFOLReasoner {
         } catch (ParserException e) {
             throw new RuntimeException("should never happen!");
         }
-        EntailmentType result = checkEntailment(ontologyID, le);
+        EntailmentType result = checkEntailment(le);
         Set<ConsistencyViolation> cons = new HashSet<ConsistencyViolation>();
         if (result==EntailmentType.notEntailed){
-            cons.add(new ConsistencyViolation(ontologyID));
+            cons.add(new ConsistencyViolation());
         }
         return cons;
     }
 
-    public void deRegisterOntology(IRI ontologyID) {
-        deRegisterOntology(ontologyID);
-    }
-
-    public void deRegisterOntology(Set<IRI> ontologyIDs) {
-        for (IRI iri: ontologyIDs){
-            deRegisterOntology(iri);
+    public void deRegister() {
+    	try {
+            builtInFacade.deregister();
+        } catch (org.wsml.reasoner.ExternalToolException e) {
+            e.printStackTrace();
         }
-        
     }
 
     /**
      * stupid we should change existing IF at some point!
      */
-    public boolean entails(IRI ontologyID, LogicalExpression expression) {
-        return (checkEntailment(ontologyID, expression)==EntailmentType.entailed);
+    public boolean entails(LogicalExpression expression) {
+        return (checkEntailment(expression)==EntailmentType.entailed);
     }
 
     /**
      * stupid we should change existing IF at some point!
      */
-    public boolean entails(IRI ontologyID, Set<LogicalExpression> expressions) {
-        List<EntailmentType> l = checkEntailment(ontologyID, new ArrayList<LogicalExpression>(expressions));
+    public boolean entails(Set<LogicalExpression> expressions) {
+        List<EntailmentType> l = checkEntailment(new ArrayList<LogicalExpression>(expressions));
         boolean result = true;
         for (EntailmentType t :l){
             if (t!=EntailmentType.entailed){
@@ -172,28 +169,42 @@ public class FOLBasedWSMLReasoner implements WSMLFOLReasoner {
         return result;
     }
 
-    public boolean executeGroundQuery(IRI ontologyID, LogicalExpression query) {
-        return entails(ontologyID, query);
-    }
-
-    public void registerOntologies(Set<Ontology> ontologies) throws InconsistencyException {
-        for (Ontology o: ontologies){
-            registerOntology(o);
-        }
+    public boolean executeGroundQuery(LogicalExpression query) {
+        return entails(query);
     }
 
     public void registerOntology(Ontology ontology) throws InconsistencyException {
-        Ontology ontologyAsExpressions;
-        
-        //in order to keep track of cyclic imports
-        Set<Ontology> importedOntologies = new HashSet<Ontology>();
-        
+    	Set <Ontology> ontologies = new HashSet <Ontology>();
+    	ontologies.add(ontology);
+    	registerOntologies(ontologies);
+    }
+    
+    public void registerOntologies(Set<Ontology> ontologies) throws InconsistencyException {
+    	Set <Entity> entities = new HashSet <Entity>();
+        for (Ontology ontology : ontologies){
+	    	entities.addAll(ontology.listConcepts());
+	    	entities.addAll(ontology.listInstances());
+	    	entities.addAll(ontology.listRelations());
+	    	entities.addAll(ontology.listRelationInstances());
+	    	entities.addAll(ontology.listAxioms());
+        }
+    	registerEntities(entities);
+    }
+    
+    public void registerEntities(Set <Entity> entities) throws InconsistencyException {
         // Convert conceptual syntax to logical expressions
-        OntologyNormalizer normalizer = new AxiomatizationNormalizer(wsmoManager, importedOntologies);
-        ontologyAsExpressions = normalizer.normalize(ontology);
+        OntologyNormalizer normalizer = new AxiomatizationNormalizer(wsmoManager);
+        entities = normalizer.normalizeEntities(entities);
 
+        Set <Axiom> axioms = new HashSet <Axiom> ();
+        for (Entity e : entities){
+        	if (e instanceof Axiom){
+        		axioms.add((Axiom) e);
+        	}
+        }
+        
         normalizer = new MoleculeNormalizer(wsmoManager);
-        ontologyAsExpressions = normalizer.normalize(ontologyAsExpressions);
+        axioms = normalizer.normalizeAxioms(axioms);
         
 //      System.out.println("\n-------\n Ontology after Normalization:\n" +
 //      BaseNormalizationTest.serializeOntology(normalizedOntology));
@@ -219,13 +230,13 @@ public class FOLBasedWSMLReasoner implements WSMLFOLReasoner {
 
 
         Set<LogicalExpression> les = new HashSet<LogicalExpression>();
-        for (Axiom a :(Set<Axiom>)ontologyAsExpressions.listAxioms()){
+        for (Axiom a : axioms){
             for (LogicalExpression le : (Set<LogicalExpression>)a.listDefinitions()){
                 les.add(quantify(le));
             }
         }
         try {
-            builtInFacade.register(ontology.getIdentifier().toString(), les);
+            builtInFacade.register(les);
         } catch (ExternalToolException e) {
             throw new RuntimeException(e);
         }
@@ -253,39 +264,39 @@ public class FOLBasedWSMLReasoner implements WSMLFOLReasoner {
      * ##################################
      */
     
-    public Set<Map<Variable, Term>> executeQuery(IRI ontologyID, LogicalExpression query) {
+    public Set<Map<Variable, Term>> executeQuery(LogicalExpression query) {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public Set<Concept> getAllConcepts(IRI ontologyID) {
+    public Set<Concept> getAllConcepts() {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public Set<Concept> getConcepts(IRI ontologyID, Instance instance) {
+    public Set<Concept> getConcepts(Instance instance) {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public Set<Instance> getInstances(IRI ontologyID, Concept concept) {
+    public Set<Instance> getInstances(Concept concept) {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public Set<Concept> getSubConcepts(IRI ontologyID, Concept concept) {
+    public Set<Concept> getSubConcepts(Concept concept) {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public Set<Concept> getSuperConcepts(IRI ontologyID, Concept concept) {
+    public Set<Concept> getSuperConcepts(Concept concept) {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public boolean isMemberOf(IRI ontologyID, Instance instance, Concept concept) {
+    public boolean isMemberOf(Instance instance, Concept concept) {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public boolean isSatisfiable(IRI ontologyID) {
+    public boolean isSatisfiable() {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public boolean isSubConceptOf(IRI ontologyID, Concept subConcept, Concept superConcept) {
+    public boolean isSubConceptOf(Concept subConcept, Concept superConcept) {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
     
@@ -293,121 +304,121 @@ public class FOLBasedWSMLReasoner implements WSMLFOLReasoner {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
 
-    public void registerOntologiesNoVerification(Set<Ontology> ontologies) {
+    public void registerEntitiesNoVerification(Set<Entity> entities) {
         throw new UnsupportedOperationException("This method is not yet implemented");
     }
     
-	public Set<Instance> getAllInstances(IRI ontologyID) {
+	public Set<Instance> getAllInstances() {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Set<IRI> getAllAttributes(IRI ontologyID) {
+	public Set<IRI> getAllAttributes() {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Set<IRI> getAllConstraintAttributes(IRI ontologyID) {
+	public Set<IRI> getAllConstraintAttributes() {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Set<IRI> getAllInferenceAttributes(IRI ontologyID) {
+	public Set<IRI> getAllInferenceAttributes() {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Set<Concept> getEquivalentConcepts(IRI ontologyID, Concept concept) {
+	public Set<Concept> getEquivalentConcepts(Concept concept) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public boolean isEquivalentConcept(IRI ontologyID, Concept concept1, Concept concept2) {
+	public boolean isEquivalentConcept(Concept concept1, Concept concept2) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Set<Concept> getDirectConcepts(IRI ontologyID, Instance instance) {
+	public Set<Concept> getDirectConcepts(Instance instance) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Set<IRI> getSubRelations(IRI ontologyID, Identifier attributeId) {
+	public Set<IRI> getSubRelations(Identifier attributeId) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Set<IRI> getSuperRelations(IRI ontologyID, Identifier attributeId) {
+	public Set<IRI> getSuperRelations(Identifier attributeId) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Set<IRI> getEquivalentRelations(IRI ontologyID, Identifier attributeId) {
+	public Set<IRI> getEquivalentRelations(Identifier attributeId) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Set<IRI> getInverseRelations(IRI ontologyID, Identifier attributeId) {
+	public Set<IRI> getInverseRelations(Identifier attributeId) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Set<Concept> getConceptsOf(IRI ontologyID, Identifier attributeId) {
+	public Set<Concept> getConceptsOf(Identifier attributeId) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Set<IRI> getRangesOfInferingAttribute(IRI ontologyID, Identifier attributeId) {
+	public Set<IRI> getRangesOfInferingAttribute(Identifier attributeId) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Set<IRI> getRangesOfConstraintAttribute(IRI ontologyID, Identifier attributeId) {
+	public Set<IRI> getRangesOfConstraintAttribute(Identifier attributeId) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Map<IRI, Set<Term>> getInferingAttributeValues(IRI ontologyID, Instance instance) {
+	public Map<IRI, Set<Term>> getInferingAttributeValues(Instance instance) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Map<IRI, Set<Term>> getConstraintAttributeValues(IRI ontologyID, Instance instance) {
+	public Map<IRI, Set<Term>> getConstraintAttributeValues(Instance instance) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Map<Instance, Set<Term>> getInferingAttributeInstances(IRI ontologyID, Identifier attributeId) {
+	public Map<Instance, Set<Term>> getInferingAttributeInstances(Identifier attributeId) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Map<Instance, Set<Term>> getConstraintAttributeInstances(IRI ontologyID, Identifier attributeId) {
+	public Map<Instance, Set<Term>> getConstraintAttributeInstances(Identifier attributeId) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Instance getInferingAttributeValue(IRI ontologyID, Instance subject, Identifier attributeId) {
+	public Instance getInferingAttributeValue(Instance subject, Identifier attributeId) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public String getConstraintAttributeValue(IRI ontologyID, Instance subject, Identifier attributeId) {
+	public String getConstraintAttributeValue(Instance subject, Identifier attributeId) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Set<Instance> getInferingAttributeValues(IRI ontologyID, Instance subject, Identifier attributeId) {
+	public Set<Instance> getInferingAttributeValues(Instance subject, Identifier attributeId) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Set<String> getConstraintAttributeValues(IRI ontologyID, Instance subject, Identifier attributeId) {
+	public Set<String> getConstraintAttributeValues(Instance subject, Identifier attributeId) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Set<Concept> getDirectSubConcepts(IRI ontologyID, Concept concept) {
+	public Set<Concept> getDirectSubConcepts(Concept concept) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Set<Concept> getDirectSuperConcepts(IRI ontologyID, Concept concept) {
+	public Set<Concept> getDirectSuperConcepts(Concept concept) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Set<IRI> getDirectSubRelations(IRI ontologyID, Identifier attributeId) {
+	public Set<IRI> getDirectSubRelations(Identifier attributeId) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
-	public Set<IRI> getDirectSuperRelations(IRI ontologyID, Identifier attributeId) {
+	public Set<IRI> getDirectSuperRelations(Identifier attributeId) {
 		throw new UnsupportedOperationException("This method is not yet implemented");
 	}
 
 	public boolean checkQueryContainment(LogicalExpression query1,
-			LogicalExpression query2, IRI ontologyID) {
+			LogicalExpression query2) {
 		throw new UnsupportedOperationException("This method is not implemented");
 	}
 	
 	public Set<Map<Variable, Term>> getQueryContainment(LogicalExpression query1,
-			LogicalExpression query2, IRI ontologyID) {
+			LogicalExpression query2) {
 		throw new UnsupportedOperationException("This method is not implemented");
 	}
 	

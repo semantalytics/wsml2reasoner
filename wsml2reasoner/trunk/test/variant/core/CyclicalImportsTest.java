@@ -24,8 +24,7 @@ public class CyclicalImportsTest extends BaseReasonerTest {
     protected void setUp() throws Exception {
     	super.setUp();
     	parseThis(getReaderForFile("test/files/CyclicalImports2.wsml"));
-        setupScenario(ONTOLOGY_FILE); 
-        previous =  BaseReasonerTest.reasoner;             
+        previous =  BaseReasonerTest.reasoner;
      }
 
     protected void tearDown() throws Exception {
@@ -87,20 +86,24 @@ public class CyclicalImportsTest extends BaseReasonerTest {
     
     public void testAllReasoners() throws Exception{
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+    	setupScenario(ONTOLOGY_FILE); 
     	cyclicalImports4Datalog();
     	cyclicalImports();
     	
-//    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
-//    	cyclicalImports4Datalog();
-//    	cyclicalImports();
-//    	    	
-//    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET);
-//    	cyclicalImports();
-//    	
-//    	if (exists("org.wsml.reasoner.builtin.kaon2.Kaon2Facade")) { 
-//    		resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
-//    	   	cyclicalImports4Datalog();
-//    	   	cyclicalImports();
-//    	}
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
+    	setupScenario(ONTOLOGY_FILE); 
+    	cyclicalImports4Datalog();
+    	cyclicalImports();
+    	    	
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET);
+    	setupScenario(ONTOLOGY_FILE); 
+    	cyclicalImports();
+    	
+    	if (exists("org.wsml.reasoner.builtin.kaon2.Kaon2Facade")) { 
+    		resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+			setupScenario(ONTOLOGY_FILE); 
+    	   	cyclicalImports4Datalog();
+    	   	cyclicalImports();
+    	}
     }
 }

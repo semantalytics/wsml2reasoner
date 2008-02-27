@@ -47,7 +47,7 @@ public interface FOLReasonerFacade{
      * @throws ExternalToolException
      *             if some exception happens during ontology registration
      */
-    public void register(String ontologyURI, Set<LogicalExpression> kb)
+    public void register(Set<LogicalExpression> kb)
             throws ExternalToolException;
 
     /**
@@ -58,7 +58,7 @@ public interface FOLReasonerFacade{
      * @throws ExternalToolException
      *             if exception happens during ontology removal
      */
-    public void deregister(String ontologyURI) throws ExternalToolException;
+    public void deregister() throws ExternalToolException;
 
     /**
      * Evaluates a set of conjectures on a particular external tool.
@@ -71,6 +71,6 @@ public interface FOLReasonerFacade{
      *             in case that some error occurs during the execution of the
      *             query
      */
-    public List<EntailmentType> checkEntailment(String ontologyIRI, List<LogicalExpression> conjecture);
+    public List<EntailmentType> checkEntailment(List<LogicalExpression> conjecture);
 
 }

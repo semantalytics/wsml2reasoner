@@ -19,7 +19,6 @@ public class BundledWSMLDLTests {
 		suite.addTestSuite(WSML2OWLTest.class);
 		suite.addTestSuite(DLSimpleInferenceTests.class);
 		suite.addTestSuite(WSMLDLNormalizerTest.class);
-		suite.addTestSuite(DLOntologyRegistrationTest.class);
 		suite.addTestSuite(CycleTests.class);
 		//$JUnit-END$
 		return suite;

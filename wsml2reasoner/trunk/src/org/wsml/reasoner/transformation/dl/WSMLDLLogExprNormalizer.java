@@ -23,6 +23,7 @@ import org.wsml.reasoner.transformation.le.LogicalExpressionNormalizer;
 import org.wsml.reasoner.transformation.le.MoleculeDecompositionRules;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
 import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
+import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.UnnumberedAnonymousID;
@@ -86,47 +87,65 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
      * @see OntologyNormalizer#normalize(Ontology)
      */
 	
-	public Ontology normalize(Ontology ontology) {
-		try {		
-			// normalizing concepts (replace unnumbered anonymous identifiers)
-			ontology = normalizeConcepts(ontology);
-			// normalizing instances (replace unnumbered anonymous identifiers)
-			ontology = normalizeInstances(ontology);
-		} catch (SynchronisationException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidModelException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		// gather logical expressions from normalized axioms       
-        Set<Axiom> axioms = (Set<Axiom>) ontology.listAxioms();       
-        Set<LogicalExpression> resultExp = normalizeLogExpr(axioms);
-        
-        // create new ontology containing the resulting logical expressions:
-        Ontology resultOnt = wsmoFactory.createOntology((IRI) ontology.getIdentifier());
-        
-        // delete old axioms (wsmo4j statics :( ) and add a new one containing the 
-        // normalized logical expressions
-        for (Axiom a : (Set<Axiom>)resultOnt.listAxioms()){
-            try {
-                a.setOntology(null);
-            } catch (InvalidModelException e) {
-                e.printStackTrace();
-            }
-        }
-        Axiom axiom = wsmoFactory.createAxiom((IRI) 
-        		anonymousIdTranslator.translate(wsmoFactory.createAnonymousID()));
-        for (LogicalExpression expression : resultExp) {
+	public Set <Axiom> normalizeAxioms(Collection <Axiom> theAxioms){
+		Set <Axiom> result = new HashSet <Axiom> ();
+		Axiom axiom = wsmoFactory.createAxiom((IRI) anonymousIdTranslator.translate(wsmoFactory.createAnonymousID()));
+        for (LogicalExpression expression : normalizeLogExpr(theAxioms)) {
             axiom.addDefinition(expression);
         }
-        try {
-            resultOnt.addAxiom(axiom);
-        } catch (InvalidModelException e) {
-            e.printStackTrace();
-        }
-        return resultOnt;
+        result.add(axiom);
+        return result;
+    }
+
+    /**
+     * Performs the transformation that is described above.
+     * 
+     * @param o -
+     *            the ontology for which we need to resolve the conceptual
+     *            syntax part.
+     * 
+     * @return an ontology represent o semantically but only consists of axioms
+     */
+    
+    public Set <Entity> normalizeEntities(Collection <Entity> theEntities) {
+    	Set <Entity> result = new HashSet <Entity> ();
+    	
+    	Set <Axiom> axiomsToProcess = new HashSet <Axiom> ();
+    	for (Entity e : theEntities){
+    		if (e instanceof Concept){
+    			try
+                {
+	                result.addAll(normalizeConcept((Concept) e));
+                }
+                catch( SynchronisationException e1 )
+                {
+	                e1.printStackTrace();
+                }
+                catch( InvalidModelException e1 )
+                {
+	                e1.printStackTrace();
+                }
+    		}
+    		else if (e instanceof Instance){
+    			try
+                {
+	                result.addAll(normalizeInstance((Instance) e));
+                }
+                catch( SynchronisationException e1 )
+                {
+	                e1.printStackTrace();
+                }
+                catch( InvalidModelException e1 )
+                {
+	                e1.printStackTrace();
+                }
+    		}
+    		else if (e instanceof Axiom){
+    			axiomsToProcess.add((Axiom) e);
+    		}
+    	}
+    	     
+        return new HashSet<Entity>(normalizeAxioms(axiomsToProcess));
 	}
 	
 	/*
@@ -140,75 +159,64 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
 	 * this superconcept's identifier is also replaced.
 	 */
 	
-	private Ontology normalizeConcepts(Ontology ontology) throws SynchronisationException, InvalidModelException {
-		Set<Concept> concepts = (Set<Concept>) ontology.listConcepts();
-		for (Concept concept : concepts) {
-			if (concept.getIdentifier() instanceof UnnumberedAnonymousID) {
-				Identifier id = (Identifier)anonymousIdTranslator.translate(
-						concept.getIdentifier());
-				Concept newConcept = wsmoFactory.createConcept(id);
-				// the superConcept to which the old concept refers to is transfered to the new 
-				// concept
-				if (concept.listSuperConcepts().size() > 0) {
-					Iterator<Concept> it = concept.listSuperConcepts().iterator();
-					while (it.hasNext()) {
-						Concept superConcept = it.next();
-						if (superConcept.getIdentifier() instanceof UnnumberedAnonymousID) {
-							Identifier id2 = (Identifier)anonymousIdTranslator.translate(
-									superConcept.getIdentifier());
-							superConcept = wsmoFactory.createConcept(id2);
-						}
-						newConcept.addSuperConcept(superConcept);
-					}	
-				}
-				// the attribute to which the old concept refers to is transfered to the new concept
-				if (concept.listAttributes().size() > 0) {
-					Iterator<Attribute> it = concept.listAttributes().iterator();
-					while (it.hasNext()) {
-						Attribute attribute = it.next();
-						Attribute newAttribute = null;
-						newAttribute = newConcept.createAttribute(attribute.getIdentifier());
-//						if (attribute.listNFPValues().size() > 0) {
-//							Set<Entry> nfpsSet = attribute.listNFPValues().entrySet();
-//							newAttribute = (Attribute) transferNFPs(nfpsSet, newAttribute);
-//						}
-						if (attribute.listTypes().size() > 0) {
-							Set<Type> types = attribute.listTypes();
-							Iterator<Type> it4 = types.iterator();
-							while (it4.hasNext()) {
-								Type type = it4.next();
-								newAttribute.addType(type);
-							}
+	private Set <Entity> normalizeConcept(Concept concept) throws SynchronisationException, InvalidModelException {
+		Set <Entity> result = new HashSet <Entity> ();
+		if (concept.getIdentifier() instanceof UnnumberedAnonymousID) {
+			Identifier id = (Identifier)anonymousIdTranslator.translate(
+					concept.getIdentifier());
+			Concept newConcept = wsmoFactory.createConcept(id);
+			// the superConcept to which the old concept refers to is transfered to the new 
+			// concept
+			if (concept.listSuperConcepts().size() > 0) {
+				Iterator<Concept> it = concept.listSuperConcepts().iterator();
+				while (it.hasNext()) {
+					Concept superConcept = it.next();
+					if (superConcept.getIdentifier() instanceof UnnumberedAnonymousID) {
+						Identifier id2 = (Identifier)anonymousIdTranslator.translate(
+								superConcept.getIdentifier());
+						superConcept = wsmoFactory.createConcept(id2);
+					}
+					newConcept.addSuperConcept(superConcept);
+				}	
+			}
+			// the attribute to which the old concept refers to is transfered to the new concept
+			if (concept.listAttributes().size() > 0) {
+				Iterator<Attribute> it = concept.listAttributes().iterator();
+				while (it.hasNext()) {
+					Attribute attribute = it.next();
+					Attribute newAttribute = null;
+					newAttribute = newConcept.createAttribute(attribute.getIdentifier());
+					if (attribute.listTypes().size() > 0) {
+						Set<Type> types = attribute.listTypes();
+						Iterator<Type> it4 = types.iterator();
+						while (it4.hasNext()) {
+							Type type = it4.next();
+							newAttribute.addType(type);
 						}
 					}
 				}
-//				if (concept.listNFPValues().size() > 0) {
-//					Map nfps = concept.listNFPValues();
-//					Set<Entry> nfpsSet = nfps.entrySet();
-//					newConcept = (Concept) transferNFPs(nfpsSet, newConcept); 
-//				}
-				ontology.addConcept(newConcept);
-				ontology.removeConcept(concept);			
 			}
-			else {
-				// the superConcept to which the old concept refers to is transfered to the new 
-				// concept
-				if (concept.listSuperConcepts().size() > 0) {
-					Iterator<Concept> it = concept.listSuperConcepts().iterator();
-					while (it.hasNext()) {
-						Concept superConcept = it.next();
-						if (superConcept.getIdentifier() instanceof UnnumberedAnonymousID) {
-							concept.removeSuperConcept(superConcept);
-							Identifier id = (Identifier)anonymousIdTranslator.translate(
-									superConcept.getIdentifier());
-							superConcept = wsmoFactory.createConcept(id);
-							concept.addSuperConcept(superConcept);
-						}
-					}	
-				}
-			}
+			result.add(newConcept);			
 		}
-		return ontology;
+		else {
+			// the superConcept to which the old concept refers to is transfered to the new 
+			// concept
+			if (concept.listSuperConcepts().size() > 0) {
+				Iterator<Concept> it = concept.listSuperConcepts().iterator();
+				while (it.hasNext()) {
+					Concept superConcept = it.next();
+					if (superConcept.getIdentifier() instanceof UnnumberedAnonymousID) {
+						concept.removeSuperConcept(superConcept);
+						Identifier id = (Identifier)anonymousIdTranslator.translate(
+								superConcept.getIdentifier());
+						superConcept = wsmoFactory.createConcept(id);
+						concept.addSuperConcept(superConcept);
+					}
+				}	
+			}
+			result.add(concept);
+		}
+		return result;
 	}
 	
 	/*
@@ -220,38 +228,33 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
 	 * this concept's identifier is also replaced.
 	 */
 	
-	private Ontology normalizeInstances(Ontology ontology) throws SynchronisationException, InvalidModelException {
-		Set<Instance> instances = (Set<Instance>) ontology.listInstances();
-		Iterator<Instance> it = instances.iterator();
-		while (it.hasNext()) {
-			Instance instance = it.next();
-			Instance newInstance = null;
-			if (instance.getIdentifier() instanceof UnnumberedAnonymousID) {
-				Identifier id = (Identifier) anonymousIdTranslator.translate(
-						instance.getIdentifier());
-				newInstance = wsmoFactory.createInstance(id);
-				ontology.removeInstance(instance);
-				ontology.addInstance(newInstance);
-
-			}
-			else {
-				// replace concept's unnumbered anonymous identifiers
-				if (instance.listConcepts().size() > 0) {
-					Iterator<Concept> it2 = instance.listConcepts().iterator();
-					while (it2.hasNext()) {
-						Concept concept = it2.next();
-						if (concept.getIdentifier() instanceof UnnumberedAnonymousID) {
-							Identifier id = (Identifier) anonymousIdTranslator.translate(
-									concept.getIdentifier());
-							Concept newConcept = wsmoFactory.createConcept(id);
-							instance.removeConcept(concept);
-							instance.addConcept(newConcept);		
-						}
+	private Set <Entity> normalizeInstance(Instance instance) throws SynchronisationException, InvalidModelException {
+		Set <Entity> result = new HashSet <Entity> ();
+		Instance newInstance = null;
+		if (instance.getIdentifier() instanceof UnnumberedAnonymousID) {
+			Identifier id = (Identifier) anonymousIdTranslator.translate(
+					instance.getIdentifier());
+			newInstance = wsmoFactory.createInstance(id);
+			result.add(newInstance);
+		}
+		else {
+			// replace concept's unnumbered anonymous identifiers
+			if (instance.listConcepts().size() > 0) {
+				Iterator<Concept> it2 = instance.listConcepts().iterator();
+				while (it2.hasNext()) {
+					Concept concept = it2.next();
+					if (concept.getIdentifier() instanceof UnnumberedAnonymousID) {
+						Identifier id = (Identifier) anonymousIdTranslator.translate(
+								concept.getIdentifier());
+						Concept newConcept = wsmoFactory.createConcept(id);
+						instance.removeConcept(concept);
+						instance.addConcept(newConcept);		
 					}
 				}
 			}
+			result.add(instance);
 		}
-		return ontology;
+		return result;
 	}
 	
 	/*
@@ -260,7 +263,7 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
 	 * are applied.
 	 */
 	
-	private Set<LogicalExpression> normalizeLogExpr(Set<Axiom> axioms) {
+	private Set<LogicalExpression> normalizeLogExpr(Collection<Axiom> axioms) {
 		Set<LogicalExpression> expressions = new HashSet<LogicalExpression>();
 		for (Axiom axiom : axioms) {
             expressions.addAll((Collection<LogicalExpression>) axiom.listDefinitions());

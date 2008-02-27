@@ -61,8 +61,8 @@ public class Martin extends BaseReasonerTest {
     }
 
     /**
-     * This function tests the query: ?x[?att ofType ?y] on an ontologgy with a Concept having an
-     * attirubte.
+     * This function tests the query: ?x[?att ofType ?y] on an ontology with a Concept having an
+     * attribute.
      * 
      * @throws Exception
      */
@@ -77,7 +77,7 @@ public class Martin extends BaseReasonerTest {
 
         Set<Map<Variable, Term>> result = null;
         reasoner.registerOntology(ont);
-        result = reasoner.executeQuery((IRI) ont.getIdentifier(), query);        
+        result = reasoner.executeQuery(query);        
         System.out.println(result);
         assertEquals(1, result.size());
         

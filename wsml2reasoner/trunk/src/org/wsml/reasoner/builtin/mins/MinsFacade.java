@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.deri.mins.Atom;
 import org.deri.mins.Body;
 import org.deri.mins.DB;
@@ -125,7 +124,7 @@ public class MinsFacade implements DatalogReasonerFacade {
      * Here we store a MINS Engine which contains the compiled KB for each
      * registered ontology
      */
-    private Map<String, RuleSet> registeredKbs = new HashMap<String, RuleSet>();
+    private RuleSet minsEngine;
 
     private WSMO4JManager wsmoManager;
 
@@ -158,14 +157,11 @@ public class MinsFacade implements DatalogReasonerFacade {
      * 
      * @throws ExternalToolException
      */
-    public Set<Map<Variable, Term>> evaluate(ConjunctiveQuery q,
-            String ontologyURI) throws ExternalToolException {
+    public Set<Map<Variable, Term>> evaluate(ConjunctiveQuery q) throws ExternalToolException {
 
         try {
-            // retrieve KB ment for IRI:
-            RuleSet minsEngine = registeredKbs.get(ontologyURI);
             if (minsEngine == null){
-                throw new InternalReasonerException("No KB with given ID registered "+ontologyURI);
+                throw new InternalReasonerException("MINS reasoner not initialised");
             }
             Rule query = translateQuery(q, minsEngine);
 
@@ -466,15 +462,13 @@ public class MinsFacade implements DatalogReasonerFacade {
     /**
      * @see DatalogReasonerFacade#register(String, Set)
      */
-    public void register(String ontologyURI, Set<org.wsml.reasoner.Rule> kb)
+    public void register(Set<org.wsml.reasoner.Rule> kb)
             throws ExternalToolException {
         // Set up an instance of a MINS engine
         BuiltinConfig builtInConfig = new BuiltinConfig();
         DBInterface db = new DB(); // facts stored in RAM
-        RuleSet minsEngine = new RuleSet(builtInConfig, db);
+        minsEngine = new RuleSet(builtInConfig, db);
         minsEngine.debuglevel = 0;
-
-        // System.out.println(kb);
 
         // Translate (resp. Transfer) the knowledge base to MINS
         try {
@@ -485,14 +479,13 @@ public class MinsFacade implements DatalogReasonerFacade {
                     "Unsupported feature for MINS in knowledgebase.");
         }
         addDataTypeMemberShipRules(minsEngine);
-        registeredKbs.put(ontologyURI, minsEngine);
     }
 
     /**
      * @see DatalogReasonerFacade#deregister(String)
      */
-    public void deregister(String ontologyURI) throws ExternalToolException {
-    	registeredKbs.remove(ontologyURI);
+    public void deregister() throws ExternalToolException {
+    	minsEngine = null;
     }
 
     private void addDataTypeMemberShipRules(RuleSet rs) {
@@ -593,13 +586,11 @@ public class MinsFacade implements DatalogReasonerFacade {
                             0) }, new IsConst()) }));
     }
 
-	public boolean checkQueryContainment(ConjunctiveQuery query1,
-			ConjunctiveQuery query2, String ontologyURI){
+	public boolean checkQueryContainment(ConjunctiveQuery query1, ConjunctiveQuery query2){
 		throw new UnsupportedOperationException("This method is not implemented");
 	}
 	
-	public Set<Map<Variable, Term>> getQueryContainment(ConjunctiveQuery query1,
-			ConjunctiveQuery query2, String ontologyURI){
+	public Set<Map<Variable, Term>> getQueryContainment(ConjunctiveQuery query1, ConjunctiveQuery query2){
 		throw new UnsupportedOperationException("This method is not implemented");
 	}
 

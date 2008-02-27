@@ -79,12 +79,12 @@ public class ReasonerCreationTest extends BaseReasonerTest {
         System.out.println("\n--------------------------------------------------------------------");
         System.out.println("DL Reasoning: Registered - Instances ");
         System.out.println("--------------------------------------------------------------------");
-        Set<Instance> set = wsmlReasoner.getAllInstances((IRI) ontology.getIdentifier());
+        Set<Instance> set = wsmlReasoner.getAllInstances();
         for (Instance instance : set) {
         	System.out.println(instance.getIdentifier().toString());
         }
         
-        wsmlReasoner.deRegisterOntology((IRI) ontology.getIdentifier());
+        wsmlReasoner.deRegister();
         
 	}
 	
@@ -105,12 +105,12 @@ public class ReasonerCreationTest extends BaseReasonerTest {
         System.out.println("\n--------------------------------------------------------------------");
         System.out.println("Datalog Reasoning: Registered - Instances");
         System.out.println("--------------------------------------------------------------------");
-        Set<Instance> set = wsmlReasoner.getAllInstances((IRI) ontology.getIdentifier());
+        Set<Instance> set = wsmlReasoner.getAllInstances();
         for (Instance instance : set) {
         	System.out.println(instance.getIdentifier().toString());
         }
         
-        wsmlReasoner.deRegisterOntology((IRI) ontology.getIdentifier());
+        wsmlReasoner.deRegister();
 	}
 	
     public void testReasonerCreation() throws Exception{

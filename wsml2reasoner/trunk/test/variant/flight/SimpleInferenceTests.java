@@ -21,14 +21,12 @@ package variant.flight;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Map.Entry;
-
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsmo.common.IRI;
-
 import base.BaseReasonerTest;
 
 /*
@@ -74,43 +72,43 @@ public void basicInferences() throws Exception {
         wsmlReasoner.registerOntology(o);       
         
 		// test ontology satisfiability
-		assertTrue(wsmlReasoner.isSatisfiable((IRI) o.getIdentifier()));
+		assertTrue(wsmlReasoner.isSatisfiable());
 		
 		// test logicalExpressionIsNotConsistent with a MembershipMolecule
-		assertFalse(wsmlReasoner.entails((IRI) o.getIdentifier(), 
+		assertFalse(wsmlReasoner.entails( 
 				leFactory.createLogicalExpression(
 						"bart_simpson memberOf actor.", o)));
 		
 		// test logicalExpressionIsConsistent with a MembershipMolecule
-		assertTrue(wsmlReasoner.entails((IRI) o.getIdentifier(), 
+		assertTrue(wsmlReasoner.entails( 
 				leFactory.createLogicalExpression(
 						"bart_simpson memberOf character.", o)));
 		
 		// test logicalExpressionIsConsistent with a Conjunction
-		assertTrue(wsmlReasoner.entails((IRI) o.getIdentifier(), 
+		assertTrue(wsmlReasoner.entails( 
 				leFactory.createLogicalExpression(
 						"?x memberOf school and ?x memberOf place.", 
 						o)));
-		assertTrue(wsmlReasoner.entails((IRI) o.getIdentifier(), 
+		assertTrue(wsmlReasoner.entails( 
 				leFactory.createLogicalExpression(
 						"marge_simpson memberOf character and " +
 						"nancy_cartwright memberOf actor.", o)));
 		
 		// test logicalExpressionIsNotConsistent with a Conjunction
-		assertFalse(wsmlReasoner.entails((IRI) o.getIdentifier(), 
+		assertFalse(wsmlReasoner.entails( 
 				leFactory.createLogicalExpression(
 				"?x memberOf character and ?x memberOf actor.", o)));
     
 		// test getAllConcepts
 		Set<Concept> set = new HashSet<Concept>();
-		set = wsmlReasoner.getAllConcepts((IRI) o.getIdentifier());
+		set = wsmlReasoner.getAllConcepts();
 //		for (Concept concept : set) 
 //			System.out.println(concept.getIdentifier().toString());
 		assertTrue(set.size() == 16);
 		
 		// test getAllInstances
 		Set<Instance> set2 = new HashSet<Instance>();
-		set2 = wsmlReasoner.getAllInstances((IRI) o.getIdentifier());
+		set2 = wsmlReasoner.getAllInstances();
 //		for (Instance instance : set2) 
 //			System.out.println(instance.getIdentifier().toString());
 		assertTrue(set2.size() == 70);
@@ -120,28 +118,28 @@ public void basicInferences() throws Exception {
 		// either been explicitly defined as inferring or constraining attributes 
 		// or that have been assigned a value
 		Set<IRI> set3 = new HashSet<IRI>();
-		set3 = wsmlReasoner.getAllAttributes((IRI) o.getIdentifier());
+		set3 = wsmlReasoner.getAllAttributes();
 //		for (IRI attributeId : set3) 
 //			System.out.println(attributeId.toString());
 		assertTrue(set3.size() == 32);
 	
 		// test getAllConstraintAttributes
 		set3.clear();
-		set3 = wsmlReasoner.getAllConstraintAttributes((IRI) o.getIdentifier());
+		set3 = wsmlReasoner.getAllConstraintAttributes();
 //		for (IRI attributeId : set3) 
 //			System.out.println(attributeId.toString());
 		assertTrue(set3.size() == 28);
 		
 		// test getAllInferenceAttributes
 		set3.clear();
-		set3 = wsmlReasoner.getAllInferenceAttributes((IRI) o.getIdentifier());
+		set3 = wsmlReasoner.getAllInferenceAttributes();
 //		for (IRI attributeId : set3) 
 //			System.out.println(attributeId.toString());
 		assertTrue(set3.size() == 3);
 		
 		// test getSubConcepts
 		set.clear();
-		set = wsmlReasoner.getSubConcepts((IRI) o.getIdentifier(),  
+		set = wsmlReasoner.getSubConcepts(  
 				o.findConcept(wsmoFactory.createIRI(ns + "place")));
 //		for (Concept concept : set)
 //			System.out.println(concept.getIdentifier().toString());
@@ -149,7 +147,7 @@ public void basicInferences() throws Exception {
 		
 		// test getDirectSubConcepts
 		set.clear();
-		set = wsmlReasoner.getDirectSubConcepts((IRI) o.getIdentifier(),  
+		set = wsmlReasoner.getDirectSubConcepts(  
 				o.findConcept(wsmoFactory.createIRI(ns + "place")));
 //		for (Concept concept : set)
 //			System.out.println(concept.getIdentifier().toString());
@@ -157,7 +155,7 @@ public void basicInferences() throws Exception {
 		
 		// test getSuperConcepts
 		set.clear();
-		set = wsmlReasoner.getSuperConcepts((IRI) o.getIdentifier(), 
+		set = wsmlReasoner.getSuperConcepts( 
 				o.findConcept(wsmoFactory.createIRI(ns + "university")));
 //		for (Concept concept : set)
 //			System.out.println(concept.getIdentifier().toString());
@@ -165,7 +163,7 @@ public void basicInferences() throws Exception {
 
 		// test getDirectSuperConcepts
 		set.clear();
-		set = wsmlReasoner.getDirectSuperConcepts((IRI) o.getIdentifier(), 
+		set = wsmlReasoner.getDirectSuperConcepts( 
 				o.findConcept(wsmoFactory.createIRI(ns + "university")));
 //		for (Concept concept : set)
 //			System.out.println(concept.getIdentifier().toString());
@@ -173,38 +171,38 @@ public void basicInferences() throws Exception {
 
 		// test isSubConceptOf
 		assertTrue(wsmlReasoner.isSubConceptOf(
-				(IRI) o.getIdentifier(), 
+				 
 				o.findConcept(wsmoFactory.createIRI(ns + "university")), 
 				o.findConcept(wsmoFactory.createIRI(ns + "place"))));
-		assertTrue(wsmlReasoner.executeGroundQuery((IRI) o.getIdentifier(),
+		assertTrue(wsmlReasoner.executeGroundQuery(
 				leFactory.createLogicalExpression("workplace subConceptOf place", 
 						o)));
 		
 		// test isNotSubConceptOf
 		assertFalse(wsmlReasoner.isSubConceptOf(
-				(IRI) o.getIdentifier(), 
+				 
 				o.findConcept(wsmoFactory.createIRI(ns + "workplace")), 
 				o.findConcept(wsmoFactory.createIRI(ns + "character"))));
 		
 		// test isMemberOf
 		assertTrue(wsmlReasoner.isMemberOf(
-				(IRI) o.getIdentifier(), 
+				 
 				o.findInstance(wsmoFactory.createIRI(ns + "bart_simpson")), 
 				o.findConcept(wsmoFactory.createIRI(ns + "character"))));
-		assertTrue(wsmlReasoner.executeGroundQuery((IRI) o.getIdentifier(),
+		assertTrue(wsmlReasoner.executeGroundQuery(
 				leFactory.createLogicalExpression("bart_simpson memberOf character", 
 						o)));
 		
 		// test isNotMemberOf
 		assertFalse(wsmlReasoner.isMemberOf(
-				(IRI) o.getIdentifier(), 
+				 
 				o.findInstance(wsmoFactory.createIRI(ns + "bart_simpson")), 
 				o.findConcept(wsmoFactory.createIRI(ns + "actor"))));
 		
 		// test direct conceptsOf
 		set.clear();
 		set = wsmlReasoner.getDirectConcepts(
-				(IRI) o.getIdentifier(), 
+				 
 				o.findInstance(wsmoFactory.createIRI(ns + "springfield_elementary")));
 //		for(Concept concept : set)
 //			System.out.println(concept.getIdentifier().toString());
@@ -215,7 +213,7 @@ public void basicInferences() throws Exception {
 		// test allConceptsOf
 		set.clear();
 		set = wsmlReasoner.getConcepts(
-				(IRI) o.getIdentifier(), 
+				 
 				o.findInstance(wsmoFactory.createIRI(ns + "springfield_elementary")));
 //		for(Concept concept : set)
 //			System.out.println(concept.getIdentifier().toString());
@@ -226,7 +224,7 @@ public void basicInferences() throws Exception {
 		// test allInstancesOf
 		set2.clear();
 		set2 = wsmlReasoner.getInstances(
-				(IRI) o.getIdentifier(), 
+				 
 				o.findConcept(wsmoFactory.createIRI(ns + "workplace")));
 //		for(Instance instance : set2)
 //			System.out.println(instance.getIdentifier().toString());
@@ -234,7 +232,7 @@ public void basicInferences() throws Exception {
 		
 		// test getConceptsOfAttribute
 		set.clear();
-		set = wsmlReasoner.getConceptsOf((IRI) o.getIdentifier(), 
+		set = wsmlReasoner.getConceptsOf( 
 				wsmoFactory.createIRI(ns + "hasGender"));
 //		for (Concept concept : set)
 //			System.out.println(concept.getIdentifier().toString());
@@ -244,7 +242,7 @@ public void basicInferences() throws Exception {
 
 		// test getRangesOfInferingAttribute
 		set3.clear();
-		set3 = wsmlReasoner.getRangesOfInferingAttribute((IRI) o.getIdentifier(), 
+		set3 = wsmlReasoner.getRangesOfInferingAttribute( 
 				wsmoFactory.createIRI(ns + "testAttribute"));
 //		for (Identifier rangeId : set3)
 //			System.out.println(rangeId.toString());
@@ -252,7 +250,7 @@ public void basicInferences() throws Exception {
 		
 		// test getRangesOfConstraintAttribute
 		set3.clear();
-		set3 = wsmlReasoner.getRangesOfConstraintAttribute((IRI) o.getIdentifier(), 
+		set3 = wsmlReasoner.getRangesOfConstraintAttribute( 
 				wsmoFactory.createIRI(ns + "hasChild"));
 //		for (Identifier rangeId : set3)
 //			System.out.println(rangeId.toString());
@@ -260,7 +258,7 @@ public void basicInferences() throws Exception {
 		
 		// test getValuesOfInferingAttribute of a specified instance
 		Set<Entry<IRI, Set<Term>>> entrySet = wsmlReasoner.getInferingAttributeValues(
-				(IRI) o.getIdentifier(), 
+				 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "homer_simpson"))).entrySet();
 		for (Entry<IRI, Set<Term>> entry : entrySet) {
 //			System.out.println(entry.getKey().toString());
@@ -272,7 +270,7 @@ public void basicInferences() throws Exception {
 
 		// test getValuesOfConstraintAttribute of a specified instance
         Set <Entry<IRI, Set<Term>>> entrySetTerm = 
-				wsmlReasoner.getConstraintAttributeValues((IRI) o.getIdentifier(), 
+				wsmlReasoner.getConstraintAttributeValues( 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "marge_simpson"))).entrySet();
 		for (Entry<IRI, Set<Term>> entry : entrySetTerm) {
 //			System.out.println(entry.getKey().toString());
@@ -284,7 +282,7 @@ public void basicInferences() throws Exception {
 		
 		// test get instances and values of a specified infering attribute
 		Set<Entry<Instance, Set<Term>>> entrySet2 = wsmlReasoner.
-				getInferingAttributeInstances((IRI) o.getIdentifier(), 
+				getInferingAttributeInstances( 
 				wsmoFactory.createIRI(ns + "testAttribute")).entrySet();
 		for (Entry<Instance, Set<Term>> entry : entrySet2) {
 //			System.out.println(entry.getKey().getIdentifier().toString());
@@ -296,7 +294,7 @@ public void basicInferences() throws Exception {
 				
 		// test get instances and values of a specified constraint attribute
         Set<Entry<Instance, Set<Term>>> entrySetTerm2 = wsmlReasoner.getConstraintAttributeInstances(
-				(IRI) o.getIdentifier(), 
+				 
 				wsmoFactory.createIRI(ns + "hasCatchPhrase")).entrySet();
 		for (Entry<Instance, Set<Term>> entry : entrySetTerm2) {
 //			System.out.println(entry.getKey().getIdentifier().toString());
@@ -307,29 +305,29 @@ public void basicInferences() throws Exception {
 		assertTrue(entrySetTerm2.size() == 3);
 		
 		// test isInstanceHavingInferingAttributeValue
-		assertTrue(wsmlReasoner.executeGroundQuery((IRI) o.getIdentifier(),
+		assertTrue(wsmlReasoner.executeGroundQuery(
 				leFactory.createLogicalExpression("marge_simpson[hasChild " +
 						"hasValue bart_simpson].", o)));
 		
 		// test isInstanceNotHavingInferingAttributeValue
-		assertFalse(wsmlReasoner.executeGroundQuery((IRI) o.getIdentifier(), 
+		assertFalse(wsmlReasoner.executeGroundQuery( 
 				leFactory.createLogicalExpression("marge_simpson[hasChild " +
 						"hasValue bobby_simpson].", o)));
 		
 		// test isInstanceHavingConstraintAttributeValue
-		assertTrue(wsmlReasoner.executeGroundQuery((IRI) o.getIdentifier(), 
+		assertTrue(wsmlReasoner.executeGroundQuery( 
 				leFactory.createLogicalExpression("marge_simpson[hasName " +
 						"hasValue \"Marge Simpson\"].", o)));
 		
 		// test isInstanceNotHavingConstraintAttributeValue
-		assertFalse(wsmlReasoner.executeGroundQuery((IRI) o.getIdentifier(), 
+		assertFalse(wsmlReasoner.executeGroundQuery( 
 				leFactory.createLogicalExpression("marge_simpson[hasCatchPhrase " +
 						"hasValue \"blabla\"].", o)));
 		
 		// test getInferingAttributeValues
 		Set untypedSet = new HashSet();
 		untypedSet = wsmlReasoner.getInferingAttributeValues(
-				(IRI) o.getIdentifier(), 
+				 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "homer_simpson")),
 				wsmoFactory.createIRI(ns + "testAttribute"));
 //		for(Object object : untypedSet)
@@ -339,14 +337,14 @@ public void basicInferences() throws Exception {
 		// test getConstraintAttributeValues
 		untypedSet.clear();
 		untypedSet = wsmlReasoner.getConstraintAttributeValues(
-				(IRI) o.getIdentifier(), 
+				 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "marge_simpson")),
 				wsmoFactory.createIRI(ns + "hasChild"));
 //		for(Object dataValue : untypedSet)
 //			System.out.println(dataValue.toString());
 		assertTrue(untypedSet.size() == 3);
 		
-		wsmlReasoner.deRegisterOntology((IRI) o.getIdentifier());
+		wsmlReasoner.deRegister();
 	}
 	
     

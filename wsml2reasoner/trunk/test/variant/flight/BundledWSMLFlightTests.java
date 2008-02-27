@@ -28,7 +28,6 @@ public class BundledWSMLFlightTests {
 		suite.addTestSuite(SimpleInferenceTests.class);
 		suite.addTestSuite(DogsworldTest.class);
 		suite.addTestSuite(AttributeInheritanceTest.class);
-		suite.addTestSuite(OntologyRegistrationTest.class);
 		suite.addTestSuite(MaciejVTABug.class);
 		suite.addTestSuite(ConstraintViolationCheck.class);
 		suite.addTestSuite(RegisterMultipleTimes.class);

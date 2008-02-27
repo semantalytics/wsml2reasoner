@@ -57,7 +57,7 @@ public class TPTPFacade extends FOLAbstractFacade {
     
     int id;
     
-    public void register(String ontologyURI, Set<LogicalExpression> expressions) throws ExternalToolException {
+    public void register(Set<LogicalExpression> expressions) throws ExternalToolException {
         String kb ="";
         TPTPLESerializeVisitor les = new TPTPLESerializeVisitor();
         
@@ -68,7 +68,7 @@ public class TPTPFacade extends FOLAbstractFacade {
             kb+=newExpression;
         }
         log.debug(kb);
-        convertedOntologies.put(ontologyURI, kb);
-        symbolMaps.put(ontologyURI,les.getSymbolMap());
+        convertedOntology = kb;
+        symbolMap = les.getSymbolMap();
     }
 }

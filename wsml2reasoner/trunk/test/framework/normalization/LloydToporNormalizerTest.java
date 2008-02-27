@@ -18,6 +18,8 @@
  */
 package framework.normalization;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.impl.WSMO4JManager;
@@ -48,11 +50,14 @@ public class LloydToporNormalizerTest extends BaseNormalizationTest
         // read test ontology:
         Ontology ontology = parseOntology("files/lloyd-topor.wsml");
 
+        Set <Axiom> axioms = new HashSet <Axiom>();
+        axioms.addAll(ontology.listAxioms());
+        
         // normalize ontology with the LELloydToporNormalizer:
-        Ontology normOnt = normalizer.normalize(ontology);
+        axioms = normalizer.normalizeAxioms(axioms);
         System.out.println("\n\n***\n"+ new LloydToporRules(new WSMO4JManager()).toString());
 
         // test whether produced ontology contains exactly 4 axioms:
-        assertTrue(((Axiom)normOnt.listAxioms().iterator().next()).listDefinitions().size() == 4);
+        assertTrue(axioms.iterator().next().listDefinitions().size() == 4);
     }
 }

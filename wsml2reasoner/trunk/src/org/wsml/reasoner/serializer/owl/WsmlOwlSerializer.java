@@ -153,7 +153,7 @@ public class WsmlOwlSerializer implements Serializer {
 					"valid!");
 		}
 		// convert ontology
-        return reasoner.convertOntology(ontology);
+        return reasoner.createOWLOntology(ontology);
 	}
 	
 }

@@ -28,7 +28,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.Conjunction;
 import org.omwg.logicalexpression.Constants;
@@ -42,7 +41,6 @@ import org.omwg.ontology.ComplexDataType;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.DataValue;
 import org.omwg.ontology.Instance;
-import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Parameter;
 import org.omwg.ontology.Relation;
 import org.omwg.ontology.RelationInstance;
@@ -50,13 +48,12 @@ import org.omwg.ontology.SimpleDataType;
 import org.omwg.ontology.Type;
 import org.omwg.ontology.Value;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.impl.DatalogBasedWSMLReasoner;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.FixedModificationRules;
+import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.UnnumberedAnonymousID;
-import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -91,21 +88,18 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
     private WsmoFactory wsmoFactory;
     private LogicalExpressionFactory leFactory;
     private FixedModificationRules fixedRules;
-    private Map<LogicalExpression,String> axiomIDs;
-    
-    private Set<Ontology> processedOntologies;    
-    
-    public AxiomatizationNormalizer(WSMO4JManager wsmoManager,Set<Ontology> theProcessedOntologies) {
-    	this(wsmoManager);
-    	this.processedOntologies = theProcessedOntologies;
-    }
+    private Map<LogicalExpression,String> axiomIDs; 
 
-    private AxiomatizationNormalizer(WSMO4JManager wsmoManager) {
+    public AxiomatizationNormalizer(WSMO4JManager wsmoManager) {
         leFactory = wsmoManager.getLogicalExpressionFactory();
         wsmoFactory = wsmoManager.getWSMOFactory();
         fixedRules = new FixedModificationRules(wsmoManager);
         axiomIDs = new HashMap<LogicalExpression, String>();
         
+    }
+    
+    public Set <Axiom> normalizeAxioms(Collection <Axiom> theAxioms){
+    	throw new UnsupportedOperationException();
     }
 
     /**
@@ -118,100 +112,63 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
      * @return an ontology represent o semantically but only consists of axioms
      */
     
-    public Ontology normalize(Ontology ontology) {
-        String ontologyID = ontology.getIdentifier() + "-as-axioms";
-        Ontology resultOntology = wsmoFactory.createOntology(wsmoFactory.createIRI(ontologyID));
-        for (Axiom a : (Set<Axiom>) resultOntology.listAxioms()) {
-            try {
-                a.setOntology(null);
-            } catch (InvalidModelException e) {
-                e.printStackTrace();
-            }
-        }
-        
+    public Set <Entity> normalizeEntities(Collection <Entity> theEntities) {
+        Set <Entity> result = new HashSet <Entity> ();
+//        for (Axiom a : (Set<Axiom>) resultOntology.listAxioms()) {
+//            try {
+//                a.setOntology(null);
+//            } catch (InvalidModelException e) {
+//                e.printStackTrace();
+//            }
+//        }
        
-        //0 = allow imports
-        //1 = do not allow imports
-        if(DatalogBasedWSMLReasoner.allowImports == 0){
-	        for(Ontology o: (Collection<Ontology>) ontology.listOntologies()){ 
-	        	if (processedOntologies.contains(o)) continue;
-	        	processedOntologies.add(o);
-	        	
-        		Ontology tempOntology = normalize(o);
-        		for (Axiom a: (Collection<Axiom>) tempOntology.listAxioms()){
-        			try {
-						resultOntology.addAxiom(a);
-					} catch (InvalidModelException e) {
-						throw new RuntimeException(e);
-					}
-        		}
-	        		
-	        }
-        }
-        // process axioms:
-        for (Axiom axiom : (Collection<Axiom>) ontology.listAxioms()) {
-            Identifier newAxiomId;
-            if (axiom.getIdentifier() instanceof UnnumberedAnonymousID){
-                newAxiomId = wsmoFactory.createAnonymousID(); 
-            }else {
-                //create an axiom such that orginal one is not touched.
-                newAxiomId = wsmoFactory.createIRI(axiom.getIdentifier()
-                        +AnonymousIdUtils.NAMED_AXIOM_SUFFIX+System.currentTimeMillis());;
-            }
-            
-            Axiom newAxiom = wsmoFactory.createAxiom(newAxiomId);
-            for(LogicalExpression definition : (Set<LogicalExpression>)axiom.listDefinitions()){
-                newAxiom.addDefinition(definition);
-            }
-            try{
-                resultOntology.addAxiom(newAxiom);
-            } catch(InvalidModelException e){
-                e.printStackTrace();
-            }
-        }
-        
-        // process concepts:
-        for (Concept concept : (Collection<Concept>) ontology.listConcepts()) {
-            addAsAxioms(resultOntology, normalizeConcept(concept));
-        }
-
-        // process relations:
-        for (Relation relation : (Collection<Relation>) ontology
-                .listRelations()) {
-            addAsAxioms(resultOntology, normalizeRelation(relation));
-        }
-
-        // Concept instances
-        for (Instance instance : (Collection<Instance>) ontology
-                .listInstances()) {
-            addAsAxioms(resultOntology, normalizeInstance(instance));
-        }        
-
-//        repealAxiomIDs();
-        return resultOntology;
+        for (Entity e : theEntities){
+        	if (e instanceof Axiom){
+        		Axiom axiom = (Axiom) e;
+                Identifier newAxiomId;
+                if (axiom.getIdentifier() instanceof UnnumberedAnonymousID){
+                    newAxiomId = wsmoFactory.createAnonymousID(); 
+                }else {
+                    //create an axiom such that original one is not touched.
+                    newAxiomId = wsmoFactory.createIRI(axiom.getIdentifier() +AnonymousIdUtils.NAMED_AXIOM_SUFFIX+System.currentTimeMillis());;
+                }
+                
+                Axiom newAxiom = wsmoFactory.createAxiom(newAxiomId);
+                for(LogicalExpression definition : (Set<LogicalExpression>)axiom.listDefinitions()){
+                    newAxiom.addDefinition(definition);
+                }
+                result.add(newAxiom);
+        	}
+        	else if (e instanceof Concept){
+				result.addAll(getAxioms(normalizeConcept((Concept) e)));
+        	}
+			else if (e instanceof Relation){
+				result.addAll(getAxioms(normalizeRelation((Relation) e)));
+			}
+			else if (e instanceof Instance){
+				result.addAll(getAxioms(normalizeInstance((Instance) e)));
+			}
+        }      
+        return result;
     }
 
-    protected void addAsAxioms(Ontology ontology,
-            Collection<LogicalExpression> expressions) {
-        if (expressions.isEmpty()) {
-            return;
+    protected Set<Axiom> getAxioms(Collection<LogicalExpression> expressions) {
+    	Set <Axiom> axioms = new HashSet <Axiom> ();
+        if (!expressions.isEmpty()){
+	        for (LogicalExpression expression : expressions) {
+	            //corelate IDs to type of axioms
+	            Identifier id; 
+	            if (axiomIDs.containsKey(expression)){
+	               id = wsmoFactory.createIRI(axiomIDs.get(expression)); 
+	            }else {
+	               id = wsmoFactory.createAnonymousID();
+	            }
+	            Axiom axiom = wsmoFactory.createAxiom(id);
+	            axiom.addDefinition(expression);
+	            axioms.add(axiom);
+	        }
         }
-        for (LogicalExpression expression : expressions) {
-            try {
-                //corelate IDs to type of axioms
-                Identifier id; 
-                if (axiomIDs.containsKey(expression)){
-                   id = wsmoFactory.createIRI(axiomIDs.get(expression)); 
-                }else {
-                   id = wsmoFactory.createAnonymousID();
-                }
-                Axiom axiom = wsmoFactory.createAxiom(id);
-                ontology.addAxiom(axiom);
-                axiom.addDefinition(expression);
-            } catch (InvalidModelException e) {
-                e.printStackTrace();
-            }
-        }
+        return axioms;
     }
 
     

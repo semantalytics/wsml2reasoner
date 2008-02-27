@@ -62,18 +62,17 @@ public class QueryContainmentTest extends BaseReasonerTest {
         LogicalExpression query2 = leFactory.createLogicalExpression("vehicle(?x)", ontology);
         
         // perform query containment check
-        boolean check = wsmlReasoner.checkQueryContainment(query1, query2, 
-        		(IRI) ontology.getIdentifier());
+        boolean check = wsmlReasoner.checkQueryContainment(query1, query2);
         assertTrue(check);
         
-        wsmlReasoner.deRegisterOntology((IRI) ontology.getIdentifier());
+        wsmlReasoner.deRegister();
         wsmlReasoner.registerOntology(ontology);
         
         // get containment mapping result set
         Set<Map<Variable, Term>> result = wsmlReasoner.getQueryContainment(
-        		query1, query2, (IRI) ontology.getIdentifier());
+        		query1, query2);
 //        System.out.println(result);
-        wsmlReasoner.deRegisterOntology((IRI) ontology.getIdentifier());
+        wsmlReasoner.deRegister();
 	}
 	
 	public void testConjunctiveQueryContainment() throws Exception {
@@ -94,19 +93,18 @@ public class QueryContainmentTest extends BaseReasonerTest {
         LogicalExpression query2 = leFactory.createLogicalExpression("vehicle(?x)", ontology);
         
         // perform query containment check
-        boolean check = wsmlReasoner.checkQueryContainment(query1, query2, 
-        		(IRI) ontology.getIdentifier());
+        boolean check = wsmlReasoner.checkQueryContainment(query1, query2);
         assertTrue(check);
         
-        wsmlReasoner.deRegisterOntology((IRI) ontology.getIdentifier());
+        wsmlReasoner.deRegister();
         wsmlReasoner.registerOntology(ontology);
         
         // get containment mapping result set
         Set<Map<Variable, Term>> result = wsmlReasoner.getQueryContainment(
-        		query1, query2, (IRI) ontology.getIdentifier());
+        		query1, query2);
 //        System.out.println(result);
         
-        wsmlReasoner.deRegisterOntology((IRI) ontology.getIdentifier());
+        wsmlReasoner.deRegister();
 	}
 	
 	public void testConjunctiveQueryContainment2() throws Exception {
@@ -128,11 +126,10 @@ public class QueryContainmentTest extends BaseReasonerTest {
         		"vehicle(?x) and ?x[hasTires hasValue 5]", ontology);
         
         // perform query containment check
-        boolean check = wsmlReasoner.checkQueryContainment(query1, query2, 
-        		(IRI) ontology.getIdentifier());
+        boolean check = wsmlReasoner.checkQueryContainment(query1, query2);
         assertFalse(check);
         
-        wsmlReasoner.deRegisterOntology((IRI) ontology.getIdentifier());
+        wsmlReasoner.deRegister();
 	}
 	
 	public void testDisjunctiveQueryContainment() throws Exception {
@@ -151,8 +148,7 @@ public class QueryContainmentTest extends BaseReasonerTest {
         
         // perform query containment check
         try {
-        	wsmlReasoner.checkQueryContainment(query1, query2, 
-            		(IRI) ontology.getIdentifier());
+        	wsmlReasoner.checkQueryContainment(query1, query2);
         	fail("Should fail because disjunctive queries are not allowed for " +
         			"the query containment check");
 		} catch (Exception e) {
@@ -176,8 +172,7 @@ public class QueryContainmentTest extends BaseReasonerTest {
         
         // perform query containment check
         try {
-        	wsmlReasoner.checkQueryContainment(query1, query2, 
-            		(IRI) ontology.getIdentifier());
+        	wsmlReasoner.checkQueryContainment(query1, query2);
         	fail("Should fail because disjunctive queries are not allowed for " +
         			"the query containment check");
 		} catch (Exception e) {
@@ -202,8 +197,7 @@ public class QueryContainmentTest extends BaseReasonerTest {
         
         // perform query containment check
         try {
-        	wsmlReasoner.checkQueryContainment(query1, query2, 
-            		(IRI) ontology.getIdentifier());
+        	wsmlReasoner.checkQueryContainment(query1, query2);
         	fail("Should fail because disjunctive queries are not allowed for " +
         			"the query containment check");
 		} catch (Exception e) {

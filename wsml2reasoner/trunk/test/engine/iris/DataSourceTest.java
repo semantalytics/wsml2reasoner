@@ -55,7 +55,7 @@ public class DataSourceTest extends BaseReasonerTest {
 		// add the data source to the configuration
 		final Map<String, Object> config = new HashMap<String, Object>();
 		config.put(IrisFacade.EXTERNAL_DATA_SOURCE, 
-				Collections.singletonMap("urn:dogsworld", Collections.singleton(new DogSource())));
+				Collections.singleton(new DogSource()));
 		
 		setupScenario(ONTOLOGY_FILE, config);
 		previous = BaseReasonerTest.reasoner;
@@ -85,16 +85,14 @@ public class DataSourceTest extends BaseReasonerTest {
 	}
 
 	public void testConsistencyChecker() throws Exception {
-		assertTrue(((WSMLFlightReasoner) wsmlReasoner).isSatisfiable((IRI) o
-				.getIdentifier()));
+		assertTrue(((WSMLFlightReasoner) wsmlReasoner).isSatisfiable());
 	}
 
 	public void testInstanceRetrieval() throws Exception {
 		String query = "Anne memberOf CatOwner";
 		LogicalExpression qExpression = leFactory.createLogicalExpression(
 				query, o);
-		assertTrue(wsmlReasoner.executeGroundQuery((IRI) o.getIdentifier(),
-				qExpression));
+		assertTrue(wsmlReasoner.executeGroundQuery(qExpression));
 	}
 
 	/**

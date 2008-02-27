@@ -48,7 +48,7 @@ public class XSBFacade implements DatalogReasonerFacade {
      * Here we store a MINS Engine which contains the compiled KB for each
      * registered ontology
      */
-    private Map<String, String> registeredKbs = new HashMap<String, String>();
+    private String program;
 
     private WSMO4JManager wsmoManager;
 
@@ -70,14 +70,12 @@ public class XSBFacade implements DatalogReasonerFacade {
      * 
      * @throws ExternalToolException
      */
-    public Set<Map<Variable, Term>> evaluate(ConjunctiveQuery q,
-            String ontologyURI) throws ExternalToolException {
+    public Set<Map<Variable, Term>> evaluate(ConjunctiveQuery q) throws ExternalToolException {
 
         try {
             // retrieve KB ment for IRI:
-            String program = registeredKbs.get(ontologyURI);
             if (program == null){
-                throw new InternalReasonerException("No KB with given ID registered"+ontologyURI);
+                throw new InternalReasonerException("XSB Reasoner not initialised");
             }
             String query = translateQuery(q);
 
@@ -205,27 +203,23 @@ public class XSBFacade implements DatalogReasonerFacade {
     /**
      * @see DatalogReasonerFacade#register(String, Set)
      */
-    public void register(String ontologyURI, Set<org.wsml.reasoner.Rule> kb)
+    public void register(Set<org.wsml.reasoner.Rule> kb)
             throws ExternalToolException {
-        String program = translateKnowledgebase(kb);
-        registeredKbs.put(ontologyURI, program);
+        program = translateKnowledgebase(kb);
     }
 
     /**
      * @see DatalogReasonerFacade#deregister(String)
      */
-    public void deregister(String ontologyURI) throws ExternalToolException {
-        registeredKbs.remove(ontologyURI);
-
+    public void deregister() throws ExternalToolException {
+        program = null;
     }
 
-	public boolean checkQueryContainment(ConjunctiveQuery query1,
-			ConjunctiveQuery query2, String ontologyURI){
+	public boolean checkQueryContainment(ConjunctiveQuery query1, ConjunctiveQuery query2){
 		throw new UnsupportedOperationException("This method is not implemented");
 	}
 
-	public Set<Map<Variable, Term>> getQueryContainment(ConjunctiveQuery query1,
-			ConjunctiveQuery query2, String ontologyURI) {
+	public Set<Map<Variable, Term>> getQueryContainment(ConjunctiveQuery query1, ConjunctiveQuery query2) {
 		throw new UnsupportedOperationException("This method is not implemented");
 	}
 }

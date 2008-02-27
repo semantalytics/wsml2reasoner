@@ -27,7 +27,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
@@ -37,7 +36,6 @@ import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.Factory;
@@ -104,8 +102,7 @@ public class WSMLReasonerFacade
 
 		// a set of variable bindings (map with variables as keys, and the
 		// bindings: IRIs or DataValues as values
-		Set<Map<Variable, Term>> queryResult = reasoner.executeQuery((IRI) onto
-				.getIdentifier(), lequery);
+		Set<Map<Variable, Term>> queryResult = reasoner.executeQuery(lequery);
 		ReasonerResult reasonerResult = new ReasonerResult(queryResult);
 
 		return reasonerResult;

@@ -85,7 +85,7 @@ public class AttributeInheritanceTest extends BaseReasonerTest {
         reasoner.registerOntology(o);
 
         query = leFactory.createLogicalExpression("?x[?attribute ofType ?range]", o);
-        result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
+        result = reasoner.executeQuery(query);
         assertEquals(2,result.size());
 	}
 	

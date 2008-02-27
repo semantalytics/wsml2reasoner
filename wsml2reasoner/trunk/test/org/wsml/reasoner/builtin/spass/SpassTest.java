@@ -51,9 +51,9 @@ public class SpassTest extends BaseReasonerTest{
             "a and b or c ",nsContainer);
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
-        tptp.register("abc", set);
+        tptp.register(set);
         
-        String fol = tptp.convertedOntologies.get("abc");
+        String fol = tptp.convertedOntology;
         Pattern pattern = Pattern.compile(escape(
         		" formula ( or ( and (a , b ) , c) "));
         Matcher matcher = pattern.matcher(fol);
@@ -73,8 +73,8 @@ public class SpassTest extends BaseReasonerTest{
                 wsml,nsContainer);
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
-        tptp.register("abc", set);
-        String folreal = tptp.convertedOntologies.get("abc");
+        tptp.register(set);
+        String folreal = tptp.convertedOntology;
         Pattern pattern = Pattern.compile(escape( fol));
         Matcher matcher = pattern.matcher(fol);
         assertTrue("did not find "+fol,matcher.find());

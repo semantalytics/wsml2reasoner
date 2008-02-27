@@ -109,7 +109,7 @@ public class Boolean extends BaseReasonerTest {
         reasoner.registerOntology(o);
 
         query = leFactory.createLogicalExpression("a[f hasValue ?y]", o);
-        result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
+        result = reasoner.executeQuery(query);
         assertEquals(1,result.size());
         Map<Variable,Term> m =result.iterator().next();
         System.out.println(m.get(leFactory.createVariable("y")));
@@ -117,7 +117,7 @@ public class Boolean extends BaseReasonerTest {
                 m.get(leFactory.createVariable("y")));
         
         query = leFactory.createLogicalExpression("a[t hasValue ?y]", o);
-        result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
+        result = reasoner.executeQuery(query);
         assertEquals(1,result.size());
         m =result.iterator().next();
         System.out.println(m.get(leFactory.createVariable("y")));
@@ -125,7 +125,7 @@ public class Boolean extends BaseReasonerTest {
                 m.get(leFactory.createVariable("y")));
         
         query = leFactory.createLogicalExpression("a(?y)", o);
-        result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
+        result = reasoner.executeQuery(query);
         assertEquals(1,result.size());
         m =result.iterator().next();
         System.out.println(m.get(leFactory.createVariable("y")));

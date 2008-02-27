@@ -167,8 +167,7 @@ public class LotsOfImports {
         //reasoner.registerOntologyNoVerification(exampleOntology);
 
         // Execute query request
-        Set<Map<Variable, Term>> result = reasoner.executeQuery(
-                (IRI) exampleOntology.getIdentifier(), query);
+        Set<Map<Variable, Term>> result = reasoner.executeQuery(query);
 
         // print out the results:
         System.out.println("The query '" + query

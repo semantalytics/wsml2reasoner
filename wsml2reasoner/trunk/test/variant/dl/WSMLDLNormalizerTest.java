@@ -24,13 +24,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
-
 import org.deri.wsmo4j.validator.WsmlDLValidator;
+import org.omwg.ontology.Axiom;
+import org.omwg.ontology.Concept;
+import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
+import org.omwg.ontology.Relation;
+import org.omwg.ontology.RelationInstance;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.dl.Relation2AttributeNormalizer;
 import org.wsml.reasoner.transformation.dl.WSMLDLLogExprNormalizer;
+import org.wsmo.common.Entity;
+import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.common.exception.SynchronisationException;
 import org.wsmo.factory.Factory;
 import org.wsmo.wsml.Parser;
 
@@ -49,7 +56,7 @@ public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
         //in order to keep track of cyclic imports
         Set<Ontology> importedOntologies = new HashSet<Ontology>();
         relTransformer = new Relation2AttributeNormalizer(new WSMO4JManager());
-        axiomTransformer = new AxiomatizationNormalizer(new WSMO4JManager(), importedOntologies);
+        axiomTransformer = new AxiomatizationNormalizer(new WSMO4JManager());
         logExprTransformer = new WSMLDLLogExprNormalizer(new WSMO4JManager());
 	}
 
@@ -81,17 +88,48 @@ System.out.println(serializeOntology(ontology)+"\n\n\n-------------\n\n\n");
 		
         // normalize ontology with the WSMLDLNormalizer:
 		Ontology normOnt = createOntology();
-		normOnt = relTransformer.normalize(ontology);
-System.out.println(serializeOntology(normOnt)+"\n\n\n-------------\n\n\n"); 
+		
+		Set <Entity> entities = new HashSet <Entity>();
+    	entities.addAll(ontology.listConcepts());
+    	entities.addAll(ontology.listInstances());
+    	entities.addAll(ontology.listRelations());
+    	entities.addAll(ontology.listRelationInstances());
+    	entities.addAll(ontology.listAxioms());
+		
+    	Set <Entity> e1 = relTransformer.normalizeEntities(entities);
+    	System.out.println(serializeOntology(createOntology(e1, "http://www.WSMLDLNormalizerTestOntology1.com"))+"\n\n\n-------------\n\n\n"); 
 
-		normOnt = axiomTransformer.normalize(normOnt);	
-System.out.println(serializeOntology(normOnt)+"\n\n\n-------------\n\n\n"); 
-
-		normOnt = logExprTransformer.normalize(normOnt);	
-System.out.println(serializeOntology(normOnt)+"\n\n\n-------------\n\n\n");	       
+    	Set <Entity> e2 = axiomTransformer.normalizeEntities(e1);
+		System.out.println(serializeOntology(createOntology(e2, "http://www.WSMLDLNormalizerTestOntology2.com"))+"\n\n\n-------------\n\n\n"); 
+		
+		Set <Entity> e3 = logExprTransformer.normalizeEntities( e2 );	
+		System.out.println(serializeOntology(createOntology(e3, "http://www.WSMLDLNormalizerTestOntology3.com"))+"\n\n\n-------------\n\n\n");	       
     }
 	
     
+	private Ontology createOntology( Set<Entity> entities, String IRI ) throws SynchronisationException, InvalidModelException
+    {
+		Ontology o = wsmoFactory.createOntology( wsmoFactory.createIRI( IRI ) );
+        for (Entity e : entities){
+        	if (e instanceof Concept){
+        		o.addConcept((Concept) e);
+        	}
+        	else if (e instanceof Instance){
+        		o.addInstance((Instance) e);  		
+			}
+        	else if (e instanceof Relation){
+        		o.addRelation((Relation) e);
+			}
+        	else if (e instanceof RelationInstance){
+        		o.addRelationInstance((RelationInstance) e);
+			}
+        	else if (e instanceof Axiom){
+        		o.addAxiom((Axiom) e);
+			}
+        }
+        return o;
+    }
+
 	public void testAnonIdTransformationss() throws Exception {
     	// read test file and parse it 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(
@@ -101,7 +139,7 @@ System.out.println(serializeOntology(normOnt)+"\n\n\n-------------\n\n\n");
         // assuming first topentity in file is an ontology  
         ontology = (Ontology)wsmlParser.parse(new InputStreamReader(is))[0];  
         
-System.out.println(serializeOntology(ontology)+"\n\n\n-------------\n\n\n");
+        System.out.println(serializeOntology(ontology)+"\n\n\n-------------\n\n\n");
 
 		// validate the test ontology
 		WsmlDLValidator validator = new WsmlDLValidator(leFactory);
@@ -113,10 +151,18 @@ System.out.println(serializeOntology(ontology)+"\n\n\n-------------\n\n\n");
 		
         // normalize ontology with the WSMLDLNormalizer:
 		Ontology normOnt = createOntology();
-		normOnt = relTransformer.normalize(ontology);
-		normOnt = logExprTransformer.normalize(normOnt);
 		
-System.out.println(serializeOntology(normOnt)+"\n\n\n-------------\n\n\n");
+		Set <Entity> entities = new HashSet <Entity>();
+    	entities.addAll(ontology.listConcepts());
+    	entities.addAll(ontology.listInstances());
+    	entities.addAll(ontology.listRelations());
+    	entities.addAll(ontology.listRelationInstances());
+    	entities.addAll(ontology.listAxioms());
+		
+    	entities = relTransformer.normalizeEntities( entities );
+    	entities = logExprTransformer.normalizeEntities(entities);
+		
+    	System.out.println(serializeOntology(createOntology( entities, "http://www.WSMLDLNormalizerTestOntology4.com" ))+"\n\n\n-------------\n\n\n");
     }
     
 	public void testRelationTransformations() throws Exception {
@@ -140,10 +186,18 @@ System.out.println(serializeOntology(ontology)+"\n\n\n-------------\n\n\n");
 		
         // normalize ontology with the WSMLDLNormalizer:
 		Ontology normOnt = createOntology();
-		normOnt = relTransformer.normalize(ontology);
-		normOnt = logExprTransformer.normalize(normOnt);
 		
-System.out.println(serializeOntology(normOnt)+"\n\n\n-------------\n\n\n");
+		Set <Entity> entities = new HashSet <Entity>();
+    	entities.addAll(ontology.listConcepts());
+    	entities.addAll(ontology.listInstances());
+    	entities.addAll(ontology.listRelations());
+    	entities.addAll(ontology.listRelationInstances());
+    	entities.addAll(ontology.listAxioms());
+		
+    	entities = relTransformer.normalizeEntities(entities);
+		entities = logExprTransformer.normalizeEntities(entities);
+		
+		System.out.println(serializeOntology(createOntology( entities, "http://www.WSMLDLNormalizerTestOntology5.com" ))+"\n\n\n-------------\n\n\n");
     }
     
 	public void testDecompositionTransformations() throws Exception {
@@ -167,10 +221,18 @@ System.out.println(serializeOntology(ontology)+"\n\n\n-------------\n\n\n");
 		
         // normalize ontology with the WSMLDLNormalizer:
 		Ontology normOnt = createOntology();
-		normOnt = relTransformer.normalize(ontology);
-		normOnt = logExprTransformer.normalize(normOnt);
 		
-System.out.println(serializeOntology(normOnt)+"\n\n\n-------------\n\n\n");
+		Set <Entity> entities = new HashSet <Entity>();
+    	entities.addAll(ontology.listConcepts());
+    	entities.addAll(ontology.listInstances());
+    	entities.addAll(ontology.listRelations());
+    	entities.addAll(ontology.listRelationInstances());
+    	entities.addAll(ontology.listAxioms());
+		
+    	entities = relTransformer.normalizeEntities(entities);
+    	entities = logExprTransformer.normalizeEntities(entities);
+		
+    	System.out.println(serializeOntology(createOntology( entities, "http://www.WSMLDLNormalizerTestOntology6.com" ))+"\n\n\n-------------\n\n\n");
     }
 	
 }

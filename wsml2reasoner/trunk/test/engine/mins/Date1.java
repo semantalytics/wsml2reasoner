@@ -94,7 +94,7 @@ public class Date1 extends BaseReasonerTest {
         reasoner.registerOntology(o);
 
         query = leFactory.createLogicalExpression("a[birth hasValue ?y]", o);
-        result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
+        result = reasoner.executeQuery(query);
         assertEquals(1,result.size());
         Map<Variable,Term> m =result.iterator().next();
         System.out.println(m.get(leFactory.createVariable("y")));
@@ -108,7 +108,7 @@ public class Date1 extends BaseReasonerTest {
                 m.get(leFactory.createVariable("y")));
         
         query = leFactory.createLogicalExpression("?a[birth hasValue ?y] and ?b[birth hasValue ?x] and ?y<?x", o);
-        result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
+        result = reasoner.executeQuery(query);
         assertEquals(1,result.size());
         m =result.iterator().next();
         System.out.println(m.get(leFactory.createVariable("a")));
@@ -130,7 +130,7 @@ public class Date1 extends BaseReasonerTest {
         reasoner.registerOntology(o);
 
         query = leFactory.createLogicalExpression("a(?y)", o);
-        result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
+        result = reasoner.executeQuery(query);
         assertEquals(1,result.size());
         Map<Variable,Term> m =result.iterator().next();
         System.out.println(m.get(leFactory.createVariable("y")));

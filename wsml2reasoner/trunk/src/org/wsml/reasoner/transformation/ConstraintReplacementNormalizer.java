@@ -3,10 +3,10 @@ package org.wsml.reasoner.transformation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.AttributeConstraintMolecule;
 import org.omwg.logicalexpression.AttributeValueMolecule;
@@ -19,13 +19,11 @@ import org.omwg.logicalexpression.MembershipMolecule;
 import org.omwg.logicalexpression.NegationAsFailure;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Axiom;
-import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.InternalReasonerException;
 import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
-import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -84,71 +82,64 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
 
     }
 
+    public Set <Entity> normalizeEntities(Collection <Entity> theEntities) {
+    	throw new UnsupportedOperationException();
+    }
     
-    public Ontology normalize(Ontology ontology) {
-        String ontologyID = ontology.getIdentifier() + "-contraints-replaced";
-        Ontology resultOntology = wsmoFactory.createOntology(wsmoFactory.createIRI(ontologyID));
-
-        try {
-            for (Axiom a : (Set<Axiom>) resultOntology.listAxioms()) {
-                a.setOntology(null);
-            }
-
-            // process axioms:
-            List<LogicalExpression> tempHolder = new ArrayList<LogicalExpression>();
-            for (Axiom axiom : (Collection<Axiom>) ontology.listAxioms()) {
-                tempHolder.clear(); // clear any content if exists
-                
-                for (LogicalExpression definition : (Set<LogicalExpression>)axiom.listDefinitions()){
-                    if (definition instanceof Constraint) {
-                        Identifier axiomID = axiom.getIdentifier();
-                        String axiomIDString = axiomID.toString();
-                        if (axiomIDString.startsWith(AnonymousIdUtils.MINCARD_PREFIX)) {
-                            tempHolder.add(replaceMinCardConstraint((Constraint)definition));
-                        } 
-                        else if (axiomIDString.startsWith(AnonymousIdUtils.MAXCARD_PREFIX)) {
-                            tempHolder.add(replaceMaxCardConstraint((Constraint)definition));
-                        }
-                        else if (axiomIDString.startsWith(AnonymousIdUtils.ANONYMOUS_PREFIX)) {
-                            tempHolder.add(replaceUnnamedUserConstraint((Constraint)definition, axiomID));
-                        } 
-                        else { // axiom named by user
-                            tempHolder.add(replaceNamedUserConstraint((Constraint)definition, axiomID));
-                        }
+    public Set <Axiom> normalizeAxioms(Collection <Axiom> theAxioms){
+    	Set <Axiom> result = new HashSet <Axiom> ();
+    	
+        List<LogicalExpression> tempHolder = new ArrayList<LogicalExpression>();
+        for (Axiom axiom : theAxioms) {
+            tempHolder.clear(); // clear any content if exists
+            
+            for (LogicalExpression definition : (Set<LogicalExpression>)axiom.listDefinitions()){
+                if (definition instanceof Constraint) {
+                    Identifier axiomID = axiom.getIdentifier();
+                    String axiomIDString = axiomID.toString();
+                    if (axiomIDString.startsWith(AnonymousIdUtils.MINCARD_PREFIX)) {
+                        tempHolder.add(replaceMinCardConstraint((Constraint)definition));
                     } 
-                    else if (definition instanceof AttributeConstraintMolecule) {// oftype statement
-                        tempHolder.add(definition);
-                        tempHolder.add(
-                                replaceAttrOfTypeConstraint(
-                                        (AttributeConstraintMolecule)definition));
+                    else if (axiomIDString.startsWith(AnonymousIdUtils.MAXCARD_PREFIX)) {
+                        tempHolder.add(replaceMaxCardConstraint((Constraint)definition));
+                    }
+                    else if (axiomIDString.startsWith(AnonymousIdUtils.ANONYMOUS_PREFIX)) {
+                        tempHolder.add(replaceUnnamedUserConstraint((Constraint)definition, axiomID));
                     } 
-                    else{ // no constraint axiom
-                        tempHolder.add(definition);//resultOntology.addAxiom(axiom);
+                    else { // axiom named by user
+                        tempHolder.add(replaceNamedUserConstraint((Constraint)definition, axiomID));
                     }
-                }
-                if (tempHolder.size() > 0) { // create a new Axiom
-                    Axiom normAxiom= wsmoFactory.createAxiom(wsmoFactory
-                            .createIRI(AnonymousIdUtils.getNewAnonymousIri()));
-                    for(LogicalExpression normLE : tempHolder) {
-                        normAxiom.addDefinition(normLE);
-                    }
-                    resultOntology.addAxiom(normAxiom);
-                }
-                else {
-                    resultOntology.addAxiom(axiom);
+                } 
+                else if (definition instanceof AttributeConstraintMolecule) {// oftype statement
+                    tempHolder.add(definition);
+                    tempHolder.add(
+                            replaceAttrOfTypeConstraint(
+                                    (AttributeConstraintMolecule)definition));
+                } 
+                else{ // no constraint axiom
+                    tempHolder.add(definition);//resultOntology.addAxiom(axiom);
                 }
             }
-            Axiom axiom = wsmoFactory.createAxiom(wsmoFactory
-                    .createAnonymousID());
-            for (LogicalExpression le : createMetaViolationAxioms()) {
-                axiom.addDefinition(le);
+            if (tempHolder.size() > 0) { // create a new Axiom
+                Axiom normAxiom= wsmoFactory.createAxiom(wsmoFactory
+                        .createIRI(AnonymousIdUtils.getNewAnonymousIri()));
+                for(LogicalExpression normLE : tempHolder) {
+                    normAxiom.addDefinition(normLE);
+                }
+                result.add(normAxiom);
             }
-            resultOntology.addAxiom(axiom);
-        } catch (InvalidModelException e) {
-            throw new InternalReasonerException(e);
+            else {
+            	result.add(axiom);
+            }
         }
+        Axiom axiom = wsmoFactory.createAxiom(wsmoFactory
+                .createAnonymousID());
+        for (LogicalExpression le : createMetaViolationAxioms()) {
+            axiom.addDefinition(le);
+        }
+        result.add(axiom);
 
-        return resultOntology;
+        return result;
     }
 
     private List<LogicalExpression> createMetaViolationAxioms() {

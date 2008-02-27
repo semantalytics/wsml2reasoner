@@ -18,6 +18,8 @@
  */
 package framework.normalization;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +28,7 @@ import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
+import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 
 public class ConstructReductionNormalizerTest extends BaseNormalizationTest
@@ -50,14 +53,22 @@ public class ConstructReductionNormalizerTest extends BaseNormalizationTest
     {
         // read test ontology:
         Ontology ontology = parseOntology("files/constructs.wsml");
+        
+        Set <Axiom> axioms = new HashSet <Axiom>();
+        axioms.addAll(ontology.listAxioms());
 
         // normalize ontology with the LEConstructReductionNormalizer:
-        Ontology normOnt = normalizer.normalize(ontology);
+        axioms = normalizer.normalizeAxioms(axioms);
+        
+        Ontology o = wsmoFactory.createOntology( wsmoFactory.createIRI( "http://www.ConstructReductionNormalizerTestOntology.com" ) );
+        for (Axiom a : axioms){
+        	o.addAxiom(a);
+        }
 
         // test whether produced expression is correct
         // by means of regular expressions matched against serialized result
         // ontology:
-        String normString = serializeOntology(normOnt);
+        String normString = serializeOntology(o);
         Pattern pattern = Pattern.compile(".*E.*impliedBy.*C.*or.*D.*impliedBy.*A.*and.*B.*and.*A.*and.*B.*impliedBy.*E.*impliedBy.*C.*or.*D.*", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(normString);
         assertTrue(matcher.find());
@@ -78,13 +89,21 @@ public class ConstructReductionNormalizerTest extends BaseNormalizationTest
         a.addDefinition(leFactory.createLogicalExpression(
                 "A[r1 ofType v1, r2 impliesType v2].", ontology));
         
+        Set <Axiom> axioms = new HashSet <Axiom>();
+        axioms.addAll(ontology.listAxioms());
+        
         // normalize ontology with the LEConstructReductionNormalizer:
-        Ontology normOnt = normalizer.normalize(ontology);
+        axioms = normalizer.normalizeAxioms(axioms);
 
+        Ontology o = wsmoFactory.createOntology( wsmoFactory.createIRI( "http://www.ConstructReductionNormalizerTestOntology.com" ) );
+        for (Axiom ax : axioms){
+        	o.addAxiom(ax);
+        }
+        
         // test whether produced expression is correct
         // by means of regular expressions matched against serialized result
         // ontology:
-        String normString = serializeOntology(normOnt);
+        String normString = serializeOntology(o);
         Pattern pattern = Pattern.compile("c.*\\[.*r1.*hasValue.*v1.*\\].*and.*c.*\\[.*r2.*hasValue.*v2.*].*", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(normString);
         Pattern pattern2 = Pattern.compile("c.*\\[.*r2.*hasValue.*v2.*\\].*and.*c.*\\[.*r1.*hasValue.*v1.*].*", Pattern.DOTALL);
@@ -98,12 +117,19 @@ public class ConstructReductionNormalizerTest extends BaseNormalizationTest
         // read test ontology:
         Ontology ontology = parseOntology("files/constructs.wsml");
 
+        Set <Axiom> axioms = new HashSet <Axiom>();
+        axioms.addAll(ontology.listAxioms());
+        
         // normalize ontology with the LEConstructReductionNormalizer:
-        Ontology normOnt = normalizer.normalize(ontology);
+        axioms = normalizer.normalizeAxioms(axioms);
 
+        Ontology o = wsmoFactory.createOntology( wsmoFactory.createIRI( "http://www.ConstructReductionNormalizerTestOntology.com" ) );
+        for (Axiom ax : axioms){
+        	o.addAxiom(ax);
+        }
         // test whether produced expression is correct
         
-        String normString = serializeOntology(normOnt);
+        String normString = serializeOntology(o);
 
 
         Pattern pattern = Pattern.compile("c.*\\[.*r1.*hasValue.*v1.*\\]");

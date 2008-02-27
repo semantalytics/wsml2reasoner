@@ -97,7 +97,7 @@ public class IRITest extends BaseReasonerTest {
         reasoner.registerOntology(o);
 
         query = leFactory.createLogicalExpression("?x memberOf _iri", o);
-        result = reasoner.executeQuery((IRI) o.getIdentifier(), query);
+        result = reasoner.executeQuery(query);
         System.out.println(result);
         //for(Entry<Variable, Term>)
     }

@@ -19,7 +19,10 @@
 
 package org.wsml.reasoner.transformation;
 
-import org.omwg.ontology.Ontology;
+import java.util.Collection;
+import java.util.Set;
+import org.omwg.ontology.Axiom;
+import org.wsmo.common.Entity;
 
 /**
  * An interface for the normalization of ontologies written in WSML.
@@ -43,5 +46,6 @@ public interface OntologyNormalizer
      * @return an ontology that represents the original ontology after application of
      *         the normalization step.
      */
-    public Ontology normalize(Ontology ontology);
+    public Set <Entity> normalizeEntities(Collection <Entity> theEntities);
+    public Set <Axiom> normalizeAxioms(Collection <Axiom> theAxioms);
 }

@@ -22,7 +22,6 @@ import static org.deri.iris.factory.Factory.BASIC;
 import static org.deri.iris.factory.Factory.BUILTIN;
 import static org.deri.iris.factory.Factory.CONCRETE;
 import static org.deri.iris.factory.Factory.TERM;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -36,13 +35,8 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.deri.iris.EvaluationException;
 import org.deri.iris.Configuration;
-import org.deri.iris.KnowledgeBaseFactory;
-import org.deri.iris.facts.IDataSource;
-import org.deri.iris.storage.IRelation;
-import org.deri.iris.api.IKnowledgeBase;
+import org.deri.iris.EvaluationException;
 import org.deri.iris.api.basics.IAtom;
 import org.deri.iris.api.basics.ILiteral;
 import org.deri.iris.api.basics.IPredicate;
@@ -76,8 +70,9 @@ import org.deri.iris.builtins.IsDateTimeBuiltin;
 import org.deri.iris.builtins.IsDecimalBuiltin;
 import org.deri.iris.builtins.IsIntegerBuiltin;
 import org.deri.iris.builtins.IsStringBuiltin;
+import org.deri.iris.facts.IDataSource;
 import org.deri.iris.querycontainment.QueryContainment;
-
+import org.deri.iris.storage.IRelation;
 import org.omwg.logicalexpression.Constants;
 import org.omwg.logicalexpression.terms.BuiltInConstructedTerm;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
@@ -138,20 +133,8 @@ public class IrisFacade implements DatalogReasonerFacade {
 	private static final Pattern DURATION_PATTERN = Pattern
 			.compile("P(\\d{4})Y(\\d{1,2})M(\\d{1,2})DT(\\d{1,2})H(\\d{1,2})M(\\d{1,2})S");
 
-	/** Map storing all the uri <-> program mappings. */
-	private final Map<String, IKnowledgeBase> progs = new HashMap<String, IKnowledgeBase>();
-
-	/** 
-	 * Map to determine whether a rule for a conjunctive query in a program was 
-	 * already created. The first map stores the ontologyId &gt;-&lt; conjunctive 
-	 * query mappings.  The second map is build as follows: 
-	 * <ul>
-	 * <li>key = the <code>ConjunctiveQuery</code> object which was substituted</li>
-	 * <li>value = the literal uesd to substitute the query</li>
-	 * </ul>
-	 */
-	private Map<String, Map<ConjunctiveQuery, IQuery>> conjunctiveQueries = 
-		new HashMap<String, Map<ConjunctiveQuery, IQuery>>();
+	/** knowledge-base. */
+	private org.deri.iris.api.IKnowledgeBase prog;
 
 	/**
 	 * Records whether the ontology changed since the last calculation of the
@@ -161,7 +144,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 	 * <li>value = <code>true</code> if changed, otherwise <code>false</code></li>
 	 * </ul>
 	 */
-	private Map<String, Boolean> factsChanged = new HashMap<String, Boolean>();
+	private boolean factsChanged = false;
 
 	/**
 	 * Records whether the ontology changed since the last calculation of the
@@ -171,7 +154,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 	 * <li>value = <code>true</code> if changed, otherwise <code>false</code></li>
 	 * </ul>
 	 */
-	private Map<String, Boolean> rulesChanged = new HashMap<String, Boolean>();
+	private boolean rulesChanged = false;
 
 	private QueryContainment queryCont = null;
 	
@@ -182,13 +165,9 @@ public class IrisFacade implements DatalogReasonerFacade {
 	private org.deri.iris.storage.IRelation QCResult = null;
 	
 	/**
-	 * Map containing all the ontology-&gt;datasources mappings.
-	 * <ul>
-	 * <li>key = ontology uri</li>
-	 * <li>value = data sources to use for this ontology</li>
-	 * </ul>
+	 * The external data sources.
 	 */
-	private final Map<String, Collection<ExternalDataSource>> sources;
+	private final Collection<ExternalDataSource> sources;
 
 	public IrisFacade(final WSMO4JManager m, final Map<String, Object> config) {
 		DATA_FACTORY = m.getDataFactory();
@@ -197,10 +176,10 @@ public class IrisFacade implements DatalogReasonerFacade {
 		
 		// retrieving the data source
 		final Object ds = (config != null) ? config.get(EXTERNAL_DATA_SOURCE) : null;
-		if ((ds != null) && (ds instanceof Map)) {
-			sources = (Map<String, Collection<ExternalDataSource>>) ds;
+		if ((ds != null) && (ds instanceof Collection)) {
+			sources = (Collection<ExternalDataSource>) ds;
 		} else {
-			sources = Collections.EMPTY_MAP;
+			sources = Collections.EMPTY_LIST;
 		}
 	}
 
@@ -208,27 +187,20 @@ public class IrisFacade implements DatalogReasonerFacade {
 		this(new WSMO4JManager(), null);
 	}
 
-	public synchronized void deregister(String ontologyURI)
-			throws ExternalToolException {
-		progs.remove(ontologyURI);
+	public synchronized void deregister() throws ExternalToolException {
+		prog = null;
 	}
 
-	public synchronized Set<Map<Variable, Term>> evaluate(ConjunctiveQuery q,
-			String ontologyURI) throws ExternalToolException {
-		if (ontologyURI == null) {
-			throw new NullPointerException("The ontology uri must not be null");
-		}
+	public synchronized Set<Map<Variable, Term>> evaluate(ConjunctiveQuery q) throws ExternalToolException {
 		if (q == null) {
 			throw new NullPointerException("The query must not be null");
 		}
-		if (!progs.containsKey(ontologyURI)) {
-			throw new InternalReasonerException("A program with the uri '" + 
-					ontologyURI + "' has not been registered, yet.");
+		if (prog == null) {
+			throw new InternalReasonerException("A program has not been registered");
 		}
 
 		// constructing the query -- i.e. rule with no head
-		final List<ILiteral> body = new ArrayList<ILiteral>(q.getLiterals()
-				.size());
+		final List<ILiteral> body = new ArrayList<ILiteral>(q.getLiterals().size());
 		// converting the literals of the query
 		for (final Literal l : q.getLiterals()) {
 			body.add(literal2Literal(l));
@@ -240,7 +212,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 		org.deri.iris.storage.IRelation executionResult;
 		List<IVariable> variableBindings = new ArrayList<IVariable>();
 		try {
-			executionResult = progs.get(ontologyURI).execute(query, variableBindings);
+			executionResult = prog.execute(query, variableBindings);
 		} catch (EvaluationException e2) {
 			throw new ExternalToolException(e2.getMessage());
 		}
@@ -269,17 +241,12 @@ public class IrisFacade implements DatalogReasonerFacade {
 		return res;
 	}
 	
-	public synchronized boolean checkQueryContainment(ConjunctiveQuery query1, 
-			ConjunctiveQuery query2, String ontologyURI) {
-		if (ontologyURI == null) {
-			throw new NullPointerException("The ontology uri must not be null");
-		}
+	public synchronized boolean checkQueryContainment(ConjunctiveQuery query1, ConjunctiveQuery query2) {
 		if (query1 == null || query2 == null) {
 			throw new NullPointerException("The queries must not be null");
 		}
-		if (!progs.containsKey(ontologyURI)) {
-			throw new InternalReasonerException("A program with the uri '" + 
-					ontologyURI + "' has not been registered, yet.");
+		if (prog == null) {
+			throw new InternalReasonerException("A program has not been registered");
 		}
 
 		// constructing query 1, the query to be frozen in IRIS 
@@ -308,7 +275,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 		containedQuery = iQuery2;	
 
 		// doing the query containment check
-		queryCont = new QueryContainment(progs.get(ontologyURI));
+		queryCont = new QueryContainment(prog);
 		boolean check = false;
 		try {
 			check = queryCont.checkQueryContainment(iQuery1, iQuery2);
@@ -319,12 +286,10 @@ public class IrisFacade implements DatalogReasonerFacade {
 		return check;
 	}
 	
-	public synchronized Set<Map<Variable, Term>> getQueryContainment(
-			ConjunctiveQuery query1, ConjunctiveQuery query2, String ontologyURI) 
-			throws ExternalToolException {
+	public synchronized Set<Map<Variable, Term>> getQueryContainment(ConjunctiveQuery query1, ConjunctiveQuery query2) throws ExternalToolException {
 		
 		// check query containment and get IRIS result set
-		if (checkQueryContainment(query1, query2, ontologyURI))
+		if (checkQueryContainment(query1, query2))
 			QCResult = queryCont.getContainmentMappings();
 		
 		// constructing the result set to return
@@ -344,21 +309,17 @@ public class IrisFacade implements DatalogReasonerFacade {
 	}
 
 	
-	public synchronized void register(String ontologyURI, Set<Rule> kb)
-			throws ExternalToolException {
-		if (ontologyURI == null) {
-			throw new NullPointerException("The ontology uri must not be null");
-		}
+	public synchronized void register(Set<Rule> kb) throws ExternalToolException {
 		if (kb == null) {
 			throw new NullPointerException("The knowlebe base must not be null");
 		}
-		if (progs.containsKey(ontologyURI)) {
-			deregister(ontologyURI);
+		if (prog != null) {
+			deregister();
 		}
 		
 		Map<IPredicate, org.deri.iris.storage.IRelation> facts = new HashMap<IPredicate, org.deri.iris.storage.IRelation>();
 		List<IRule> rules = new ArrayList<IRule>();
-		final Configuration conf = new Configuration();
+		final Configuration conf = org.deri.iris.KnowledgeBaseFactory.getDefaultConfiguration();
 		
 		// translating all the rules
 		for (final Rule r : kb) {
@@ -367,8 +328,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 				IPredicate pred = atom.getPredicate();
 
 				org.deri.iris.storage.IRelation relation = facts.get(atom.getPredicate() );
-				if( relation == null )
-				{
+				if( relation == null ){
 					relation = new org.deri.iris.storage.simple.SimpleRelationFactory().createRelation();
 					facts.put( pred, relation );
 				}
@@ -391,19 +351,14 @@ public class IrisFacade implements DatalogReasonerFacade {
 			rules.add(r);
 		}
 		// add the data sources
-		final Collection<ExternalDataSource> ds = sources.get(ontologyURI);
-		if (ds != null) {
-			for (final ExternalDataSource ext : ds) {
-				conf.mExternalDataSources.add(new IrisDataSource(ext));
-			}
+		for (final ExternalDataSource ext : sources) {
+			conf.mExternalDataSources.add(new IrisDataSource(ext));
 		}
 		
-		final IKnowledgeBase newKb = KnowledgeBaseFactory.createKnowledgeBase(facts, rules, conf);
+		factsChanged = true;
+		rulesChanged = true;
 		
-		this.factsChanged.put(ontologyURI, true);
-		this.rulesChanged.put(ontologyURI, true);
-		this.progs.put(ontologyURI, newKb);
-		this.conjunctiveQueries.put(ontologyURI, new HashMap<ConjunctiveQuery, IQuery>());
+		prog = org.deri.iris.KnowledgeBaseFactory.createKnowledgeBase( facts, rules, conf );
 	}
 
 	/**

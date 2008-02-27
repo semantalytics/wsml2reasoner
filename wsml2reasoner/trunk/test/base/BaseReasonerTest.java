@@ -183,7 +183,6 @@ public class BaseReasonerTest extends TestCase {
     protected static void setupScenario(final String ontologyFile,
 			final Map<String, Object> config) throws IOException,
 			ParserException, InvalidModelException, InconsistencyException {
-       
     	setUpFactories();
 
         // Set up serializer
@@ -220,8 +219,7 @@ public class BaseReasonerTest extends TestCase {
         System.out.println(logExprSerializer.serialize(qExpression));
         System.out.println("--------------\n\n");
 
-        Set<Map<Variable, Term>> result = wsmlReasoner.executeQuery((IRI) o
-                .getIdentifier(), qExpression);
+        Set<Map<Variable, Term>> result = wsmlReasoner.executeQuery(qExpression);
 
         System.out.println("Found < " + result.size()
                 + " > results to the query:");
@@ -244,7 +242,7 @@ public class BaseReasonerTest extends TestCase {
     		System.out.println("\n\nStarting DL reasoner - " +
     				"retrieving all instances of concept " + concept);
     	    System.out.println("\n\nExpecting " + expected.size() + " result(s)...");
-    		Set<Instance> result = wsmlReasoner.getInstances((IRI) o.getIdentifier(), 
+    		Set<Instance> result = wsmlReasoner.getInstances(
     				wsmoFactory.createConcept(
     				wsmoFactory.createIRI(concept)));
     		System.out.println("Found < " + result.size()

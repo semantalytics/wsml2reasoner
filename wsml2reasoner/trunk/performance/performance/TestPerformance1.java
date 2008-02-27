@@ -110,7 +110,7 @@ public class TestPerformance1 {
 
     	String[] reasonerNames = new String[ 0 ];
     	
-    	switch( 1 )
+    	switch( 5 )
     	{
     	case 98:	// nobel
 //    		reasonerNames = new String[]{"IRIS", "KAON", "MINS"};
@@ -167,13 +167,13 @@ public class TestPerformance1 {
 //        	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/GeographyOntology.wsml")); // Inconsistency
         	break;
 
-    	case 5: // For KAON, IRIS and MINS
-    		reasonerNames = new String[]{"KAON", "MINS", "IRIS" };
+    	case 5: // For IRIS and MINS
+    		reasonerNames = new String[]{"MINS", "IRIS" };
     		
     		// WEIRD!!!!!!!!
-// 1       	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/EG1.wsml"));	// Can only be loaded alone
-// 2       	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/JobSeekerOntology.wsml"));
-// 3       	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/CompetenceOntology.wsml"));
+//    		wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/EG1.wsml"));	// Can only be loaded alone
+ 			wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/JobSeekerOntology.wsml"));
+	       	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/CompetenceOntology.wsml"));
 //    		wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/LanguageOntology.wsml")); // MINS inconsistency
 //        	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/DrivingLicenseOntology.wsml")); // MINS Consitency violation
 //        	wsmo4jOntologies.add(loadOntology("performance/ontologies/simple/GeographyOntology.wsml")); // Consistency violation
@@ -237,7 +237,7 @@ public class TestPerformance1 {
             for (int i = 0; i < j; i++){
                 System.out.print("Executing query " + i + " of " + j + " ");
                 long t2_start = System.currentTimeMillis();
-                result = reasoner.executeQuery((IRI) theOntology.getIdentifier(), query);
+                result = reasoner.executeQuery(query);
                 long t2_end = System.currentTimeMillis();
                 long t2 = t2_end - t2_start;
                 performanceresult.addExecuteQuery(i, t2);
@@ -246,7 +246,7 @@ public class TestPerformance1 {
     
             System.out.print("Deregistering Ontology ");
             long t3_start = System.currentTimeMillis();
-            reasoner.deRegisterOntology((IRI) theOntology.getIdentifier());
+            reasoner.deRegister();
             long t3_end = System.currentTimeMillis();
             long t3 = t3_end - t3_start;
             System.out.println("(" + t3 + "ms)");

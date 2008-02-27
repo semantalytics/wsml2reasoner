@@ -113,7 +113,7 @@ public class LoadReferenceOntology {
         LogicalExpression le = Factory.createLogicalExpressionFactory(new HashMap <String, Object> ()).createLogicalExpression("?x memberOf ?y");
         
         Ontology ontology = new ArrayList <Ontology>(ontologies).get(0);
-        Set <Map<Variable, Term>> result = reasoner.executeQuery((IRI) ontology.getIdentifier(), le);
+        Set <Map<Variable, Term>> result = reasoner.executeQuery(le);
         long query_end = System.currentTimeMillis();
         long query = query_end - query_start;
         System.out.println("Query executed in " + query + " ms");

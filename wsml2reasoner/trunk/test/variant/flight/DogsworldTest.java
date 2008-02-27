@@ -68,14 +68,14 @@ public class DogsworldTest extends BaseReasonerTest {
     }
     
     public void consistencyChecker() throws Exception {
-        assertTrue(((WSMLFlightReasoner)wsmlReasoner).isSatisfiable((IRI)o.getIdentifier()));
+        assertTrue(((WSMLFlightReasoner)wsmlReasoner).isSatisfiable());
     }
 
     //Currently fails with MINS - see open.MinsInstanceRetrieval
     public void instanceRetrieval() throws Exception {
         String query = "Anne memberOf CatOwner";
         LogicalExpression qExpression = leFactory.createLogicalExpression(query, o);
-        assertTrue(wsmlReasoner.executeGroundQuery((IRI)o.getIdentifier(), qExpression));
+        assertTrue(wsmlReasoner.executeGroundQuery(qExpression));
     }
     
     public void testFlightReasoners() throws Exception{

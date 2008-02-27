@@ -55,10 +55,9 @@ public class SpassFacade extends FOLAbstractFacade {
     }
 
     @Override
-    public List<EntailmentType> checkEntailment(String ontologyIRI,List<LogicalExpression> conjecture) {
-        String ontology = convertedOntologies.get(ontologyIRI);
-        if (ontology==null) throw new RuntimeException("ontology not registered");
-        TPTPSymbolMap map = symbolMaps.get(ontologyIRI);
+    public List<EntailmentType> checkEntailment(List<LogicalExpression> conjecture) {
+        if (convertedOntology==null) throw new RuntimeException("ontology not registered");
+        TPTPSymbolMap map = symbolMap;
         if (map==null) throw new RuntimeException("Could not find a symbolmap for iri, error in conversion");
         
         List<EntailmentType> results = new ArrayList<EntailmentType>();
@@ -66,13 +65,13 @@ public class SpassFacade extends FOLAbstractFacade {
             String conjectureString = getConjecture(le,map);
             collector.clear();
             le.accept(collector);
-            ontology = ontology.replace("<REPLACE_ME_WITH_MORE_PREDICATES>", 
+            convertedOntology = convertedOntology.replace("<REPLACE_ME_WITH_MORE_PREDICATES>", 
             		getPredicates(map));
-            ontology = ontology.replace("<REPLACE_ME_WITH_MORE_FUNCTIONS>", 
+            convertedOntology = convertedOntology.replace("<REPLACE_ME_WITH_MORE_FUNCTIONS>", 
             		getFunctions(map));
             log.debug("checking conjecture:" +conjectureString);
-            log.debug("\n\n"+ontology + "\n" + conjectureString);
-            results.add(invokeHttp(ontology + "\n" + conjectureString));
+            log.debug("\n\n"+convertedOntology + "\n" + conjectureString);
+            results.add(invokeHttp(convertedOntology + "\n" + conjectureString));
         }
         return results;
     }
@@ -90,7 +89,7 @@ public class SpassFacade extends FOLAbstractFacade {
     }
     
     
-    public void register(String ontologyURI, Set<LogicalExpression> expressions) throws ExternalToolException {
+    public void register(Set<LogicalExpression> expressions) throws ExternalToolException {
         String kb ="";
     	kb += "begin_problem(WSML_Problem).\n\n";
     	kb += getSpassMetaDisc();
@@ -125,8 +124,8 @@ public class SpassFacade extends FOLAbstractFacade {
     	kb += allAxioms;
     	kb += "end_of_list.\n";
 //    	log.debug("REGISTERED KB: "+ontologyURI+"\n"+kb);
-        convertedOntologies.put(ontologyURI, kb);
-        symbolMaps.put(ontologyURI,symmap);
+        convertedOntology = kb;
+        symbolMap = symmap;
     }
 
 	/**

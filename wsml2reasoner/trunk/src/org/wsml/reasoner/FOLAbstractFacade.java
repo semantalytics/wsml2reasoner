@@ -44,8 +44,8 @@ public abstract class FOLAbstractFacade implements FOLReasonerFacade {
     private Logger log = Logger.getLogger(FOLAbstractFacade.class);
     WSMO4JManager wsmo4jmanager;
     String httpAddress;
-    public Map<String,String> convertedOntologies = new HashMap<String, String>();
-    protected Map<String,TPTPSymbolMap> symbolMaps = new HashMap<String, TPTPSymbolMap>();
+    public String convertedOntology;
+    protected TPTPSymbolMap symbolMap;
  
     static public String DERI_TPTP_REASONER="http://dev1.deri.at/dont-treat-this-service-to-hard";
     static public String DERI_SPASS_REASONER="http://dev1.deri.at/spass-plus-t";
@@ -55,10 +55,9 @@ public abstract class FOLAbstractFacade implements FOLReasonerFacade {
         this.httpAddress=endpoint;
     }
     
-    public List<EntailmentType> checkEntailment(String ontologyIRI,List<LogicalExpression> conjecture) {
-        String ontology = convertedOntologies.get(ontologyIRI);
-        if (ontology==null) throw new RuntimeException("ontology not registered");
-        TPTPSymbolMap map = symbolMaps.get(ontologyIRI);
+    public List<EntailmentType> checkEntailment(List<LogicalExpression> conjecture) {
+        if (convertedOntology==null) throw new RuntimeException("ontology not registered");
+        TPTPSymbolMap map = symbolMap;
         if (map==null) throw new RuntimeException("Could not find a symbolmap for iri, error in conversion");
         
         List<EntailmentType> results = new ArrayList<EntailmentType>();
@@ -66,7 +65,7 @@ public abstract class FOLAbstractFacade implements FOLReasonerFacade {
             String conjectureString = getConjecture(le,map);
             log.debug("checking conjecture:" +conjectureString);
 //            log.debug("\n\n"+ontology + "\n" + conjectureString);
-            results.add(invokeHttp(ontology + "\n" + conjectureString));
+            results.add(invokeHttp(convertedOntology + "\n" + conjectureString));
         }
         return results;
     }
@@ -122,7 +121,7 @@ public abstract class FOLAbstractFacade implements FOLReasonerFacade {
             return result;
     }
 
-    public void deregister(String ontologyURI) throws ExternalToolException {
-        convertedOntologies.remove(ontologyURI);
+    public void deregister() throws ExternalToolException {
+        convertedOntology = null;
     }
 }
