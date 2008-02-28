@@ -23,7 +23,6 @@
 	<classpathentry kind="lib" path="lib/ext/performance-tests/JFreeChart/jcommon-1.0.10.jar"/>
 	<classpathentry kind="lib" path="lib/ext/performance-tests/JFreeChart/jfreechart-1.0.6.jar"/>
 	<classpathentry kind="lib" path="lib/ext/performance-tests/JFreeChart/swtgraphics2d.jar"/>
-	<classpathentry kind="lib" path="lib/ext/iris-reasoner/iris/iris-0.56.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="lib" path="lib/ext/xsb-system/interprolog.jar"/>
 	<classpathentry kind="lib" path="lib/ext/log4j/log4j-1.2.14.jar"/>
@@ -32,5 +31,6 @@
 	<classpathentry kind="lib" path="lib/ext/wsmo/wsmo4j-0.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/ext/wsmo/wsmo-api-0.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/ext/sql-interface/hsqldb.jar"/>
+	<classpathentry kind="lib" path="lib/ext/iris-reasoner/iris/iris-0.57.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

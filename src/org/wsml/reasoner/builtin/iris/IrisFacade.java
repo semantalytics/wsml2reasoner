@@ -352,13 +352,18 @@ public class IrisFacade implements DatalogReasonerFacade {
 		}
 		// add the data sources
 		for (final ExternalDataSource ext : sources) {
-			conf.mExternalDataSources.add(new IrisDataSource(ext));
+			conf.externalDataSources.add(new IrisDataSource(ext));
 		}
 		
 		factsChanged = true;
 		rulesChanged = true;
 		
-		prog = org.deri.iris.KnowledgeBaseFactory.createKnowledgeBase( facts, rules, conf );
+		try {
+			prog = org.deri.iris.KnowledgeBaseFactory.createKnowledgeBase( facts, rules, conf );
+		} catch (EvaluationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
