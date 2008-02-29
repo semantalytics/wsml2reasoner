@@ -20,6 +20,7 @@ package org.wsml.reasoner.api;
 
 import java.util.List;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.wsmo.common.IRI;
 
 
 /**
@@ -34,5 +35,12 @@ public interface WSMLFOLReasoner extends WSMLReasoner{
     public List<EntailmentType> checkEntailment (List<LogicalExpression> conjectures);
     
     public EntailmentType checkEntailment (LogicalExpression conjectures);
+    
+    /**@deprecated*/
+    public List<EntailmentType> checkEntailment (IRI ontologyID, List<LogicalExpression> conjectures);
+    
+    /**@deprecated*/
+    public EntailmentType checkEntailment (IRI ontologyID, LogicalExpression conjectures);
+	
 	
 }

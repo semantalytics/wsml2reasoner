@@ -361,4 +361,181 @@ public interface WSMLReasoner {
 	 */
 	public Set getConstraintAttributeValues(Instance subject, Identifier attributeId);
 
+	
+	/**@deprecated*/
+	public void deRegisterOntology(IRI ontologyID);
+
+	
+	/**@deprecated*/
+	public void deRegisterOntology(Set<IRI> ontologyIDs);
+
+	
+	/**@deprecated*/
+	public boolean checkQueryContainment(LogicalExpression query1, 
+	    		LogicalExpression query2, IRI ontologyID);
+	
+	
+	/**@deprecated*/
+    public Set<Map<Variable, Term>> getQueryContainment(LogicalExpression 
+    		query1, LogicalExpression query2, IRI ontologyID);
+    
+    
+    /**@deprecated*/
+    public boolean executeGroundQuery(IRI ontologyID, LogicalExpression query);
+
+    
+    /**@deprecated*/
+    public Set<Map<Variable, Term>> executeQuery(IRI ontologyID,
+            LogicalExpression query);
+    
+    
+    /**@deprecated*/
+    public boolean entails(IRI ontologyID, LogicalExpression expression);
+
+    
+    /**@deprecated*/
+    public boolean entails(IRI ontologyID, Set<LogicalExpression> expressions);
+    
+    
+    /**@deprecated*/
+    public boolean isSatisfiable(IRI ontologyID);
+
+    
+    /**@deprecated*/
+    public Set<ConsistencyViolation> checkConsistency(IRI ontologyID);
+
+    /**@deprecated*/
+    public boolean isSubConceptOf(IRI ontologyID, Concept subConcept,
+            Concept superConcept);
+
+    
+    /**@deprecated*/
+    public boolean isMemberOf(IRI ontologyID, Instance instance, Concept concept);
+    
+    
+    /**@deprecated*/
+    public Set<Concept> getSubConcepts(IRI ontologyID, Concept concept);
+    
+    
+    /**@deprecated*/
+    public Set<Concept> getDirectSubConcepts(IRI ontologyID, Concept concept);
+
+    
+    /**@deprecated*/
+    public Set<Concept> getSuperConcepts(IRI ontologyID, Concept concept);
+   
+    
+    /**@deprecated*/
+    public Set<Concept> getDirectSuperConcepts(IRI ontologyID, Concept concept);
+
+    
+    /**@deprecated*/
+    public Set<Instance> getInstances(IRI ontologyID, Concept concept);
+
+
+    /**@deprecated*/
+    public Set<Concept> getConcepts(IRI ontologyID, Instance instance);
+    
+   
+    /**@deprecated*/
+	public Set<Concept> getAllConcepts(IRI ontologyID);
+	
+	
+	/**@deprecated*/
+	public Set<Instance> getAllInstances(IRI ontologyID);
+	
+	
+	/**@deprecated*/
+	public Set<IRI> getAllAttributes(IRI ontologyID);
+	
+	
+	/**@deprecated*/
+	public Set<IRI> getAllConstraintAttributes(IRI ontologyID);
+	
+	
+	/**@deprecated*/
+	public Set<IRI> getAllInferenceAttributes(IRI ontologyID);
+
+	
+	/**@deprecated*/
+	public Set<Concept> getEquivalentConcepts(IRI ontologyID, Concept concept);
+	
+	
+	/**@deprecated*/
+	public boolean isEquivalentConcept(IRI ontologyID, Concept concept1, 
+			Concept concept2);
+	
+	
+	/**@deprecated*/
+	public Set<Concept> getDirectConcepts(IRI ontologyID, Instance instance);
+	
+	
+	/**@deprecated*/
+	public Set<IRI> getSubRelations(IRI ontologyID, Identifier attributeId);
+	
+	
+	/**@deprecated*/
+	public Set<IRI> getDirectSubRelations(IRI ontologyID, Identifier attributeId);
+	
+	
+	/**@deprecated*/
+	public Set<IRI> getSuperRelations(IRI ontologyID, Identifier attributeId);
+	
+	
+	/**@deprecated*/
+	public Set<IRI> getDirectSuperRelations(IRI ontologyID, Identifier attributeId);
+	
+	
+	/**@deprecated*/
+	public Set<IRI> getEquivalentRelations(IRI ontologyID, 
+			Identifier attributeId);
+	
+	
+	/**@deprecated*/
+	public Set<IRI> getInverseRelations(IRI ontologyID, Identifier attributeId);
+	
+	
+	/**@deprecated*/
+	public Set<Concept> getConceptsOf(IRI ontologyID, Identifier attributeId);
+	
+	
+	/**@deprecated*/
+	public Set<IRI> getRangesOfInferingAttribute(IRI ontologyID, 
+			Identifier attributeId);
+	
+	
+	/**@deprecated*/
+	public Set<IRI> getRangesOfConstraintAttribute(IRI ontologyID, 
+			Identifier attributeId);
+	
+	
+	/**@deprecated*/
+	public Map<IRI, Set<Term>> getInferingAttributeValues(IRI ontologyID, 
+			Instance instance);
+	
+	
+	/**@deprecated*/
+	public Map<IRI, Set<Term>> getConstraintAttributeValues(IRI ontologyID, 
+			Instance instance);
+	
+	
+	/**@deprecated*/
+	public Map<Instance, Set<Term>> getInferingAttributeInstances(
+			IRI ontologyID, Identifier attributeId);
+	
+	
+	/**@deprecated*/
+	public Map<Instance, Set<Term>> getConstraintAttributeInstances(
+			IRI ontologyID, Identifier attributeId);
+	
+	
+	/**@deprecated*/
+	public Set getInferingAttributeValues(IRI ontologyID, 
+			Instance subject, Identifier attributeId);
+
+	
+	/**@deprecated*/
+	public Set getConstraintAttributeValues(IRI ontologyID, 
+			Instance subject, Identifier attributeId);
+		
 }

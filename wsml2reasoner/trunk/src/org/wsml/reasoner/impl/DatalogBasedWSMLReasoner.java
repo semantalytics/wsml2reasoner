@@ -1714,4 +1714,183 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         return values;
 	}
 
+	public Set<ConsistencyViolation> checkConsistency(IRI ontologyID) {
+		return checkConsistency();
+	}
+
+	public boolean checkQueryContainment(LogicalExpression query1,
+			LogicalExpression query2, IRI ontologyID) {
+		return checkQueryContainment(query1, query2);
+	}
+
+	public void deRegisterOntology(IRI ontologyID) {
+		deRegister();
+	}
+
+	public void deRegisterOntology(Set<IRI> ontologyIDs) {
+		deRegister();
+	}
+
+	public boolean entails(IRI ontologyID, LogicalExpression expression) {
+		return entails(expression);
+	}
+
+	public boolean entails(IRI ontologyID, Set<LogicalExpression> expressions) {
+		return entails(expressions);
+	}
+
+	public boolean executeGroundQuery(IRI ontologyID, LogicalExpression query) {
+		return executeGroundQuery(query);
+	}
+
+	public Set<Map<Variable, Term>> executeQuery(IRI ontologyID,
+			LogicalExpression query) {
+		return executeQuery(query);
+	}
+
+	public Set<IRI> getAllAttributes(IRI ontologyID) {
+		return getAllAttributes();
+	}
+
+	public Set<Concept> getAllConcepts(IRI ontologyID) {
+		return getAllConcepts();
+	}
+
+	public Set<IRI> getAllConstraintAttributes(IRI ontologyID) {
+		return getAllConstraintAttributes();
+	}
+
+	public Set<IRI> getAllInferenceAttributes(IRI ontologyID) {
+		return getAllInferenceAttributes();
+	}
+
+	public Set<Instance> getAllInstances(IRI ontologyID) {
+		return getAllInstances();
+	}
+
+	public Set<Concept> getConcepts(IRI ontologyID, Instance instance) {
+		return getConcepts(instance);
+	}
+
+	public Set<Concept> getConceptsOf(IRI ontologyID, Identifier attributeId) {
+		return getConceptsOf(attributeId);
+	}
+
+	public Map<Instance, Set<Term>> getConstraintAttributeInstances(
+			IRI ontologyID, Identifier attributeId) {
+		return getConstraintAttributeInstances(attributeId);
+	}
+
+	public Set getConstraintAttributeValues(IRI ontologyID, Instance subject,
+			Identifier attributeId) {
+		return getConstraintAttributeValues(subject, attributeId);
+	}
+
+	public Map<IRI, Set<Term>> getConstraintAttributeValues(IRI ontologyID,
+			Instance instance) {
+		return getConstraintAttributeValues(instance);
+	}
+
+	public Set<Concept> getDirectConcepts(IRI ontologyID, Instance instance) {
+		return getDirectConcepts(instance);
+	}
+
+	public Set<Concept> getDirectSubConcepts(IRI ontologyID, Concept concept) {
+		return getDirectSubConcepts(concept);
+	}
+
+	public Set<IRI> getDirectSubRelations(IRI ontologyID, Identifier attributeId) {
+		return getDirectSubRelations(attributeId);
+	}
+
+	public Set<Concept> getDirectSuperConcepts(IRI ontologyID, Concept concept) {
+		return getDirectSuperConcepts(concept);
+	}
+
+	public Set<IRI> getDirectSuperRelations(IRI ontologyID,
+			Identifier attributeId) {
+		return getDirectSuperRelations(attributeId);
+	}
+
+	public Set<Concept> getEquivalentConcepts(IRI ontologyID, Concept concept) {
+		return getEquivalentConcepts(concept);
+	}
+
+	public Set<IRI> getEquivalentRelations(IRI ontologyID,
+			Identifier attributeId) {
+		return getEquivalentRelations(attributeId);
+	}
+
+	public Map<Instance, Set<Term>> getInferingAttributeInstances(
+			IRI ontologyID, Identifier attributeId) {
+		return getInferingAttributeInstances(attributeId);
+	}
+
+	public Set getInferingAttributeValues(IRI ontologyID, Instance subject,
+			Identifier attributeId) {
+		return getInferingAttributeValues(subject, attributeId);
+	}
+
+	public Map<IRI, Set<Term>> getInferingAttributeValues(IRI ontologyID,
+			Instance instance) {
+		return getInferingAttributeValues(instance);
+	}
+
+	public Set<Instance> getInstances(IRI ontologyID, Concept concept) {
+		return getInstances(concept);
+	}
+
+	public Set<IRI> getInverseRelations(IRI ontologyID, Identifier attributeId) {
+		return getInverseRelations(attributeId);
+	}
+
+	public Set<Map<Variable, Term>> getQueryContainment(
+			LogicalExpression query1, LogicalExpression query2, IRI ontologyID) {
+		return getQueryContainment(query1, query2);
+	}
+
+	public Set<IRI> getRangesOfConstraintAttribute(IRI ontologyID,
+			Identifier attributeId) {
+		return getRangesOfConstraintAttribute(attributeId);
+	}
+
+	public Set<IRI> getRangesOfInferingAttribute(IRI ontologyID,
+			Identifier attributeId) {
+		return getRangesOfInferingAttribute(attributeId);
+	}
+
+	public Set<Concept> getSubConcepts(IRI ontologyID, Concept concept) {
+		return getSubConcepts(concept);
+	}
+
+	public Set<IRI> getSubRelations(IRI ontologyID, Identifier attributeId) {
+		return getSubRelations(attributeId);
+	}
+
+	public Set<Concept> getSuperConcepts(IRI ontologyID, Concept concept) {
+		return getSubConcepts(concept);
+	}
+
+	public Set<IRI> getSuperRelations(IRI ontologyID, Identifier attributeId) {
+		return getSuperRelations(attributeId);
+	}
+
+	public boolean isEquivalentConcept(IRI ontologyID, Concept concept1,
+			Concept concept2) {
+		return isEquivalentConcept(concept1, concept2);
+	}
+
+	public boolean isMemberOf(IRI ontologyID, Instance instance, Concept concept) {
+		return isMemberOf(instance, concept);
+	}
+
+	public boolean isSatisfiable(IRI ontologyID) {
+		return isSatisfiable();
+	}
+
+	public boolean isSubConceptOf(IRI ontologyID, Concept subConcept,
+			Concept superConcept) {
+		return isSubConceptOf(subConcept, superConcept);
+	}
+	
 }
