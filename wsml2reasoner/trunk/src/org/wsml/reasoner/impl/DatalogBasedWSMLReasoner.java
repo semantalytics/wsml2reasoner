@@ -252,9 +252,9 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         // System.out.println(p);
         // System.out.println("-*");
     	
-        for (Rule r : p){
-        	System.out.println(r);
-        }
+//        for (Rule r : p){
+//        	System.out.println(r);
+//        }
         
         return p;
     }
