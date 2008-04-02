@@ -22,6 +22,7 @@ import static org.deri.iris.factory.Factory.BASIC;
 import static org.deri.iris.factory.Factory.BUILTIN;
 import static org.deri.iris.factory.Factory.CONCRETE;
 import static org.deri.iris.factory.Factory.TERM;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.deri.iris.Configuration;
 import org.deri.iris.EvaluationException;
 import org.deri.iris.api.basics.IAtom;
@@ -277,29 +279,56 @@ public class IrisFacade implements DatalogReasonerFacade {
 		return check;
 	}
 	
+	private List<IVariable> extractUniqueVariables( IQuery query )
+	{
+		List<IVariable> result = new ArrayList<IVariable>();
+		
+		for( ILiteral literal : query.getLiterals() )
+		{
+			for( ITerm term : literal.getAtom().getTuple() )
+			{
+				if( term instanceof IVariable )
+				{
+					IVariable variable = (IVariable) term;
+					
+					if( ! result.contains( variable ) )
+						result.add( variable );
+				}
+			}
+		}
+		
+		return result;
+	}
+	
 	public synchronized Set<Map<Variable, Term>> getQueryContainment(
 			ConjunctiveQuery query1, ConjunctiveQuery query2) 
 			throws ExternalToolException {
 		
 		// check query containment and get IRIS result set
-		if (checkQueryContainment(query1, query2))
+		if (checkQueryContainment(query1, query2)) {
 			QCResult = queryCont.getContainmentMappings();
 		
-		// constructing the result set to return
-		final Set<Map<Variable, Term>> result = new HashSet<Map<Variable, Term>>();
-
-		List<IVariable> varList = containedQuery.getVariables();		
-		for (int i =0; i< QCResult.size(); i++){
-			ITuple t = QCResult.get(i);
-			assert t.size() == varList.size();
-			final Map<Variable, Term> tmp = new HashMap<Variable, Term>();
-			for( int pos = 0; pos < t.size(); pos++){
-				tmp.put( (Variable)irisTermConverter(varList.get(pos)), irisTermConverter(t.get(pos)));
-			}
-			result.add(tmp);
-		}	
-		QCResult = new SimpleRelationFactory().createRelation();
-		return result;
+			// constructing the result set to return
+			final Set<Map<Variable, Term>> result = new HashSet<Map<Variable, Term>>();
+		
+			// getting the variables from query2 in the execution order
+			List<IVariable> variableBindings = queryCont.getVariableBindings();
+		
+			assert QCResult.size() > 0;
+			assert variableBindings.size() == QCResult.get(0).size();
+		
+			for (int i =0; i< QCResult.size(); i++){
+				ITuple t = QCResult.get(i);
+				final Map<Variable, Term> tmp = new HashMap<Variable, Term>();
+				for( int pos = 0; pos < t.size(); pos++){
+					tmp.put( (Variable)irisTermConverter(variableBindings.get(pos)), irisTermConverter(t.get(pos)));
+				}
+				result.add(tmp);
+			}	
+			QCResult = new SimpleRelationFactory().createRelation();
+			return result;
+		}
+		return new HashSet<Map<Variable, Term>>();
 	}
 
 	
