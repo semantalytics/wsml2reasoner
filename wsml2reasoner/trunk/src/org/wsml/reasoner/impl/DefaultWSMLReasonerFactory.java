@@ -19,10 +19,9 @@
 
 package org.wsml.reasoner.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
-
 import org.deri.wsmo4j.validator.WsmlValidatorImpl;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.WSMLCoreReasoner;
@@ -38,6 +37,8 @@ import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
+import org.wsmo.validator.ValidationError;
+import org.wsmo.validator.ValidationWarning;
 import org.wsmo.validator.WsmlValidator;
 
 /**
@@ -62,142 +63,155 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
     }
 
     private WSMO4JManager extractWsmoManager(Map<String, Object> params) {
+    	assert params != null;
+    	
         WsmoFactory wsmoFactory;
         LogicalExpressionFactory leFactory;
         DataFactory dataFactory;
+        
         wsmoFactory = params.containsKey(PARAM_WSMO_FACTORY) ? (WsmoFactory) params
                 .get(PARAM_WSMO_FACTORY)
                 : Factory.createWsmoFactory(null);
+                
         leFactory = params.containsKey(PARAM_LE_FACTORY) ? (LogicalExpressionFactory) params
                 .get(PARAM_LE_FACTORY)
                 : Factory.createLogicalExpressionFactory(null);
+                
         dataFactory = params.containsKey(PARAM_DATA_FACTORY) ? (DataFactory) params
                 .get(PARAM_DATA_FACTORY)
                 : Factory.createDataFactory(null);
+                
         return new WSMO4JManager(wsmoFactory, leFactory, dataFactory);
     }
 
-    public WSMLReasoner createWSMLReasoner(Map<String, Object> params, Ontology ontology) {
+    private String determineVariant( Ontology ontology )
+    {
+    	assert ontology != null;
+    	
     	WsmlValidator validator = new WsmlValidatorImpl();
-    	String variant = validator.determineVariant(ontology, new Vector(), new Vector());
-    	if (variant == null) {
-    		throw new RuntimeException("Given ontology is not valid WSML-FULL!");
-    	}
-    	if (params == null) {
-			if (variant.equals(WSML.WSML_DL))
-				return new DLBasedWSMLReasoner(BuiltInReasoner.PELLET, 
-						new WSMO4JManager());
-			else if (variant.equals(WSML.WSML_CORE) || variant.equals(WSML.WSML_FLIGHT)) {
-				return new DatalogBasedWSMLReasoner(BuiltInReasoner.KAON2, 
-						new WSMO4JManager(), params);
-			}
-		}
-		else {
-			WSMO4JManager wsmoManager = extractWsmoManager(params);
-			if (variant.equals(WSML.WSML_DL)) {
-				BuiltInReasoner builtin = params.containsKey(PARAM_BUILT_IN_REASONER) 
-        				? (BuiltInReasoner) params.get(PARAM_BUILT_IN_REASONER) 
-        						: BuiltInReasoner.PELLET;
-        		return new DLBasedWSMLReasoner(builtin, wsmoManager);
-			}
-			else if (variant.equals(WSML.WSML_CORE) || variant.equals(WSML.WSML_FLIGHT)
-					|| variant.equals(WSML.WSML_RULE)) {
-				BuiltInReasoner builtin = params.containsKey(PARAM_BUILT_IN_REASONER) 
-	            		? (BuiltInReasoner) params.get(PARAM_BUILT_IN_REASONER)
-	            				: BuiltInReasoner.KAON2;
-	            return new DatalogBasedWSMLReasoner(builtin, wsmoManager, params);
-			}	
-		}
-    	throw new RuntimeException("Reasoning is not yet supported for WSML-FULL!");
+    	String variant = validator.determineVariant(ontology, new ArrayList<ValidationError>(), new ArrayList<ValidationWarning>());
+    	if (variant == null)
+    		throw new RuntimeException("Unable to determine WSML variant from given ontology: " + ontology.getIdentifier() );
+    	return variant;
+    }
+    
+    private BuiltInReasoner extractReasoner( Map<String, Object> params, BuiltInReasoner defaultReasoner )
+    {
+    	assert params != null;
+
+        BuiltInReasoner requested = (BuiltInReasoner) params.get( PARAM_BUILT_IN_REASONER );
+        if( requested != null )
+        	return requested;
+
+    	return defaultReasoner;
+    }
+    
+	private void setAllowImportsFlag( DatalogBasedWSMLReasoner reasoner, Map<String, Object> params )
+	{
+    	assert params != null;
+
+        Object o = params.get(PARAM_ALLOW_IMPORTS);
+        if (o!=null && o instanceof Integer){
+        	reasoner.setAllowImports((Integer)o);
+        }
+	}
+
+    public WSMLReasoner createWSMLReasoner(Map<String, Object> params, Ontology ontology) {
+    	if( ontology == null )
+    		throw new IllegalArgumentException( "The ontology paramter may not be null" );
+    	
+        if (params == null)
+        	params = new HashMap<String, Object>();
+
+        String wsmlVariant = determineVariant(ontology);
+    	
+    	if( wsmlVariant.equals( WSML.WSML_CORE ) )
+    		return createWSMLCoreReasoner( params );
+    	
+    	if( wsmlVariant.equals( WSML.WSML_DL ) )
+    		return createWSMLDLReasoner( params );
+    	
+    	if( wsmlVariant.equals( WSML.WSML_FLIGHT ) )
+    		return createWSMLFlightReasoner( params );
+    	
+    	if( wsmlVariant.equals( WSML.WSML_RULE ) )
+    		return createWSMLRuleReasoner( params );
+
+		throw new RuntimeException( "Unsupported WSML variant: " + wsmlVariant );
     }
 
     public WSMLReasoner createWSMLReasoner(Ontology ontology) {
     	return createWSMLReasoner(null, ontology);
     }
     
-    public WSMLCoreReasoner createWSMLCoreReasoner(Map<String, Object> params)
-            throws UnsupportedOperationException {
-        if (params == null) {
-            return new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
-                    BuiltInReasoner.KAON2, new WSMO4JManager(), params);
-        } else {
-            WSMO4JManager wsmoManager = extractWsmoManager(params);
-            BuiltInReasoner builtin = params
-                    .containsKey(PARAM_BUILT_IN_REASONER) ? (BuiltInReasoner) params
-                    .get(PARAM_BUILT_IN_REASONER)
-                    : BuiltInReasoner.KAON2;
-            return new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
-                    builtin, wsmoManager, params);
-        }
+    public WSMLCoreReasoner createWSMLCoreReasoner(Map<String, Object> params) {
+        if (params == null)
+        	params = new HashMap<String, Object>();
+    	params.put( PARAM_WSML_VARIANT, WSML.WSML_CORE );
+    	
+    	return new DatalogBasedWSMLReasoner( extractReasoner( params, BuiltInReasoner.KAON2 ), extractWsmoManager( params ), params );
     }
 
-    public WSMLCoreReasoner createWSMLCoreReasoner()
-            throws UnsupportedOperationException {
+    public WSMLCoreReasoner createWSMLCoreReasoner() {
         return createWSMLCoreReasoner(null);
     }
 
     public WSMLDLReasoner createWSMLDLReasoner(Map<String, Object> params) {
-		if (params == null) {
-			return new DLBasedWSMLReasoner(BuiltInReasoner.PELLET, 
-					new WSMO4JManager());
-		}
-		else {
-			WSMO4JManager wsmoManager = extractWsmoManager(params);
-            BuiltInReasoner builtin = params.containsKey(PARAM_BUILT_IN_REASONER) 
-            		? (BuiltInReasoner) params.get(PARAM_BUILT_IN_REASONER) 
-            		: BuiltInReasoner.PELLET;
-            DLBasedWSMLReasoner dlwsmlr = new DLBasedWSMLReasoner(builtin, 
-            		wsmoManager);
-            return dlwsmlr;
-		}
+        if (params == null)
+        	params = new HashMap<String, Object>();
+    	params.put( PARAM_WSML_VARIANT, WSML.WSML_DL );
+    	
+    	return new DLBasedWSMLReasoner( extractReasoner( params, BuiltInReasoner.PELLET ), extractWsmoManager( params ) );
 	}
 
-	public WSMLDLReasoner createWSMLDLReasoner() 
-			throws UnsupportedOperationException {
+	public WSMLDLReasoner createWSMLDLReasoner() {
 		return createWSMLDLReasoner(null);
 	}
     
-    public WSMLFlightReasoner createWSMLFlightReasoner(Map<String, Object> params)
-            throws UnsupportedOperationException {
-        if (params == null) {
-            return new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
-                    BuiltInReasoner.KAON2, new WSMO4JManager(), params);
-        } else {
-            WSMO4JManager wsmoManager = extractWsmoManager(params);
-            BuiltInReasoner builtin = params
-                    .containsKey(PARAM_BUILT_IN_REASONER) ? (BuiltInReasoner) params
-                    .get(PARAM_BUILT_IN_REASONER)
-                    : BuiltInReasoner.KAON2;
-            DatalogBasedWSMLReasoner dbwsmlr = new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
-                    builtin, wsmoManager, params);
-            
-            Object o = params.get(PARAM_ALLOW_IMPORTS);
-            if (o!=null && o instanceof Integer){
-                dbwsmlr.setAllowImports((Integer)o);
-            }
+    public WSMLFlightReasoner createWSMLFlightReasoner(Map<String, Object> params) {
+        if (params == null)
+        	params = new HashMap<String, Object>();
+    	params.put( PARAM_WSML_VARIANT, WSML.WSML_FLIGHT );
+    	
+    	DatalogBasedWSMLReasoner reasoner = new DatalogBasedWSMLReasoner( extractReasoner( params, BuiltInReasoner.KAON2 ), extractWsmoManager( params ), params );
 
-            return dbwsmlr;
-        }
+    	setAllowImportsFlag( reasoner, params );
+    	
+    	return reasoner;
     }
 
-    public WSMLFlightReasoner createWSMLFlightReasoner()
-            throws UnsupportedOperationException {
+    public WSMLFlightReasoner createWSMLFlightReasoner() {
         return createWSMLFlightReasoner(null);
     }
 
-    public WSMLFOLReasoner createWSMLFOLReasoner() throws UnsupportedOperationException {
+
+	public WSMLRuleReasoner createWSMLRuleReasoner() throws UnsupportedOperationException {
+		return createWSMLRuleReasoner(null);
+	}
+	
+	public WSMLRuleReasoner createWSMLRuleReasoner(Map<String, Object> params) throws UnsupportedOperationException {
+        if (params == null)
+        	params = new HashMap<String, Object>();
+    	params.put( PARAM_WSML_VARIANT, WSML.WSML_RULE );
+
+    	DatalogBasedWSMLReasoner reasoner = new DatalogBasedWSMLReasoner( extractReasoner( params, BuiltInReasoner.IRIS ), extractWsmoManager( params ), params );
+
+    	setAllowImportsFlag( reasoner, params );
+    	
+    	return reasoner;
+    }
+	
+	public WSMLFOLReasoner createWSMLFOLReasoner() throws UnsupportedOperationException {
         return createWSMLFOLReasoner(null);
     }
     
     public WSMLFOLReasoner createWSMLFOLReasoner(Map<String, Object> params) throws UnsupportedOperationException {
-        if (params == null) {
+        if (params == null)
         	params = new HashMap<String, Object>();
-        }
+        
+        WSMO4JManager wsmo4jManager = extractWsmoManager( params );
 
-        BuiltInReasoner reasoner = BuiltInReasoner.SPASS;
-        if (params.containsKey(PARAM_BUILT_IN_REASONER)){
-        	reasoner = (BuiltInReasoner)params.get(PARAM_BUILT_IN_REASONER);
-        }
+        BuiltInReasoner reasoner = extractReasoner( params, BuiltInReasoner.SPASS );
         
         String uri=null;
         if (params.containsKey(PARAM_EXTERNAL_REASONER_URI)){
@@ -213,35 +227,6 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         	}
         }
         
-        return new org.wsml.reasoner.impl.FOLBasedWSMLReasoner(
-    			reasoner,
-    			new WSMO4JManager(),
-    			uri);
-    }
-
-	public WSMLRuleReasoner createWSMLRuleReasoner() throws UnsupportedOperationException {
-		return createWSMLRuleReasoner(null);
-	}
-
-	public WSMLRuleReasoner createWSMLRuleReasoner(Map<String, Object> params) throws UnsupportedOperationException {
-        if (params == null) {
-            return new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
-                    BuiltInReasoner.MINS, new WSMO4JManager(), params);
-        } else {
-            WSMO4JManager wsmoManager = extractWsmoManager(params);
-            BuiltInReasoner builtin = params
-                    .containsKey(PARAM_BUILT_IN_REASONER) ? (BuiltInReasoner) params
-                    .get(PARAM_BUILT_IN_REASONER)
-                    : BuiltInReasoner.MINS;
-            DatalogBasedWSMLReasoner dbwsmlr = new org.wsml.reasoner.impl.DatalogBasedWSMLReasoner(
-                    builtin, wsmoManager, params);
-            
-            Object o = params.get(PARAM_ALLOW_IMPORTS);
-            if (o!=null && o instanceof Integer){
-                dbwsmlr.setAllowImports((Integer)o);
-            }
-
-            return dbwsmlr;
-        }
+        return new org.wsml.reasoner.impl.FOLBasedWSMLReasoner( reasoner, wsmo4jManager, uri);
     }
 }
