@@ -18,6 +18,8 @@ public class BundledIrisTests {
 		suite.addTestSuite(BuiltInDateTimeTest.class);
 		suite.addTestSuite(QueryContainmentTest.class);
 		suite.addTestSuite(DataSourceTest.class);
+		suite.addTestSuite(RuleNotFiringTest.class);
+		suite.addTestSuite(NotStratifiedTest.class);
 		//$JUnit-END$
 		return suite;
 	}
