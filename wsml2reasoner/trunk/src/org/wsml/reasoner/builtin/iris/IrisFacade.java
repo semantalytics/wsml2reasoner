@@ -73,6 +73,7 @@ import org.deri.iris.builtins.IsStringBuiltin;
 import org.deri.iris.facts.IDataSource;
 import org.deri.iris.querycontainment.QueryContainment;
 import org.deri.iris.storage.IRelation;
+import org.deri.iris.storage.simple.SimpleRelationFactory;
 import org.omwg.logicalexpression.Constants;
 import org.omwg.logicalexpression.terms.BuiltInConstructedTerm;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
@@ -162,7 +163,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 	
 
 	/** Map that contains the variable mapping from the query containment check. */
-	private org.deri.iris.storage.IRelation QCResult = null;
+	private org.deri.iris.storage.IRelation QCResult = new SimpleRelationFactory().createRelation();
 	
 	/**
 	 * The external data sources.
@@ -286,7 +287,9 @@ public class IrisFacade implements DatalogReasonerFacade {
 		return check;
 	}
 	
-	public synchronized Set<Map<Variable, Term>> getQueryContainment(ConjunctiveQuery query1, ConjunctiveQuery query2) throws ExternalToolException {
+	public synchronized Set<Map<Variable, Term>> getQueryContainment(
+			ConjunctiveQuery query1, ConjunctiveQuery query2) 
+			throws ExternalToolException {
 		
 		// check query containment and get IRIS result set
 		if (checkQueryContainment(query1, query2))
@@ -305,6 +308,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 			}
 			result.add(tmp);
 		}	
+		QCResult = new SimpleRelationFactory().createRelation();
 		return result;
 	}
 
