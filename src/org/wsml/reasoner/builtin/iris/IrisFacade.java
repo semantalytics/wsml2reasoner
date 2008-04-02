@@ -91,12 +91,14 @@ import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.WSML2DatalogTransformer;
 import org.wsml.reasoner.api.ExternalDataSource;
 import org.wsml.reasoner.api.InternalReasonerException;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.ExternalDataSource.HasValue;
 import org.wsml.reasoner.api.ExternalDataSource.MemberOf;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.UnnumberedAnonymousID;
+import org.wsmo.common.WSML;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
@@ -137,26 +139,6 @@ public class IrisFacade implements DatalogReasonerFacade {
 	/** knowledge-base. */
 	private org.deri.iris.api.IKnowledgeBase prog;
 
-	/**
-	 * Records whether the ontology changed since the last calculation of the
-	 * fixed point.
-	 * <ul>
-	 * <li>key = ontologyId</li>
-	 * <li>value = <code>true</code> if changed, otherwise <code>false</code></li>
-	 * </ul>
-	 */
-	private boolean factsChanged = false;
-
-	/**
-	 * Records whether the ontology changed since the last calculation of the
-	 * fixed point.
-	 * <ul>
-	 * <li>key = ontologyId</li>
-	 * <li>value = <code>true</code> if changed, otherwise <code>false</code></li>
-	 * </ul>
-	 */
-	private boolean rulesChanged = false;
-
 	private QueryContainment queryCont = null;
 	
 	private IQuery containedQuery = null;
@@ -164,6 +146,8 @@ public class IrisFacade implements DatalogReasonerFacade {
 
 	/** Map that contains the variable mapping from the query containment check. */
 	private org.deri.iris.storage.IRelation QCResult = new SimpleRelationFactory().createRelation();
+	
+	private final String wsmlVariant;
 	
 	/**
 	 * The external data sources.
@@ -174,7 +158,13 @@ public class IrisFacade implements DatalogReasonerFacade {
 		DATA_FACTORY = m.getDataFactory();
 		WSMO_FACTORY = m.getWSMOFactory();
 		LOGIC_FACTORY = m.getLogicalExpressionFactory();
-		
+
+		String variant = null;
+    	if( config != null )
+    		variant = (String) config.get( WSMLReasonerFactory.PARAM_WSML_VARIANT );
+
+    	wsmlVariant = variant == null ? WSML.WSML_FLIGHT : variant;
+
 		// retrieving the data source
 		final Object ds = (config != null) ? config.get(EXTERNAL_DATA_SOURCE) : null;
 		if ((ds != null) && (ds instanceof Collection)) {
@@ -323,7 +313,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 		
 		Map<IPredicate, org.deri.iris.storage.IRelation> facts = new HashMap<IPredicate, org.deri.iris.storage.IRelation>();
 		List<IRule> rules = new ArrayList<IRule>();
-		final Configuration conf = org.deri.iris.KnowledgeBaseFactory.getDefaultConfiguration();
+		final Configuration configuration = org.deri.iris.KnowledgeBaseFactory.getDefaultConfiguration();
 		
 		// translating all the rules
 		for (final Rule r : kb) {
@@ -356,17 +346,22 @@ public class IrisFacade implements DatalogReasonerFacade {
 		}
 		// add the data sources
 		for (final ExternalDataSource ext : sources) {
-			conf.externalDataSources.add(new IrisDataSource(ext));
+			configuration.externalDataSources.add(new IrisDataSource(ext));
 		}
 		
-		factsChanged = true;
-		rulesChanged = true;
-		
 		try {
-			prog = org.deri.iris.KnowledgeBaseFactory.createKnowledgeBase( facts, rules, conf );
+			// If reasoning with WSML-Rule, we need unsafe rule support and well-founded semantics
+			if( wsmlVariant.equals( WSML.WSML_RULE ) )
+			{
+				configuration.ruleSafetyProcessor = new org.deri.iris.rules.safety.AugmentingRuleSafetyProcessor();
+				configuration.evaluationStrategyFactory = new org.deri.iris.evaluation.wellfounded.WellFoundedEvaluationStrategyFactory();
+			}
+			
+			prog = org.deri.iris.KnowledgeBaseFactory.createKnowledgeBase( facts, rules, configuration );
 		} catch (EvaluationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new RuntimeException( e.getMessage() );
 		}
 	}
 
