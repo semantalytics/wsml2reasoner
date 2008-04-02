@@ -30,30 +30,26 @@ import org.omwg.ontology.Ontology;
  */
 public interface WSMLReasonerFactory {
 
-//     public String PARAM_WSML_VARIANT = "WSML VARIANT";
-//    
-//     public enum WSMLVariant {
-//    	 WSML_CORE, WSML_FLIGHT, WSML_RULE, WSML_DL, WSML_FULL
-//     };
+    public static final String PARAM_WSMO_FACTORY = "WSML FACTORY";
 
-    public String PARAM_WSMO_FACTORY = "WSML FACTORY";
+    public static final String PARAM_LE_FACTORY = "LE FACTORY";
 
-    public String PARAM_LE_FACTORY = "LE FACTORY";
+    public static final String PARAM_DATA_FACTORY = "DATA FACTORY";
 
-    public String PARAM_DATA_FACTORY = "DATA FACTORY";
-
-    public String PARAM_BUILT_IN_REASONER = "BUILT IN REASONER";
+    public static final String PARAM_BUILT_IN_REASONER = "BUILT IN REASONER";
 
     //public String DISABLE_CONSISTENCY_CHECK = "Disable consistency check";
     /**
      * underlying reasoner reasoner uses a specific evaluation method (if supported)
      */
-    public String PARAM_EVAL_METHOD = "Evaluation Method";
+    public static final String PARAM_EVAL_METHOD = "Evaluation Method";
     
-    public String PARAM_ALLOW_IMPORTS = "Allow ontology imports";
+    public static final String PARAM_ALLOW_IMPORTS = "Allow ontology imports";
     
-    public String PARAM_EXTERNAL_REASONER_URI = "ENDPOINT";
+    public static final String PARAM_EXTERNAL_REASONER_URI = "ENDPOINT";
     
+    public static final String PARAM_WSML_VARIANT = "WSML VARIANT";
+
     /**
      * Enum to select which reasoner to take. This enum also holds informations 
      * about those reasoners.
