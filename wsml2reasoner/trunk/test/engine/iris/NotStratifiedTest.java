@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
@@ -32,12 +31,13 @@ import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
+import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsmo.common.IRI;
+import org.wsmo.common.WSML;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
-
 import base.BaseReasonerTest;
 
 /**
@@ -66,7 +66,8 @@ public class NotStratifiedTest extends BaseReasonerTest {
 		// cannot yet handle such built-ins
 		previous = BaseReasonerTest.reasoner;
 		BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
-		wsmlReasoner = BaseReasonerTest.getReasoner();
+//		wsmlReasoner = BaseReasonerTest.getReasoner();
+		wsmlReasoner = getIrisReasoner();
 		wsmoFactory = Factory.createWsmoFactory(null);
 		leFactory = Factory.createLogicalExpressionFactory(null);
 		parser = Factory.createParser(null);
@@ -76,6 +77,13 @@ public class NotStratifiedTest extends BaseReasonerTest {
     protected void tearDown() throws Exception {
     	super.tearDown();
     	resetReasoner(previous);
+    }
+    
+    private WSMLReasoner getIrisReasoner()
+    {
+    	Map<String, Object> params = new HashMap<String, Object>();
+    	params.put( WSMLReasonerFactory.PARAM_BUILT_IN_REASONER, BuiltInReasoner.IRIS );
+    	return DefaultWSMLReasonerFactory.getFactory().createWSMLRuleReasoner( params );
     }
 
     public void testOntology1() throws Exception
