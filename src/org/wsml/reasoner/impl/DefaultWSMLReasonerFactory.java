@@ -149,7 +149,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         	params = new HashMap<String, Object>();
     	params.put( PARAM_WSML_VARIANT, WSML.WSML_CORE );
     	
-    	return new DatalogBasedWSMLReasoner( extractReasoner( params, BuiltInReasoner.KAON2 ), extractWsmoManager( params ), params );
+    	return new DatalogBasedWSMLReasoner( extractReasoner( params, BuiltInReasoner.IRIS ), extractWsmoManager( params ), params );
     }
 
     public WSMLCoreReasoner createWSMLCoreReasoner() {
@@ -173,7 +173,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         	params = new HashMap<String, Object>();
     	params.put( PARAM_WSML_VARIANT, WSML.WSML_FLIGHT );
     	
-    	DatalogBasedWSMLReasoner reasoner = new DatalogBasedWSMLReasoner( extractReasoner( params, BuiltInReasoner.KAON2 ), extractWsmoManager( params ), params );
+    	DatalogBasedWSMLReasoner reasoner = new DatalogBasedWSMLReasoner( extractReasoner( params, BuiltInReasoner.IRIS ), extractWsmoManager( params ), params );
 
     	setAllowImportsFlag( reasoner, params );
     	
