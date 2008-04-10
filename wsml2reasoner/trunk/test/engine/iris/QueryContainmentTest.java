@@ -164,13 +164,13 @@ public class QueryContainmentTest extends BaseReasonerTest {
 //        wsmlReasoner.registerOntology(ontology);
 //        
 //        // build queries
-//        LogicalExpression query1 = leFactory.createLogicalExpression(
+//		LogicalExpression query1 = leFactory.createLogicalExpression(
+//				"?x[hasSRS hasValue gk] memberOf Polygon and " +
+//				"?y[hasSRS hasValue gk] memberOf Polygon.\n", ontology);	
+//        LogicalExpression query2 = leFactory.createLogicalExpression(
 //        		"?a[hasSRS hasValue ?refsys] memberOf GM_Object and " +
 //        		"?b[hasSRS hasValue ?refsys] memberOf GM_Object and " +
 //        		"?refsys memberOf projSRS.", ontology);
-//        LogicalExpression query2 = leFactory.createLogicalExpression(
-//        		"?x[hasSRS hasValue gk] memberOf Polygon and " +
-//        		"?y[hasSRS hasValue gk] memberOf Polygon.\n", ontology);
 //        
 //        // perform query containment check
 //        boolean check = wsmlReasoner.checkQueryContainment(query1, query2);
