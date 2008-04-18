@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 import org.deri.wsmo4j.io.serializer.wsml.VisitorSerializeWSMLTerms;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
@@ -33,7 +32,6 @@ import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -48,7 +46,6 @@ import org.wsmo.wsml.Serializer;
  */
 public class LotsOfImports {
     
-    int evalmethod = 3;
     WSMO4JManager wsmoManager = new WSMO4JManager();
 	WsmoFactory wsmoFactory = wsmoManager.getWSMOFactory();
     Parser wsmlParser = Factory.createParser(null);
@@ -143,8 +140,6 @@ public class LotsOfImports {
         	return;
         }
        
-        params.put(WSMLReasonerFactory.PARAM_EVAL_METHOD,
-                new Integer(evalmethod));
         params.put(WSMLReasonerFactory.PARAM_ALLOW_IMPORTS, 0);
         WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
                 .createWSMLFlightReasoner(params);
