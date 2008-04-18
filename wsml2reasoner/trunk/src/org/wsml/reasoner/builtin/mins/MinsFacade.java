@@ -130,7 +130,7 @@ public class MinsFacade implements DatalogReasonerFacade {
 
     private MinsSymbolMap symbTransfomer;
     
-    public EvaluationMethod evaluationMethod = EvaluationMethod.WELL_FOUNDED_WITH_ALTERNATE_FIXEDPOINT;
+    public EvaluationMethod evaluationMethod = EvaluationMethod.WELL_FOUNDED;
 
     /**
      * Creates a facade object that allows to invoke the MINS rule system for
