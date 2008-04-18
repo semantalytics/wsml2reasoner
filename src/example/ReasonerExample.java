@@ -23,7 +23,6 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
 import org.deri.wsmo4j.io.serializer.wsml.VisitorSerializeWSMLTerms;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
@@ -33,7 +32,6 @@ import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -51,8 +49,6 @@ import org.wsmo.wsml.Serializer;
  */
 public class ReasonerExample {
     
-    int evalmethod = 2;
-
     /**
      * @param args
      *            none expected
@@ -131,8 +127,6 @@ public class ReasonerExample {
         	return;
         }
         
-        params.put(WSMLReasonerFactory.PARAM_EVAL_METHOD,
-                new Integer(evalmethod));
         WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
                 .createWSMLFlightReasoner(params);
 
@@ -165,10 +159,6 @@ public class ReasonerExample {
      * @return object model of ontology at file location
      */
     private Ontology loadOntology(String file) {
-        WSMO4JManager wsmoManager = new WSMO4JManager();
-        LogicalExpressionFactory leFactory = wsmoManager
-                .getLogicalExpressionFactory();
-        WsmoFactory wsmoFactory = wsmoManager.getWSMOFactory();
         Parser wsmlParser = Factory.createParser(null);
 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(

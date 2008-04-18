@@ -48,8 +48,6 @@ import org.wsmo.wsml.Serializer;
  */
 public class Kaon2ReasonerExample {
     
-    int evalmethod = 2;
-
     /**
      * @param args
      *            none expected
@@ -83,8 +81,6 @@ public class Kaon2ReasonerExample {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
                 WSMLReasonerFactory.BuiltInReasoner.KAON2);
-        params.put(WSMLReasonerFactory.PARAM_EVAL_METHOD,
-                new Integer(evalmethod));
         WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
                 .createWSMLFlightReasoner(params);
 
@@ -117,10 +113,6 @@ public class Kaon2ReasonerExample {
      * @return object model of ontology at file location
      */
     private Ontology loadOntology(String file) {
-        WSMO4JManager wsmoManager = new WSMO4JManager();
-        LogicalExpressionFactory leFactory = wsmoManager
-                .getLogicalExpressionFactory();
-        WsmoFactory wsmoFactory = wsmoManager.getWSMOFactory();
         Parser wsmlParser = Factory.createParser(null);
 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(
