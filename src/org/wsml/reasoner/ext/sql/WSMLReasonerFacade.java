@@ -61,7 +61,6 @@ public class WSMLReasonerFacade
 		params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
 				WSMLReasonerFactory.BuiltInReasoner.IRIS);
 		
-		params.put(WSMLReasonerFactory.PARAM_EVAL_METHOD, new Integer(2));
 		reasoner = DefaultWSMLReasonerFactory.getFactory()
 				.createWSMLFlightReasoner(params);
 	}
