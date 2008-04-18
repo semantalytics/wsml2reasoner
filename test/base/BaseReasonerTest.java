@@ -29,9 +29,7 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
 import junit.framework.TestCase;
-
 import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
@@ -43,7 +41,6 @@ import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.DataFactory;
@@ -58,13 +55,15 @@ public class BaseReasonerTest extends TestCase {
     //CHANGE HERE TO CHECK DIFFERENT REASONERS!
     public static WSMLReasonerFactory.BuiltInReasoner reasoner =
 //    	WSMLReasonerFactory.BuiltInReasoner.KAON2;
-    	WSMLReasonerFactory.BuiltInReasoner.IRIS;
-//    	WSMLReasonerFactory.BuiltInReasoner.MINS;
+//    	WSMLReasonerFactory.BuiltInReasoner.IRIS;
+    	WSMLReasonerFactory.BuiltInReasoner.MINS;
     	
     //CHANGE HERE TO CHECK DIFFERENT EVALUATION METHODS-
     //IS ALSO SET FROM BUNDLED VARIANT TEST SUITES
     //e.g. ReasonerCoreTest
-    public static int evalMethod = 3;
+    // -1 means 'do not change the default'
+    // any value >= 0 will be passed to the underlying reasoner facade
+    public static int evalMethod = -1;
 
     //0=allow imports
     //1=do not allow imports
@@ -102,8 +101,10 @@ public class BaseReasonerTest extends TestCase {
     public static WSMLReasoner getReasoner(final Map<String, Object> config) {
 		// Create reasoner
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,reasoner);  
-        params.put(WSMLReasonerFactory.PARAM_EVAL_METHOD,evalMethod);
+        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,reasoner);
+        
+        if( evalMethod >= 0 )
+        	params.put(WSMLReasonerFactory.PARAM_EVAL_METHOD,evalMethod);
         params.put(WSMLReasonerFactory.PARAM_ALLOW_IMPORTS,allowImports);
         
         // overwrite the default configuration
