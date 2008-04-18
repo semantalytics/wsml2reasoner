@@ -31,8 +31,6 @@ public class TestPerformance1 {
 	/** How often to repeat the query to get a good average. */
 	public static final int QUERY_REPETITION_COUNT = 4;
 	
-    int evalmethod = 2;
-
     /**
      * @param args
      *            none expected
@@ -268,7 +266,6 @@ public class TestPerformance1 {
     private WSMLReasoner getReasoner(WSMLReasonerFactory.BuiltInReasoner theReasoner) throws InconsistencyException{
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER, theReasoner);
-        params.put(WSMLReasonerFactory.PARAM_EVAL_METHOD, new Integer(evalmethod));
         WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLFlightReasoner(params);
         return reasoner;
     }

@@ -29,9 +29,6 @@ public class TestPerformanceWithUseOfFeatures {
     public static int TIMELIMIT_REGISTRATION = 60000;
     public static int WAIT_INTERVAL = 1000;
     
-    int evalmethod = 3;
-    
-    
     String directoryPath = "performance/performance/results/";
     
     String[] reasonerNames = new String[]{"KAON", "MINS", "IRIS"};
@@ -441,7 +438,6 @@ public class TestPerformanceWithUseOfFeatures {
     private WSMLReasoner getReasoner(WSMLReasonerFactory.BuiltInReasoner theReasoner) throws InconsistencyException{
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER, theReasoner);
-        params.put(WSMLReasonerFactory.PARAM_EVAL_METHOD, new Integer(evalmethod));
         WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLFlightReasoner(params);
         return reasoner;
     }
