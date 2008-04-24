@@ -31,6 +31,6 @@
 	<classpathentry kind="lib" path="lib/ext/wsmo/wsmo4j-0.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/ext/wsmo/wsmo-api-0.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/ext/sql-interface/hsqldb.jar"/>
-	<classpathentry kind="lib" path="lib/ext/iris-reasoner/iris/iris-0.57.jar"/>
+	<classpathentry kind="lib" path="lib/ext/iris-reasoner/iris/iris-20080402.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
