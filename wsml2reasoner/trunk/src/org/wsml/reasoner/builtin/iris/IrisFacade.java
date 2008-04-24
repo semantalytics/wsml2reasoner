@@ -143,8 +143,6 @@ public class IrisFacade implements DatalogReasonerFacade {
 
 	private QueryContainment queryCont = null;
 	
-	private IQuery containedQuery = null;
-	
 
 	/** Map that contains the variable mapping from the query containment check. */
 	private org.deri.iris.storage.IRelation QCResult = new SimpleRelationFactory().createRelation();
@@ -265,10 +263,13 @@ public class IrisFacade implements DatalogReasonerFacade {
 		
 		// creating the query
 		final IQuery iQuery2 = BASIC.createQuery(body2);
-		containedQuery = iQuery2;	
 
 		// doing the query containment check
 		queryCont = new QueryContainment(prog);
+		
+//		System.out.println("prog: " + prog);
+//		System.out.println("query1: " + query1);
+//		System.out.println("query2 : " + query2);
 		boolean check = false;
 		try {
 			check = queryCont.checkQueryContainment(iQuery1, iQuery2);
