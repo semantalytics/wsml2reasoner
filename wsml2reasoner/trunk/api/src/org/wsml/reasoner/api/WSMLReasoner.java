@@ -55,6 +55,13 @@ public interface WSMLReasoner {
     public void registerEntitiesNoVerification(Set<Entity> ontologies);
 
     /**
+     * Register some entities and do a consistency check.
+     * @param theEntities The entities to register.
+     * @throws InconsistencyException If a consistency violation is detected.
+     */
+    public void registerEntities(Set<Entity> theEntities) throws InconsistencyException;
+
+    /**
      * Registers the ontology. If the ontology is already registered, updates
      * the ontology content.
      * 
