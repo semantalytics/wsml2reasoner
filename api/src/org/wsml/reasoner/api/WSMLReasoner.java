@@ -40,14 +40,20 @@ import org.wsmo.common.Identifier;
  */
 public interface WSMLReasoner {
 	
+	/**
+	 * Register all given ontologies with the reasoner.
+	 * @param ontologies The ontologies to register in the same reasoning space.
+	 * @throws InconsistencyException
+	 */
     public void registerOntologies(Set<Ontology> ontologies)
             throws InconsistencyException;
 
     /**
-     * Registers the ontology. If the ontology is already registered, updates
-     * the ontology content.
+     * Registers the ontology with the reasoner.
+     * All currently registered contents of the reasoner are removed and replaced
+     * with the elements of the new ontology.
      * 
-     * @param ontology
+     * @param ontology The ontology to register
      */
     public void registerOntology(Ontology ontology)
             throws InconsistencyException;
