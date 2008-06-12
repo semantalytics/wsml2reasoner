@@ -192,7 +192,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 			owlValidator.setReporter(new ValidatorLogger());
 			valid = owlValidator.isOWLDL(owlOntology);
 		} catch (Exception e) {
-			throw new RuntimeException ("Difficulties in building the OWL ontology : " + e.getMessage());
+			throw new RuntimeException ("Difficulties in building the OWL ontology : ", e);
 		}
 		if (!(builtInFacade instanceof PelletFacade) && !valid) { //TODO: Ask Nathalie
 			throw new RuntimeException("The transformed OWL DL ontology is " +
@@ -229,6 +229,19 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
         return axioms;
 	}
 	
+	private URI createUniqueURI() throws URISyntaxException
+	{
+		StringBuilder uriString = new StringBuilder();
+		uriString.append( 'a' );
+		byte[] bytes = new java.rmi.dgc.VMID().toString().getBytes();
+		
+		for( byte b : bytes )
+		{
+			uriString.append( Integer.toString( b, 16 ) );
+		}
+		return new URI( uriString.toString() );
+	}
+	
 	/*
 	 * Method to transform a WSML ontology into an OWL ontology.
 	 */
@@ -243,7 +256,7 @@ public class DLBasedWSMLReasoner implements WSMLDLReasoner{
 		owlDataFactory = owlConnection.getDataFactory();
 		
 		// Get an OWL ontology
-		URI uri = new URI(new java.rmi.dgc.VMID().toString());
+		URI uri = createUniqueURI();
 
 		owlOntology = owlConnection.createOntology(uri, uri);
 		
