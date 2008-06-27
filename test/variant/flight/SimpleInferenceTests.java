@@ -102,9 +102,9 @@ public void basicInferences() throws Exception {
 		// test getAllConcepts
 		Set<Concept> set = new HashSet<Concept>();
 		set = wsmlReasoner.getAllConcepts();
-//		for (Concept concept : set) 
-//			System.out.println(concept.getIdentifier().toString());
-		assertTrue(set.size() == 16);
+		for (Concept concept : set) 
+			System.out.println(concept.getIdentifier().toString());
+		assertTrue(set.size() == 17);
 		
 		// test getAllInstances
 		Set<Instance> set2 = new HashSet<Instance>();

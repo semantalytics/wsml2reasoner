@@ -356,17 +356,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
     }
 
     public Set<Map<Variable, Term>> executeQuery(LogicalExpression query) {
-        // execute query:
-        Set<Map<Variable, Term>> bindings = null;
-        try {
-            bindings = internalExecuteQuery(query);
-        } catch (DatalogException e) {
-            throw new InternalReasonerException(e);
-        } catch (ExternalToolException e) {
-            throw new InternalReasonerException(e);
-        }
-
-        return bindings;
+        return internalExecuteQuery(query);
     }
 
     public boolean checkQueryContainment(LogicalExpression query1, LogicalExpression query2) {
@@ -429,14 +419,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
                 instanceID, conceptVariable);
 
         // submit query to reasoner:
-        Set<Map<Variable, Term>> bindings;
-        try {
-            bindings = internalExecuteQuery(query);
-        } catch (DatalogException e) {
-            throw new InternalReasonerException();
-        } catch (ExternalToolException e) {
-            throw new InternalReasonerException();
-        }
+        Set<Map<Variable, Term>> bindings = internalExecuteQuery(query);
 
         // extract concepts from result:
         Set<Concept> concepts = new HashSet<Concept>();
@@ -456,14 +439,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
                 instanceVariable, conceptID);
 
         // submit query to reasoner:
-        Set<Map<Variable, Term>> bindings;
-        try {
-            bindings = internalExecuteQuery(query);
-        } catch (DatalogException e) {
-            throw new InternalReasonerException();
-        } catch (ExternalToolException e) {
-            throw new InternalReasonerException();
-        }
+        Set<Map<Variable, Term>> bindings = internalExecuteQuery(query);
 
         // extract concepts from result:
         Set<Instance> instances = new HashSet<Instance>();
@@ -484,14 +460,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
                 conceptVariable, conceptID);
 
         // submit query to reasoner:
-        Set<Map<Variable, Term>> bindings;
-        try {
-            bindings = internalExecuteQuery(query);
-        } catch (DatalogException e) {
-            throw new InternalReasonerException();
-        } catch (ExternalToolException e) {
-            throw new InternalReasonerException();
-        }
+        Set<Map<Variable, Term>> bindings = internalExecuteQuery(query);
 
         // extract concepts from result:
         Set<Concept> concepts = new HashSet<Concept>();
@@ -517,10 +486,6 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 					"\"(?x, _\"" + conceptID.toString() + "\")");
 			// submit query to reasoner:
             bindings = internalExecuteQuery(query);
-        } catch (DatalogException e) {
-            throw new InternalReasonerException();
-        } catch (ExternalToolException e) {
-            throw new InternalReasonerException();
         } catch (ParserException e) {
         	throw new InternalReasonerException();
 		}
@@ -547,14 +512,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
                 conceptVariable);
 
         // submit query to reasoner:
-        Set<Map<Variable, Term>> bindings;
-        try {
-            bindings = internalExecuteQuery(query);
-        } catch (DatalogException e) {
-            throw new InternalReasonerException();
-        } catch (ExternalToolException e) {
-            throw new InternalReasonerException();
-        }
+        Set<Map<Variable, Term>> bindings = internalExecuteQuery(query);
 
         // extract concepts from result:
         Set<Concept> concepts = new HashSet<Concept>();
@@ -581,10 +539,6 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 			
 			// submit query to reasoner:
             bindings = internalExecuteQuery(query);
-        } catch (DatalogException e) {
-            throw new InternalReasonerException();
-        } catch (ExternalToolException e) {
-            throw new InternalReasonerException();
         } catch (ParserException e) {
         	throw new InternalReasonerException();
 		}
@@ -612,14 +566,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
                 instanceID, conceptID);
 
         // submit query to reasoner:
-        Set<Map<Variable, Term>> bindings;
-        try {
-            bindings = internalExecuteQuery(query);
-        } catch (DatalogException e) {
-            throw new InternalReasonerException();
-        } catch (ExternalToolException e) {
-            throw new InternalReasonerException();
-        }
+        Set<Map<Variable, Term>> bindings = internalExecuteQuery(query);
 
         // check for non-empty result:
         return bindings.size() != 0;
@@ -635,14 +582,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
                 subconceptID, superconceptID);
 
         // / submit query to reasoner:
-        Set<Map<Variable, Term>> bindings;
-        try {
-            bindings = internalExecuteQuery(query);
-        } catch (DatalogException e) {
-            throw new InternalReasonerException();
-        } catch (ExternalToolException e) {
-            throw new InternalReasonerException();
-        }
+        Set<Map<Variable, Term>> bindings = internalExecuteQuery(query);
 
         // check for non-empty result:
         return bindings.size() != 0;
@@ -845,11 +785,19 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         throw new UnsupportedOperationException("Method not implemented yet!");
     }
 
-    protected Set<Map<Variable, Term>> internalExecuteQuery(LogicalExpression query) throws DatalogException, org.wsml.reasoner.ExternalToolException {
+    protected Set<Map<Variable, Term>> internalExecuteQuery(LogicalExpression query) {
         Set<org.wsml.reasoner.ConjunctiveQuery> datalogQueries = convertQuery(query);
         Set<Map<Variable, Term>> result = new HashSet<Map<Variable, Term>>();
         for (ConjunctiveQuery datalogQuery : datalogQueries) {
-            result.addAll(builtInFacade.evaluate(datalogQuery));
+        	try
+        	{
+        		result.addAll(builtInFacade.evaluate(datalogQuery));
+	        } catch (DatalogException e) {
+	            throw new InternalReasonerException( e );
+	        } catch (ExternalToolException e) {
+	            throw new InternalReasonerException( e );
+	        }
+
         }
         return result;
     }
@@ -989,125 +937,75 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         registerEntitiesNoVerification(entities);
     }
 
+	/**
+	 * Extract concept IRIs from a query result set.
+	 * @param bindings The results set.
+	 * @param variable The variables identifying the term of interest.
+	 * @param concepts The collection to hold the found concepts.
+	 */
+	private void extractConcepts( Set<Map<Variable, Term>> bindings, Term variable, Set<Concept> concepts )
+	{
+        for (Map<Variable, Term> binding : bindings) {
+        	Term term = binding.get( variable );
+        	if ( term instanceof IRI)
+        	{
+	        	IRI conceptID = (IRI) binding.get(variable);
+	        	if (!conceptID.getNamespace().toString().startsWith(
+	        			"http://www.wsmo.org/wsml/wsml-syntax")) {
+	        		concepts.add(wsmoFactory.getConcept(conceptID));
+	        	}
+        	}
+        }
+	}
+
 	public Set<Concept> getAllConcepts() {
-		// build membership query:
-        Term instanceVariable = leFactory.createVariable("z");
-		Term conceptVariable1 = leFactory.createVariable("x");
-		Term conceptVariable2 = leFactory.createVariable("y");
-        LogicalExpression query = leFactory.createMemberShipMolecule(
-        		instanceVariable, conceptVariable1);
+		// Create some variables to use in all the queries.
+        Term instance = leFactory.createVariable("instance");
+		Term concept1 = leFactory.createVariable("concept1");
+		Term concept2 = leFactory.createVariable("concept2");
 
-        // submit query to reasoner:
-        Set<Map<Variable, Term>> bindings;
-        try {
-            bindings = internalExecuteQuery(query);
-        } catch (DatalogException e) {
-            throw new InternalReasonerException();
-        } catch (ExternalToolException e) {
-            throw new InternalReasonerException();
-        }
-
-        // extract concepts from result:
+		// Store all the discovered concepts here.
         Set<Concept> concepts = new HashSet<Concept>();
-        for (Map<Variable, Term> binding : bindings) {
-        	IRI conceptID = (IRI) binding.get(leFactory.createVariable("x"));
-        	if (!conceptID.getNamespace().toString().startsWith(
-        			"http://www.wsmo.org/wsml/wsml-syntax")) {
-        		concepts.add(wsmoFactory.getConcept(conceptID));
-        	}
-        }
-        
-        // build new subconcept query:
-        query = leFactory.createSubConceptMolecule(
-        		conceptVariable1, conceptVariable2);
-        
-        // submit query to reasoner:
-        try {
-            bindings = internalExecuteQuery(query);
-        } catch (DatalogException e) {
-            throw new InternalReasonerException();
-        } catch (ExternalToolException e) {
-            throw new InternalReasonerException();
-        }
-        
-        // extract concepts from result:
-        for (Map<Variable, Term> binding : bindings) {
-            IRI conceptID1 = (IRI) binding.get(leFactory.createVariable("x"));
-            if (!conceptID1.getNamespace().toString().startsWith(
-            		"http://www.wsmo.org/wsml/wsml-syntax")) {
-        		concepts.add(wsmoFactory.getConcept(conceptID1));
-        	}
-            IRI conceptID2 = (IRI) binding.get(leFactory.createVariable("y"));
-            if (!conceptID2.getNamespace().toString().startsWith(
-            		"http://www.wsmo.org/wsml/wsml-syntax")) {
-        		concepts.add(wsmoFactory.getConcept(conceptID2));
-        	}
-        }
-        
-        // build new constraint attributes query:
-        query = leFactory.createAttributeConstraint(
-        		conceptVariable1, instanceVariable, conceptVariable2);
-        
-        // submit query to reasoner:
-        try {
-            bindings = internalExecuteQuery(query);
-        } catch (DatalogException e) {
-            throw new InternalReasonerException();
-        } catch (ExternalToolException e) {
-            throw new InternalReasonerException();
-        }
-        
-        // extract concepts from result:
-        for (Map<Variable, Term> binding : bindings) {
-            IRI conceptID = (IRI) binding.get(leFactory.createVariable("x"));
-            if (!conceptID.getNamespace().toString().startsWith(
-            		"http://www.wsmo.org/wsml/wsml-syntax")) {
-        		concepts.add(wsmoFactory.getConcept(conceptID));
-        	}
-            if (binding.get(leFactory.createVariable("y")) instanceof IRI) {
-            	conceptID = (IRI) binding.get(leFactory.createVariable("y"));
-            	if (!conceptID.getNamespace().toString().startsWith(
-            			"http://www.wsmo.org/wsml/wsml-syntax")) {
-            		concepts.add(wsmoFactory.getConcept(conceptID));
-            	}
-            }
-        }
 
-        // build new inference attributes query:
-        query = leFactory.createAttributeInference(
-        		conceptVariable1, instanceVariable, conceptVariable2);
+		// memberOf
+        LogicalExpression query = leFactory.createMemberShipMolecule(instance, concept1);
+
+        Set<Map<Variable, Term>> bindings = internalExecuteQuery(query);
+        extractConcepts( bindings, concept1, concepts );
         
-        // submit query to reasoner:
-        try {
-            bindings = internalExecuteQuery(query);
-        } catch (DatalogException e) {
-            throw new InternalReasonerException();
-        } catch (ExternalToolException e) {
-            throw new InternalReasonerException();
-        }
+        // subConceptOf
+        query = leFactory.createSubConceptMolecule(concept1, concept2);
         
-        // extract concepts from result:
-        for (Map<Variable, Term> binding : bindings) {
-            IRI conceptID = (IRI) binding.get(leFactory.createVariable("x"));
-            if (!conceptID.getNamespace().toString().startsWith(
-            		"http://www.wsmo.org/wsml/wsml-syntax")) {
-        		concepts.add(wsmoFactory.getConcept(conceptID));
-        	}
-            if (binding.get(leFactory.createVariable("y")) instanceof IRI) {
-            	conceptID = (IRI) binding.get(leFactory.createVariable("y"));
-            	if (!conceptID.getNamespace().toString().startsWith(
-            			"http://www.wsmo.org/wsml/wsml-syntax")) {
-            		concepts.add(wsmoFactory.getConcept(conceptID));
-            	}
-            }
-        }
+        bindings = internalExecuteQuery(query);
+        extractConcepts( bindings, concept1, concepts );
+        extractConcepts( bindings, concept2, concepts );
+        
+        // ofType
+        query = leFactory.createAttributeConstraint(concept1, instance, concept2);
+        
+        bindings = internalExecuteQuery(query);
+        
+        extractConcepts( bindings, concept1, concepts );
+        extractConcepts( bindings, concept2, concepts );
+
+        // impliesType
+        query = leFactory.createAttributeInference(concept1, instance, concept2);
+        
+        bindings = internalExecuteQuery(query);
+        
+        extractConcepts( bindings, concept1, concepts );
+        extractConcepts( bindings, concept2, concepts );
+        
+        return concepts;
+        /*
+        This has been commented out, because concepts can also be instances of concepts,
+        e.g. A can be a concept and also a member-of B
+        
+        In other words, this filtering should not be done.
         
         Set<Instance> tmpInst = getAllInstances();
         Set<IRI> tmpAttr = getAllAttributes();
-        Set<Concept> tmpConc = new HashSet<Concept>(concepts.size());
-        for (Concept concept : concepts) {
-        	tmpConc.add(concept);
-        }
+        Set<Concept> tmpConc = new HashSet<Concept>(concepts);
         
         for (Concept concept : tmpConc) {
         	IRI conceptID = (IRI) concept.getIdentifier();
@@ -1124,6 +1022,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         }
         
         return concepts;
+        */
 	}
 
 	public Set<Instance> getAllInstances() {
@@ -1135,14 +1034,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 				instanceVariable, variable);
 		
 		// submit query to reasoner:
-		Set<Map<Variable, Term>> bindings;
-		try {
-			bindings = internalExecuteQuery(query);
-		} catch (DatalogException e) {
-			throw new InternalReasonerException();
-		} catch (ExternalToolException e) {
-			throw new InternalReasonerException();
-		}
+        Set<Map<Variable, Term>> bindings = internalExecuteQuery(query);
 		
 		// extract instances from result:
 		Set<Instance> instances = new HashSet<Instance>();
@@ -1158,13 +1050,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         		instanceVariable, attributeVariable, variable);
         
         // submit query to reasoner:
-        try {
-            bindings = internalExecuteQuery(query);
-        } catch (DatalogException e) {
-            throw new InternalReasonerException();
-        } catch (ExternalToolException e) {
-            throw new InternalReasonerException();
-        }
+        bindings = internalExecuteQuery(query);
         
         // extract instances from result:
         for (Map<Variable, Term> binding : bindings) {
@@ -1194,14 +1080,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 				instanceVariable, attributeVariable, conceptVariable);
 		
 		// submit query to reasoner:
-		Set<Map<Variable, Term>> bindings;
-		try {
-			bindings = internalExecuteQuery(query);
-		} catch (DatalogException e) {
-			throw new InternalReasonerException();
-		} catch (ExternalToolException e) {
-			throw new InternalReasonerException();
-		}
+        Set<Map<Variable, Term>> bindings = internalExecuteQuery(query);
 		
 		// extract instances from result:
 		Set<IRI> attributes = new HashSet<IRI>();
@@ -1210,18 +1089,12 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 			attributes.add(attributeID);
 		}
 		
-		// build new query for infering attributes:
+		// build new query for inferring attributes:
 		query = leFactory.createAttributeInference(
 				instanceVariable, attributeVariable, conceptVariable);
 		
 		// submit query to reasoner:
-		try {
-			bindings = internalExecuteQuery(query);
-		} catch (DatalogException e) {
-			throw new InternalReasonerException();
-		} catch (ExternalToolException e) {
-			throw new InternalReasonerException();
-		}
+        bindings = internalExecuteQuery(query);
 		
 		// extract instances from result:
 		for (Map<Variable, Term> binding : bindings) {
@@ -1234,13 +1107,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 				instanceVariable, attributeVariable, conceptVariable);
 		
 		// submit query to reasoner:
-		try {
-			bindings = internalExecuteQuery(query);
-		} catch (DatalogException e) {
-			throw new InternalReasonerException();
-		} catch (ExternalToolException e) {
-			throw new InternalReasonerException();
-		}
+        bindings = internalExecuteQuery(query);
 		
 		// extract instances from result:
 		for (Map<Variable, Term> binding : bindings) {
@@ -1259,14 +1126,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 				instanceVariable, attributeVariable, conceptVariable);
 		
 		// submit query to reasoner:
-		Set<Map<Variable, Term>> bindings;
-		try {
-			bindings = internalExecuteQuery(query);
-		} catch (DatalogException e) {
-			throw new InternalReasonerException();
-		} catch (ExternalToolException e) {
-			throw new InternalReasonerException();
-		}
+        Set<Map<Variable, Term>> bindings = internalExecuteQuery(query);
 		
 		// extract instances from result:
 		Set<IRI> attributes = new HashSet<IRI>();
@@ -1286,14 +1146,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 				instanceVariable, attributeVariable, conceptVariable);
 		
 		// submit query to reasoner:
-		Set<Map<Variable, Term>> bindings;
-		try {
-			bindings = internalExecuteQuery(query);
-		} catch (DatalogException e) {
-			throw new InternalReasonerException();
-		} catch (ExternalToolException e) {
-			throw new InternalReasonerException();
-		}
+        Set<Map<Variable, Term>> bindings = internalExecuteQuery(query);
 		
 		// extract instances from result:
 		Set<IRI> attributes = new HashSet<IRI>();
@@ -1326,10 +1179,6 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
 					"\"(_\"" + instanceID.toString() + "\", ?x)");
 			// submit query to reasoner:
             bindings = internalExecuteQuery(query);
-        } catch (DatalogException e) {
-            throw new InternalReasonerException();
-        } catch (ExternalToolException e) {
-            throw new InternalReasonerException();
         } catch (ParserException e) {
         	throw new InternalReasonerException();
 		}
@@ -1356,14 +1205,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         		queryPart2);
         
         // submit query to reasoner:
-        Set<Map<Variable, Term>> bindings;
-        try {
-            bindings = internalExecuteQuery(query);
-        } catch (DatalogException e) {
-            throw new InternalReasonerException();
-        } catch (ExternalToolException e) {
-            throw new InternalReasonerException();
-        }
+        Set<Map<Variable, Term>> bindings = internalExecuteQuery(query);
 
         // extract concepts from result:
         Set<Concept> concepts = new HashSet<Concept>();
@@ -1414,14 +1256,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         		instanceVariable, attributeId, valueVariable);
 
         // submit query to reasoner:
-        Set<Map<Variable, Term>> bindings;
-        try {
-            bindings = internalExecuteQuery(query);
-        } catch (DatalogException e) {
-            throw new InternalReasonerException();
-        } catch (ExternalToolException e) {
-            throw new InternalReasonerException();
-        }
+        Set<Map<Variable, Term>> bindings = internalExecuteQuery(query);
 
         // extract iris from result:
         Set<IRI> iris = new HashSet<IRI>();
@@ -1440,14 +1275,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         		instanceVariable, attributeId, valueVariable);
 
         // submit query to reasoner:
-        Set<Map<Variable, Term>> bindings;
-        try {
-            bindings = internalExecuteQuery(query);
-        } catch (DatalogException e) {
-            throw new InternalReasonerException();
-        } catch (ExternalToolException e) {
-            throw new InternalReasonerException();
-        }
+        Set<Map<Variable, Term>> bindings = internalExecuteQuery(query);
 
         // extract iris from result:
         Set<IRI> iris = new HashSet<IRI>();
@@ -1472,14 +1300,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         		queryPart2);
 
         // submit query to reasoner:
-        Set<Map<Variable, Term>> bindings;
-        try {
-            bindings = internalExecuteQuery(query);
-        } catch (DatalogException e) {
-            throw new InternalReasonerException();
-        } catch (ExternalToolException e) {
-            throw new InternalReasonerException();
-        }
+        Set<Map<Variable, Term>> bindings = internalExecuteQuery(query);
 
         // extract results:
         Map<IRI, Set<Term>> results = new HashMap<IRI, Set<Term>>();
@@ -1516,14 +1337,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         		queryPart2);
         
         // submit query to reasoner:
-        Set<Map<Variable, Term>> bindings;
-        try {
-            bindings = internalExecuteQuery(query);
-        } catch (DatalogException e) {
-            throw new InternalReasonerException();
-        } catch (ExternalToolException e) {
-            throw new InternalReasonerException();
-        }
+        Set<Map<Variable, Term>> bindings = internalExecuteQuery(query);
 
         // extract results:
         Map<IRI, Set<Term>> results = new HashMap<IRI, Set<Term>>();
@@ -1560,14 +1374,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         		queryPart2);
         
         // submit query to reasoner:
-        Set<Map<Variable, Term>> bindings;
-        try {
-            bindings = internalExecuteQuery(query);
-        } catch (DatalogException e) {
-            throw new InternalReasonerException();
-        } catch (ExternalToolException e) {
-            throw new InternalReasonerException();
-        }
+        Set<Map<Variable, Term>> bindings = internalExecuteQuery(query);
 
         // extract results:
         Map<Instance, Set<Term>> results = new HashMap<Instance, Set<Term>>();
@@ -1606,14 +1413,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         		queryPart2);
         
         // submit query to reasoner:
-        Set<Map<Variable, Term>> bindings;
-        try {
-            bindings = internalExecuteQuery(query);
-        } catch (DatalogException e) {
-            throw new InternalReasonerException();
-        } catch (ExternalToolException e) {
-            throw new InternalReasonerException();
-        }
+        Set<Map<Variable, Term>> bindings = internalExecuteQuery(query);
 
         // extract results:
         Map<Instance, Set<Term>> results = new HashMap<Instance, Set<Term>>();
@@ -1653,14 +1453,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         		queryPart2);
 
         // submit query to reasoner:
-        Set<Map<Variable, Term>> bindings;
-        try {
-            bindings = internalExecuteQuery(query);
-        } catch (DatalogException e) {
-            throw new InternalReasonerException();
-        } catch (ExternalToolException e) {
-            throw new InternalReasonerException();
-        }
+        Set<Map<Variable, Term>> bindings = internalExecuteQuery(query);
 
         // extract instances from result:
         Set values = new HashSet();
@@ -1691,14 +1484,7 @@ public class DatalogBasedWSMLReasoner implements WSMLFlightReasoner,
         		queryPart2);
 
         // submit query to reasoner:
-        Set<Map<Variable, Term>> bindings;
-        try {
-            bindings = internalExecuteQuery(query);
-        } catch (DatalogException e) {
-            throw new InternalReasonerException();
-        } catch (ExternalToolException e) {
-            throw new InternalReasonerException();
-        }
+        Set<Map<Variable, Term>> bindings = internalExecuteQuery(query);
 
         // extract instances from result:
         Set values = new HashSet();
