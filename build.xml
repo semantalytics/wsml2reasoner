@@ -346,8 +346,8 @@
 		<delete dir="${lib.kaon2}" />
 		<mkdir dir="${lib.kaon2}"/>
 		<mkdir dir="${lib.kaon2}/kaon2/"/>
-		<get src="http://tools.deri.org/wsml2reasoner/ext/wsml2reasoner-ext-kaon2.jar"
-			dest="${lib.kaon2}/wsml2reasoner-ext-kaon2.jar"/>
+		<get src="http://tools.deri.org/wsml2reasoner/ext/wsml2reasoner-ext-kaon2-${deploy.version}.jar"
+			dest="${lib.kaon2}/wsml2reasoner-ext-kaon2-${deploy.version}.jar"/>
 		<get src="http://tools.deri.org/wsml2reasoner/ext/license-lgpl.txt"
 					dest="${lib.kaon2}/license-lgpl.txt"/>
 		<get src="http://tools.deri.org/wsml2reasoner/ext/kaon2/kaon2.jar"
@@ -361,8 +361,8 @@
 		<delete dir="${lib.kaon2}" />
 		<mkdir dir="${lib.kaon2}"/>
 		<mkdir dir="${lib.kaon2}/kaon2/"/>
-		<get src="http://tools.deri.org/wsml2reasoner/ext/wsml2reasoner-ext-kaon2.jar"
-			dest="${lib.kaon2}/wsml2reasoner-ext-kaon2.jar"/>
+		<get src="http://tools.deri.org/wsml2reasoner/ext/wsml2reasoner-ext-kaon2-${deploy.version}.jar"
+			dest="${lib.kaon2}/wsml2reasoner-ext-kaon2-${deploy.version}.jar"/>
 		<get src="http://tools.deri.org/wsml2reasoner/ext/license-lgpl.txt"
 					dest="${lib.kaon2}/license-lgpl.txt"/>
 		<get src="http://tools.deri.org/wsml2reasoner/ext/kaon2/kaon2.jar"
