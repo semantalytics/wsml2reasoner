@@ -553,7 +553,8 @@ public class IrisFacade implements DatalogReasonerFacade {
 			return CONCRETE.createDateTime(getIntFromValue(cv, 0),
 					getIntFromValue(cv, 1), getIntFromValue(cv, 2),
 					getIntFromValue(cv, 3), getIntFromValue(cv, 4),
-					getIntFromValue(cv, 5), getIntFromValue(cv, 6),
+					(int)Double.parseDouble( getFieldValue( cv, 5) ),
+					getIntFromValue(cv, 6),
 					getIntFromValue(cv, 7));
 		} else if (t.equals(WsmlDataType.WSML_DECIMAL)) {
 			return CONCRETE.createDecimal(Double.parseDouble(v.getValue()
@@ -606,7 +607,12 @@ public class IrisFacade implements DatalogReasonerFacade {
 		} else if (t.equals(WsmlDataType.WSML_STRING)) {
 			return TERM.createString(v.toString());
 		} else if (t.equals(WsmlDataType.WSML_TIME)) {
-			// TODO: the ITime interface is not implemented at the moment
+			final ComplexDataValue cv = (ComplexDataValue) v;
+			return CONCRETE.createTime(
+					getIntFromValue(cv, 0), getIntFromValue(cv, 1),
+					(int)Double.parseDouble( getFieldValue( cv, 2) ), // seconds
+					getIntFromValue(cv, 3),
+					getIntFromValue(cv, 4));
 		}
 		throw new IllegalArgumentException("Can't convert a value of type " + t);
 	}
@@ -614,26 +620,28 @@ public class IrisFacade implements DatalogReasonerFacade {
 	/**
 	 * Returns the integer value of a ComplexDataValue at a given position.
 	 * 
-	 * @param v
-	 *            the complex data value from where to get the int
-	 * @param pos
-	 *            the index of the integer
+	 * @param value the complex data value from where to get the int
+	 * @param pos the index of the integer
 	 * @return the extracted and converted integer
-	 * @throws NullPointerException
-	 *             if the value is {@code null}
-	 * @throws IllegalArgumentException
-	 *             if the pos is smaller than 0
 	 */
-	static private int getIntFromValue(final ComplexDataValue v, int pos) {
-		if (v == null) {
-			throw new NullPointerException("The value must not be null");
-		}
-		if (pos < 0) {
-			throw new IllegalArgumentException(
-					"The position must be greater than 0, but was " + pos);
-		}
-		return Integer.parseInt(v.getArgumentValue((byte) pos).getValue()
-				.toString());
+	static private int getIntFromValue(final ComplexDataValue value, int pos) {
+		assert value != null;
+		assert pos >= 0;
+
+		return Integer.parseInt( getFieldValue( value, pos ) );
+	}
+
+	/**
+	 * Get a field of a complex value.
+	 * @param value The complex value
+	 * @param pos The position of the file (zero-based index)
+	 * @return The string-ised field value.
+	 */
+	static private String getFieldValue(final ComplexDataValue value, int pos) {
+		assert value != null;
+		assert pos >= 0;
+
+		return value.getArgumentValue((byte) pos).getValue().toString();
 	}
 
 	/**
