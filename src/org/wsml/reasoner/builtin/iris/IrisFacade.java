@@ -22,7 +22,6 @@ import static org.deri.iris.factory.Factory.BASIC;
 import static org.deri.iris.factory.Factory.BUILTIN;
 import static org.deri.iris.factory.Factory.CONCRETE;
 import static org.deri.iris.factory.Factory.TERM;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -36,7 +35,6 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.deri.iris.Configuration;
 import org.deri.iris.EvaluationException;
 import org.deri.iris.api.basics.IAtom;
@@ -66,6 +64,7 @@ import org.deri.iris.api.terms.concrete.IHexBinary;
 import org.deri.iris.api.terms.concrete.IIntegerTerm;
 import org.deri.iris.api.terms.concrete.IIri;
 import org.deri.iris.api.terms.concrete.ISqName;
+import org.deri.iris.api.terms.concrete.ITime;
 import org.deri.iris.builtins.IsBooleanBuiltin;
 import org.deri.iris.builtins.IsDateBuiltin;
 import org.deri.iris.builtins.IsDateTimeBuiltin;
@@ -223,7 +222,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 				IVariable variable = variableBindings.get( pos );
 				ITerm term = t.get( pos );
 
-				tmp.put( (Variable) irisTermConverter(variable), irisTermConverter(term));
+				tmp.put( (Variable) convertTermFromIrisToWsmo4j(variable), convertTermFromIrisToWsmo4j(term));
 			}
 			
 			res.add(tmp);
@@ -280,31 +279,10 @@ public class IrisFacade implements DatalogReasonerFacade {
 		return check;
 	}
 	
-	private List<IVariable> extractUniqueVariables( IQuery query )
-	{
-		List<IVariable> result = new ArrayList<IVariable>();
-		
-		for( ILiteral literal : query.getLiterals() )
-		{
-			for( ITerm term : literal.getAtom().getTuple() )
-			{
-				if( term instanceof IVariable )
-				{
-					IVariable variable = (IVariable) term;
-					
-					if( ! result.contains( variable ) )
-						result.add( variable );
-				}
-			}
-		}
-		
-		return result;
-	}
-	
 	public synchronized Set<Map<Variable, Term>> getQueryContainment(
 			ConjunctiveQuery query1, ConjunctiveQuery query2) 
 			throws ExternalToolException {
-		
+		/*
 		// check query containment and get IRIS result set
 		if (checkQueryContainment(query1, query2)) {
 			QCResult = queryCont.getContainmentMappings();
@@ -322,13 +300,14 @@ public class IrisFacade implements DatalogReasonerFacade {
 				ITuple t = QCResult.get(i);
 				final Map<Variable, Term> tmp = new HashMap<Variable, Term>();
 				for( int pos = 0; pos < t.size(); pos++){
-					tmp.put( (Variable)irisTermConverter(variableBindings.get(pos)), irisTermConverter(t.get(pos)));
+					tmp.put( (Variable)convertTermFromIrisToWsmo4j(variableBindings.get(pos)), convertTermFromIrisToWsmo4j(t.get(pos)));
 				}
 				result.add(tmp);
 			}	
 			QCResult = new SimpleRelationFactory().createRelation();
 			return result;
 		}
+		*/
 		return new HashSet<Map<Variable, Term>>();
 	}
 
@@ -430,7 +409,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 		final List<ITerm> terms = new ArrayList<ITerm>(l.getTerms().length);
 		// converting the terms of the literal
 		for (final Term t : l.getTerms()) {
-			terms.add(wsmoTermConverter(t));
+			terms.add(convertTermFromWsmo4jToIris(t));
 		}
 
 		final String sym = l.getPredicateUri();		
@@ -487,7 +466,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 	 *             if the term-type couldn't be converted
 	 */
 	
-	static ITerm wsmoTermConverter(final Term t) {
+	static ITerm convertTermFromWsmo4jToIris(final Term t) {
 		if (t == null) {
 			throw new NullPointerException("The term must not be null");
 		}
@@ -497,12 +476,12 @@ public class IrisFacade implements DatalogReasonerFacade {
 			final ConstructedTerm ct = (ConstructedTerm) t;
 			final List<ITerm> terms = new ArrayList<ITerm>(ct.getArity());
 			for (final Term term : (List<Term>) ct.listParameters()) {
-				terms.add(wsmoTermConverter(term));
+				terms.add(convertTermFromWsmo4jToIris(term));
 			}
 			return TERM.createConstruct(ct.getFunctionSymbol().toString(),
 					terms);
 		} else if (t instanceof DataValue) {
-			return dataValueConverter((DataValue) t);
+			return convertWsmo4jDataValueToIrisTerm((DataValue) t);
 		} else if (t instanceof IRI) {
 			return CONCRETE.createIri(t.toString());
 		} else if (t instanceof Variable) {
@@ -523,7 +502,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 	 * 
 	 * @param v
 	 *            the wsmo4j value to convert
-	 * @return the correspoinding ITerm implementation
+	 * @return the corresponding ITerm implementation
 	 * @throws NullPointerException
 	 *             if the value is {@code null}
 	 * @throws IllegalArgumentException
@@ -532,7 +511,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 	 *             if the value was a duration and the duration string couldn't
 	 *             be parsed
 	 */
-	static ITerm dataValueConverter(final DataValue v) {
+	static ITerm convertWsmo4jDataValueToIrisTerm(final DataValue v) {
 		if (v == null) {
 			throw new NullPointerException("The data value must not be null");
 		}
@@ -550,12 +529,33 @@ public class IrisFacade implements DatalogReasonerFacade {
 					cv, 1), getIntFromValue(cv, 2));
 		} else if (t.equals(WsmlDataType.WSML_DATETIME)) {
 			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createDateTime(getIntFromValue(cv, 0),
-					getIntFromValue(cv, 1), getIntFromValue(cv, 2),
-					getIntFromValue(cv, 3), getIntFromValue(cv, 4),
-					(int)Double.parseDouble( getFieldValue( cv, 5) ),
+			double seconds = Double.parseDouble( getFieldValue( cv, 5) );
+			int int_seconds = (int) seconds;
+			int milliseconds = (int) ( (seconds - int_seconds) * 1000.0 );
+			
+			return CONCRETE.createDateTime(
+					getIntFromValue(cv, 0),
+					getIntFromValue(cv, 1),
+					getIntFromValue(cv, 2),
+					getIntFromValue(cv, 3),
+					getIntFromValue(cv, 4),
+					int_seconds,
+					milliseconds,
 					getIntFromValue(cv, 6),
 					getIntFromValue(cv, 7));
+		} else if (t.equals(WsmlDataType.WSML_TIME)) {
+			final ComplexDataValue cv = (ComplexDataValue) v;
+			double seconds = Double.parseDouble( getFieldValue( cv, 2) );
+			int int_seconds = (int) seconds;
+			int milliseconds = (int) ( (seconds - int_seconds) * 1000.0 );
+			
+			return CONCRETE.createTime(
+					getIntFromValue(cv, 0),
+					getIntFromValue(cv, 1),
+					int_seconds,
+					milliseconds,
+					getIntFromValue(cv, 3),
+					getIntFromValue(cv, 4));
 		} else if (t.equals(WsmlDataType.WSML_DECIMAL)) {
 			return CONCRETE.createDecimal(Double.parseDouble(v.getValue()
 					.toString()));
@@ -606,13 +606,6 @@ public class IrisFacade implements DatalogReasonerFacade {
 			return CONCRETE.createSqName(v.getValue().toString());
 		} else if (t.equals(WsmlDataType.WSML_STRING)) {
 			return TERM.createString(v.toString());
-		} else if (t.equals(WsmlDataType.WSML_TIME)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createTime(
-					getIntFromValue(cv, 0), getIntFromValue(cv, 1),
-					(int)Double.parseDouble( getFieldValue( cv, 2) ), // seconds
-					getIntFromValue(cv, 3),
-					getIntFromValue(cv, 4));
 		}
 		throw new IllegalArgumentException("Can't convert a value of type " + t);
 	}
@@ -624,7 +617,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 	 * @param pos the index of the integer
 	 * @return the extracted and converted integer
 	 */
-	static private int getIntFromValue(final ComplexDataValue value, int pos) {
+	private static int getIntFromValue(final ComplexDataValue value, int pos) {
 		assert value != null;
 		assert pos >= 0;
 
@@ -637,7 +630,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 	 * @param pos The position of the file (zero-based index)
 	 * @return The string-ised field value.
 	 */
-	static private String getFieldValue(final ComplexDataValue value, int pos) {
+	private static String getFieldValue(final ComplexDataValue value, int pos) {
 		assert value != null;
 		assert pos >= 0;
 
@@ -655,7 +648,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 	 * @throws IllegalArgumentException
 	 *             if the term-type couldn't be converted
 	 */
-	Term irisTermConverter(final ITerm t) {
+	Term convertTermFromIrisToWsmo4j(final ITerm t) {
 		if (t == null) {
 			throw new NullPointerException("The term must not be null");
 		}
@@ -681,7 +674,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 			final IConstructedTerm ct = (IConstructedTerm) t;
 			final List<Term> terms = new ArrayList<Term>(ct.getValue().size());
 			for (final ITerm term : ct.getValue()) {
-				terms.add(irisTermConverter(term));
+				terms.add(convertTermFromIrisToWsmo4j(term));
 			}
 			return LOGIC_FACTORY.createConstructedTerm(WSMO_FACTORY
 					.createIRI(ct.getFunctionSymbol()), terms);
@@ -695,10 +688,16 @@ public class IrisFacade implements DatalogReasonerFacade {
 					.getDay(), 0, 0);
 		} else if (t instanceof IDateTime) {
 			final IDateTime dt = (IDateTime) t;
-			// TODO: the IDateTerm at the moment doesn't support timezone
+			float seconds = (float)( dt.getSecond() + (dt.getMillisecond() / 1000.0) );
 			int[] tzData = getTZData(dt.getTimeZone());
 			return DATA_FACTORY.createWsmlDateTime(dt.getYear(), dt.getMonth(),
-					dt.getDay(), dt.getHour(), dt.getMinute(), dt.getSecond(),
+					dt.getDay(), dt.getHour(), dt.getMinute(), seconds,
+					tzData[0], tzData[1]);
+		} else if (t instanceof ITime) {
+			final ITime time = (ITime) t;
+			float seconds = (float)( time.getSecond() + (time.getMillisecond() / 1000.0) );
+			int[] tzData = getTZData(time.getTimeZone());
+			return DATA_FACTORY.createWsmlTime(time.getHour(), time.getMinute(), seconds,
 					tzData[0], tzData[1]);
 		} else if (t instanceof IDecimalTerm) {
 			return DATA_FACTORY.createWsmlDecimal(new BigDecimal(
@@ -858,14 +857,14 @@ public class IrisFacade implements DatalogReasonerFacade {
 
 			if (p.equals(memberOf)) {
 				for (final MemberOf mo : source.memberOf(null, null)) {
-					r.add(BASIC.createTuple(wsmoTermConverter(mo.getId()), 
-							wsmoTermConverter(mo.getConcept())));
+					r.add(BASIC.createTuple(convertTermFromWsmo4jToIris(mo.getId()), 
+							convertTermFromWsmo4jToIris(mo.getConcept())));
 				}
 			} else if (p.equals(hasValue)) {
 				for (final HasValue hv : source.hasValue(null, null, null)) {
-					r.add(BASIC.createTuple(wsmoTermConverter(hv.getId()), 
-							wsmoTermConverter(hv.getName()), 
-							wsmoTermConverter(hv.getValue())));
+					r.add(BASIC.createTuple(convertTermFromWsmo4jToIris(hv.getId()), 
+							convertTermFromWsmo4jToIris(hv.getName()), 
+							convertTermFromWsmo4jToIris(hv.getValue())));
 				}
 			}
 		}
