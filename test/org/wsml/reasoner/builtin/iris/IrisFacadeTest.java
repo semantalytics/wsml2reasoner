@@ -74,11 +74,11 @@ public class IrisFacadeTest extends TestCase {
 		final IConcreteFactory CF = org.deri.iris.factory.Factory.CONCRETE;
 
 		// test variable
-		assertEquals(TF.createVariable("asdf"), IrisFacade.wsmoTermConverter(LF
+		assertEquals(TF.createVariable("asdf"), IrisFacade.convertTermFromWsmo4jToIris(LF
 				.createVariable("asdf")));
 		// test iri
 		assertEquals(CF.createIri("http://my.iri"), IrisFacade
-				.wsmoTermConverter(WF.createIRI("http://my.iri")));
+				.convertTermFromWsmo4jToIris(WF.createIRI("http://my.iri")));
 		
 		// test constructed term
 		final ConstructedTerm wc = LF.createConstructedTerm(WF
@@ -89,7 +89,7 @@ public class IrisFacadeTest extends TestCase {
 		final IConstructedTerm ic = TF.createConstruct("http://constr", TF
 				.createString("a"), TF.createConstruct("http://inner", TF
 				.createString("b")), TF.createString("c"));
-		assertEquals(ic, IrisFacade.wsmoTermConverter(wc));
+		assertEquals(ic, IrisFacade.convertTermFromWsmo4jToIris(wc));
 		// test builtins
 		// TODO: not implemented yet
 		// test datavalues
@@ -116,61 +116,61 @@ public class IrisFacadeTest extends TestCase {
 		final IConstructedTerm ic = TF.createConstruct("http://constr", TF
 				.createString("a"), TF.createConstruct("http://inner", TF
 				.createString("b")), TF.createString("c"));
-		assertEquals(wc, IF.irisTermConverter(ic));
+		assertEquals(wc, IF.convertTermFromIrisToWsmo4j(ic));
 		// test string
-		assertEquals(DF.createWsmlString("asdf"), IF.irisTermConverter(TF
+		assertEquals(DF.createWsmlString("asdf"), IF.convertTermFromIrisToWsmo4j(TF
 				.createString("asdf")));
 		// test variable
-		assertEquals(LF.createVariable("asdf"), IF.irisTermConverter(TF
+		assertEquals(LF.createVariable("asdf"), IF.convertTermFromIrisToWsmo4j(TF
 				.createVariable("asdf")));
 		// test Base64Binary
 		assertEquals(DF.createWsmlBase64Binary("asdf".getBytes()), IF
-				.irisTermConverter(CF.createBase64Binary("asdf")));
+				.convertTermFromIrisToWsmo4j(CF.createBase64Binary("asdf")));
 		// test boolean
-		assertEquals(DF.createWsmlBoolean("true"), IF.irisTermConverter(CF
+		assertEquals(DF.createWsmlBoolean("true"), IF.convertTermFromIrisToWsmo4j(CF
 				.createBoolean(true)));
 		// test date
 		assertEquals(DF.createWsmlDate(2007, 1, 20, 0, 0), IF
-				.irisTermConverter(CF.createDate(2007, 1, 20)));
+				.convertTermFromIrisToWsmo4j(CF.createDate(2007, 1, 20)));
 		// test datetime
 		assertEquals(DF.createWsmlDateTime(2007, 1, 20, 13, 45, 11, 0, 0), IF
-				.irisTermConverter(CF.createDateTime(2007, 1, 20, 13, 45, 11,
+				.convertTermFromIrisToWsmo4j(CF.createDateTime(2007, 1, 20, 13, 45, 11,
 						0, 0)));
 		// test decimal
-		assertEquals(DF.createWsmlDecimal("3.1415"), IF.irisTermConverter(CF
+		assertEquals(DF.createWsmlDecimal("3.1415"), IF.convertTermFromIrisToWsmo4j(CF
 				.createDecimal(3.1415d)));
 		// test double
-		assertEquals(DF.createWsmlDouble("3.1415"), IF.irisTermConverter(CF
+		assertEquals(DF.createWsmlDouble("3.1415"), IF.convertTermFromIrisToWsmo4j(CF
 				.createDouble(3.1415d)));
 		// test duration
 //		assertEquals(DF.createWsmlDuration(5, 3, 5, 12, 16, 11), IF
 //				.irisTermConverter(CF.createDuration(5, 12, 16, 11)));
 		// test float
-		assertEquals(DF.createWsmlFloat("3.1415"), IF.irisTermConverter(CF
+		assertEquals(DF.createWsmlFloat("3.1415"), IF.convertTermFromIrisToWsmo4j(CF
 				.createFloat(3.1415f)));
 		// test gday
-		assertEquals(DF.createWsmlGregorianDay(15), IF.irisTermConverter(CF
+		assertEquals(DF.createWsmlGregorianDay(15), IF.convertTermFromIrisToWsmo4j(CF
 				.createGDay(15)));
 		// test gmonth
-		assertEquals(DF.createWsmlGregorianMonth(2), IF.irisTermConverter(CF
+		assertEquals(DF.createWsmlGregorianMonth(2), IF.convertTermFromIrisToWsmo4j(CF
 				.createGMonth(2)));
 		// test gmonthday
 		assertEquals(DF.createWsmlGregorianMonthDay(5, 15), IF
-				.irisTermConverter(CF.createGMonthDay(5, 15)));
+				.convertTermFromIrisToWsmo4j(CF.createGMonthDay(5, 15)));
 		// test gyear
-		assertEquals(DF.createWsmlGregorianYear(2010), IF.irisTermConverter(CF
+		assertEquals(DF.createWsmlGregorianYear(2010), IF.convertTermFromIrisToWsmo4j(CF
 				.createGYear(2010)));
 		// test gyearmonth
 		assertEquals(DF.createWsmlGregorianYearMonth(2010, 5), IF
-				.irisTermConverter(CF.createGYearMonth(2010, 5)));
+				.convertTermFromIrisToWsmo4j(CF.createGYearMonth(2010, 5)));
 		// test hexbinary
 		assertEquals(DF.creatWsmlHexBinary("15AB".getBytes()), IF
-				.irisTermConverter(CF.createHexBinary("15AB")));
+				.convertTermFromIrisToWsmo4j(CF.createHexBinary("15AB")));
 		// test integer
-		assertEquals(DF.createWsmlInteger("15"), IF.irisTermConverter(CF
+		assertEquals(DF.createWsmlInteger("15"), IF.convertTermFromIrisToWsmo4j(CF
 				.createInteger(15)));
 		// test iri
-		assertEquals(WF.createIRI("http://my.iri"), IF.irisTermConverter(CF
+		assertEquals(WF.createIRI("http://my.iri"), IF.convertTermFromIrisToWsmo4j(CF
 				.createIri("http://my.iri")));
 		// test sqname
 		// there is no sqname in wsmo4j
@@ -219,58 +219,58 @@ public class IrisFacadeTest extends TestCase {
 
 		// test base64binary
 		assertEquals(CF.createBase64Binary("asdfxQ=="), IrisFacade
-				.dataValueConverter(DF.createWsmlBase64Binary("asdfxQ=="
+				.convertWsmo4jDataValueToIrisTerm(DF.createWsmlBase64Binary("asdfxQ=="
 						.getBytes())));
 		// test boolean
-		assertEquals(CF.createBoolean(true), IrisFacade.dataValueConverter(DF
+		assertEquals(CF.createBoolean(true), IrisFacade.convertWsmo4jDataValueToIrisTerm(DF
 				.createWsmlBoolean(true)));
 		// test date
 		assertEquals(CF.createDate(2007, 1, 8), IrisFacade
-				.dataValueConverter(DF.createWsmlDate(2007, 1, 8, 0, 0)));
+				.convertWsmo4jDataValueToIrisTerm(DF.createWsmlDate(2007, 1, 8, 0, 0)));
 		// test datetime
 		assertEquals(CF.createDateTime(2007, 1, 8, 13, 15, 22, 1, 0),
-				IrisFacade.dataValueConverter(DF.createWsmlDateTime(2007, 1, 8,
+				IrisFacade.convertWsmo4jDataValueToIrisTerm(DF.createWsmlDateTime(2007, 1, 8,
 						13, 15, 22, 1, 0)));
 		// test decimal
-		assertEquals(CF.createDecimal(1.3498), IrisFacade.dataValueConverter(DF
+		assertEquals(CF.createDecimal(1.3498), IrisFacade.convertWsmo4jDataValueToIrisTerm(DF
 				.createWsmlDecimal("1.3498")));
 		// test double
-		assertEquals(CF.createDouble(1.3498), IrisFacade.dataValueConverter(DF
+		assertEquals(CF.createDouble(1.3498), IrisFacade.convertWsmo4jDataValueToIrisTerm(DF
 				.createWsmlDouble("1.3498")));
 		// test duration
 //		assertEquals(CF.createDuration(8, 13, 15, 22), IrisFacade
 //				.dataValueConverter(DF.createWsmlDuration(2007, 1, 8, 13, 15,
 //						22)));
 		// test float
-		assertEquals(CF.createFloat(1.3498f), IrisFacade.dataValueConverter(DF
+		assertEquals(CF.createFloat(1.3498f), IrisFacade.convertWsmo4jDataValueToIrisTerm(DF
 				.createWsmlFloat("1.3498")));
 		// test gday
-		assertEquals(CF.createGDay(15), IrisFacade.dataValueConverter(DF
+		assertEquals(CF.createGDay(15), IrisFacade.convertWsmo4jDataValueToIrisTerm(DF
 				.createWsmlGregorianDay(15)));
 		// test gmonth
-		assertEquals(CF.createGMonth(10), IrisFacade.dataValueConverter(DF
+		assertEquals(CF.createGMonth(10), IrisFacade.convertWsmo4jDataValueToIrisTerm(DF
 				.createWsmlGregorianMonth(10)));
 		// test gmonthday
 		assertEquals(CF.createGMonthDay(10, 4), IrisFacade
-				.dataValueConverter(DF.createWsmlGregorianMonthDay(10, 4)));
+				.convertWsmo4jDataValueToIrisTerm(DF.createWsmlGregorianMonthDay(10, 4)));
 		// test gyear
-		assertEquals(CF.createGYear(2007), IrisFacade.dataValueConverter(DF
+		assertEquals(CF.createGYear(2007), IrisFacade.convertWsmo4jDataValueToIrisTerm(DF
 				.createWsmlGregorianYear(2007)));
 		// test gyearmonth
 		assertEquals(CF.createGYearMonth(2007, 10), IrisFacade
-				.dataValueConverter(DF.createWsmlGregorianYearMonth(2007, 10)));
+				.convertWsmo4jDataValueToIrisTerm(DF.createWsmlGregorianYearMonth(2007, 10)));
 		// test base64binary
 		assertEquals(CF.createHexBinary("12AF"), IrisFacade
-				.dataValueConverter(DF.creatWsmlHexBinary("12AF".getBytes())));
+				.convertWsmo4jDataValueToIrisTerm(DF.creatWsmlHexBinary("12AF".getBytes())));
 		// test int
-		assertEquals(CF.createInteger(23), IrisFacade.dataValueConverter(DF
+		assertEquals(CF.createInteger(23), IrisFacade.convertWsmo4jDataValueToIrisTerm(DF
 				.createWsmlInteger("23")));
 		// test iri
 		// iri is a term and not a datavalue!
 		// test sqname
 		// i'm sorry, but i never saw something like an sqname in wsmo4j...
 		// test string
-		assertEquals(TF.createString("asdf"), IrisFacade.dataValueConverter(DF
+		assertEquals(TF.createString("asdf"), IrisFacade.convertWsmo4jDataValueToIrisTerm(DF
 				.createWsmlString("asdf")));
 		// test time
 		// TODO: i'm sorry again, but time isn't implemented in iris at the
