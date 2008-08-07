@@ -10,10 +10,9 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
-import org.wsmo.common.IRI;
 import org.wsmo.wsml.Parser;
 
 import base.BaseReasonerTest;
@@ -36,7 +35,7 @@ public class RegisterMultipleTimes  extends BaseReasonerTest  {
 	Parser parser = org.wsmo.factory.Factory.createParser(null);
 //	LogicalExpressionFactory leFactory = Factory.createLogicalExpressionFactory(null);
 	
-    WSMLReasoner reasoner;
+    LPReasoner reasoner;
     BuiltInReasoner previous;
     
     String file1 = "files/RegisterMultipleTimes1.wsml";
@@ -63,7 +62,7 @@ public class RegisterMultipleTimes  extends BaseReasonerTest  {
      * @throws Exception
      */
     public void clearDeregistration() throws Exception {
-    	reasoner = BaseReasonerTest.getReasoner();
+    	reasoner = (LPReasoner) BaseReasonerTest.getReasoner();
     	InputStream is = this.getClass().getClassLoader().getResourceAsStream(file1);
     	assertNotNull(is);
     	Ontology ont0 =(Ontology)parser.parse(new InputStreamReader(is))[0]; 
@@ -96,7 +95,7 @@ public class RegisterMultipleTimes  extends BaseReasonerTest  {
      * @throws Exception
      */
     public void removeInstances() throws Exception {
-    	reasoner = BaseReasonerTest.getReasoner();
+    	reasoner = (LPReasoner) BaseReasonerTest.getReasoner();
         String ns = "http://ex1.org#";
         String test = "namespace _\""+ns+"\" \n" +
                 "ontology o1 \n" +

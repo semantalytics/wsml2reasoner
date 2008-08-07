@@ -30,53 +30,41 @@ import java.util.Map;
 import java.util.Set;
 
 import org.deri.wsmo4j.io.serializer.wsml.VisitorSerializeWSMLTerms;
-import org.deri.wsmo4j.logicalexpression.LogicalExpressionImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.Factory;
-import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
 import com.ontotext.wsmo4j.parser.wsml.ParserImpl;
 
-
 public class LoadReferenceOntology {
 
-    public static void main(String[] args) throws FileNotFoundException, IOException, ParserException, InvalidModelException, InconsistencyException {        
-        test(new File("test/files/CompensationOntology.wsml"), 
-        		new File("test/files/DrivingLicenseOntology.wsml"), 
-        		new File("test/files/GeographyOntology.wsml"), 
-        		new File("test/files/TimeOntology.wsml"), 
-        		new File("test/files/CompetenceOntology.wsml"), 
-        		new File("test/files/LabourRegulatoryOntology.wsml"), 
-        		new File("test/files/OccupationOntologyC.wsml"), 
-        		new File("test/files/LanguageOntology.wsml"), 
-        		new File("test/files/JobOfferOntology.wsml"), 
-        		new File("test/files/JobSeekerOntology.wsml"));
-        
+    public static void main(String[] args) throws FileNotFoundException, IOException, ParserException, InvalidModelException, InconsistencyException {
+        test(new File("test/files/CompensationOntology.wsml"), new File("test/files/DrivingLicenseOntology.wsml"), new File("test/files/GeographyOntology.wsml"), new File("test/files/TimeOntology.wsml"), new File("test/files/CompetenceOntology.wsml"), new File("test/files/LabourRegulatoryOntology.wsml"), new File("test/files/OccupationOntologyC.wsml"), new File("test/files/LanguageOntology.wsml"), new File("test/files/JobOfferOntology.wsml"), new File("test/files/JobSeekerOntology.wsml"));
+
         // DO WE NEED THESE???
-//        test(new File("ontologies/RO/SkillOntology.wsml")); // 2 secs
-//        test(new File("ontologies/RO/EconomicActivityOntology.wsml")); // 30 secs
-//        test(new File("ontologies/RO/EducationOntology.wsml")); // 4 secs
-        
-//        File directory = new File("ontologies/RO/");
-//        for (File f : directory.listFiles()){
-//            test(f);
-//        }
+        // test(new File("ontologies/RO/SkillOntology.wsml")); // 2 secs
+        // test(new File("ontologies/RO/EconomicActivityOntology.wsml")); // 30
+        // secs
+        // test(new File("ontologies/RO/EducationOntology.wsml")); // 4 secs
+
+        // File directory = new File("ontologies/RO/");
+        // for (File f : directory.listFiles()){
+        // test(f);
+        // }
     }
-    
-    public static void test(File... files) throws FileNotFoundException, IOException, ParserException, InvalidModelException, InconsistencyException{
-        
+
+    public static void test(File... files) throws FileNotFoundException, IOException, ParserException, InvalidModelException, InconsistencyException {
+
         HashMap<String, Object> parserProps = new HashMap<String, Object>();
         Parser wsmlParser;
         try {
@@ -86,34 +74,34 @@ public class LoadReferenceOntology {
             re.printStackTrace();
             wsmlParser = Factory.createParser(parserProps);
         }
-        
-        Set <Ontology> ontologies = new HashSet <Ontology> ();
-        for (File f : files){
+
+        Set<Ontology> ontologies = new HashSet<Ontology>();
+        for (File f : files) {
             long parse_start = System.currentTimeMillis();
             TopEntity[] tes = wsmlParser.parse(new BufferedReader(new FileReader(f)));
             long parse_end = System.currentTimeMillis();
             long parse = parse_end - parse_start;
             System.out.println("Read " + f.getName() + " in " + parse + " ms");
-            
-            for (TopEntity te : tes){
-                if (te instanceof Ontology){
+
+            for (TopEntity te : tes) {
+                if (te instanceof Ontology) {
                     ontologies.add((Ontology) te);
                 }
             }
         }
-        
+
         long register_start = System.currentTimeMillis();
-        WSMLReasoner reasoner = getReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
+        LPReasoner reasoner = getReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
         reasoner.registerOntologies(ontologies);
         long register_end = System.currentTimeMillis();
         long register = register_end - register_start;
         System.out.println("Ontologies registered in " + register + " ms");
         long query_start = System.currentTimeMillis();
-        
-        LogicalExpression le = Factory.createLogicalExpressionFactory(new HashMap <String, Object> ()).createLogicalExpression("?x memberOf ?y");
-        
-        Ontology ontology = new ArrayList <Ontology>(ontologies).get(0);
-        Set <Map<Variable, Term>> result = reasoner.executeQuery(le);
+
+        LogicalExpression le = Factory.createLogicalExpressionFactory(new HashMap<String, Object>()).createLogicalExpression("?x memberOf ?y");
+
+        Ontology ontology = new ArrayList<Ontology>(ontologies).get(0);
+        Set<Map<Variable, Term>> result = reasoner.executeQuery(le);
         long query_end = System.currentTimeMillis();
         long query = query_end - query_start;
         System.out.println("Query executed in " + query + " ms");
@@ -127,15 +115,15 @@ public class LoadReferenceOntology {
         }
         System.out.println("-----------");
     }
-    
-    private static WSMLReasoner getReasoner(WSMLReasonerFactory.BuiltInReasoner theReasoner) throws InconsistencyException{
+
+    private static LPReasoner getReasoner(WSMLReasonerFactory.BuiltInReasoner theReasoner) throws InconsistencyException {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER, theReasoner);
-//        params.put(WSMLReasonerFactory.PARAM_EVAL_METHOD, new Integer(2));
-        WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLFlightReasoner(params);
+        // params.put(WSMLReasonerFactory.PARAM_EVAL_METHOD, new Integer(2));
+        LPReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().createFlightReasoner(params);
         return reasoner;
     }
-    
+
     private static String termToString(Term t, Ontology o) {
         VisitorSerializeWSMLTerms v = new VisitorSerializeWSMLTerms(o);
         t.accept(v);

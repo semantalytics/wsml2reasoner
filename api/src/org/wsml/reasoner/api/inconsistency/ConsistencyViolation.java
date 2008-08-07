@@ -13,29 +13,31 @@ public class ConsistencyViolation {
 
     public ConsistencyViolation() {
     }
-    
-    public String toString(){
+
+    public String toString() {
         return "Consitency Violation!!";
     }
-    
-    protected static String toString(Type t, TopEntity te){
-        if (t instanceof Concept){
-            return toString(((Concept) t).getIdentifier(),te);
-        }else{
-            return toString(((WsmlDataType)t).getIRI(),te);
+
+    protected static String toString(Type t, TopEntity te) {
+        if (t instanceof Concept) {
+            return toString(((Concept) t).getIdentifier(), te);
+        }
+        else {
+            return toString(((WsmlDataType) t).getIRI(), te);
         }
     }
-    
-    protected static String toString(Value v, TopEntity te){
-        if (v instanceof Instance ){
-            return toString(((Instance) v).getIdentifier(),te);
-        }else{
-            return toString((Term)v,te);
+
+    protected static String toString(Value v, TopEntity te) {
+        if (v instanceof Instance) {
+            return toString(((Instance) v).getIdentifier(), te);
+        }
+        else {
+            return toString((Term) v, te);
         }
     }
-    
-    protected static String toString (Term t, TopEntity te){
-        if (te!=null){
+
+    protected static String toString(Term t, TopEntity te) {
+        if (te != null) {
             VisitorSerializeWSMLTerms v = new VisitorSerializeWSMLTerms(te);
             t.accept(v);
             return v.getSerializedObject();

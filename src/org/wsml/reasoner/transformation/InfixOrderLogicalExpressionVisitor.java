@@ -44,25 +44,25 @@ import org.omwg.logicalexpression.UniversalQuantification;
 import org.omwg.logicalexpression.Visitor;
 
 /**
- * Implements a left-first, depth-first traversal over logical expressions.
- * The point in time when a node has to be handled according to the traversal order
+ * Implements a left-first, depth-first traversal over logical expressions. The
+ * point in time when a node has to be handled according to the traversal order
  * is defined by the infix order.
  * 
- * Subclasses should be visitors of logical expressions that 
- * don't need to care about how to traverse nodes but overwrite the new kinds of 
- * methods whose default implementation is empty:
+ * Subclasses should be visitors of logical expressions that don't need to care
+ * about how to traverse nodes but overwrite the new kinds of methods whose
+ * default implementation is empty:
  * 
- * (1) 'handleXXX' methods, that are called by the abstract traversal implementation
- *  when the respective node is actually to be handeled (according to the 
- *  traversal order)
- *  
- * (2) 'enterXXX' methods, that are called by the abstract traversal implementation
- *  when the respective subtree rooted in the given node is entered (according to the 
- *  traversal order)
+ * (1) 'handleXXX' methods, that are called by the abstract traversal
+ * implementation when the respective node is actually to be handeled (according
+ * to the traversal order)
  * 
- * (3) 'leaveXXX' methods, that are called by the abstract traversal implementation
- *  when the respective subtree rooted in the given node is left (according to the 
- *  traversal order)
+ * (2) 'enterXXX' methods, that are called by the abstract traversal
+ * implementation when the respective subtree rooted in the given node is
+ * entered (according to the traversal order)
+ * 
+ * (3) 'leaveXXX' methods, that are called by the abstract traversal
+ * implementation when the respective subtree rooted in the given node is left
+ * (according to the traversal order)
  * 
  * @author Uwe Keller, DERI Innsbruck
  * @author Gabor Nagypal, FZI
@@ -255,16 +255,13 @@ public abstract class InfixOrderLogicalExpressionVisitor implements Visitor {
     public void leaveAttributeValueMolecule(AttributeValueMolecule arg0) {
     }
 
-    public void enterAttributeConstraintMolecule(
-            AttributeConstraintMolecule arg0) {
+    public void enterAttributeConstraintMolecule(AttributeConstraintMolecule arg0) {
     }
 
-    public void handleAttributeConstraintMolecule(
-            AttributeConstraintMolecule arg0) {
+    public void handleAttributeConstraintMolecule(AttributeConstraintMolecule arg0) {
     }
 
-    public void leaveAttributeConstraintMolecule(
-            AttributeConstraintMolecule arg0) {
+    public void leaveAttributeConstraintMolecule(AttributeConstraintMolecule arg0) {
     }
 
     public void enterAttributeInferenceMolecule(AttributeInferenceMolecule arg0) {
@@ -302,7 +299,7 @@ public abstract class InfixOrderLogicalExpressionVisitor implements Visitor {
 
     public void leaveCompoundMolecule(CompoundMolecule arg0) {
     }
-    
+
     public void enterNegation(Negation arg0) {
     }
 
@@ -311,7 +308,7 @@ public abstract class InfixOrderLogicalExpressionVisitor implements Visitor {
 
     public void leaveNegation(Negation arg0) {
     }
-    
+
     public void enterNegationAsFailure(NegationAsFailure arg0) {
     }
 
@@ -320,7 +317,7 @@ public abstract class InfixOrderLogicalExpressionVisitor implements Visitor {
 
     public void leaveNegationAsFailure(NegationAsFailure arg0) {
     }
-    
+
     public void enterConstraint(Constraint arg0) {
     }
 
@@ -329,7 +326,7 @@ public abstract class InfixOrderLogicalExpressionVisitor implements Visitor {
 
     public void leaveConstraint(Constraint arg0) {
     }
-    
+
     public void enterInverseImplication(InverseImplication arg0) {
     }
 
@@ -338,7 +335,7 @@ public abstract class InfixOrderLogicalExpressionVisitor implements Visitor {
 
     public void leaveInverseImplication(InverseImplication arg0) {
     }
-    
+
     public void enterImplication(Implication arg0) {
     }
 
@@ -347,7 +344,7 @@ public abstract class InfixOrderLogicalExpressionVisitor implements Visitor {
 
     public void leaveImplication(Implication arg0) {
     }
-    
+
     public void enterEquivalence(Equivalence arg0) {
     }
 
@@ -356,7 +353,7 @@ public abstract class InfixOrderLogicalExpressionVisitor implements Visitor {
 
     public void leaveEquivalence(Equivalence arg0) {
     }
-    
+
     public void enterLogicProgrammingRule(LogicProgrammingRule arg0) {
     }
 
@@ -365,7 +362,7 @@ public abstract class InfixOrderLogicalExpressionVisitor implements Visitor {
 
     public void leaveLogicProgrammingRule(LogicProgrammingRule arg0) {
     }
-    
+
     public void enterUniversalQuantification(UniversalQuantification arg0) {
     }
 
@@ -374,7 +371,7 @@ public abstract class InfixOrderLogicalExpressionVisitor implements Visitor {
 
     public void leaveUniversalQuantification(UniversalQuantification arg0) {
     }
-    
+
     public void enterExistentialQuantification(ExistentialQuantification arg0) {
     }
 

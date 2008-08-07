@@ -20,7 +20,6 @@
  */
 package org.wsml.reasoner.ext.sql;
 
-import java.io.OutputStream;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,36 +32,34 @@ import org.wsmo.factory.Factory;
 import org.wsmo.wsml.Serializer;
 
 /**
- * This class mainly contains several debugging and utility related methods.
- * The purpose of the methods is mostly self explanatory.
+ * This class mainly contains several debugging and utility related methods. The
+ * purpose of the methods is mostly self explanatory.
  * 
  * @author Florian Fischer, florian.fischer@deri.at
- *
+ * 
  */
 public class QueryUtil {
-		
-	public static void printResults(OutputStream os, Set<Map<Variable, Term>> result,
-			Ontology o) {
-		for (Map<Variable, Term> vBinding : result) {
-			for (Variable var : vBinding.keySet()) {
-				System.out.print(var + ": "
-						+ termToString(vBinding.get(var), o) + "\t ");
-			}
-			System.out.println();
-		}
-	}
 
-	public static String toString(Ontology ont) {
-		Serializer wsmlSerializer = Factory.createSerializer(null);
+    public static void printResults(Set<Map<Variable, Term>> result, Ontology o) {
+        for (Map<Variable, Term> vBinding : result) {
+            for (Variable var : vBinding.keySet()) {
+                System.out.print(var + ": " + termToString(vBinding.get(var), o) + "\t ");
+            }
+            System.out.println();
+        }
+    }
 
-		StringBuffer str = new StringBuffer();
-		wsmlSerializer.serialize(new TopEntity[] { ont }, str);
-		return str.toString();
-	}
+    public static String toString(Ontology ont) {
+        Serializer wsmlSerializer = Factory.createSerializer(null);
 
-	public static String termToString(Term t, Ontology o) {
-		VisitorSerializeWSMLTerms v = new VisitorSerializeWSMLTerms(o);
-		t.accept(v);
-		return v.getSerializedObject();
-	}
+        StringBuffer str = new StringBuffer();
+        wsmlSerializer.serialize(new TopEntity[] { ont }, str);
+        return str.toString();
+    }
+
+    public static String termToString(Term t, Ontology o) {
+        VisitorSerializeWSMLTerms v = new VisitorSerializeWSMLTerms(o);
+        t.accept(v);
+        return v.getSerializedObject();
+    }
 }

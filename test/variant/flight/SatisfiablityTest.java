@@ -22,10 +22,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.omwg.ontology.Ontology;
+import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
-import org.wsmo.common.IRI;
 import org.wsmo.factory.Factory;
 import org.wsmo.wsml.Parser;
 
@@ -68,7 +68,7 @@ public class SatisfiablityTest extends BaseReasonerTest {
        wsmlReasoner.registerOntology(ontology);       
        
 		// test ontology satisfiability
-		assertTrue(wsmlReasoner.isSatisfiable());
+		assertTrue(((LPReasoner) wsmlReasoner).checkConsistency().size() == 0);
 		
 		wsmlReasoner.deRegister();
 	}

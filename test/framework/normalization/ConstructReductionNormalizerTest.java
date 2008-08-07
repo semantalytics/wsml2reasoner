@@ -28,7 +28,6 @@ import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
-import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 
 public class ConstructReductionNormalizerTest extends BaseNormalizationTest

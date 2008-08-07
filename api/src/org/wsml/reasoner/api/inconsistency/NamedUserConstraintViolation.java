@@ -15,11 +15,10 @@ public class NamedUserConstraintViolation extends UserConstraintViolation {
     public Axiom getAxiom() {
         return axiom;
     }
-    
-    public String toString(){
-        TopEntity te=axiom.getOntology();
-        return "User constraint Violation due to axiom: " + 
-                toString(axiom.getIdentifier(),te);  
+
+    public String toString() {
+        TopEntity te = axiom.getOntology();
+        return "User constraint Violation due to axiom: " + toString(axiom.getIdentifier(), te);
     }
-    
+
 }

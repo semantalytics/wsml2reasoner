@@ -21,28 +21,28 @@ package org.wsml.reasoner;
 
 import java.util.LinkedList;
 import java.util.List;
+
 /**
  * Represents a rule of a datalog program.
  * 
- * A rule is of the form:  HEAD <- BODY where HEAD is a single literal
- * and BODY is a list of literals.
+ * A rule is of the form: HEAD <- BODY where HEAD is a single literal and BODY
+ * is a list of literals.
  * 
- * The BODY literals are combined conjunctively.
- * A rule with an empty body is called fact. A rule with an empty head is called 
- * constraint.
+ * The BODY literals are combined conjunctively. A rule with an empty body is
+ * called fact. A rule with an empty head is called constraint.
  * 
  * @author Uwe Keller, DERI Innsbruck
  * @author Gabor Nagypal, FZI
  */
 
 public class Rule {
-    
+
     private static final List<Literal> EMPTY_BODY = new LinkedList<Literal>();
-    
+
     private List<Literal> body;
+
     private Literal head;
-    
-    
+
     /**
      * @return Returns the body.
      */
@@ -56,14 +56,14 @@ public class Rule {
     public Literal getHead() {
         return head;
     }
-   
-    public boolean isFact(){
+
+    public boolean isFact() {
         return (body == EMPTY_BODY);
     }
-    
-    public boolean isConstraint(){
+
+    public boolean isConstraint() {
         return (head == null);
-    }  
+    }
 
     /**
      * Creates a rule with the given head and body.
@@ -73,55 +73,57 @@ public class Rule {
      */
     public Rule(Literal head, List<Literal> body) throws DatalogException {
         super();
-        
-        if (body == null || body.size() == 0){
+
+        if (body == null || body.size() == 0) {
             body = EMPTY_BODY;
         }
-         
-        if (head != null && !head.isPositive()){
+
+        if (head != null && !head.isPositive()) {
             throw new DatalogException("Only a positive literal is allowed in a rule");
         }
-            
+
         this.body = body;
         this.head = head;
     }
 
     /**
      * Creates a fact, i.e. a rule with an empty body.
+     * 
      * @param head
      */
     public Rule(Literal head) throws DatalogException {
         this(head, EMPTY_BODY);
     }
 
-    public String toString(){
+    public String toString() {
         String result;
-        
-        if (this.isConstraint()){
+
+        if (this.isConstraint()) {
             result = "";
-        } else {
+        }
+        else {
             // fact or general rule
             result = this.getHead().toString();
         }
-        
-        if (!this.isFact()){
+
+        if (!this.isFact()) {
             result += " :- ";
-            
+
             int i = 1;
             List<Literal> body = this.getBody();
-            for (Literal l : body ){
+            for (Literal l : body) {
                 result += l.toString();
-                if (i < body.size()){
+                if (i < body.size()) {
                     result += ", ";
                 }
                 i++;
             }
         }
-        
+
         result += ".";
         return result;
     }
-    
+
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
@@ -137,5 +139,5 @@ public class Rule {
         hash = 31 * hash + (null == body ? 0 : body.hashCode());
         return hash;
     }
-    
+
 }

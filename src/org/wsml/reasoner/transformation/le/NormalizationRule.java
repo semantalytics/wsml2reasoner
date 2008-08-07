@@ -21,13 +21,16 @@ package org.wsml.reasoner.transformation.le;
 import org.omwg.logicalexpression.LogicalExpression;
 
 /**
- * A normalization rule specifies the behaviour of how to normalize a logical expression.
- * @author Stephan Grimm, FZI Karlsruhe 
+ * A normalization rule specifies the behaviour of how to normalize a logical
+ * expression.
+ * 
+ * @author Stephan Grimm, FZI Karlsruhe
  */
-public interface NormalizationRule extends LEModificationRule
-{
+public interface NormalizationRule extends LEModificationRule {
     /**
-     * This method applies the normalization behaviour specified by this normalization rule to a logical expression.
+     * This method applies the normalization behaviour specified by this
+     * normalization rule to a logical expression.
+     * 
      * @param expression
      * @return a logical expressions resulting from the normalization
      */

@@ -21,72 +21,63 @@
 package org.wsml.reasoner.ext.sql;
 
 /**
- * This class represents a single entry in a reasoner result table and is used to simplify
- * several individual processing steps. An entry simply consists of a generic Java object as a value,
- * the name of the entry (the column name, the variable name, ...) and the Java class type of the entry.
+ * This class represents a single entry in a reasoner result table and is used
+ * to simplify several individual processing steps. An entry simply consists of
+ * a generic Java object as a value, the name of the entry (the column name, the
+ * variable name, ...) and the Java class type of the entry.
  * 
  * @author Florian Fischer, florian.fischer@deri.at
  */
-public class Entry
-{
-	private Object value;
-	private String name;
-	private Class<?> classMapping;
+public class Entry {
+    private Object value;
 
-	public Entry(Object value, String name, Class<?> mapping)
-	{
-		this.value = value;
-		this.name = name;
-		this.classMapping = mapping;
-	}
+    private String name;
 
-	public Entry(Object value, Class<?> mapping)
-	{
-		this.value = value;
-		this.classMapping = mapping;
-	}
+    private Class< ? > classMapping;
 
-	public Object getValue()
-	{
-		return value;
-	}
+    public Entry(Object value, String name, Class< ? > mapping) {
+        this.value = value;
+        this.name = name;
+        this.classMapping = mapping;
+    }
 
-	public void setValue(Object value)
-	{
-		this.value = value;
-	}
+    public Entry(Object value, Class< ? > mapping) {
+        this.value = value;
+        this.classMapping = mapping;
+    }
 
-	public String getName()
-	{
-		return name;
-	}
+    public Object getValue() {
+        return value;
+    }
 
-	public void setName(String name)
-	{
-		this.name = name;
-	}
+    public void setValue(Object value) {
+        this.value = value;
+    }
 
-	public Class<?> getClassMapping()
-	{
-		return classMapping;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setClassMapping(Class<?> mapping)
-	{
-		//the only upward promotion now 
-		if(mapping.equals(String.class))
-		{
-			value = value.toString();
-			classMapping = mapping;
-		}
-		//otherwise it ought to be the same class
-		//this catches bugs where illegal mappings like
-		//calendar -> bigdecimal
-		if(!mapping.equals(classMapping))
-		{
-			throw new IllegalArgumentException("Type promotion from " + 
-					classMapping + " to " + mapping + " is not legal.");
-		}
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Class< ? > getClassMapping() {
+        return classMapping;
+    }
+
+    public void setClassMapping(Class< ? > mapping) {
+        // the only upward promotion now
+        if (mapping.equals(String.class)) {
+            value = value.toString();
+            classMapping = mapping;
+        }
+        // otherwise it ought to be the same class
+        // this catches bugs where illegal mappings like
+        // calendar -> bigdecimal
+        if (!mapping.equals(classMapping)) {
+            throw new IllegalArgumentException("Type promotion from " + classMapping + " to " + mapping + " is not legal.");
+        }
+    }
 
 }

@@ -18,12 +18,23 @@
  */
 package org.wsml.reasoner.api;
 
-/**
- *  An interface for invoking a WSML-DL reasoner with a particular reasoning task.
- *  
- * @author grahen
- *
- */
-public interface WSMLRuleReasoner extends WSMLReasoner {
+import java.util.List;
 
+import org.omwg.logicalexpression.LogicalExpression;
+
+/**
+ * An interface for invoking a WSML-FOL reasoner with a particular reasoning
+ * task.
+ * 
+ * @author Holger Lausen, DERI Innsbruck
+ */
+public interface FOLReasoner extends WSMLReasoner {
+
+    public enum EntailmentType {
+        entailed, notEntailed, unkown
+    };
+
+    public List<EntailmentType> checkEntailment(List<LogicalExpression> conjectures);
+
+    public EntailmentType checkEntailment(LogicalExpression conjectures);
 }

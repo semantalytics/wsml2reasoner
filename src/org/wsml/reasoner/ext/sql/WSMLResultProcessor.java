@@ -29,48 +29,45 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 
 /**
- * This class is an adapter between reasoner results and a format that 
- * is convenient to store in a database.
+ * This class is an adapter between reasoner results and a format that is
+ * convenient to store in a database.
  * 
- * This involves deriving correct data-types per Entry, then per column and also 
+ * This involves deriving correct data-types per Entry, then per column and also
  * setting common column names based on the names of variables.
  * 
  * @author Florian Fischer, florian.fischer@deri.at
- *
+ * 
  */
-public class WSMLResultProcessor
-{
-	/**
-	 * Converts a ReasonerResult to a Table.
-	 * 
-	 * @param result The ReasonerResult.
-	 * @return The Table.
-	 */
-	public Table process(ReasonerResult result) 
-	{
-		Table orderedTable = new Table();
-		DatatypeVisitor visitor = new DatatypeVisitor();		
-		Set<Map<Variable, Term>> r = result.getResult();
-		
-		int i = 0;
-		for (Map<Variable, Term> row : r)
-		{
-			ArrayList<Entry> entryRow = new ArrayList<Entry>();
-			for (Variable var : row.keySet())
-			{				
-				Term t = row.get(var);
-				t.accept(visitor);
-				Entry entry = visitor.getMapping();
-				entry.setName(var.getName());
-				entryRow.add(entry);
-			}		
-			orderedTable.storeRow(i, entryRow);	
-			i++;
-		}
-		
-		orderedTable.promoteDataTypes();	
-		orderedTable.determineColumnNames();
- 		return orderedTable;
-	}
-	
+public class WSMLResultProcessor {
+    /**
+     * Converts a ReasonerResult to a Table.
+     * 
+     * @param result
+     *            The ReasonerResult.
+     * @return The Table.
+     */
+    public Table process(ReasonerResult result) {
+        Table orderedTable = new Table();
+        DatatypeVisitor visitor = new DatatypeVisitor();
+        Set<Map<Variable, Term>> r = result.getResult();
+
+        int i = 0;
+        for (Map<Variable, Term> row : r) {
+            ArrayList<Entry> entryRow = new ArrayList<Entry>();
+            for (Variable var : row.keySet()) {
+                Term t = row.get(var);
+                t.accept(visitor);
+                Entry entry = visitor.getMapping();
+                entry.setName(var.getName());
+                entryRow.add(entry);
+            }
+            orderedTable.storeRow(i, entryRow);
+            i++;
+        }
+
+        orderedTable.promoteDataTypes();
+        orderedTable.determineColumnNames();
+        return orderedTable;
+    }
+
 }

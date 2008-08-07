@@ -23,15 +23,17 @@ import java.util.Set;
 import org.omwg.logicalexpression.LogicalExpression;
 
 /**
- * A logical expression transformer transforms a single logical expression into a set of resulting logical expressions. The
- * result should be created such that the original expression remains unchanged.
+ * A logical expression transformer transforms a single logical expression into
+ * a set of resulting logical expressions. The result should be created such
+ * that the original expression remains unchanged.
  * 
  * @author Stephan Grimm, FZI Karlsruhe
  */
-public interface LogicalExpressionTransformer
-{
+public interface LogicalExpressionTransformer {
     /**
-     * This method transforms a single logical expression into a set of resulting expressions.
+     * This method transforms a single logical expression into a set of
+     * resulting expressions.
+     * 
      * @param expression
      * @return a set of logical expression resulting from the transformation
      */

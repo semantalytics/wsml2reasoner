@@ -1,19 +1,11 @@
 package engine.iris;
 
-import java.util.Map;
-import java.util.Set;
-
 import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
-import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
-import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
-import org.wsmo.common.IRI;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
 import base.BaseReasonerTest;
@@ -28,7 +20,7 @@ public class QueryContainmentTest extends BaseReasonerTest {
 	
 	private LogicalExpressionFactory leFactory;
 	
-	private WSMLReasoner wsmlReasoner;
+	private LPReasoner wsmlReasoner;
 
 	private Parser parser;
 	   
@@ -41,7 +33,7 @@ public class QueryContainmentTest extends BaseReasonerTest {
 		// currently set to IRIS since the other reasoning engines
 		// cannot yet handle such built-ins
 		BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
-		wsmlReasoner = BaseReasonerTest.getReasoner();
+		wsmlReasoner = (LPReasoner) BaseReasonerTest.getReasoner();
 		wsmoFactory = Factory.createWsmoFactory(null);
 		leFactory = Factory.createLogicalExpressionFactory(null);
 		parser = Factory.createParser(null);
@@ -54,7 +46,7 @@ public class QueryContainmentTest extends BaseReasonerTest {
                 "axiom definedBy \n" +
                 "vehicle(?x) :- car(?x).\n";
         ontology = (Ontology) parser.parse(new StringBuffer(test))[0];
-        wsmlReasoner = BaseReasonerTest.getReasoner();
+        wsmlReasoner = (LPReasoner) BaseReasonerTest.getReasoner();
         wsmlReasoner.registerOntology(ontology);
         
         // build queries
@@ -65,13 +57,6 @@ public class QueryContainmentTest extends BaseReasonerTest {
         boolean check = wsmlReasoner.checkQueryContainment(query1, query2);
         assertTrue(check);
         
-        wsmlReasoner.deRegister();
-        wsmlReasoner.registerOntology(ontology);
-        
-        // get containment mapping result set
-        Set<Map<Variable, Term>> result = wsmlReasoner.getQueryContainment(
-        		query1, query2);
-//        System.out.println(result);
         wsmlReasoner.deRegister();
 	}
 	
@@ -84,7 +69,7 @@ public class QueryContainmentTest extends BaseReasonerTest {
                 "car(?x) :- mobile(?x) and ?x[hasWheel hasValue ?y] " +
                 "and ?x[hasTires hasValue 4].\n";
         ontology = (Ontology) parser.parse(new StringBuffer(test))[0];
-        wsmlReasoner = BaseReasonerTest.getReasoner();
+        wsmlReasoner = (LPReasoner) BaseReasonerTest.getReasoner();
         wsmlReasoner.registerOntology(ontology);
         
         // build queries
@@ -95,14 +80,6 @@ public class QueryContainmentTest extends BaseReasonerTest {
         // perform query containment check
         boolean check = wsmlReasoner.checkQueryContainment(query1, query2);
         assertTrue(check);
-        
-        wsmlReasoner.deRegister();
-        wsmlReasoner.registerOntology(ontology);
-        
-        // get containment mapping result set
-        Set<Map<Variable, Term>> result = wsmlReasoner.getQueryContainment(
-        		query1, query2);
-//        System.out.println(result);
         
         wsmlReasoner.deRegister();
 	}
@@ -116,7 +93,7 @@ public class QueryContainmentTest extends BaseReasonerTest {
                 "car(?x) :- mobile(?x) and ?x[hasWheel hasValue ?y] " +
                 "and ?x[hasTires hasValue 4].\n";
         ontology = (Ontology) parser.parse(new StringBuffer(test))[0];
-        wsmlReasoner = BaseReasonerTest.getReasoner();
+        wsmlReasoner = (LPReasoner) BaseReasonerTest.getReasoner();
         wsmlReasoner.registerOntology(ontology);
         
         // build queries
@@ -194,7 +171,7 @@ public class QueryContainmentTest extends BaseReasonerTest {
                 "axiom definedBy \n" +
                 "vehicle(?x) :- car(?x) and mobile(?x).\n";
         ontology = (Ontology) parser.parse(new StringBuffer(test))[0];
-        wsmlReasoner = BaseReasonerTest.getReasoner();
+        wsmlReasoner = (LPReasoner) BaseReasonerTest.getReasoner();
         wsmlReasoner.registerOntology(ontology);
         
         // build queries
@@ -218,7 +195,7 @@ public class QueryContainmentTest extends BaseReasonerTest {
                 "axiom definedBy \n" +
                 "vehicle(?x) :- car(?x) and mobile(?x).\n";
         ontology = (Ontology) parser.parse(new StringBuffer(test))[0];
-        wsmlReasoner = BaseReasonerTest.getReasoner();
+        wsmlReasoner = (LPReasoner) BaseReasonerTest.getReasoner();
         wsmlReasoner.registerOntology(ontology);
         
         // build queries
@@ -242,7 +219,7 @@ public class QueryContainmentTest extends BaseReasonerTest {
                 "axiom definedBy \n" +
                 "vehicle(?x) :- car(?x) and ?x[hasTires hasValue ?y] and ?y=4.\n";
         ontology = (Ontology) parser.parse(new StringBuffer(test))[0];
-        wsmlReasoner = BaseReasonerTest.getReasoner();
+        wsmlReasoner = (LPReasoner) BaseReasonerTest.getReasoner();
         wsmlReasoner.registerOntology(ontology);
         
         // build queries

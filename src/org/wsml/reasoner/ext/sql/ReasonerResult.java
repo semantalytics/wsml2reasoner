@@ -32,14 +32,14 @@ import org.omwg.ontology.Variable;
  * @author Florian Fischer, florian.fischer@deri.at
  */
 public class ReasonerResult {
-	
-	public ReasonerResult(Set<Map<Variable, Term>> resultSet) {
-		result = resultSet;
-	}
-	
-	public Set<Map<Variable, Term>> getResult() {
-		return result;
-	}
-	
-	protected Set<Map<Variable, Term>> result;
+
+    public ReasonerResult(Set<Map<Variable, Term>> resultSet) {
+        result = resultSet;
+    }
+
+    public Set<Map<Variable, Term>> getResult() {
+        return result;
+    }
+
+    protected Set<Map<Variable, Term>> result;
 }

@@ -27,9 +27,9 @@ import java.util.Set;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.ExternalDataSource;
-import org.wsml.reasoner.api.WSMLFlightReasoner;
+import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
+import org.wsml.reasoner.api.data.ExternalDataSource;
 import org.wsml.reasoner.builtin.iris.IrisFacade;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
@@ -85,14 +85,14 @@ public class DataSourceTest extends BaseReasonerTest {
 	}
 
 	public void testConsistencyChecker() throws Exception {
-		assertTrue(((WSMLFlightReasoner) wsmlReasoner).isSatisfiable());
+		assertTrue(((LPReasoner) wsmlReasoner).checkConsistency().size() == 0);
 	}
 
 	public void testInstanceRetrieval() throws Exception {
 		String query = "Anne memberOf CatOwner";
 		LogicalExpression qExpression = leFactory.createLogicalExpression(
 				query, o);
-		assertTrue(wsmlReasoner.executeGroundQuery(qExpression));
+		assertTrue(((LPReasoner) wsmlReasoner).executeGroundQuery(qExpression));
 	}
 
 	/**

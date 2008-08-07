@@ -27,10 +27,9 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
-import org.wsmo.common.IRI;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -55,7 +54,7 @@ public class Boolean extends BaseReasonerTest {
     LogicalExpressionFactory leFactory;
     DataFactory dFactory;
     WsmoFactory wsmoFactory;
-    WSMLReasoner reasoner;
+    LPReasoner reasoner;
     BuiltInReasoner previous;
     String ns = "http://www.yabooleantest.org#";
     String ontologyFile = "files/simplerBoolean.wsml";
@@ -67,7 +66,7 @@ public class Boolean extends BaseReasonerTest {
         leFactory = Factory.createLogicalExpressionFactory(null);
         dFactory = Factory.createDataFactory(null);
         previous = BaseReasonerTest.reasoner;
-        reasoner =  BaseReasonerTest.getReasoner();
+        reasoner =  (LPReasoner) BaseReasonerTest.getReasoner();
         wsmoFactory = Factory.createWsmoFactory(null);
     }
 
@@ -105,7 +104,7 @@ public class Boolean extends BaseReasonerTest {
         Ontology o = (Ontology) parser.parse(new StringBuffer(test))[0];
         Set<Map<Variable, Term>> result = null;
         LogicalExpression query;
-        reasoner = BaseReasonerTest.getReasoner();
+        reasoner = (LPReasoner) BaseReasonerTest.getReasoner();
         reasoner.registerOntology(o);
 
         query = leFactory.createLogicalExpression("a[f hasValue ?y]", o);

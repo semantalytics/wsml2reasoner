@@ -27,12 +27,11 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.common.IRI;
 import org.wsmo.factory.Factory;
 import org.wsmo.wsml.Parser;
 
@@ -47,7 +46,7 @@ public class AttributeInheritanceTest extends BaseReasonerTest {
 
 	private Parser parser = null;
 	
-    private WSMLReasoner reasoner = null;
+    private LPReasoner reasoner = null;
     
     private BuiltInReasoner previous;
     
@@ -58,7 +57,7 @@ public class AttributeInheritanceTest extends BaseReasonerTest {
         wsmoFactory = wsmoManager.getWSMOFactory();
         leFactory = wsmoManager.getLogicalExpressionFactory();
         previous = BaseReasonerTest.reasoner;
-        reasoner = BaseReasonerTest.getReasoner();
+        reasoner = (LPReasoner) BaseReasonerTest.getReasoner();
 	}
 	
 	/**
@@ -81,7 +80,7 @@ public class AttributeInheritanceTest extends BaseReasonerTest {
         Ontology o = (Ontology) parser.parse(new StringBuffer(test))[0];
         Set<Map<Variable, Term>> result = null;
         LogicalExpression query;
-        reasoner = BaseReasonerTest.getReasoner();
+        reasoner = (LPReasoner) BaseReasonerTest.getReasoner();
         reasoner.registerOntology(o);
 
         query = leFactory.createLogicalExpression("?x[?attribute ofType ?range]", o);

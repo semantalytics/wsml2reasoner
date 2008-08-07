@@ -19,12 +19,13 @@ package engine.tptp;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
-import org.wsml.reasoner.api.WSMLFOLReasoner;
-import org.wsml.reasoner.api.WSMLFOLReasoner.EntailmentType;
+import org.wsml.reasoner.api.FOLReasoner;
+import org.wsml.reasoner.api.FOLReasoner.EntailmentType;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
@@ -53,7 +54,7 @@ public class TPTPEntailmentTest extends BaseReasonerTest {
 
     private WsmoFactory wsmoFactory = null;
     private LogicalExpressionFactory leFactory = null;
-    private WSMLFOLReasoner wsmlReasoner = null;
+    private FOLReasoner wsmlReasoner = null;
     BuiltInReasoner previous;  
     private Parser parser = null; 
     
@@ -64,7 +65,7 @@ public class TPTPEntailmentTest extends BaseReasonerTest {
         wsmoFactory = wsmoManager.getWSMOFactory();
         leFactory = wsmoManager.getLogicalExpressionFactory();
         previous = BaseReasonerTest.reasoner;
-        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLFOLReasoner();
+        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createFOLReasoner(new HashMap <String, Object> ());
         parser = Factory.createParser(null);
     }
     

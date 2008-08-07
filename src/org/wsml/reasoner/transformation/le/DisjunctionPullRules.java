@@ -36,8 +36,11 @@ import org.wsml.reasoner.impl.WSMO4JManager;
  */
 public class DisjunctionPullRules extends FixedModificationRules {
 
+    private AddOnlyArrayList<NormalizationRule> rules;
+
     public DisjunctionPullRules(WSMO4JManager wsmoManager) {
         super(wsmoManager);
+        rules = new AddOnlyArrayList<NormalizationRule>();
         rules.add(new ConjunctionPushRule());
     }
 
@@ -49,7 +52,8 @@ public class DisjunctionPullRules extends FixedModificationRules {
             if (hasLeftDisjunction(conjunction)) {
                 conjunct = conjunction.getRightOperand();
                 disjunction = (Disjunction) conjunction.getLeftOperand();
-            } else {
+            }
+            else {
                 conjunct = conjunction.getLeftOperand();
                 disjunction = (Disjunction) conjunction.getRightOperand();
             }
@@ -57,8 +61,7 @@ public class DisjunctionPullRules extends FixedModificationRules {
             collectDirectDisjuncts(disjunction, disjuncts);
             Set<LogicalExpression> newDisjuncts = new HashSet<LogicalExpression>();
             for (LogicalExpression disjunct : disjuncts) {
-                newDisjuncts.add(leFactory
-                        .createConjunction(conjunct, disjunct));
+                newDisjuncts.add(leFactory.createConjunction(conjunct, disjunct));
             }
             return buildNaryDisjunction(newDisjuncts);
         }
@@ -66,8 +69,7 @@ public class DisjunctionPullRules extends FixedModificationRules {
         public boolean isApplicable(LogicalExpression expression) {
             if (expression instanceof Conjunction) {
                 Conjunction conjunction = (Conjunction) expression;
-                return hasLeftDisjunction(conjunction)
-                        || hasRightDisjunction(conjunction);
+                return hasLeftDisjunction(conjunction) || hasRightDisjunction(conjunction);
             }
             return false;
         }
@@ -80,8 +82,7 @@ public class DisjunctionPullRules extends FixedModificationRules {
             return binary.getRightOperand() instanceof Disjunction;
         }
 
-        protected void collectDirectDisjuncts(LogicalExpression expression,
-                Set<LogicalExpression> disjuncts) {
+        protected void collectDirectDisjuncts(LogicalExpression expression, Set<LogicalExpression> disjuncts) {
             if (expression instanceof Disjunction) {
                 Disjunction disjunction = (Disjunction) expression;
                 collectDirectDisjuncts(disjunction.getLeftOperand(), disjuncts);
@@ -94,5 +95,9 @@ public class DisjunctionPullRules extends FixedModificationRules {
         public String toString() {
             return "A or B and (C or D)\n\t=>\n A or B and C or B and D\n";
         }
+    }
+
+    public AddOnlyArrayList<NormalizationRule> getRules() {
+        return rules;
     }
 }

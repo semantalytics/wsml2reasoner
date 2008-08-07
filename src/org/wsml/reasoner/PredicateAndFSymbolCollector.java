@@ -21,68 +21,84 @@ import java.util.Set;
 
 import org.deri.wsmo4j.io.parser.wsml.TempVariable;
 import org.omwg.logicalexpression.Atom;
-import org.omwg.logicalexpression.terms.*;
-import org.omwg.ontology.*;
+import org.omwg.logicalexpression.terms.ConstructedTerm;
+import org.omwg.logicalexpression.terms.NumberedAnonymousID;
+import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.ComplexDataValue;
+import org.omwg.ontology.SimpleDataValue;
+import org.omwg.ontology.Variable;
 import org.wsml.reasoner.transformation.InfixOrderLogicalExpressionVisitor;
 import org.wsmo.common.IRI;
 import org.wsmo.common.UnnumberedAnonymousID;
 
 public class PredicateAndFSymbolCollector extends InfixOrderLogicalExpressionVisitor {
-    
+
     private Set<Atom> atoms = new HashSet<Atom>();
-    
-    private FSymCollector termCollectVisitor = new FSymCollector(); 
-    
-    public void clear(){
-    	termCollectVisitor.fsymbols.clear();
-    	termCollectVisitor.constants.clear();
-    	atoms.clear();
-    }
-    
-    public Set<ConstructedTerm> getFSyms(){
-    	return termCollectVisitor.fsymbols;
-    }
-    
-    public Set<Atom> getAtoms(){
-    	return atoms;
-    }
-    
-    public Set<Term> getConstants(){
-    	return termCollectVisitor.constants;
+
+    private FSymCollector termCollectVisitor = new FSymCollector();
+
+    public void clear() {
+        termCollectVisitor.fsymbols.clear();
+        termCollectVisitor.constants.clear();
+        atoms.clear();
     }
 
-	@Override
+    public Set<ConstructedTerm> getFSyms() {
+        return termCollectVisitor.fsymbols;
+    }
+
+    public Set<Atom> getAtoms() {
+        return atoms;
+    }
+
+    public Set<Term> getConstants() {
+        return termCollectVisitor.constants;
+    }
+
+    @Override
     public void handleAtom(Atom expr) {
-		if(expr.getArity()>0 && expr.getParameter(0) instanceof TempVariable){
-			//do nothing this is a buildin which is converted to a function
-		}else{
-			atoms.add(expr);
-		}
-		for (Term t :expr.listParameters()){
-			t.accept(termCollectVisitor);
-		}
+        if (expr.getArity() > 0 && expr.getParameter(0) instanceof TempVariable) {
+            // do nothing this is a buildin which is converted to a function
+        }
+        else {
+            atoms.add(expr);
+        }
+        for (Term t : expr.listParameters()) {
+            t.accept(termCollectVisitor);
+        }
     }
 
-	@Override
-	public Object getSerializedObject() {
-		return null;
-	}
+    @Override
+    public Object getSerializedObject() {
+        return null;
+    }
 }
 
-class FSymCollector implements org.omwg.logicalexpression.terms.Visitor{
+class FSymCollector implements org.omwg.logicalexpression.terms.Visitor {
     Set<ConstructedTerm> fsymbols = new HashSet<ConstructedTerm>();
-    Set<Term> constants = new HashSet<Term>();
-    
-	public void visitIRI(IRI arg0) {
-		constants.add(arg0);
-	}
-	public void visitComplexDataValue(ComplexDataValue arg0) {}
-	public void visitNumberedID(NumberedAnonymousID arg0) {}
-	public void visitSimpleDataValue(SimpleDataValue arg0) {}
-	public void visitUnnumberedID(UnnumberedAnonymousID arg0) {}
-	public void visitVariable(Variable arg0) {}
 
-	public void visitConstructedTerm(ConstructedTerm arg0) {
-		fsymbols.add(arg0);
-	}
+    Set<Term> constants = new HashSet<Term>();
+
+    public void visitIRI(IRI arg0) {
+        constants.add(arg0);
+    }
+
+    public void visitComplexDataValue(ComplexDataValue arg0) {
+    }
+
+    public void visitNumberedID(NumberedAnonymousID arg0) {
+    }
+
+    public void visitSimpleDataValue(SimpleDataValue arg0) {
+    }
+
+    public void visitUnnumberedID(UnnumberedAnonymousID arg0) {
+    }
+
+    public void visitVariable(Variable arg0) {
+    }
+
+    public void visitConstructedTerm(ConstructedTerm arg0) {
+        fsymbols.add(arg0);
+    }
 }

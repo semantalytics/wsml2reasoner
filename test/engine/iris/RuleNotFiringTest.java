@@ -29,10 +29,9 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
-import org.wsmo.common.IRI;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
@@ -46,7 +45,7 @@ public class RuleNotFiringTest extends BaseReasonerTest {
 	
 	private LogicalExpressionFactory leFactory;
 	
-	private WSMLReasoner wsmlReasoner;
+	private LPReasoner wsmlReasoner;
 	
 	private BuiltInReasoner previous;
 
@@ -62,7 +61,7 @@ public class RuleNotFiringTest extends BaseReasonerTest {
 		// cannot yet handle such built-ins
 		previous = BaseReasonerTest.reasoner;
 		BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
-		wsmlReasoner = BaseReasonerTest.getReasoner();
+		wsmlReasoner =  (LPReasoner) BaseReasonerTest.getReasoner();
 		wsmoFactory = Factory.createWsmoFactory(null);
 		leFactory = Factory.createLogicalExpressionFactory(null);
 		parser = Factory.createParser(null);
@@ -97,8 +96,7 @@ public class RuleNotFiringTest extends BaseReasonerTest {
        System.out.println("WSML Query LE:");
        System.out.println(qExpression.toString());
        System.out.println("\n\nExpecting " + expected.size() + " results...\n");
-       Set<Map<Variable, Term>> result = wsmlReasoner.executeQuery(
-    		   (IRI) ontology.getIdentifier(), qExpression);
+       Set<Map<Variable, Term>> result = wsmlReasoner.executeQuery(qExpression);
        System.out.println("Found < " + result.size() + " > results to the query:\n");
       
        // assert that expected result set size equals actual result set size
@@ -113,7 +111,7 @@ public class RuleNotFiringTest extends BaseReasonerTest {
        
        assertTrue(resultSet.contains(nsp + "me"));
 		
-       wsmlReasoner.deRegisterOntology((IRI) ontology.getIdentifier());
+       wsmlReasoner.deRegister();
 	}
 	
     @Override

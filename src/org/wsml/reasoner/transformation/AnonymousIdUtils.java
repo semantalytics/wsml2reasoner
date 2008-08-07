@@ -15,7 +15,7 @@ public abstract class AnonymousIdUtils {
     protected static final String MINCARD_PREFIX = "http://www.wsmo.org/reasoner/mincard_";
 
     protected static final String MAXCARD_PREFIX = "http://www.wsmo.org/reasoner/maxcard_";
-    
+
     public static final String NAMED_AXIOM_SUFFIX = "~~";
 
     /**
@@ -26,8 +26,7 @@ public abstract class AnonymousIdUtils {
      * @return unique URI
      */
     private static String getNewIri(String prefix) {
-        String newURI = prefix + System.currentTimeMillis() + "-"
-                + Math.abs(RND.nextInt());
+        String newURI = prefix + System.currentTimeMillis() + "-" + Math.abs(RND.nextInt());
         return newURI;
     }
 
@@ -50,15 +49,15 @@ public abstract class AnonymousIdUtils {
     public static boolean isOfTypeIri(String iri) {
         return iri.startsWith(OFTYPE_PREFIX);
     }
-    
+
     public static boolean isMinCardIri(String iri) {
         return iri.startsWith(MINCARD_PREFIX);
     }
-    
+
     public static boolean isMaxCardIri(String iri) {
         return iri.startsWith(MAXCARD_PREFIX);
     }
-    
+
     /**
      * Checks whether an IRI represents an automatically generated anonymous ID
      * 

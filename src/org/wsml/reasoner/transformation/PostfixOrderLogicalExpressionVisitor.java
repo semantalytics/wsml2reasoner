@@ -211,8 +211,6 @@ public abstract class PostfixOrderLogicalExpressionVisitor implements Visitor {
         }
     }
 
-//    abstract public Object getSerializedObject();
-
     public void enterAtom(Atom arg0) {
     }
 
@@ -249,16 +247,13 @@ public abstract class PostfixOrderLogicalExpressionVisitor implements Visitor {
     public void leaveAttributeValueMolecule(AttributeValueMolecule arg0) {
     }
 
-    public void enterAttributeConstraintMolecule(
-            AttributeConstraintMolecule arg0) {
+    public void enterAttributeConstraintMolecule(AttributeConstraintMolecule arg0) {
     }
 
-    public void handleAttributeConstraintMolecule(
-            AttributeConstraintMolecule arg0) {
+    public void handleAttributeConstraintMolecule(AttributeConstraintMolecule arg0) {
     }
 
-    public void leaveAttributeConstraintMolecule(
-            AttributeConstraintMolecule arg0) {
+    public void leaveAttributeConstraintMolecule(AttributeConstraintMolecule arg0) {
     }
 
     public void enterAttributeInferenceMolecule(AttributeInferenceMolecule arg0) {
@@ -296,7 +291,7 @@ public abstract class PostfixOrderLogicalExpressionVisitor implements Visitor {
 
     public void leaveCompoundMolecule(CompoundMolecule arg0) {
     }
-    
+
     public void enterNegation(Negation arg0) {
     }
 
@@ -305,7 +300,7 @@ public abstract class PostfixOrderLogicalExpressionVisitor implements Visitor {
 
     public void leaveNegation(Negation arg0) {
     }
-    
+
     public void enterNegationAsFailure(NegationAsFailure arg0) {
     }
 
@@ -314,7 +309,7 @@ public abstract class PostfixOrderLogicalExpressionVisitor implements Visitor {
 
     public void leaveNegationAsFailure(NegationAsFailure arg0) {
     }
-    
+
     public void enterConstraint(Constraint arg0) {
     }
 
@@ -323,7 +318,7 @@ public abstract class PostfixOrderLogicalExpressionVisitor implements Visitor {
 
     public void leaveConstraint(Constraint arg0) {
     }
-    
+
     public void enterInverseImplication(InverseImplication arg0) {
     }
 
@@ -332,7 +327,7 @@ public abstract class PostfixOrderLogicalExpressionVisitor implements Visitor {
 
     public void leaveInverseImplication(InverseImplication arg0) {
     }
-    
+
     public void enterImplication(Implication arg0) {
     }
 
@@ -341,7 +336,7 @@ public abstract class PostfixOrderLogicalExpressionVisitor implements Visitor {
 
     public void leaveImplication(Implication arg0) {
     }
-    
+
     public void enterEquivalence(Equivalence arg0) {
     }
 
@@ -350,7 +345,7 @@ public abstract class PostfixOrderLogicalExpressionVisitor implements Visitor {
 
     public void leaveEquivalence(Equivalence arg0) {
     }
-    
+
     public void enterLogicProgrammingRule(LogicProgrammingRule arg0) {
     }
 
@@ -359,7 +354,7 @@ public abstract class PostfixOrderLogicalExpressionVisitor implements Visitor {
 
     public void leaveLogicProgrammingRule(LogicProgrammingRule arg0) {
     }
-    
+
     public void enterUniversalQuantification(UniversalQuantification arg0) {
     }
 
@@ -368,7 +363,7 @@ public abstract class PostfixOrderLogicalExpressionVisitor implements Visitor {
 
     public void leaveUniversalQuantification(UniversalQuantification arg0) {
     }
-    
+
     public void enterExistentialQuantification(ExistentialQuantification arg0) {
     }
 
@@ -377,5 +372,4 @@ public abstract class PostfixOrderLogicalExpressionVisitor implements Visitor {
 
     public void leaveExistentialQuantification(ExistentialQuantification arg0) {
     }
-
 }

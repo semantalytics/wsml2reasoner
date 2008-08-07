@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.wsml.reasoner.impl.WSMO4JManager;
@@ -42,25 +43,22 @@ public class MoleculeNormalizer implements OntologyNormalizer {
 
     public MoleculeNormalizer(WSMO4JManager wsmoManager) {
         List<NormalizationRule> postOrderRules = new ArrayList<NormalizationRule>();
-        postOrderRules
-                .addAll((List<NormalizationRule>) new FOLMoleculeDecompositionRules(
-                        wsmoManager));
-        leNormalizer = new OnePassReplacementNormalizer(
-                postOrderRules, wsmoManager);
+        postOrderRules.addAll(new FOLMoleculeDecompositionRules(wsmoManager).getRules());
+        leNormalizer = new OnePassReplacementNormalizer(postOrderRules, wsmoManager);
         wsmoFactory = wsmoManager.getWSMOFactory();
         anonymousIdTranslator = new AnonymousIdTranslator(wsmoFactory);
     }
 
-    public Set <Entity> normalizeEntities(Collection <Entity> theEntities) {
-    	throw new UnsupportedOperationException();
+    public Set<Entity> normalizeEntities(Collection<Entity> theEntities) {
+        throw new UnsupportedOperationException();
     }
-    
-    public Set <Axiom> normalizeAxioms(Collection <Axiom> theAxioms){
-    	Set <Axiom> result = new HashSet <Axiom> ();
+
+    public Set<Axiom> normalizeAxioms(Collection<Axiom> theAxioms) {
+        Set<Axiom> result = new HashSet<Axiom>();
         // gather logical expressions from axioms in ontology:
         Set<LogicalExpression> expressions = new HashSet<LogicalExpression>();
         for (Axiom axiom : theAxioms) {
-            expressions.addAll((Collection<LogicalExpression>) axiom.listDefinitions());
+            expressions.addAll(axiom.listDefinitions());
         }
 
         // iteratively normalize logical expressions:
@@ -69,7 +67,7 @@ public class MoleculeNormalizer implements OntologyNormalizer {
             anonymousIdTranslator.setScope(expression);
             resultExp.add(leNormalizer.normalize(expression));
         }
-        
+
         Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
         for (LogicalExpression expression : resultExp) {
             axiom.addDefinition(expression);

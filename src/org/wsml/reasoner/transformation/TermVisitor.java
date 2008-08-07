@@ -38,30 +38,14 @@ import org.wsmo.common.UnnumberedAnonymousID;
  */
 public class TermVisitor implements Visitor {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.omwg.logicalexpression.terms.VisitorTerms#getSerializedObject()
-     *      should be obsolate (next snapshot) TODO remove!
-     */
-    // public Object getSerializedObject() {
-    // return null;
-    // }
     public void visitConstructedTerm(ConstructedTerm arg0) {
-        enterConstructedTerm(arg0);
         for (int i = 0; i < arg0.getArity(); i++) {
             Term nextArg = arg0.getParameter(i);
             nextArg.accept(this);
         }
-        handleConstructedTerm(arg0);
-        leaveConstructedTerm(arg0);
-
     }
 
     public void visitVariable(Variable arg0) {
-    }
-
-    public void visitIRI(IRI arg0) {
     }
 
     public void visitSimpleDataValue(SimpleDataValue arg0) {
@@ -76,15 +60,6 @@ public class TermVisitor implements Visitor {
     public void visitNumberedID(NumberedAnonymousID arg0) {
     }
 
-    // -- Additional methods ...
-
-    public void enterConstructedTerm(ConstructedTerm arg0) {
+    public void visitIRI(IRI arg0) {
     }
-
-    public void handleConstructedTerm(ConstructedTerm arg0) {
-    }
-
-    public void leaveConstructedTerm(ConstructedTerm arg0) {
-    }
-
 }

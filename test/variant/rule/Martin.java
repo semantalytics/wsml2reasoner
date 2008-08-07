@@ -25,10 +25,9 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
-import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -42,7 +41,7 @@ public class Martin extends BaseReasonerTest {
     Parser parser;
     LogicalExpressionFactory leFactory;
     WsmoFactory wsmoFactory;
-    WSMLReasoner reasoner;
+    LPReasoner reasoner;
     BuiltInReasoner previous;
     
     public void setUp(){
@@ -51,7 +50,7 @@ public class Martin extends BaseReasonerTest {
         wsmoFactory = Factory.createWsmoFactory(null);
         previous = BaseReasonerTest.reasoner;
         BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
-        reasoner = BaseReasonerTest.getReasoner();
+        reasoner = (LPReasoner) BaseReasonerTest.getReasoner();
     }
     
     @Override

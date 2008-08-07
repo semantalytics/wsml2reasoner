@@ -24,80 +24,79 @@ import org.omwg.logicalexpression.Constants;
 
 /**
  * Interface or class description
- *
+ * 
  * <pre>
- * Created on 20.03.2007
- * Committed by $Author: hlausen $
- * $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/builtin/tptp/TPTPSymbolMap.java,v $,
+ *  Created on 20.03.2007
+ *  Committed by $Author: hlausen $
+ *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/builtin/tptp/TPTPSymbolMap.java,v $,
  * </pre>
- *
+ * 
  * @author Rosi, Holger
- *
+ * 
  * @version $Revision: 1.3 $ $Date: 2007-06-15 10:23:38 $
  */
 public class TPTPSymbolMap {
-    
+
     private Map<String, String> iri2tptpTerm = new HashMap<String, String>();
+
     private Map<String, String> tptp2iriTerm = new HashMap<String, String>();
-    
-    private Map<String,String> buildinmapping = new HashMap<String, String>();
-    
-    public TPTPSymbolMap(){
-    	buildinmapping.put(Constants.NUMERIC_ADD , "plus");
-    	buildinmapping.put(Constants.NUMERIC_SUB , "minus");
-    	buildinmapping.put(Constants.NUMERIC_MUL , "times");
-    	buildinmapping.put(Constants.GREATER_THAN , "greater");
-    	buildinmapping.put(Constants.GREATER_EQUAL , "greatereq");
-    	buildinmapping.put(Constants.LESS_THAN , "less");
-    	buildinmapping.put(Constants.LESS_EQUAL , "lesseq");
-    	buildinmapping.put(Constants.NUMERIC_EQUAL , "equiv");
+
+    private Map<String, String> buildinmapping = new HashMap<String, String>();
+
+    public TPTPSymbolMap() {
+        buildinmapping.put(Constants.NUMERIC_ADD, "plus");
+        buildinmapping.put(Constants.NUMERIC_SUB, "minus");
+        buildinmapping.put(Constants.NUMERIC_MUL, "times");
+        buildinmapping.put(Constants.GREATER_THAN, "greater");
+        buildinmapping.put(Constants.GREATER_EQUAL, "greatereq");
+        buildinmapping.put(Constants.LESS_THAN, "less");
+        buildinmapping.put(Constants.LESS_EQUAL, "lesseq");
+        buildinmapping.put(Constants.NUMERIC_EQUAL, "equiv");
     }
-    
-    
-    public String getTPTPTerm(String wsmlTerm){
-    	if(buildinmapping.containsKey(wsmlTerm)){
-    		return buildinmapping.get(wsmlTerm);
-    	}
+
+    public String getTPTPTerm(String wsmlTerm) {
+        if (buildinmapping.containsKey(wsmlTerm)) {
+            return buildinmapping.get(wsmlTerm);
+        }
         String tptpTerm = iri2tptpTerm.get(wsmlTerm);
-        if (tptpTerm!=null) return tptpTerm;
+        if (tptpTerm != null)
+            return tptpTerm;
         tptpTerm = getLastAlphaNumerics(wsmlTerm);
-        int unique=1;
-        while (tptp2iriTerm.containsKey(tptpTerm)){
-            if (unique!=1){
-                tptpTerm=tptpTerm.substring(1,tptpTerm.length()-2);
+        int unique = 1;
+        while (tptp2iriTerm.containsKey(tptpTerm)) {
+            if (unique != 1) {
+                tptpTerm = tptpTerm.substring(1, tptpTerm.length() - 2);
             }
-            tptpTerm+=unique++;
+            tptpTerm += unique++;
         }
         iri2tptpTerm.put(wsmlTerm, tptpTerm);
         tptp2iriTerm.put(tptpTerm, wsmlTerm);
         return tptpTerm;
     }
 
-    
-    private String getLastAlphaNumerics(String iri){
+    private String getLastAlphaNumerics(String iri) {
         StringBuffer buf = new StringBuffer();
-        for (int i= iri.length()-1; i>=0;i--){
+        for (int i = iri.length() - 1; i >= 0; i--) {
             char current = iri.charAt(i);
-            if ((current>='a' && current<='z')||
-                    (current>='A' && current<='Z')){
+            if ((current >= 'a' && current <= 'z') || (current >= 'A' && current <= 'Z')) {
                 buf.append(iri.charAt(i));
-            }else{
-                if (buf.length()!=0) break;
+            }
+            else {
+                if (buf.length() != 0)
+                    break;
             }
         }
-        if (buf.length()==0) return "a";
+        if (buf.length() == 0)
+            return "a";
         buf.reverse();
         String result = Character.toLowerCase(buf.charAt(0)) + buf.substring(1);
         return result;
     }
-    
 
-    
-    public static void main(String[] a){
+    public static void main(String[] a) {
         TPTPSymbolMap t = new TPTPSymbolMap();
         System.out.println(t.getTPTPTerm("urn:/#"));
         System.out.println(t.getTPTPTerm("urn://"));
     }
-    
-    
+
 }

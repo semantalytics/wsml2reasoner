@@ -29,9 +29,11 @@ public final class AnonymousIdTranslator {
     public Term translate(LogicalExpression scope, Term term) {
         if (term instanceof UnnumberedAnonymousID) {
             return wsmoFactory.createIRI(AnonymousIdUtils.getNewAnonymousIri());
-        } else if (term instanceof NumberedAnonymousID) {
+        }
+        else if (term instanceof NumberedAnonymousID) {
             return translate(scope, (NumberedAnonymousID) term);
-        } else
+        }
+        else
             return term;
     }
 

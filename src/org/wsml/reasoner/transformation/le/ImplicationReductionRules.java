@@ -31,8 +31,12 @@ import org.wsml.reasoner.impl.WSMO4JManager;
  * @author Stephan Grimm, FZI Karlsruhe
  */
 public class ImplicationReductionRules extends FixedModificationRules {
+
+    private AddOnlyArrayList<NormalizationRule> rules;
+
     public ImplicationReductionRules(WSMO4JManager wsmoManager) {
         super(wsmoManager);
+        rules = new AddOnlyArrayList<NormalizationRule>();
         rules.add(new EquivalenceReplacementRule());
         rules.add(new RightImplicationReplacementRule());
     }
@@ -42,12 +46,9 @@ public class ImplicationReductionRules extends FixedModificationRules {
             Equivalence equivalence = (Equivalence) expression;
             LogicalExpression leftArg = equivalence.getLeftOperand();
             LogicalExpression rightArg = equivalence.getRightOperand();
-            LogicalExpression impliedBy1 = leFactory.createInverseImplication(
-                    rightArg, leftArg);
-            LogicalExpression impliedBy2 = leFactory.createInverseImplication(
-                    leftArg, rightArg);
-            LogicalExpression and = leFactory.createConjunction(impliedBy1,
-                    impliedBy2);
+            LogicalExpression impliedBy1 = leFactory.createInverseImplication(rightArg, leftArg);
+            LogicalExpression impliedBy2 = leFactory.createInverseImplication(leftArg, rightArg);
+            LogicalExpression and = leFactory.createConjunction(impliedBy1, impliedBy2);
             return and;
         }
 
@@ -60,14 +61,12 @@ public class ImplicationReductionRules extends FixedModificationRules {
         }
     }
 
-    protected class RightImplicationReplacementRule implements
-            NormalizationRule {
+    protected class RightImplicationReplacementRule implements NormalizationRule {
         public LogicalExpression apply(LogicalExpression expression) {
             Implication implication = (Implication) expression;
             LogicalExpression leftArg = implication.getLeftOperand();
             LogicalExpression rightArg = implication.getRightOperand();
-            LogicalExpression impliedBy = leFactory.createInverseImplication(
-                    rightArg, leftArg);
+            LogicalExpression impliedBy = leFactory.createInverseImplication(rightArg, leftArg);
             return impliedBy;
         }
 
@@ -78,5 +77,9 @@ public class ImplicationReductionRules extends FixedModificationRules {
         public String toString() {
             return "A implies B\n\t=>\n B impliedBy A\n";
         }
+    }
+
+    public AddOnlyArrayList<NormalizationRule> getRules() {
+        return rules;
     }
 }

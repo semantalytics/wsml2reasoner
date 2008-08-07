@@ -48,28 +48,28 @@ import org.wsmo.common.UnnumberedAnonymousID;
  * </p>
  * 
  * <pre>
- * _string         _string(&quot;any-character*&quot;)                           java.lang.String    
- * _decimal        _decimal(&quot;'-'?numeric+.numeric+&quot;)                   java.math.BigDecimal    
- * _integer        _integer(&quot;'-'?numeric+&quot;)                            java.math.BigInteger    
- * _float          _float(&quot;see XML Schema document&quot;)                   java.lang.Float 
- * _double         _double(&quot;see XML Schema document&quot;)                  java.lang.Double    
- * _iri            _iri(&quot;iri-according-to-rfc3987&quot;)                    java.lang.String    
- * _sqname         _sqname(&quot;iri-rfc3987&quot;, &quot;localname&quot;)                 java.lang.String[]  
- * _boolean        _boolean(&quot;true-or-false&quot;)                           java.lang.Boolean   
- * _duration       _duration(year, month, day, hour, minute, second)   java.lang.String    
- * _dateTime       _dateTime(year, month, day, hour, minute, second, timezone-hour, timezone-minute)
- *                 _dateTime(year, month, day, hour, minute, second)   java.util.Calendar  
- * _time           _time(hour, minute, second, timezone-hour, timezone-minute) 
- *                 _time(hour, minute, second)                         java.util.Calendar  
- * _date           _date(year, month, day, timezone-hour, timezone-minute) 
- *                 _date(year, month, day)                             java.util.Calendar
- * _gyearmonth     _gyearmonth(year, month)                            java.lang.Integer[] 
- * _gyear          _gyear(year)    java.lang.Integer   
- * _gmonthday      _gmonthday(month, day)                              java.lang.Integer[] 
- * _gday           _gday(day)                                          java.lang.Integer   
- * _gmonth         _gmonth(month)                                      java.lang.Integer   
- * _hexbinary      _hexbinary(hexadecimal-encoding)                    java.lang.String    
- * _base64binary   _base64binary(hexadecimal-encoding)                 java.lang.String    
+ *  _string         _string(&quot;any-character*&quot;)                           java.lang.String    
+ *  _decimal        _decimal(&quot;'-'?numeric+.numeric+&quot;)                   java.math.BigDecimal    
+ *  _integer        _integer(&quot;'-'?numeric+&quot;)                            java.math.BigInteger    
+ *  _float          _float(&quot;see XML Schema document&quot;)                   java.lang.Float 
+ *  _double         _double(&quot;see XML Schema document&quot;)                  java.lang.Double    
+ *  _iri            _iri(&quot;iri-according-to-rfc3987&quot;)                    java.lang.String    
+ *  _sqname         _sqname(&quot;iri-rfc3987&quot;, &quot;localname&quot;)                 java.lang.String[]  
+ *  _boolean        _boolean(&quot;true-or-false&quot;)                           java.lang.Boolean   
+ *  _duration       _duration(year, month, day, hour, minute, second)   java.lang.String    
+ *  _dateTime       _dateTime(year, month, day, hour, minute, second, timezone-hour, timezone-minute)
+ *                  _dateTime(year, month, day, hour, minute, second)   java.util.Calendar  
+ *  _time           _time(hour, minute, second, timezone-hour, timezone-minute) 
+ *                  _time(hour, minute, second)                         java.util.Calendar  
+ *  _date           _date(year, month, day, timezone-hour, timezone-minute) 
+ *                  _date(year, month, day)                             java.util.Calendar
+ *  _gyearmonth     _gyearmonth(year, month)                            java.lang.Integer[] 
+ *  _gyear          _gyear(year)    java.lang.Integer   
+ *  _gmonthday      _gmonthday(month, day)                              java.lang.Integer[] 
+ *  _gday           _gday(day)                                          java.lang.Integer   
+ *  _gmonth         _gmonth(month)                                      java.lang.Integer   
+ *  _hexbinary      _hexbinary(hexadecimal-encoding)                    java.lang.String    
+ *  _base64binary   _base64binary(hexadecimal-encoding)                 java.lang.String    
  * </pre>
  * 
  * <p>
@@ -80,9 +80,9 @@ import org.wsmo.common.UnnumberedAnonymousID;
  * </p>
  * 
  * This implementation resolves arrays, so that the values can be conveniently
- * stored in a database and converts all the time/date related datatypes to a Java Calendar.
- * All numeric types are mapped to Java BigDecimals.
- * The only unsupported datatypes are _hexbinary and _base64binary for the moment.
+ * stored in a database and converts all the time/date related datatypes to a
+ * Java Calendar. All numeric types are mapped to Java BigDecimals. The only
+ * unsupported datatypes are _hexbinary and _base64binary for the moment.
  * 
  * Several methods of the Visitor interface are not supported because the
  * DataLog Reasoner is only supposed to return i)IRIs or ii) DataValues as
@@ -95,223 +95,186 @@ import org.wsmo.common.UnnumberedAnonymousID;
  * 
  * @author Florian Fischer, florian.fischer@deri.at
  */
-public class DatatypeVisitor implements Visitor
-{
+public class DatatypeVisitor implements Visitor {
 
-	private Queue<Entry> derivedMappings = new LinkedList<Entry>();
-	private Map<String, Class<?>> simpleDataTypes = new HashMap<String, Class<?>>();
-	private Map<String, Class<?>> complextDataTypes = new HashMap<String, Class<?>>();
+    private Queue<Entry> derivedMappings = new LinkedList<Entry>();
 
-	/***************************************************************************
-	 * Constructs a new VisitorDatatype and sets up type mappings.
-	 */
-	public DatatypeVisitor()
-	{
-		simpleDataTypes.put(WsmlDataType.WSML_STRING, String.class);
-		simpleDataTypes.put(WsmlDataType.WSML_DECIMAL, BigDecimal.class);
-		simpleDataTypes.put(WsmlDataType.WSML_INTEGER, BigDecimal.class);
+    private Map<String, Class< ? >> simpleDataTypes = new HashMap<String, Class< ? >>();
 
-		simpleDataTypes.put(WsmlDataType.WSML_IRI, String.class);
+    private Map<String, Class< ? >> complextDataTypes = new HashMap<String, Class< ? >>();
 
-		complextDataTypes.put(WsmlDataType.WSML_FLOAT, BigDecimal.class);
-		complextDataTypes.put(WsmlDataType.WSML_DOUBLE, BigDecimal.class);
-		complextDataTypes.put(WsmlDataType.WSML_SQNAME, String.class);
-		complextDataTypes.put(WsmlDataType.WSML_BOOLEAN, Boolean.class);
+    /***************************************************************************
+     * Constructs a new VisitorDatatype and sets up type mappings.
+     */
+    public DatatypeVisitor() {
+        simpleDataTypes.put(WsmlDataType.WSML_STRING, String.class);
+        simpleDataTypes.put(WsmlDataType.WSML_DECIMAL, BigDecimal.class);
+        simpleDataTypes.put(WsmlDataType.WSML_INTEGER, BigDecimal.class);
 
-		complextDataTypes.put(WsmlDataType.WSML_DURATION, String.class);
+        simpleDataTypes.put(WsmlDataType.WSML_IRI, String.class);
 
-		complextDataTypes.put(WsmlDataType.WSML_DATETIME, Calendar.class);
-		complextDataTypes.put(WsmlDataType.WSML_TIME, Calendar.class);
-		complextDataTypes.put(WsmlDataType.WSML_DATE, Calendar.class);
+        complextDataTypes.put(WsmlDataType.WSML_FLOAT, BigDecimal.class);
+        complextDataTypes.put(WsmlDataType.WSML_DOUBLE, BigDecimal.class);
+        complextDataTypes.put(WsmlDataType.WSML_SQNAME, String.class);
+        complextDataTypes.put(WsmlDataType.WSML_BOOLEAN, Boolean.class);
 
-		complextDataTypes.put(WsmlDataType.WSML_GYEARMONTH, Calendar.class);
-		complextDataTypes.put(WsmlDataType.WSML_GMONTHDAY, Calendar.class);
-		complextDataTypes.put(WsmlDataType.WSML_GYEAR, Calendar.class);
-		complextDataTypes.put(WsmlDataType.WSML_GDAY, Calendar.class);
-		complextDataTypes.put(WsmlDataType.WSML_GMONTH, Calendar.class);	
-	}
+        complextDataTypes.put(WsmlDataType.WSML_DURATION, String.class);
 
-	/**
-	 * Returns the topmost Value/Type Pair. VisitorDatatype in this regard
-	 * behaves like a FIFO data structure.
-	 * 
-	 * @return a Pair of the term value and the derived java class.
-	 */
-	public Entry getMapping()
-	{
-		return derivedMappings.remove();
-	}
+        complextDataTypes.put(WsmlDataType.WSML_DATETIME, Calendar.class);
+        complextDataTypes.put(WsmlDataType.WSML_TIME, Calendar.class);
+        complextDataTypes.put(WsmlDataType.WSML_DATE, Calendar.class);
 
-	public void visitComplexDataValue(ComplexDataValue t)
-	{
-		assert t != null;
-		
-		String complextType = t.getType().getIRI().toString();
-		Class<?> javaTypeForWSMLType = complextDataTypes.get(complextType);
+        complextDataTypes.put(WsmlDataType.WSML_GYEARMONTH, Calendar.class);
+        complextDataTypes.put(WsmlDataType.WSML_GMONTHDAY, Calendar.class);
+        complextDataTypes.put(WsmlDataType.WSML_GYEAR, Calendar.class);
+        complextDataTypes.put(WsmlDataType.WSML_GDAY, Calendar.class);
+        complextDataTypes.put(WsmlDataType.WSML_GMONTH, Calendar.class);
+    }
 
-		if (javaTypeForWSMLType == null)
-		{
-			throw new IllegalArgumentException("Datatype " + complextType
-					+ " is not supported at the moment.");
-		}
+    /**
+     * Returns the topmost Value/Type Pair. VisitorDatatype in this regard
+     * behaves like a FIFO data structure.
+     * 
+     * @return a Pair of the term value and the derived java class.
+     */
+    public Entry getMapping() {
+        return derivedMappings.remove();
+    }
 
-		Object value = null;
-		// WsmlDataType.WSML_DATETIME, WsmlDataType.WSML_TIME,
-		// WsmlDataType.WSML_DATE are already stored as Calendar
-		if (complextType.equals(WsmlDataType.WSML_GYEARMONTH)
-				|| complextType.equals(WsmlDataType.WSML_GMONTHDAY)
-				|| complextType.equals(WsmlDataType.WSML_GYEAR)
-				|| complextType.equals(WsmlDataType.WSML_GDAY)
-				|| complextType.equals(WsmlDataType.WSML_GMONTH))
-		{
+    public void visitComplexDataValue(ComplexDataValue t) {
+        assert t != null;
 
-			value = convertTimeValue(t);
-		}
-		else if (complextType.equals(WsmlDataType.WSML_SQNAME))
-		{
-			// according to ComplexDataValueImpl SQNames are not supported,
-			// there seems to be some stale
-			// code in there.
-			throw new UnsupportedOperationException("SQNames not supported");
-		}
-		else if (complextType.equals(WsmlDataType.WSML_FLOAT))
-		{
-			Float f = (Float)t.getValue();
-			value = BigDecimal.valueOf(f);
-		}
-		else if(complextType.equals(WsmlDataType.WSML_DOUBLE))
-		{			
-			Double d = (Double)t.getValue();
-			value = BigDecimal.valueOf(d);
-		}
-		else
-		{
-			// otherwise the type matches
-			value = t.getValue();
-		}
+        String complextType = t.getType().getIRI().toString();
+        Class< ? > javaTypeForWSMLType = complextDataTypes.get(complextType);
 
-		if (value == null)
-		{
-			throw new UnsupportedOperationException(
-					"No suitable conversion found for " + complextType);
-		}
+        if (javaTypeForWSMLType == null) {
+            throw new IllegalArgumentException("Datatype " + complextType + " is not supported at the moment.");
+        }
 
-		Entry mapping = new Entry(value, javaTypeForWSMLType);
-		derivedMappings.add(mapping);
-	}
+        Object value = null;
+        // WsmlDataType.WSML_DATETIME, WsmlDataType.WSML_TIME,
+        // WsmlDataType.WSML_DATE are already stored as Calendar
+        if (complextType.equals(WsmlDataType.WSML_GYEARMONTH) || complextType.equals(WsmlDataType.WSML_GMONTHDAY) || complextType.equals(WsmlDataType.WSML_GYEAR) || complextType.equals(WsmlDataType.WSML_GDAY) || complextType.equals(WsmlDataType.WSML_GMONTH)) {
 
-	public void visitConstructedTerm(ConstructedTerm t)
-	{
-		throw new UnsupportedOperationException(
-				"ConstructedTerms not supported");
-	}
+            value = convertTimeValue(t);
+        }
+        else if (complextType.equals(WsmlDataType.WSML_SQNAME)) {
+            // according to ComplexDataValueImpl SQNames are not supported,
+            // there seems to be some stale
+            // code in there.
+            throw new UnsupportedOperationException("SQNames not supported");
+        }
+        else if (complextType.equals(WsmlDataType.WSML_FLOAT)) {
+            Float f = (Float) t.getValue();
+            value = BigDecimal.valueOf(f);
+        }
+        else if (complextType.equals(WsmlDataType.WSML_DOUBLE)) {
+            Double d = (Double) t.getValue();
+            value = BigDecimal.valueOf(d);
+        }
+        else {
+            // otherwise the type matches
+            value = t.getValue();
+        }
 
-	public void visitIRI(IRI t)
-	{
-		assert t != null;
-		
-		Class<?> javaTypeForWSMLType = simpleDataTypes
-				.get(WsmlDataType.WSML_IRI);
-		derivedMappings.add(new Entry(t.toString(), javaTypeForWSMLType));
-	}
+        if (value == null) {
+            throw new UnsupportedOperationException("No suitable conversion found for " + complextType);
+        }
 
-	public void visitNumberedID(NumberedAnonymousID t)
-	{
-		throw new UnsupportedOperationException(
-				"NumberedAnonymousIDs not supported");
-	}
+        Entry mapping = new Entry(value, javaTypeForWSMLType);
+        derivedMappings.add(mapping);
+    }
 
-	public void visitSimpleDataValue(SimpleDataValue t)
-	{
-		assert t != null;
-		
-		String simpleValueType = t.getType().getIRI().toString();
-		Class<?> javaTypeForWSMLType = simpleDataTypes.get(simpleValueType);
-		Entry mapping = null;
+    public void visitConstructedTerm(ConstructedTerm t) {
+        throw new UnsupportedOperationException("ConstructedTerms not supported");
+    }
 
-		// check if type is known
-		if (javaTypeForWSMLType == null)
-		{
-			throw new IllegalArgumentException("Datatype " + simpleValueType
-					+ " is not supported at the moment.");
-		}
+    public void visitIRI(IRI t) {
+        assert t != null;
 
-		// perform necessary conversions
-		if (simpleValueType.equals(WsmlDataType.WSML_INTEGER))
-		{
-			mapping = new Entry(convertInteger(t), javaTypeForWSMLType);
-		}
-		else
-		{
-			mapping = new Entry(t.getValue(), javaTypeForWSMLType);
-		}
+        Class< ? > javaTypeForWSMLType = simpleDataTypes.get(WsmlDataType.WSML_IRI);
+        derivedMappings.add(new Entry(t.toString(), javaTypeForWSMLType));
+    }
 
-		derivedMappings.add(mapping);
-	}
+    public void visitNumberedID(NumberedAnonymousID t) {
+        throw new UnsupportedOperationException("NumberedAnonymousIDs not supported");
+    }
 
-	public void visitUnnumberedID(UnnumberedAnonymousID t)
-	{
-		throw new UnsupportedOperationException(
-				"UnnumberedAnonymousIDs not supported");
-	}
+    public void visitSimpleDataValue(SimpleDataValue t) {
+        assert t != null;
 
-	public void visitVariable(Variable t)
-	{
-		throw new UnsupportedOperationException("Variables not supported");
-	}
+        String simpleValueType = t.getType().getIRI().toString();
+        Class< ? > javaTypeForWSMLType = simpleDataTypes.get(simpleValueType);
+        Entry mapping = null;
 
-	protected BigDecimal convertInteger(SimpleDataValue i)
-	{
-		assert i.getType().getIRI().toString()
-				.equals(WsmlDataType.WSML_INTEGER);
+        // check if type is known
+        if (javaTypeForWSMLType == null) {
+            throw new IllegalArgumentException("Datatype " + simpleValueType + " is not supported at the moment.");
+        }
 
-		return new BigDecimal((BigInteger) i.getValue());
-	}
+        // perform necessary conversions
+        if (simpleValueType.equals(WsmlDataType.WSML_INTEGER)) {
+            mapping = new Entry(convertInteger(t), javaTypeForWSMLType);
+        }
+        else {
+            mapping = new Entry(t.getValue(), javaTypeForWSMLType);
+        }
 
-	/**
-	 * Does Conversion of WSML_GYEARMONTH, WSML_GMONTHDAY, WSML_GYEAR,
-	 * WSML_GDAY, WSML_GMONTH to Java Calendar objects.
-	 * 
-	 * @param t
-	 *            the Complex Time Value.
-	 * @return the resulting Calendar object.
-	 */
-	protected Calendar convertTimeValue(ComplexDataValue t)
-	{
-		String complextType = t.getType().getIRI().toString();
-		GregorianCalendar tempCal = new GregorianCalendar();
-		tempCal.clear();
-		tempCal.setGregorianChange(new Date(Long.MIN_VALUE));
+        derivedMappings.add(mapping);
+    }
 
-		if (complextType.equals(WsmlDataType.WSML_GYEARMONTH))
-		{
-			Integer[] ym = (Integer[]) t.getValue();
-			tempCal.set(Calendar.YEAR, ym[0]);
-			tempCal.set(Calendar.MONTH, ym[1] - 1); // moths start at 0 in a
-													// Java Calendar
-		}
-		else if (complextType.equals(WsmlDataType.WSML_GMONTHDAY))
-		{
-			Integer[] md = (Integer[]) t.getValue();
-			tempCal.set(Calendar.MONTH, md[0] - 1);
-			tempCal.set(Calendar.DAY_OF_MONTH, md[1]);
-		}
-		else if (complextType.equals(WsmlDataType.WSML_GYEAR))
-		{
-			Integer y = (Integer) t.getValue();
-			tempCal.set(Calendar.YEAR, y);
-		}
-		else if (complextType.equals(WsmlDataType.WSML_GDAY))
-		{
-			Integer d = (Integer) t.getValue();
-			tempCal.set(Calendar.DAY_OF_MONTH, d);
-		}
-		else if (complextType.equals(WsmlDataType.WSML_GMONTH))
-		{
-			Integer y = (Integer) t.getValue();
-			tempCal.set(Calendar.MONTH, y - 1);
-		}
+    public void visitUnnumberedID(UnnumberedAnonymousID t) {
+        throw new UnsupportedOperationException("UnnumberedAnonymousIDs not supported");
+    }
 
-		return tempCal;
-	}
+    public void visitVariable(Variable t) {
+        throw new UnsupportedOperationException("Variables not supported");
+    }
+
+    protected BigDecimal convertInteger(SimpleDataValue i) {
+        assert i.getType().getIRI().toString().equals(WsmlDataType.WSML_INTEGER);
+
+        return new BigDecimal((BigInteger) i.getValue());
+    }
+
+    /**
+     * Does Conversion of WSML_GYEARMONTH, WSML_GMONTHDAY, WSML_GYEAR,
+     * WSML_GDAY, WSML_GMONTH to Java Calendar objects.
+     * 
+     * @param t
+     *            the Complex Time Value.
+     * @return the resulting Calendar object.
+     */
+    protected Calendar convertTimeValue(ComplexDataValue t) {
+        String complextType = t.getType().getIRI().toString();
+        GregorianCalendar tempCal = new GregorianCalendar();
+        tempCal.clear();
+        tempCal.setGregorianChange(new Date(Long.MIN_VALUE));
+
+        if (complextType.equals(WsmlDataType.WSML_GYEARMONTH)) {
+            Integer[] ym = (Integer[]) t.getValue();
+            tempCal.set(Calendar.YEAR, ym[0]);
+            tempCal.set(Calendar.MONTH, ym[1] - 1); // moths start at 0 in a
+            // Java Calendar
+        }
+        else if (complextType.equals(WsmlDataType.WSML_GMONTHDAY)) {
+            Integer[] md = (Integer[]) t.getValue();
+            tempCal.set(Calendar.MONTH, md[0] - 1);
+            tempCal.set(Calendar.DAY_OF_MONTH, md[1]);
+        }
+        else if (complextType.equals(WsmlDataType.WSML_GYEAR)) {
+            Integer y = (Integer) t.getValue();
+            tempCal.set(Calendar.YEAR, y);
+        }
+        else if (complextType.equals(WsmlDataType.WSML_GDAY)) {
+            Integer d = (Integer) t.getValue();
+            tempCal.set(Calendar.DAY_OF_MONTH, d);
+        }
+        else if (complextType.equals(WsmlDataType.WSML_GMONTH)) {
+            Integer y = (Integer) t.getValue();
+            tempCal.set(Calendar.MONTH, y - 1);
+        }
+
+        return tempCal;
+    }
 }

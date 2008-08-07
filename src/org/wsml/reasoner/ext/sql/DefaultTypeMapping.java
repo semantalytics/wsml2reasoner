@@ -22,102 +22,96 @@
 package org.wsml.reasoner.ext.sql;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * This class provides a mapping from Java classes to java.sql.Types and 
- * furthermore to String representations in order to simplify the dynamic construction
- * of SQL statements for variable Java types. 
+ * This class provides a mapping from Java classes to java.sql.Types and
+ * furthermore to String representations in order to simplify the dynamic
+ * construction of SQL statements for variable Java types.
  * 
- * More details can be found in:
- * "JDBC API Tutorial and Reference, Second Edition: Universal Data Access for 
- * the Java 2 Platform"
+ * More details can be found in: "JDBC API Tutorial and Reference, Second
+ * Edition: Universal Data Access for the Java 2 Platform"
  */
-public class DefaultTypeMapping
-{
-	public DefaultTypeMapping()
-	{
-		typeMap.put(String.class, Types.VARCHAR);
-		typeMap.put(Integer.class, Types.INTEGER);
-		typeMap.put(Long.class, Types.BIGINT);	
-		typeMap.put(BigDecimal.class, Types.DECIMAL);
-		typeMap.put(Boolean.class, Types.BIT);	
-		typeMap.put(Float.class, Types.FLOAT);
-		typeMap.put(Double.class, Types.DOUBLE);
-		typeMap.put(Date.class, Types.DATE);
-		typeMap.put(Timestamp.class, Types.TIMESTAMP);
+public class DefaultTypeMapping {
+    public DefaultTypeMapping() {
+        typeMap.put(String.class, Types.VARCHAR);
+        typeMap.put(Integer.class, Types.INTEGER);
+        typeMap.put(Long.class, Types.BIGINT);
+        typeMap.put(BigDecimal.class, Types.DECIMAL);
+        typeMap.put(Boolean.class, Types.BIT);
+        typeMap.put(Float.class, Types.FLOAT);
+        typeMap.put(Double.class, Types.DOUBLE);
+        typeMap.put(Date.class, Types.DATE);
+        typeMap.put(Timestamp.class, Types.TIMESTAMP);
 
-		//for convenience all the common sql types are mapped here
-		syntaxMap.put(java.sql.Types.BIT, "BIT");
-		syntaxMap.put(java.sql.Types.TINYINT, "TINYINT");
-		syntaxMap.put(java.sql.Types.SMALLINT, "SMALLINT");
-		syntaxMap.put(java.sql.Types.INTEGER, "INTEGER");
-		syntaxMap.put(java.sql.Types.BIGINT, "BIGINT");
-		syntaxMap.put(java.sql.Types.FLOAT, "FLOAT");
-		syntaxMap.put(java.sql.Types.REAL, "REAL");
-		syntaxMap.put(java.sql.Types.DOUBLE, "DOUBLE");
-		syntaxMap.put(java.sql.Types.NUMERIC, "NUMERIC");
-		syntaxMap.put(java.sql.Types.DECIMAL, "DECIMAL");
-		syntaxMap.put(java.sql.Types.CHAR, "CHAR");
-		syntaxMap.put(java.sql.Types.VARCHAR, "VARCHAR(255)");
-		syntaxMap.put(java.sql.Types.LONGVARCHAR, "LONGVARCHAR");
-		syntaxMap.put(java.sql.Types.TIME, "TIME");
-		syntaxMap.put(java.sql.Types.TIMESTAMP, "TIMESTAMP");
-		syntaxMap.put(java.sql.Types.BINARY, "BINARY");
-		syntaxMap.put(java.sql.Types.VARBINARY, "VARBINARY");
-		syntaxMap.put(java.sql.Types.LONGVARBINARY, "LONGVARBINARY");
-		syntaxMap.put(java.sql.Types.NULL, "NULL");
-		syntaxMap.put(java.sql.Types.OTHER, "OTHER");
-		syntaxMap.put(java.sql.Types.CLOB, "CLOB");
+        // for convenience all the common sql types are mapped here
+        syntaxMap.put(java.sql.Types.BIT, "BIT");
+        syntaxMap.put(java.sql.Types.TINYINT, "TINYINT");
+        syntaxMap.put(java.sql.Types.SMALLINT, "SMALLINT");
+        syntaxMap.put(java.sql.Types.INTEGER, "INTEGER");
+        syntaxMap.put(java.sql.Types.BIGINT, "BIGINT");
+        syntaxMap.put(java.sql.Types.FLOAT, "FLOAT");
+        syntaxMap.put(java.sql.Types.REAL, "REAL");
+        syntaxMap.put(java.sql.Types.DOUBLE, "DOUBLE");
+        syntaxMap.put(java.sql.Types.NUMERIC, "NUMERIC");
+        syntaxMap.put(java.sql.Types.DECIMAL, "DECIMAL");
+        syntaxMap.put(java.sql.Types.CHAR, "CHAR");
+        syntaxMap.put(java.sql.Types.VARCHAR, "VARCHAR(255)");
+        syntaxMap.put(java.sql.Types.LONGVARCHAR, "LONGVARCHAR");
+        syntaxMap.put(java.sql.Types.TIME, "TIME");
+        syntaxMap.put(java.sql.Types.TIMESTAMP, "TIMESTAMP");
+        syntaxMap.put(java.sql.Types.BINARY, "BINARY");
+        syntaxMap.put(java.sql.Types.VARBINARY, "VARBINARY");
+        syntaxMap.put(java.sql.Types.LONGVARBINARY, "LONGVARBINARY");
+        syntaxMap.put(java.sql.Types.NULL, "NULL");
+        syntaxMap.put(java.sql.Types.OTHER, "OTHER");
+        syntaxMap.put(java.sql.Types.CLOB, "CLOB");
 
-	}
+    }
 
-	/**
-	 * Gets the SQL string representation for a Java type.
-	 * 
-	 * @param javaType The Java type.
-	 * @return A string representation mapping to the datatype which can be used
-	 * in SQL statements (e.g.: INT, VARCHAR, ..).
-	 */
-	public String getTypeString(Class<?> javaType)
-	{
-		int typeNumber = getType(javaType);
-		String typeString = syntaxMap.get(typeNumber);
+    /**
+     * Gets the SQL string representation for a Java type.
+     * 
+     * @param javaType
+     *            The Java type.
+     * @return A string representation mapping to the datatype which can be used
+     *         in SQL statements (e.g.: INT, VARCHAR, ..).
+     */
+    public String getTypeString(Class< ? > javaType) {
+        int typeNumber = getType(javaType);
+        String typeString = syntaxMap.get(typeNumber);
 
-		if (typeString == null)
-		{
-			throw new IllegalArgumentException("No Syntax for type "
-					+ javaType.getName() + " found.");
-		}
+        if (typeString == null) {
+            throw new IllegalArgumentException("No Syntax for type " + javaType.getName() + " found.");
+        }
 
-		return typeString;
-	}
+        return typeString;
+    }
 
-	/**
-	 * Get the respective SQL type (as defined in @see java.sql.Types) for a 
-	 * certain JAVA type.
-	 * 
-	 * @param javaType The Java type.
-	 * @return A value corresponding to one of java.sql.Types.
-	 */
-	public int getType(Class<?> javaType)
-	{
-		Integer typeNumber = typeMap.get(javaType);
+    /**
+     * Get the respective SQL type (as defined in
+     * 
+     * @see java.sql.Types) for a certain JAVA type.
+     * 
+     * @param javaType
+     *            The Java type.
+     * @return A value corresponding to one of java.sql.Types.
+     */
+    public int getType(Class< ? > javaType) {
+        Integer typeNumber = typeMap.get(javaType);
 
-		if (typeNumber == null)
-		{
-			throw new IllegalArgumentException("The mappoing of "
-					+ javaType.getName() + " is not supported.");
-		}
+        if (typeNumber == null) {
+            throw new IllegalArgumentException("The mappoing of " + javaType.getName() + " is not supported.");
+        }
 
-		return typeNumber;
-	}
+        return typeNumber;
+    }
 
-	private Map<Class<?>, Integer> typeMap = new HashMap<Class<?>, Integer>();
-	private Map<Integer, String>syntaxMap = new HashMap<Integer, String>();	
+    private Map<Class< ? >, Integer> typeMap = new HashMap<Class< ? >, Integer>();
+
+    private Map<Integer, String> syntaxMap = new HashMap<Integer, String>();
 }

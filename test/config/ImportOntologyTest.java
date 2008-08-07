@@ -30,11 +30,10 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.common.IRI;
 import org.wsmo.factory.Factory;
 import org.wsmo.locator.Locator;
 import org.wsmo.locator.LocatorManager;
@@ -106,7 +105,7 @@ public class ImportOntologyTest extends BaseReasonerTest {
         //Assumes first Topentity in file is an ontology  
         Ontology ontology = (Ontology)wsmlParser.parse(new InputStreamReader(is))[0]; 
  
-		HashMap prefs = new HashMap();
+		HashMap <String, Object> prefs = new HashMap <String, Object>();
 		prefs.put(Factory.PROVIDER_CLASS, "org.deri.wsmo4j.locator.LocatorImpl");
 		
 		Locator locator = LocatorManager.createLocator(prefs);
@@ -132,7 +131,7 @@ public class ImportOntologyTest extends BaseReasonerTest {
         LogicalExpression query = leFactory.createLogicalExpression(
                 "?x memberOf ?v", ontology);
         System.out.println("Query:\n" + query.toString());
-        WSMLReasoner reasoner = BaseReasonerTest.getReasoner();
+        LPReasoner reasoner = (LPReasoner) BaseReasonerTest.getReasoner();
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(WSMLReasonerFactory.PARAM_ALLOW_IMPORTS, 0);
         Set<Map<Variable, Term>> result = null;
