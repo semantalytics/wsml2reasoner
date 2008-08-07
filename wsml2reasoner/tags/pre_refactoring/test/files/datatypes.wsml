@@ -1,0 +1,23 @@
+namespace {_"http://www.example.org#datatypes/"}
+
+ontology datatypes
+
+axiom
+  definedBy
+    tuple1(1, 1.0).
+    
+axiom
+  definedBy
+    test2(12.0,km).
+    test2(?x,mi) :- ?x = (?y/1.6) and test2(?y,km).  
+    
+axiom km2mi
+  definedBy 
+    miles[value hasValue ?mi] memberOf Miles
+    :-
+    ?info[value hasValue ?km] memberOf Kilomter and ?mi = (?km / 1.6).   
+    
+    kmCI memberOf Kilomter[value hasValue 16].
+  
+  
+    
