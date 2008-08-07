@@ -2013,9 +2013,9 @@ public class BenchmarkOntologyGenerator {
 				dataFactory.createWsmlString(description));
 		
 		// collect amount of ontology terms
-		List<Term> concepts = OntologyUtil.getConcepts(ontology);
+		List concepts = OntologyUtil.getConcepts(ontology);
 		int attributes = 0;
-		for (Term c : concepts) {
+		for (Term c : (List <Term>) concepts) {
 			attributes += OntologyUtil.getAttributes(c, ontology).size();
 		}
 		int instances = OntologyUtil.getInstances(ontology).size();

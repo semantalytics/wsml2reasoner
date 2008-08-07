@@ -12,20 +12,17 @@ public class WSMO4JManager {
     private LogicalExpressionFactory leFactory;
 
     private DataFactory dataFactory;
-    
+
     public WSMO4JManager() {
-        this(Factory.createWsmoFactory(null), Factory
-                .createLogicalExpressionFactory(null), Factory
-                .createDataFactory(null));
+        this(Factory.createWsmoFactory(null), Factory.createLogicalExpressionFactory(null), Factory.createDataFactory(null));
     }
 
-    public WSMO4JManager(WsmoFactory wsmoFactory,
-            LogicalExpressionFactory leFactory, DataFactory dataFactory) {
+    public WSMO4JManager(WsmoFactory wsmoFactory, LogicalExpressionFactory leFactory, DataFactory dataFactory) {
         this.wsmoFactory = wsmoFactory;
         this.leFactory = leFactory;
         this.dataFactory = dataFactory;
     }
-    
+
     public WsmoFactory getWSMOFactory() {
         return wsmoFactory;
     }

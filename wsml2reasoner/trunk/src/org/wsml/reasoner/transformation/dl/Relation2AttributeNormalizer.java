@@ -28,7 +28,6 @@ import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
-import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Parameter;
 import org.omwg.ontology.Relation;
 import org.omwg.ontology.RelationInstance;
@@ -42,195 +41,152 @@ import org.wsmo.common.Identifier;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.common.exception.SynchronisationException;
 import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
 
 /**
  * A normalizer for WSML-DL relations, subRelations and relation instances.
- *
+ * 
  * <pre>
- *  Created on July 3rd, 2006
- *  Committed by $Author: graham $
- *  $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/transformation/dl/Relation2AttributeNormalizer.java,v $,
+ *   Created on July 3rd, 2006
+ *   Committed by $Author: graham $
+ *   $Source: /home/richi/temp/w2r/wsml2reasoner/src/org/wsml/reasoner/transformation/dl/Relation2AttributeNormalizer.java,v $,
  * </pre>
- *
+ * 
  * @author Nathalie Steinmetz, DERI Innsbruck
  * @version $Revision: 1.5 $ $Date: 2007-04-26 17:39:14 $
  */
 public class Relation2AttributeNormalizer implements OntologyNormalizer {
 
-	protected WsmoFactory wsmoFactory;
-    
+    protected WsmoFactory wsmoFactory;
+
     protected LogicalExpressionFactory leFactory;
-    
+
     protected DataFactory dataFactory;
 
     protected AnonymousIdTranslator anonymousIdTranslator;
-    
-	public Relation2AttributeNormalizer(WSMO4JManager wsmoManager) {
+
+    public Relation2AttributeNormalizer(WSMO4JManager wsmoManager) {
         wsmoFactory = wsmoManager.getWSMOFactory();
         leFactory = wsmoManager.getLogicalExpressionFactory();
         dataFactory = wsmoManager.getDataFactory();
         anonymousIdTranslator = new AnonymousIdTranslator(wsmoFactory);
-	}
-	
-	public Set <Axiom> normalizeAxioms(Collection <Axiom> theAxioms){
-    	throw new UnsupportedOperationException();
     }
 
-    public Set <Entity> normalizeEntities(Collection <Entity> theEntities) {
-    	Set <Entity> result = new HashSet <Entity> ();
-    	for (Entity e : theEntities){
-    		if (e instanceof Relation){
-    			try
-                {
-	                result.addAll(normalizeRelation((Relation) e));
-                }
-                catch( InvalidModelException e1 )
-                {
-	                e1.printStackTrace();
-                }
-    		}
-    		else if (e instanceof RelationInstance){
-    			try
-                {
-	                result.addAll(normalizeRelationInstance((RelationInstance) e));
-                }
-                catch( SynchronisationException e1 )
-                {
-	                e1.printStackTrace();
-                }
-                catch( InvalidModelException e1 )
-                {
-	                e1.printStackTrace();
-                }
-    		}
-    		else{
-    			result.add(e);
-    		}
-    	}
-		return result;
-	}
+    public Set<Axiom> normalizeAxioms(Collection<Axiom> theAxioms) {
+        throw new UnsupportedOperationException();
+    }
 
-	/*
-	 * Relations are replaced by concept attributes.
-	 */
-	private Set <Entity> normalizeRelation(Relation relation) throws InvalidModelException{
-		Set <Entity> result = new HashSet <Entity> ();
-		Parameter p1 = relation.getParameter((byte) 0);
-		Parameter p2 = relation.getParameter((byte) 1);
-		Concept newConcept = null;
-		for(Type t : p1.listTypes()){
-			if (t instanceof Concept) {
-				Identifier id = ((Concept) t).getIdentifier();
-				
-				newConcept = relation.getOntology().findConcept( id );
-				if (newConcept == null) {
-					newConcept = wsmoFactory.createConcept(id);
-				}
-				
-				Attribute attribute = newConcept.createAttribute(relation.getIdentifier());	
-				for (Type type : p2.listTypes()){
-					attribute.addType(type);
-					if (p2.isConstraining()) {
-						attribute.setConstraining(true);
-					}
-				}
-			}
-		}			
-		if (relation.listSuperRelations().size() > 0) {
-			Axiom axiom = normalizeSuperRelations(relation.listSuperRelations(), relation);
-			if (axiom != null) {
-				result.add(axiom);
-			}
-		}
-		result.add(newConcept);
-		return result;
-	}
-	
-	/*
-	 * Superrelations are replaced by implication logical expressions.
-	 */
-	private Axiom normalizeSuperRelations(Set<Relation> superRelations, Relation relation) {
-		Axiom axiom = wsmoFactory.createAxiom((Identifier) anonymousIdTranslator.translate(
-				wsmoFactory.createAnonymousID())) ;
-		LogicalExpression logExpr = null;
-		Iterator<Relation> it = superRelations.iterator();
-		while (it.hasNext()) {
-			Relation superRelation = it.next();
-			String le = "?x[_\"" + relation.getIdentifier() + "\" hasValue ?y] implies " +
-					"?x[_\"" + superRelation.getIdentifier() + "\" hasValue ?y].";
-			try {
-				logExpr = leFactory.createLogicalExpression(le);
-			} catch (ParserException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			axiom.addDefinition(logExpr);
-		}
-		return axiom;	
-	}
-	
-	/*
-	 * Relation instances are replaced by attribute values.
-	 */
-	
-	private Set <Entity> normalizeRelationInstance(RelationInstance relationInstance) throws SynchronisationException, InvalidModelException {
-		Set <Entity> result = new HashSet <Entity> ();
-		Value v1 = relationInstance.getParameterValue((byte) 0);
-		Value v2 = relationInstance.getParameterValue((byte) 1);
-		Instance newInstance = null;
-		if (v1 instanceof Instance){
-			newInstance = (Instance) v1;
-		}
-		if (newInstance == null) {
-			newInstance = wsmoFactory.createInstance(((Instance) v1).getIdentifier());
-		}
-		if (v2 instanceof Instance) {
-			Instance tmp = wsmoFactory.createInstance(((Instance) v2).getIdentifier());
-			newInstance.addAttributeValue(relationInstance.getRelation().getIdentifier(), 
-					tmp);
-		}
-		else {
-			newInstance.addAttributeValue(relationInstance.getRelation().getIdentifier(), v2);
-		}
-		result.add(newInstance);
-		return result;
-	}
+    public Set<Entity> normalizeEntities(Collection<Entity> theEntities) {
+        Set<Entity> result = new HashSet<Entity>();
+        for (Entity e : theEntities) {
+            if (e instanceof Relation) {
+                try {
+                    result.addAll(normalizeRelation((Relation) e));
+                }
+                catch (InvalidModelException e1) {
+                    e1.printStackTrace();
+                }
+            }
+            else if (e instanceof RelationInstance) {
+                try {
+                    result.addAll(normalizeRelationInstance((RelationInstance) e));
+                }
+                catch (SynchronisationException e1) {
+                    e1.printStackTrace();
+                }
+                catch (InvalidModelException e1) {
+                    e1.printStackTrace();
+                }
+            }
+            else {
+                result.add(e);
+            }
+        }
+        return result;
+    }
 
-//	/*
-//	 * Method to transfer non functional properties from one element to another.
-//	 */
-//	private Entity transferNFPs(Set<Entry> nfpsSet, Entity entity) 
-//			throws SynchronisationException, InvalidModelException {
-//		Iterator<Entry> itNfp = nfpsSet.iterator();
-//		while (itNfp.hasNext()) {
-//			Entry mapEntry = itNfp.next();
-//			if (mapEntry.getValue() instanceof Identifier) {	
-//				entity.addNFPValue((IRI) mapEntry.getKey(), 
-//						(Identifier) mapEntry.getValue());
-//			}
-//			else if (mapEntry.getValue() instanceof Value) {
-//				entity.addNFPValue((IRI) mapEntry.getKey(), 
-//					(Value) mapEntry.getValue());
-//			}
-//			else if (mapEntry.getValue() instanceof Set) {
-//				Set values = (Set) mapEntry.getValue();
-//				Iterator itVal = values.iterator();
-//				while (itVal.hasNext()) {
-//					Object obj = itVal.next();
-//					if (obj instanceof Value) {	
-//						entity.addNFPValue((IRI) mapEntry.getKey(), (Value) obj);
-//					}
-//					else if (obj instanceof Identifier) {
-//						entity.addNFPValue((IRI) mapEntry.getKey(), (Identifier) obj);
-//					}
-//				}
-//			}
-//		}
-//		return entity;
-//	}
-	
+    /*
+     * Relations are replaced by concept attributes.
+     */
+    private Set<Entity> normalizeRelation(Relation relation) throws InvalidModelException {
+        Set<Entity> result = new HashSet<Entity>();
+        Parameter p1 = relation.getParameter((byte) 0);
+        Parameter p2 = relation.getParameter((byte) 1);
+        Concept newConcept = null;
+        for (Type t : p1.listTypes()) {
+            if (t instanceof Concept) {
+                Identifier id = ((Concept) t).getIdentifier();
+
+                newConcept = relation.getOntology().findConcept(id);
+                if (newConcept == null) {
+                    newConcept = wsmoFactory.createConcept(id);
+                }
+
+                Attribute attribute = newConcept.createAttribute(relation.getIdentifier());
+                for (Type type : p2.listTypes()) {
+                    attribute.addType(type);
+                    if (p2.isConstraining()) {
+                        attribute.setConstraining(true);
+                    }
+                }
+            }
+        }
+        if (relation.listSuperRelations().size() > 0) {
+            Axiom axiom = normalizeSuperRelations(relation.listSuperRelations(), relation);
+            if (axiom != null) {
+                result.add(axiom);
+            }
+        }
+        result.add(newConcept);
+        return result;
+    }
+
+    /*
+     * Superrelations are replaced by implication logical expressions.
+     */
+    private Axiom normalizeSuperRelations(Set<Relation> superRelations, Relation relation) {
+        Axiom axiom = wsmoFactory.createAxiom((Identifier) anonymousIdTranslator.translate(wsmoFactory.createAnonymousID()));
+        LogicalExpression logExpr = null;
+        Iterator<Relation> it = superRelations.iterator();
+        while (it.hasNext()) {
+            Relation superRelation = it.next();
+            String le = "?x[_\"" + relation.getIdentifier() + "\" hasValue ?y] implies " + "?x[_\"" + superRelation.getIdentifier() + "\" hasValue ?y].";
+            try {
+                logExpr = leFactory.createLogicalExpression(le);
+            }
+            catch (ParserException e) {
+                e.printStackTrace();
+            }
+            axiom.addDefinition(logExpr);
+        }
+        return axiom;
+    }
+
+    /*
+     * Relation instances are replaced by attribute values.
+     */
+
+    private Set<Entity> normalizeRelationInstance(RelationInstance relationInstance) throws SynchronisationException, InvalidModelException {
+        Set<Entity> result = new HashSet<Entity>();
+        Value v1 = relationInstance.getParameterValue((byte) 0);
+        Value v2 = relationInstance.getParameterValue((byte) 1);
+        Instance newInstance = null;
+        if (v1 instanceof Instance) {
+            newInstance = (Instance) v1;
+        }
+        if (newInstance == null) {
+            newInstance = wsmoFactory.createInstance(((Instance) v1).getIdentifier());
+        }
+        if (v2 instanceof Instance) {
+            Instance tmp = wsmoFactory.createInstance(((Instance) v2).getIdentifier());
+            newInstance.addAttributeValue(relationInstance.getRelation().getIdentifier(), tmp);
+        }
+        else {
+            newInstance.addAttributeValue(relationInstance.getRelation().getIdentifier(), v2);
+        }
+        result.add(newInstance);
+        return result;
+    }
 }

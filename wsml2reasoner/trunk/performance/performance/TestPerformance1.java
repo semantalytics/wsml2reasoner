@@ -15,12 +15,11 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
 import org.wsmo.wsml.Parser;
@@ -203,7 +202,7 @@ public class TestPerformance1 {
         
         System.out.print("Creating reasoner ");
         long t0_start = System.currentTimeMillis();
-        WSMLReasoner reasoner = null;
+        LPReasoner reasoner = null;
         if (theReasonerName.equals("MINS")){
             reasoner = getReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
         }
@@ -263,10 +262,10 @@ public class TestPerformance1 {
         return performanceresult;
     }
 
-    private WSMLReasoner getReasoner(WSMLReasonerFactory.BuiltInReasoner theReasoner) throws InconsistencyException{
+    private LPReasoner getReasoner(WSMLReasonerFactory.BuiltInReasoner theReasoner) throws InconsistencyException{
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER, theReasoner);
-        WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLFlightReasoner(params);
+        LPReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().createFlightReasoner(params);
         return reasoner;
     }
     

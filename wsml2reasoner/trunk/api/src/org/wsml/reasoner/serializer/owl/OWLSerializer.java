@@ -25,7 +25,6 @@ import java.util.Map;
 import org.semanticweb.owl.io.RendererException;
 import org.semanticweb.owl.model.OWLOntology;
 
-
 /**
  * An interface serializing OWL ontologies.
  * 
@@ -33,54 +32,64 @@ import org.semanticweb.owl.model.OWLOntology;
  */
 public interface OWLSerializer {
 
-	public static final String OWL_SERIALIZER = "OWL Serializer";
-	
-	public static final String OWL_RDF = "OWL RDF Syntax";
-	
-	public static final String OWL_ABSTRACT = "OWL Abstract Syntax";
-	
-	/**
-	 * This method serializes to OWL-RDF syntax.
-	 * 
-	 * @param ontology OWL ontology to be serialized
-	 * @param arg1 Writer to be written to
-	 * @throws IOException
-	 */
-	public void serialize(OWLOntology ontology, Writer arg1) throws RendererException;
+    public static final String OWL_SERIALIZER = "OWL Serializer";
 
-	/**
-	 * This method serializes to either OWL-RDF syntax or OWL abstract syntax.
-	 * 
-	 * @param ontology OWL ontology to be serialized
-	 * @param arg1 Writer to be written to
-	 * @param arg2 a map that can contain a preference: 
-	 * 			   - serializing to the OWL-RDF syntax or
-	 * 			   - serializing to the OWL abstract syntax
-	 * 		       If no map, or an empty map, is added, OWL-RDF syntax is the default
-	 * @throws IOException
-	 */
-	public void serialize(OWLOntology ontology, Writer arg1, Map arg2) throws RendererException;
+    public static final String OWL_RDF = "OWL RDF Syntax";
 
-	/**
-	 * This method serializes to OWL-RDF syntax.
-	 * 
-	 * @param ontology OWL ontology to be serialized
-	 * @param arg1 StringBuffer to be written to
-	 * @throws IOException
-	 */
-	public void serialize(OWLOntology ontology, StringBuffer arg1) throws RendererException;
+    public static final String OWL_ABSTRACT = "OWL Abstract Syntax";
 
-	/**
-	 * This method serializes to either OWL-RDF syntax or OWL abstract syntax.
-	 * 
-	 * @param ontology OWL ontology to be serialized
-	 * @param arg1 StringBuffer to be written to
-	 * @param arg2 a map that can contain a preference: 
-	 * 			   - serializing to the OWL-RDF syntax or
-	 * 			   - serializing to the OWL abstract syntax
-	 * 		       If no map, or an empty map, is added, OWL-RDF syntax is the default
-	 * @throws IOException
-	 */
-	public void serialize(OWLOntology ontology, StringBuffer arg1, Map arg2) throws RendererException;
-	
+    /**
+     * This method serializes to OWL-RDF syntax.
+     * 
+     * @param ontology
+     *            OWL ontology to be serialized
+     * @param arg1
+     *            Writer to be written to
+     * @throws IOException
+     */
+    public void serialize(OWLOntology ontology, Writer arg1) throws RendererException;
+
+    /**
+     * This method serializes to either OWL-RDF syntax or OWL abstract syntax.
+     * 
+     * @param ontology
+     *            OWL ontology to be serialized
+     * @param arg1
+     *            Writer to be written to
+     * @param arg2
+     *            a map that can contain a preference: - serializing to the
+     *            OWL-RDF syntax or - serializing to the OWL abstract syntax If
+     *            no map, or an empty map, is added, OWL-RDF syntax is the
+     *            default
+     * @throws IOException
+     */
+    public void serialize(OWLOntology ontology, Writer arg1, Map arg2) throws RendererException;
+
+    /**
+     * This method serializes to OWL-RDF syntax.
+     * 
+     * @param ontology
+     *            OWL ontology to be serialized
+     * @param arg1
+     *            StringBuffer to be written to
+     * @throws IOException
+     */
+    public void serialize(OWLOntology ontology, StringBuffer arg1) throws RendererException;
+
+    /**
+     * This method serializes to either OWL-RDF syntax or OWL abstract syntax.
+     * 
+     * @param ontology
+     *            OWL ontology to be serialized
+     * @param arg1
+     *            StringBuffer to be written to
+     * @param arg2
+     *            a map that can contain a preference: - serializing to the
+     *            OWL-RDF syntax or - serializing to the OWL abstract syntax If
+     *            no map, or an empty map, is added, OWL-RDF syntax is the
+     *            default
+     * @throws IOException
+     */
+    public void serialize(OWLOntology ontology, StringBuffer arg1, Map arg2) throws RendererException;
+
 }

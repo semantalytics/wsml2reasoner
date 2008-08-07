@@ -35,8 +35,7 @@ public class ConjunctiveQuery {
 
     private List<Literal> literals = null;
 
-    public ConjunctiveQuery(List<Literal> literals)
-            throws DatalogException {
+    public ConjunctiveQuery(List<Literal> literals) throws DatalogException {
         this.literals = literals;
     }
 
@@ -72,7 +71,7 @@ public class ConjunctiveQuery {
         }
         return result;
     }
-    
+
     public boolean equals(Object obj) {
         if (this == obj)
             return true;

@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.wsml.reasoner.impl.WSMO4JManager;
@@ -46,34 +47,26 @@ public class ConstructReductionNormalizer implements OntologyNormalizer {
     public ConstructReductionNormalizer(WSMO4JManager wsmoManager) {
         List<NormalizationRule> preOrderRules = new ArrayList<NormalizationRule>();
         List<NormalizationRule> postOrderRules = new ArrayList<NormalizationRule>();
-        preOrderRules
-                .addAll((List<NormalizationRule>) new ImplicationReductionRules(
-                        wsmoManager));
+        preOrderRules.addAll(new ImplicationReductionRules(wsmoManager).getRules());
         // preOrderRules.addAll((List<NormalizationRule>)DisjunctionPullRules.instantiate());
-        preOrderRules.addAll((List<NormalizationRule>) new NegationPushRules(
-                wsmoManager));
-        postOrderRules
-                .addAll((List<NormalizationRule>) new MoleculeDecompositionRules(
-                        wsmoManager));
-        postOrderRules
-                .addAll((List<NormalizationRule>) new DisjunctionPullRules(
-                        wsmoManager));
-        leNormalizer = new OnePassReplacementNormalizer(preOrderRules,
-                postOrderRules, wsmoManager);
+        preOrderRules.addAll(new NegationPushRules(wsmoManager).getRules());
+        postOrderRules.addAll(new MoleculeDecompositionRules(wsmoManager).getRules());
+        postOrderRules.addAll(new DisjunctionPullRules(wsmoManager).getRules());
+        leNormalizer = new OnePassReplacementNormalizer(preOrderRules, postOrderRules, wsmoManager);
         wsmoFactory = wsmoManager.getWSMOFactory();
         anonymousIdTranslator = new AnonymousIdTranslator(wsmoFactory);
     }
 
-    public Set <Entity> normalizeEntities(Collection <Entity> theEntities) {
-    	throw new UnsupportedOperationException();
+    public Set<Entity> normalizeEntities(Collection<Entity> theEntities) {
+        throw new UnsupportedOperationException();
     }
-    
-    public Set <Axiom> normalizeAxioms(Collection <Axiom> theAxioms){
-    	Set <Axiom> result = new HashSet <Axiom> ();
+
+    public Set<Axiom> normalizeAxioms(Collection<Axiom> theAxioms) {
+        Set<Axiom> result = new HashSet<Axiom>();
         // gather logical expressions from axioms in ontology:
         Set<LogicalExpression> expressions = new HashSet<LogicalExpression>();
         for (Axiom axiom : theAxioms) {
-            expressions.addAll((Collection<LogicalExpression>) axiom.listDefinitions());
+            expressions.addAll(axiom.listDefinitions());
         }
 
         // iteratively normalize logical expressions:
@@ -82,7 +75,7 @@ public class ConstructReductionNormalizer implements OntologyNormalizer {
             anonymousIdTranslator.setScope(expression);
             resultExp.add(leNormalizer.normalize(expression));
         }
-        
+
         Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
         for (LogicalExpression expression : resultExp) {
             axiom.addDefinition(expression);

@@ -16,33 +16,46 @@
 
 package org.wsml.reasoner;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
-import org.deri.wsmo4j.io.parser.wsml.TempVariable;
-import org.deri.wsmo4j.logicalexpression.ConstantTransformer;
-import org.deri.wsmo4j.logicalexpression.terms.ConstructedTermImpl;
-import org.omwg.logicalexpression.*;
+import org.omwg.logicalexpression.Atom;
+import org.omwg.logicalexpression.AttributeConstraintMolecule;
+import org.omwg.logicalexpression.AttributeInferenceMolecule;
+import org.omwg.logicalexpression.AttributeValueMolecule;
+import org.omwg.logicalexpression.CompoundMolecule;
+import org.omwg.logicalexpression.Constraint;
+import org.omwg.logicalexpression.LogicProgrammingRule;
+import org.omwg.logicalexpression.MembershipMolecule;
+import org.omwg.logicalexpression.NegationAsFailure;
+import org.omwg.logicalexpression.Quantified;
+import org.omwg.logicalexpression.SubConceptMolecule;
+import org.omwg.logicalexpression.Visitor;
 import org.omwg.logicalexpression.terms.Term;
 import org.wsml.reasoner.builtin.tptp.TPTPSymbolMap;
 import org.wsml.reasoner.builtin.tptp.TPTPTermSerializer;
-import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 
 /**
  * Default left to right depth first walker...
- *   
+ * 
  * @author Holger Lausen
  * @version $Revision: 1.1 $ $Date: 2007-08-10 09:44:49 $
  * @see org.omwg.logicalexpression.Visitor
  */
 public abstract class FOLAbstractSerializeVisitor implements Visitor {
-	protected Map<Term,Term> atoms2Rewrite = new HashMap<Term, Term>();
-   
+    protected Map<Term, Term> atoms2Rewrite = new HashMap<Term, Term>();
+
     protected Vector<String> stack;
+
     TPTPTermSerializer visitor;
 
     /**
-     * @param nsC TopEntity
+     * @param nsC
+     *            TopEntity
      * @see org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML#LogExprSerializerWSML(TopEntity)
      */
     public FOLAbstractSerializeVisitor() {
@@ -50,23 +63,23 @@ public abstract class FOLAbstractSerializeVisitor implements Visitor {
         stack = new Vector<String>();
         visitor.setAtoms2ConstructedTerms(atoms2Rewrite);
     }
-    
-    
 
     /**
      * Builds a String representing the Atom and adds it to a vector.
-     * @param expr Atom to be serialized
+     * 
+     * @param expr
+     *            Atom to be serialized
      * @see org.deri.wsmo4j.logicalexpression.AbstractVisitor#visitAtom(Atom)
      */
     public void visitAtom(Atom expr) {
         Term predicateSymbol = expr.getIdentifier();
-        //put on term stack
+        // put on term stack
         predicateSymbol.accept(visitor);
-        
+
         String s = visitor.getSerializedObject();
-        //one might get something like + back so replace this to http://...#numericAdd
-        String realIRI = ConstantTransformer.getInstance().findIri(s);
-        
+        // one might get something like + back so replace this to
+        // http://...#numericAdd
+
         int nbParams = expr.getArity();
         if (nbParams > 0) {
             s = s + "(";
@@ -82,12 +95,13 @@ public abstract class FOLAbstractSerializeVisitor implements Visitor {
         stack.add(s);
     }
 
-
     /**
      * All serialized elements are added to a vector. This method removes the
      * first serialized object from this vector and shifts any subsequent
      * objects to the left (subtracts one from their indices).
-     * @return the serialized String object that is the first element in this vector
+     * 
+     * @return the serialized String object that is the first element in this
+     *         vector
      */
     public String getSerializedObject() {
         return stack.remove(0);
@@ -95,7 +109,9 @@ public abstract class FOLAbstractSerializeVisitor implements Visitor {
 
     /**
      * Builds a String representing the Quantified Expression
-     * @param expr Quantified Expression to be serialized, with operator EXISTS
+     * 
+     * @param expr
+     *            Quantified Expression to be serialized, with operator EXISTS
      * @return String representing serialized Quantified Expression
      */
     protected String helpQuantified(Quantified expr) {
@@ -104,8 +120,8 @@ public abstract class FOLAbstractSerializeVisitor implements Visitor {
         Iterator i = s.iterator();
         res = res + "[";
         while (i.hasNext()) {
-            ((Term)i.next()).accept(visitor);
-            res = res + (String)visitor.getSerializedObject();
+            ((Term) i.next()).accept(visitor);
+            res = res + visitor.getSerializedObject();
             if (i.hasNext()) {
                 res = res + ",";
             }
@@ -114,24 +130,23 @@ public abstract class FOLAbstractSerializeVisitor implements Visitor {
         expr.getOperand().accept(this);
         return res;
     }
-    
-    
+
     public void visitNegationAsFailure(NegationAsFailure expr) {
         throw new RuntimeException("no constraints should be here!!!!");
     }
-    
+
     public void visitConstraint(Constraint expr) {
         throw new RuntimeException("no constraints should be here!!!!");
     }
-    
+
     public void visitLogicProgrammingRule(LogicProgrammingRule expr) {
         throw new RuntimeException("should not be here anymore!");
     }
-    
+
     public void visitCompoundMolecule(CompoundMolecule expr) {
         throw new RuntimeException("should not be here anymore!");
     }
-    
+
     public void visitAttributeContraintMolecule(AttributeConstraintMolecule expr) {
         throw new RuntimeException("should not be here anymore!");
     }
@@ -153,11 +168,11 @@ public abstract class FOLAbstractSerializeVisitor implements Visitor {
 
     }
 
-	public TPTPSymbolMap getSymbolMap() {
-		return visitor.getSymbolMap();
-	}
+    public TPTPSymbolMap getSymbolMap() {
+        return visitor.getSymbolMap();
+    }
 
-	public void setSymbolMap(TPTPSymbolMap map) {
-		visitor.SetSymbolMap(map);
-	}
+    public void setSymbolMap(TPTPSymbolMap map) {
+        visitor.SetSymbolMap(map);
+    }
 }

@@ -29,17 +29,14 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
-import org.wsmo.wsml.Serializer;
 
 /**
  * Usage Example for the wsml2Reasoner Framework
@@ -47,7 +44,7 @@ import org.wsmo.wsml.Serializer;
  * @author Holger Lausen, DERI Innsbruck
  */
 public class Kaon2ReasonerExample {
-    
+
     /**
      * @param args
      *            none expected
@@ -57,7 +54,8 @@ public class Kaon2ReasonerExample {
         try {
             ex.doTestRun();
             System.exit(0);
-        } catch (Throwable e) {
+        }
+        catch (Throwable e) {
             e.printStackTrace();
         }
     }
@@ -69,36 +67,29 @@ public class Kaon2ReasonerExample {
         Ontology exampleOntology = loadOntology("example/simpleOntology.wsml");
         if (exampleOntology == null)
             return;
-        LogicalExpressionFactory leFactory = new WSMO4JManager()
-                .getLogicalExpressionFactory();
+        LogicalExpressionFactory leFactory = new WSMO4JManager().getLogicalExpressionFactory();
 
         String queryString = "?x memberOf ?y";
 
-        LogicalExpression query = leFactory.createLogicalExpression(
-                queryString, exampleOntology);
+        LogicalExpression query = leFactory.createLogicalExpression(queryString, exampleOntology);
 
         // get A reasoner
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
-                WSMLReasonerFactory.BuiltInReasoner.KAON2);
-        WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
-                .createWSMLFlightReasoner(params);
+        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER, WSMLReasonerFactory.BuiltInReasoner.KAON2);
+        LPReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().createFlightReasoner(params);
 
         // Register ontology
         reasoner.registerOntology(exampleOntology);
-        //reasoner.registerOntologyNoVerification(exampleOntology);
+        // reasoner.registerOntologyNoVerification(exampleOntology);
 
         // Execute query request
         Set<Map<Variable, Term>> result = reasoner.executeQuery(query);
 
         // print out the results:
-        System.out.println("The query '" + query
-                + "' has the following results:");
+        System.out.println("The query '" + query + "' has the following results:");
         for (Map<Variable, Term> vBinding : result) {
             for (Variable var : vBinding.keySet()) {
-                System.out.print(var + ": " + 
-                        termToString(vBinding.get(var),exampleOntology) 
-                        + "\t ");
+                System.out.print(var + ": " + termToString(vBinding.get(var), exampleOntology) + "\t ");
             }
             System.out.println();
         }
@@ -115,41 +106,26 @@ public class Kaon2ReasonerExample {
     private Ontology loadOntology(String file) {
         Parser wsmlParser = Factory.createParser(null);
 
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream(
-                file);
+        InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);
         try {
-            final TopEntity[] identifiable = wsmlParser
-                    .parse(new InputStreamReader(is));
+            final TopEntity[] identifiable = wsmlParser.parse(new InputStreamReader(is));
             if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {
                 return (Ontology) identifiable[0];
-            } else {
+            }
+            else {
                 System.out.println("First Element of file no ontology ");
                 return null;
             }
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             System.out.println("Unable to parse ontology: " + e.getMessage());
             return null;
         }
 
     }
 
-    /**
-     * small utility method for debugging
-     * 
-     * @param ont
-     *            ontology to be serialized to string
-     * @return string representation of ontology
-     */
-    private String toString(Ontology ont) {
-        Serializer wsmlSerializer = Factory.createSerializer(null);
-
-        StringBuffer str = new StringBuffer();
-        wsmlSerializer.serialize(new TopEntity[] { ont }, str);
-        return str.toString();
-    }
-    
-    private String termToString(Term t, Ontology o){
+    private String termToString(Term t, Ontology o) {
         VisitorSerializeWSMLTerms v = new VisitorSerializeWSMLTerms(o);
         t.accept(v);
         return v.getSerializedObject();

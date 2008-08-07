@@ -33,12 +33,11 @@ import org.omwg.logicalexpression.LogicalExpression;
  * 
  * @author Stephan Grimm, FZI Karlsruhe
  */
-public class TopDownLESplitter implements LogicalExpressionTransformer
-{
+public class TopDownLESplitter implements LogicalExpressionTransformer {
+    
     protected List<TransformationRule> rules;
 
-    public TopDownLESplitter(List<TransformationRule> rules)
-    {
+    public TopDownLESplitter(List<TransformationRule> rules) {
         this.rules = rules;
     }
 
@@ -46,23 +45,19 @@ public class TopDownLESplitter implements LogicalExpressionTransformer
      * This method performs the transformation of a given logical expression
      * according to a set of transformation rules.
      */
-    public Set<LogicalExpression> transform(LogicalExpression expression)
-    {
+    public Set<LogicalExpression> transform(LogicalExpression expression) {
         Set<LogicalExpression> outputExpressions = new HashSet<LogicalExpression>();
 
         // apply an applicable transformation rule:
         boolean noRuleApplicable = true;
-        for(TransformationRule transformationRule : rules)
-        {
-            if(transformationRule.isApplicable(expression))
-            {
+        for (TransformationRule transformationRule : rules) {
+            if (transformationRule.isApplicable(expression)) {
                 noRuleApplicable = false;
                 outputExpressions = transformationRule.apply(expression);
                 break;
             }
         }
-        if(noRuleApplicable)
-        {
+        if (noRuleApplicable) {
             outputExpressions.add(expression);
             return outputExpressions;
         }
@@ -70,9 +65,8 @@ public class TopDownLESplitter implements LogicalExpressionTransformer
         // recursively apply transformation to all resulting expressions:
         Set<LogicalExpression> resultingExpressions = new HashSet<LogicalExpression>();
         Iterator outputExpressionIterator = outputExpressions.iterator();
-        while(outputExpressionIterator.hasNext())
-        {
-            LogicalExpression outputExpression = (LogicalExpression)outputExpressionIterator.next();
+        while (outputExpressionIterator.hasNext()) {
+            LogicalExpression outputExpression = (LogicalExpression) outputExpressionIterator.next();
             Set<LogicalExpression> replacements = transform(outputExpression);
             resultingExpressions.addAll(replacements);
         }

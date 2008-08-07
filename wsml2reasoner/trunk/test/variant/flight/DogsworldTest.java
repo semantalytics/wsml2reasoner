@@ -26,10 +26,9 @@ import java.util.Set;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.WSMLFlightReasoner;
+import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
-import org.wsmo.common.IRI;
 
 import base.BaseReasonerTest;
 
@@ -68,14 +67,14 @@ public class DogsworldTest extends BaseReasonerTest {
     }
     
     public void consistencyChecker() throws Exception {
-        assertTrue(((WSMLFlightReasoner)wsmlReasoner).isSatisfiable());
+        assertTrue(((LPReasoner) wsmlReasoner).checkConsistency().size() == 0);
     }
 
     //Currently fails with MINS - see open.MinsInstanceRetrieval
     public void instanceRetrieval() throws Exception {
         String query = "Anne memberOf CatOwner";
         LogicalExpression qExpression = leFactory.createLogicalExpression(query, o);
-        assertTrue(wsmlReasoner.executeGroundQuery(qExpression));
+        assertTrue(((LPReasoner) wsmlReasoner).executeGroundQuery(qExpression));
     }
     
     public void testFlightReasoners() throws Exception{

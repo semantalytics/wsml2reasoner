@@ -74,7 +74,6 @@ public class SpassTest extends BaseReasonerTest{
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
         tptp.register(set);
-        String folreal = tptp.convertedOntology;
         Pattern pattern = Pattern.compile(escape( fol));
         Matcher matcher = pattern.matcher(fol);
         assertTrue("did not find "+fol,matcher.find());

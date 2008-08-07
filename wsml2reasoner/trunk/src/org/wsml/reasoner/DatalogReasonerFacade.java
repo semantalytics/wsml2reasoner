@@ -48,8 +48,7 @@ public interface DatalogReasonerFacade {
      * @throws ExternalToolException
      *             if some exception happens during ontology registration
      */
-    public void register(Set<Rule> kb)
-            throws ExternalToolException;
+    public void register(Set<Rule> kb) throws ExternalToolException;
 
     /**
      * Removes the ontology from the external reasoner
@@ -75,37 +74,34 @@ public interface DatalogReasonerFacade {
      *             query
      */
     public Set<Map<Variable, Term>> evaluate(ConjunctiveQuery q) throws ExternalToolException;
-    
+
     /**
      * Checks whether query1 is contained within query2.
      * 
      * @param query1
      *            the query that may be contained within query2.
      * @param query2
-     * 			  the query that may contain query1.
+     *            the query that may contain query1.
      * @param ontologyURI
      *            the orginal logical ontology URI
      * @return true when query1 is contained within query2, false otherwise.
      */
-    public boolean checkQueryContainment(ConjunctiveQuery query1,
-    		ConjunctiveQuery query2);
-    
+    public boolean checkQueryContainment(ConjunctiveQuery query1, ConjunctiveQuery query2);
+
     /**
-     * Checks whether query1 is contained within query2 and returns the 
+     * Checks whether query1 is contained within query2 and returns the
      * resulting variable mapping
      * 
      * @param query1
      *            the query that may be contained within query2.
      * @param query2
-     * 			  the query that may contain query1.
+     *            the query that may contain query1.
      * @param ontologyURI
      *            the orginal logical ontology URI
      * @return a set of variable bindings (map with variables as keys, and the
      *         bindings: IRIs or DataValues as values)
-     * @throws ExternalToolException 
+     * @throws ExternalToolException
      */
-    public Set<Map<Variable, Term>> getQueryContainment(ConjunctiveQuery query1,
-    		ConjunctiveQuery query2) 
-    		throws ExternalToolException;
+    public Set<Map<Variable, Term>> getQueryContainment(ConjunctiveQuery query1, ConjunctiveQuery query2) throws ExternalToolException;
 
 }

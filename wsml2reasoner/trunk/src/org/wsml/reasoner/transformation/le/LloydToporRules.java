@@ -36,11 +36,13 @@ import org.wsml.reasoner.impl.WSMO4JManager;
  * 
  * @author Stephan Grimm, FZI Karlsruhe
  */
-public class LloydToporRules extends FixedModificationRules
-{
-    public LloydToporRules(WSMO4JManager wsmoManager)
-    {
+public class LloydToporRules extends FixedModificationRules {
+
+    private AddOnlyArrayList<TransformationRule> rules;
+
+    public LloydToporRules(WSMO4JManager wsmoManager) {
         super(wsmoManager);
+        rules = new AddOnlyArrayList<TransformationRule>();
         rules.add(new SplitDisjunctiveBody());
         rules.add(new SplitConstraint());
         rules.add(new SplitConjunctiveHead());
@@ -49,102 +51,84 @@ public class LloydToporRules extends FixedModificationRules
         rules.add(new TransformImplication());
     }
 
-    public class SplitConjunctiveHead implements TransformationRule
-    {
-        public boolean isApplicable(LogicalExpression expression)
-        {
-            if(expression instanceof LogicProgrammingRule)
-            {
-                LogicProgrammingRule lpRule = (LogicProgrammingRule)expression;
+    public class SplitConjunctiveHead implements TransformationRule {
+        public boolean isApplicable(LogicalExpression expression) {
+            if (expression instanceof LogicProgrammingRule) {
+                LogicProgrammingRule lpRule = (LogicProgrammingRule) expression;
                 return lpRule.getLeftOperand() instanceof Conjunction;
             }
             return false;
         }
 
-        public Set<LogicalExpression> apply(LogicalExpression expression)
-        {
+        public Set<LogicalExpression> apply(LogicalExpression expression) {
             Set<LogicalExpression> resultingExpressions = new HashSet<LogicalExpression>();
-            LogicProgrammingRule lpRule = (LogicProgrammingRule)expression;
-            Conjunction conjunction = (Conjunction)lpRule.getLeftOperand();
+            LogicProgrammingRule lpRule = (LogicProgrammingRule) expression;
+            Conjunction conjunction = (Conjunction) lpRule.getLeftOperand();
             resultingExpressions.add(leFactory.createLogicProgrammingRule(conjunction.getLeftOperand(), lpRule.getRightOperand()));
             resultingExpressions.add(leFactory.createLogicProgrammingRule(conjunction.getRightOperand(), lpRule.getRightOperand()));
             return resultingExpressions;
         }
 
-        public String toString()
-        {
+        public String toString() {
             return "A1 and ... and An :- B\n\t=>\n A1 :- B\n\t...\n An :- B\n";
         }
     }
 
-    public class SplitDisjunctiveBody implements TransformationRule
-    {
-        public boolean isApplicable(LogicalExpression expression)
-        {
-            if(expression instanceof LogicProgrammingRule)
-            {
-                LogicProgrammingRule lpRule = (LogicProgrammingRule)expression;
+    public class SplitDisjunctiveBody implements TransformationRule {
+        public boolean isApplicable(LogicalExpression expression) {
+            if (expression instanceof LogicProgrammingRule) {
+                LogicProgrammingRule lpRule = (LogicProgrammingRule) expression;
                 return lpRule.getRightOperand() instanceof Disjunction;
             }
             return false;
         }
 
-        public Set<LogicalExpression> apply(LogicalExpression expression)
-        {
+        public Set<LogicalExpression> apply(LogicalExpression expression) {
             Set<LogicalExpression> resultingExpressions = new HashSet<LogicalExpression>();
-            LogicProgrammingRule lpRule = (LogicProgrammingRule)expression;
-            Disjunction disjunction = (Disjunction)lpRule.getRightOperand();
+            LogicProgrammingRule lpRule = (LogicProgrammingRule) expression;
+            Disjunction disjunction = (Disjunction) lpRule.getRightOperand();
             resultingExpressions.add(leFactory.createLogicProgrammingRule(lpRule.getLeftOperand(), disjunction.getLeftOperand()));
             resultingExpressions.add(leFactory.createLogicProgrammingRule(lpRule.getLeftOperand(), disjunction.getRightOperand()));
             return resultingExpressions;
         }
 
-        public String toString()
-        {
+        public String toString() {
             return "A :- B1 or ... Bn\n\t=>\n A :- B1\n\t...\n A :- Bn\n";
         }
     }
 
-    public class TransformNestedImplication implements TransformationRule
-    {
-        public boolean isApplicable(LogicalExpression expression)
-        {
-            if(expression instanceof LogicProgrammingRule)
-            {
-                LogicProgrammingRule lpRule = (LogicProgrammingRule)expression;
+    public class TransformNestedImplication implements TransformationRule {
+        public boolean isApplicable(LogicalExpression expression) {
+            if (expression instanceof LogicProgrammingRule) {
+                LogicProgrammingRule lpRule = (LogicProgrammingRule) expression;
                 return lpRule.getLeftOperand() instanceof InverseImplication;
             }
             return false;
         }
 
-        public Set<LogicalExpression> apply(LogicalExpression expression)
-        {
+        public Set<LogicalExpression> apply(LogicalExpression expression) {
             Set<LogicalExpression> resultingExpressions = new HashSet<LogicalExpression>();
-            LogicProgrammingRule lpRule = (LogicProgrammingRule)expression;
-            
-            InverseImplication innerRule = (InverseImplication)lpRule.getLeftOperand();
+            LogicProgrammingRule lpRule = (LogicProgrammingRule) expression;
+
+            InverseImplication innerRule = (InverseImplication) lpRule.getLeftOperand();
             Conjunction conjunction = leFactory.createConjunction(innerRule.getRightOperand(), lpRule.getRightOperand());
             resultingExpressions.add(leFactory.createLogicProgrammingRule(innerRule.getLeftOperand(), conjunction));
             return resultingExpressions;
         }
 
-        public String toString()
-        {
+        public String toString() {
             return "A1 impliedBy A2 :- B\n\t=>\n A1 :- A2 and B\n";
         }
     }
 
-    public class SplitConjunction implements TransformationRule
-    {
-        public boolean isApplicable(LogicalExpression expression)
-        {
+    public class SplitConjunction implements TransformationRule {
+        public boolean isApplicable(LogicalExpression expression) {
             return expression instanceof Conjunction;
         }
 
-        public Set<LogicalExpression> apply(LogicalExpression expression)
-        {
+        public Set<LogicalExpression> apply(LogicalExpression expression) {
             Set<LogicalExpression> resultingExpressions = new HashSet<LogicalExpression>();
-            Conjunction conjunction = (Conjunction)expression;
+            Conjunction conjunction = (Conjunction) expression;
             LogicalExpression leftArg = conjunction.getLeftOperand();
             LogicalExpression rightArg = conjunction.getRightOperand();
             resultingExpressions.add(leftArg);
@@ -152,59 +136,53 @@ public class LloydToporRules extends FixedModificationRules
             return resultingExpressions;
         }
 
-        public String toString()
-        {
+        public String toString() {
             return "A1 and ... and An \n\t=>\n A1\n\t...\n An\n";
         }
     }
 
-    public class TransformImplication implements TransformationRule
-    {
-        public boolean isApplicable(LogicalExpression expression)
-        {
+    public class TransformImplication implements TransformationRule {
+        public boolean isApplicable(LogicalExpression expression) {
             return expression instanceof InverseImplication;
         }
 
-        public Set<LogicalExpression> apply(LogicalExpression expression)
-        {
+        public Set<LogicalExpression> apply(LogicalExpression expression) {
             Set<LogicalExpression> resultingExpressions = new HashSet<LogicalExpression>();
-            InverseImplication inverseImplication = (InverseImplication)expression;
+            InverseImplication inverseImplication = (InverseImplication) expression;
             LogicProgrammingRule lpRule = leFactory.createLogicProgrammingRule(inverseImplication.getLeftOperand(), inverseImplication.getRightOperand());
             resultingExpressions.add(lpRule);
             return resultingExpressions;
         }
 
-        public String toString()
-        {
+        public String toString() {
             return "A1 impliedBy A2\n\t=>\n A1 :- A2\n";
         }
     }
 
-    public class SplitConstraint implements TransformationRule
-    {
-        public boolean isApplicable(LogicalExpression expression)
-        {
-            if(expression instanceof Constraint)
-            {
-                Constraint constraint = (Constraint)expression;
+    public class SplitConstraint implements TransformationRule {
+        public boolean isApplicable(LogicalExpression expression) {
+            if (expression instanceof Constraint) {
+                Constraint constraint = (Constraint) expression;
                 return constraint.getOperand() instanceof Disjunction;
             }
             return false;
         }
 
-        public Set<LogicalExpression> apply(LogicalExpression expression)
-        {
+        public Set<LogicalExpression> apply(LogicalExpression expression) {
             Set<LogicalExpression> resultingExpressions = new HashSet<LogicalExpression>();
-            Constraint constraint = (Constraint)expression;
-            Disjunction disjunction = (Disjunction)constraint.getOperand();
+            Constraint constraint = (Constraint) expression;
+            Disjunction disjunction = (Disjunction) constraint.getOperand();
             resultingExpressions.add(leFactory.createConstraint(disjunction.getLeftOperand()));
             resultingExpressions.add(leFactory.createConstraint(disjunction.getRightOperand()));
             return resultingExpressions;
         }
 
-        public String toString()
-        {
+        public String toString() {
             return "!- B1 or ... or Bn\n\t=>\n !- B1\n\t...\n !- Bn\n";
         }
+    }
+
+    public AddOnlyArrayList<TransformationRule> getRules() {
+        return rules;
     }
 }

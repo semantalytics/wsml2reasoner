@@ -43,8 +43,6 @@ public class AnonymousIDReplacementTest extends BaseNormalizationTest
     protected void setUp() throws Exception
     {
         super.setUp();
-        //in order to keep track of cyclic imports
-        Set<Ontology> importedOntologies = new HashSet<Ontology>();
         WSMO4JManager wmsoManager = new WSMO4JManager();
         axiomatizationNormalizer = new AxiomatizationNormalizer(wmsoManager);
         reductionNormalizer = new ConstructReductionNormalizer(wmsoManager);
@@ -94,7 +92,7 @@ public class AnonymousIDReplacementTest extends BaseNormalizationTest
         Set <Entity> entitiesAsAxioms = axiomatizationNormalizer.normalizeEntities(entities);
         
         Set <Axiom> axioms = new HashSet <Axiom> ();
-        for (Entity e : entities){
+        for (Entity e : entitiesAsAxioms){
         	if (e instanceof Axiom){
         		axioms.add((Axiom) e);
         	}

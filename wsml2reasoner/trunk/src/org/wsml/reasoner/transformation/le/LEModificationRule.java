@@ -27,8 +27,7 @@ import org.omwg.logicalexpression.LogicalExpression;
  * 
  * @author Stephan Grimm, FZI Karlsruhe
  */
-public interface LEModificationRule
-{
+public interface LEModificationRule {
     /**
      * This method decides whether the behaviour specified by this modification
      * rule is applicable to a given logical expression.

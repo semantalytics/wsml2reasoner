@@ -19,16 +19,15 @@
 
 package org.wsml.reasoner;
 
-
 /**
- * Represents an exception that is caused by an external tool during
- * the execution of a query.
+ * Represents an exception that is caused by an external tool during the
+ * execution of a query.
  * 
  * @author Uwe Keller, DERI Innsbruck
  * @author Gabor Nagypal, FZI
  */
 public class ExternalToolException extends Exception {
-    
+
     /**
      * Needed for Java 5
      */
@@ -37,13 +36,13 @@ public class ExternalToolException extends Exception {
     public ExternalToolException(String message) {
         super(message);
     }
-    
+
     public ExternalToolException(String message, Throwable t) {
         super(message, t);
     }
 
     /**
-     * Creates an 
+     * Creates an
      */
     public ExternalToolException(ConjunctiveQuery q) {
         super("Failed to translate query: " + q.toString());
@@ -56,5 +55,5 @@ public class ExternalToolException extends Exception {
     public ExternalToolException(ConjunctiveQuery q, Throwable t) {
         super("Failed to translate query: " + q.toString(), t);
     }
-    
+
 }

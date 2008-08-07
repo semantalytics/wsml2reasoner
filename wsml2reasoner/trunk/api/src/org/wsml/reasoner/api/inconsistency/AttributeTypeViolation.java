@@ -9,10 +9,12 @@ import org.omwg.ontology.Type;
 import org.wsmo.common.TopEntity;
 
 public class AttributeTypeViolation extends ConsistencyViolation {
-    
+
     private Instance instance;
-    
-    private ConstructedTerm ctInstance;private Ontology ontology;
+
+    private ConstructedTerm ctInstance;
+
+    private Ontology ontology;
 
     private Term violatingValue;
 
@@ -31,7 +33,7 @@ public class AttributeTypeViolation extends ConsistencyViolation {
     public Instance getInstance() {
         return instance;
     }
-   
+
     public Term getViolatingValue() {
         return violatingValue;
     }
@@ -51,23 +53,15 @@ public class AttributeTypeViolation extends ConsistencyViolation {
         this.attribute = attribute;
         this.expectedType = expectedType;
     }
-    
-    public String toString(){
-    	if (instance!=null){
-    		TopEntity te = instance.getOntology();
-    		return "AttributeTypeViolation due to instance: " + 
-            	toString(instance.getIdentifier(),te) +
-            	" expected type: "+ toString(expectedType,te)+ 
-            	" found value: " + toString(violatingValue,te) + 
-            	" at attribute: " + toString(attribute.getIdentifier(),te);
-    	}
-    	else{
-    		TopEntity te = ontology;
-    		return "AttributeTypeViolation due to instance: " + 
-            	toString(ctInstance,te) +
-            	" expected type: "+ toString(expectedType,te)+ 
-            	" found value: " + toString(violatingValue,te) + 
-            	" at attribute: " + toString(attribute.getIdentifier(),te);    	
-    	}
+
+    public String toString() {
+        if (instance != null) {
+            TopEntity te = instance.getOntology();
+            return "AttributeTypeViolation due to instance: " + toString(instance.getIdentifier(), te) + " expected type: " + toString(expectedType, te) + " found value: " + toString(violatingValue, te) + " at attribute: " + toString(attribute.getIdentifier(), te);
+        }
+        else {
+            TopEntity te = ontology;
+            return "AttributeTypeViolation due to instance: " + toString(ctInstance, te) + " expected type: " + toString(expectedType, te) + " found value: " + toString(violatingValue, te) + " at attribute: " + toString(attribute.getIdentifier(), te);
+        }
     }
 }

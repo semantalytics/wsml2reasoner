@@ -27,9 +27,9 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 import org.omwg.ontology.WsmlDataType;
+import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
-import org.wsmo.common.IRI;
 
 import base.BaseReasonerTest;
 
@@ -81,7 +81,7 @@ public class PreserveTypeTests extends BaseReasonerTest {
                 query, o);
         logExprSerializer.serialize(qExpression);
         
-        Set<Map<Variable, Term>> result = wsmlReasoner.executeQuery(qExpression);
+        Set<Map<Variable, Term>> result = ((LPReasoner) wsmlReasoner).executeQuery(qExpression);
         
         for (Map<Variable, Term> binding : result) {
         	SimpleDataValueImpl shouldBeDecimal = (SimpleDataValueImpl) 

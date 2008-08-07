@@ -18,13 +18,7 @@
  */
 package variant.flight;
 
-import java.util.Map;
-import java.util.Set;
-
-import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
-import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
@@ -40,9 +34,9 @@ import base.BaseReasonerTest;
  * Interface or class description
  * 
  * <pre>
- *   Created on 20.04.2006
- *   Committed by $Author: graham $
- *   $Source: /home/richi/temp/w2r/wsml2reasoner/test/variant/flight/ConstraintViolationCheck.java,v $,
+ *    Created on 20.04.2006
+ *    Committed by $Author: graham $
+ *    $Source: /home/richi/temp/w2r/wsml2reasoner/test/variant/flight/ConstraintViolationCheck.java,v $,
  * </pre>
  * 
  * @author Holger lausen
@@ -51,91 +45,81 @@ import base.BaseReasonerTest;
  */
 public class ConstraintViolationCheck extends BaseReasonerTest {
     Parser parser;
+
     LogicalExpressionFactory leFactory;
+
     WsmoFactory wsmoFactory;
+
     WSMLReasoner reasoner;
+
     BuiltInReasoner previous;
-    
-    public void setUp() throws Exception{
-    	super.setUp();
+
+    public void setUp() throws Exception {
+        super.setUp();
         parser = Factory.createParser(null);
         leFactory = Factory.createLogicalExpressionFactory(null);
         wsmoFactory = Factory.createWsmoFactory(null);
         reasoner = BaseReasonerTest.getReasoner();
         previous = BaseReasonerTest.reasoner;
     }
-    
+
     protected void tearDown() throws Exception {
-    	super.tearDown();
-    	resetReasoner(previous);
+        super.tearDown();
+        resetReasoner(previous);
     }
 
+    // public void testSubcumption() throws Exception {
+    //
+    // String test = "namespace { _\"i:\"} \n" +
+    // "ontology simpsons \n" +
+    // "concept sub subConceptOf super \n" +
+    // "c ofType test \n" +
+    // "instance ia memberOf super \n";
+    //        
+    // Ontology ont = (Ontology) parser.parse(new StringBuffer(test))[0];
+    //
+    // //String q = "?x memberOf a and ?x[c hasValue?y] and naf ?y memberOf
+    // test";
+    // String q = "?x memberOf super";
+    // LogicalExpression query = leFactory.createLogicalExpression(
+    // q, ont);
+    // System.out.println("LE:"+query+"\n\n");
+    //
+    // Set<Map<Variable, Term>> result = null;
+    //
+    // reasoner.registerOntology(ont);
+    // result = reasoner.executeQuery((IRI) ont.getIdentifier(), query);
+    // System.out.println(result);
+    // assertEquals(1,result.size());
+    // }
 
-//    public void testSubcumption() throws Exception {
-//
-//        String test = "namespace { _\"i:\"} \n" +
-//                "ontology simpsons \n" +
-//                "concept sub subConceptOf super \n" +
-//                "c ofType test \n" +
-//                "instance ia memberOf super \n";
-//        
-//        Ontology ont = (Ontology) parser.parse(new StringBuffer(test))[0];
-//
-//        //String q = "?x memberOf a and ?x[c hasValue?y] and naf ?y memberOf test";
-//        String q = "?x memberOf super";
-//        LogicalExpression query = leFactory.createLogicalExpression(
-//                q, ont);
-//        System.out.println("LE:"+query+"\n\n");
-//
-//        Set<Map<Variable, Term>> result = null;
-//
-//        reasoner.registerOntology(ont);
-//        result = reasoner.executeQuery((IRI) ont.getIdentifier(), query);
-//        System.out.println(result);
-//        assertEquals(1,result.size());
-//    }
-    
     public void constraintViolationCheck() throws Exception {
 
-        String test = "namespace { _\"i:\"} \n" +
-                "ontology simpsons \n" +
-                "concept sub  \n" +
-                "//  c impliesType (1 *)_string \n" +
-                "instance ia memberOf sub  \n" +
-                "axiom i definedBy !-?x memberOf sub. ";
-        
+        String test = "namespace { _\"i:\"} \n" + "ontology simpsons \n" + "concept sub  \n" + "//  c impliesType (1 *)_string \n" + "instance ia memberOf sub  \n" + "axiom i definedBy !-?x memberOf sub. ";
+
         Ontology ont = (Ontology) parser.parse(new StringBuffer(test))[0];
 
         reasoner = BaseReasonerTest.getReasoner();
-        
-        //String q = "?x memberOf a and ?x[c hasValue?y] and naf ?y memberOf test";
-        String q = "?x memberOf super";
-        LogicalExpression query = leFactory.createLogicalExpression(
-                q, ont);
-        //System.out.println("LE:"+query+"\n\n");
 
-        Set<Map<Variable, Term>> result = null;
-        try{
+        try {
             reasoner.registerOntology(ont);
-        }catch(InconsistencyException e){
+        }
+        catch (InconsistencyException e) {
             System.out.println(e.getViolations().iterator().next());
         }
-        //result = reasoner.executeQuery((IRI) ont.getIdentifier(), query);
-        //System.out.println(result);
-        //assertEquals(1,result.size());
     }
-    
-    public void testFlightReasoners() throws Exception{
 
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
-    	constraintViolationCheck();
-    	
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
-    	constraintViolationCheck();
-    	
-    	if (base.BaseReasonerTest.exists("org.wsml.reasoner.builtin.kaon2.Kaon2Facade")) { 
-    		resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
-    		constraintViolationCheck();
-    	}
+    public void testFlightReasoners() throws Exception {
+
+        resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+        constraintViolationCheck();
+
+        resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
+        constraintViolationCheck();
+
+        if (base.BaseReasonerTest.exists("org.wsml.reasoner.builtin.kaon2.Kaon2Facade")) {
+            resetReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
+            constraintViolationCheck();
+        }
     }
 }

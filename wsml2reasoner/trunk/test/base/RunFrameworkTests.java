@@ -3,7 +3,6 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import framework.datatypes.BundledDatatypeTests;
 import framework.normalization.BundledNormalizationTests;
-import framework.registration.BundledRegistrationTests;
 import framework.transformation.BundledTransformationTests;
 
 public class RunFrameworkTests {
@@ -17,7 +16,6 @@ public class RunFrameworkTests {
         // $JUnit-BEGIN$
         suite.addTest(BundledNormalizationTests.suite());
         suite.addTest(BundledTransformationTests.suite());
-        suite.addTest(BundledRegistrationTests.suite());
         suite.addTest(BundledDatatypeTests.suite());
         // $JUnit-END$
         return suite;

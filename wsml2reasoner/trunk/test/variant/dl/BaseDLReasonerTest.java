@@ -64,10 +64,6 @@ public abstract class BaseDLReasonerTest extends TestCase
     protected Ontology createOntology()
     {
         return createOntology("http://LoR.wsml#");
-//        int ontologyNumber = ontologyCount++;
-//        Ontology ontology = wsmoFactory.createOntology(wsmoFactory.createIRI("http://mu.org#ont" + Integer.toString(ontologyNumber)));
-//        ontology.setDefaultNamespace(wsmoFactory.createIRI("http://mu." + Integer.toString(ontologyNumber) + ".org#"));
-//        return ontology;
     }
     
     protected Ontology createOntology(String namespace)

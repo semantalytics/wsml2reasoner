@@ -40,32 +40,31 @@ import org.wsml.reasoner.impl.WSMO4JManager;
 public class TPTPFacade extends FOLAbstractFacade {
 
     Logger log = Logger.getLogger(TPTPFacade.class);
-    
-    public TPTPFacade(WSMO4JManager manager, String syntax){
-    	super(manager,syntax);
+
+    public TPTPFacade(WSMO4JManager manager, String syntax) {
+        super(manager, syntax);
     }
-    
+
     @Override
-	public String getConjecture(LogicalExpression le, TPTPSymbolMap map) {
-    	TPTPLESerializeVisitor les = new TPTPLESerializeVisitor();
-    	les.setSymbolMap(map);
+    public String getConjecture(LogicalExpression le, TPTPSymbolMap map) {
+        TPTPLESerializeVisitor les = new TPTPLESerializeVisitor();
+        les.setSymbolMap(map);
         le.accept(les);
         String conjectureString = les.getSerializedObject();
-        return "fof(id" + id++ + ",conjecture, ("
-        	+ conjectureString + ")). \n";
+        return "fof(id" + id++ + ",conjecture, (" + conjectureString + ")). \n";
     }
-    
+
     int id;
-    
+
     public void register(Set<LogicalExpression> expressions) throws ExternalToolException {
-        String kb ="";
+        String kb = "";
         TPTPLESerializeVisitor les = new TPTPLESerializeVisitor();
-        
-        for (LogicalExpression le:expressions ){
+
+        for (LogicalExpression le : expressions) {
             le.accept(les);
             String newExpression = les.getSerializedObject();
-        	newExpression = "fof(id"+id++ +",axiom, ("+newExpression +")). \n";
-            kb+=newExpression;
+            newExpression = "fof(id" + id++ + ",axiom, (" + newExpression + ")). \n";
+            kb += newExpression;
         }
         log.debug(kb);
         convertedOntology = kb;

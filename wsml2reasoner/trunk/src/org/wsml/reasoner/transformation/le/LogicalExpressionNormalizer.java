@@ -26,10 +26,10 @@ import org.omwg.logicalexpression.LogicalExpression;
  * 
  * @author Stephan Grimm, FZI Karlsruhe
  */
-public interface LogicalExpressionNormalizer
-{
+public interface LogicalExpressionNormalizer {
     /**
      * This method normalizes a single logical expression.
+     * 
      * @param expression
      * @return The normalized form of expression (as copy)
      */

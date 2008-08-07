@@ -28,10 +28,9 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
-import org.wsmo.common.IRI;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -58,7 +57,7 @@ public class IRITest extends BaseReasonerTest {
     LogicalExpressionFactory leFactory;
     DataFactory dFactory;
     WsmoFactory wsmoFactory;
-    WSMLReasoner reasoner;
+    LPReasoner reasoner;
     BuiltInReasoner previous;
     
     
@@ -70,7 +69,7 @@ public class IRITest extends BaseReasonerTest {
 		// cannot yet handle such built-ins
         previous = BaseReasonerTest.reasoner;
         BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.MINS;
-        reasoner =  BaseReasonerTest.getReasoner();
+        reasoner =  (LPReasoner) BaseReasonerTest.getReasoner();
         wsmoFactory = Factory.createWsmoFactory(null);
     }
 

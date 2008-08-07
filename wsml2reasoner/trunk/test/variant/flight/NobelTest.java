@@ -13,11 +13,10 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.WSMLReasoner;
+import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.Factory;
@@ -145,7 +144,7 @@ public class NobelTest {
 		// Print ontology
 		printOntology(o);
 
-		WSMLReasoner reasoner = getReasoner();
+		LPReasoner reasoner = getReasoner();
 		// Register ontology
 		reasoner.registerOntology(o);
 
@@ -228,13 +227,12 @@ public class NobelTest {
 	 * 
 	 * @return Reasoner
 	 */
-	private WSMLReasoner getReasoner() {
+	private LPReasoner getReasoner() {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
 				WSMLReasonerFactory.BuiltInReasoner.KAON2);
 
-		WSMLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
-				.createWSMLFlightReasoner(params);
+		LPReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().createFlightReasoner(params);
 		return reasoner;
 	}
 
@@ -250,7 +248,7 @@ public class NobelTest {
 	 * @return Result after the query evaluation
 	 * @throws Exception
 	 */
-	private Set<Map<Variable, Term>> performQuery(WSMLReasoner reasoner,
+	private Set<Map<Variable, Term>> performQuery(LPReasoner reasoner,
 			Ontology o, String queryString) throws Exception {
 		LogicalExpression query = this.leFactory.createLogicalExpression(
 				queryString, o);

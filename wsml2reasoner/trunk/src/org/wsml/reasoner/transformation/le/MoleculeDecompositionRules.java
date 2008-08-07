@@ -45,208 +45,103 @@ import org.wsmo.common.Identifier;
  * 
  * @author Stephan Grimm, FZI Karlsruhe
  */
-public class MoleculeDecompositionRules extends FixedModificationRules
-{
+public class MoleculeDecompositionRules extends FixedModificationRules {
     protected AnonymousIdTranslator anonymousIDTranslator;
 
-    public MoleculeDecompositionRules(WSMO4JManager wsmoManager)
-    {
+    private AddOnlyArrayList<NormalizationRule> rules;
+
+    public MoleculeDecompositionRules(WSMO4JManager wsmoManager) {
         super(wsmoManager);
         anonymousIDTranslator = new AnonymousIdTranslator(wsmoManager.getWSMOFactory());
+        rules = new AddOnlyArrayList<NormalizationRule>();
         rules.add(new MoleculeDecompositionRule());
         rules.add(new MoleculeAnonymousIDRule());
         rules.add(new AtomAnonymousIDRule());
     }
 
-    
-    protected class MoleculeDecompositionRule implements NormalizationRule
-    {
-        public LogicalExpression apply(LogicalExpression expression)
-        {
-            Set<LogicalExpression> simpleMolecules = decomposeMolecule((CompoundMolecule)expression);
+    protected class MoleculeDecompositionRule implements NormalizationRule {
+        public LogicalExpression apply(LogicalExpression expression) {
+            Set<LogicalExpression> simpleMolecules = decomposeMolecule((CompoundMolecule) expression);
             return buildNaryConjunction(simpleMolecules);
         }
 
-        public boolean isApplicable(LogicalExpression expression)
-        {
+        public boolean isApplicable(LogicalExpression expression) {
             return expression instanceof CompoundMolecule;
         }
 
-        protected Set<LogicalExpression> decomposeMolecule(CompoundMolecule compoundMolecule)
-        {
+        protected Set<LogicalExpression> decomposeMolecule(CompoundMolecule compoundMolecule) {
             Set<LogicalExpression> simpleMolecules = new HashSet<LogicalExpression>();
             Iterator moleculeIterator = compoundMolecule.listOperands().iterator();
-            while(moleculeIterator.hasNext())
-            {
-                Molecule molecule = (Molecule)moleculeIterator.next();
+            while (moleculeIterator.hasNext()) {
+                Molecule molecule = (Molecule) moleculeIterator.next();
                 simpleMolecules.add(molecule);
             }
-/*            
-            Term term = replaceAnonymous(compoundMolecule.getTerm());
-
-            // extract subClassOf-statements:
-            if(molecule.listSubConceptOf() != null)
-            {
-                for(Term superclassTerm : (Set<Term>)molecule.listSubConceptOf())
-                {
-                    superclassTerm = replaceAnonymous(superclassTerm);
-                    simpleMolecules.add(createSubClassOfMolecule(term, superclassTerm));
-                }
-            }
-
-            // extract instanceOf-statements:
-            if(molecule.listMemberOf() != null)
-            {
-                for(Term classTerm : (Set<Term>)molecule.listMemberOf())
-                {
-                    classTerm = replaceAnonymous(classTerm);
-                    simpleMolecules.add(createInstanceOfMolecule(term, classTerm));
-                }
-            }
-
-            // extract attribute specification constructs:
-            if(molecule.listAttributeSpecifications() != null)
-            {
-                for(AttrSpecification attrSpec : (Set<AttrSpecification>)molecule.listAttributeSpecifications())
-                {
-                    Set<Term> arguments = attrSpec.listArguments();
-                    for(Term argTerm : arguments)
-                    {
-                        argTerm = replaceAnonymous(argTerm);
-                        Set<Term> singletonTerm = new HashSet<Term>();
-                        singletonTerm.add(argTerm);
-                        AttrSpecification singleAttrSpec = leFactory.createAttrSpecification(attrSpec.getOperator(), attrSpec.getName(), singletonTerm);
-                        simpleMolecules.add(createAttrSpecMolecule(term, singleAttrSpec));
-                    }
-                }
-            }
-*/
             return simpleMolecules;
         }
-
-/*
-        protected Molecule createSubClassOfMolecule(Term subclassTerm, Term superclassTerm)
-        {
-            Set<Term> termSingleton = new HashSet<Term>();
-            termSingleton.add(superclassTerm);
-            return leFactory.createMolecule(subclassTerm, termSingleton, null, null);
-        }
-
-        protected Molecule createInstanceOfMolecule(Term instanceTerm, Term classTerm)
-        {
-            Set<Term> termSingleton = new HashSet<Term>();
-            termSingleton.add(classTerm);
-            return leFactory.createMolecule(instanceTerm, null, termSingleton, null);
-        }
-
-        protected Molecule createAttrSpecMolecule(Term term, AttrSpecification attrSpec)
-        {
-            Set<AttrSpecification> attrSpecSingleton = new HashSet<AttrSpecification>();
-            attrSpecSingleton.add(attrSpec);
-            return leFactory.createMolecule(term, null, null, attrSpecSingleton);
-        }
-*/
-/*        
-        protected LogicalExpression buildConjunction(Set<LogicalExpression> expressions)
-        {
-            LogicalExpression conjunction = null;
-            Iterator<LogicalExpression> leIterator = expressions.iterator();
-            if(leIterator.hasNext())
-            {
-                conjunction = leIterator.next();
-            }
-            while(leIterator.hasNext())
-            {
-                conjunction = leFactory.createBinary(Binary.AND, conjunction, leIterator.next());
-            }
-            return conjunction;
-        }
-*/
-/*
-        protected Term replaceAnonymous(Term term)
-        {
-            if(term instanceof UnnumberedAnonymousID || term instanceof NumberedAnonymousID)
-            {
-                return anonymousIDTranslator.translate((Identifier)term);
-            }
-            else
-                return term;
-        }
-*/
-        public String toString()
-        {
+        public String toString() {
             return "X[A1,...,An]\n\t=>\n X[A1] and ... and X[An]\n";
         }
     }
 
-    protected class AtomAnonymousIDRule implements NormalizationRule
-    {
+    protected class AtomAnonymousIDRule implements NormalizationRule {
 
-        public LogicalExpression apply(LogicalExpression expression)
-        {
-            Atom atom = (Atom)expression;
-            Identifier id = (Identifier)anonymousIDTranslator.translate(atom.getIdentifier());
+        public LogicalExpression apply(LogicalExpression expression) {
+            Atom atom = (Atom) expression;
+            Identifier id = (Identifier) anonymousIDTranslator.translate(atom.getIdentifier());
             List<Term> args = new ArrayList<Term>();
-            for(int i = 0; i < atom.getArity(); i++)
-            {
+            for (int i = 0; i < atom.getArity(); i++) {
                 Term term = atom.getParameter(i);
-                if(term instanceof Identifier)
-                {
-                    term = anonymousIDTranslator.translate((Identifier)term);
+                if (term instanceof Identifier) {
+                    term = anonymousIDTranslator.translate(term);
                 }
                 args.add(term);
             }
             return leFactory.createAtom(id, args);
         }
 
-        public boolean isApplicable(LogicalExpression expression)
-        {
+        public boolean isApplicable(LogicalExpression expression) {
             return expression instanceof Atom;
         }
     }
-    
-    protected class MoleculeAnonymousIDRule implements NormalizationRule
-    {
 
-        public LogicalExpression apply(LogicalExpression expression)
-        {
-            Molecule molecule = (Molecule)expression;
+    protected class MoleculeAnonymousIDRule implements NormalizationRule {
+
+        public LogicalExpression apply(LogicalExpression expression) {
+            Molecule molecule = (Molecule) expression;
             Term leftOperand = anonymousIDTranslator.translate(molecule.getLeftParameter());
             Term rightOperand = anonymousIDTranslator.translate(molecule.getRightParameter());
             Term attribute = null;
-            if(molecule instanceof AttributeMolecule)
-            {
-                attribute = anonymousIDTranslator.translate(((AttributeMolecule)molecule).getAttribute());
+            if (molecule instanceof AttributeMolecule) {
+                attribute = anonymousIDTranslator.translate(((AttributeMolecule) molecule).getAttribute());
             }
-           
-            //instantiate the appropriate molecule type:
-            if(molecule instanceof MembershipMolecule)
-            {
+
+            // instantiate the appropriate molecule type:
+            if (molecule instanceof MembershipMolecule) {
                 return leFactory.createMemberShipMolecule(leftOperand, rightOperand);
             }
-            else if(molecule instanceof SubConceptMolecule)
-            {
+            else if (molecule instanceof SubConceptMolecule) {
                 return leFactory.createSubConceptMolecule(leftOperand, rightOperand);
             }
-            else if(molecule instanceof AttributeConstraintMolecule)
-            {
+            else if (molecule instanceof AttributeConstraintMolecule) {
                 return leFactory.createAttributeConstraint(leftOperand, attribute, rightOperand);
             }
-            else if(molecule instanceof AttributeInferenceMolecule)
-            {
+            else if (molecule instanceof AttributeInferenceMolecule) {
                 return leFactory.createAttributeInference(leftOperand, attribute, rightOperand);
             }
-            else if(molecule instanceof AttributeValueMolecule)
-            {
+            else if (molecule instanceof AttributeValueMolecule) {
                 return leFactory.createAttributeValue(leftOperand, attribute, rightOperand);
             }
-            else
+            else{
                 throw new RuntimeException("in MoleculeAnonymousIDRule::apply() : reached presumably unreachable code!");
+            }
         }
 
-        public boolean isApplicable(LogicalExpression expression)
-        {
+        public boolean isApplicable(LogicalExpression expression) {
             return expression instanceof Molecule;
         }
+    }
+
+    public AddOnlyArrayList<NormalizationRule> getRules() {
+        return rules;
     }
 }

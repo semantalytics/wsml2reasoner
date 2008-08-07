@@ -36,99 +36,108 @@ import org.wsmo.common.IRI;
 
 /**
  * Default left to right depth first walker...
- *   
+ * 
  * @author Holger Lausen
  * @version $Revision: 1.1 $ $Date: 2007-08-10 09:44:49 $
  * @see org.omwg.logicalexpression.Visitor
  */
 public class SpassSerializeVisitor extends FOLAbstractSerializeVisitor {
-    
 
     /**
-     * Builds a String representing the Unary expression and adds it to a vector.
-     * @param expr Unary Expression to be serialized, with operator NEG
+     * Builds a String representing the Unary expression and adds it to a
+     * vector.
+     * 
+     * @param expr
+     *            Unary Expression to be serialized, with operator NEG
      * @see org.deri.wsmo4j.logicalexpression.AbstractVisitor#visitNegation(Negation)
      */
     public void visitNegation(Negation expr) {
         expr.getOperand().accept(this);
-        stack.add("not (" + (String)stack.remove(stack.size() - 1) + ")");
+        stack.add("not (" + stack.remove(stack.size() - 1) + ")");
     }
 
-
     /**
-     * Builds a String representing the Binary expression and adds it to a vector.
-     * @param expr Binary Expression to be serialized, with operator AND
+     * Builds a String representing the Binary expression and adds it to a
+     * vector.
+     * 
+     * @param expr
+     *            Binary Expression to be serialized, with operator AND
      * @see org.deri.wsmo4j.logicalexpression.AbstractVisitor#visitConjunction(Conjunction)
      */
     public void visitConjunction(Conjunction expr) {
-    	 //check functionsymbols to rewrite
-        if (expr.getRightOperand() instanceof Atom){
-            Atom a = (Atom)expr.getRightOperand();
-            if (a.getArity()>0 && a.getParameter(0) instanceof TempVariable){
-                List <Term> params = new LinkedList <Term>(a.listParameters());
+        // check functionsymbols to rewrite
+        if (expr.getRightOperand() instanceof Atom) {
+            Atom a = (Atom) expr.getRightOperand();
+            if (a.getArity() > 0 && a.getParameter(0) instanceof TempVariable) {
+                List<Term> params = new LinkedList<Term>(a.listParameters());
                 params.remove(0);
-                Term key = a.getParameter(0);
-                Term subst = new ConstructedTermImpl((IRI)a.getIdentifier(), params);
-                atoms2Rewrite.put(a.getParameter(0),subst);
+                Term subst = new ConstructedTermImpl((IRI) a.getIdentifier(), params);
+                atoms2Rewrite.put(a.getParameter(0), subst);
                 expr.getLeftOperand().accept(this);
                 return;
             }
         }
         expr.getLeftOperand().accept(this);
         expr.getRightOperand().accept(this);
-        stack.add(" and (" + stack.remove(stack.size() - 2) + " , " + stack.remove(stack.size() - 1)+ ")");
+        stack.add(" and (" + stack.remove(stack.size() - 2) + " , " + stack.remove(stack.size() - 1) + ")");
     }
 
     public void visitImplication(Implication expr) {
         expr.getLeftOperand().accept(this);
         expr.getRightOperand().accept(this);
-        stack.add(" implies(" + stack.remove(stack.size() - 2) + ", " +
-                       stack.remove(stack.size() - 1) + ")");
+        stack.add(" implies(" + stack.remove(stack.size() - 2) + ", " + stack.remove(stack.size() - 1) + ")");
     }
 
     /**
-     * Builds a String representing the Binary expression and adds it to a vector.
-     * @param expr Binary Expression to be serialized, with operator OR
+     * Builds a String representing the Binary expression and adds it to a
+     * vector.
+     * 
+     * @param expr
+     *            Binary Expression to be serialized, with operator OR
      * @see org.deri.wsmo4j.logicalexpression.AbstractVisitor#visitDisjunction(Disjunction)
      */
     public void visitDisjunction(Disjunction expr) {
         expr.getLeftOperand().accept(this);
         expr.getRightOperand().accept(this);
-        stack.add(" or(" + stack.remove(stack.size() - 2) + " , " + stack.remove(stack.size() - 1) +")");
+        stack.add(" or(" + stack.remove(stack.size() - 2) + " , " + stack.remove(stack.size() - 1) + ")");
     }
 
     /**
-     * Builds a String representing the Quantified expression and adds it to a vector.
-     * @param expr Quantified Expression to be serialized, with operator FORALL
+     * Builds a String representing the Quantified expression and adds it to a
+     * vector.
+     * 
+     * @param expr
+     *            Quantified Expression to be serialized, with operator FORALL
      * @see org.deri.wsmo4j.logicalexpression.AbstractVisitor#visitUniversalQuantification(UniversalQuantification)
      */
     public void visitUniversalQuantification(UniversalQuantification expr) {
         String res = helpQuantified(expr);
-        stack.add(" forall (" + res + "," + (String)stack.remove(stack.size() - 1) + " )");
+        stack.add(" forall (" + res + "," + stack.remove(stack.size() - 1) + " )");
     }
 
     /**
-     * Builds a String representing the Quantified expression and adds it to a vector.
-     * @param expr Quantified Expression to be serialized, with operator EXISTS
+     * Builds a String representing the Quantified expression and adds it to a
+     * vector.
+     * 
+     * @param expr
+     *            Quantified Expression to be serialized, with operator EXISTS
      * @see org.deri.wsmo4j.logicalexpression.AbstractVisitor#visitExistentialQuantification(ExistentialQuantification)
      */
     public void visitExistentialQuantification(ExistentialQuantification expr) {
         String res = helpQuantified(expr);
-        stack.add(" exists(" + res + "," + (String)stack.remove(stack.size() - 1) + " )");
+        stack.add(" exists(" + res + "," + stack.remove(stack.size() - 1) + " )");
     }
 
     public void visitEquivalence(Equivalence expr) {
         expr.getLeftOperand().accept(this);
         expr.getRightOperand().accept(this);
-        stack.add(" equiv(" + stack.remove(stack.size() - 2) + " , " +
-                       stack.remove(stack.size() - 1) + ")");
+        stack.add(" equiv(" + stack.remove(stack.size() - 2) + " , " + stack.remove(stack.size() - 1) + ")");
     }
 
     public void visitInverseImplication(InverseImplication expr) {
         expr.getLeftOperand().accept(this);
         expr.getRightOperand().accept(this);
-        stack.add(" implies (" + stack.remove(stack.size() - 1) + " , " +
-                       stack.remove(stack.size() - 1) + ")");
+        stack.add(" implies (" + stack.remove(stack.size() - 1) + " , " + stack.remove(stack.size() - 1) + ")");
 
     }
 }

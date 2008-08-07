@@ -11,12 +11,11 @@ import junit.framework.TestCase;
 
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Ontology;
-import org.wsml.reasoner.api.WSMLDLReasoner;
+import org.wsml.reasoner.api.DLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.common.IRI;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
@@ -31,7 +30,7 @@ public class CycleTests extends TestCase {
 	
 	private String ns = null;
 	
-	private WSMLDLReasoner wsmlReasoner = null;
+	private DLReasoner wsmlReasoner = null;
 	
 	private BuiltInReasoner previous;
 	
@@ -79,13 +78,13 @@ public class CycleTests extends TestCase {
         ns = ontology.getDefaultNamespace().getIRI().toString();
         // Pellet
         params.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, BuiltInReasoner.PELLET);
-        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLDLReasoner(params);
+        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createDLReasoner(params);
         doCycleTests();
         
         // KAON2
         if (base.BaseReasonerTest.exists("org.wsml.reasoner.builtin.kaon2.Kaon2DLFacade")) { 
 	        params.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, BuiltInReasoner.KAON2);
-	        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createWSMLDLReasoner(params);
+	        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createDLReasoner(params);
 	        doCycleTests();
         }
     }

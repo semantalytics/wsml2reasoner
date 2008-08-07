@@ -24,20 +24,21 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
+import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsmo.common.IRI;
-import org.wsmo.common.WSML;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
+
 import base.BaseReasonerTest;
 
 /**
@@ -50,7 +51,7 @@ public class NotStratifiedTest extends BaseReasonerTest {
 	
 	private LogicalExpressionFactory leFactory;
 	
-	private WSMLReasoner wsmlReasoner;
+	private LPReasoner wsmlReasoner;
 	
 	private BuiltInReasoner previous;
 
@@ -67,7 +68,7 @@ public class NotStratifiedTest extends BaseReasonerTest {
 		previous = BaseReasonerTest.reasoner;
 		BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
 //		wsmlReasoner = BaseReasonerTest.getReasoner();
-		wsmlReasoner = getIrisReasoner();
+		wsmlReasoner = (LPReasoner) getIrisReasoner();
 		wsmoFactory = Factory.createWsmoFactory(null);
 		leFactory = Factory.createLogicalExpressionFactory(null);
 		parser = Factory.createParser(null);
@@ -83,7 +84,7 @@ public class NotStratifiedTest extends BaseReasonerTest {
     {
     	Map<String, Object> params = new HashMap<String, Object>();
     	params.put( WSMLReasonerFactory.PARAM_BUILT_IN_REASONER, BuiltInReasoner.IRIS );
-    	return DefaultWSMLReasonerFactory.getFactory().createWSMLRuleReasoner( params );
+    	return DefaultWSMLReasonerFactory.getFactory().createRuleReasoner( params );
     }
 
     public void testOntology1() throws Exception
@@ -126,8 +127,7 @@ public class NotStratifiedTest extends BaseReasonerTest {
        System.out.println("WSML Query LE:");
        System.out.println(qExpression.toString());
        System.out.println("\n\nExpecting " + expected.size() + " results...\n");
-       Set<Map<Variable, Term>> result = wsmlReasoner.executeQuery(
-    		   (IRI) ontology.getIdentifier(), qExpression);
+       Set<Map<Variable, Term>> result = wsmlReasoner.executeQuery(qExpression);
        System.out.println("Found < " + result.size() + " > results to the query:\n");
       
        Set<String> resultSet = new HashSet<String>(2);
@@ -137,6 +137,6 @@ public class NotStratifiedTest extends BaseReasonerTest {
     	   resultSet.add(resultBinding.entrySet().iterator().next().getValue().toString());
        }
        
-       wsmlReasoner.deRegisterOntology((IRI) ontology.getIdentifier());
+       wsmlReasoner.deRegister();
 	}
 }

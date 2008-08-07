@@ -21,15 +21,14 @@ package org.wsml.reasoner.transformation;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.LloydToporRules;
 import org.wsml.reasoner.transformation.le.LogicalExpressionTransformer;
 import org.wsml.reasoner.transformation.le.TopDownLESplitter;
-import org.wsml.reasoner.transformation.le.TransformationRule;
 import org.wsmo.common.Entity;
 import org.wsmo.factory.WsmoFactory;
 
@@ -39,21 +38,21 @@ public class LloydToporNormalizer implements OntologyNormalizer {
     protected WsmoFactory wsmoFactory;
 
     public LloydToporNormalizer(WSMO4JManager wsmoManager) {
-        List<TransformationRule> lloydToporRules = (List<TransformationRule>) new LloydToporRules(wsmoManager);
-        leTransformer = new TopDownLESplitter(lloydToporRules);
+        LloydToporRules lloydToporRules = new LloydToporRules(wsmoManager);
+        leTransformer = new TopDownLESplitter(lloydToporRules.getRules());
         wsmoFactory = wsmoManager.getWSMOFactory();
     }
 
-    public Set <Entity> normalizeEntities(Collection <Entity> theEntities) {
-    	throw new UnsupportedOperationException();
+    public Set<Entity> normalizeEntities(Collection<Entity> theEntities) {
+        throw new UnsupportedOperationException();
     }
-    
-    public Set <Axiom> normalizeAxioms(Collection <Axiom> theAxioms){
-    	Set <Axiom> result = new HashSet <Axiom> ();
+
+    public Set<Axiom> normalizeAxioms(Collection<Axiom> theAxioms) {
+        Set<Axiom> result = new HashSet<Axiom>();
         // gather logical expressions from axioms in ontology:
         Set<LogicalExpression> expressions = new HashSet<LogicalExpression>();
         for (Axiom axiom : theAxioms) {
-            expressions.addAll((Collection<LogicalExpression>) axiom.listDefinitions());
+            expressions.addAll(axiom.listDefinitions());
         }
 
         // iteratively normalize logical expressions:
@@ -61,7 +60,7 @@ public class LloydToporNormalizer implements OntologyNormalizer {
         for (LogicalExpression expression : expressions) {
             resultExp.addAll(leTransformer.transform(expression));
         }
-        
+
         Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
         for (LogicalExpression expression : resultExp) {
             axiom.addDefinition(expression);

@@ -23,18 +23,18 @@ import java.util.List;
 import java.util.Set;
 
 import org.omwg.logicalexpression.LogicalExpression;
-import org.wsml.reasoner.api.WSMLFOLReasoner.EntailmentType;
+import org.wsml.reasoner.api.FOLReasoner.EntailmentType;
 
 /**
- * This interface represents a facade to (potentially) various proover that allows to
- * perform FOL reasoning
+ * This interface represents a facade to (potentially) various proover that
+ * allows to perform FOL reasoning
  * 
  * For each such system a specific facade must be implemented to integrate the
  * component into the system.
  * 
  * @author Holger Lausen
  */
-public interface FOLReasonerFacade{
+public interface FOLReasonerFacade {
 
     /**
      * Registers the Datalog knowledge base representing the ontology at the
@@ -47,8 +47,7 @@ public interface FOLReasonerFacade{
      * @throws ExternalToolException
      *             if some exception happens during ontology registration
      */
-    public void register(Set<LogicalExpression> kb)
-            throws ExternalToolException;
+    public void register(Set<LogicalExpression> kb) throws ExternalToolException;
 
     /**
      * Removes the ontology from the external reasoner

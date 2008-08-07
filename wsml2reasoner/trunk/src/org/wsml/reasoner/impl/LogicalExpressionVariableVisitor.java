@@ -61,8 +61,7 @@ import org.wsml.reasoner.transformation.PostfixOrderLogicalExpressionVisitor;
  * @author Uwe Keller, DERI Innsbruck
  * @author Gabor Nagypal, FZI
  */
-public class LogicalExpressionVariableVisitor extends
-        PostfixOrderLogicalExpressionVisitor {
+public class LogicalExpressionVariableVisitor extends PostfixOrderLogicalExpressionVisitor {
 
     private Map<LogicalExpression, Set<Variable>> freeVars;
 
@@ -136,7 +135,7 @@ public class LogicalExpressionVariableVisitor extends
 
         for (int i = 0; i < arg0.getArity(); i++) {
             Term nextArg = arg0.getParameter(i);
-            internalDoTerm(nextArg, fvs, bvs);
+            internalDoTerm(nextArg, fvs);
         }
 
         freeVars.put(arg0, fvs);
@@ -198,15 +197,15 @@ public class LogicalExpressionVariableVisitor extends
         if (operands.size() > 0) {
             Molecule m = (Molecule) operands.get(0);
             Term t = m.getLeftParameter();
-            internalDoTerm(t, fvs, bvs);
+            internalDoTerm(t, fvs);
         }
 
         for (Iterator i = operands.iterator(); i.hasNext();) {
             Molecule m = (Molecule) i.next();
-            internalDoTerm(m.getRightParameter(), fvs, bvs);
+            internalDoTerm(m.getRightParameter(), fvs);
             if (m instanceof AttributeMolecule) {
                 AttributeMolecule am = (AttributeMolecule) m;
-                internalDoTerm(am.getAttribute(), fvs, bvs);
+                internalDoTerm(am.getAttribute(), fvs);
             }
         }
         freeVars.put(arg0, fvs);
@@ -224,8 +223,7 @@ public class LogicalExpressionVariableVisitor extends
     }
 
     @Override
-    public void handleAttributeConstraintMolecule(
-            AttributeConstraintMolecule arg0) {
+    public void handleAttributeConstraintMolecule(AttributeConstraintMolecule arg0) {
         internalHandleMolecule(arg0);
     }
 
@@ -242,11 +240,11 @@ public class LogicalExpressionVariableVisitor extends
     private void internalHandleMolecule(Molecule m) {
         Set<Variable> fvs = new HashSet<Variable>();
         Set<Variable> bvs = new HashSet<Variable>();
-        internalDoTerm(m.getLeftParameter(), fvs, bvs);
-        internalDoTerm(m.getRightParameter(), fvs, bvs);
+        internalDoTerm(m.getLeftParameter(), fvs);
+        internalDoTerm(m.getRightParameter(), fvs);
         if (m instanceof AttributeMolecule) {
             AttributeMolecule am = (AttributeMolecule) m;
-            internalDoTerm(am.getAttribute(), fvs, bvs);
+            internalDoTerm(am.getAttribute(), fvs);
         }
         freeVars.put(m, fvs);
         boundVars.put(m, bvs);
@@ -310,7 +308,7 @@ public class LogicalExpressionVariableVisitor extends
 
     }
 
-    private void internalDoTerm(Term t, Set<Variable> fvs, Set<Variable> bvs) {
+    private void internalDoTerm(Term t, Set<Variable> fvs) {
         tvv.reset();
         t.accept(tvv);
         fvs.addAll(tvv.getVariables());

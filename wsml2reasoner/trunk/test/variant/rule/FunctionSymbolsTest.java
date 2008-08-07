@@ -81,21 +81,21 @@ public class FunctionSymbolsTest extends BaseReasonerTest {
         String query = "?x memberOf travelVoucher";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
-        List terms = new ArrayList();
+        List <Term> terms = new ArrayList <Term>();
         terms.add(wsmoFactory.createIRI(NS+"my_trainTicket1"));
         binding.put(leFactory.createVariable("x"), 
                 leFactory.createConstructedTerm(
                         wsmoFactory.createIRI(NS+ "f"),terms));
         expected.add(binding);
         binding = new HashMap<Variable, Term>();
-        terms = new ArrayList();
+        terms = new ArrayList <Term>();
         terms.add(wsmoFactory.createIRI(NS+"my_trainTicket2"));
         binding.put(leFactory.createVariable("x"), 
                 leFactory.createConstructedTerm(
                         wsmoFactory.createIRI(NS+ "f"),terms));
         expected.add(binding);
         binding = new HashMap<Variable, Term>();
-        terms = new ArrayList();
+        terms = new ArrayList <Term>();
         terms.add(wsmoFactory.createIRI(NS+"my_trainTicket3"));
         binding.put(leFactory.createVariable("x"), 
                 leFactory.createConstructedTerm(
@@ -109,7 +109,7 @@ public class FunctionSymbolsTest extends BaseReasonerTest {
         String query = "?x memberOf validVoucher";
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
-        List terms = new ArrayList();
+        List <Term> terms = new ArrayList <Term>();
         terms.add(wsmoFactory.createIRI(NS+"my_trainTicket1"));
         terms.add(wsmoFactory.createIRI(NS+"customer1"));
         binding.put(leFactory.createVariable("x"), 
@@ -117,7 +117,7 @@ public class FunctionSymbolsTest extends BaseReasonerTest {
                         wsmoFactory.createIRI(NS+ "f"),terms));
         expected.add(binding);
         binding = new HashMap<Variable, Term>();
-        terms = new ArrayList();
+        terms = new ArrayList <Term>();
         terms.add(wsmoFactory.createIRI(NS+"my_trainTicket2"));
         terms.add(wsmoFactory.createIRI(NS+"customer2"));
         binding.put(leFactory.createVariable("x"), 
