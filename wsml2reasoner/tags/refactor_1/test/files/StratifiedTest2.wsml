@@ -1,0 +1,24 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-rule"
+namespace { _"http://www.direct_instance_test.wsml#"
+ }
+
+ontology direct_instance_test
+
+concept c1
+	name ofType _integer
+	
+concept c2 subConceptOf c1
+
+instance i memberOf c2
+
+axiom c1Axiom 
+	definedBy
+		?x[name hasValue 1] :- di(?x, c1).	
+
+axiom c2Axiom 
+	definedBy
+		?x[name hasValue 2] :- di(?x, c2).	
+
+axiom direct_instance definedBy
+	di(?x, ?T) :- ?x memberOf ?T and naf(ndi(?x, ?T)).
+	ndi(?x, ?T) :- ?x memberOf ?T and ?subT subConceptOf ?T and ?x memberOf ?subT and naf ( ?x subConceptOf ?subT and ?subT subConceptOf ?x).
