@@ -173,8 +173,8 @@ public class DataValuesTest extends BaseNormalizationTest {
         // transform ontology to OWL ontology
         owlOntology = dlReasoner.createOWLOntology(ontology);
         serializer.serialize(owlOntology, writer, prefs);
-        // System.out.println(writer.toString());
-        assertTrue(writer.toString().contains("value(a:hasLocation b:testOntology))"));
+        System.out.println(writer.toString());
+        assertTrue(writer.toString().contains("value(b:hasLocation a:testOntology))"));
         axiom.removeDefinition(le);
     }
 
