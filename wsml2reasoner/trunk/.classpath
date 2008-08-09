@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="api/src"/>
+	<classpathentry kind="src" path="api"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="performance"/>
+	<classpathentry excluding="org/wsml/reasoner/builtin/kaon2/" kind="src" path="proprietary"/>
+	<classpathentry excluding="org/wsml/reasoner/builtin/kaon2/" kind="src" path="proprietary_test"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/ext/iris-reasoner/jgrapht/jgrapht-jdk1.5-0.7.1.jar"/>
 	<classpathentry kind="lib" path="lib/ext/pellet-reasoner/pellet/pellet.jar"/>
