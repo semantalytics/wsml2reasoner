@@ -56,7 +56,15 @@ public interface WSMLReasonerFactory {
      */
     public enum BuiltInReasoner {
 
-        KAON2("org.wsml.reasoner.builtin.kaon2.Kaon2Facade"), KAON2DL("org.wsml.reasoner.builtin.kaon2.Kaon2DLFacade"), MINS("org.wsml.reasoner.builtin.mins.MinsFacade"), PELLET("org.wsml.reasoner.builtin.pellet.PelletFacade"), XSB("org.wsml.reasoner.builtin.xsb.XSBFacade"), IRIS("org.wsml.reasoner.builtin.iris.IrisFacade"), IRISDB("org.wsml.reasoner.builtin.iris.IrisDbFacade"), TPTP("org.wsml.reasoner.builtin.tptp.TPTPFacade"), SPASS("org.wsml.reasoner.builtin.spass.SpassFacade");
+        KAON2("org.wsml.reasoner.builtin.kaon2.Kaon2Facade"),
+        KAON2DL("org.wsml.reasoner.builtin.kaon2.Kaon2DLFacade"),
+        MINS("org.wsml.reasoner.builtin.mins.MinsFacade"),
+        PELLET("org.wsml.reasoner.builtin.pellet.PelletFacade"),
+        XSB("org.wsml.reasoner.builtin.xsb.XSBFacade"),
+        IRIS("org.wsml.reasoner.builtin.iris.IrisFacade"),
+        IRISDB("org.wsml.reasoner.builtin.iris.IrisDbFacade"),
+        TPTP("org.wsml.reasoner.builtin.tptp.TPTPFacade"),
+        SPASS("org.wsml.reasoner.builtin.spass.SpassFacade");
 
         private final String facadeclazz;
 
