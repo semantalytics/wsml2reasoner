@@ -7,8 +7,6 @@ import org.omwg.logicalexpression.MembershipMolecule;
 import org.omwg.logicalexpression.SubConceptMolecule;
 import org.omwg.ontology.DataValue;
 import org.semanticweb.owl.model.OWLDescription;
-import org.wsml.reasoner.api.InternalReasonerException;
-import org.wsml.reasoner.api.WSMLDLReasoner;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
