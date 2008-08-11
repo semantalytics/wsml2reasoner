@@ -25,7 +25,7 @@ import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.LloydToporNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
-import org.wsml.reasoner.transformation.le.LloydToporRules;
+import org.wsml.reasoner.transformation.le.lloydtopor.LloydToporRules;
 
 public class LloydToporNormalizerTest extends BaseNormalizationTest
 {
