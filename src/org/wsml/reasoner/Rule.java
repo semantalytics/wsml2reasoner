@@ -19,7 +19,7 @@
 
 package org.wsml.reasoner;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,7 +37,7 @@ import java.util.List;
 
 public class Rule {
 
-    private static final List<Literal> EMPTY_BODY = new LinkedList<Literal>();
+    private static final List<Literal> EMPTY_BODY = new ArrayList<Literal>();
 
     private List<Literal> body;
 

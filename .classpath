@@ -4,8 +4,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="performance"/>
-	<classpathentry excluding="org/wsml/reasoner/builtin/kaon2/" kind="src" path="proprietary"/>
-	<classpathentry excluding="org/wsml/reasoner/builtin/kaon2/" kind="src" path="proprietary_test"/>
+	<classpathentry kind="src" path="proprietary"/>
+	<classpathentry kind="src" path="proprietary_test"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/ext/iris-reasoner/jgrapht/jgrapht-jdk1.5-0.7.1.jar"/>
 	<classpathentry kind="lib" path="lib/ext/pellet-reasoner/pellet/pellet.jar"/>
@@ -25,6 +25,7 @@
 	<classpathentry kind="lib" path="lib/ext/performance-tests/JFreeChart/jcommon-1.0.10.jar"/>
 	<classpathentry kind="lib" path="lib/ext/performance-tests/JFreeChart/jfreechart-1.0.6.jar"/>
 	<classpathentry kind="lib" path="lib/ext/performance-tests/JFreeChart/swtgraphics2d.jar"/>
+	<classpathentry kind="lib" path="lib/ext/kaon2-reasoner/kaon2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="lib" path="lib/ext/xsb-system/interprolog.jar"/>
 	<classpathentry kind="lib" path="lib/ext/log4j/log4j-1.2.14.jar"/>
