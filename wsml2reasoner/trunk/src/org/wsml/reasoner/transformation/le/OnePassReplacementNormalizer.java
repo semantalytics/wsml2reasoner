@@ -126,8 +126,9 @@ public class OnePassReplacementNormalizer implements LogicalExpressionNormalizer
                 if (rule.isApplicable(expression)) {
                     LogicalExpression oldExpression = expression;
                     expression = rule.apply(expression);
-                    if (!expression.equals(oldExpression))
+                    if (!expression.equals(oldExpression)){
                         expressionHasChanged = true;
+                    }
                     break;
                 }
             }
@@ -155,12 +156,10 @@ public class OnePassReplacementNormalizer implements LogicalExpressionNormalizer
             result = leFactory.createNegationAsFailure(arguments.get(0));
         }
         else if (compound instanceof ExistentialQuantification) {
-            ExistentialQuantification exists = (ExistentialQuantification) compound;
-            result = leFactory.createExistentialQuantification(exists.listVariables(), arguments.get(0));
+            result = leFactory.createExistentialQuantification(((ExistentialQuantification) compound).listVariables(), arguments.get(0));
         }
         else if (compound instanceof UniversalQuantification) {
-            UniversalQuantification exists = (UniversalQuantification) compound;
-            result = leFactory.createUniversalQuantification(exists.listVariables(), arguments.get(0));
+            result = leFactory.createUniversalQuantification(((UniversalQuantification) compound).listVariables(), arguments.get(0));
         }
         else if (compound instanceof Conjunction) {
             result = leFactory.createConjunction(arguments.get(0), arguments.get(1));

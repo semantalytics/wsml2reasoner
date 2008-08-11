@@ -7,15 +7,11 @@ import java.util.Random;
  */
 public abstract class AnonymousIdUtils {
     protected static final Random RND = new Random();
-
-    protected static final String ANONYMOUS_PREFIX = "http://www.wsmo.org/reasoner/anonymous_";
-
-    protected static final String OFTYPE_PREFIX = "http://www.wsmo.org/reasoner/oftype_";
-
-    protected static final String MINCARD_PREFIX = "http://www.wsmo.org/reasoner/mincard_";
-
-    protected static final String MAXCARD_PREFIX = "http://www.wsmo.org/reasoner/maxcard_";
-
+    
+    public static final String ANONYMOUS_PREFIX = "http://www.wsmo.org/reasoner/anonymous_";
+    public static final String OFTYPE_PREFIX = "http://www.wsmo.org/reasoner/oftype_";
+    public static final String MINCARD_PREFIX = "http://www.wsmo.org/reasoner/mincard_";
+    public static final String MAXCARD_PREFIX = "http://www.wsmo.org/reasoner/maxcard_";
     public static final String NAMED_AXIOM_SUFFIX = "~~";
 
     /**
@@ -26,8 +22,7 @@ public abstract class AnonymousIdUtils {
      * @return unique URI
      */
     private static String getNewIri(String prefix) {
-        String newURI = prefix + System.currentTimeMillis() + "-" + Math.abs(RND.nextInt());
-        return newURI;
+        return prefix + System.currentTimeMillis() + "-" + Math.abs(RND.nextInt());
     }
 
     public static String getNewAnonymousIri() {

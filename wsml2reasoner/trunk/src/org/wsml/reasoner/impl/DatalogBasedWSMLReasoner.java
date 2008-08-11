@@ -93,19 +93,14 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
     protected org.wsml.reasoner.DatalogReasonerFacade builtInFacade = null;
 
     protected WsmoFactory wsmoFactory;
-
     protected LogicalExpressionFactory leFactory;
-
     protected WSMO4JManager wsmoManager;
 
     private int allowImports = 0;
-
     private boolean disableConsitencyCheck = false;
-
+    
     private long normTime = -1;
-
     private long convTime = -1;
-
     private long consTime = -1;
 
     private Set<Map<Variable, Term>> queryContainmentResult = null;
@@ -132,10 +127,10 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
             throw new IllegalArgumentException("The WSMO4JManager must not be null");
         }
 
-        builtInFacade = createFacade(builtInType.getFacadeClass(), wsmoManager, config);
+        this.builtInFacade = createFacade(builtInType.getFacadeClass(), wsmoManager, config);
         this.wsmoManager = wsmoManager;
-        wsmoFactory = this.wsmoManager.getWSMOFactory();
-        leFactory = this.wsmoManager.getLogicalExpressionFactory();
+        this.wsmoFactory = wsmoManager.getWSMOFactory();
+        this.leFactory = wsmoManager.getLogicalExpressionFactory();
     }
 
     /**
@@ -240,22 +235,12 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         for (Axiom a : axioms) {
             lExprs.addAll(a.listDefinitions());
         }
-        // System.out.println(lExprs);
 
         p = wsml2datalog.transform(lExprs);
         p.addAll(wsml2datalog.generateAuxilliaryRules());
 
         long normTime_end = System.currentTimeMillis();
         normTime = normTime_end - normTime_start;
-
-        // System.out.println("datalog program:");
-        // System.out.println(p);
-        // System.out.println("-*");
-
-        // for (Rule r : p){
-        // System.out.println(r);
-        // }
-
         return p;
     }
 
@@ -353,20 +338,14 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
     }
 
     public boolean checkQueryContainment(LogicalExpression query1, LogicalExpression query2) {
-
-        // create a logical expression visitor that checks whether the queries
-        // contain disjunctions, negations or built-ins
         QueryContainmentHelper helper = new QueryContainmentHelper();
         query1.accept(helper);
         query2.accept(helper);
 
-        // convert logical expressions to conjunctive queries
         Set<org.wsml.reasoner.ConjunctiveQuery> datalogQueries1 = convertQuery(query1);
         Set<org.wsml.reasoner.ConjunctiveQuery> datalogQueries2 = convertQuery(query2);
 
         boolean result = false;
-
-        // check whether query1 is contained within query2
         for (ConjunctiveQuery datalogQuery1 : datalogQueries1) {
             for (ConjunctiveQuery datalogQuery2 : datalogQueries2) {
                 result = builtInFacade.checkQueryContainment(datalogQuery1, datalogQuery2);
@@ -376,21 +355,14 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
     }
 
     public Set<Map<Variable, Term>> getQueryContainment(LogicalExpression query1, LogicalExpression query2) {
-
-        // create a logical expression visitor that checks whether the queries
-        // contain disjunctions, negations or built-ins
         QueryContainmentHelper helper = new QueryContainmentHelper();
         query1.accept(helper);
         query2.accept(helper);
 
-        // convert logical expressions to conjunctive queries
         Set<org.wsml.reasoner.ConjunctiveQuery> datalogQueries1 = convertQuery(query1);
         Set<org.wsml.reasoner.ConjunctiveQuery> datalogQueries2 = convertQuery(query2);
 
-        // build set for query containment variable mapping result
         queryContainmentResult = new HashSet<Map<Variable, Term>>();
-
-        // check whether query1 is contained within query2
         for (ConjunctiveQuery datalogQuery1 : datalogQueries1) {
             for (ConjunctiveQuery datalogQuery2 : datalogQueries2) {
                 try {
@@ -444,7 +416,6 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
 
     private void addAttributeOfTypeViolations(Set<ConsistencyViolation> errors) throws InvalidModelException {
         // ATTR_OFTYPE(instance,value,concept, attribute,violated_type)
-
         Variable i = leFactory.createVariable("i");
         Variable v = leFactory.createVariable("v");
         Variable c = leFactory.createVariable("c");
@@ -463,26 +434,20 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
 
         Set<Map<Variable, Term>> violations = executeQuery(atom);
         for (Map<Variable, Term> violation : violations) {
-            // Construct error object
-
             Term rawValue = violation.get(v);
-            // Value value;
-            // if (rawValue instanceof DataValue)
-            // value = (DataValue) rawValue;
-            // else
-            // value = wsmoFactory.createInstance((IRI) rawValue);
             Concept concept = wsmoFactory.getConcept((IRI) violation.get(c));
             Attribute attribute = concept.findAttributes((IRI) violation.get(a)).iterator().next();
             Type type;
             IRI typeId = (IRI) violation.get(t);
-            if (WsmlDataType.WSML_STRING.equals(typeId.toString()) || WsmlDataType.WSML_INTEGER.equals(typeId.toString()) || WsmlDataType.WSML_DECIMAL.equals(typeId.toString()) || WsmlDataType.WSML_BOOLEAN.equals(typeId.toString()))
+            if (WsmlDataType.WSML_STRING.equals(typeId.toString()) || WsmlDataType.WSML_INTEGER.equals(typeId.toString()) || WsmlDataType.WSML_DECIMAL.equals(typeId.toString()) || WsmlDataType.WSML_BOOLEAN.equals(typeId.toString())){
                 type = wsmoManager.getDataFactory().createWsmlDataType(typeId);
-            else
+            }
+            else{
                 type = wsmoFactory.getConcept(typeId);
+            }
 
             if (violation.get(i) instanceof Identifier) {
-                Instance instance = wsmoFactory.getInstance((IRI) violation.get(i));
-                errors.add(new AttributeTypeViolation(instance, rawValue, attribute, type));
+                errors.add(new AttributeTypeViolation(wsmoFactory.getInstance((IRI) violation.get(i)), rawValue, attribute, type));
             }
             if (violation.get(i) instanceof ConstructedTerm) {
                 errors.add(new AttributeTypeViolation((ConstructedTerm) violation.get(i), rawValue, attribute, type));
@@ -493,7 +458,6 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
 
     private void addMinCardinalityViolations(Set<ConsistencyViolation> errors) throws InvalidModelException {
         // MIN_CARD(instance, concept, attribute)
-
         Variable i = leFactory.createVariable("i");
         Variable c = leFactory.createVariable("c");
         Variable a = leFactory.createVariable("a");
@@ -508,9 +472,6 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
 
         Set<Map<Variable, Term>> violations = executeQuery(atom);
         for (Map<Variable, Term> violation : violations) {
-            // Construct error object
-            // Instance instance = wsmoFactory.getInstance((Identifier)
-            // violation.get(i));
             Concept concept = wsmoFactory.getConcept((Identifier) violation.get(c));
             Attribute attribute = concept.findAttributes((Identifier) violation.get(a)).iterator().next();
             errors.add(new MinCardinalityViolation(violation.get(i), attribute, concept.getOntology()));
@@ -519,7 +480,6 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
 
     private void addMaxCardinalityViolations(Set<ConsistencyViolation> errors) throws InvalidModelException {
         // MAX_CARD(instance, concept, attribute)
-
         Variable i = leFactory.createVariable("i");
         Variable c = leFactory.createVariable("c");
         Variable a = leFactory.createVariable("a");
@@ -534,9 +494,6 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
 
         Set<Map<Variable, Term>> violations = executeQuery(atom);
         for (Map<Variable, Term> violation : violations) {
-            // Construct error object
-            // Instance instance = wsmoFactory.getInstance((IRI)
-            // violation.get(i));
             Concept concept = wsmoFactory.getConcept((IRI) violation.get(c));
             Attribute attribute = concept.findAttributes((IRI) violation.get(a)).iterator().next();
             errors.add(new MaxCardinalityViolation(violation.get(i), attribute, concept.getOntology()));
@@ -545,7 +502,6 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
 
     private void addNamedUserViolations(Set<ConsistencyViolation> errors) throws InvalidModelException {
         // NAMED_USER(axiom)
-
         Variable i = leFactory.createVariable("i");
 
         IRI atomId = wsmoFactory.createIRI(ConstraintReplacementNormalizer.NAMED_USER_IRI);
@@ -572,7 +528,6 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
 
     private void addUnNamedUserViolations(Set<ConsistencyViolation> errors) throws InvalidModelException {
         // UNNAMED_USER(axiom)
-
         Variable i = leFactory.createVariable("i");
 
         IRI atomId = wsmoFactory.createIRI(ConstraintReplacementNormalizer.UNNAMED_USER_IRI);
@@ -583,7 +538,6 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
 
         Set<Map<Variable, Term>> violations = executeQuery(atom);
         for (int k = 0; k < violations.size(); k++) {
-            // Construct error object
             errors.add(new UnNamedUserConstraintViolation());
         }
     }
@@ -629,19 +583,11 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         for (LogicalExpression query : conjunctiveQueries) {
             p.addAll(wsml2datalog.transform(query));
         }
-
-        // System.out.println("Query as program:" + p);
-        // if (p.size() != 1)
-        // throw new IllegalArgumentException("Could not transform query " + q);
-
+        
         Set<ConjunctiveQuery> result = new HashSet<ConjunctiveQuery>();
-
         for (Rule rule : p) {
-
             if (rule.getHead().getPredicateUri().equals(WSML_RESULT_PREDICATE)) {
-
                 List<Literal> body = new LinkedList<Literal>();
-
                 for (Literal l : rule.getBody()) {
                     body.add(l);
                 }
@@ -694,7 +640,6 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
 
     public void registerEntitiesNoVerification(Set<Entity> theEntities) {
         Set<org.wsml.reasoner.Rule> kb = new HashSet<org.wsml.reasoner.Rule>();
-
         kb.addAll(convertEntities(theEntities));
 
         long convTime_start = System.currentTimeMillis();

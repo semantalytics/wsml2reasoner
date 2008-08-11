@@ -33,11 +33,9 @@ import org.wsmo.factory.LogicalExpressionFactory;
 
 public class ConjunctionPushRule implements NormalizationRule {
     
-    private WSMO4JManager wsmoManager;
     private LogicalExpressionFactory leFactory;
     
     public ConjunctionPushRule(WSMO4JManager wsmoManager){
-        this.wsmoManager = wsmoManager;
         this.leFactory = wsmoManager.getLogicalExpressionFactory();
     }
     
@@ -54,7 +52,7 @@ public class ConjunctionPushRule implements NormalizationRule {
                 result.add(leFactory.createConjunction(conjunction.getLeftOperand(), disjunct));
             }
         }
-        return LEUtil.buildNaryDisjunction(wsmoManager, result);
+        return LEUtil.buildNaryDisjunction(leFactory, result);
     }
 
     public boolean isApplicable(LogicalExpression expression) {

@@ -21,7 +21,6 @@ package org.wsml.reasoner.transformation;
 
 import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.NumberedAnonymousID;
-import org.omwg.logicalexpression.terms.Term;
 import org.omwg.logicalexpression.terms.Visitor;
 import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.SimpleDataValue;
@@ -40,8 +39,7 @@ public class TermVisitor implements Visitor {
 
     public void visitConstructedTerm(ConstructedTerm arg0) {
         for (int i = 0; i < arg0.getArity(); i++) {
-            Term nextArg = arg0.getParameter(i);
-            nextArg.accept(this);
+            arg0.getParameter(i).accept(this);
         }
     }
 

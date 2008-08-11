@@ -19,12 +19,11 @@
 package org.wsml.reasoner.transformation.le;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import org.omwg.logicalexpression.Conjunction;
 import org.omwg.logicalexpression.Disjunction;
 import org.omwg.logicalexpression.LogicalExpression;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.factory.LogicalExpressionFactory;
 
 
 public class LEUtil {
@@ -32,31 +31,27 @@ public class LEUtil {
     protected static final byte CONJUNCTION = 0;
     protected static final byte DISJUNCTION = 1;
     
-    public static Conjunction buildNaryConjunction(WSMO4JManager wsmoManager, Collection< ? extends LogicalExpression> expressions) {
-        return (Conjunction) buildNary(wsmoManager, CONJUNCTION, expressions);
+    public static Conjunction buildNaryConjunction(LogicalExpressionFactory leFactory, Collection< ? extends LogicalExpression> expressions) {
+        return (Conjunction) buildNary(leFactory, CONJUNCTION, expressions);
     }
 
-    public static Disjunction buildNaryDisjunction(WSMO4JManager wsmoManager, Collection< ? extends LogicalExpression> expressions) {
-        return (Disjunction) buildNary(wsmoManager, DISJUNCTION, expressions);
+    public static Disjunction buildNaryDisjunction(LogicalExpressionFactory leFactory, Collection< ? extends LogicalExpression> expressions) {
+        return (Disjunction) buildNary(leFactory, DISJUNCTION, expressions);
     }
 
-    public static LogicalExpression buildNary(WSMO4JManager wsmoManager, byte operationCode, Collection< ? extends LogicalExpression> expressions) {
-        LogicalExpression nary = null;
-        Iterator< ? extends LogicalExpression> leIterator = expressions.iterator();
-        if (leIterator.hasNext()) {
-            nary = leIterator.next();
-        }
-        while (leIterator.hasNext()) {
-            switch (operationCode) {
-            case CONJUNCTION:
-                nary = wsmoManager.getLogicalExpressionFactory().createConjunction(nary, leIterator.next());
-                break;
-
-            case DISJUNCTION:
-                nary = wsmoManager.getLogicalExpressionFactory().createDisjunction(nary, leIterator.next());
-                break;
+    public static LogicalExpression buildNary(LogicalExpressionFactory leFactory, byte operationCode, Collection< ? extends LogicalExpression> expressions) {
+        LogicalExpression result = null;
+        for (LogicalExpression le : expressions){
+            if (result == null){
+                result = le;
+            }
+            else if (operationCode == CONJUNCTION){
+                result = leFactory.createConjunction(result, le);
+            }
+            else if (operationCode == DISJUNCTION){
+                result = leFactory.createDisjunction(result, le);
             }
         }
-        return nary;
+        return result;
     }
 }

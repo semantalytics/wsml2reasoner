@@ -46,12 +46,13 @@ public class ConstructReductionNormalizer implements OntologyNormalizer {
 
     public ConstructReductionNormalizer(WSMO4JManager wsmoManager) {
         List<NormalizationRule> preOrderRules = new ArrayList<NormalizationRule>();
-        List<NormalizationRule> postOrderRules = new ArrayList<NormalizationRule>();
         preOrderRules.addAll(new ImplicationReductionRules(wsmoManager).getRules());
-        // preOrderRules.addAll((List<NormalizationRule>)DisjunctionPullRules.instantiate());
         preOrderRules.addAll(new NegationPushRules(wsmoManager).getRules());
+        
+        List<NormalizationRule> postOrderRules = new ArrayList<NormalizationRule>();
         postOrderRules.addAll(new MoleculeDecompositionRules(wsmoManager).getRules());
         postOrderRules.addAll(new DisjunctionPullRules(wsmoManager).getRules());
+        
         leNormalizer = new OnePassReplacementNormalizer(preOrderRules, postOrderRules, wsmoManager);
         wsmoFactory = wsmoManager.getWSMOFactory();
         anonymousIdTranslator = new AnonymousIdTranslator(wsmoFactory);

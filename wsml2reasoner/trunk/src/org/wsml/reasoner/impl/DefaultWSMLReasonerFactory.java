@@ -101,25 +101,26 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
     }
 
     public WSMLReasoner createWSMLReasoner(Map<String, Object> params, Ontology ontology) {
-        if (ontology == null)
+        if (ontology == null){
             throw new IllegalArgumentException("The ontology paramter may not be null");
-
-        if (params == null)
+        }
+        if (params == null){
             params = new HashMap<String, Object>();
-
+        }
+        
         String wsmlVariant = determineVariant(ontology);
-
-        if (wsmlVariant.equals(WSML.WSML_CORE))
+        if (wsmlVariant.equals(WSML.WSML_CORE)){
             return createCoreReasoner(params);
-
-        if (wsmlVariant.equals(WSML.WSML_DL))
+        }
+        else if (wsmlVariant.equals(WSML.WSML_DL)){
             return createDLReasoner(params);
-
-        if (wsmlVariant.equals(WSML.WSML_FLIGHT))
+        }
+        else if (wsmlVariant.equals(WSML.WSML_FLIGHT)){
             return createFlightReasoner(params);
-
-        if (wsmlVariant.equals(WSML.WSML_RULE))
+        }
+        else if (wsmlVariant.equals(WSML.WSML_RULE)){
             return createRuleReasoner(params);
+        }
 
         throw new RuntimeException("Unsupported WSML variant: " + wsmlVariant);
     }
@@ -129,45 +130,42 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
     }
 
     public DLReasoner createDLReasoner(Map<String, Object> params) {
-        if (params == null)
+        if (params == null){
             params = new HashMap<String, Object>();
+        }
         params.put(PARAM_WSML_VARIANT, WSML.WSML_DL);
-
+        // TODO: BARRY - Can you pass the allow imports flag in here (see LPReasoner)
         return new DLBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.PELLET), extractWsmoManager(params));
     }
 
     public LPReasoner createFlightReasoner(Map<String, Object> params) {
-        if (params == null)
+        if (params == null){
             params = new HashMap<String, Object>();
+        }
         params.put(PARAM_WSML_VARIANT, WSML.WSML_FLIGHT);
 
         DatalogBasedWSMLReasoner reasoner = new DatalogBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.IRIS), extractWsmoManager(params), params);
-
         setAllowImportsFlag(reasoner, params);
-
         return reasoner;
     }
 
     public LPReasoner createRuleReasoner(Map<String, Object> params) {
-        if (params == null)
+        if (params == null){
             params = new HashMap<String, Object>();
+        }
         params.put(PARAM_WSML_VARIANT, WSML.WSML_RULE);
-
         DatalogBasedWSMLReasoner reasoner = new DatalogBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.IRIS), extractWsmoManager(params), params);
-
         setAllowImportsFlag(reasoner, params);
-
         return reasoner;
     }
 
     public FOLReasoner createFOLReasoner(Map<String, Object> params) {
-        if (params == null)
+        if (params == null){
             params = new HashMap<String, Object>();
-
-        WSMO4JManager wsmo4jManager = extractWsmoManager(params);
-
+        }
+        
+        // TODO: BARRY - Can you look at this, I have no idea what this actually trying to do
         BuiltInReasoner reasoner = extractReasoner(params, BuiltInReasoner.SPASS);
-
         String uri = null;
         if (params.containsKey(PARAM_EXTERNAL_REASONER_URI)) {
             uri = (String) params.get(PARAM_EXTERNAL_REASONER_URI);
@@ -183,7 +181,6 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
                 throw new RuntimeException("need to specify URI");
             }
         }
-
-        return new org.wsml.reasoner.impl.FOLBasedWSMLReasoner(reasoner, wsmo4jManager, uri);
+        return new org.wsml.reasoner.impl.FOLBasedWSMLReasoner(reasoner, extractWsmoManager(params), uri);
     }
 }
