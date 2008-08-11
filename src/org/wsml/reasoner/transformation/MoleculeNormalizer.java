@@ -27,10 +27,10 @@ import java.util.Set;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsml.reasoner.transformation.le.FOLMoleculeDecompositionRules;
 import org.wsml.reasoner.transformation.le.LogicalExpressionNormalizer;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
 import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
+import org.wsml.reasoner.transformation.le.foldecomposition.FOLMoleculeDecompositionRules;
 import org.wsmo.common.Entity;
 import org.wsmo.factory.WsmoFactory;
 
