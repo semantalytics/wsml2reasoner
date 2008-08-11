@@ -72,8 +72,8 @@
 	<target name="compile-proprietary" depends="compile" description="Compiles wsml2reasoner propietary facade files">
 		<fail message="The kaon2 jar file (${file.kaon2.jar}) must be present." unless="kaon2.jar.present" />
 		
-		<delete dir="${dir.classes.ext}" />
-		<mkdir dir="${dir.classes.ext}" />
+		<delete dir="${dir.classes.proprietary}" />
+		<mkdir dir="${dir.classes.proprietary}" />
 
 		<copy todir="${dir.classes.proprietary}" preservelastmodified="yes" includeEmptyDirs="no">
 			<fileset dir="${dir.proprietary.src}">
@@ -91,8 +91,8 @@
 
 	<target name="wsml2reasoner-proprietary" depends="compile-proprietary, wsml2reasoner" description="Creates wsml2reasoner proprietary extension jar">
 		<mkdir dir="${dir.jar}" />
-		<jar jarfile="${file.jar.ext}">
-			<fileset dir="${dir.classes.ext}" />
+		<jar jarfile="${file.jar.proprietary}">
+			<fileset dir="${dir.classes.proprietary}" />
 		</jar>
 	</target>
 	
@@ -176,14 +176,15 @@
 		</zip>
 	</target>
 
-	<target name="release-proprietary" depends="wsml2reasoner, source-zip, javadoc-zip" 
+	<target name="release-proprietary" depends="wsml2reasoner, wsml2reasoner-proprietary, source-zip, javadoc-zip" 
 		description="Creates wsml2reasoner jar + L-GPL, GPL and propreietary libraries">
 		
 		<mkdir dir="${dir.release}" />
-		<delete file="${file.release.gpl}" />
+		<delete file="${file.release.proprietary}" />
 
-		<zip destfile="${file.release.gpl}">
+		<zip destfile="${file.release.proprietary}">
 			<fileset file="${file.jar}"/>
+			<fileset file="${file.jar.proprietary}"/>
 			
 			<zipfileset dir="${dir.lib}" prefix="${dir.lib}" />
 			
