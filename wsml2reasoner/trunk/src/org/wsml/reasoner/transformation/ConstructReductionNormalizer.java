@@ -27,13 +27,13 @@ import java.util.Set;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsml.reasoner.transformation.le.DisjunctionPullRules;
-import org.wsml.reasoner.transformation.le.ImplicationReductionRules;
 import org.wsml.reasoner.transformation.le.LogicalExpressionNormalizer;
-import org.wsml.reasoner.transformation.le.MoleculeDecompositionRules;
-import org.wsml.reasoner.transformation.le.NegationPushRules;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
 import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
+import org.wsml.reasoner.transformation.le.disjunctionpull.DisjunctionPullRules;
+import org.wsml.reasoner.transformation.le.implicationreduction.ImplicationReductionRules;
+import org.wsml.reasoner.transformation.le.moleculedecomposition.MoleculeDecompositionRules;
+import org.wsml.reasoner.transformation.le.negationpush.NegationPushRules;
 import org.wsmo.common.Entity;
 import org.wsmo.factory.WsmoFactory;
 

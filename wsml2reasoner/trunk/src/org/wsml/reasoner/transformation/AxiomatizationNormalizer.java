@@ -50,7 +50,7 @@ import org.omwg.ontology.Type;
 import org.omwg.ontology.Value;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsml.reasoner.transformation.le.FixedModificationRules;
+import org.wsml.reasoner.transformation.le.LEUtil;
 import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
@@ -90,16 +90,15 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
     private LogicalExpressionFactory leFactory;
 
-    private FixedModificationRules fixedRules;
-
     private Map<LogicalExpression, String> axiomIDs;
 
-    public AxiomatizationNormalizer(WSMO4JManager wsmoManager) {
-        leFactory = wsmoManager.getLogicalExpressionFactory();
-        wsmoFactory = wsmoManager.getWSMOFactory();
-        fixedRules = new FixedModificationRules(wsmoManager);
-        axiomIDs = new HashMap<LogicalExpression, String>();
+    private WSMO4JManager wsmoManager;
 
+    public AxiomatizationNormalizer(WSMO4JManager wsmoManager) {
+        this.leFactory = wsmoManager.getLogicalExpressionFactory();
+        this.wsmoFactory = wsmoManager.getWSMOFactory();
+        this.wsmoManager = wsmoManager;
+        this.axiomIDs = new HashMap<LogicalExpression, String>();
     }
 
     public Set<Axiom> normalizeAxioms(Collection<Axiom> theAxioms) {
@@ -272,7 +271,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         conjuncts.add(moY);
         conjuncts.add(valXY);
         conjuncts.add(valYZ);
-        LogicalExpression conjunction = fixedRules.buildNaryConjunction(conjuncts);
+        LogicalExpression conjunction = LEUtil.buildNaryConjunction(wsmoManager, conjuncts);
         return leFactory.createImplication(conjunction, valXZ);
     }
 
@@ -288,7 +287,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         conjuncts.add(moX);
         conjuncts.add(moY);
         conjuncts.add(valXY);
-        LogicalExpression conjunction = fixedRules.buildNaryConjunction(conjuncts);
+        LogicalExpression conjunction = LEUtil.buildNaryConjunction(wsmoManager, conjuncts);
         return leFactory.createImplication(conjunction, valYX);
     }
 
@@ -356,7 +355,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         conjuncts.add(moX);
         conjuncts.addAll(Arrays.asList(valXY));
         conjuncts.addAll(inEqualities);
-        LogicalExpression conjunction = fixedRules.buildNaryConjunction(conjuncts);
+        LogicalExpression conjunction = LEUtil.buildNaryConjunction(wsmoManager, conjuncts);
         IRI newPIRI = wsmoFactory.createIRI(AnonymousIdUtils.getNewAnonymousIri());
         Atom newPX = leFactory.createAtom(newPIRI, Arrays.asList(new Term[] { xVariable, attributeID }));
         minCardConstraints.add(leFactory.createLogicProgrammingRule(newPX, conjunction));
@@ -408,7 +407,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
             conjuncts.add(leFactory.createCompoundMolecule(Arrays.asList(valXY)));
         }
         conjuncts.addAll(inEqualities);
-        LogicalExpression conjunction = fixedRules.buildNaryConjunction(conjuncts);
+        LogicalExpression conjunction = LEUtil.buildNaryConjunction(wsmoManager, conjuncts);
         LogicalExpression maxCardConstraint = leFactory.createConstraint(conjunction);
         proclaimAxiomID(maxCardConstraint, AnonymousIdUtils.getNewMaxCardIri());
         // System.out.println(maxCardConstraint.toString());

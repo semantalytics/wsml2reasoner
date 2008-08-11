@@ -26,9 +26,9 @@ import java.util.Set;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsml.reasoner.transformation.le.LloydToporRules;
 import org.wsml.reasoner.transformation.le.LogicalExpressionTransformer;
 import org.wsml.reasoner.transformation.le.TopDownLESplitter;
+import org.wsml.reasoner.transformation.le.lloydtopor.LloydToporRules;
 import org.wsmo.common.Entity;
 import org.wsmo.factory.WsmoFactory;
 
