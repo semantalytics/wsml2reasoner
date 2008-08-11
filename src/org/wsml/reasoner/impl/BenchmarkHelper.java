@@ -43,26 +43,26 @@ public class BenchmarkHelper {
     public long getNormalizationTime() {
         if (reasoner == null)
             return -1;
-        else
+        else{
             return reasoner.getNormalizationTime();
+        }
     }
 
     public long getConvertTime() {
-        if (reasoner == null)
+        if (reasoner == null){
             return -1;
-        else
+        }
+        else{
             return reasoner.getConvertionTime();
+        }
     }
 
     public long getConsistencyCheckTime() {
-        if (reasoner == null)
+        if (reasoner == null){
             return -1;
-        else
+        }
+        else{
             return reasoner.getConsistencyCheckTime();
+        }
     }
-
 }
-/*
- * $Log: not supported by cvs2svn $
- * 
- */

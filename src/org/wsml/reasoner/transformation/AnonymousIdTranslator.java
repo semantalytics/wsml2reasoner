@@ -33,8 +33,9 @@ public final class AnonymousIdTranslator {
         else if (term instanceof NumberedAnonymousID) {
             return translate(scope, (NumberedAnonymousID) term);
         }
-        else
+        else{
             return term;
+        }
     }
 
     public void setScope(LogicalExpression scope) {

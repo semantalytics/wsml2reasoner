@@ -92,12 +92,9 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
     private Map<LogicalExpression, String> axiomIDs;
 
-    private WSMO4JManager wsmoManager;
-
     public AxiomatizationNormalizer(WSMO4JManager wsmoManager) {
         this.leFactory = wsmoManager.getLogicalExpressionFactory();
         this.wsmoFactory = wsmoManager.getWSMOFactory();
-        this.wsmoManager = wsmoManager;
         this.axiomIDs = new HashMap<LogicalExpression, String>();
     }
 
@@ -117,13 +114,6 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
     public Set<Entity> normalizeEntities(Collection<Entity> theEntities) {
         Set<Entity> result = new HashSet<Entity>();
-        // for (Axiom a : (Set<Axiom>) resultOntology.listAxioms()) {
-        // try {
-        // a.setOntology(null);
-        // } catch (InvalidModelException e) {
-        // e.printStackTrace();
-        // }
-        // }
 
         for (Entity e : theEntities) {
             if (e instanceof Axiom) {
@@ -135,7 +125,6 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 else {
                     // create an axiom such that original one is not touched.
                     newAxiomId = wsmoFactory.createIRI(axiom.getIdentifier() + AnonymousIdUtils.NAMED_AXIOM_SUFFIX + System.currentTimeMillis());
-                    ;
                 }
 
                 Axiom newAxiom = wsmoFactory.createAxiom(newAxiomId);
@@ -206,7 +195,6 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
             Identifier typeID;
             if (type instanceof Concept) {
                 typeID = ((Concept) type).getIdentifier();
-
             }
             else if (type instanceof SimpleDataType) {
                 typeID = ((SimpleDataType) type).getIRI();
@@ -236,9 +224,8 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         if (attribute.isTransitive()) {
             resultExpressions.add(createTransitivityConstraint(conceptID, attributeID));
         }
-        Identifier inverseAttribute = attribute.getInverseOf();
-        if (inverseAttribute != null) {
-            resultExpressions.addAll(createInverseConstraints(conceptID, attributeID, inverseAttribute));
+        if (attribute.getInverseOf() != null) {
+            resultExpressions.addAll(createInverseConstraints(conceptID, attributeID, attribute.getInverseOf()));
         }
 
         // process cardinality constraints:
@@ -271,8 +258,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         conjuncts.add(moY);
         conjuncts.add(valXY);
         conjuncts.add(valYZ);
-        LogicalExpression conjunction = LEUtil.buildNaryConjunction(wsmoManager, conjuncts);
-        return leFactory.createImplication(conjunction, valXZ);
+        return leFactory.createImplication(LEUtil.buildNaryConjunction(leFactory, conjuncts), valXZ);
     }
 
     protected LogicalExpression createSymmetryConstraint(Identifier conceptID, Identifier attributeID) {
@@ -287,15 +273,13 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         conjuncts.add(moX);
         conjuncts.add(moY);
         conjuncts.add(valXY);
-        LogicalExpression conjunction = LEUtil.buildNaryConjunction(wsmoManager, conjuncts);
-        return leFactory.createImplication(conjunction, valYX);
+        return leFactory.createImplication(LEUtil.buildNaryConjunction(leFactory, conjuncts), valYX);
     }
 
     protected LogicalExpression createReflexivityConstraint(Identifier conceptID, Identifier attributeID) {
         Variable xVariable = leFactory.createVariable("x");
         LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable, conceptID);
         LogicalExpression valXX = leFactory.createAttributeValue(xVariable, attributeID, xVariable);
-
         return leFactory.createImplication(moX, valXX);
     }
 
@@ -355,7 +339,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         conjuncts.add(moX);
         conjuncts.addAll(Arrays.asList(valXY));
         conjuncts.addAll(inEqualities);
-        LogicalExpression conjunction = LEUtil.buildNaryConjunction(wsmoManager, conjuncts);
+        LogicalExpression conjunction = LEUtil.buildNaryConjunction(leFactory, conjuncts);
         IRI newPIRI = wsmoFactory.createIRI(AnonymousIdUtils.getNewAnonymousIri());
         Atom newPX = leFactory.createAtom(newPIRI, Arrays.asList(new Term[] { xVariable, attributeID }));
         minCardConstraints.add(leFactory.createLogicProgrammingRule(newPX, conjunction));
@@ -407,10 +391,9 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
             conjuncts.add(leFactory.createCompoundMolecule(Arrays.asList(valXY)));
         }
         conjuncts.addAll(inEqualities);
-        LogicalExpression conjunction = LEUtil.buildNaryConjunction(wsmoManager, conjuncts);
+        LogicalExpression conjunction = LEUtil.buildNaryConjunction(leFactory, conjuncts);
         LogicalExpression maxCardConstraint = leFactory.createConstraint(conjunction);
         proclaimAxiomID(maxCardConstraint, AnonymousIdUtils.getNewMaxCardIri());
-        // System.out.println(maxCardConstraint.toString());
         return maxCardConstraint;
     }
 
@@ -429,7 +412,6 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         for (Relation superRelation : relation.listSuperRelations()) {
             Atom superRelP = leFactory.createAtom(superRelation.getIdentifier(), terms);
             resultExpressions.add(leFactory.createImplication(relP, superRelP));
-
         }
 
         // process relation parameters:
@@ -464,7 +446,6 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 }
             }
         }
-        // System.out.println(parameterAxioms);
         resultExpressions.addAll(parameterAxioms);
 
         // process relation instances:
@@ -472,14 +453,10 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
             List<Term> args = new LinkedList<Term>();
             for (Value value : relInstance.listParameterValues()) {
                 if (value instanceof Instance) {
-                    Identifier val = ((Instance) value).getIdentifier();
-                    args.add(val);
-
+                    args.add(((Instance) value).getIdentifier());
                 }
                 else if (value instanceof DataValue) {
-                    DataValue dataValue = (DataValue) value;
-                    // args.add(convertDataValue(dataValue));
-                    args.add(dataValue);
+                    args.add((DataValue) value);
                 }
             }
             resultExpressions.add(leFactory.createAtom(relationID, args));
@@ -510,7 +487,6 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         // process attribute values:
         Map<Identifier, Set<Value>> attributeValues = instance.listAttributeValues();
         for (Identifier attribute : attributeValues.keySet()) {
-
             Set<Value> values = attributeValues.get(attribute);
             List<Molecule> molecules = new ArrayList<Molecule>(values.size());
             for (Value value : values) {
@@ -518,10 +494,8 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 if (value instanceof Instance) {
                     Instance i = ((Instance) value);
                     valueTerm = i.getIdentifier();
-
                 }
                 else if (value instanceof DataValue) {
-                    // valueTerm = convertDataValue((DataValue)value);
                     valueTerm = ((DataValue) value);
                 }
                 molecules.add(leFactory.createAttributeValue(instanceID, attribute, valueTerm));
@@ -533,8 +507,6 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 resultExpressions.add(molecules.get(0));
             }
         }
-
         return resultExpressions;
     }
-
 }

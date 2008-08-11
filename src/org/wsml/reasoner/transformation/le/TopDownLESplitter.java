@@ -19,7 +19,6 @@
 package org.wsml.reasoner.transformation.le;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -64,13 +63,9 @@ public class TopDownLESplitter implements LogicalExpressionTransformer {
 
         // recursively apply transformation to all resulting expressions:
         Set<LogicalExpression> resultingExpressions = new HashSet<LogicalExpression>();
-        Iterator outputExpressionIterator = outputExpressions.iterator();
-        while (outputExpressionIterator.hasNext()) {
-            LogicalExpression outputExpression = (LogicalExpression) outputExpressionIterator.next();
-            Set<LogicalExpression> replacements = transform(outputExpression);
-            resultingExpressions.addAll(replacements);
+        for (LogicalExpression outputExpression : outputExpressions){
+            resultingExpressions.addAll(transform(outputExpression));
         }
-
         return resultingExpressions;
     }
 }

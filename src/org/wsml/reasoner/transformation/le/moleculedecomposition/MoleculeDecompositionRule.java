@@ -27,17 +27,18 @@ import org.omwg.logicalexpression.Molecule;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.LEUtil;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
+import org.wsmo.factory.LogicalExpressionFactory;
 
 public class MoleculeDecompositionRule implements NormalizationRule {
     
-    private WSMO4JManager wsmoManager;
+    private LogicalExpressionFactory leFactory;
     
     public MoleculeDecompositionRule(WSMO4JManager wsmoManager){
-        this.wsmoManager = wsmoManager;
+        this.leFactory = wsmoManager.getLogicalExpressionFactory();
     }
     
     public LogicalExpression apply(LogicalExpression expression) {
-        return LEUtil.buildNaryConjunction(wsmoManager, decomposeMolecule((CompoundMolecule) expression));
+        return LEUtil.buildNaryConjunction(leFactory, decomposeMolecule((CompoundMolecule) expression));
     }
 
     public boolean isApplicable(LogicalExpression expression) {

@@ -35,7 +35,6 @@ import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.TopEntity;
 import org.wsmo.validator.ValidationError;
 import org.wsmo.validator.ValidationWarning;
-import org.wsmo.validator.WsmlValidator;
 import org.wsmo.wsml.Serializer;
 
 /**
@@ -147,18 +146,10 @@ public class WsmlOwlSerializer implements Serializer {
     }
 
     private OWLOntology transformOntology(TopEntity[] te) {
-        Ontology ontology = (Ontology) te[0];
-
-        DLBasedWSMLReasoner reasoner = new DLBasedWSMLReasoner(BuiltInReasoner.PELLET, new WSMO4JManager());
-
-        // check if given WSML-DL ontology is valid
-        WsmlValidator validator = new WsmlValidatorImpl();
-        boolean valid = validator.isValid(ontology, "http://www.wsmo.org/wsml/wsml-syntax/wsml-dl", new ArrayList<ValidationError>(), new ArrayList<ValidationWarning>());
-        if (!valid) {
+        if (!new WsmlValidatorImpl().isValid(te[0], "http://www.wsmo.org/wsml/wsml-syntax/wsml-dl", new ArrayList<ValidationError>(), new ArrayList<ValidationWarning>())) {
             throw new RuntimeException("The given WSML-DL ontology is not " + "valid!");
         }
-        // convert ontology
-        return reasoner.createOWLOntology(ontology);
+        return new DLBasedWSMLReasoner(BuiltInReasoner.PELLET, new WSMO4JManager()).createOWLOntology((Ontology) te[0]);
     }
 
 }

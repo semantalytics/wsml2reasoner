@@ -20,10 +20,8 @@ package org.wsml.reasoner.transformation.dl;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
-import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
@@ -147,21 +145,17 @@ public class Relation2AttributeNormalizer implements OntologyNormalizer {
      * Superrelations are replaced by implication logical expressions.
      */
     private Axiom normalizeSuperRelations(Set<Relation> superRelations, Relation relation) {
-        Axiom axiom = wsmoFactory.createAxiom((Identifier) anonymousIdTranslator.translate(wsmoFactory.createAnonymousID()));
-        LogicalExpression logExpr = null;
-        Iterator<Relation> it = superRelations.iterator();
-        while (it.hasNext()) {
-            Relation superRelation = it.next();
-            String le = "?x[_\"" + relation.getIdentifier() + "\" hasValue ?y] implies " + "?x[_\"" + superRelation.getIdentifier() + "\" hasValue ?y].";
+        Axiom result = wsmoFactory.createAxiom((Identifier) anonymousIdTranslator.translate(wsmoFactory.createAnonymousID()));
+        for (Relation sr : superRelations){
+            String le = "?x[_\"" + relation.getIdentifier() + "\" hasValue ?y] implies " + "?x[_\"" + sr.getIdentifier() + "\" hasValue ?y].";
             try {
-                logExpr = leFactory.createLogicalExpression(le);
+                result.addDefinition(leFactory.createLogicalExpression(le));
             }
             catch (ParserException e) {
                 e.printStackTrace();
             }
-            axiom.addDefinition(logExpr);
         }
-        return axiom;
+        return result;
     }
 
     /*

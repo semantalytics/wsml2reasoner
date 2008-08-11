@@ -34,21 +34,15 @@ import org.semanticweb.owl.model.OWLOntology;
 public class OWLSerializerImpl implements OWLSerializer {
 
     public void serialize(OWLOntology owlOntology, Writer arg1) throws RendererException {
-        org.semanticweb.owl.io.owl_rdf.Renderer renderer = new org.semanticweb.owl.io.owl_rdf.Renderer();
-        renderer.renderOntology(owlOntology, arg1);
+        new org.semanticweb.owl.io.owl_rdf.Renderer().renderOntology(owlOntology, arg1);
     }
 
-    public void serialize(OWLOntology owlOntology, Writer arg1, Map arg2) throws RendererException {
-        boolean rdf_syntax = true;
-        if (arg2 != null && arg2.containsKey(OWLSerializer.OWL_SERIALIZER)) {
-            if (arg2.get(OWLSerializer.OWL_SERIALIZER).equals(OWLSerializer.OWL_ABSTRACT)) {
-                rdf_syntax = false;
-                Renderer renderer = new Renderer();
-                renderer.renderOntology(owlOntology, arg1);
-            }
+    public void serialize(OWLOntology owlOntology, Writer theWriter, Map theMap) throws RendererException {
+        if (theMap != null && theMap.containsKey(OWLSerializer.OWL_SERIALIZER) && theMap.get(OWLSerializer.OWL_SERIALIZER).equals(OWLSerializer.OWL_ABSTRACT)) {
+            new Renderer().renderOntology(owlOntology, theWriter);
         }
-        if (rdf_syntax) {
-            serialize(owlOntology, arg1);
+        else{
+            serialize(owlOntology, theWriter);
         }
     }
 

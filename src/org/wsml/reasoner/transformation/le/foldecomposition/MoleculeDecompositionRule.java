@@ -49,19 +49,17 @@ public class MoleculeDecompositionRule implements NormalizationRule {
     public final static String ofType = "urn://oftp#";
     public final static String impliesType = "urn://imtp#";
     
-    private WSMO4JManager wsmoManager;
     private LogicalExpressionFactory leFactory;
     private WsmoFactory wsmoFactory;
     
     public MoleculeDecompositionRule(WSMO4JManager wsmoManager){
-        this.wsmoManager = wsmoManager;
         this.leFactory = wsmoManager.getLogicalExpressionFactory();
         this.wsmoFactory = wsmoManager.getWSMOFactory();
     }
     
     public LogicalExpression apply(LogicalExpression expression) {
         if (expression instanceof CompoundMolecule) {
-            return LEUtil.buildNaryConjunction(wsmoManager, decomposeMolecule((CompoundMolecule) expression));
+            return LEUtil.buildNaryConjunction(leFactory, decomposeMolecule((CompoundMolecule) expression));
         }
         else {
             return moleculeToAtom((Molecule) expression);

@@ -13,7 +13,6 @@ import org.omwg.logicalexpression.AttributeValueMolecule;
 import org.omwg.logicalexpression.CompoundMolecule;
 import org.omwg.logicalexpression.Conjunction;
 import org.omwg.logicalexpression.Constraint;
-import org.omwg.logicalexpression.LogicProgrammingRule;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.MembershipMolecule;
 import org.omwg.logicalexpression.NegationAsFailure;
@@ -28,46 +27,30 @@ import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
 public class ConstraintReplacementNormalizer implements OntologyNormalizer {
+   
     private static final String PREFIX = "http://www.wsmo.org/reasoner/";
 
     public static final String ATTR_OFTYPE_IRI = PREFIX + "ATTR_OFTYPE";
-
     public static final int ATTR_OFTYPE_ARITY = 5;
-
     public static final String MIN_CARD_IRI = PREFIX + "MIN_CARD";
-
     public static final int MIN_CARD_ARITY = 3;
-
     public static final String MAX_CARD_IRI = PREFIX + "MAX_CARD";
-
     public static final int MAX_CARD_ARITY = 3;
-
     public static final String NAMED_USER_IRI = PREFIX + "NAMED_USER";
-
     public static final int NAMED_USER_ARITY = 1;
-
     public static final String UNNAMED_USER_IRI = PREFIX + "UNNAMED_USER";
-
     public static final int UNNAMED_USER_ARITY = 1;
-
     public static final String VIOLATION_IRI = PREFIX + "VIOLATION";
-
     public static final int VIOLATION_ARITY = 0;
 
     public IRI attributeOfTypePredicateID;
-
     public IRI minCardinalityPredicateID;
-
     public IRI maxCardinalityPredicateID;
-
     public IRI namedUserAxiomPredicateID;
-
     public IRI unnamedUserAxiomPredicateID;
-
     public IRI violationPredicateID;
 
     private WsmoFactory wsmoFactory;
-
     private LogicalExpressionFactory leFactory;
 
     public ConstraintReplacementNormalizer(WSMO4JManager wsmoManager) {
@@ -79,7 +62,6 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
         namedUserAxiomPredicateID = wsmoFactory.createIRI(NAMED_USER_IRI);
         unnamedUserAxiomPredicateID = wsmoFactory.createIRI(UNNAMED_USER_IRI);
         violationPredicateID = wsmoFactory.createIRI(VIOLATION_IRI);
-
     }
 
     public Set<Entity> normalizeEntities(Collection<Entity> theEntities) {
@@ -106,20 +88,19 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
                     else if (axiomIDString.startsWith(AnonymousIdUtils.ANONYMOUS_PREFIX)) {
                         tempHolder.add(replaceUnnamedUserConstraint((Constraint) definition, axiomID));
                     }
-                    else { // axiom named by user
+                    else {
                         tempHolder.add(replaceNamedUserConstraint((Constraint) definition, axiomID));
                     }
                 }
-                else if (definition instanceof AttributeConstraintMolecule) {// oftype
-                                                                                // statement
+                else if (definition instanceof AttributeConstraintMolecule) {
                     tempHolder.add(definition);
                     tempHolder.add(replaceAttrOfTypeConstraint((AttributeConstraintMolecule) definition));
                 }
-                else { // no constraint axiom
-                    tempHolder.add(definition);// resultOntology.addAxiom(axiom);
+                else {
+                    tempHolder.add(definition);
                 }
             }
-            if (tempHolder.size() > 0) { // create a new Axiom
+            if (tempHolder.size() > 0) {
                 Axiom normAxiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(AnonymousIdUtils.getNewAnonymousIri()));
                 for (LogicalExpression normLE : tempHolder) {
                     normAxiom.addDefinition(normLE);
@@ -140,7 +121,6 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
     }
 
     private List<LogicalExpression> createMetaViolationAxioms() {
-
         List<LogicalExpression> resultLEs = new LinkedList<LogicalExpression>();
 
         Variable v1 = leFactory.createVariable("v1");
@@ -151,51 +131,44 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
 
         Atom head = leFactory.createAtom(violationPredicateID, new ArrayList<Term>());
 
-        // VIOLATION :-
-        // ATTR_OFTYPE(instance,value,concept,attribute,violated_type)
+        // VIOLATION :- ATTR_OFTYPE(instance,value,concept,attribute,violated_type)
         List<Term> params = new ArrayList<Term>(5);
         params.add(v1);
         params.add(v2);
         params.add(v3);
         params.add(v4);
         params.add(v5);
-        Atom body = leFactory.createAtom(attributeOfTypePredicateID, params);
-        addNewViolationAxiom(resultLEs, head, body);
+        addNewViolationAxiom(resultLEs, head, leFactory.createAtom(attributeOfTypePredicateID, params));
 
         // VIOLATION :- MIN_CARD(instance, concept, attribute)
         params = new ArrayList<Term>(3);
         params.add(v1);
         params.add(v2);
         params.add(v3);
-        body = leFactory.createAtom(minCardinalityPredicateID, params);
-        addNewViolationAxiom(resultLEs, head, body);
+        addNewViolationAxiom(resultLEs, head, leFactory.createAtom(minCardinalityPredicateID, params));
 
         // VIOLATION :- MAX_CARD(instance, concept, attribute)
         params = new ArrayList<Term>(3);
         params.add(v1);
         params.add(v2);
         params.add(v3);
-        body = leFactory.createAtom(maxCardinalityPredicateID, params);
-        addNewViolationAxiom(resultLEs, head, body);
+        addNewViolationAxiom(resultLEs, head, leFactory.createAtom(maxCardinalityPredicateID, params));
 
         // VIOLATION :- NAMED_USER(axiom_id)
         params = new ArrayList<Term>(1);
         params.add(v1);
-        body = leFactory.createAtom(namedUserAxiomPredicateID, params);
-        addNewViolationAxiom(resultLEs, head, body);
+        addNewViolationAxiom(resultLEs, head, leFactory.createAtom(namedUserAxiomPredicateID, params));
 
         // VIOLATION :- UNNAMED_USER(axiom_id)
         params = new ArrayList<Term>(1);
         params.add(v1);
-        body = leFactory.createAtom(unnamedUserAxiomPredicateID, params);
-        addNewViolationAxiom(resultLEs, head, body);
+        addNewViolationAxiom(resultLEs, head, leFactory.createAtom(unnamedUserAxiomPredicateID, params));
 
         return resultLEs;
     }
 
     private void addNewViolationAxiom(List<LogicalExpression> resultAxioms, Atom head, Atom body) {
-        LogicProgrammingRule rule = leFactory.createLogicProgrammingRule(head, body);
-        resultAxioms.add(rule);
+        resultAxioms.add(leFactory.createLogicProgrammingRule(head, body));
     }
 
     private LogicalExpression replaceAttrOfTypeConstraint(AttributeConstraintMolecule expression) {
@@ -217,51 +190,16 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
         params.add(conceptID);
         params.add(attributeID);
         params.add(typeID);
-        Atom head = leFactory.createAtom(attributeOfTypePredicateID, params);
-
-        // add the signature as fact
-
-        return leFactory.createLogicProgrammingRule(head, body);
-
-        /*
-         * LogicProgrammingRule rule =
-         * leFactory.createLogicProgrammingRule(head, body);
-         *  // create an axiom from rule: Axiom resultAxiom =
-         * wsmoFactory.createAxiom(wsmoFactory
-         * .createIRI(AnonymousIdUtils.getNewAnonymousIri()));
-         * resultAxiom.addDefinition(rule);
-         * 
-         * return resultAxiom;
-         */
+        return leFactory.createLogicProgrammingRule(leFactory.createAtom(attributeOfTypePredicateID, params), body);
     }
 
     private LogicalExpression replaceUnnamedUserConstraint(Constraint constraint, Identifier axiomID) {
-        // create corresponding rule:
-        // Constraint constraint = (Constraint) (axiom.listDefinitions()
-        // .iterator().next());
-        LogicalExpression body = constraint.getOperand();
         List<Term> params = new ArrayList<Term>(1);
         params.add(axiomID);
-        Atom head = leFactory.createAtom(unnamedUserAxiomPredicateID, params);
-
-        return leFactory.createLogicProgrammingRule(head, body);
-        /*
-         * LogicProgrammingRule rule =
-         * leFactory.createLogicProgrammingRule(head, body);
-         *  // create an axiom from rule: Axiom resultAxiom =
-         * wsmoFactory.createAxiom(wsmoFactory
-         * .createIRI(AnonymousIdUtils.getNewAnonymousIri()));
-         * resultAxiom.addDefinition(rule);
-         * 
-         * return resultAxiom;
-         */
+        return leFactory.createLogicProgrammingRule(leFactory.createAtom(unnamedUserAxiomPredicateID, params), constraint.getOperand());
     }
 
     private LogicalExpression replaceMaxCardConstraint(Constraint constraint) {
-        // get relevant elements out of the attribute constraint:
-        // Constraint constraint = (Constraint)
-        // axiom.listDefinitions().iterator()
-        // .next();
         Conjunction body = (Conjunction) constraint.getOperand();
         Collection<LogicalExpression> conjuncts = extractConjuncts(body);
         Term instanceID = null, attributeID = null, conceptID = null;
@@ -289,26 +227,10 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
         params.add(instanceID);
         params.add(conceptID);
         params.add(attributeID);
-        Atom head = leFactory.createAtom(maxCardinalityPredicateID, params);
-
-        return leFactory.createLogicProgrammingRule(head, body);
-        /*
-         * LogicProgrammingRule rule =
-         * leFactory.createLogicProgrammingRule(head, body);
-         *  // create an axiom from rule: Axiom resultAxiom =
-         * wsmoFactory.createAxiom(wsmoFactory
-         * .createIRI(AnonymousIdUtils.getNewAnonymousIri()));
-         * resultAxiom.addDefinition(rule);
-         * 
-         * return resultAxiom;
-         */
+        return leFactory.createLogicProgrammingRule(leFactory.createAtom(maxCardinalityPredicateID, params), body);
     }
 
     private LogicalExpression replaceMinCardConstraint(Constraint constraint) {
-        // get relevant elements out of the attribute constraint:
-        // Constraint constraint = (Constraint)
-        // axiom.listDefinitions().iterator()
-        // .next();
         Conjunction body = (Conjunction) constraint.getOperand();
         Collection<LogicalExpression> conjuncts = extractConjuncts(body);
         Term instanceID = null, conceptID = null, attributeID = null;
@@ -329,20 +251,7 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
         params.add(instanceID);
         params.add(conceptID);
         params.add(attributeID);
-        Atom head = leFactory.createAtom(minCardinalityPredicateID, params);
-
-        return leFactory.createLogicProgrammingRule(head, body);
-
-        /*
-         * LogicProgrammingRule rule =
-         * leFactory.createLogicProgrammingRule(head, body);
-         *  // create an axiom from rule: Axiom resultAxiom =
-         * wsmoFactory.createAxiom(wsmoFactory
-         * .createIRI(AnonymousIdUtils.getNewAnonymousIri()));
-         * resultAxiom.addDefinition(rule);
-         * 
-         * return resultAxiom;
-         */
+        return leFactory.createLogicProgrammingRule(leFactory.createAtom(minCardinalityPredicateID, params), body);
     }
 
     private Collection<LogicalExpression> extractConjuncts(Conjunction conjunction) {
@@ -365,25 +274,8 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
     }
 
     private LogicalExpression replaceNamedUserConstraint(Constraint constraint, Identifier axiomID) {
-        // create corresponding rule:
-        // Constraint constraint = (Constraint) (axiom.listDefinitions()
-        // .iterator().next());
-        LogicalExpression body = constraint.getOperand();
         List<Term> params = new ArrayList<Term>(1);
         params.add(axiomID);
-        Atom head = leFactory.createAtom(namedUserAxiomPredicateID, params);
-
-        return leFactory.createLogicProgrammingRule(head, body);
-        /*
-         * LogicProgrammingRule rule =
-         * leFactory.createLogicProgrammingRule(head, body);
-         *  // create an axiom from rule: Axiom resultAxiom =
-         * wsmoFactory.createAxiom(wsmoFactory
-         * .createIRI(AnonymousIdUtils.getNewAnonymousIri()));
-         * resultAxiom.addDefinition(rule);
-         * 
-         * return resultAxiom;
-         */
+        return leFactory.createLogicProgrammingRule(leFactory.createAtom(namedUserAxiomPredicateID, params), constraint.getOperand());
     }
-
 }
