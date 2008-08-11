@@ -212,7 +212,7 @@ public class IrisFacadeTest extends TestCase {
 						.createWsmlString("c"))));
 	}
 
-	public void testDavaValueConverter() {
+	public void testDataValueConverter() {
 		final DataFactory DF = org.wsmo.factory.Factory.createDataFactory(null);
 		final ITermFactory TF = org.deri.iris.factory.Factory.TERM;
 		final IConcreteFactory CF = org.deri.iris.factory.Factory.CONCRETE;

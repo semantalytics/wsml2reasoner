@@ -108,12 +108,6 @@ import org.wsmo.factory.WsmoFactory;
  * <p>
  * The wsmo4j interface for the iris reasoner.
  * </p>
- * <p>
- * $Id: IrisFacade.java,v 1.24 2007-11-13 17:36:11 nathalie Exp $
- * </p>
- * 
- * @author Richard Pöttler (richard dot poettler at deri dot org)
- * @version $Revision: 1.24 $
  */
 public class IrisFacade implements DatalogReasonerFacade {
 
@@ -302,7 +296,7 @@ public class IrisFacade implements DatalogReasonerFacade {
 
     public synchronized void register(Set<Rule> kb) throws ExternalToolException {
         if (kb == null) {
-            throw new NullPointerException("The knowlebe base must not be null");
+            throw new IllegalArgumentException("The knowledge base must not be null");
         }
         if (prog != null) {
             deregister();
