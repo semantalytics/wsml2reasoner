@@ -68,8 +68,7 @@ public class DisjunctionPullRules extends FixedModificationRules {
 
         public boolean isApplicable(LogicalExpression expression) {
             if (expression instanceof Conjunction) {
-                Conjunction conjunction = (Conjunction) expression;
-                return hasLeftDisjunction(conjunction) || hasRightDisjunction(conjunction);
+                return hasLeftDisjunction((Conjunction) expression) || hasRightDisjunction((Conjunction) expression);
             }
             return false;
         }
@@ -84,9 +83,8 @@ public class DisjunctionPullRules extends FixedModificationRules {
 
         protected void collectDirectDisjuncts(LogicalExpression expression, Set<LogicalExpression> disjuncts) {
             if (expression instanceof Disjunction) {
-                Disjunction disjunction = (Disjunction) expression;
-                collectDirectDisjuncts(disjunction.getLeftOperand(), disjuncts);
-                collectDirectDisjuncts(disjunction.getRightOperand(), disjuncts);
+                collectDirectDisjuncts(((Disjunction) expression).getLeftOperand(), disjuncts);
+                collectDirectDisjuncts(((Disjunction) expression).getRightOperand(), disjuncts);
                 return;
             }
             disjuncts.add(expression);
