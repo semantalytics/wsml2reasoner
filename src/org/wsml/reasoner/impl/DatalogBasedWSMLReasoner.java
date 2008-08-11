@@ -649,8 +649,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
             builtInFacade.register(kb);
         }
         catch (org.wsml.reasoner.ExternalToolException e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("This set of ontologies could not have been registered at the built-in reasoner", e);
+            throw new IllegalArgumentException("This set of entities could not be registered with the built-in reasoner", e);
         }
 
         long convTime_end = System.currentTimeMillis();
