@@ -37,6 +37,7 @@ public class FOLdecompositionTestsuite {
         //$JUnit-BEGIN$
         suite.addTestSuite(TestAtomAnonymousIDRule.class);
         suite.addTestSuite(TestMoleculeAnonymousIDRule.class);
+        suite.addTestSuite(TestFOLMoleculeDecompositionRules.class);
         //$JUnit-END$
         return suite;
     }
