@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry path="api" kind="src"/>
 	<classpathentry path="src" kind="src"/>
-	<classpathentry excluding="org/wsml/reasoner/builtin/kaon2/Kaon2DLFacade.java|org/wsml/reasoner/builtin/kaon2/Kaon2Facade.java" path="proprietary" kind="src"/>
+	<classpathentry excluding="org/wsml/reasoner/builtin/kaon2/Kaon2DLFacade.java|org/wsml/reasoner/builtin/kaon2/Kaon2Facade.java|org/wsml/reasoner/builtin/kaon2/Kaon2LPWrapperImplementation.java|org/wsml/reasoner/builtin/kaon2/Kaon2DLWrapperImplementation.java|org/wsml/reasoner/builtin/kaon2/Kaon2LPFacade.java" path="proprietary" kind="src"/>
 	<classpathentry path="unit-test" kind="src"/>
 	<classpathentry path="test" kind="src"/>
 	<classpathentry excluding="org/wsml/reasoner/builtin/kaon2/Kaon2FacadeTest.java" path="proprietary_test" kind="src"/>
