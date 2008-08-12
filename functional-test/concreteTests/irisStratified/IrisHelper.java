@@ -1,4 +1,4 @@
-package concreteTests.iris;
+package concreteTests.irisStratified;
 
 import helper.ReasonerHelper;
 import org.wsml.reasoner.api.LPReasoner;
