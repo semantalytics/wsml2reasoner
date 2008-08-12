@@ -49,42 +49,19 @@ public interface WSMLReasonerFactory {
     public static final String PARAM_EXTERNAL_REASONER_URI = "ENDPOINT";
 
     /**
-     * Enum to select which reasoner to take. This enum also holds informations
-     * about those reasoners.
+     * Enum to select which built-in reasoner to use.
      */
     public enum BuiltInReasoner {
-
-        KAON2("org.wsml.reasoner.builtin.kaon2.Kaon2Facade"),
-        KAON2DL("org.wsml.reasoner.builtin.kaon2.Kaon2DLFacade"),
-        MINS("org.wsml.reasoner.builtin.mins.MinsWellFoundedFacade"),
-//        MINS_NAIVE("org.wsml.reasoner.builtin.mins.MinsNaiveFacade"),
-        PELLET("org.wsml.reasoner.builtin.pellet.PelletFacade"),
-        XSB("org.wsml.reasoner.builtin.xsb.XSBFacade"),
-        IRIS_STRATIFIED("org.wsml.reasoner.builtin.iris.IrisStratifiedFacade"),
-        IRIS_WELL_FOUNDED("org.wsml.reasoner.builtin.iris.IrisWellFoundedFacade"),
-        TPTP("org.wsml.reasoner.builtin.tptp.TPTPFacade"),
-        SPASS("org.wsml.reasoner.builtin.spass.SpassFacade");
-
-        private final String facadeclazz;
-
-        /**
-         * Constructs a new enum entry.
-         * 
-         * @param facadeclazz
-         *            class for the facade containing a proper constructor
-         */
-        BuiltInReasoner(final String facadeclazz) {
-            this.facadeclazz = facadeclazz;
-        }
-
-        /**
-         * Returns the facade class.
-         * 
-         * @return the facade class
-         */
-        public String getFacadeClass() {
-            return facadeclazz;
-        }
+        KAON2,
+        KAON2DL,
+        MINS,
+//        MINS_NAIVE,
+        PELLET,
+        XSB,
+        IRIS_STRATIFIED,
+        IRIS_WELL_FOUNDED,
+        TPTP,
+        SPASS
     };
 
     /**

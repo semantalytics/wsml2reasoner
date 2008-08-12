@@ -27,7 +27,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
-
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Axiom;
@@ -53,6 +52,7 @@ import org.wsml.reasoner.api.DLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.api.exception.InternalReasonerException;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
+import org.wsml.reasoner.builtin.kaon2.Kaon2DLFacade;
 import org.wsml.reasoner.builtin.pellet.PelletFacade;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
@@ -68,12 +68,11 @@ import org.wsmo.factory.WsmoFactory;
 import org.wsmo.validator.ValidationError;
 import org.wsmo.validator.ValidationWarning;
 import org.wsmo.validator.WsmlValidator;
-
 import uk.ac.man.cs.img.owl.validation.ValidatorLogger;
 
 public class DLBasedWSMLReasoner implements DLReasoner {
 
-    protected DLReasonerFacade builtInFacade = null;
+    protected final DLReasonerFacade builtInFacade;
 
     protected WsmoFactory wsmoFactory = null;
 
@@ -99,43 +98,33 @@ public class DLBasedWSMLReasoner implements DLReasoner {
 
     private boolean disableConsitencyCheck = false;
 
-    public DLBasedWSMLReasoner(BuiltInReasoner builtInType, WSMO4JManager wsmoManager) {
+    public DLBasedWSMLReasoner(BuiltInReasoner builtInType, WSMO4JManager wsmoManager) throws InternalReasonerException {
         this.wsmoManager = wsmoManager;
         this.wsmoFactory = this.wsmoManager.getWSMOFactory();
         this.leFactory = this.wsmoManager.getLogicalExpressionFactory();
         this.dataFactory = this.wsmoManager.getDataFactory();
+        
+        builtInFacade = createFacade( builtInType );
+    }
+    
+    private DLReasonerFacade createFacade( BuiltInReasoner builtInType )
+    {
         switch (builtInType) {
         case PELLET:
-            builtInFacade = createFacade(builtInType.getFacadeClass());
-            break;
-        case KAON2:
+            return new PelletFacade();
+
         case KAON2DL:
-            builtInFacade = createFacade(BuiltInReasoner.KAON2DL.getFacadeClass());
-            break;
-        default:
-            throw new UnsupportedOperationException("Reasoning with " + builtInType.toString() + " is not supported yet!");
+        	try
+        	{
+        		return new Kaon2DLFacade();
+        	}
+        	catch( OWLException e )
+        	{
+        		throw new InternalReasonerException( "Unable to instantiate the Kaon2 DL facade.", e );
+        	}
         }
-    }
 
-    /**
-     * Instantiates a new reasoner facade of the given class. The facade must
-     * have a constructor taking no arguments.
-     * 
-     * @param className
-     *            the class of the facade
-     * @return the newly instantiated facade
-     * @throws InternalReasonerException
-     *             if something went wrong while instantiating the reasoner
-     */
-    private DLReasonerFacade createFacade(String className) throws InternalReasonerException {
-        assert className != null : "The classname must not be null";
-
-        try {
-            return (org.wsml.reasoner.DLReasonerFacade) Class.forName(className).getConstructor().newInstance();
-        }
-        catch (Exception e) {
-            throw new InternalReasonerException("Couldn't use the constructor for " + className + " taking no arguments", e);
-        }
+        throw new InternalReasonerException("Reasoning with " + builtInType.toString() + " is not supported yet!");
     }
 
     public void setDisableConsitencyCheck(boolean check) {
