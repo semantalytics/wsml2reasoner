@@ -1,0 +1,110 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-rule"
+namespace { _"http://examples.com/ontologies/mytravel#"
+, 
+     wsml _"http://www.wsmo.org/wsml/wsml-syntax#" }
+
+ontology travel1
+
+concept ticket
+     type impliesType _string
+     departure_city impliesType _string
+     departure_code impliesType _string
+     arrival_city impliesType _string
+     arrival_code impliesType _string
+     departure_date impliesType date
+     arrival_date impliesType date
+     departure_time impliesType time
+     arrival_time impliesType time
+     issuing_terms impliesType terms
+     firstName impliesType _string
+     lastName impliesType _string
+     
+concept travelVoucher
+     type impliesType _string
+     bearer impliesType name
+     toFrom impliesType tripPoints
+     departureDate impliesType date
+     arrivalDate impliesType date
+     departureTime impliesType time
+     arrivalTime impliesType time
+     terms impliesType payment
+     deliveryDate impliesType date
+
+concept date
+     year impliesType _integer
+     month impliesType _integer
+     day impliesType _integer
+
+concept time
+     hour impliesType _integer
+     minutes impliesType _integer
+
+concept terms
+     price impliesType cost
+     paymant_method impliesType _string
+     delivery_type impliesType delivery
+
+concept cost
+     amount impliesType _integer
+     hasCurrency impliesType currency
+
+concept delivery
+     type impliesType _string
+     due_to impliesType date
+
+concept currency
+
+concept customer
+     firstName impliesType _string
+     lastName impliesType _string
+     street impliesType _string
+     city impliesType _string
+     zipCode impliesType _string
+     country impliesType _string
+
+concept trainTimeTable
+     departure_city impliesType _string
+     arrival_city impliesType _string
+     travel_date impliesType date
+
+concept irishCity
+
+instance euro memberOf currency
+
+instance dollar memberOf currency
+
+instance Dublin memberOf irishCity
+
+instance Galway memberOf irishCity
+
+axiom hasVoucher
+     definedBy 
+          f(?x) memberOf travelVoucher
+			:-
+			?x memberOf ticket.
+		 	
+axiom hasValidVoucher
+     definedBy 
+          f(?x, ?y) memberOf validVoucher
+			:-
+			?x memberOf ticket
+			[firstName hasValue ?q] and
+			?y memberOf customer
+			[firstName hasValue ?q].
+			
+instance my_trainTicket1 memberOf ticket
+	firstName hasValue Scruffy
+
+instance my_trainTicket2 memberOf ticket
+	firstName hasValue Graham
+	
+instance customer1 memberOf customer
+	firstName hasValue Scruffy
+	
+instance customer2 memberOf customer
+	firstName hasValue Graham
+		
+instance my_trainTicket3 memberOf ticket
+	firstName hasValue Uwe		
+
+	
