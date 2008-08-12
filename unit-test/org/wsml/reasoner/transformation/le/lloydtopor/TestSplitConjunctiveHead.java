@@ -64,10 +64,6 @@ public class TestSplitConjunctiveHead extends TestCase {
           assertTrue(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" and _\"urn:c\" :- _\"urn:b\" ")));
           assertTrue(rule.isApplicable(LETestHelper.buildLE(" _\"urn:a\" and _\"urn:b\" and _\"urn:c\" and _\"urn:f\" :- _\"urn:d\"")));
           assertTrue(rule.isApplicable(LETestHelper.buildLE("( _\"urn:a\" and _\"urn:b\" ) and _\"urn:c\" :- _\"urn:d\" or _\"urn:e\"")));
-          
-
-      
-        
     }
     
     public void testApply() throws ParserException {
@@ -75,7 +71,6 @@ public class TestSplitConjunctiveHead extends TestCase {
     	LogicalExpression in = LETestHelper.buildLE("_\"urn:a\" and _\"urn:c\" :- _\"urn:b\" ");
         Set <LogicalExpression> result = rule.apply(in);
      
-        assertTrue(!result.toString().contains("_#"));
         assertEquals(2, result.size());
         assertTrue(result.contains(LETestHelper.buildLE("_\"urn:a\" :- _\"urn:b\"")));
         assertTrue(result.contains(LETestHelper.buildLE("_\"urn:c\" :- _\"urn:b\"")));
@@ -83,12 +78,8 @@ public class TestSplitConjunctiveHead extends TestCase {
   
         in = LETestHelper.buildLE("( _\"urn:a\" and _\"urn:b\" ) and _\"urn:c\" :- _\"urn:d\" or _\"urn:e\"");
         result = rule.apply(in);
-        
-        assertTrue(!result.toString().contains("_#"));
         assertEquals(2, result.size());
         assertTrue(result.contains(LETestHelper.buildLE("_\"urn:c\" :- _\"urn:d\" or _\"urn:e\"")));
         assertTrue(result.contains(LETestHelper.buildLE("_\"urn:a\" and _\"urn:b\" :- (_\"urn:d\" or _\"urn:e\")")));
-      
-
     }
 }
