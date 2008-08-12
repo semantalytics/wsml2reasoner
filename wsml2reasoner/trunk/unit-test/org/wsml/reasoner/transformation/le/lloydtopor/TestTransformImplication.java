@@ -19,7 +19,6 @@
  * MA  02110-1301, USA.
  */
 
-
 package org.wsml.reasoner.transformation.le.lloydtopor;
 
 import java.util.Set;
@@ -31,62 +30,78 @@ import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.wsml.ParserException;
 
-
 public class TestTransformImplication extends TestCase {
 
-    private TransformImplication rule;
-    // "A1 impliedBy A2\n\t=>\n A1 :- A2\n"
-    
-    public TestTransformImplication() {
-        super();
-    }
-    
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.rule = new TransformImplication(new WSMO4JManager());
-    }
-    
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        this.rule = null;
-    }
-    
-    public void testIsApplicable() throws ParserException {
-          assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\"")));
-          assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" implies _\"urn:b\""))); 
-          assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" or _\"urn:b\"")));
-          assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" and _\"urn:b\" and _\"urn:c\" or _\"urn:d\"")));
-          assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" and _\"urn:b\" implies _\"urn:c\" ")));
-          assertFalse(rule.isApplicable(LETestHelper.buildLE("(_\"urn:a\" or _\"urn:b\" ) and _\"urn:c\" or  _\"urn:d\"")));
-          
-          assertTrue(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" and _\"urn:b\"")));
-          assertTrue(rule.isApplicable(LETestHelper.buildLE("( _\"urn:a\" and _\"urn:b\" ) and _\"urn:c\" ")));
-          assertTrue(rule.isApplicable(LETestHelper.buildLE("(_\"urn:a\" or _\"urn:b\" ) and _\"urn:c\" and  _\"urn:d\"")));
-        
-    }
-    
-    public void testApply() throws ParserException {
-        LogicalExpression in = LETestHelper.buildLE(" ( _\"urn:a\" and _\"urn:b\" )");
-        Set <LogicalExpression> result = rule.apply(in);
-        
-        assertTrue(!result.toString().contains("_#"));
-        assertEquals(2, result.size());
-        
-        assertTrue(result.contains(LETestHelper.buildLE("_\"urn:a\"")));
-        assertTrue(result.contains(LETestHelper.buildLE("_\"urn:b\"")));
-        
-  
-        in = LETestHelper.buildLE("(_\"urn:a\" or _\"urn:b\" ) and _\"urn:c\" and  _\"urn:d\"");
-        result = rule.apply(in);
-        
-        assertTrue(!result.toString().contains("_#"));
-        assertEquals(2, result.size());
-        
-        assertTrue(result.contains(LETestHelper.buildLE("_\"urn:d\"")));
-        assertTrue(result.contains(LETestHelper.buildLE("(_\"urn:a\" or _\"urn:b\")  and  _\"urn:c\" ")));
-        
-        
-        
-        
-    }
+	private TransformImplication rule;
+	// "A1 impliedBy A2\n\t=>\n A1 :- A2\n"
+
+	public TestTransformImplication() {
+		super();
+	}
+
+	protected void setUp() throws Exception {
+		super.setUp();
+		this.rule = new TransformImplication(new WSMO4JManager());
+	}
+
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		this.rule = null;
+	}
+
+	public void testIsApplicable() throws ParserException {
+		assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\"")));
+		assertFalse(rule.isApplicable(LETestHelper
+				.buildLE("_\"urn:a\" implies _\"urn:b\"")));
+		assertFalse(rule.isApplicable(LETestHelper
+				.buildLE("_\"urn:a\" or _\"urn:b\"")));
+		assertFalse(rule
+				.isApplicable(LETestHelper
+						.buildLE("_\"urn:a\" and _\"urn:b\" and _\"urn:c\" or _\"urn:d\"")));
+		assertFalse(rule
+				.isApplicable(LETestHelper
+						.buildLE("_\"urn:a\" implies (_\"urn:b\" impliedBy _\"urn:c\") ")));
+		assertFalse(rule
+				.isApplicable(LETestHelper
+						.buildLE("(_\"urn:a\" or _\"urn:b\" ) and (_\"urn:c\" impliedBy  _\"urn:d\")")));
+
+		assertTrue(rule.isApplicable(LETestHelper
+				.buildLE("_\"urn:a\" impliedBy _\"urn:b\"")));
+		assertTrue(rule.isApplicable(LETestHelper
+				.buildLE("_\"urn:a\" and _\"urn:b\" impliedBy _\"urn:c\" ")));
+		assertTrue(rule
+				.isApplicable(LETestHelper
+						.buildLE("_\"urn:a\" impliedBy _\"urn:b\" impliedBy  _\"urn:d\" or _\"urn:e\" ")));
+
+	}
+
+	public void testApply() throws ParserException {
+		LogicalExpression in = LETestHelper
+				.buildLE("_\"urn:a\" impliedBy _\"urn:b\"");
+		Set<LogicalExpression> result = rule.apply(in);
+
+		assertTrue(!result.toString().contains("_#"));
+		assertEquals(1, result.size());
+
+		assertTrue(result.contains(LETestHelper
+				.buildLE("_\"urn:a\" :- _\"urn:b\" ")));
+
+		  
+		 in = LETestHelper.buildLE("_\"urn:a\" and _\"urn:b\" impliedBy _\"urn:c\" " );
+		 result = rule.apply(in);
+		        
+		 assertTrue(!result.toString().contains("_#"));
+		 assertEquals(1, result.size());
+		        
+		 assertTrue(result.contains(LETestHelper.buildLE(" _\"urn:a\" and _\"urn:b\" :- _\"urn:c\" ")));
+		 
+		 
+		 in = LETestHelper.buildLE("_\"urn:a\" impliedBy _\"urn:b\" impliedBy  _\"urn:d\" or _\"urn:e\" ");
+		 result = rule.apply(in);
+		        
+		 assertTrue(!result.toString().contains("_#"));
+		 assertEquals(1, result.size());
+		 assertTrue(result.contains(LETestHelper.buildLE("_\"urn:a\" impliedBy _\"urn:b\" :- _\"urn:d\" or _\"urn:e\"" )));
+		 
+	}
 }

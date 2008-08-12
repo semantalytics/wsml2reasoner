@@ -38,6 +38,8 @@ public class LloydToporRulesTestSuite {
         suite.addTestSuite(TestSplitConjunctiveHead.class);
         suite.addTestSuite(TestSplitConstraint.class);
         suite.addTestSuite(TestSplitDisjunctiveBody.class);
+        suite.addTestSuite(TestTransformImplication.class);
+        suite.addTestSuite(TestTransformNestedImplication.class);
         //$JUnit-END$
         return suite;
     }
