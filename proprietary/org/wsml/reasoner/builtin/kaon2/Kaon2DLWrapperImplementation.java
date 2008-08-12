@@ -18,6 +18,7 @@
 package org.wsml.reasoner.builtin.kaon2;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.net.URI;
@@ -31,6 +32,7 @@ import java.util.Vector;
 import java.util.Map.Entry;
 import org.apache.log4j.Logger;
 import org.semanticweb.kaon2.id;
+import org.semanticweb.kaon2.api.DefaultOntologyResolver;
 import org.semanticweb.kaon2.api.KAON2Connection;
 import org.semanticweb.kaon2.api.KAON2Exception;
 import org.semanticweb.kaon2.api.KAON2Manager;
@@ -139,7 +141,17 @@ public class Kaon2DLWrapperImplementation implements DLReasonerFacade
 			Map<String, Object> m = new HashMap<String, Object>();
 			m.put( KAON2Connection.LOAD_FROM_INPUT_STREAM, in );
 
-			ontology = connection.openOntology( owlOntology.getURI().toString(), m );
+			String ontologyUri = owlOntology.getURI().toString();
+			
+			File f = File.createTempFile( "kaon2", ".xml" );
+
+			DefaultOntologyResolver resolver = (DefaultOntologyResolver) connection.getOntologyResolver();
+			
+			String fileUri = f.toURI().toString();
+			resolver.registerReplacement( ontologyUri, fileUri);
+
+			
+			ontology = connection.openOntology( ontologyUri, m );
 			reasoner = ontology.createReasoner();
 		}
 		catch( Exception e )
