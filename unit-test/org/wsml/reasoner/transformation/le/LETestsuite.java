@@ -22,6 +22,9 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.wsml.reasoner.transformation.le.disjunctionpull.DisjunctionPullTestsuite;
+import org.wsml.reasoner.transformation.le.foldecomposition.FOLdecompositionTestsuite;
+import org.wsml.reasoner.transformation.le.implicationreduction.ImplicationreductionTestsuite;
+import org.wsml.reasoner.transformation.le.inverseimplicationreduction.InverseImplicationReductionTestsuite;
 import org.wsml.reasoner.transformation.le.negationpush.NegationPushTestsuite;
 
 
@@ -36,6 +39,9 @@ public class LETestsuite {
         //$JUnit-BEGIN$
         suite.addTest(DisjunctionPullTestsuite.suite());
         suite.addTest(NegationPushTestsuite.suite());
+        suite.addTest(ImplicationreductionTestsuite.suite());
+        suite.addTest(InverseImplicationReductionTestsuite.suite());
+        suite.addTest(FOLdecompositionTestsuite.suite());
         //$JUnit-END$
         return suite;
     }
