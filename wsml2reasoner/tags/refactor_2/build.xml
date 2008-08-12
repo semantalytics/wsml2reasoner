@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+	
+<project name="WSML2Reasoner Framework" default="wsml2reasoner" basedir="." >
+
+	<!-- $Id$ -->
+
+	<property file="build.properties" />
+	
+	<patternset id="java-source-files">
+		<include name="**/*.java" />
+	</patternset>
+			
+	<patternset id="java-source-files">
+		<include name="**/*.java" />
+	</patternset>
+
+	<patternset id="lgpl-jars">
+		<exclude name="**/kaon2-reasoner/" />
+		<exclude name="**/mins-reasoner/" />
+	</patternset>
+
+	<patternset id="gpl-jars">
+		<exclude name="**/kaon2-reasoner/" />
+	</patternset>
+
+	<!-- =================================================================== -->
+	<!-- Targets                                                       		 -->
+	<!-- =================================================================== -->
+
+	<target name="init">
+		<!-- Set the DSTAMP, TSTAMP and TODAY properties -->
+		<tstamp />
+	
+		<!-- Set the property "kaon2.jar.present" is the kaon2.jar is present -->
+		<available file="${file.kaon2.jar}" property="kaon2.jar.present"/>
+		
+	</target>
+
+	<target name="clean" depends="init" description="Removes parent build directory">
+		<delete dir="${dir.build}" />
+	</target>
+
+	<target name="compile" depends="init" description="Compiles wsml2reasoner src and api files">
+
+		<delete dir="${dir.classes}" />
+		<mkdir dir="${dir.classes}" />
+
+		<copy todir="${dir.classes}" preservelastmodified="yes" includeEmptyDirs="no">
+			<fileset dir="${dir.src}">
+				<patternset refid="java-source-files" />
+				<exclude name="${package.example}/*.java" />
+			</fileset>
+			<fileset dir="${dir.api}">
+				<patternset refid="java-source-files" />
+			</fileset>
+		</copy>
+		
+		<javac srcdir="${dir.classes}" destdir="${dir.classes}" deprecation="on" debug="on" >
+			<classpath>
+				<fileset dir="${dir.lib}" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="wsml2reasoner" depends="compile" description="Creates wsml2reasoner jar">
+		<mkdir dir="${dir.jar}" />
+		<jar jarfile="${file.jar}">
+			<fileset dir="${dir.classes}" />
+		</jar>
+	</target>
+	
+	<target name="compile-proprietary" depends="compile" description="Compiles wsml2reasoner propietary facade files">
+		<fail message="The kaon2 jar file (${file.kaon2.jar}) must be present." unless="kaon2.jar.present" />
+		
+		<delete dir="${dir.classes.proprietary}" />
+		<mkdir dir="${dir.classes.proprietary}" />
+
+		<copy todir="${dir.classes.proprietary}" preservelastmodified="yes" includeEmptyDirs="no">
+			<fileset dir="${dir.proprietary.src}">
+				<patternset refid="java-source-files" />
+			</fileset>
+		</copy>
+		
+		<javac srcdir="${dir.classes.proprietary}" destdir="${dir.classes.proprietary}" deprecation="on" debug="on" >
+			<classpath>
+				<pathelement location ="${dir.classes}" />
+				<fileset dir="${dir.lib}" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="wsml2reasoner-proprietary" depends="compile-proprietary, wsml2reasoner" description="Creates wsml2reasoner proprietary extension jar">
+		<mkdir dir="${dir.jar}" />
+		<jar jarfile="${file.jar.proprietary}">
+			<fileset dir="${dir.classes.proprietary}" />
+		</jar>
+	</target>
+	
+	<target name="javadoc" depends="compile" description="Generate the javadoc">
+		<delete dir="${dir.javadoc}" />
+		<mkdir dir="${dir.javadoc}" />
+		<javadoc destdir="${dir.javadoc}"
+             classpath ="${dir.lib}"
+             author="true"
+             version="true"
+             use="true"
+			 link="http://java.sun.com/j2se/1.5.0/docs/api/"
+			 windowtitle = "WSML2Reasoner Framework">
+			<fileset dir="${dir.classes}">
+				<patternset refid="java-source-files" />
+			</fileset>
+			<doctitle><![CDATA[<h1>WSML2Reasoner Framework</h1>]]></doctitle>
+			<bottom>
+				<![CDATA[<i>Copyright &#169; 2008 University of Innsbruck, Austria; FZI, Germany. All Rights Reserved.</i>]]>
+			</bottom>
+			<tag name="TODO" scope="all" description="To do:" />
+		</javadoc>
+	</target>
+
+	<target name="javadoc-zip" depends="javadoc" description="Creates a zip file containing all the javadoc">
+		<mkdir dir="${dir.javadoc.zip}" />
+		<delete file="${file.javadoc.zip}" />
+		<zip destfile="${file.javadoc.zip}">
+			<fileset dir="${dir.javadoc}"/>
+		</zip>
+	</target>
+
+	<target name="source-zip" depends="compile" description="Creates a zip file containing all the source code">
+		<mkdir dir="${dir.src.zip}" />
+		<delete file="${file.src.zip}" />
+		<zip destfile="${file.src.zip}">
+			<fileset dir="${dir.classes}">
+				<patternset refid="java-source-files" />
+			</fileset>
+		</zip>
+	</target>
+
+	<target name="release-lgpl" depends="wsml2reasoner, source-zip, javadoc-zip" 
+		description="Creates wsml2reasoner jar + L-GPL libraries only">
+		
+		<mkdir dir="${dir.release}" />
+		<delete file="${file.release.lgpl}" />
+
+		<zip destfile="${file.release.lgpl}">
+			<fileset file="${file.jar}"/>
+			
+			<zipfileset dir="${dir.lib}" prefix="${dir.lib}">
+				<patternset refid="lgpl-jars"/>
+			</zipfileset>
+			
+			<fileset file="${file.src.zip}"/>
+			<fileset file="${file.javadoc.zip}"/>
+			
+			<fileset dir="${basedir}" file="${license.lgpl}" />
+		</zip>
+	</target>
+
+	<target name="release-gpl" depends="wsml2reasoner, source-zip, javadoc-zip" 
+		description="Creates wsml2reasoner jar + L-GPL and GPL libraries only">
+		
+		<mkdir dir="${dir.release}" />
+		<delete file="${file.release.gpl}" />
+
+		<zip destfile="${file.release.gpl}">
+			<fileset file="${file.jar}"/>
+			
+			<zipfileset dir="${dir.lib}" prefix="${dir.lib}">
+				<patternset refid="gpl-jars"/>
+			</zipfileset>
+			
+			<fileset file="${file.src.zip}"/>
+			<fileset file="${file.javadoc.zip}"/>
+			
+			<fileset dir="${basedir}" includes ="${license.lgpl}" />
+			<fileset dir="${basedir}" includes ="${license.gpl}" />
+		</zip>
+	</target>
+
+	<target name="release-proprietary" depends="wsml2reasoner, wsml2reasoner-proprietary, source-zip, javadoc-zip" 
+		description="Creates wsml2reasoner jar + L-GPL, GPL and propreietary libraries">
+		
+		<mkdir dir="${dir.release}" />
+		<delete file="${file.release.proprietary}" />
+
+		<zip destfile="${file.release.proprietary}">
+			<fileset file="${file.jar}"/>
+			<fileset file="${file.jar.proprietary}"/>
+			
+			<zipfileset dir="${dir.lib}" prefix="${dir.lib}" />
+			
+			<fileset file="${file.src.zip}"/>
+			<fileset file="${file.javadoc.zip}"/>
+			
+			<fileset dir="${basedir}" includes ="${license.lgpl}" />
+			<fileset dir="${basedir}" includes ="${license.gpl}" />
+		</zip>
+	</target>
+</project>
