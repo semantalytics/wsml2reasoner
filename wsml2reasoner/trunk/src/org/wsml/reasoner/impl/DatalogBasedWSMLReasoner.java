@@ -19,8 +19,6 @@
 
 package org.wsml.reasoner.impl;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -28,7 +26,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
@@ -36,7 +33,6 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
-import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Type;
 import org.omwg.ontology.Variable;
@@ -57,6 +53,11 @@ import org.wsml.reasoner.api.inconsistency.MaxCardinalityViolation;
 import org.wsml.reasoner.api.inconsistency.MinCardinalityViolation;
 import org.wsml.reasoner.api.inconsistency.NamedUserConstraintViolation;
 import org.wsml.reasoner.api.inconsistency.UnNamedUserConstraintViolation;
+import org.wsml.reasoner.builtin.iris.IrisStratifiedFacade;
+import org.wsml.reasoner.builtin.iris.IrisWellFoundedFacade;
+import org.wsml.reasoner.builtin.kaon2.Kaon2LPFacade;
+import org.wsml.reasoner.builtin.mins.MinsWellFoundedFacade;
+import org.wsml.reasoner.builtin.xsb.XSBFacade;
 import org.wsml.reasoner.transformation.AnonymousIdUtils;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.ConstraintReplacementNormalizer;
@@ -90,7 +91,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
 
     protected final static String WSML_RESULT_PREDICATE = "http://www.wsmo.org/reasoner/" + "wsml_query_result";
 
-    protected org.wsml.reasoner.DatalogReasonerFacade builtInFacade = null;
+    protected final org.wsml.reasoner.DatalogReasonerFacade builtInFacade;
 
     protected WsmoFactory wsmoFactory;
     protected LogicalExpressionFactory leFactory;
@@ -127,7 +128,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
             throw new IllegalArgumentException("The WSMO4JManager must not be null");
         }
 
-        this.builtInFacade = createFacade(builtInType.getFacadeClass(), wsmoManager, config);
+        this.builtInFacade = createFacade(builtInType, wsmoManager, config);
         this.wsmoManager = wsmoManager;
         this.wsmoFactory = wsmoManager.getWSMOFactory();
         this.leFactory = wsmoManager.getLogicalExpressionFactory();
@@ -143,41 +144,27 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
      * @throws InternalReasonerException if something went wrong while 
      * instantiating the reasoner
      */
-    private DatalogReasonerFacade createFacade(final String className, final WSMO4JManager wsmoManager, final Map<String, Object> config) throws InternalReasonerException {
-        assert className != null : "The class name must not be null";
+    private DatalogReasonerFacade createFacade(BuiltInReasoner builtInType, WSMO4JManager wsmoManager, Map<String, Object> config) throws InternalReasonerException {
         assert wsmoManager != null : "The manager must not be null";
 
-        final String illegal_constructor_msg = "Couldn't use the constructor " + "for " + className + " taking a WSMO4JManager and a Map";
-
-        try {
-            final Class< ? > facade = Class.forName(className);
-            final Constructor< ? > constructor = facade.getConstructor(WSMO4JManager.class, Map.class);
-            return (DatalogReasonerFacade) constructor.newInstance(wsmoManager, config);
+        switch( builtInType )
+        {
+        case KAON2:
+        	return new Kaon2LPFacade( wsmoManager, config );
+        case MINS:
+        	return new MinsWellFoundedFacade( wsmoManager, config );
+//        case MINS_NAIVE:
+//        	return new MinsWellNaive( wsmoManager, config );
+        case XSB:
+        	return new XSBFacade( wsmoManager, config );
+        case IRIS_STRATIFIED:
+        	return new IrisStratifiedFacade( wsmoManager, config );
+        case IRIS_WELL_FOUNDED:
+        	return new IrisWellFoundedFacade( wsmoManager, config );
         }
-        catch (NullPointerException e) {
-            throw new InternalReasonerException(illegal_constructor_msg, e);
-        }
-        catch (ClassNotFoundException e) {
-            throw new InternalReasonerException(illegal_constructor_msg, e);
-        }
-        catch (SecurityException e) {
-            throw new InternalReasonerException(illegal_constructor_msg, e);
-        }
-        catch (NoSuchMethodException e) {
-            throw new InternalReasonerException(illegal_constructor_msg, e);
-        }
-        catch (IllegalArgumentException e) {
-            throw new InternalReasonerException(illegal_constructor_msg, e);
-        }
-        catch (InstantiationException e) {
-            throw new InternalReasonerException(illegal_constructor_msg, e);
-        }
-        catch (IllegalAccessException e) {
-            throw new InternalReasonerException(illegal_constructor_msg, e);
-        }
-        catch (InvocationTargetException e) {
-            throw new InternalReasonerException(illegal_constructor_msg, e);
-        }
+        
+        throw new InternalReasonerException( "An built-in reasoner could not be instantiated. " +
+        				"Perhaps you have selected a built-in reasoner that does not support logic programming?" );
     }
 
     public void setDisableConsitencyCheck(boolean check) {
