@@ -19,23 +19,25 @@
  * MA  02110-1301, USA.
  */
 
-package org.wsml.reasoner.transformation.le.inverseimplicationreduction;
+package org.wsml.reasoner.transformation.le.lloydtopor;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
 
-public class InverseImplicationReductionTestsuite {
+public class LloydToporRulesTestSuite {
 
     public static void main(String[] args) {
         junit.textui.TestRunner.run(suite());
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite("Test suite for Inverse Implication reduction.");
+        TestSuite suite = new TestSuite("Test suite for Lloyd Topor Rules");
         //$JUnit-BEGIN$
-        suite.addTestSuite(TestInvImplLeftConjunctionReplacementRule.class);
-        suite.addTestSuite(TestInvImplRightDisjunctionReplacementRule.class);
+        suite.addTestSuite(TestSplitConjunction.class);
+        suite.addTestSuite(TestSplitConjunctiveHead.class);
+        suite.addTestSuite(TestSplitConstraint.class);
+        suite.addTestSuite(TestSplitDisjunctiveBody.class);
         //$JUnit-END$
         return suite;
     }
