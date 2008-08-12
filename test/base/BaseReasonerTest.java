@@ -107,8 +107,6 @@ public class BaseReasonerTest extends TestCase {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,reasoner);
         
-        if( evalMethod >= 0 )
-        	params.put(WSMLReasonerFactory.PARAM_EVAL_METHOD,evalMethod);
         params.put(WSMLReasonerFactory.PARAM_ALLOW_IMPORTS,allowImports);
         
         // overwrite the default configuration
