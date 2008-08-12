@@ -32,7 +32,7 @@ public class InverseImplicationReductionTestsuite {
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite("Test suite for Inverse Implication reduction.");
+        TestSuite suite = new TestSuite("Test suite for Inverse Implication reduction");
         //$JUnit-BEGIN$
         suite.addTestSuite(TestInvImplLeftConjunctionReplacementRule.class);
         suite.addTestSuite(TestInvImplRightDisjunctionReplacementRule.class);

@@ -32,7 +32,7 @@ public class ImplicationreductionTestsuite {
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite("Test suite for Implicationreduction.");
+        TestSuite suite = new TestSuite("Test suite for Implication reduction");
         //$JUnit-BEGIN$
         suite.addTestSuite(TestEquivalenceReplacementRule.class);
         suite.addTestSuite(TestRightImplicationReplacementRule.class);
