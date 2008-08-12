@@ -35,8 +35,8 @@ public class FOLdecompositionTestsuite {
     public static Test suite() {
         TestSuite suite = new TestSuite("Test suite for FOL decomposition");
         //$JUnit-BEGIN$
-//        suite.addTestSuite();
-//        suite.addTestSuite();
+        suite.addTestSuite(TestAtomAnonymousIDRule.class);
+        suite.addTestSuite(TestMoleculeAnonymousIDRule.class);
         //$JUnit-END$
         return suite;
     }

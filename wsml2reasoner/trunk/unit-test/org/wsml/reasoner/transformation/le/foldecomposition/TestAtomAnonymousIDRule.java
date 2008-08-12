@@ -23,13 +23,17 @@ package org.wsml.reasoner.transformation.le.foldecomposition;
 
 import junit.framework.TestCase;
 
-
+import org.omwg.logicalexpression.LogicalExpression;
+import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsml.reasoner.transformation.AnonymousIdTranslator;
+import org.wsml.reasoner.transformation.AnonymousIdUtils;
+import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.wsml.ParserException;
 
 
 public class TestAtomAnonymousIDRule extends TestCase {
 
-//    private AtomAnonymousIDRule rule;
+    private AtomAnonymousIDRule rule;
     
     public TestAtomAnonymousIDRule() {
         super();
@@ -37,19 +41,40 @@ public class TestAtomAnonymousIDRule extends TestCase {
     
     protected void setUp() throws Exception {
         super.setUp();
-//        this.rule = new AtomAnonymousIDRule(new WSMO4JManager(), null);
+        WSMO4JManager wsmoManager = new WSMO4JManager();
+        this.rule = new AtomAnonymousIDRule(wsmoManager, new AnonymousIdTranslator(wsmoManager.getWSMOFactory()));
     }
     
     protected void tearDown() throws Exception {
         super.tearDown();
-//        this.rule = null;
+        this.rule = null;
     }
     
     public void testIsApplicable() throws ParserException {
-   
+        assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" subConceptOf _#")));
+        assertFalse(rule.isApplicable(LETestHelper.buildLE("_# memberOf _\"urn:a\"")));
+        assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\"[_\"urn:b\" ofType _#]")));
+        assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\"[_\"urn:b\" impliesType _#]")));
+        assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\"[_\"urn:b\" hasValue _#]")));
+        assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\"[_# ofType _#]")));
+        assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\"[_# impliesType _#]")));
+        assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\"[_# hasValue _#]")));
+        assertTrue(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\"(_#)")));
+        assertTrue(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\"(_#, _#)")));
+        assertTrue(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\"(_#, _#, _#)")));
     }
     
     public void testApply() throws ParserException {
-      
+        LogicalExpression in = LETestHelper.buildLE("_\"urn:a\"(_#)");
+        LogicalExpression result = rule.apply(in);
+        assertTrue(!result.toString().contains("_#"));
+        assertEquals(2, result.toString().split(AnonymousIdUtils.ANONYMOUS_PREFIX).length);
+        assertTrue(result.toString().startsWith("_\"urn:a\"(_\"" + AnonymousIdUtils.ANONYMOUS_PREFIX));
+        
+        in = LETestHelper.buildLE("_\"urn:a\"(_#, _#, _#)");
+        result = rule.apply(in);
+        assertTrue(!result.toString().contains("_#"));
+        assertEquals(4, result.toString().split(AnonymousIdUtils.ANONYMOUS_PREFIX).length);
+        assertTrue(result.toString().startsWith("_\"urn:a\"(_\"" + AnonymousIdUtils.ANONYMOUS_PREFIX));
     }
 }
