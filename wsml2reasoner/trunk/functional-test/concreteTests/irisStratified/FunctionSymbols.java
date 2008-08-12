@@ -1,4 +1,4 @@
-package concreteTests.iris;
+package concreteTests.irisStratified;
 
 import org.wsml.reasoner.api.LPReasoner;
 import abstractTests.lp.AbstractFunctionSymbols;
