@@ -78,8 +78,76 @@ public class TestFOLMoleculeDecompositionRules extends TestCase {
     
     public void testApply() throws ParserException {
     	LogicalExpression in = LETestHelper.buildLE("_\"urn:a\"[_\"urn:b\" impliesType _\"urn:c\"]");
-        LogicalExpression result = rule.apply(in);
-        System.out.println(result.toString());
+        LogicalExpression result = rule.apply(in);       
+        assertEquals(2, result.toString().split("#").length);
+        assertTrue(result.toString().trim().equals("_\"urn://imtp#\"(_\"urn:a\",_\"urn:b\",_\"urn:c\")."));
+        
+        in = LETestHelper.buildLE("_\"urn:a\"[_\"urn:b\" ofType _\"urn:c\"]");
+        result = rule.apply(in);        
+        assertEquals(2, result.toString().split("#").length);
+        assertTrue(result.toString().trim().equals("_\"urn://oftp#\"(_\"urn:a\",_\"urn:b\",_\"urn:c\")."));
+      
+        in = LETestHelper.buildLE("_\"urn:a\"[_\"urn:b\" hasValue _\"urn:c\"]");
+        result = rule.apply(in);
+        assertEquals(2, result.toString().split("#").length);
+        assertTrue(result.toString().trim().equals("_\"urn://hv#\"(_\"urn:a\",_\"urn:b\",_\"urn:c\")."));
+
+        in = LETestHelper.buildLE("_\"urn:a\"[_\"urn:b\" impliesType _#]");
+        result = rule.apply(in); 
+        assertEquals(3, result.toString().split("#").length);
+        assertTrue(result.toString().trim().equals("_\"urn://imtp#\"(_\"urn:a\",_\"urn:b\",_#)."));
+
+        in = LETestHelper.buildLE("_\"urn:a\" subConceptOf _#");
+        result = rule.apply(in);  
+        assertEquals(3, result.toString().split("#").length);
+        assertTrue(result.toString().trim().equals("_\"urn://sub#\"(_\"urn:a\",_#)."));
+        
+        in = LETestHelper.buildLE("_\"urn:a\"[_\"urn:b\" ofType _#]");
+        result = rule.apply(in);  
+        assertEquals(3, result.toString().split("#").length);
+        assertTrue(result.toString().trim().equals("_\"urn://oftp#\"(_\"urn:a\",_\"urn:b\",_#)."));
+        
+
+        in = LETestHelper.buildLE("_\"urn:a\"[_\"urn:b\" impliesType _#]");
+        result = rule.apply(in);  
+        assertEquals(3, result.toString().split("#").length);
+        assertTrue(result.toString().trim().equals("_\"urn://imtp#\"(_\"urn:a\",_\"urn:b\",_#)."));
+
+        in = LETestHelper.buildLE("_\"urn:a\"[_\"urn:b\" hasValue _#]");
+        result = rule.apply(in);  
+        assertEquals(3, result.toString().split("#").length);
+        assertTrue(result.toString().trim().equals("_\"urn://hv#\"(_\"urn:a\",_\"urn:b\",_#)."));
+
+        in = LETestHelper.buildLE("_\"urn:a\"[_# ofType _\"urn:b\"]");
+        result = rule.apply(in);  
+        assertEquals(3, result.toString().split("#").length);
+        assertTrue(result.toString().trim().equals("_\"urn://oftp#\"(_\"urn:a\",_#,_\"urn:b\")."));
+
+        in = LETestHelper.buildLE("_\"urn:a\"[_# impliesType _\"urn:b\"]");
+        result = rule.apply(in);  
+        assertEquals(3, result.toString().split("#").length);
+        assertTrue(result.toString().trim().equals("_\"urn://imtp#\"(_\"urn:a\",_#,_\"urn:b\")."));
+
+        in = LETestHelper.buildLE("_\"urn:a\"[_# hasValue _\"urn:b\"]");
+        result = rule.apply(in);  
+        assertEquals(3, result.toString().split("#").length);
+        assertTrue(result.toString().trim().equals("_\"urn://hv#\"(_\"urn:a\",_#,_\"urn:b\")."));
+
+        in = LETestHelper.buildLE("_\"urn:a\"[_# ofType _#]");
+        result = rule.apply(in);  
+        assertEquals(4, result.toString().split("#").length);
+        assertTrue(result.toString().trim().equals("_\"urn://oftp#\"(_\"urn:a\",_#,_#)."));
+
+        in = LETestHelper.buildLE("_\"urn:a\"[_# impliesType _#]");
+        result = rule.apply(in);        
+        assertEquals(4, result.toString().split("#").length);
+        assertTrue(result.toString().trim().equals("_\"urn://imtp#\"(_\"urn:a\",_#,_#)."));
+
+        
+        in = LETestHelper.buildLE("_\"urn:a\"[_# hasValue _#]");
+        result = rule.apply(in);        
+        assertEquals(4, result.toString().split("#").length);
+        assertTrue(result.toString().trim().equals("_\"urn://hv#\"(_\"urn:a\",_#,_#)."));
 
     	
 
