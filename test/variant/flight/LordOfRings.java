@@ -344,7 +344,7 @@ public class LordOfRings extends BaseReasonerTest {
     }
     
     public void testFlightReasoners() throws Exception{
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED);
     	aragornIsElendilsHeir();
     	aragornLovesElf();
     	aragornLovesFemale();

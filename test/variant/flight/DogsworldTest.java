@@ -78,7 +78,7 @@ public class DogsworldTest extends BaseReasonerTest {
     }
     
     public void testFlightReasoners() throws Exception{
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED);
     	subconceptsOfMammal();
     	consistencyChecker();
     	instanceRetrieval();

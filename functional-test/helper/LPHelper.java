@@ -49,7 +49,7 @@ public class LPHelper
 {
     public static final WSMLReasonerFactory.BuiltInReasoner[] FLIGHT_REASONERS = new WSMLReasonerFactory.BuiltInReasoner[]
     {
-    	WSMLReasonerFactory.BuiltInReasoner.IRIS,
+    	WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED,
     	WSMLReasonerFactory.BuiltInReasoner.MINS,
     	WSMLReasonerFactory.BuiltInReasoner.KAON2
     	
@@ -88,23 +88,23 @@ public class LPHelper
 		return sw.toString();
     }
 
-   	private static boolean isKaon( WSMLReasonerFactory.BuiltInReasoner reasoner )
-   	{
-   		return reasoner == WSMLReasonerFactory.BuiltInReasoner.KAON2 ||
-   			reasoner == WSMLReasonerFactory.BuiltInReasoner.KAON2DL;
-   	}
-    
-    private static boolean exists (String className)
-    {
-    	try {
-    		Class.forName (className);
-    		return true;
-    	}
-    	catch (ClassNotFoundException exception) {
-    		return false;
-    	}
-    }
-    
+//   	private static boolean isKaon( WSMLReasonerFactory.BuiltInReasoner reasoner )
+//   	{
+//   		return reasoner == WSMLReasonerFactory.BuiltInReasoner.KAON2 ||
+//   			reasoner == WSMLReasonerFactory.BuiltInReasoner.KAON2DL;
+//   	}
+//    
+//    private static boolean exists (String className)
+//    {
+//    	try {
+//    		Class.forName (className);
+//    		return true;
+//    	}
+//    	catch (ClassNotFoundException exception) {
+//    		return false;
+//    	}
+//    }
+//    
     private static Reader getReaderForFile(String location) {
         Reader ontoReader = null;
         try {

@@ -162,7 +162,7 @@ public class ViolationsTest extends BaseReasonerTest {
     }
     
     public void testAllReasoners() throws Exception{
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED);
     	violations();
     	System.gc();
     	

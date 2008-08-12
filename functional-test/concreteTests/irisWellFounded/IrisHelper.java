@@ -1,4 +1,4 @@
-package concreteTests.iris;
+package concreteTests.irisWellFounded;
 
 import helper.ReasonerHelper;
 import org.wsml.reasoner.api.LPReasoner;
@@ -8,6 +8,6 @@ public class IrisHelper
 {
 	static LPReasoner getIRIS()
 	{
-		return ReasonerHelper.getLPReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED );
+		return ReasonerHelper.getLPReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS_WELL_FOUNDED );
 	}
 }

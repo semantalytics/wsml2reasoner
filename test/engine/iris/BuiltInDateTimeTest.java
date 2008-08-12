@@ -42,7 +42,7 @@ public class BuiltInDateTimeTest extends BaseReasonerTest {
 		// currently set to IRIS since the other reasoning engines
 		// cannot yet handle such built-ins
 		previous = BaseReasonerTest.reasoner;
-		BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
+		BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED;
 		wsmlReasoner = (LPReasoner) BaseReasonerTest.getReasoner();
 		wsmoFactory = Factory.createWsmoFactory(null);
 		leFactory = Factory.createLogicalExpressionFactory(null);

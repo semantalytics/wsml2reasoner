@@ -8,6 +8,6 @@ public class Kaon2Helper
 {
 	static LPReasoner getKAON2()
 	{
-		return (LPReasoner) ReasonerHelper.getReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2, null );
+		return ReasonerHelper.getLPReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2 );
 	}
 }

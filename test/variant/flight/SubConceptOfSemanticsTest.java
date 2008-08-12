@@ -91,7 +91,7 @@ public class SubConceptOfSemanticsTest extends BaseReasonerTest {
 //  }
   
   public void testFlightReasoners() throws Exception{
-  	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+  	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED);
   	subConceptOfIsReflexiv1();
   	//subConceptOfIsReflexiv2();
   	//subConceptOfIsReflexiv3();

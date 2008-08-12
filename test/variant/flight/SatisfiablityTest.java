@@ -75,7 +75,7 @@ public class SatisfiablityTest extends BaseReasonerTest {
 	
     
     public void testFlightReasoners() throws Exception{
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED);
     	satisfiablity();
     	
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);

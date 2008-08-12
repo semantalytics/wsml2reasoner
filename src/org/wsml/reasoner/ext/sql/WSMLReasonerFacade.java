@@ -57,7 +57,7 @@ public class WSMLReasonerFacade {
         manager = new WSMO4JManager();
         parser = Factory.createParser(null);
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER, WSMLReasonerFactory.BuiltInReasoner.IRIS);
+        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER, WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED);
 
         reasoner = DefaultWSMLReasonerFactory.getFactory().createFlightReasoner(params);
     }

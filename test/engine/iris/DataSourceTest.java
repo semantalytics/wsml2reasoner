@@ -30,7 +30,7 @@ import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.api.data.ExternalDataSource;
-import org.wsml.reasoner.builtin.iris.IrisFacade;
+import org.wsml.reasoner.builtin.iris.IrisStratifiedFacade;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.WsmoFactory;
@@ -54,7 +54,7 @@ public class DataSourceTest extends BaseReasonerTest {
 		
 		// add the data source to the configuration
 		final Map<String, Object> config = new HashMap<String, Object>();
-		config.put(IrisFacade.EXTERNAL_DATA_SOURCE, 
+		config.put(IrisStratifiedFacade.EXTERNAL_DATA_SOURCE, 
 				Collections.singleton(new DogSource()));
 		
 		setupScenario(ONTOLOGY_FILE, config);

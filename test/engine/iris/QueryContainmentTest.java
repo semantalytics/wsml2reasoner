@@ -32,7 +32,7 @@ public class QueryContainmentTest extends BaseReasonerTest {
 		// get a reasoner
 		// currently set to IRIS since the other reasoning engines
 		// cannot yet handle such built-ins
-		BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
+		BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED;
 		wsmlReasoner = (LPReasoner) BaseReasonerTest.getReasoner();
 		wsmoFactory = Factory.createWsmoFactory(null);
 		leFactory = Factory.createLogicalExpressionFactory(null);
