@@ -1,20 +1,3 @@
-/**
- * WSML Reasoner based on KAON2
- * 
- * Copyright (c) 2005, FZI, Germany
- * 
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
- * any later version. This library is distributed in the hope that it will be
- * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
- * General Public License for more details. You should have received a copy of
- * the GNU Lesser General Public License along with this library; if not, write
- * to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
- * 02111-1307 USA
- */
-
 package org.wsml.reasoner.builtin.kaon2;
 
 import java.io.File;
@@ -63,17 +46,9 @@ import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
 /**
- * Integrates the Kaon2 system into the WSML Core/Flight Reasoner framework for
- * query answering. Kaon2 can compute models for disjunctive logic programs and
- * thus can deal with query answering with (non-disjunctive) datalog as well. In
- * addition, Kaon2 supports the basic WSML datatypes: string, integer and
- * decimal (float)
- * 
- * @author Gabor Nagypal, FZI, Germany
  */
-public class Kaon2Facade implements DatalogReasonerFacade
+public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 {
-
 	private final Map<String, Object> EMPTY_MAP = new HashMap<String, Object>();
 
 	private org.wsml.reasoner.ConjunctiveQuery query;
@@ -90,7 +65,7 @@ public class Kaon2Facade implements DatalogReasonerFacade
 
 	private String ontologyUri;
 
-	public Kaon2Facade( WSMO4JManager wsmoManager, final Map<String, Object> config )
+	public Kaon2LPWrapperImplementation( WSMO4JManager wsmoManager, final Map<String, Object> config )
 	{
 		df = wsmoManager.getDataFactory();
 		wf = wsmoManager.getWSMOFactory();
@@ -105,9 +80,9 @@ public class Kaon2Facade implements DatalogReasonerFacade
 		return conn;
 	}
 
-	/**
-	 * Evaluates a Query on a Datalog knowledgebase
-	 */
+	/* (non-Javadoc)
+     * @see org.wsml.reasoner.builtin.kaon2.I#evaluate(org.wsml.reasoner.ConjunctiveQuery)
+     */
 	public Set<Map<org.omwg.ontology.Variable, org.omwg.logicalexpression.terms.Term>> evaluate( ConjunctiveQuery q) throws ExternalToolException
 	{
 
@@ -654,6 +629,9 @@ public class Kaon2Facade implements DatalogReasonerFacade
 		return result;
 	}
 
+	/* (non-Javadoc)
+     * @see org.wsml.reasoner.builtin.kaon2.I#register(java.util.Set)
+     */
 	public void register( Set<org.wsml.reasoner.Rule> kb ) throws ExternalToolException
 	{
 		try
@@ -699,6 +677,9 @@ public class Kaon2Facade implements DatalogReasonerFacade
 		this.conn.close();
 	}
 
+	/* (non-Javadoc)
+     * @see org.wsml.reasoner.builtin.kaon2.I#deregister()
+     */
 	public void deregister() throws ExternalToolException
 	{
 		try
@@ -719,11 +700,17 @@ public class Kaon2Facade implements DatalogReasonerFacade
 		}
 	}
 
+	/* (non-Javadoc)
+     * @see org.wsml.reasoner.builtin.kaon2.I#checkQueryContainment(org.wsml.reasoner.ConjunctiveQuery, org.wsml.reasoner.ConjunctiveQuery)
+     */
 	public boolean checkQueryContainment( ConjunctiveQuery query1, ConjunctiveQuery query2 )
 	{
 		throw new UnsupportedOperationException( "This method is not implemented" );
 	}
 
+	/* (non-Javadoc)
+     * @see org.wsml.reasoner.builtin.kaon2.I#getQueryContainment(org.wsml.reasoner.ConjunctiveQuery, org.wsml.reasoner.ConjunctiveQuery)
+     */
 	public Set<Map<org.omwg.ontology.Variable, org.omwg.logicalexpression.terms.Term>> getQueryContainment(
 	                ConjunctiveQuery query1, ConjunctiveQuery query2 )
 	{
@@ -742,5 +729,4 @@ public class Kaon2Facade implements DatalogReasonerFacade
 		}
 		return new URI( uriString.toString() );
 	}
-
 }
