@@ -8,6 +8,6 @@ public class MinsHelper
 {
 	static LPReasoner getMINS()
 	{
-		return (LPReasoner) ReasonerHelper.getReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS, null );
+		return ReasonerHelper.getLPReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
 	}
 }

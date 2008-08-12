@@ -60,7 +60,7 @@ public class AttributeRangeTest extends BaseReasonerTest {
     }
     
     public void testAllReasoners() throws Exception{
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED);
     	attributeRange();
     	
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);

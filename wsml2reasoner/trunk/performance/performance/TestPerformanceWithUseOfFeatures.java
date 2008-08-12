@@ -325,7 +325,7 @@ public class TestPerformanceWithUseOfFeatures {
             reasoner = getReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2);
         }
         else if (theReasonerName.equals("IRIS")) {
-            reasoner = getReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+            reasoner = getReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED);
         }
         long t0_end = System.currentTimeMillis();
         long t0 = t0_end - t0_start;

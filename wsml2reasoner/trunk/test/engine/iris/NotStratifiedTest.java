@@ -66,7 +66,7 @@ public class NotStratifiedTest extends BaseReasonerTest {
 		// currently set to IRIS since the other reasoning engines
 		// cannot yet handle such built-ins
 		previous = BaseReasonerTest.reasoner;
-		BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS;
+		BaseReasonerTest.reasoner = WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED;
 //		wsmlReasoner = BaseReasonerTest.getReasoner();
 		wsmlReasoner = (LPReasoner) getIrisReasoner();
 		wsmoFactory = Factory.createWsmoFactory(null);
@@ -83,7 +83,7 @@ public class NotStratifiedTest extends BaseReasonerTest {
     private WSMLReasoner getIrisReasoner()
     {
     	Map<String, Object> params = new HashMap<String, Object>();
-    	params.put( WSMLReasonerFactory.PARAM_BUILT_IN_REASONER, BuiltInReasoner.IRIS );
+    	params.put( WSMLReasonerFactory.PARAM_BUILT_IN_REASONER, BuiltInReasoner.IRIS_STRATIFIED );
     	return DefaultWSMLReasonerFactory.getFactory().createRuleReasoner( params );
     }
 

@@ -111,7 +111,7 @@ public class ConstraintViolationCheck extends BaseReasonerTest {
 
     public void testFlightReasoners() throws Exception {
 
-        resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+        resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED);
         constraintViolationCheck();
 
         resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);

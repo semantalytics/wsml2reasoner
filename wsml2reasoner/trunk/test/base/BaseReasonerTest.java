@@ -121,7 +121,7 @@ public class BaseReasonerTest extends TestCase {
          * KAON2 can also handle DL reasoning
          * DL reasoning should be handled by
          */
-        if(reasoner.equals(WSMLReasonerFactory.BuiltInReasoner.IRIS) |
+        if(reasoner.equals(WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED) |
         		reasoner.equals(WSMLReasonerFactory.BuiltInReasoner.KAON2)){
         	wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
             	.createFlightReasoner(params);

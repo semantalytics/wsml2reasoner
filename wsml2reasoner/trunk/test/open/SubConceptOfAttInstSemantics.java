@@ -65,7 +65,7 @@ public class SubConceptOfAttInstSemantics extends BaseReasonerTest {
   }
   
   public void testFlightReasoners() throws Exception{
-  	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+  	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED);
   	subConceptOfIsReflexiv2();
   	subConceptOfIsReflexiv3();
   	

@@ -55,7 +55,7 @@ public class MaciejVTABug2 extends BaseReasonerTest {
     }
     
     public void testFlightReasoners() throws Exception{
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED);
     	memberOfQuery();
        	
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);

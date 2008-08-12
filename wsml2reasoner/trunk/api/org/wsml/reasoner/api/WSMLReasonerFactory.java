@@ -48,8 +48,6 @@ public interface WSMLReasonerFactory {
 
     public static final String PARAM_EXTERNAL_REASONER_URI = "ENDPOINT";
 
-    public static final String PARAM_WSML_VARIANT = "WSML VARIANT";
-
     /**
      * Enum to select which reasoner to take. This enum also holds informations
      * about those reasoners.
@@ -58,11 +56,12 @@ public interface WSMLReasonerFactory {
 
         KAON2("org.wsml.reasoner.builtin.kaon2.Kaon2Facade"),
         KAON2DL("org.wsml.reasoner.builtin.kaon2.Kaon2DLFacade"),
-        MINS("org.wsml.reasoner.builtin.mins.MinsFacade"),
+        MINS("org.wsml.reasoner.builtin.mins.MinsWellFoundedFacade"),
+//        MINS_NAIVE("org.wsml.reasoner.builtin.mins.MinsNaiveFacade"),
         PELLET("org.wsml.reasoner.builtin.pellet.PelletFacade"),
         XSB("org.wsml.reasoner.builtin.xsb.XSBFacade"),
-        IRIS("org.wsml.reasoner.builtin.iris.IrisFacade"),
-        IRISDB("org.wsml.reasoner.builtin.iris.IrisDbFacade"),
+        IRIS_STRATIFIED("org.wsml.reasoner.builtin.iris.IrisStratifiedFacade"),
+        IRIS_WELL_FOUNDED("org.wsml.reasoner.builtin.iris.IrisWellFoundedFacade"),
         TPTP("org.wsml.reasoner.builtin.tptp.TPTPFacade"),
         SPASS("org.wsml.reasoner.builtin.spass.SpassFacade");
 

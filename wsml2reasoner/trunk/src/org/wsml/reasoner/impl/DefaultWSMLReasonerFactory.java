@@ -133,7 +133,6 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         if (params == null){
             params = new HashMap<String, Object>();
         }
-        params.put(PARAM_WSML_VARIANT, WSML.WSML_DL);
         // TODO: BARRY - Can you pass the allow imports flag in here (see LPReasoner)
         return new DLBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.PELLET), extractWsmoManager(params));
     }
@@ -142,9 +141,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         if (params == null){
             params = new HashMap<String, Object>();
         }
-        params.put(PARAM_WSML_VARIANT, WSML.WSML_FLIGHT);
-
-        DatalogBasedWSMLReasoner reasoner = new DatalogBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.IRIS), extractWsmoManager(params), params);
+        DatalogBasedWSMLReasoner reasoner = new DatalogBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.IRIS_STRATIFIED), extractWsmoManager(params), params);
         setAllowImportsFlag(reasoner, params);
         return reasoner;
     }
@@ -153,8 +150,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         if (params == null){
             params = new HashMap<String, Object>();
         }
-        params.put(PARAM_WSML_VARIANT, WSML.WSML_RULE);
-        DatalogBasedWSMLReasoner reasoner = new DatalogBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.IRIS), extractWsmoManager(params), params);
+        DatalogBasedWSMLReasoner reasoner = new DatalogBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.IRIS_WELL_FOUNDED), extractWsmoManager(params), params);
         setAllowImportsFlag(reasoner, params);
         return reasoner;
     }

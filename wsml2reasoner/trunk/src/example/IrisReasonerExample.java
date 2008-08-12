@@ -75,7 +75,7 @@ public class IrisReasonerExample {
 
         // get A reasoner
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER, WSMLReasonerFactory.BuiltInReasoner.IRIS);
+        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER, WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED);
         LPReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().createFlightReasoner(params);
 
         // Register ontology

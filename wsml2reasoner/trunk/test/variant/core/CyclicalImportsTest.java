@@ -85,7 +85,7 @@ public class CyclicalImportsTest extends BaseReasonerTest {
     
     
     public void testAllReasoners() throws Exception{
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED);
     	setupScenario(ONTOLOGY_FILE); 
     	cyclicalImports4Datalog();
     	cyclicalImports();

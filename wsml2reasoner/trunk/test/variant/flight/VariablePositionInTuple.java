@@ -66,7 +66,7 @@ public class VariablePositionInTuple extends BaseReasonerTest {
     }
     
     public void testFlightReasoners() throws Exception{
-    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS);
+    	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED);
     	variablePosition();
     	
     	resetReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
