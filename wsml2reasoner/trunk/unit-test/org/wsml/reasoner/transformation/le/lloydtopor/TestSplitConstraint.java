@@ -75,7 +75,6 @@ public class TestSplitConstraint extends TestCase {
     	LogicalExpression in = LETestHelper.buildLE(" !- (_\"urn:a\") or ( _\"urn:b\")");
     	Set <LogicalExpression> result = rule.apply(in);
         
-        assertTrue(!result.toString().contains("_#"));
         assertEquals(2, result.size());
         assertTrue(result.contains(LETestHelper.buildLE("!- _\"urn:a\" ")));
         assertTrue(result.contains(LETestHelper.buildLE("!- _\"urn:b\" ")));
@@ -83,7 +82,6 @@ public class TestSplitConstraint extends TestCase {
         in = LETestHelper.buildLE(" !- (_\"urn:a\") or (_\"urn:b\") or (_\"urn:c\") ");
     	result = rule.apply(in);
 
-        assertTrue(!result.toString().contains("_#"));
         assertEquals(2, result.size());
         assertTrue(result.contains(LETestHelper.buildLE("!- _\"urn:c\" ")));
         assertTrue(result.contains(LETestHelper.buildLE("!- _\"urn:a\" or (_\"urn:b\")")));
@@ -92,7 +90,6 @@ public class TestSplitConstraint extends TestCase {
         in = LETestHelper.buildLE(" !- ( _\"urn:a\" and _\"urn:b\" ) or _\"urn:c\" or _\"urn:d\" ");
     	result = rule.apply(in);
       
-        assertTrue(!result.toString().contains("_#"));
         assertEquals(2, result.size());
         assertTrue(result.contains(LETestHelper.buildLE("!- _\"urn:d\" ")));
         assertTrue(result.contains(LETestHelper.buildLE("!- ( _\"urn:a\" and _\"urn:b\" ) or _\"urn:c\" ")));

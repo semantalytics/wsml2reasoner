@@ -61,34 +61,21 @@ public class TestSplitConjunction extends TestCase {
           assertTrue(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" and _\"urn:b\"")));
           assertTrue(rule.isApplicable(LETestHelper.buildLE("( _\"urn:a\" and _\"urn:b\" ) and _\"urn:c\" ")));
           assertTrue(rule.isApplicable(LETestHelper.buildLE("(_\"urn:a\" or _\"urn:b\" ) and _\"urn:c\" and  _\"urn:d\"")));
-        
-
-      
-        
     }
     
     public void testApply() throws ParserException {
         LogicalExpression in = LETestHelper.buildLE(" ( _\"urn:a\" and _\"urn:b\" )");
         Set <LogicalExpression> result = rule.apply(in);
         
-        assertTrue(!result.toString().contains("_#"));
         assertEquals(2, result.size());
-        
         assertTrue(result.contains(LETestHelper.buildLE("_\"urn:a\"")));
         assertTrue(result.contains(LETestHelper.buildLE("_\"urn:b\"")));
         
-  
         in = LETestHelper.buildLE("(_\"urn:a\" or _\"urn:b\" ) and _\"urn:c\" and  _\"urn:d\"");
         result = rule.apply(in);
         
-        assertTrue(!result.toString().contains("_#"));
         assertEquals(2, result.size());
-        
         assertTrue(result.contains(LETestHelper.buildLE("_\"urn:d\"")));
         assertTrue(result.contains(LETestHelper.buildLE("(_\"urn:a\" or _\"urn:b\")  and  _\"urn:c\" ")));
-        
-        
-        
-        
     }
 }

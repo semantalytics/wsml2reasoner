@@ -21,15 +21,10 @@
 
 package org.wsml.reasoner.transformation.le.foldecomposition;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import junit.framework.TestCase;
-
 
 import org.omwg.logicalexpression.LogicalExpression;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsml.reasoner.transformation.AnonymousIdUtils;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.wsml.ParserException;
 
@@ -82,14 +77,9 @@ public class TestFOLMoleculeDecompositionRules extends TestCase {
     }
     
     public void testApply() throws ParserException {
-    	LogicalExpression in = LETestHelper.buildLE("_# memberOf _#");
+    	LogicalExpression in = LETestHelper.buildLE("_\"urn:a\"[_\"urn:b\" impliesType _\"urn:c\"]");
         LogicalExpression result = rule.apply(in);
-        
-        assertTrue(result.toString().contains("isa"));
-        assertTrue(result.toString().startsWith("_\"urn:"));
-        
-        in = LETestHelper.buildLE("_\"urn:a\"[_\"urn:b\" ofType _\"urn:c\"]");
-//        result = rule.apply(in);
+        System.out.println(result.toString());
 
     	
 
