@@ -38,12 +38,6 @@ public interface WSMLReasonerFactory {
 
     public static final String PARAM_BUILT_IN_REASONER = "BUILT IN REASONER";
 
-    /**
-     * underlying reasoner reasoner uses a specific evaluation method (if
-     * supported)
-     */
-    public static final String PARAM_EVAL_METHOD = "Evaluation Method";
-
     public static final String PARAM_ALLOW_IMPORTS = "Allow ontology imports";
 
     public static final String PARAM_EXTERNAL_REASONER_URI = "ENDPOINT";
