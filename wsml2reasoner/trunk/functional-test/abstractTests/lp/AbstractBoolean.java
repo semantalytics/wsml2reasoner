@@ -20,18 +20,9 @@ package abstractTests.lp;
 
 import helper.LPHelper;
 import helper.OntologyHelper;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import helper.Results;
 import junit.framework.TestCase;
-import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
-import org.omwg.ontology.Variable;
-import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
 import abstractTests.LPTest;
 
 /**
@@ -42,13 +33,10 @@ public abstract class AbstractBoolean extends TestCase implements LPTest{
     public void testSimplerBoolean() throws Exception {
     	final String ns = "http://www.yabooleantest.org#";
     	
-        Set<Map<Variable,Term>> expected = new HashSet<Map<Variable,Term>>();
-        Map<Variable, Term> binding = new HashMap<Variable, Term>();
-        
-        binding.put(leFactory.createVariable("x"), wsmoFactory.createIRI(ns + "truth"));
-        expected.add(binding);
-        
-    	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology("files/simplerBoolean.wsml"), "?x[reallyExists hasValue _boolean(\"true\")]", expected, getLPReasoner() );
+    	Results r = new Results( "x" );
+    	r.addBinding( Results.iri( ns + "truth" ) );
+    	
+    	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology("files/simplerBoolean.wsml"), "?x[reallyExists hasValue _boolean(\"true\")]", r.get(), getLPReasoner() );
     }
     
     /**
@@ -66,46 +54,19 @@ public abstract class AbstractBoolean extends TestCase implements LPTest{
         
         Ontology ontology = OntologyHelper.parseOntology( test );
         
-        {
-	        Set<Map<Variable,Term>> expected = new HashSet<Map<Variable,Term>>();
-	        Map<Variable, Term> binding = new HashMap<Variable, Term>();
-	        binding.put(leFactory.createVariable("y"), dataFactory.createWsmlBoolean( false) );
-	        expected.add(binding);
-	
-	
-	        LPHelper.executeQueryAndCheckResults( ontology, "a[f hasValue ?y]", expected, getLPReasoner() );
-        }
+    	Results r = new Results( "y" );
+    	r.addBinding( Results.bool( false ) );
+    	
+        LPHelper.executeQueryAndCheckResults( ontology, "a[f hasValue ?y]", r.get(), getLPReasoner() );
 
-        {
-	        Set<Map<Variable,Term>> expected2 = new HashSet<Map<Variable,Term>>();
-	        Map<Variable, Term> binding2 = new HashMap<Variable, Term>();
-	        binding2.put(leFactory.createVariable("y"), dataFactory.createWsmlBoolean( true) );
-	        expected2.add(binding2);
-	
-	        LPHelper.executeQueryAndCheckResults( ontology, "a[t hasValue ?y]", expected2, getLPReasoner() );
-        }        
+    	r = new Results( "y" );
+    	r.addBinding( Results.bool( true ) );
+    	
+        LPHelper.executeQueryAndCheckResults( ontology, "a[t hasValue ?y]", r.get(), getLPReasoner() );
 
-        {
-	        Set<Map<Variable,Term>> expected = new HashSet<Map<Variable,Term>>();
-	        Map<Variable, Term> binding = new HashMap<Variable, Term>();
-	        binding.put(leFactory.createVariable("y"), wsmoFactory.createIRI(ns+"t") );
-	        expected.add(binding);
+    	r = new Results( "y" );
+    	r.addBinding( Results.iri( ns + "t" ) );
 
-	        LPHelper.executeQueryAndCheckResults( ontology, "a(?y)", expected, getLPReasoner() );
-	    }
-    }
-    
-    private static final WsmoFactory wsmoFactory;
-    private static final LogicalExpressionFactory leFactory;
-    private static final DataFactory dataFactory;
-    private static final WSMO4JManager wsmoManager;
-    
-    static{
-//  	 Set up factories for creating WSML elements
-	   	wsmoManager = new WSMO4JManager();
-	
-	   	leFactory = wsmoManager.getLogicalExpressionFactory();
-	   	wsmoFactory = wsmoManager.getWSMOFactory();
-	   	dataFactory = wsmoManager.getDataFactory();
+        LPHelper.executeQueryAndCheckResults( ontology, "a(?y)", r.get(), getLPReasoner() );
     }
 }
