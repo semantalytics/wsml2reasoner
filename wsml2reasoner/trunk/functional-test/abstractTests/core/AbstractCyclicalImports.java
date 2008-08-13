@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import junit.framework.TestCase;
 import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -22,16 +23,16 @@ public abstract class AbstractCyclicalImports extends TestCase implements CoreTe
     private static final String ns1 = "http://here.comes.the.whistleman/CyclicalImports1#";
     private static final String ns2 = "http://here.comes.the.whistleman/CyclicalImports2#";
 
+    // A reference for the imported ontology.
+    private Ontology importedOntology;
+    
     protected void setUp() throws Exception {
-    	// Don't know why this is done here.
-    	// Maybe to ensure that the ontology is reachable/loadable.
-    	OntologyHelper.loadOntology( ONTOLOGY_FILE2 );
-
-    	// 	 Set up factories for creating WSML elements
-	   	wsmoManager = new WSMO4JManager();
+    	WSMO4JManager wsmoManager = new WSMO4JManager();
 	
 	   	leFactory = wsmoManager.getLogicalExpressionFactory();
 	   	wsmoFactory = wsmoManager.getWSMOFactory();
+
+    	importedOntology = OntologyHelper.loadOntology( ONTOLOGY_FILE2 );
     }
 
     public void testCyclicalImports1() throws Exception {
@@ -65,6 +66,8 @@ public abstract class AbstractCyclicalImports extends TestCase implements CoreTe
         binding.put(leFactory.createVariable("X"),  wsmoFactory.createIRI(ns2 + "JohnMedeski"));
         binding.put(leFactory.createVariable("Y"),  wsmoFactory.createIRI(ns1 + "JazzMusician"));
         expected.add(binding);
+        
+        assertNotNull( importedOntology );
      
         CoreHelper.queryXMemberOfYAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE1 ), getReasoner(), expected );
     }
@@ -80,11 +83,12 @@ public abstract class AbstractCyclicalImports extends TestCase implements CoreTe
         expected.add(binding);
         binding.put(leFactory.createVariable("X"),  wsmoFactory.createIRI(ns1 + "JohnScofield"));
         expected.add(binding);
-
+        
+        assertNotNull( importedOntology );
+        
         CoreHelper.queryXMemberOfConceptAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE1 ), getReasoner(), ns1 + "JazzMusician", expected );
     }
 
     private WsmoFactory wsmoFactory;
     private LogicalExpressionFactory leFactory;
-    private WSMO4JManager wsmoManager;
 }
