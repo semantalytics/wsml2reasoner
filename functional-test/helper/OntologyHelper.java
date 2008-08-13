@@ -1,3 +1,25 @@
+/*
+ * WSML2Reasoner
+ * An extensible framework for reasoning with WSML ontologies.
+ * 
+ * Copyright (C) 2008 Semantic Technology Institute (STI) Innsbruck, 
+ * University of Innsbruck, Technikerstrasse 21a, 6020 Innsbruck, Austria.
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
+ * MA  02110-1301, USA.
+ */
 package helper;
 
 import java.io.FileNotFoundException;
@@ -23,18 +45,36 @@ import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 import org.wsmo.wsml.Serializer;
 
+/**
+ * Helper to make loading, parsing and serialising ontologies and their components simpler.
+ */
 public class OntologyHelper
 {
+	/**
+	 * Load an ontology from a wsml file.
+	 * @param ontologyFile The filenanme containing the wsml.
+	 * @return The loaded ontology.
+	 */
     public static Ontology loadOntology( String ontologyFile  ) throws IOException, ParserException, InvalidModelException
     {
     	return parseThis(getReaderForFile(ontologyFile ));
     }
     
+	/**
+	 * Parse an ontology from a string containing the wsml.
+	 * @param ontologyString The wsml ontology.
+	 * @return The parsed ontology.
+	 */
     public static Ontology parseOntology( String ontologyString ) throws IOException, ParserException, InvalidModelException
     {
     	return parseThis(new StringReader(ontologyString));
     }
     
+    /**
+     * Serialise an ontology to a string.
+     * @param ontology The ontology instance.
+     * @return The string-ised ontology.
+     */
     public static String toString( Ontology ontology )
     {
         Serializer ontologySerializer = org.wsmo.factory.Factory.createSerializer(null);
@@ -51,6 +91,12 @@ public class OntologyHelper
 		return sw.toString();
     }
 
+    /**
+     * Serialise a logical expression to a string.
+     * @param ontology The ontology instance to use to create the seriliser.
+     * @param logicalExpression The logical expression to serialise.
+     * @return The string-ised logical expression.
+     */
     public static String toString( Ontology ontology, LogicalExpression logicalExpression )
     {
 		LogExprSerializerWSML logExprSerializer = new LogExprSerializerWSML(ontology);
@@ -58,6 +104,11 @@ public class OntologyHelper
 		return logExprSerializer.serialize( logicalExpression );
     }
     
+    /**
+     * Serialise a result set to a string.
+     * @param resultSet The result set to serialise.
+     * @return The string-ised result set.
+     */
     public static String toString( Set<Map<Variable, Term>> resultSet )
     {
     	StringWriter writer = new StringWriter();
