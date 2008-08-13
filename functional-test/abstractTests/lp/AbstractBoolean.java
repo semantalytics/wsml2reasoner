@@ -19,6 +19,7 @@
 package abstractTests.lp;
 
 import helper.LPHelper;
+import helper.OntologyHelper;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -47,7 +48,7 @@ public abstract class AbstractBoolean extends TestCase implements LPTest{
         binding.put(leFactory.createVariable("x"), wsmoFactory.createIRI(ns + "truth"));
         expected.add(binding);
         
-    	LPHelper.executeQuery( LPHelper.loadOntology("files/simplerBoolean.wsml"), "?x[reallyExists hasValue _boolean(\"true\")]", expected, getReasoner() );
+    	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology("files/simplerBoolean.wsml"), "?x[reallyExists hasValue _boolean(\"true\")]", expected, getLPReasoner() );
     }
     
     /**
@@ -63,7 +64,7 @@ public abstract class AbstractBoolean extends TestCase implements LPTest{
                 "a[t hasValue _boolean(\"true\")].\n " +
                 "a(?a) :- a[?a hasValue ?x] and ?x != _boolean(\"false\"). ";
         
-        Ontology ontology = LPHelper.parseOntology( test );
+        Ontology ontology = OntologyHelper.parseOntology( test );
         
         {
 	        Set<Map<Variable,Term>> expected = new HashSet<Map<Variable,Term>>();
@@ -72,7 +73,7 @@ public abstract class AbstractBoolean extends TestCase implements LPTest{
 	        expected.add(binding);
 	
 	
-	        LPHelper.executeQuery( ontology, "a[f hasValue ?y]", expected, getReasoner() );
+	        LPHelper.executeQueryAndCheckResults( ontology, "a[f hasValue ?y]", expected, getLPReasoner() );
         }
 
         {
@@ -81,7 +82,7 @@ public abstract class AbstractBoolean extends TestCase implements LPTest{
 	        binding2.put(leFactory.createVariable("y"), dataFactory.createWsmlBoolean( true) );
 	        expected2.add(binding2);
 	
-	        LPHelper.executeQuery( ontology, "a[t hasValue ?y]", expected2, getReasoner() );
+	        LPHelper.executeQueryAndCheckResults( ontology, "a[t hasValue ?y]", expected2, getLPReasoner() );
         }        
 
         {
@@ -90,7 +91,7 @@ public abstract class AbstractBoolean extends TestCase implements LPTest{
 	        binding.put(leFactory.createVariable("y"), wsmoFactory.createIRI(ns+"t") );
 	        expected.add(binding);
 
-	        LPHelper.executeQuery( ontology, "a(?y)", expected, getReasoner() );
+	        LPHelper.executeQueryAndCheckResults( ontology, "a(?y)", expected, getLPReasoner() );
 	    }
     }
     

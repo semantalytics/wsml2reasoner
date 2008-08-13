@@ -250,10 +250,10 @@ public class BaseReasonerTest extends TestCase {
     				wsmoFactory.createIRI(concept)));
     		System.out.println("Found < " + result.size()
     		        + " > results to the query:");
-    		for (Instance instance : result){
-    			System.out.println("(" + (++i) + ") -- " + instance.getIdentifier().toString() );
-//    			assertTrue("Result does not contain instance: " + instance.getIdentifier().toString(), result.contains(instance));
-    		}
+//    		for (Instance instance : result){
+//    			System.out.println("(" + (++i) + ") -- " + instance.getIdentifier().toString() );
+////    			assertTrue("Result does not contain instance: " + instance.getIdentifier().toString(), result.contains(instance));
+//    		}
     		assertEquals("Engine: " + reasoner + " ", expected.size(), result.size());
     		for (Map<Variable, Term> binding : expected) {
     		    assertTrue("Engine: " + reasoner + " - Result does not contain instance: " +

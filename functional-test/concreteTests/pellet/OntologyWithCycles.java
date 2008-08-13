@@ -6,7 +6,7 @@ import abstractTests.dl.AbstractOntologyWithCycles;
 
 public class OntologyWithCycles extends AbstractOntologyWithCycles
 {
-	public DLReasoner getReasoner()
+	public DLReasoner getDLReasoner()
     {
 	    return PelletHelper.getPellet();
     }
