@@ -6,7 +6,7 @@ import org.wsml.reasoner.api.WSMLReasonerFactory;
 
 public class MinsHelper
 {
-	static LPReasoner getMINS()
+	static LPReasoner getReasoner()
 	{
 		return ReasonerHelper.getLPReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
 	}

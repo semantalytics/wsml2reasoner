@@ -7,6 +7,6 @@ public class CyclicalImports extends AbstractCyclicalImports
 {
 	public WSMLReasoner getReasoner()
 	{
-		return Kaon2Helper.getKaon2DL();
+		return Kaon2Helper.getReasoner();
 	}
 }

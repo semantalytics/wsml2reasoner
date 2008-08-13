@@ -7,6 +7,6 @@ public class CyclicalImports extends AbstractCyclicalImports
 {
 	public LPReasoner getReasoner()
 	{
-		return IrisHelper.getIRIS();
+		return IrisHelper.getReasoner();
 	}
 }

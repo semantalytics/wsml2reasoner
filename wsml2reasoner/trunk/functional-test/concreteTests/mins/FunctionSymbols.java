@@ -7,6 +7,6 @@ public class FunctionSymbols extends AbstractFunctionSymbols
 {
 	public LPReasoner getLPReasoner()
 	{
-		return MinsHelper.getMINS();
+		return MinsHelper.getReasoner();
 	}
 }

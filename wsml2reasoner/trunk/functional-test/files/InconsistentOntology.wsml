@@ -1,0 +1,24 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-rule"
+
+namespace {_"urn:functionsymbol#"}
+ 
+/*
+	A *BAD* ontology that will cause an inconsistency violation.
+	
+	This ontology is problematic, because without a concept definition like this:
+	
+		concept Concept
+			attribute ofType OtherConcept
+	
+	the axiom will cause inconsistency violations by assigning values to an attribute of unknown type.
+*/
+ontology inconsistencyOntology
+
+
+axiom 
+ definedBy
+  Concept[attribute ofType OtherConcept].
+  f[attribute hasValue 10] memberOf Concept.
+  
+  
+  

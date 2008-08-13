@@ -6,7 +6,7 @@ import org.wsml.reasoner.api.WSMLReasonerFactory;
 
 public class Kaon2Helper
 {
-	static DLReasoner getKaon2DL()
+	static DLReasoner getReasoner()
 	{
 		return ReasonerHelper.getDLReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2DL );
 	}

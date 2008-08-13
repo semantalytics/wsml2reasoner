@@ -7,6 +7,6 @@ public class CyclicalImports extends AbstractCyclicalImports
 {
 	public LPReasoner getReasoner()
 	{
-		return Kaon2Helper.getKAON2();
+		return Kaon2Helper.getReasoner();
 	}
 }

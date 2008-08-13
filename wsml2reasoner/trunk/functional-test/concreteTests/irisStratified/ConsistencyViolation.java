@@ -1,9 +1,9 @@
 package concreteTests.irisStratified;
 
 import org.wsml.reasoner.api.LPReasoner;
-import abstractTests.lp.AbstractFunctionSymbols;
+import abstractTests.lp.AbstractConsistencyViolation;
 
-public class FunctionSymbols extends AbstractFunctionSymbols
+public class ConsistencyViolation extends AbstractConsistencyViolation
 {
 	public LPReasoner getLPReasoner()
 	{

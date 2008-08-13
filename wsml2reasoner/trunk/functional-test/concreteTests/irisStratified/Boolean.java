@@ -7,6 +7,6 @@ public class Boolean extends AbstractBoolean
 {
 	public LPReasoner getLPReasoner()
 	{
-		return IrisHelper.getIRIS();
+		return IrisHelper.getReasoner();
 	}
 }
