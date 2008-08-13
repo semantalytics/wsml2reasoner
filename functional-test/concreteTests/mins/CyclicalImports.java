@@ -7,6 +7,6 @@ public class CyclicalImports extends AbstractCyclicalImports
 {
 	public WSMLReasoner getReasoner()
 	{
-		return MinsHelper.getMINS();
+		return MinsHelper.getReasoner();
 	}
 }

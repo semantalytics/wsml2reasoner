@@ -76,6 +76,7 @@ import org.wsmo.common.Identifier;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
+import com.ontotext.wsmo4j.ontology.AttributeImpl;
 
 /**
  * A prototypical implementation of a reasoner for WSML Core and WSML Flight.
@@ -423,7 +424,8 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         for (Map<Variable, Term> violation : violations) {
             Term rawValue = violation.get(v);
             Concept concept = wsmoFactory.getConcept((IRI) violation.get(c));
-            Attribute attribute = concept.findAttributes((IRI) violation.get(a)).iterator().next();
+            
+            Attribute attribute = findAttributeForError((IRI) violation.get(a), concept);
             Type type;
             IRI typeId = (IRI) violation.get(t);
             if (WsmlDataType.WSML_STRING.equals(typeId.toString()) || WsmlDataType.WSML_INTEGER.equals(typeId.toString()) || WsmlDataType.WSML_DECIMAL.equals(typeId.toString()) || WsmlDataType.WSML_BOOLEAN.equals(typeId.toString())){
@@ -443,7 +445,19 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
 
     }
 
-    private void addMinCardinalityViolations(Set<ConsistencyViolation> errors) throws InvalidModelException {
+    private Attribute findAttributeForError(Identifier id, Concept concept) {
+        Attribute attribute = null;
+        Set <Attribute> attributes = concept.findAttributes(id);
+        if (attributes.size() == 0){
+        	attribute = new AttributeImpl(id, concept);
+        }
+        else{
+        	attribute = attributes.iterator().next();
+        }
+        return attribute;
+    }
+
+	private void addMinCardinalityViolations(Set<ConsistencyViolation> errors) throws InvalidModelException {
         // MIN_CARD(instance, concept, attribute)
         Variable i = leFactory.createVariable("i");
         Variable c = leFactory.createVariable("c");
@@ -460,7 +474,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         Set<Map<Variable, Term>> violations = executeQuery(atom);
         for (Map<Variable, Term> violation : violations) {
             Concept concept = wsmoFactory.getConcept((Identifier) violation.get(c));
-            Attribute attribute = concept.findAttributes((Identifier) violation.get(a)).iterator().next();
+            Attribute attribute = findAttributeForError((Identifier) violation.get(a), concept);
             errors.add(new MinCardinalityViolation(violation.get(i), attribute, concept.getOntology()));
         }
     }
@@ -482,7 +496,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         Set<Map<Variable, Term>> violations = executeQuery(atom);
         for (Map<Variable, Term> violation : violations) {
             Concept concept = wsmoFactory.getConcept((IRI) violation.get(c));
-            Attribute attribute = concept.findAttributes((IRI) violation.get(a)).iterator().next();
+            Attribute attribute = findAttributeForError((Identifier) violation.get(a), concept);
             errors.add(new MaxCardinalityViolation(violation.get(i), attribute, concept.getOntology()));
         }
     }

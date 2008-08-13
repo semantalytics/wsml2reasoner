@@ -1,9 +1,9 @@
 package concreteTests.irisWellFounded;
 
 import org.wsml.reasoner.api.LPReasoner;
-import abstractTests.lp.AbstractBoolean;
+import abstractTests.lp.AbstractConsistencyViolation;
 
-public class Boolean extends AbstractBoolean
+public class ConsistencyViolation extends AbstractConsistencyViolation
 {
 	public LPReasoner getLPReasoner()
 	{

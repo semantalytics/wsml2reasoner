@@ -6,7 +6,7 @@ import org.wsml.reasoner.api.WSMLReasonerFactory;
 
 public class IrisHelper
 {
-	static LPReasoner getIRIS()
+	static LPReasoner getReasoner()
 	{
 		return ReasonerHelper.getLPReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS_WELL_FOUNDED );
 	}

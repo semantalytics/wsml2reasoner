@@ -6,7 +6,7 @@ import org.wsml.reasoner.api.WSMLReasonerFactory;
 
 public class PelletHelper
 {
-	static DLReasoner getPellet()
+	static DLReasoner getReasoner()
 	{
 		return ReasonerHelper.getDLReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET );
 	}

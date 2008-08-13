@@ -8,6 +8,6 @@ public class OntologyWithCycles extends AbstractOntologyWithCycles
 {
 	public DLReasoner getDLReasoner()
     {
-	    return PelletHelper.getPellet();
+	    return PelletHelper.getReasoner();
     }
 }

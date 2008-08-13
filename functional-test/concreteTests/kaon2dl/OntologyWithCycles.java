@@ -7,6 +7,6 @@ public class OntologyWithCycles extends AbstractOntologyWithCycles
 {
 	public DLReasoner getDLReasoner()
     {
-	    return Kaon2Helper.getKaon2DL();
+	    return Kaon2Helper.getReasoner();
     }
 }
