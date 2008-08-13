@@ -20,11 +20,8 @@ package abstractTests.lp;
 
 import helper.LPHelper;
 import helper.OntologyHelper;
-import java.util.Map;
-import java.util.Set;
+import helper.Results;
 import junit.framework.TestCase;
-import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Variable;
 import abstractTests.LPTest;
 
 public abstract class AbstractConceptWithAttribute extends TestCase implements LPTest {
@@ -34,20 +31,14 @@ public abstract class AbstractConceptWithAttribute extends TestCase implements L
      * attribute.
      */
     public void testConceptWithAttribute() throws Exception {
-    	String test = getOntHeader() + "concept c attr ofType integer ";
+    	String ontology = ontologyheader + "concept c attr ofType integer ";
     	
-        Set<Map<Variable, Term>> actualResults = LPHelper.executeQuery(
-        				OntologyHelper.parseOntology( test ), "?x[?att ofType ?y]", getLPReasoner() );
+        Results r = new Results( "x", "att", "y" );
+        r.addBinding( Results.iri( NS + "c" ), Results.iri( NS + "attr" ), Results.iri( NS + "integer" ) );
 
-        //System.out.println( OntologyHelper.toString( actualResults ) );
-        
-        assertEquals( 1, actualResults.size() );
-        
-        // The actual output is this:
-        //?att=urn:fooattr, ?y=urn:foointeger, ?x=urn:fooc
-        // Wouldn't it be better to check for exactly this?
+        LPHelper.executeQueryAndCheckResults( OntologyHelper.parseOntology( ontology ), "?x[?att ofType ?y]", r.get(), getLPReasoner() );
     }
-    private String getOntHeader(){
-    	return "namespace {_\"urn:fooXX\"} ontology bar"+" \n";
-    }
+
+    private static final String NS = "urn:fooXX";
+    private static final String ontologyheader = "namespace {_\"" + NS + "\"} ontology bar"+" \n";
 }

@@ -20,12 +20,7 @@ package abstractTests.lp;
 
 import helper.LPHelper;
 import helper.OntologyHelper;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import junit.framework.TestCase;
-import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import abstractTests.LPTest;
 
@@ -35,9 +30,8 @@ public abstract class AbstractConsistencyViolation extends TestCase implements L
     
     public void testInconsistency() throws Exception {
         String query = "?x memberOf ?y";
-        Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         try{
-            LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, expected, getLPReasoner() );
+            LPHelper.executeQuery( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, getLPReasoner() );
             fail("Should have thrown InconsistencyException");
         }
         catch (InconsistencyException e){
