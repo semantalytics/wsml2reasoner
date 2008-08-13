@@ -33,7 +33,7 @@ public abstract class AbstractOntologyWithCycles extends TestCase implements DLT
     	Ontology ontology = (Ontology)parser.parse(new InputStreamReader(is))[0]; 
         final String ns = ontology.getDefaultNamespace().getIRI().toString();
 
-        DLReasoner reasoner = getReasoner();
+        DLReasoner reasoner = getDLReasoner();
        
         // register ontology at the wsml reasoner
 		reasoner.registerOntology(ontology);

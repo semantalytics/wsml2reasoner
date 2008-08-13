@@ -5,7 +5,7 @@ import abstractTests.lp.AbstractFunctionSymbols;
 
 public class FunctionSymbols extends AbstractFunctionSymbols
 {
-	public LPReasoner getReasoner()
+	public LPReasoner getLPReasoner()
 	{
 		return MinsHelper.getMINS();
 	}

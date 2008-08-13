@@ -5,7 +5,7 @@ import abstractTests.lp.AbstractBoolean;
 
 public class Boolean extends AbstractBoolean
 {
-	public LPReasoner getReasoner()
+	public LPReasoner getLPReasoner()
 	{
 		return MinsHelper.getMINS();
 	}

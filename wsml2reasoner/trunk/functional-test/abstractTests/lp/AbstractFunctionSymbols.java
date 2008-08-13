@@ -20,6 +20,7 @@
 package abstractTests.lp;
 
 import helper.LPHelper;
+import helper.OntologyHelper;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,14 +38,6 @@ import abstractTests.LPTest;
 
 /** 
  * Interface or class description
- * 
- * @author Adrian Mocan, Holger Lausen
- *
- * Created on 17-Feb-2006
- * Committed by $Author: graham $
- * 
- * $Source: /home/richi/temp/w2r/wsml2reasoner/test/variant/rule/FunctionSymbolsTest.java,v $, 
- * @version $Revision: 1.3 $ $Date: 2007-08-14 16:53:36 $
  */
 
 public abstract class AbstractFunctionSymbols extends TestCase implements LPTest{
@@ -79,7 +72,7 @@ public abstract class AbstractFunctionSymbols extends TestCase implements LPTest
         expected.add(binding);
 //        performQuery(query, expected);
 //        System.out.println("Finished query.");
-    	LPHelper.executeQuery( LPHelper.loadOntology(ONTOLOGY_FILE ), query, expected, getReasoner() );
+    	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology(ONTOLOGY_FILE ), query, expected, getLPReasoner() );
     }
     
     public void testFSHasValidVoucher() throws Exception {
@@ -101,7 +94,7 @@ public abstract class AbstractFunctionSymbols extends TestCase implements LPTest
                 leFactory.createConstructedTerm(
                         wsmoFactory.createIRI(NS+ "f"),terms));
         expected.add(binding);
-    	LPHelper.executeQuery( LPHelper.loadOntology(ONTOLOGY_FILE ), query, expected, getReasoner() );
+    	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology(ONTOLOGY_FILE ), query, expected, getLPReasoner() );
     }
 
     private static final WsmoFactory wsmoFactory;
