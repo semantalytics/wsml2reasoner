@@ -133,9 +133,12 @@ public class Chart {
 		return null;
 	}
 	
-	public void doChartsFromCSV(File dir) throws IOException, ParserException, InvalidModelException{
+	public IndexEntry doChartsFromCSV(File dir) throws IOException, ParserException, InvalidModelException{
 		System.out.println("processing "+dir);
-		FileWriter fwhtml = new FileWriter(dir.getAbsolutePath()+"/index.html");
+		
+		String htmlFile = dir.getAbsolutePath()+ "/index.html";
+		
+		FileWriter fwhtml = new FileWriter(htmlFile);
 		FileWriter fwtex = new FileWriter(dir.getAbsolutePath()+"/index.tex");
 		
 		TestInfo testInfo = getTestInfo(dir);
@@ -211,6 +214,7 @@ public class Chart {
 		fwhtml.close();
 		
 		fwtex.close();
+		return new IndexEntry(testInfo.title, htmlFile);
 	}
 	
 	String convertToTex(String s){
@@ -335,8 +339,8 @@ public class Chart {
 							false // urls
 			);
 		else
-			chart = ChartFactory.createLineChart3D(
-							name, // Title
+			chart = ChartFactory.createLineChart(
+							name, // Titles
 							"", // X-Axis label
 							"Time in ms", // Y-Axis label
 							data, // Dataset

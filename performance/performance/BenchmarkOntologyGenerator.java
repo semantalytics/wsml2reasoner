@@ -18,20 +18,43 @@
  */
 package performance;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 
 import org.deri.wsmo4j.logicalexpression.util.OntologyUtil;
-import org.omwg.logicalexpression.*;
+import org.omwg.logicalexpression.Atom;
+import org.omwg.logicalexpression.AttributeValueMolecule;
+import org.omwg.logicalexpression.Conjunction;
+import org.omwg.logicalexpression.Constants;
+import org.omwg.logicalexpression.Implication;
+import org.omwg.logicalexpression.LogicProgrammingRule;
+import org.omwg.logicalexpression.MembershipMolecule;
+import org.omwg.logicalexpression.NegationAsFailure;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.*;
+import org.omwg.ontology.Attribute;
+import org.omwg.ontology.Axiom;
+import org.omwg.ontology.Concept;
+import org.omwg.ontology.Instance;
+import org.omwg.ontology.Ontology;
+import org.omwg.ontology.Relation;
+import org.omwg.ontology.RelationInstance;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.common.*;
+import org.wsmo.common.IRI;
+import org.wsmo.common.Namespace;
+import org.wsmo.common.TopEntity;
+import org.wsmo.common.WSML;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.common.exception.SynchronisationException;
-import org.wsmo.factory.*;
+import org.wsmo.factory.DataFactory;
+import org.wsmo.factory.Factory;
+import org.wsmo.factory.LogicalExpressionFactory;
+import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
 import org.wsmo.wsml.Serializer;
 
@@ -56,17 +79,7 @@ public class BenchmarkOntologyGenerator {
 	// default path defining the directory in which to store the ontologies
 	private static String path = "performance/performance/results/";
 	
-	// for each type of ontology (like e.g. subconcept ontology) ontologies 
-	// with the following amounts of entities shall be created
-	private static int[] amount;
-	static{ 
-		amount = new int[15];
-		for (int i=0;i <amount.length;i++){
-			int t = i*250;
-			if (t==0) t=10;
-			amount[i]=t;
-		}
-	}
+	private static int numberOfDataPoints = 2;
 	
 	/*
 	 * Non functional properties used for description of the ontologies and queries
@@ -144,23 +157,23 @@ public class BenchmarkOntologyGenerator {
 		serializer = Factory.createSerializer(null);
 		
 		BenchmarkOntologyGenerator generator = new BenchmarkOntologyGenerator();
-			generator.genSubconceptOntologies();
-			generator.genDeepSubconceptOntologies();
-			generator.genInstanceOntologies();
-			generator.genInstanceANDsubconceptOntologies();
-			generator.genInstanceANDdeepSubconceptOntologies();
-			generator.genOfTypeOntologies();
-			generator.genOfTypeANDsubconceptOntologies();
-			generator.genCardinality01Ontologies();
-			generator.genCardinality010Ontologies();
-			generator.genMinCardinalityOntologies();
-			generator.genInverseAttributeOntologies();
-			generator.genTransitiveAttributeOntologies();
-			generator.genSymmetricAttributeOntologies();
-			generator.genReflexiveAttributeOntologies();
-			generator.genLocallyStratifiedNegationOntologies();
-			generator.genGloballyStratifiedNegationOntologies();
-			generator.genBuiltInAttributeOntologies();
+		generator.genSubconceptOntologies();
+		generator.genDeepSubconceptOntologies();
+		generator.genInstanceOntologies();
+		generator.genInstanceANDsubconceptOntologies();
+		generator.genInstanceANDdeepSubconceptOntologies();
+		generator.genOfTypeOntologies();
+		generator.genOfTypeANDsubconceptOntologies();
+		generator.genCardinality01Ontologies();
+		generator.genCardinality010Ontologies();
+		generator.genMinCardinalityOntologies();
+		generator.genInverseAttributeOntologies();
+		generator.genTransitiveAttributeOntologies();
+		generator.genSymmetricAttributeOntologies();
+		generator.genReflexiveAttributeOntologies();
+		generator.genLocallyStratifiedNegationOntologies();
+		generator.genGloballyStratifiedNegationOntologies();
+		generator.genBuiltInAttributeOntologies();
 	}
 	
 	/**
@@ -182,6 +195,14 @@ public class BenchmarkOntologyGenerator {
 	public void genSubconceptOntologies() 
 			throws IOException, SynchronisationException, InvalidModelException {
 		Ontology ontology = null;
+		
+		int[] amount = new int[numberOfDataPoints];
+		for (int i=0;i <amount.length;i++){
+			int t = i*250;
+			if (t==0) t=10;
+			amount[i]=t;
+		}
+		
 		for (int i = 0; i < amount.length; i++) {	
 			// create default namespace
 			Namespace ns = wsmoFactory.createNamespace("", 
@@ -286,7 +307,7 @@ public class BenchmarkOntologyGenerator {
 		Ontology ontology = null;
 		
 		// reduce amounts of entities that shall be created for this ontology type
-		int[] amount = new int[15];
+		int[] amount = new int[numberOfDataPoints];
 		for (int i=0;i <amount.length;i++){
 			int t = i*20;
 			if (t==0) t=10;
@@ -394,6 +415,14 @@ public class BenchmarkOntologyGenerator {
 	public void genInstanceOntologies() 
 			throws IOException, SynchronisationException, InvalidModelException {
 		Ontology ontology = null;
+		
+		int[] amount = new int[numberOfDataPoints];
+		for (int i=0;i <amount.length;i++){
+			int t = i*250;
+			if (t==0) t=10;
+			amount[i]=t;
+		}
+		
 		for (int i = 0; i < amount.length; i++) {	
 			// create default namespace
 			Namespace ns = wsmoFactory.createNamespace("", 
@@ -473,6 +502,14 @@ public class BenchmarkOntologyGenerator {
 	public void genInstanceANDsubconceptOntologies() 
 			throws IOException, SynchronisationException, InvalidModelException {
 		Ontology ontology = null;
+		
+		int[] amount = new int[numberOfDataPoints];
+		for (int i=0;i <amount.length;i++){
+			int t = i*250;
+			if (t==0) t=10;
+			amount[i]=t;
+		}
+		
 		for (int i = 0; i < amount.length; i++) {	
 			// create default namespace
 			Namespace ns = wsmoFactory.createNamespace("", 
@@ -566,7 +603,7 @@ public class BenchmarkOntologyGenerator {
 	public void genInstanceANDdeepSubconceptOntologies() 
 			throws IOException, SynchronisationException, InvalidModelException {
 		Ontology ontology = null;
-		int[] amount = new int[15];
+		int[] amount = new int[numberOfDataPoints];
 		for (int i=0;i <amount.length;i++){
 			int t = i*20;
 			if (t==0) t=10;
@@ -675,6 +712,14 @@ public class BenchmarkOntologyGenerator {
 	public void genOfTypeOntologies() 
 			throws IOException, SynchronisationException, InvalidModelException {
 		Ontology ontology = null;
+		
+		int[] amount = new int[numberOfDataPoints];
+		for (int i=0;i <amount.length;i++){
+			int t = i*250;
+			if (t==0) t=10;
+			amount[i]=t;
+		}
+		
 		for (int i = 0; i < amount.length; i++) {	
 			// create default namespace
 			Namespace ns = wsmoFactory.createNamespace("", 
@@ -781,6 +826,14 @@ public class BenchmarkOntologyGenerator {
 	public void genOfTypeANDsubconceptOntologies() 
 			throws IOException, SynchronisationException, InvalidModelException {
 		Ontology ontology = null;
+		
+		int[] amount = new int[numberOfDataPoints];
+		for (int i=0;i <amount.length;i++){
+			int t = i*250;
+			if (t==0) t=10;
+			amount[i]=t;
+		}
+		
 		for (int i = 0; i < amount.length; i++) {	
 			// create default namespace
 			Namespace ns = wsmoFactory.createNamespace("", 
@@ -889,7 +942,15 @@ public class BenchmarkOntologyGenerator {
 	 */
 	public void genCardinality01Ontologies() 
 			throws IOException, SynchronisationException, InvalidModelException {
-		Ontology ontology = null;
+		Ontology ontology = null;	
+		
+		int[] amount = new int[numberOfDataPoints];
+		for (int i=0;i <amount.length;i++){
+			int t = i*250;
+			if (t==0) t=10;
+			amount[i]=t;
+		}
+		
 		for (int i = 0; i < amount.length; i++) {	
 			// create default namespace
 			Namespace ns = wsmoFactory.createNamespace("", 
@@ -992,6 +1053,14 @@ public class BenchmarkOntologyGenerator {
 	public void genCardinality010Ontologies() 
 			throws IOException, SynchronisationException, InvalidModelException {
 		Ontology ontology = null;
+		
+		int[] amount = new int[numberOfDataPoints];
+		for (int i=0;i <amount.length;i++){
+			int t = i*250;
+			if (t==0) t=10;
+			amount[i]=t;
+		}
+		
 		for (int i = 0; i < amount.length; i++) {	
 			// create default namespace
 			Namespace ns = wsmoFactory.createNamespace("", 
@@ -1093,6 +1162,14 @@ public class BenchmarkOntologyGenerator {
 	public void genMinCardinalityOntologies() 
 			throws IOException, SynchronisationException, InvalidModelException {
 		Ontology ontology = null;
+		
+		int[] amount = new int[numberOfDataPoints];
+		for (int i=0;i <amount.length;i++){
+			int t = i*250;
+			if (t==0) t=10;
+			amount[i]=t;
+		}
+		
 		for (int i = 0; i < amount.length; i++) {	
 			// create default namespace
 			Namespace ns = wsmoFactory.createNamespace("", 
@@ -1198,7 +1275,7 @@ public class BenchmarkOntologyGenerator {
 			throws IOException, SynchronisationException, InvalidModelException {
 		Ontology ontology = null;
 		
-		int[] amount = new int[15];
+		int[] amount = new int[numberOfDataPoints];
 		for (int i=0;i <amount.length;i++){
 			int t = i*25;
 			if (t==0) t=10;
@@ -1312,6 +1389,14 @@ public class BenchmarkOntologyGenerator {
 	public void genTransitiveAttributeOntologies() 
 			throws IOException, SynchronisationException, InvalidModelException {
 		Ontology ontology = null;
+		
+		int[] amount = new int[numberOfDataPoints];
+		for (int i=0;i <amount.length;i++){
+			int t = i*250;
+			if (t==0) t=10;
+			amount[i]=t;
+		}
+		
 		for (int i = 0; i < amount.length; i++) {	
 			// create default namespace
 			Namespace ns = wsmoFactory.createNamespace("", 
@@ -1426,7 +1511,7 @@ public class BenchmarkOntologyGenerator {
 			throws IOException, SynchronisationException, InvalidModelException {
 		Ontology ontology = null;
 		
-		int[] amount = new int[15];
+		int[] amount = new int[numberOfDataPoints];
 		for (int i=0;i <amount.length;i++){
 			int t = i*75;
 			if (t==0) t=10;
@@ -1537,6 +1622,14 @@ public class BenchmarkOntologyGenerator {
 	public void genReflexiveAttributeOntologies() 
 			throws IOException, SynchronisationException, InvalidModelException {
 		Ontology ontology = null;
+		
+		int[] amount = new int[numberOfDataPoints];
+		for (int i=0;i <amount.length;i++){
+			int t = i*250;
+			if (t==0) t=10;
+			amount[i]=t;
+		}
+		
 		for (int i = 0; i < amount.length; i++) {	
 			// create default namespace
 			Namespace ns = wsmoFactory.createNamespace("", 
@@ -1632,6 +1725,14 @@ public class BenchmarkOntologyGenerator {
 	public void genLocallyStratifiedNegationOntologies() 
 			throws IOException, SynchronisationException, InvalidModelException, ParserException {
 		Ontology ontology = null;
+		
+		int[] amount = new int[numberOfDataPoints];
+		for (int i=0;i <amount.length;i++){
+			int t = i*250;
+			if (t==0) t=10;
+			amount[i]=t;
+		}
+		
 		for (int i = 0; i < amount.length; i++) {	
 			// create default namespace
 			Namespace ns = wsmoFactory.createNamespace("", 
@@ -1753,6 +1854,14 @@ public class BenchmarkOntologyGenerator {
 	public void genGloballyStratifiedNegationOntologies() 
 			throws IOException, SynchronisationException, InvalidModelException, ParserException {
 		Ontology ontology = null;
+		
+		int[] amount = new int[numberOfDataPoints];
+		for (int i=0;i <amount.length;i++){
+			int t = i*250;
+			if (t==0) t=10;
+			amount[i]=t;
+		}
+		
 		for (int i = 0; i < amount.length; i++) {	
 			// create default namespace
 			Namespace ns = wsmoFactory.createNamespace("", 
@@ -1862,6 +1971,14 @@ public class BenchmarkOntologyGenerator {
 	public void genBuiltInAttributeOntologies() 
 			throws IOException, SynchronisationException, InvalidModelException, ParserException {
 		Ontology ontology = null;
+		
+		int[] amount = new int[numberOfDataPoints];
+		for (int i=0;i <amount.length;i++){
+			int t = i*250;
+			if (t==0) t=10;
+			amount[i]=t;
+		}
+		
 		for (int i = 0; i < amount.length; i++) {	
 			// create default namespace
 			Namespace ns = wsmoFactory.createNamespace("", 
@@ -2013,9 +2130,9 @@ public class BenchmarkOntologyGenerator {
 				dataFactory.createWsmlString(description));
 		
 		// collect amount of ontology terms
-		List concepts = OntologyUtil.getConcepts(ontology);
+		List <Term> concepts = OntologyUtil.getConcepts(ontology);
 		int attributes = 0;
-		for (Term c : (List <Term>) concepts) {
+		for (Term c :  concepts) {
 			attributes += OntologyUtil.getAttributes(c, ontology).size();
 		}
 		int instances = OntologyUtil.getInstances(ontology).size();
@@ -2077,78 +2194,4 @@ public class BenchmarkOntologyGenerator {
 	    writer.close();
 	    System.out.println("Wrote " + fileName + ".wsml");
 	}
-
-
-	
-
 }
-/*
- * $Log: not supported by cvs2svn $
- * Revision 1.21  2007-06-29 17:50:39  nathalie
- * fixed error in description of one query and expected result
- *
- * Revision 1.20  2007-06-27 16:03:25  nathalie
- * changed ontology nfps
- *
- * Revision 1.19  2007-06-27 09:15:54  nathalie
- * small update in ontology descriptions
- *
- * Revision 1.18  2007-06-22 12:10:42  hlausen
- * customized the number of features accoring to difficulty
- * added query to html result page
- * time out specifc to each query and not global per ontology as before
- *
- * Revision 1.17  2007-06-21 11:32:59  nathalie
- * *** empty log message ***
- *
- * Revision 1.16  2007-06-21 11:25:05  nathalie
- * added query numbering to query names and fixed inconsistencies in minimal cardinality ontologies
- *
- * Revision 1.15  2007-06-21 10:57:28  hlausen
- * *** empty log message ***
- *
- * Revision 1.14  2007-06-21 10:34:41  nathalie
- * more nfps and slight changes in the ontology building
- *
- * Revision 1.13  2007-06-21 07:52:12  hlausen
- * more steps no iteration per step!
- *
- * Revision 1.12  2007-06-21 07:48:19  hlausen
- * *** empty log message ***
- *
- * Revision 1.11  2007-06-21 07:28:50  nathalie
- * fixed bug in attribute counting
- *
- * Revision 1.10  2007-06-21 06:42:30  hlausen
- * sorry for the delay
- *
- * Revision 1.9  2007-06-20 16:44:32  nathalie
- * *** empty log message ***
- *
- * Revision 1.8  2007-06-20 15:51:28  nathalie
- * changed amount of element features per ontology
- *
- * Revision 1.7  2007-06-20 15:47:36  nathalie
- * added nfps
- *
- * Revision 1.6  2007-06-20 14:11:39  nathalie
- * added nfps
- *
- * Revision 1.5  2007-06-20 09:43:30  nathalie
- * added minCardinality ontologies and tests; added minor changes in the ontology building
- *
- * Revision 1.4  2007-06-18 16:46:56  hlausen
- * more improvements for better charts (one per query)
- *
- * Revision 1.3  2007-06-18 13:04:00  hlausen
- * adding numberformat to better sort files and creating directories on the fly
- *
- * Revision 1.2  2007-06-18 11:24:56  nathalie
- * changed/added methods to generate locally and globally stratified negation ontologies
- *
- * Revision 1.1  2007-06-18 07:20:11  nathalie
- * added 1) automatic ontology generator class and 2)
- * performance test ontologies and results
- *
- *
- */

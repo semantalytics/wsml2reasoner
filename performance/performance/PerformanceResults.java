@@ -22,6 +22,7 @@ import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.wsml.ParserException;
 
 import performance.chart.Chart;
+import performance.chart.IndexEntry;
 
 
 public class PerformanceResults {
@@ -285,7 +286,7 @@ public class PerformanceResults {
             System.out.println("Written to: " + queryTimeFile.getAbsolutePath());
         }
     }
-    public void writeAll(String theDirectory) throws IOException, ParserException, InvalidModelException{
+    public IndexEntry writeAll(String theDirectory) throws IOException, ParserException, InvalidModelException{
         File directory = new File(theDirectory);
         clearDirectory(directory);
 //        writeCSVLoadTime(directory);
@@ -294,7 +295,7 @@ public class PerformanceResults {
         writeCSVConsistencyCheckTime(directory);
         writeCSVQueryTimes(directory);
         
-        new Chart().doChartsFromCSV(directory);
+        return new Chart().doChartsFromCSV(directory);
     }
     
     private String toCommaDelimited(List theList) {
