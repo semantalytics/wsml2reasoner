@@ -7,8 +7,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
@@ -34,6 +36,8 @@ import org.wsmo.factory.Factory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
+import performance.chart.IndexEntry;
+
 public class TestPerformanceWithUseOfFeatures {
     // how often to repeat each query!
     public static int NO_OF_TESTRUNS = 1;
@@ -44,7 +48,8 @@ public class TestPerformanceWithUseOfFeatures {
 
     public static int WAIT_INTERVAL = 1000;
 
-    String directoryPath = "performance/performance/results/";
+    private static String directoryPath = "performance/performance/results/";
+    static final String BASE = "performance/performance/results/";
 
     String[] reasonerNames = new String[] { "KAON", "MINS", "IRIS" };
 
@@ -61,26 +66,29 @@ public class TestPerformanceWithUseOfFeatures {
 
         // ex.doTestRun();
 
-        ex.testSubconceptOntologies();
-        ex.testDeepSubconceptOntologies();
-        ex.testInstanceOntologies();
-        ex.testInstanceANDsubconceptOntologies();
-        ex.testInstanceANDdeepSubconceptOntologies();
-        ex.testOfTypeOntologies();
-        ex.testOfTypeANDsubconceptOntologies();
-        ex.testCardinality01Ontologies();
-        ex.testCardinality010Ontologies();
-        ex.testCardinality1maxOntologies();
-        ex.testInverseAttributeOntologies();
-        ex.testTransitiveAttributeOntologies();
-        ex.testSymmetricAttributeOntologies();
-        ex.testReflexiveAttributeOntologies();
-        ex.testLocallyStratifiedNegation();
-        ex.testGloballyStratifiedNegation();
-        ex.testBuiltInAttributeOntologies();
+        List <IndexEntry> entries = new ArrayList <IndexEntry> ();
+        entries.add(ex.testSubconceptOntologies());
+        entries.add(ex.testDeepSubconceptOntologies());
+        entries.add(ex.testInstanceOntologies());
+        entries.add(ex.testInstanceANDsubconceptOntologies());
+        entries.add(ex.testInstanceANDdeepSubconceptOntologies());
+        entries.add(ex.testOfTypeOntologies());
+        entries.add(ex.testOfTypeANDsubconceptOntologies());
+        entries.add(ex.testCardinality01Ontologies());
+        entries.add(ex.testCardinality010Ontologies());
+        entries.add(ex.testCardinality1maxOntologies());
+        entries.add(ex.testInverseAttributeOntologies());
+        entries.add(ex.testTransitiveAttributeOntologies());
+        entries.add(ex.testSymmetricAttributeOntologies());
+        entries.add(ex.testReflexiveAttributeOntologies());
+        entries.add(ex.testLocallyStratifiedNegation());
+        entries.add(ex.testGloballyStratifiedNegation());
+        entries.add(ex.testBuiltInAttributeOntologies());
+        createMainIndex(entries);
+        createIndex(entries);
     }
 
-    /**
+	/**
      * loads an Ontology and performs sample query
      */
     public void doTestRun() throws Exception {
@@ -96,22 +104,25 @@ public class TestPerformanceWithUseOfFeatures {
         File d = new File(dir);
         Map<String, Ontology> onts = new TreeMap<String, Ontology>();
         File[] files = d.listFiles(wsmlFilter);
-        for (File f : files) {
-            try {
-                Ontology ont = (Ontology) wsmlParser.parse(new FileReader(f))[0];
-                onts.put(f.getName(), ont);
-            }
-            catch (Exception e) {
-                System.out.println(f.getAbsolutePath() + "/" + f.getName());
-                throw new RuntimeException("could not load ontology", e);
-            }
+        if (files != null){
+	        for (File f : files) {
+	            try {
+	                Ontology ont = (Ontology) wsmlParser.parse(new FileReader(f))[0];
+	                onts.put(f.getName(), ont);
+	            }
+	            catch (Exception e) {
+	                System.out.println(f.getAbsolutePath() + "/" + f.getName());
+	                throw new RuntimeException("could not load ontology", e);
+	            }
+	        }
+	        Ontology[] ret = new Ontology[onts.size()];
+	        int i = 0;
+	        for (Ontology o : onts.values()) {
+	            ret[i++] = o;
+	        }
+	        return ret;
         }
-        Ontology[] ret = new Ontology[onts.size()];
-        int i = 0;
-        for (Ontology o : onts.values()) {
-            ret[i++] = o;
-        }
-        return ret;
+        return new Ontology[0];
     }
 
     FileFilter wsmlFilter = new FileFilter() {
@@ -120,158 +131,158 @@ public class TestPerformanceWithUseOfFeatures {
         }
     };
 
-    static final String BASE = "performance/performance/results/";
-
     /**
      * loads subconcept type ontologies and performs sample queries
      */
-    public void testSubconceptOntologies() throws Exception {
+    public IndexEntry testSubconceptOntologies() throws Exception {
         String fileName = "subconcept/";
         Ontology[] ontologies = loadOntologies(BASE + fileName);
-        runPerformanceTests(reasonerNames, ontologies, fileName);
+        return runPerformanceTests(reasonerNames, ontologies, fileName);
     }
 
     /**
      * loads deep subconcept type ontologies and performs sample queries
      */
-    public void testDeepSubconceptOntologies() throws Exception {
+    public IndexEntry testDeepSubconceptOntologies() throws Exception {
         String path = "deepSubconcept/";
         Ontology[] ontologies = loadOntologies(BASE + path);
-        runPerformanceTests(reasonerNames, ontologies, path);
+        return runPerformanceTests(reasonerNames, ontologies, path);
     }
 
     /**
      * loads instance type ontologies and performs sample queries
      */
-    public void testInstanceOntologies() throws Exception {
+    public IndexEntry testInstanceOntologies() throws Exception {
         String path = "instance/";
         Ontology[] ontologies = loadOntologies(BASE + path);
-        runPerformanceTests(reasonerNames, ontologies, path);
+        return runPerformanceTests(reasonerNames, ontologies, path);
     }
 
     /**
      * loads instance and subconcept type ontologies and performs sample queries
      */
-    public void testInstanceANDsubconceptOntologies() throws Exception {
+    public IndexEntry testInstanceANDsubconceptOntologies() throws Exception {
         String path = "instanceANDsubconcept/";
         Ontology[] ontologies = loadOntologies(BASE + path);
-        runPerformanceTests(reasonerNames, ontologies, path);
+        return runPerformanceTests(reasonerNames, ontologies, path);
     }
 
     /**
      * loads instance and deep subconcept type ontologies and performs sample
      * queries
      */
-    public void testInstanceANDdeepSubconceptOntologies() throws Exception {
+    public IndexEntry testInstanceANDdeepSubconceptOntologies() throws Exception {
         String path = "instanceANDdeepSubconcept/";
         Ontology[] ontologies = loadOntologies(BASE + path);
-        runPerformanceTests(reasonerNames, ontologies, path);
+        return runPerformanceTests(reasonerNames, ontologies, path);
     }
 
     /**
      * loads ofType type ontologies and performs sample queries
      */
-    public void testOfTypeOntologies() throws Exception {
+    public IndexEntry testOfTypeOntologies() throws Exception {
         String path = "ofType/";
         Ontology[] ontologies = loadOntologies(BASE + path);
-        runPerformanceTests(reasonerNames, ontologies, path);
+        return runPerformanceTests(reasonerNames, ontologies, path);
     }
 
     /**
      * loads ofType and subconcept type ontologies and performs sample queries
      */
-    public void testOfTypeANDsubconceptOntologies() throws Exception {
+    public IndexEntry testOfTypeANDsubconceptOntologies() throws Exception {
         String path = "ofTypeANDsubconcept/";
         Ontology[] ontologies = loadOntologies(BASE + path);
-        runPerformanceTests(reasonerNames, ontologies, path);
+        return runPerformanceTests(reasonerNames, ontologies, path);
     }
 
     /**
      * loads cardinality (0 1) type ontologies and performs sample queries
      */
-    public void testCardinality01Ontologies() throws Exception {
+    public IndexEntry testCardinality01Ontologies() throws Exception {
         String path = "cardinality_0_1/";
         Ontology[] ontologies = loadOntologies(BASE + path);
-        runPerformanceTests(reasonerNames, ontologies, path);
+        return runPerformanceTests(reasonerNames, ontologies, path);
     }
 
     /**
      * loads cardinality (0 10) type ontologies and performs sample queries
      */
-    public void testCardinality010Ontologies() throws Exception {
+    public IndexEntry testCardinality010Ontologies() throws Exception {
         String path = "cardinality_0_10/";
         Ontology[] ontologies = loadOntologies(BASE + path);
-        runPerformanceTests(reasonerNames, ontologies, path);
+        return runPerformanceTests(reasonerNames, ontologies, path);
     }
 
     /**
      * loads cardinality (1 *) type ontologies and performs sample queries
      */
-    public void testCardinality1maxOntologies() throws Exception {
+    public IndexEntry testCardinality1maxOntologies() throws Exception {
         String path = "cardinality_1_max/";
         Ontology[] ontologies = loadOntologies(BASE + path);
-        runPerformanceTests(reasonerNames, ontologies, path);
+        return runPerformanceTests(reasonerNames, ontologies, path);
     }
 
     /**
      * loads inverse attribute type ontologies and performs sample queries
      */
-    public void testInverseAttributeOntologies() throws Exception {
+    public IndexEntry testInverseAttributeOntologies() throws Exception {
         String path = "inverseAttribute/";
         Ontology[] ontologies = loadOntologies(BASE + path);
-        runPerformanceTests(reasonerNames, ontologies, path);
+        return runPerformanceTests(reasonerNames, ontologies, path);
     }
 
     /**
      * loads transitive attribute type ontologies and performs sample queries
      */
-    public void testTransitiveAttributeOntologies() throws Exception {
+    public IndexEntry testTransitiveAttributeOntologies() throws Exception {
         String path = "transitiveAttribute/";
         Ontology[] ontologies = loadOntologies(BASE + path);
-        runPerformanceTests(reasonerNames, ontologies, path);
+        return runPerformanceTests(reasonerNames, ontologies, path);
     }
 
     /**
      * loads symmetric attribute type ontologies and performs sample queries
      */
-    public void testSymmetricAttributeOntologies() throws Exception {
+    public IndexEntry testSymmetricAttributeOntologies() throws Exception {
         String path = "symmetricAttribute/";
         Ontology[] ontologies = loadOntologies(BASE + path);
-        runPerformanceTests(reasonerNames, ontologies, path);
+        return runPerformanceTests(reasonerNames, ontologies, path);
     }
 
     /**
      * loads reflexive attribute type ontologies and performs sample queries
      */
-    public void testReflexiveAttributeOntologies() throws Exception {
+    public IndexEntry testReflexiveAttributeOntologies() throws Exception {
         String path = "reflexiveAttribute/";
         Ontology[] ontologies = loadOntologies(BASE + path);
-        runPerformanceTests(this.reasonerNames, ontologies, path);
+        return runPerformanceTests(this.reasonerNames, ontologies, path);
     }
 
-    public void testLocallyStratifiedNegation() throws Exception {
+    public IndexEntry testLocallyStratifiedNegation() throws Exception {
         String path = "locallyStratifiedNegation/";
         Ontology[] ontologies = loadOntologies(BASE + path);
-        runPerformanceTests(reasonerNames, ontologies, path);
+        return runPerformanceTests(reasonerNames, ontologies, path);
     }
 
-    public void testGloballyStratifiedNegation() throws Exception {
+    public IndexEntry testGloballyStratifiedNegation() throws Exception {
         String path = "globallyStratifiedNegation/";
         Ontology[] ontologies = loadOntologies(BASE + path);
-        runPerformanceTests(reasonerNames, ontologies, path);
+        return runPerformanceTests(reasonerNames, ontologies, path);
     }
 
     /**
      * loads built-in attribute type ontologies and performs sample queries
      */
-    public void testBuiltInAttributeOntologies() throws Exception {
+    public IndexEntry testBuiltInAttributeOntologies() throws Exception {
         String path = "built_in/";
         Ontology[] ontologies = loadOntologies(BASE + path);
-        runPerformanceTests(reasonerNames, ontologies, path);
+        return runPerformanceTests(reasonerNames, ontologies, path);
     }
 
-    private void runPerformanceTests(String[] reasonerNames, Ontology[] ontologies, String path) throws SynchronisationException, InvalidModelException, ParserException, InconsistencyException, IOException {
-
+    private IndexEntry runPerformanceTests(String[] reasonerNames, Ontology[] ontologies, String path) throws SynchronisationException, InvalidModelException, ParserException, InconsistencyException, IOException {
+    	if (ontologies.length == 0){
+    		return null;
+    	}
         timedOutReasoner.clear();
         SortedMap<String, String> queries = new TreeMap<String, String>();
 
@@ -306,9 +317,10 @@ public class TestPerformanceWithUseOfFeatures {
                 System.gc();
             }
         }
-        performanceresults.writeAll(new File(directoryPath + path).getAbsolutePath());
+        IndexEntry e = performanceresults.writeAll(new File(directoryPath + path).getAbsolutePath());
         log.write(new File(directoryPath + path + "log.txt"));
         resultLog.write(new File(directoryPath + path + "resultLog.txt"));
+        return e;
     }
 
     // reasoner, {regist, query}
@@ -436,9 +448,7 @@ public class TestPerformanceWithUseOfFeatures {
     }
 
     private void waitUntilAlive(MyThread t) {
-        // System.out.println("waiting "+t);
         while (!t.isFinished() && !t.isAlive()) {
-            // System.out.println("waiting!! "+t);
             waitABit();
         }
     }
@@ -469,6 +479,40 @@ public class TestPerformanceWithUseOfFeatures {
             return null;
         }
     }
+    
+    private static void createIndex(List<IndexEntry> entries) throws IOException{
+    	String firstPage = "";
+    	if (entries != null && entries.size() > 0 && entries.get(0) != null){
+    		firstPage = entries.get(0).getUrl().substring(entries.get(0).getUrl().lastIndexOf('\\') + 1);
+    	}
+    	
+    	FileWriter fwhtml = new FileWriter(new File(directoryPath + "/index.html") );
+    	fwhtml.append("<head><META http-equiv=\"Content-Type\" content=\"text/html; charset=US-ASCII\">\n");
+    	fwhtml.append("<title>Unit Test Results.</title></head>\n");
+    	fwhtml.append("<frameset cols=\"20%,80%\">\n");
+    	fwhtml.append("<frameset rows=\"100%\"><frame src=\"mainindex.html\" name=\"mainindex\"></frameset>\n");
+    	fwhtml.append("<frame src=\"./" + firstPage + "\" name=\"resultFrame\">\n");
+    	fwhtml.append("<noframes>\n");
+    	fwhtml.append("<h2>Frame Alert</h2>\n");
+    	fwhtml.append("<p>This document is designed to be viewed using the frames feature. If you see this message, you are using a non-frame-capable web client.</p>\n");
+    	fwhtml.append("</noframes></frameset></html>\n");
+		fwhtml.flush();
+		fwhtml.close();
+    }
+    
+    private static void createMainIndex(List<IndexEntry> entries) throws IOException {
+		FileWriter fwhtml = new FileWriter(new File(directoryPath + "/mainindex.html") );
+		fwhtml.append("<html><body>\n");
+		fwhtml.append("<b>Test Run Results</b><br>");
+		for (IndexEntry e : entries){
+			if (e != null){
+				fwhtml.append("<a href=\"./" + e.getUrl().substring(e.getUrl().lastIndexOf('\\') + 1) + "\" target=\"resultFrame\">"+ e.getTitle() + "</a><br>\n");
+			}
+		}
+		fwhtml.append("</body></html>");
+		fwhtml.flush();
+		fwhtml.close();
+	}
 }
 
 class MyThread extends Thread {
@@ -562,7 +606,6 @@ class QueryThread extends MyThread {
     public long getDuration() {
         return t2;
     }
-
 }
 
 class MyStringBuffer {
