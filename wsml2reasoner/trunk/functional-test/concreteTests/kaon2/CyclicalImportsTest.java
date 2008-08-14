@@ -20,15 +20,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package concreteTests.irisStratified;
+package concreteTests.kaon2;
 
 import org.wsml.reasoner.api.LPReasoner;
-import abstractTests.lp.AbstractConceptWithAttribute;
+import abstractTests.core.AbstractCyclicalImports;
 
-public class ConceptWithAttribute extends AbstractConceptWithAttribute
+public class CyclicalImportsTest extends AbstractCyclicalImports
 {
-	public LPReasoner getLPReasoner()
+	public LPReasoner getReasoner()
 	{
-		return IrisHelper.getReasoner();
+		return Kaon2Helper.getReasoner();
 	}
 }

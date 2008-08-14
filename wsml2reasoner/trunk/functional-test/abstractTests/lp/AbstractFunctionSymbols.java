@@ -26,12 +26,12 @@ import helper.LPHelper;
 import helper.OntologyHelper;
 import helper.Results;
 import junit.framework.TestCase;
-import abstractTests.LPTest;
+import abstractTests.LP;
 
 /** 
  * Simple tests for function symbols (constructed terms).
  */
-public abstract class AbstractFunctionSymbols extends TestCase implements LPTest{
+public abstract class AbstractFunctionSymbols extends TestCase implements LP{
 
     private static final String NS = "http://examples.com/ontologies/mytravel#";
 

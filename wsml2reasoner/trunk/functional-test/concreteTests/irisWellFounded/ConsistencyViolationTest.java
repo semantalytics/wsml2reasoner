@@ -20,15 +20,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package concreteTests.mins;
+package concreteTests.irisWellFounded;
 
 import org.wsml.reasoner.api.LPReasoner;
-import abstractTests.lp.AbstractFunctionSymbols;
+import abstractTests.lp.AbstractConsistencyViolation;
 
-public class FunctionSymbols extends AbstractFunctionSymbols
+public class ConsistencyViolationTest extends AbstractConsistencyViolation
 {
 	public LPReasoner getLPReasoner()
 	{
-		return MinsHelper.getReasoner();
+		return IrisHelper.getReasoner();
 	}
 }

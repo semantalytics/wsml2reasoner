@@ -34,9 +34,9 @@ import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
-import abstractTests.DLTest;
+import abstractTests.DL;
 
-public abstract class AbstractOntologyWithCycles extends TestCase implements DLTest {
+public abstract class AbstractOntologyWithCycles extends TestCase implements DL {
 
     /**
      * The ontology contains a cycle in the concept description.

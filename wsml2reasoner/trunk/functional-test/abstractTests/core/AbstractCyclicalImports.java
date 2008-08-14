@@ -27,9 +27,9 @@ import helper.OntologyHelper;
 import helper.Results;
 import junit.framework.TestCase;
 import org.omwg.ontology.Ontology;
-import abstractTests.CoreTest;
+import abstractTests.Core;
 
-public abstract class AbstractCyclicalImports extends TestCase implements CoreTest {
+public abstract class AbstractCyclicalImports extends TestCase implements Core {
 	
     private static final String ONTOLOGY_FILE1 = "files/CyclicalImports1.wsml";
     private static final String ONTOLOGY_FILE2 = "files/CyclicalImports2.wsml";

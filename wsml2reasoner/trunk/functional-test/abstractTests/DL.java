@@ -20,15 +20,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package concreteTests.irisWellFounded;
+package abstractTests;
 
-import org.wsml.reasoner.api.LPReasoner;
-import abstractTests.lp.AbstractConsistencyViolation;
+import org.wsml.reasoner.api.DLReasoner;
 
-public class ConsistencyViolation extends AbstractConsistencyViolation
+public interface DL
 {
-	public LPReasoner getLPReasoner()
-	{
-		return IrisHelper.getReasoner();
-	}
+	DLReasoner getDLReasoner();
 }

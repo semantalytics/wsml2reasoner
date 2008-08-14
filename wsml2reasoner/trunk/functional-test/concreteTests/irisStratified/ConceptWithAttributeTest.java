@@ -22,12 +22,12 @@
  */
 package concreteTests.irisStratified;
 
-import org.wsml.reasoner.api.WSMLReasoner;
-import abstractTests.core.AbstractCyclicalImports;
+import org.wsml.reasoner.api.LPReasoner;
+import abstractTests.lp.AbstractConceptWithAttribute;
 
-public class CyclicalImports extends AbstractCyclicalImports
+public class ConceptWithAttributeTest extends AbstractConceptWithAttribute
 {
-	public WSMLReasoner getReasoner()
+	public LPReasoner getLPReasoner()
 	{
 		return IrisHelper.getReasoner();
 	}
