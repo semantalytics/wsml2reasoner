@@ -32,11 +32,11 @@ import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.wsml.ParserException;
 
 
-public class TestMoleculeAnonymousIDRule extends TestCase {
+public class MoleculeAnonymousIDRuleTest extends TestCase {
 
     private MoleculeAnonymousIDRule rule;
     
-    public TestMoleculeAnonymousIDRule() {
+    public MoleculeAnonymousIDRuleTest() {
         super();
     }
     

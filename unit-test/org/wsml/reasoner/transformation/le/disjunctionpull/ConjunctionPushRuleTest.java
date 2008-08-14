@@ -20,26 +20,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package org.wsml.reasoner.transformation.le.negationpush;
+package org.wsml.reasoner.transformation.le.disjunctionpull;
 
 import junit.framework.TestCase;
 
 import org.omwg.logicalexpression.LogicalExpression;
+import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.wsml.ParserException;
 
 
-public class TestDoubleNegationRule extends TestCase {
+public class ConjunctionPushRuleTest extends TestCase {
 
-    private DoubleNegationRule rule;
+    private ConjunctionPushRule rule;
     
-    public TestDoubleNegationRule() {
+    public ConjunctionPushRuleTest() {
         super();
     }
     
     protected void setUp() throws Exception {
         super.setUp();
-        this.rule = new DoubleNegationRule();
+        this.rule = new ConjunctionPushRule(new WSMO4JManager());
     }
     
     protected void tearDown() throws Exception {
@@ -51,25 +52,25 @@ public class TestDoubleNegationRule extends TestCase {
         assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\"")));
         assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" and _\"urn:b\"")));
         assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" or _\"urn:b\"")));
-        assertFalse(rule.isApplicable(LETestHelper.buildLE("naf(_\"urn:a\")")));
         assertFalse(rule.isApplicable(LETestHelper.buildLE("naf _\"urn:a\"")));
-        assertTrue(rule.isApplicable(LETestHelper.buildLE("naf(naf _\"urn:a\")")));
-        assertTrue(rule.isApplicable(LETestHelper.buildLE("naf(naf(_\"urn:a\"))")));
-        assertTrue(rule.isApplicable(LETestHelper.buildLE("naf(naf(naf _\"urn:a\"))")));
-        assertTrue(rule.isApplicable(LETestHelper.buildLE("naf(naf(naf(_\"urn:a\")))")));
+        assertFalse(rule.isApplicable(LETestHelper.buildLE("(_\"urn:a\" and _\"urn:b\") and _\"urn:c\"")));
+        assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" and (_\"urn:b\" and _\"urn:c\")")));
+        assertTrue(rule.isApplicable(LETestHelper.buildLE("(_\"urn:a\" or _\"urn:b\") and _\"urn:c\"")));
+        assertTrue(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" and (_\"urn:b\" or _\"urn:c\")")));
+        assertTrue(rule.isApplicable(LETestHelper.buildLE("(_\"urn:a\" or _\"urn:b\") and (_\"urn:c\" or _\"urn:d\")")));
     }
     
     public void testApply() throws ParserException {
-        LogicalExpression in = LETestHelper.buildLE("naf(naf(_\"urn:a\"))");
-        LogicalExpression out = LETestHelper.buildLE("_\"urn:a\"");
+        LogicalExpression in = LETestHelper.buildLE("(_\"urn:a\" or _\"urn:b\") and _\"urn:c\"");
+        LogicalExpression out = LETestHelper.buildLE("(_\"urn:a\" and _\"urn:c\") or (_\"urn:b\" and _\"urn:c\")");
         assertEquals(out, rule.apply(in));
         
-        in = LETestHelper.buildLE("naf(naf(naf(_\"urn:a\")))");
-        out = LETestHelper.buildLE("naf _\"urn:a\"");
+        in = LETestHelper.buildLE("_\"urn:a\" and (_\"urn:b\" or _\"urn:c\")");
+        out = LETestHelper.buildLE("(_\"urn:a\" and _\"urn:b\") or (_\"urn:a\" and _\"urn:c\")");
         assertEquals(out, rule.apply(in));
         
-        in = LETestHelper.buildLE("naf(naf(naf(naf(_\"urn:a\"))))");
-        out = LETestHelper.buildLE("naf (naf _\"urn:a\")");
+        in = LETestHelper.buildLE("(_\"urn:a\" or _\"urn:b\") and (_\"urn:c\" or _\"urn:d\")");
+        out = LETestHelper.buildLE("(_\"urn:a\" and (_\"urn:c\" or _\"urn:d\")) or (_\"urn:b\" and (_\"urn:c\" or _\"urn:d\"))");
         assertEquals(out, rule.apply(in));
     }
 }

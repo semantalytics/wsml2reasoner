@@ -30,11 +30,11 @@ import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.wsml.ParserException;
 
 
-public class TestNegateDisjunctionRule extends TestCase {
+public class NegateDisjunctionRuleTest extends TestCase {
 
     private NegateDisjunctionRule rule;
     
-    public TestNegateDisjunctionRule() {
+    public NegateDisjunctionRuleTest() {
         super();
     }
     

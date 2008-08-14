@@ -30,17 +30,17 @@ import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.wsml.ParserException;
 
 
-public class TestInvImplLeftConjunctionReplacementRule extends TestCase {
+public class InvImplRightDisjunctionReplacementRuleTest extends TestCase {
 
-    private InvImplLeftConjunctionReplacementRule rule;
+    private InvImplRightDisjunctionReplacementRule rule;
     
-    public TestInvImplLeftConjunctionReplacementRule() {
+    public InvImplRightDisjunctionReplacementRuleTest() {
         super();
     }
     
     protected void setUp() throws Exception {
         super.setUp();
-        this.rule = new InvImplLeftConjunctionReplacementRule(new WSMO4JManager());
+        this.rule = new InvImplRightDisjunctionReplacementRule(new WSMO4JManager());
     }
     
     protected void tearDown() throws Exception {
@@ -51,28 +51,28 @@ public class TestInvImplLeftConjunctionReplacementRule extends TestCase {
     public void testIsApplicable() throws ParserException {
         assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\"")));
         assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" implies _\"urn:b\"")));
-        assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" equivalent  _\"urn:b\"")));
-        assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" and _\"urn:b\" implies _\"urn:c\" ")));
-        assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" or _\"urn:b\" impliedBy _\"urn:c\" ")));
+        assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" impliedBy  _\"urn:b\"")));
+        assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" implies _\"urn:b\" or _\"urn:c\" ")));
+        assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" impliedBy _\"urn:b\" and _\"urn:c\" ")));
         
-        assertTrue(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" and _\"urn:b\" impliedBy _\"urn:c\" ")));
-        assertTrue(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" and _\"urn:b\" impliedBy  (_\"urn:c\"  and _\"urn:d\")")));
-        assertTrue(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" and _\"urn:b\" impliedBy ( _\"urn:c\" implies  _\"urn:d\")")));
+        assertTrue(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" impliedBy _\"urn:b\" or _\"urn:c\" ")));
+        assertTrue(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" impliedBy _\"urn:b\" or  (_\"urn:c\"  and _\"urn:d\")")));
+        assertTrue(rule.isApplicable(LETestHelper.buildLE(" (_\"urn:a\" or _\"urn:c\") impliedBy _\"urn:b\" or _\"urn:d\"")));
         
         
     }
     
     public void testApply() throws ParserException {
-        LogicalExpression in = LETestHelper.buildLE("_\"urn:a\" and _\"urn:b\" impliedBy _\"urn:c\" ");
-        LogicalExpression out = LETestHelper.buildLE(" ( _\"urn:a\" impliedBy _\"urn:c\" ) and ( _\"urn:b\" impliedBy _\"urn:c\" )");
+        LogicalExpression in = LETestHelper.buildLE("_\"urn:a\" impliedBy _\"urn:b\" or _\"urn:c\" ");
+        LogicalExpression out = LETestHelper.buildLE(" ( _\"urn:a\" impliedBy _\"urn:b\" ) and ( _\"urn:a\" impliedBy _\"urn:c\" )");
         assertEquals(out, rule.apply(in));
         
-        in = LETestHelper.buildLE("_\"urn:a\" and _\"urn:b\" impliedBy  (_\"urn:c\"  and _\"urn:d\")");
-        out = LETestHelper.buildLE(" ( ( _\"urn:a\" impliedBy (_\"urn:c\"  and _\"urn:d\") ) and (  _\"urn:b\" impliedBy (_\"urn:c\"  and _\"urn:d\") )) ");
+        in = LETestHelper.buildLE("_\"urn:a\" impliedBy _\"urn:b\" or  (_\"urn:c\"  and _\"urn:d\")");
+        out = LETestHelper.buildLE(" (_\"urn:a\" impliedBy _\"urn:b\") and ( _\"urn:a\" impliedBy  (_\"urn:c\"  and _\"urn:d\") ) ");
         assertEquals(out, rule.apply(in));
         
-        in = LETestHelper.buildLE("_\"urn:a\" and _\"urn:b\" impliedBy ( _\"urn:c\" implies  _\"urn:d\")");
-        out = LETestHelper.buildLE("(_\"urn:a\" impliedBy  ( _\"urn:c\" implies  _\"urn:d\") ) and ( _\"urn:b\" impliedBy ( _\"urn:c\" implies  _\"urn:d\")) ");
+        in = LETestHelper.buildLE(" (_\"urn:a\" or _\"urn:c\") impliedBy _\"urn:b\" or _\"urn:d\"");
+        out = LETestHelper.buildLE("( (_\"urn:a\" or _\"urn:c\") impliedBy _\"urn:b\" ) and  ( (_\"urn:a\" or _\"urn:c\") impliedBy _\"urn:d\") ");
         assertEquals(out, rule.apply(in));
     }
 }

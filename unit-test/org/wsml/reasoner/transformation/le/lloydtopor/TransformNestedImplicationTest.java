@@ -31,12 +31,12 @@ import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.wsml.ParserException;
 
-public class TestTransformNestedImplication extends TestCase {
+public class TransformNestedImplicationTest extends TestCase {
 
 	private TransformNestedImplication rule;
 	// "A1 impliedBy A2 :- B\n\t=>\n A1 :- A2 and B\n"
 
-	public TestTransformNestedImplication() {
+	public TransformNestedImplicationTest() {
 		super();
 	}
 

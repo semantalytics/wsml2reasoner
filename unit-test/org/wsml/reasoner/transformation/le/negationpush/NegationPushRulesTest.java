@@ -20,7 +20,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package org.wsml.reasoner.transformation.le.disjunctionpull;
+package org.wsml.reasoner.transformation.le.negationpush;
 
 import junit.framework.TestCase;
 
@@ -28,17 +28,17 @@ import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.wsml.ParserException;
 
 
-public class TestDisjunctionPullRules extends TestCase {
+public class NegationPushRulesTest extends TestCase {
 
-    private DisjunctionPullRules rules;
+    private NegationPushRules rules;
     
-    public TestDisjunctionPullRules() {
+    public NegationPushRulesTest() {
         super();
     }
     
     protected void setUp() throws Exception {
         super.setUp();
-        this.rules = new DisjunctionPullRules(new WSMO4JManager());
+        this.rules = new NegationPushRules(new WSMO4JManager());
     }
     
     protected void tearDown() throws Exception {
@@ -47,6 +47,6 @@ public class TestDisjunctionPullRules extends TestCase {
     }
     
     public void testGetRules() throws ParserException {
-        assertEquals(1, rules.getRules().size());
+        assertEquals(3, rules.getRules().size());
     }
 }
