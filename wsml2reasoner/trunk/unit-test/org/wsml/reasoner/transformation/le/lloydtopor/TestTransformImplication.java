@@ -1,4 +1,6 @@
 /*
+ * WSML2Reasoner
+ * An extensible framework for reasoning with WSML ontologies.
  * 
  * Copyright (C) 2008 Semantic Technology Institute (STI) Innsbruck, 
  * University of Innsbruck, Technikerstrasse 21a, 6020 Innsbruck, Austria.
@@ -18,7 +20,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-
 package org.wsml.reasoner.transformation.le.lloydtopor;
 
 import java.util.Set;
