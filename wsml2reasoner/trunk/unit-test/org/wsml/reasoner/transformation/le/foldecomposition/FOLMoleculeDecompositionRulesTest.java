@@ -30,12 +30,12 @@ import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.wsml.ParserException;
 
 
-public class TestFOLMoleculeDecompositionRules extends TestCase {
+public class FOLMoleculeDecompositionRulesTest extends TestCase {
 
     private MoleculeDecompositionRule rule;
     // "X[A1,...,An]\n\t=>\n X[A1] and ... and X[An]\n"
     
-    public TestFOLMoleculeDecompositionRules() {
+    public FOLMoleculeDecompositionRulesTest() {
         super();
     }
     

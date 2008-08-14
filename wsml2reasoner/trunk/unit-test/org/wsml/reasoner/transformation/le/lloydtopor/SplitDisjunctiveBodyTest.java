@@ -32,12 +32,12 @@ import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.wsml.ParserException;
 
 
-public class TestSplitDisjunctiveBody extends TestCase {
+public class SplitDisjunctiveBodyTest extends TestCase {
 
     private SplitDisjunctiveBody rule;
     // "A :- B1 or ... Bn\n\t=>\n A :- B1\n\t...\n A :- Bn\n"
     
-    public TestSplitDisjunctiveBody() {
+    public SplitDisjunctiveBodyTest() {
         super();
     }
     

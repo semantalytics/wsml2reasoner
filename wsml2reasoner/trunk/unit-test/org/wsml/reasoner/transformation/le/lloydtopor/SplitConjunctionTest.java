@@ -27,23 +27,22 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.omwg.logicalexpression.LogicalExpression;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.wsml.ParserException;
 
 
-public class TestSplitConjunctiveHead extends TestCase {
+public class SplitConjunctionTest extends TestCase {
 
-    private SplitConjunctiveHead rule;
-    // "A1 and ... and An :- B\n\t=>\n A1 :- B\n\t...\n An :- B\n"
+    private SplitConjunction rule;
+    // "A1 and ... and An \n\t=>\n A1\n\t...\n An\n"
     
-    public TestSplitConjunctiveHead() {
+    public SplitConjunctionTest() {
         super();
     }
     
     protected void setUp() throws Exception {
         super.setUp();
-        this.rule = new SplitConjunctiveHead(new WSMO4JManager());
+        this.rule = new SplitConjunction();
     }
     
     protected void tearDown() throws Exception {
@@ -58,28 +57,25 @@ public class TestSplitConjunctiveHead extends TestCase {
           assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" and _\"urn:b\" and _\"urn:c\" or _\"urn:d\"")));
           assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" and _\"urn:b\" implies _\"urn:c\" ")));
           assertFalse(rule.isApplicable(LETestHelper.buildLE("(_\"urn:a\" or _\"urn:b\" ) and _\"urn:c\" or  _\"urn:d\"")));
-          assertFalse(rule.isApplicable(LETestHelper.buildLE("(_\"urn:a\" or _\"urn:b\") :- _\"urn:e\" and _\"urn:c\" and  _\"urn:d\"")));
-          assertFalse(rule.isApplicable(LETestHelper.buildLE(" _\"urn:a\" and _\"urn:b\" and _\"urn:c\" or _\"urn:f\" :- _\"urn:d\"")));
-         
-          assertTrue(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" and _\"urn:c\" :- _\"urn:b\" ")));
-          assertTrue(rule.isApplicable(LETestHelper.buildLE(" _\"urn:a\" and _\"urn:b\" and _\"urn:c\" and _\"urn:f\" :- _\"urn:d\"")));
-          assertTrue(rule.isApplicable(LETestHelper.buildLE("( _\"urn:a\" and _\"urn:b\" ) and _\"urn:c\" :- _\"urn:d\" or _\"urn:e\"")));
+          
+          assertTrue(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" and _\"urn:b\"")));
+          assertTrue(rule.isApplicable(LETestHelper.buildLE("( _\"urn:a\" and _\"urn:b\" ) and _\"urn:c\" ")));
+          assertTrue(rule.isApplicable(LETestHelper.buildLE("(_\"urn:a\" or _\"urn:b\" ) and _\"urn:c\" and  _\"urn:d\"")));
     }
     
     public void testApply() throws ParserException {
-    	
-    	LogicalExpression in = LETestHelper.buildLE("_\"urn:a\" and _\"urn:c\" :- _\"urn:b\" ");
+        LogicalExpression in = LETestHelper.buildLE(" ( _\"urn:a\" and _\"urn:b\" )");
         Set <LogicalExpression> result = rule.apply(in);
-     
-        assertEquals(2, result.size());
-        assertTrue(result.contains(LETestHelper.buildLE("_\"urn:a\" :- _\"urn:b\"")));
-        assertTrue(result.contains(LETestHelper.buildLE("_\"urn:c\" :- _\"urn:b\"")));
         
-  
-        in = LETestHelper.buildLE("( _\"urn:a\" and _\"urn:b\" ) and _\"urn:c\" :- _\"urn:d\" or _\"urn:e\"");
-        result = rule.apply(in);
         assertEquals(2, result.size());
-        assertTrue(result.contains(LETestHelper.buildLE("_\"urn:c\" :- _\"urn:d\" or _\"urn:e\"")));
-        assertTrue(result.contains(LETestHelper.buildLE("_\"urn:a\" and _\"urn:b\" :- (_\"urn:d\" or _\"urn:e\")")));
+        assertTrue(result.contains(LETestHelper.buildLE("_\"urn:a\"")));
+        assertTrue(result.contains(LETestHelper.buildLE("_\"urn:b\"")));
+        
+        in = LETestHelper.buildLE("(_\"urn:a\" or _\"urn:b\" ) and _\"urn:c\" and  _\"urn:d\"");
+        result = rule.apply(in);
+        
+        assertEquals(2, result.size());
+        assertTrue(result.contains(LETestHelper.buildLE("_\"urn:d\"")));
+        assertTrue(result.contains(LETestHelper.buildLE("(_\"urn:a\" or _\"urn:b\")  and  _\"urn:c\" ")));
     }
 }
