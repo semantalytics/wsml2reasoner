@@ -27,12 +27,12 @@ import helper.OntologyHelper;
 import helper.Results;
 import junit.framework.TestCase;
 import org.omwg.ontology.Ontology;
-import abstractTests.LPTest;
+import abstractTests.LP;
 
 /**
  * Currently does not work with PELLET (due to detected inconsistency)
  */
-public abstract class AbstractBoolean extends TestCase implements LPTest{
+public abstract class AbstractBoolean extends TestCase implements LP{
    
     public void testSimplerBoolean() throws Exception {
     	final String ns = "http://www.yabooleantest.org#";

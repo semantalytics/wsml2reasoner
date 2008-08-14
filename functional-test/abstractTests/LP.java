@@ -20,16 +20,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package concreteTests.pellet;
+package abstractTests;
 
-import org.wsml.reasoner.api.DLReasoner;
-import abstractTests.dl.AbstractOntologyWithCycles;
+import org.wsml.reasoner.api.LPReasoner;
 
-
-public class OntologyWithCycles extends AbstractOntologyWithCycles
+public interface LP
 {
-	public DLReasoner getDLReasoner()
-    {
-	    return PelletHelper.getReasoner();
-    }
+	LPReasoner getLPReasoner();
 }

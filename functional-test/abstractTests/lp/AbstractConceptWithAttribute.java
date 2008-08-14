@@ -26,9 +26,9 @@ import helper.LPHelper;
 import helper.OntologyHelper;
 import helper.Results;
 import junit.framework.TestCase;
-import abstractTests.LPTest;
+import abstractTests.LP;
 
-public abstract class AbstractConceptWithAttribute extends TestCase implements LPTest {
+public abstract class AbstractConceptWithAttribute extends TestCase implements LP {
 
     /**
      * This function tests the query: ?x[?att ofType ?y] on an ontology with a Concept having an

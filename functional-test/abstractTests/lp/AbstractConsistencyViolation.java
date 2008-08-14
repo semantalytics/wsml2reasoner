@@ -26,9 +26,9 @@ import helper.LPHelper;
 import helper.OntologyHelper;
 import junit.framework.TestCase;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
-import abstractTests.LPTest;
+import abstractTests.LP;
 
-public abstract class AbstractConsistencyViolation extends TestCase implements LPTest {
+public abstract class AbstractConsistencyViolation extends TestCase implements LP {
 
     private static final String ONTOLOGY_FILE = "files/InconsistentOntology.wsml";
     

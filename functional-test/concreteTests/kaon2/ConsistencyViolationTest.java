@@ -20,11 +20,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package abstractTests;
+package concreteTests.kaon2;
 
-import org.wsml.reasoner.api.DLReasoner;
+import org.wsml.reasoner.api.LPReasoner;
+import abstractTests.lp.AbstractConsistencyViolation;
 
-public interface DLTest
+public class ConsistencyViolationTest extends AbstractConsistencyViolation
 {
-	DLReasoner getDLReasoner();
+	public LPReasoner getLPReasoner()
+	{
+		return Kaon2Helper.getReasoner();
+	}
 }

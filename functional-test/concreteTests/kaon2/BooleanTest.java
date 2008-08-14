@@ -20,15 +20,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package concreteTests.pellet;
+package concreteTests.kaon2;
 
-import org.wsml.reasoner.api.WSMLReasoner;
-import abstractTests.core.AbstractCyclicalImports;
+import org.wsml.reasoner.api.LPReasoner;
+import abstractTests.lp.AbstractBoolean;
 
-public class CyclicalImports extends AbstractCyclicalImports
+public class BooleanTest extends AbstractBoolean
 {
-	public WSMLReasoner getReasoner()
+	public LPReasoner getLPReasoner()
 	{
-		return PelletHelper.getReasoner();
+		return Kaon2Helper.getReasoner();
 	}
 }

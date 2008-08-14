@@ -20,15 +20,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package concreteTests.kaon2;
+package abstractTests;
 
-import org.wsml.reasoner.api.LPReasoner;
-import abstractTests.lp.AbstractBoolean;
+import org.wsml.reasoner.api.WSMLReasoner;
 
-public class Boolean extends AbstractBoolean
+public interface Core
 {
-	public LPReasoner getLPReasoner()
-	{
-		return Kaon2Helper.getReasoner();
-	}
+	WSMLReasoner getReasoner();
 }
