@@ -107,7 +107,7 @@ public class TestPerformance1 {
 
     	String[] reasonerNames = new String[ 0 ];
     	
-    	switch( 5 )
+    	switch( 2 )
     	{
     	case 98:	// nobel
 //    		reasonerNames = new String[]{"IRIS", "KAON", "MINS"};
