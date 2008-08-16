@@ -25,6 +25,30 @@
 	<!-- Targets                                                       		 -->
 	<!-- =================================================================== -->
 
+	<target name="run-all-tests" description="Run all tests" depends="unit-test, functional-test" />
+	
+	<target name="build-all-releases" depends="release-lgpl, release-gpl, release-proprietary" description="Build all release zip files" /> 
+
+	<target name="get-kaon2" depends="init" description="Download the KAON2 jar file.">
+
+		<fail message="Kaon2 jar already present: ${file.kaon2}" if="kaon2.jar.present" />
+		
+		<input message="KAON2 is is free of charge for universities for noncommecial academic usage (national laboratories are not considered universities). For commercial purposes, there is a commercial version of KAON2 called OntoBroker OWL (http://www.ontoprise.de/ontobrokerowl). By downloading KAON2, you accept these license agreements. Continue? (Y/N)" 
+		    validargs="Y,N" addproperty="get.kaon2" />
+
+		<condition property="not.get.kaon2">
+			<equals arg1="N" arg2="${get.kaon2}"/>
+		</condition>
+
+		<fail message="Aborted by user" if="not.get.kaon2" />
+		<mkdir dir="${dir.kaon2}"/>
+
+		<get src="http://tools.deri.org/wsml2reasoner/ext/kaon2/kaon2.jar" dest="${file.kaon2}"/>
+		<get src="http://tools.deri.org/wsml2reasoner/ext/kaon2/read_me.txt" dest="${dir.kaon2}/read_me.txt"/>
+
+		<echo message="The KAON2 jar file has been downlaoded to ${file.kaon2} - you must now manually add this to your build path." />
+	</target>
+
 	<target name="init">
 		<!-- Set the DSTAMP, TSTAMP and TODAY properties -->
 		<tstamp />
@@ -207,7 +231,6 @@
 		</zip>
 	</target>
 	
-	<target name="build-all-releases" depends="release-lgpl, release-gpl, release-proprietary" description="Build all release zip files" /> 
 
 	<target name="compile-unit-test" description="Compile the unit test classes" depends="wsml2reasoner, wsml2reasoner-proprietary">
 
@@ -300,26 +323,6 @@
 			</fileset>
 			<report format="frames" todir="${dir.functional.test.reports}/html" />
 		</junitreport>
-	</target>
-
-	<target name="get-kaon2" depends="init" description="Download the KAON2 jar file.">
-
-		<fail message="Kaon2 jar already present: ${file.kaon2}" if="kaon2.jar.present" />
-		
-		<input message="KAON2 is is free of charge for universities for noncommecial academic usage (national laboratories are not considered universities). For commercial purposes, there is a commercial version of KAON2 called OntoBroker OWL (http://www.ontoprise.de/ontobrokerowl). By downloading KAON2, you accept these license agreements. Continue? (Y/N)" 
-		    validargs="Y,N" addproperty="get.kaon2" />
-
-		<condition property="not.get.kaon2">
-			<equals arg1="N" arg2="${get.kaon2}"/>
-		</condition>
-
-		<fail message="Aborted by user" if="not.get.kaon2" />
-		<mkdir dir="${dir.kaon2}"/>
-
-		<get src="http://tools.deri.org/wsml2reasoner/ext/kaon2/kaon2.jar" dest="${file.kaon2}"/>
-		<get src="http://tools.deri.org/wsml2reasoner/ext/kaon2/read_me.txt" dest="${dir.kaon2}/read_me.txt"/>
-
-		<echo message="The KAON2 jar file has been downlaoded to ${file.kaon2} - you must now manually add this to your build path." />
 	</target>
 
 </project>
