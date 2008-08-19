@@ -90,25 +90,5 @@ public class AnonymousIdTranslatorTest extends TestCase {
 		assertEquals(i,3);
        
 	}
-	
-	
-//	public void testSetScope() throws ParserException  {
-//		
-//		translator.setScope(LETestHelper.buildLE("_\"urn:b\""));
-//		LogicalExpression in = LETestHelper.buildLE("_\"urn:b\"(_#, _#, _#)");
-//		
-//		Atom atom = (Atom) in;
-//		for (int i = 0; i < atom.getArity(); i++) {
-//            Term term = atom.getParameter(i);
-//            if (term instanceof Identifier) {
-//                term = translator.translate(term);
-//                assertTrue(!term.toString().contains("_#"));
-//                assertEquals(2, term.toString().split(AnonymousIdUtils.ANONYMOUS_PREFIX).length);
-//                assertTrue(term.toString().startsWith(AnonymousIdUtils.ANONYMOUS_PREFIX));
-//            }
-//        }
-//	}
-	
-	
 
 }
