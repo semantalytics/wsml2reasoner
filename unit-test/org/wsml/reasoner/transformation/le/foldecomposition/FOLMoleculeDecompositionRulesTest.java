@@ -73,8 +73,7 @@ public class FOLMoleculeDecompositionRulesTest extends TestCase {
         assertTrue(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\"[_# ofType _#]")));
         assertTrue(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\"[_# impliesType _#]")));
         assertTrue(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\"[_# hasValue _#]"))); 
-        
-        
+          
     }
     
     public void testApply() throws ParserException {

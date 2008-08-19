@@ -22,13 +22,36 @@
  */
 package org.wsml.reasoner.transformation.dl;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.omwg.ontology.Axiom;
+import org.omwg.ontology.Concept;
+import org.omwg.ontology.Instance;
+import org.omwg.ontology.Ontology;
+import org.omwg.ontology.Relation;
 import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.common.Entity;
+import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.factory.Factory;
+import org.wsmo.factory.LogicalExpressionFactory;
+import org.wsmo.factory.WsmoFactory;
+import org.wsmo.wsml.Parser;
+import org.wsmo.wsml.ParserException;
 
 import junit.framework.TestCase;
 
 public class WSMLDLLogExprNormalizerTest extends TestCase {
 	
 	private WSMLDLLogExprNormalizer normalizer;
+	protected Ontology ontology;
+	protected String ns = "http://ex.org#";
+	protected WsmoFactory wsmoFactory;
+	protected LogicalExpressionFactory leFactory;
+	protected Axiom axiom;
 	
 	public WSMLDLLogExprNormalizerTest() {
 		super();
@@ -38,36 +61,70 @@ public class WSMLDLLogExprNormalizerTest extends TestCase {
 		super.setUp();
 		WSMO4JManager wsmoManager = new WSMO4JManager();
 		normalizer = new WSMLDLLogExprNormalizer(wsmoManager);
+		
+        wsmoFactory = wsmoManager.getWSMOFactory();
+        leFactory = wsmoManager.getLogicalExpressionFactory();
+        
+        ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ont" + System.currentTimeMillis()));
+        ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));	
+        
+        axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom" + System.currentTimeMillis()));
+        ontology.addAxiom(axiom);
 
 	}
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		normalizer = null;
+		ontology = null;
+		axiom = null;
+		leFactory = null;
+		wsmoFactory = null;
 
 	}
 	
-	public void testNormalizeAxioms() {
+	
+    public void testNormalizeEntities() throws IOException, ParserException, InvalidModelException {
+    	InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/family.wsml");
+        assertNotNull(is);
+        Parser wsmlParser = Factory.createParser(null);
+       
+        ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is))[0];
+        
+        Set<Entity> in = new HashSet<Entity>();
+        in.addAll(ontology.listConcepts());
+    	in.addAll(ontology.listInstances());
+    	in.addAll(ontology.listRelations());
+    	in.addAll(ontology.listRelationInstances());
+    	in.addAll(ontology.listAxioms());
+    	
+    	Set <Entity> entities = normalizer.normalizeEntities(in);
+    	
+    	int en = 0;
+    	int con = 0;
+    	int rel = 0; 
+    	int inst = 0;
+
+        for (Entity e : entities){
+        	if (e instanceof Axiom){
+        		en++;
+        	}
+        	if (e instanceof Concept){
+        		con++;
+        	}
+        	if(e instanceof Relation){
+        		rel++;
+        	}
+        	if (e instanceof Instance) {
+        		inst++;
+        	}
+        }
+        assertEquals(en,1);
+        assertEquals(con,0);
+        assertEquals(rel,0);
+        assertEquals(inst,0);
 		
 	}
-	
-    public void testNormalizeEntities() {
-		
-	}
-    
-    public void normalizeConcept() {
-    	
-    }
-    
-    public void normalizeInstance() {
-    	
-    }
-    
-    public void normalizeLogExpr() {
-    	
-    }
-	
-	
 	
 
 }
