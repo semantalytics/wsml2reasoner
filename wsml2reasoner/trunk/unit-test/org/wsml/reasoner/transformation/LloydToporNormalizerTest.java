@@ -21,41 +21,40 @@
  * MA  02110-1301, USA.
  */
 
-package org.wsml.reasoner;
+package org.wsml.reasoner.transformation;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
-import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsml.reasoner.transformation.le.LETestHelper;
+import org.wsmo.common.Identifier;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
-import org.wsmo.wsml.ParserException;
 
 import junit.framework.TestCase;
 
 
-public class WSML2DatalogTransformerTest extends TestCase {
-	
-	private WSML2DatalogTransformer transformer;
+public class LloydToporNormalizerTest extends TestCase {
+
+	protected LloydToporNormalizer normalizer;
 	protected Ontology ontology;
 	protected String ns = "http://ex.org#";
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
 	protected Axiom axiom;
 	
-	
-	public WSML2DatalogTransformerTest() {
+	public LloydToporNormalizerTest() {
 		super();
 	}
 
 	protected void setUp() throws Exception {
 		super.setUp();
 		WSMO4JManager wsmoManager = new WSMO4JManager(); 
-		transformer = new WSML2DatalogTransformer(wsmoManager);
+		normalizer = new LloydToporNormalizer(wsmoManager);
 		
         wsmoFactory = wsmoManager.getWSMOFactory();
         leFactory = wsmoManager.getLogicalExpressionFactory();
@@ -65,70 +64,36 @@ public class WSML2DatalogTransformerTest extends TestCase {
         
         axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom" + System.currentTimeMillis()));
         ontology.addAxiom(axiom);
+       
 	}
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		transformer = null;
+		normalizer = null;
 		ontology = null;
 		axiom = null;
 		leFactory = null;
 		wsmoFactory = null;
 	}
 	
-	public void testTransform() throws ParserException {
+	public void testNormalizeAxioms() {
+		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
+		Axiom axiom2 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
+		Set <Axiom> axioms = new HashSet<Axiom>();
+		axioms.add(axiom1);
+		axioms.add(axiom2);
 		
-		LogicalExpression le = LETestHelper.buildLE("_\"urn:a\"[_\"urn:a\" hasValue _#]");
-		Set<Rule> out = transformer.transform(le);
-		for(Rule r : out){
-			assertTrue(r.toString().contains("wsml-has-value"));
-			assertTrue(r.toString().contains("urn:a, urn:a, _#"));
+		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
+		
+		
+		for(Axiom ax : out) {
+			System.out.println(ax.getIdentifier().toString());
 		}
 		
-		
-		le = LETestHelper.buildLE("_\"urn:a\"[_\"urn:a\" impliesType _#]");
-		out = transformer.transform(le);
-		for(Rule r : out){
-			assertTrue(r.toString().contains("wsml-implies-type"));
-			assertTrue(r.toString().contains("urn:a, urn:a, _#"));
-		}
-		
-		le = LETestHelper.buildLE("_\"urn:a\"[_\"urn:a\" ofType _#]");
-		out = transformer.transform(le);
-		for(Rule r : out){
-			assertTrue(r.toString().contains("wsml-of-type"));
-			assertTrue(r.toString().contains("urn:a, urn:a, _#"));
-		}
-		
-		le = LETestHelper.buildLE("_\"urn:a\" subConceptOf _\"urn:b\"");
-		out = transformer.transform(le);
-		for(Rule r : out){
-			assertTrue(r.toString().contains("wsml-subconcept-of"));
-			assertTrue(r.toString().contains("urn:a, urn:b"));
-		}
-		
-		le = LETestHelper.buildLE("_\"urn:a\" implies _\"urn:b\"");
-		out = transformer.transform(le);
-		for(Rule r : out){
-			assertEquals(r.toString(), ("urn:b() :- urn:a()."));
-		}
-		
-		
-		Set<LogicalExpression> in = new HashSet<LogicalExpression>();
-		in = new HashSet<LogicalExpression>();
-		le = LETestHelper.buildLE("_\"urn:a\"[_\"urn:a\" impliesType _#]");
-		in.add(le);
-		le = LETestHelper.buildLE("_\"urn:a\" subConceptOf \"urn:b\" ");
-		in.add(le);
-		
-		out = transformer.transform(in);
-		Object[] rules =  out.toArray();
-		
-		assertEquals(((Rule)rules[0]).toString(), ("wsml-subconcept-of(urn:a, urn:b)."));
-		
-		assertEquals(((Rule)rules[1]).toString(), ("wsml-implies-type(urn:a, urn:a, _#)."));
+		assertTrue(true);
 		
 	}
+	
 	
 	
 	
