@@ -25,13 +25,18 @@ package org.wsml.reasoner.transformation;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
+import org.omwg.ontology.Concept;
 import org.omwg.ontology.Ontology;
+import org.omwg.ontology.Relation;
 import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.common.Entity;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.Factory;
@@ -72,8 +77,6 @@ public class AxiomatizationNormalizerTest extends TestCase {
 		
 		
 	}
-
-
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		normalizer = null;
@@ -84,13 +87,10 @@ public class AxiomatizationNormalizerTest extends TestCase {
 		
 		
 	}
-	
-	 
+
 	public void testNormalizeEntities() throws ParserException, IOException, InvalidModelException {
-//		String s = "Man subConceptOf Human.";
-//        LogicalExpression le = leFactory.createLogicalExpression(s, ontology);
-        
-		InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/bad.wsml");
+ 
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/family.wsml");
         assertNotNull(is);
         Parser wsmlParser = Factory.createParser(null);
         // assuming first topentity in file is an ontology
@@ -103,16 +103,42 @@ public class AxiomatizationNormalizerTest extends TestCase {
     	in.addAll(ontology.listRelationInstances());
     	in.addAll(ontology.listAxioms());
 		
-    	Set <Entity> entitiesAsAxioms = normalizer.normalizeEntities( in );
+    	Set <Entity> entities = normalizer.normalizeEntities(in);
     	
-    	
-        for (Entity e : entitiesAsAxioms){
+    	int en = 0;
+
+        for (Entity e : entities){
         	if (e instanceof Axiom){
-        		System.out.println(e.toString());
+        		en++;
+        	}
+        	if (e instanceof Concept){
+        		assertFalse(true);
+        	}
+        	if(e instanceof Relation){
+        		assertFalse(true);
         	}
         }
+        assertEquals(en,18);
+	
+	}
+	
+	public void testGetAxioms() throws ParserException{
+		
+		LogicalExpression in = LETestHelper.buildLE("_# subConceptOf _\"urn:a\"");
+		ArrayList<LogicalExpression> list = new ArrayList<LogicalExpression>();
+		
+		list.add(in);
+		Set<Axiom> set = normalizer.getAxioms(list);
+		assertEquals(set.size(), 1);
+		
+		in = LETestHelper.buildLE("_# subConceptOf _\"urn:b\"");
+		list.add(in);
+		set = normalizer.getAxioms(list);
+		assertEquals(set.size(), 2);
+		
 		
 	}
-		
+	
+
 
 }
