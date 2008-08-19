@@ -113,12 +113,6 @@ public class AxiomatizationNormalizerTest extends TestCase {
         }
 		
 	}
-	
-//    public void testNormalizeConcept() {
-//		
-//		assertTrue(true);
-//	}
-	
-	
+		
 
 }

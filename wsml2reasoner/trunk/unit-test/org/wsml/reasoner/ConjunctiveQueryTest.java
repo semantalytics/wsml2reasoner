@@ -27,6 +27,9 @@ import java.util.List;
 
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
+import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.factory.LogicalExpressionFactory;
+import org.wsmo.wsml.ParserException;
 
 import junit.framework.TestCase;
 
@@ -69,26 +72,30 @@ public class ConjunctiveQueryTest extends TestCase {
 		ls.get(8).equals(new Literal(true, new String("TEST_PREDICATE_8"), new Term[0]));
 	}
 	
-	public void testGetVariables() {
+	public void testGetVariables() throws ParserException {
 		query = null;
 		ArrayList <Literal> list = new ArrayList<Literal>();
+		
+		WSMO4JManager wsmoManager = new WSMO4JManager();
+		LogicalExpressionFactory f = wsmoManager.getLogicalExpressionFactory();
+		
+		Variable test1 = f.createVariable("Variable01");
+		Variable test2 = f.createVariable("Variable02");
+		Term[] term = {test1, test2};
+		
 		int i = 0;
 		for (i = 0; i < 10; i++) {
-			//Literal literal = new Literal(true, new String("_#" + i), new Term[0]);
-			Literal literal = new Literal(true, new String("?wife[hasHusband hasValue ?]"), new Term[0]);
+			Literal literal = new Literal(true, new String("TEST_PREDICATE"), term);
 			list.add(literal);
+	
 		}
 		query = new ConjunctiveQuery(list);
 		
 		List<Variable> l = query.getVariables();
-		System.out.println(l.size());
-		assertFalse(true);
-		
-//		for(Variable v : l){
-//			
-//		}
-		
-		
+		assertEquals(l.size(), 2);
+		assertEquals(l.get(0), f.createVariable("Variable01"));
+		assertEquals(l.get(1), f.createVariable("Variable02"));
+
 		
 	}
 	
@@ -115,8 +122,6 @@ public class ConjunctiveQueryTest extends TestCase {
 		query2 = new ConjunctiveQuery(list2);
 		
 		assertEquals(false, query.equals(query2));
-		
-		
 		
 	}
 	
