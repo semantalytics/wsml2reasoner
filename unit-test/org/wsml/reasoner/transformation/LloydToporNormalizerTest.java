@@ -29,20 +29,18 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.omwg.ontology.Axiom;
-import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
 
+
 public class LloydToporNormalizerTest extends TestCase {
 
 	protected LloydToporNormalizer normalizer;
-	protected Ontology ontology;
 	protected String ns = "http://ex.org#";
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
-	protected Axiom axiom;
 
 	public LloydToporNormalizerTest() {
 		super();
@@ -56,37 +54,32 @@ public class LloydToporNormalizerTest extends TestCase {
 		wsmoFactory = wsmoManager.getWSMOFactory();
 		leFactory = wsmoManager.getLogicalExpressionFactory();
 
-		ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ont"
-				+ System.currentTimeMillis()));
-		ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));
-
-		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom"
-				+ System.currentTimeMillis()));
-		ontology.addAxiom(axiom);
-
 	}
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		normalizer = null;
-		ontology = null;
-		axiom = null;
 		leFactory = null;
 		wsmoFactory = null;
 	}
 
 	public void testNormalizeAxioms() throws ParserException {
-		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());	
-		Axiom axiom2 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
+		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom"+ System.currentTimeMillis()));
+		Axiom axiom2 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());	
+		Axiom axiom3 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
+		
 		Set<Axiom> axioms = new HashSet<Axiom>();
 		axioms.add(axiom1);
 		axioms.add(axiom2);
+		axioms.add(axiom3);
 
 		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
-
+		int axi = 0;
 		for (Axiom ax : out) {
+			axi++;
 			assertEquals(ax.getIdentifier().toString(),"_#");
 		}
+		assertEquals(axi,1);
 
 	}
 

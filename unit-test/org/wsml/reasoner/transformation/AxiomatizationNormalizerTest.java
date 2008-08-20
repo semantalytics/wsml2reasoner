@@ -26,13 +26,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-
-
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
-import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Relation;
 import org.omwg.ontology.RelationInstance;
 import org.wsml.reasoner.impl.WSMO4JManager;
@@ -48,11 +45,9 @@ import junit.framework.TestCase;
 public class AxiomatizationNormalizerTest extends TestCase {
 
 	protected AxiomatizationNormalizer normalizer;
-	protected Ontology ontology;
 	protected String ns = "http://ex.org#";
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
-	protected Axiom axiom;
 	
 	public AxiomatizationNormalizerTest() {
 		super();
@@ -65,20 +60,11 @@ public class AxiomatizationNormalizerTest extends TestCase {
 		
         wsmoFactory = wsmoManager.getWSMOFactory();
         leFactory = wsmoManager.getLogicalExpressionFactory();
-        ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ont" + System.currentTimeMillis()));
-        ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));	
-        
-        axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom" + System.currentTimeMillis()));
-        ontology.addAxiom(axiom);
-       
-		
-		
+
 	}
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		normalizer = null;
-		ontology = null;
-		axiom = null;
 		leFactory = null;
 		wsmoFactory = null;
 		
@@ -86,14 +72,16 @@ public class AxiomatizationNormalizerTest extends TestCase {
 	}
 
 	public void testNormalizeEntities() throws ParserException, IOException, InvalidModelException {
- 
 		
-        Set<Entity> in = new HashSet<Entity>();
-        in.addAll(ontology.listConcepts());
-    	in.addAll(ontology.listInstances());
-    	in.addAll(ontology.listRelations());
-    	in.addAll(ontology.listRelationInstances());
-    	in.addAll(ontology.listAxioms());
+		Set<Entity> in = new HashSet<Entity>();
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom" + System.currentTimeMillis()));
+		in.add(axiom);
+
+        Instance instance1 = wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "instance" + System.currentTimeMillis()));
+        in.add(instance1);
+        
+        Concept concept1 = wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "concept" + System.currentTimeMillis()));
+        in.add(concept1);
 		
     	Set <Entity> entities = normalizer.normalizeEntities(in);
     	
