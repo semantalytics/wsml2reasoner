@@ -26,34 +26,32 @@ package org.wsml.reasoner.transformation;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.omwg.ontology.Axiom;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
-import org.wsmo.wsml.ParserException;
+
+import junit.framework.TestCase;
 
 
-public class LloydToporNormalizerTest extends TestCase {
-
-	protected LloydToporNormalizer normalizer;
+public class ConstructReductionNormalizerTest extends TestCase {
+	
+	private ConstructReductionNormalizer normalizer;
 	protected String ns = "http://ex.org#";
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
-
-	public LloydToporNormalizerTest() {
+	
+	public ConstructReductionNormalizerTest() {
 		super();
 	}
-
+	
 	protected void setUp() throws Exception {
 		super.setUp();
 		WSMO4JManager wsmoManager = new WSMO4JManager();
-		normalizer = new LloydToporNormalizer(wsmoManager);
-
-		wsmoFactory = wsmoManager.getWSMOFactory();
-		leFactory = wsmoManager.getLogicalExpressionFactory();
-
+		normalizer = new ConstructReductionNormalizer(wsmoManager);
+        wsmoFactory = wsmoManager.getWSMOFactory();
+        leFactory = wsmoManager.getLogicalExpressionFactory();
+      
 	}
 
 	protected void tearDown() throws Exception {
@@ -61,9 +59,10 @@ public class LloydToporNormalizerTest extends TestCase {
 		normalizer = null;
 		leFactory = null;
 		wsmoFactory = null;
-	}
 
-	public void testNormalizeAxioms() throws ParserException {
+	}
+	
+	public void testNormalizeAxioms() {
 		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom" + System.currentTimeMillis()));
 		Axiom axiom2 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());	
 		Axiom axiom3 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
@@ -80,7 +79,7 @@ public class LloydToporNormalizerTest extends TestCase {
 			assertEquals(ax.getIdentifier().toString(),"_#");
 		}
 		assertEquals(axi,1);
-
+		
 	}
 
 }
