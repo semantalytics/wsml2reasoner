@@ -23,20 +23,17 @@
 
 package org.wsml.reasoner.transformation;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
+
+import junit.framework.TestCase;
 
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.common.Identifier;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
-
-import junit.framework.TestCase;
-
+import org.wsmo.wsml.ParserException;
 
 public class LloydToporNormalizerTest extends TestCase {
 
@@ -46,25 +43,27 @@ public class LloydToporNormalizerTest extends TestCase {
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
 	protected Axiom axiom;
-	
+
 	public LloydToporNormalizerTest() {
 		super();
 	}
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		WSMO4JManager wsmoManager = new WSMO4JManager(); 
+		WSMO4JManager wsmoManager = new WSMO4JManager();
 		normalizer = new LloydToporNormalizer(wsmoManager);
-		
-        wsmoFactory = wsmoManager.getWSMOFactory();
-        leFactory = wsmoManager.getLogicalExpressionFactory();
-        
-        ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ont" + System.currentTimeMillis()));
-        ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));	
-        
-        axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom" + System.currentTimeMillis()));
-        ontology.addAxiom(axiom);
-       
+
+		wsmoFactory = wsmoManager.getWSMOFactory();
+		leFactory = wsmoManager.getLogicalExpressionFactory();
+
+		ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ont"
+				+ System.currentTimeMillis()));
+		ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));
+
+		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom"
+				+ System.currentTimeMillis()));
+		ontology.addAxiom(axiom);
+
 	}
 
 	protected void tearDown() throws Exception {
@@ -75,28 +74,20 @@ public class LloydToporNormalizerTest extends TestCase {
 		leFactory = null;
 		wsmoFactory = null;
 	}
-	
-	public void testNormalizeAxioms() {
-		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
+
+	public void testNormalizeAxioms() throws ParserException {
+		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());	
 		Axiom axiom2 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
-		Set <Axiom> axioms = new HashSet<Axiom>();
+		Set<Axiom> axioms = new HashSet<Axiom>();
 		axioms.add(axiom1);
 		axioms.add(axiom2);
-		
+
 		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
-		
-		
-		for(Axiom ax : out) {
-			System.out.println(ax.getIdentifier().toString());
+
+		for (Axiom ax : out) {
+			assertEquals(ax.getIdentifier().toString(),"_#");
 		}
-		
-		assertTrue(true);
-		
+
 	}
-	
-	
-	
-	
-	
 
 }

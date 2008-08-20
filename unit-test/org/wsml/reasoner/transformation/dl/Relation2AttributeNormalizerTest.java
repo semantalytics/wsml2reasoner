@@ -23,25 +23,23 @@
 package org.wsml.reasoner.transformation.dl;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Set;
+
+import junit.framework.TestCase;
 
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
+import org.omwg.ontology.Relation;
+import org.omwg.ontology.RelationInstance;
 import org.wsml.reasoner.impl.WSMO4JManager;
-
 import org.wsmo.common.Entity;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
-import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
-import junit.framework.TestCase;
 
 
 public class Relation2AttributeNormalizerTest extends TestCase {
@@ -78,11 +76,8 @@ public class Relation2AttributeNormalizerTest extends TestCase {
 	}
 
 	public void testNormalizeEntities() throws IOException, ParserException, InvalidModelException  {
-		InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/family.wsml");
-        assertNotNull(is);
-        Parser wsmlParser = Factory.createParser(null);
-        ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is))[0];
-        
+
+		
         Set<Entity> in = new HashSet<Entity>();
         in.addAll(ontology.listConcepts());
     	in.addAll(ontology.listInstances());
@@ -91,25 +86,39 @@ public class Relation2AttributeNormalizerTest extends TestCase {
     	in.addAll(ontology.listAxioms());
 		
     	Set <Entity> entities = normalizer.normalizeEntities(in);
-
-    	int en = 0;
+    	
     	int con = 0;
-    	int inst = 0;
+    	int ins = 0;
+    	int rel = 0;
+    	int rei = 0;
+    	int axi = 0;
+    	
+    	for(Entity en : entities) {
+    		if( en instanceof Concept){
+    			con++;
+    		}
+    		if( en instanceof Instance){
+    			ins++;
+    		}
+    		if( en instanceof Relation){
+    			rel++;
+    		}
+    		if( en instanceof RelationInstance){
+    			rei++;
+    		}
+    		if( en instanceof Axiom){
+    			axi++;
+    		}
+    		
+    	}
+    	assertEquals(con,0);
+    	assertEquals(ins,0);
+    	assertEquals(rel,0);
+    	assertEquals(rei,0);
+    	assertEquals(axi,1);
+    	
 
-        for (Entity e : entities){
-        	if (e instanceof Axiom){
-        		en++;
-        	}
-        	if (e instanceof Concept){
-        		con++;
-        	}
-        	if(e instanceof Instance){
-        		inst++;
-        	}
-        }
-        assertEquals(en,2);
-        assertEquals(con,2);
-        assertEquals(inst,4);
+    	
 
 	}
 
