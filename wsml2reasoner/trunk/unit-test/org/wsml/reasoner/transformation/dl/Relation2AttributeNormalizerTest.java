@@ -31,7 +31,6 @@ import junit.framework.TestCase;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
-import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Relation;
 import org.omwg.ontology.RelationInstance;
 import org.wsml.reasoner.impl.WSMO4JManager;
@@ -45,11 +44,9 @@ import org.wsmo.wsml.ParserException;
 public class Relation2AttributeNormalizerTest extends TestCase {
 
 	private Relation2AttributeNormalizer normalizer;
-	protected Ontology ontology;
 	protected String ns = "http://ex.org#";
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
-	protected Axiom axiom;
 	
 	public Relation2AttributeNormalizerTest() {
 		super();
@@ -61,12 +58,8 @@ public class Relation2AttributeNormalizerTest extends TestCase {
 		normalizer = new Relation2AttributeNormalizer(wsmoManager);
 		wsmoFactory = wsmoManager.getWSMOFactory();
 	    leFactory = wsmoManager.getLogicalExpressionFactory();
-	        
-	    ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ont" + System.currentTimeMillis()));
-	    ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));	
-	        
-	    axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom" + System.currentTimeMillis()));
-	    ontology.addAxiom(axiom);
+	    
+	
 	}
 
 	protected void tearDown() throws Exception {
@@ -77,14 +70,17 @@ public class Relation2AttributeNormalizerTest extends TestCase {
 
 	public void testNormalizeEntities() throws IOException, ParserException, InvalidModelException  {
 
+		Set<Entity> in = new HashSet<Entity>();
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom" + System.currentTimeMillis()));
+		in.add(axiom);
 		
-        Set<Entity> in = new HashSet<Entity>();
-        in.addAll(ontology.listConcepts());
-    	in.addAll(ontology.listInstances());
-    	in.addAll(ontology.listRelations());
-    	in.addAll(ontology.listRelationInstances());
-    	in.addAll(ontology.listAxioms());
+		Instance instance1 = wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "instance" + System.currentTimeMillis()));
+	    in.add(instance1);
+	        
+	    Concept concept1 = wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "concept" + System.currentTimeMillis()));
+	    in.add(concept1);
 		
+
     	Set <Entity> entities = normalizer.normalizeEntities(in);
     	
     	int con = 0;
@@ -111,8 +107,8 @@ public class Relation2AttributeNormalizerTest extends TestCase {
     		}
     		
     	}
-    	assertEquals(con,0);
-    	assertEquals(ins,0);
+    	assertEquals(con,1);
+    	assertEquals(ins,1);
     	assertEquals(rel,0);
     	assertEquals(rei,0);
     	assertEquals(axi,1);
