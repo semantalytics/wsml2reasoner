@@ -23,8 +23,6 @@
 package org.wsml.reasoner.transformation;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,16 +31,16 @@ import java.util.Set;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
+import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Relation;
+import org.omwg.ontology.RelationInstance;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.common.Entity;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
-import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
 import junit.framework.TestCase;
@@ -67,7 +65,6 @@ public class AxiomatizationNormalizerTest extends TestCase {
 		
         wsmoFactory = wsmoManager.getWSMOFactory();
         leFactory = wsmoManager.getLogicalExpressionFactory();
-        
         ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ont" + System.currentTimeMillis()));
         ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));	
         
@@ -90,12 +87,7 @@ public class AxiomatizationNormalizerTest extends TestCase {
 
 	public void testNormalizeEntities() throws ParserException, IOException, InvalidModelException {
  
-		InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/family.wsml");
-        assertNotNull(is);
-        Parser wsmlParser = Factory.createParser(null);
-        // assuming first topentity in file is an ontology
-        ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is))[0];
-        
+		
         Set<Entity> in = new HashSet<Entity>();
         in.addAll(ontology.listConcepts());
     	in.addAll(ontology.listInstances());
@@ -105,20 +97,36 @@ public class AxiomatizationNormalizerTest extends TestCase {
 		
     	Set <Entity> entities = normalizer.normalizeEntities(in);
     	
-    	int en = 0;
-
-        for (Entity e : entities){
-        	if (e instanceof Axiom){
-        		en++;
-        	}
-        	if (e instanceof Concept){
-        		assertFalse(true);
-        	}
-        	if(e instanceof Relation){
-        		assertFalse(true);
-        	}
-        }
-        assertEquals(en,18);
+    	int con = 0;
+    	int ins = 0;
+    	int rel = 0;
+    	int rei = 0;
+    	int axi = 0;
+    	
+    	for(Entity en : entities) {
+    		if( en instanceof Concept){
+    			con++;
+    		}
+    		if( en instanceof Instance){
+    			ins++;
+    		}
+    		if( en instanceof Relation){
+    			rel++;
+    		}
+    		if( en instanceof RelationInstance){
+    			rei++;
+    		}
+    		if( en instanceof Axiom){
+    			axi++;
+    		}
+    		
+    	}
+    	assertEquals(con,0);
+    	assertEquals(ins,0);
+    	assertEquals(rel,0);
+    	assertEquals(rei,0);
+    	assertEquals(axi,1);
+    	
 	
 	}
 	
