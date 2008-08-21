@@ -2,7 +2,6 @@ package base;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import config.ImportOntologyTest;
 import engine.spass.BundledSpassTests;
 import engine.tptp.BundledTPTPTests;
 /**
@@ -24,7 +23,7 @@ public class RunConfiguredTests {
         suite.addTest(BundledTPTPTests.suite());
         suite.addTest(BundledSpassTests.suite());
         //Must specify the local path for locator
-        suite.addTestSuite(ImportOntologyTest.class);
+//        suite.addTestSuite(ImportOntologyTest.class);
         
         return suite;
     }
