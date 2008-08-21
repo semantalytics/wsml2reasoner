@@ -28,7 +28,7 @@ import org.wsml.reasoner.api.WSMLReasonerFactory;
 
 public class XSBHelper
 {
-	static LPReasoner getXSB()
+	static LPReasoner getReasoner()
 	{
 		return ReasonerHelper.getLPReasoner(WSMLReasonerFactory.BuiltInReasoner.XSB );
 	}
