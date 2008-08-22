@@ -122,6 +122,10 @@
 	</target>
 
 	<target name="wsml2reasoner-proprietary-build" description="Creates wsml2reasoner proprietary extension jar" if="kaon2.jar.present">
+		<!-- Find a better way to do this.
+			If these are dependencies, then they are executed even if the if="..." part
+			causes this target to not execute.
+			However, if this task does execuite then the followinf 2 tasks are executed twice. -->
 		<antcall target="wsml2reasoner" />
 		<antcall target="compile-proprietary" />
 		
@@ -284,12 +288,14 @@
 				</fileset>
 			</batchtest>
 		</junit>
-		<mkdir dir="${dir.unit.test.reports}/html" />
+		<mkdir dir="${dir.unit.test.reports}" />
 		<junitreport todir="${dir.unit.test.reports}">
 			<fileset dir="${dir.unit.test.reports}">
 				<include name="TEST-*Test.xml" />
 			</fileset>
-			<report format="frames" todir="${dir.unit.test.reports}/html" />
+			<report format="frames" todir="${dir.unit.test.reports}">
+				<param name="TITLE" expression="Unit Test Report" />
+			</report>
 		</junitreport>
 	</target>
 
@@ -316,12 +322,14 @@
 				</fileset>
 			</batchtest>
 		</junit>
-		<mkdir dir="${dir.functional.test.reports}/html" />
+		<mkdir dir="${dir.functional.test.reports}" />
 		<junitreport todir="${dir.functional.test.reports}">
 			<fileset dir="${dir.functional.test.reports}">
 				<include name="TEST-*Test.xml" />
 			</fileset>
-			<report format="frames" todir="${dir.functional.test.reports}/html" />
+			<report format="frames" todir="${dir.functional.test.reports}">
+				<param name="TITLE" expression="Functional Test Report" />
+			</report>
 		</junitreport>
 	</target>
 
