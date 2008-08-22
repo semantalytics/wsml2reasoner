@@ -1,7 +1,7 @@
 # Setup
-#DIR=/var/www/html/iris-reasoner_org/ant/iris
-DIR=/var/www/html/tools_deri_org/wsml2reasoner/nightly-build/wsml2reasoner
-export ANT_HOME=/home/grahamh/apache-ant-1.7.0
+DIR=/var/www/html/tools_deri_org/wsml2reasoner/nightly_build/wsml2reasoner_trunk
+SNAPSHOT=../../snapshot
+export ANT_HOME=/home/barryb/apache-ant-1.7.0
 
 echo ====================================================================
 echo WSML2Reasoner daily build script
@@ -14,16 +14,11 @@ cd $DIR
 
 echo --------------------------------------------------------------------
 echo Update from source control
-#cvs update -d
 svn up
 
 echo --------------------------------------------------------------------
-echo Clean distribution dir
-rm -rf dist/**.*
-
-echo --------------------------------------------------------------------
 echo Build using ant
-ant release
+ant clean build-all-releases run-all-tests
 
 echo --------------------------------------------------------------------
 echo Make all new files group editable
@@ -31,20 +26,23 @@ chmod -R g+w *
 
 echo --------------------------------------------------------------------
 echo Remove yesterdays snapshot
-rm -rf ../../snapshot/*.zip
-rm -rf ../../snapshot/*.jar
+rm -rf $SNAPSHOT/*
 
 echo --------------------------------------------------------------------
 echo Copy the WSML2Reasoner files and licenses
-cp license-gpl.txt ../../snapshot/
-cp license-lgpl.txt ../../snapshot/
-cp dist/* ../../snapshot/
+cp license-gpl.txt $SNAPSHOT
+cp license-lgpl.txt $SNAPSHOT
+cp build/release/* $SNAPSHOT
 
 echo --------------------------------------------------------------------
 echo Copy the javadoc to the snapshot
-cp -r javadoc/* ../../snapshot/javadoc/
+cp -r build/javadoc $SNAPSHOT
+
+echo --------------------------------------------------------------------
+echo Copy the test reports to the snapshot
+cp -r build/report $SNAPSHOT
 
 echo --------------------------------------------------------------------
 echo And try to make absolutely sure that everything is group writable
-chmod -R g+w ../../snapshot
+chmod -R g+w $SNAPSHOT
 
