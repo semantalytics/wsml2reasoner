@@ -21,6 +21,10 @@
 		<exclude name="**/kaon2-reasoner/" />
 	</patternset>
 
+	<patternset id="proprietry-jars">
+		<exclude name="**/kaon2-reasoner/" />
+	</patternset>
+
 	<!-- =================================================================== -->
 	<!-- Targets                                                       		 -->
 	<!-- =================================================================== -->
@@ -225,7 +229,9 @@
 			<fileset file="${file.jar}"/>
 			<fileset file="${file.jar.proprietary}"/>
 			
-			<zipfileset dir="${dir.lib}" prefix="${dir.lib}" />
+			<zipfileset dir="${dir.lib}" prefix="${dir.lib}">
+				<patternset refid="proprietary-jars"/>
+			</zipfileset>
 			
 			<fileset file="${file.src.zip}"/>
 			<fileset file="${file.javadoc.zip}"/>
