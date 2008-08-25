@@ -97,10 +97,9 @@ public class MoleculeDecompositionRulesTest extends TestCase{
 	        
 	        in = LETestHelper.buildLE("_\"urn:a\"[_\"urn:c\" ofType _# , _\"urn:d\" impliesType _#] memberOf _#");  
 	        result = rule.apply(in);       
-	        System.out.println(result.toString());
+	        assertTrue(result.toString().contains("_\"urn:a\"[_\"urn:d\" impliesType _#]"));
 	        assertTrue(result.toString().contains("_\"urn:a\" memberOf _#"));
-	        assertTrue(result.toString().contains("_\"urn:a\" memberOf _#"));
-	        assertTrue(result.toString().contains(" _\"urn:a\"[_\"urn:c\" ofType _#]"));
+	        assertTrue(result.toString().contains("_\"urn:a\"[_\"urn:c\" ofType _#]"));
 	      
 
 	    }
