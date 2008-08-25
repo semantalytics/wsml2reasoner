@@ -28,9 +28,13 @@ import java.util.Set;
 import junit.framework.TestCase;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
+import org.wsml.reasoner.Rule;
+import org.wsml.reasoner.api.inconsistency.AttributeTypeViolation;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
+
+import variant.flight.ViolationsTest;
 
 
 public class ConstraintReplacementNormalizerTest extends TestCase {
@@ -79,6 +83,12 @@ public class ConstraintReplacementNormalizerTest extends TestCase {
 		Set<LogicalExpression> les = violationsAxiom.listDefinitions();
 		
 		for( LogicalExpression le : les ){
+			System.out.println(le.toString());
+			System.out.println("____________");
+			if (le instanceof AttributeTypeViolation)
+				System.out.println("bbbb");
+				
+				
 //			le instanceof some kind of rule
 //			and the rule head is called (or ends with) 'VIOLATION'
 		}
@@ -121,27 +131,27 @@ public class ConstraintReplacementNormalizerTest extends TestCase {
 		return found;
 	}
 	
-	public void testNormalizeAxioms() {
-		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom_normaliser_test" ));
-		Axiom axiom2 = wsmoFactory.createAxiom(wsmoFactory.createIRI(AnonymousIdUtils.MINCARD_PREFIX));	
-		Axiom axiom3 = wsmoFactory.createAxiom(wsmoFactory.createIRI(AnonymousIdUtils.MAXCARD_PREFIX));	
-		Axiom axiom4 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
-		
-		Set<Axiom> axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
-		axioms.add(axiom2);
-		axioms.add(axiom3);
-		axioms.add(axiom4);
-
-		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
-		int axi = 0;
-		for (Axiom ax : out) {
-			axi++;
-		
-		}
-		assertEquals(axi,4);
-		assertFalse(axioms.equals(out));
-	}
+//	public void testNormalizeAxioms() {
+//		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom_normaliser_test" ));
+//		Axiom axiom2 = wsmoFactory.createAxiom(wsmoFactory.createIRI(AnonymousIdUtils.MINCARD_PREFIX));	
+//		Axiom axiom3 = wsmoFactory.createAxiom(wsmoFactory.createIRI(AnonymousIdUtils.MAXCARD_PREFIX));	
+//		Axiom axiom4 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
+//		
+//		Set<Axiom> axioms = new HashSet<Axiom>();
+//		axioms.add(axiom1);
+//		axioms.add(axiom2);
+//		axioms.add(axiom3);
+//		axioms.add(axiom4);
+//
+//		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
+//		int axi = 0;
+//		for (Axiom ax : out) {
+//			axi++;
+//		
+//		}
+//		assertEquals(axi,4);
+//		assertFalse(axioms.equals(out));
+//	}
 
 	
 	

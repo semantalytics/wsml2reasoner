@@ -41,7 +41,7 @@ import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
 
-public class MoleculeDecompositionRule implements NormalizationRule {
+public class FOLMoleculeDecompositionRule implements NormalizationRule {
     
     public final static String sub = "urn://sub#";
     public final static String isa = "urn://isa#";
@@ -52,7 +52,7 @@ public class MoleculeDecompositionRule implements NormalizationRule {
     private LogicalExpressionFactory leFactory;
     private WsmoFactory wsmoFactory;
     
-    public MoleculeDecompositionRule(WSMO4JManager wsmoManager){
+    public FOLMoleculeDecompositionRule(WSMO4JManager wsmoManager){
         this.leFactory = wsmoManager.getLogicalExpressionFactory();
         this.wsmoFactory = wsmoManager.getWSMOFactory();
     }

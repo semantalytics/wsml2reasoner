@@ -32,7 +32,7 @@
 	<classpathentry kind="lib" path="lib/ext/mins-reasoner/mins-v0_3.jar"/>
 	<classpathentry kind="lib" path="lib/ext/wsmo/WSML-grammar-20070417.jar"/>
 	<classpathentry kind="lib" path="lib/ext/wsmo/wsmo4j-0.6.1.jar"/>
-	<classpathentry kind="lib" path="lib/ext/wsmo/wsmo-api-0.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/ext/wsmo/wsmo-api-0.6.1.jar" sourcepath="C:/Documents and Settings/matpre/My Documents/wsmo4j-0.6.1"/>
 	<classpathentry kind="lib" path="lib/ext/sql-interface/hsqldb.jar"/>
 	<classpathentry kind="lib" path="lib/ext/iris-reasoner/iris/iris-20080402.jar"/>
 	<classpathentry kind="var" path="JUNIT_HOME/junit.jar" sourcepath="ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.1.0/src/org.junit_3.8.1/junitsrc.zip"/>
