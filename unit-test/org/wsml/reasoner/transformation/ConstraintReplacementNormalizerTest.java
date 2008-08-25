@@ -104,7 +104,7 @@ public class ConstraintReplacementNormalizerTest extends TestCase {
 		
 		assertTrue( contains( out, axiomUri ) );
 		
-		// Is this the correct behaviour?????
+		// Is this the correct behavior ?
 		assertTrue( contains( out, "_#" ) );
 		assertEquals(2, out.size() );
 	}
@@ -137,37 +137,12 @@ public class ConstraintReplacementNormalizerTest extends TestCase {
 		int axi = 0;
 		for (Axiom ax : out) {
 			axi++;
-			System.out.println(ax.getIdentifier().toString());
-			if(axi == 4){
-				assertEquals(ax.getIdentifier().toString(), AnonymousIdUtils.MINCARD_PREFIX);
-			}
-			if(axi == 5){
-				assertEquals(ax.getIdentifier().toString(), AnonymousIdUtils.MAXCARD_PREFIX);
-			}
+		
 		}
 		assertEquals(axi,4);
 		assertFalse(axioms.equals(out));
 	}
-	
-//	public void testNormalizeAxioms() {
-//		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom" + System.currentTimeMillis()));
-//		Axiom axiom2 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());	
-//		Axiom axiom3 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
-//		
-//		Set<Axiom> axioms = new HashSet<Axiom>();
-//		axioms.add(axiom1);
-//		axioms.add(axiom2);
-//		axioms.add(axiom3);
-//
-//		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
-//		int axi = 0;
-//		for (Axiom ax : out) {
-//			axi++;
-//		}
-//		assertEquals(axi,4);
-//		assertFalse(axioms.equals(out));
-//	}
-	
+
 	
 	
 	
