@@ -60,7 +60,7 @@ public class ConstructReductionNormalizerTest extends TestCase {
 	}
 	
 //	public void testNormalizeAxioms() {
-//		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom" + System.currentTimeMillis()));
+//		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom"));
 //		Axiom axiom2 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());	
 //		Axiom axiom3 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
 //		
