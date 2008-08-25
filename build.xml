@@ -2,6 +2,9 @@
 	
 <project name="WSML2Reasoner Framework" default="wsml2reasoner" basedir="." >
 
+	<!-- Set the DSTAMP, TSTAMP and TODAY properties -->
+	<tstamp />
+	
 	<property file="build.properties" />
 	
 	<patternset id="java-source-files">
@@ -54,9 +57,6 @@
 	</target>
 
 	<target name="init">
-		<!-- Set the DSTAMP, TSTAMP and TODAY properties -->
-		<tstamp />
-	
 		<!-- Set the property "kaon2.jar.present" if the kaon2.jar is present -->
 		<available file="${file.kaon2}" property="kaon2.jar.present"/>
 		
