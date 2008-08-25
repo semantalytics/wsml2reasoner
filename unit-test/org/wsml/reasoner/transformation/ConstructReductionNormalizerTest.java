@@ -24,16 +24,23 @@
 package org.wsml.reasoner.transformation;
 
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.ontology.Axiom;
 import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
+import org.wsmo.wsml.ParserException;
 
 import junit.framework.TestCase;
 
 
 public class ConstructReductionNormalizerTest extends TestCase {
 	
-//	private ConstructReductionNormalizer normalizer;
+	private ConstructReductionNormalizer normalizer;
 	protected String ns = "http://ex.org#";
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
@@ -45,7 +52,7 @@ public class ConstructReductionNormalizerTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		WSMO4JManager wsmoManager = new WSMO4JManager();
-//		normalizer = new ConstructReductionNormalizer(wsmoManager);
+		normalizer = new ConstructReductionNormalizer(wsmoManager);
         wsmoFactory = wsmoManager.getWSMOFactory();
         leFactory = wsmoManager.getLogicalExpressionFactory();
       
@@ -53,25 +60,62 @@ public class ConstructReductionNormalizerTest extends TestCase {
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
-//		normalizer = null;
+		normalizer = null;
 		leFactory = null;
 		wsmoFactory = null;
 
 	}
 	
-//	public void testNormalizeAxioms() {
-//		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom"));
-//		Axiom axiom2 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());	
-//		Axiom axiom3 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
-//		
-//		Set<Axiom> axioms = new HashSet<Axiom>();
-//		axioms.add(axiom1);
-//		axioms.add(axiom2);
-//		axioms.add(axiom3);
-//
-//		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
-//		
-//		
-//	}
+	public void testNormalizeAxioms() throws ParserException {
+		
+		// doubleNegationrule
+		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom1"));
+		axiom1.addDefinition(LETestHelper.buildLE("naf( naf _\"urn:a\") "));
+		
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		axioms.add(axiom1);
+
+		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
+		for (Axiom ax : out) {
+			assertEquals(ax.getIdentifier().toString(),"_#");
+			Set <LogicalExpression> les = ax.listDefinitions();
+			for(LogicalExpression le : les) {
+				assertEquals(le.toString(), "_\"urn:a\". ");
+			}
+		}
+		
+		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom2"));
+		axiom1.addDefinition(LETestHelper.buildLE("naf naf( naf _\"urn:a\") "));
+		
+		axioms = new HashSet<Axiom>();
+		axioms.add(axiom1);
+
+		out = normalizer.normalizeAxioms(axioms);
+		for (Axiom ax : out) {
+			assertEquals(ax.getIdentifier().toString(),"_#");
+			Set <LogicalExpression> les = ax.listDefinitions();
+			for(LogicalExpression le : les) {
+				assertEquals(le.toString(), "naf _\"urn:a\". ");
+			}
+		}
+		
+		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom3"));
+		axiom1.addDefinition(LETestHelper.buildLE("naf naf naf( naf _\"urn:a\") "));
+		
+		axioms = new HashSet<Axiom>();
+		axioms.add(axiom1);
+
+		out = normalizer.normalizeAxioms(axioms);
+		for (Axiom ax : out) {
+			assertEquals(ax.getIdentifier().toString(),"_#");
+			Set <LogicalExpression> les = ax.listDefinitions();
+			for(LogicalExpression le : les) {
+				assertEquals(le.toString(), "_\"urn:a\". ");
+			}
+		}
+		fail();
+			
+
+	}
 
 }
