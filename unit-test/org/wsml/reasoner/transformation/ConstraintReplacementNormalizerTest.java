@@ -25,13 +25,12 @@ package org.wsml.reasoner.transformation;
 
 import java.util.HashSet;
 import java.util.Set;
-
+import junit.framework.TestCase;
+import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
-
-import junit.framework.TestCase;
 
 
 public class ConstraintReplacementNormalizerTest extends TestCase {
@@ -63,9 +62,67 @@ public class ConstraintReplacementNormalizerTest extends TestCase {
 		wsmoFactory = null;
 		
 	}
+
+	public void testInsertViolationsAxiom() {
+		Set<Axiom> axioms = new HashSet<Axiom>();
+
+		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
+		
+		// Should always have the violation constraints in an anonymous axiom
+		assertEquals(1, out.size() );
+		
+		Axiom violationsAxiom = out.iterator().next();
+		
+		// This axiom should be anonymous
+		assertEquals( "_#", violationsAxiom.getIdentifier().toString() );
+		
+		Set<LogicalExpression> les = violationsAxiom.listDefinitions();
+		
+		for( LogicalExpression le : les ){
+//			le instanceof some kind of rule
+//			and the rule head is called (or ends with) 'VIOLATION'
+		}
+	}
+
+	public void testEmptyAxiomsAreIgnored() {
+		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom_empty" ));
+		
+//		assertFalse( contains( out, axiom1.getIdentifier().toString()) );
+	}
+
+	public void testConstraintsAreReplaced() {
+	}
+
+	public void testNormalizeAxiomsNormalAxiom() {
+		String axiomUri = ns + "axiom_normaliser_test";
+		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(axiomUri ));
+
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		axioms.add(axiom1);
+
+		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
+		
+		assertTrue( contains( out, axiomUri ) );
+		
+		// Is this the correct behaviour?????
+		assertTrue( contains( out, "_#" ) );
+		assertEquals(2, out.size() );
+	}
+	
+	private boolean contains( Set<Axiom> axioms, String identifier )
+	{
+		boolean found = false;
+		for (Axiom ax : axioms) {
+			System.out.println(ax.getIdentifier());
+			if( ax.getIdentifier().toString().equals( identifier  ))
+				found = true;
+		}
+		
+		return found;
+	}
 	
 	public void testNormalizeAxioms() {
-		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom" + System.currentTimeMillis()));
+		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom_normaliser_test" ));
 		Axiom axiom2 = wsmoFactory.createAxiom(wsmoFactory.createIRI(AnonymousIdUtils.MINCARD_PREFIX));	
 		Axiom axiom3 = wsmoFactory.createAxiom(wsmoFactory.createIRI(AnonymousIdUtils.MAXCARD_PREFIX));	
 		Axiom axiom4 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
@@ -80,14 +137,15 @@ public class ConstraintReplacementNormalizerTest extends TestCase {
 		int axi = 0;
 		for (Axiom ax : out) {
 			axi++;
+			System.out.println(ax.getIdentifier().toString());
 			if(axi == 4){
-				assertEquals(ax.getIdentifier().toString(), "http://www.wsmo.org/reasoner/mincard_");
+				assertEquals(ax.getIdentifier().toString(), AnonymousIdUtils.MINCARD_PREFIX);
 			}
 			if(axi == 5){
-				assertEquals(ax.getIdentifier().toString(), "http://www.wsmo.org/reasoner/maxcard_");
+				assertEquals(ax.getIdentifier().toString(), AnonymousIdUtils.MAXCARD_PREFIX);
 			}
 		}
-		assertEquals(axi,5);
+		assertEquals(axi,4);
 		assertFalse(axioms.equals(out));
 	}
 	
