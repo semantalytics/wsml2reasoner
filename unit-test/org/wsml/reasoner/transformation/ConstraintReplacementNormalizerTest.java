@@ -103,15 +103,16 @@ public class ConstraintReplacementNormalizerTest extends TestCase {
 		Set<Axiom> axioms = new HashSet<Axiom>();
 		axiom1.addDefinition(LETestHelper.buildLE("!- _\"urn:a\" memberOf _#"));
 		axioms.add(axiom1);
+		fail();
 		
-		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
-		
-		for(Axiom ax : out) {
-//			System.out.println(ax.getIdentifier().toString());
-			for(LogicalExpression le : ax.listDefinitions()){
-				System.out.println(le.toString());
-			}
-		}
+//		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
+//		
+//		for(Axiom ax : out) {
+////			System.out.println(ax.getIdentifier().toString());
+//			for(LogicalExpression le : ax.listDefinitions()){
+//				System.out.println(le.toString());
+//			}
+//		}
 		
 	}
 

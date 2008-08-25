@@ -85,8 +85,7 @@ public class OnePassReplacementNormalizerTest extends TestCase {
         assertTrue(out.toString().startsWith("_\""+ FOLMoleculeDecompositionRule.sub + ""));
         assertTrue(out.toString().contains("_\"urn:a\""));
         assertTrue(out.toString().contains(AnonymousIdUtils.ANONYMOUS_PREFIX));
-        
-        
+          
         
 	}
 	

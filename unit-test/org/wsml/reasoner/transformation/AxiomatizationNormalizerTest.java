@@ -74,13 +74,13 @@ public class AxiomatizationNormalizerTest extends TestCase {
 	public void testNormalizeEntities() throws ParserException, IOException, InvalidModelException {
 		
 		Set<Entity> in = new HashSet<Entity>();
-		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom" + System.currentTimeMillis()));
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom"));
 		in.add(axiom);
 
-        Instance instance1 = wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "instance" + System.currentTimeMillis()));
+        Instance instance1 = wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "instance"));
         in.add(instance1);
         
-        Concept concept1 = wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "concept" + System.currentTimeMillis()));
+        Concept concept1 = wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "concept"));
         in.add(concept1);
 		
     	Set <Entity> entities = normalizer.normalizeEntities(in);
