@@ -118,20 +118,25 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		in = new HashSet<LogicalExpression>();
 		le = LETestHelper.buildLE("_\"urn:a\"[_\"urn:a\" impliesType _#]");
 		in.add(le);
-		le = LETestHelper.buildLE("_\"urn:a\" subConceptOf \"urn:b\" ");
-		in.add(le);
 		
 		out = transformer.transform(in);
-		Object[] rules =  out.toArray();
+		for(Rule r : out){
+			assertTrue(r.toString().contains(("wsml-implies-type(urn:a, urn:a, _#).")));
+		}
 		
-		assertEquals(((Rule)rules[0]).toString(), ("wsml-subconcept-of(urn:a, urn:b)."));
-		
-		assertEquals(((Rule)rules[1]).toString(), ("wsml-implies-type(urn:a, urn:a, _#)."));
+		in = new HashSet<LogicalExpression>();
+		le = LETestHelper.buildLE("_\"urn:a\" subConceptOf \"urn:b\" ");
+		in.add(le);
+		out = transformer.transform(in);
+		for(Rule r : out){
+			assertTrue(r.toString().contains(("wsml-subconcept-of(urn:a, urn:b).")));
+		}
 		
 	}
+}
 	
 	
 	
 	
 
-}
+

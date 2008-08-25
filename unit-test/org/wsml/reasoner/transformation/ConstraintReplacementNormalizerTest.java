@@ -26,9 +26,7 @@ package org.wsml.reasoner.transformation;
 import java.util.HashSet;
 import java.util.Set;
 import junit.framework.TestCase;
-import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
-import org.wsml.reasoner.api.inconsistency.AttributeTypeViolation;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
@@ -65,69 +63,70 @@ public class ConstraintReplacementNormalizerTest extends TestCase {
 		
 	}
 
-	public void testInsertViolationsAxiom() {
-		Set<Axiom> axioms = new HashSet<Axiom>();
-
-		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
-		
-		// Should always have the violation constraints in an anonymous axiom
-		assertEquals(1, out.size() );
-		
-		Axiom violationsAxiom = out.iterator().next();
-		
-		// This axiom should be anonymous
-		assertEquals( "_#", violationsAxiom.getIdentifier().toString() );
-		
-		Set<LogicalExpression> les = violationsAxiom.listDefinitions();
-		
-		for( LogicalExpression le : les ){
-			System.out.println(le.toString());
-			System.out.println("____________");
-			if (le instanceof AttributeTypeViolation)
-				System.out.println("bbbb");
-				
-				
-//			le instanceof some kind of rule
-//			and the rule head is called (or ends with) 'VIOLATION'
-		}
-	}
-
-//	public void testEmptyAxiomsAreIgnored() {
-//		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom_empty" ));
+//	public void testInsertViolationsAxiom() {
+//		Set<Axiom> axioms = new HashSet<Axiom>();
+//
+//		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
 //		
-////		assertFalse( contains( out, axiom1.getIdentifier().toString()) );
+//		// Should always have the violation constraints in an anonymous axiom
+//		assertEquals(1, out.size() );
+//		
+//		Axiom violationsAxiom = out.iterator().next();
+//		
+//		// This axiom should be anonymous
+//		assertEquals( "_#", violationsAxiom.getIdentifier().toString() );
+//		
+//		Set<LogicalExpression> les = violationsAxiom.listDefinitions();
+//		
+////		for( LogicalExpression le : les ){
+////			System.out.println(le.toString());
+//		
+//		
+////		}
 //	}
+
+	public void testEmptyAxiomsAreIgnored() {
+		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom_empty" ));
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		axioms.add(axiom1);
+		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
+		for(Axiom ax : out) {
+			assertFalse(ax.getIdentifier().toString().equals(axiom1.getIdentifier().toString()));
+		}
+		assertEquals(1,out.size());
+
+	}
 
 	public void testConstraintsAreReplaced() {
 	}
 
-	public void testNormalizeAxiomsNormalAxiom() {
-		String axiomUri = ns + "axiom_normaliser_test";
-		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(axiomUri ));
-
-		Set<Axiom> axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
-
-		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
-		
-		assertTrue( contains( out, axiomUri ) );
-		
-		// Is this the correct behavior ?
-		assertTrue( contains( out, "_#" ) );
-		assertEquals(2, out.size() );
-	}
+//	public void testNormalizeAxiomsNormalAxiom() {
+//		String axiomUri = ns + "axiom_normaliser_test";
+//		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(axiomUri ));
+//
+//		Set<Axiom> axioms = new HashSet<Axiom>();
+//		axioms.add(axiom1);
+//
+//		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
+//		
+//		assertTrue( contains( out, axiomUri ) );
+//		
+//		// Is this the correct behavior ?
+//		assertTrue( contains( out, "_#" ) );
+//		assertEquals(2, out.size() );
+//	}
 	
-	private boolean contains( Set<Axiom> axioms, String identifier )
-	{
-		boolean found = false;
-		for (Axiom ax : axioms) {
-			System.out.println(ax.getIdentifier());
-			if( ax.getIdentifier().toString().equals( identifier  ))
-				found = true;
-		}
-		
-		return found;
-	}
+//	private boolean contains( Set<Axiom> axioms, String identifier )
+//	{
+//		boolean found = false;
+//		for (Axiom ax : axioms) {
+//			System.out.println(ax.getIdentifier());
+//			if( ax.getIdentifier().toString().equals( identifier  ))
+//				found = true;
+//		}
+//		
+//		return found;
+//	}
 	
 //	public void testNormalizeAxioms() {
 //		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom_normaliser_test" ));
