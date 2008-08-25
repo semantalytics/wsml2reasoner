@@ -81,39 +81,32 @@ public class AxiomatizationNormalizerTest extends TestCase {
         in.add(instance1);
         
         Concept concept1 = wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "concept"));
+        concept1.addInstance(wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "instance")));
         in.add(concept1);
 		
     	Set <Entity> entities = normalizer.normalizeEntities(in);
-    	
-    	int con = 0;
-    	int ins = 0;
-    	int rel = 0;
-    	int rei = 0;
-    	int axi = 0;
+
     	
     	for(Entity en : entities) {
     		if( en instanceof Concept){
-    			con++;
+    			System.out.println("Concept:  "  + en);
     		}
     		if( en instanceof Instance){
-    			ins++;
+    			System.out.println("Instance:  "  + en);
     		}
     		if( en instanceof Relation){
-    			rel++;
+    			System.out.println("Relation:  "  + en);
     		}
+    			
     		if( en instanceof RelationInstance){
-    			rei++;
+    			System.out.println("RelationInstance:  "  + en);
     		}
     		if( en instanceof Axiom){
-    			axi++;
+    			System.out.println("Axiom:  "  + en);
     		}
     		
     	}
-    	assertEquals(con,0);
-    	assertEquals(ins,0);
-    	assertEquals(rel,0);
-    	assertEquals(rei,0);
-    	assertEquals(axi,1);
+    	
     	
 	
 	}
