@@ -28,13 +28,11 @@ import java.util.Set;
 import junit.framework.TestCase;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
-import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.api.inconsistency.AttributeTypeViolation;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
-import variant.flight.ViolationsTest;
 
 
 public class ConstraintReplacementNormalizerTest extends TestCase {
@@ -94,11 +92,11 @@ public class ConstraintReplacementNormalizerTest extends TestCase {
 		}
 	}
 
-	public void testEmptyAxiomsAreIgnored() {
-		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom_empty" ));
-		
-//		assertFalse( contains( out, axiom1.getIdentifier().toString()) );
-	}
+//	public void testEmptyAxiomsAreIgnored() {
+//		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom_empty" ));
+//		
+////		assertFalse( contains( out, axiom1.getIdentifier().toString()) );
+//	}
 
 	public void testConstraintsAreReplaced() {
 	}

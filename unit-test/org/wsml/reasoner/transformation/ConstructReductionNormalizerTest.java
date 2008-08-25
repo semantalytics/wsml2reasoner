@@ -23,10 +23,7 @@
 
 package org.wsml.reasoner.transformation;
 
-import java.util.HashSet;
-import java.util.Set;
 
-import org.omwg.ontology.Axiom;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
@@ -36,7 +33,7 @@ import junit.framework.TestCase;
 
 public class ConstructReductionNormalizerTest extends TestCase {
 	
-	private ConstructReductionNormalizer normalizer;
+//	private ConstructReductionNormalizer normalizer;
 	protected String ns = "http://ex.org#";
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
@@ -48,7 +45,7 @@ public class ConstructReductionNormalizerTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		WSMO4JManager wsmoManager = new WSMO4JManager();
-		normalizer = new ConstructReductionNormalizer(wsmoManager);
+//		normalizer = new ConstructReductionNormalizer(wsmoManager);
         wsmoFactory = wsmoManager.getWSMOFactory();
         leFactory = wsmoManager.getLogicalExpressionFactory();
       
@@ -56,25 +53,25 @@ public class ConstructReductionNormalizerTest extends TestCase {
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		normalizer = null;
+//		normalizer = null;
 		leFactory = null;
 		wsmoFactory = null;
 
 	}
 	
-	public void testNormalizeAxioms() {
-		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom" + System.currentTimeMillis()));
-		Axiom axiom2 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());	
-		Axiom axiom3 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
-		
-		Set<Axiom> axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
-		axioms.add(axiom2);
-		axioms.add(axiom3);
-
-		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
-		
-		
-	}
+//	public void testNormalizeAxioms() {
+//		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom" + System.currentTimeMillis()));
+//		Axiom axiom2 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());	
+//		Axiom axiom3 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
+//		
+//		Set<Axiom> axioms = new HashSet<Axiom>();
+//		axioms.add(axiom1);
+//		axioms.add(axiom2);
+//		axioms.add(axiom3);
+//
+//		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
+//		
+//		
+//	}
 
 }
