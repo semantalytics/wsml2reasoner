@@ -1,5 +1,5 @@
 # Setup
-DIR=/var/www/html/tools_deri_org/wsml2reasoner/nightly_build/wsml2reasoner_trunk
+DIR=/var/www/html/tools_deri_org/wsml2reasoner/nightly-build/wsml2reasoner_trunk
 SNAPSHOT=../../snapshot
 export ANT_HOME=/home/barryb/apache-ant-1.7.0
 
