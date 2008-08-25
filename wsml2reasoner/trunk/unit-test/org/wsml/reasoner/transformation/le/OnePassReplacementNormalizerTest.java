@@ -30,7 +30,7 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.AnonymousIdUtils;
 import org.wsml.reasoner.transformation.le.foldecomposition.FOLMoleculeDecompositionRules;
-import org.wsml.reasoner.transformation.le.foldecomposition.MoleculeDecompositionRule;
+import org.wsml.reasoner.transformation.le.foldecomposition.FOLMoleculeDecompositionRule;
 import org.wsmo.wsml.ParserException;
 
 import junit.framework.TestCase;
@@ -63,26 +63,26 @@ public class OnePassReplacementNormalizerTest extends TestCase {
         
         LogicalExpression in = LETestHelper.buildLE("_\"urn:a\"[_\"urn:a\" impliesType _#]");
         LogicalExpression out = normalizer.normalize(in);
-        assertTrue(out.toString().startsWith("_\""+MoleculeDecompositionRule.impliesType + ""));
+        assertTrue(out.toString().startsWith("_\""+FOLMoleculeDecompositionRule.impliesType + ""));
         assertTrue(out.toString().contains("_\"urn:a\",_\"urn:a\""));
         assertTrue(out.toString().contains(AnonymousIdUtils.ANONYMOUS_PREFIX));
         
        
         in = LETestHelper.buildLE("_\"urn:a\"[_\"urn:a\" hasValue _#]");
         out = normalizer.normalize(in); 
-        assertTrue(out.toString().startsWith("_\""+MoleculeDecompositionRule.hasValue + ""));
+        assertTrue(out.toString().startsWith("_\""+FOLMoleculeDecompositionRule.hasValue + ""));
         assertTrue(out.toString().contains("_\"urn:a\",_\"urn:a\""));
         assertTrue(out.toString().contains(AnonymousIdUtils.ANONYMOUS_PREFIX));
         
         in = LETestHelper.buildLE("_\"urn:a\"[_\"urn:a\" ofType _#]");
         out = normalizer.normalize(in);
-        assertTrue(out.toString().startsWith("_\""+MoleculeDecompositionRule.ofType + ""));
+        assertTrue(out.toString().startsWith("_\""+FOLMoleculeDecompositionRule.ofType + ""));
         assertTrue(out.toString().contains("_\"urn:a\",_\"urn:a\""));
         assertTrue(out.toString().contains(AnonymousIdUtils.ANONYMOUS_PREFIX));
         
         in = LETestHelper.buildLE("_\"urn:a\" subConceptOf _#");
         out = normalizer.normalize(in);
-        assertTrue(out.toString().startsWith("_\""+ MoleculeDecompositionRule.sub + ""));
+        assertTrue(out.toString().startsWith("_\""+ FOLMoleculeDecompositionRule.sub + ""));
         assertTrue(out.toString().contains("_\"urn:a\""));
         assertTrue(out.toString().contains(AnonymousIdUtils.ANONYMOUS_PREFIX));
         

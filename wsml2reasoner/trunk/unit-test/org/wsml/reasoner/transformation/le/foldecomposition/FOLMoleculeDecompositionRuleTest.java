@@ -29,19 +29,19 @@ import org.wsmo.wsml.ParserException;
 
 import junit.framework.TestCase;
 
-public class MoleculeDecompositionRuleTest extends TestCase {
+public class FOLMoleculeDecompositionRuleTest extends TestCase {
 	
-	private MoleculeDecompositionRule rule;
+	private FOLMoleculeDecompositionRule rule;
 	// "X[A1,...,An]\n\t=>\n X[A1] and ... and X[An]\n";
 	
-	public MoleculeDecompositionRuleTest() {
+	public FOLMoleculeDecompositionRuleTest() {
         super();
     }
     
     protected void setUp() throws Exception {
         super.setUp();
         WSMO4JManager wsmoManager = new WSMO4JManager();
-        this.rule = new MoleculeDecompositionRule(wsmoManager);
+        this.rule = new FOLMoleculeDecompositionRule(wsmoManager);
     }
     
     protected void tearDown() throws Exception {
@@ -79,74 +79,74 @@ public class MoleculeDecompositionRuleTest extends TestCase {
     	LogicalExpression in = LETestHelper.buildLE("_\"urn:a\"[_\"urn:b\" impliesType _\"urn:c\"]");
         LogicalExpression result = rule.apply(in);       
         assertEquals(2, result.toString().split("#").length);
-        assertTrue(result.toString().trim().equals("_\""+ MoleculeDecompositionRule.impliesType + "\"(_\"urn:a\",_\"urn:b\",_\"urn:c\")."));
+        assertTrue(result.toString().trim().equals("_\""+ FOLMoleculeDecompositionRule.impliesType + "\"(_\"urn:a\",_\"urn:b\",_\"urn:c\")."));
         
         in = LETestHelper.buildLE("_\"urn:a\"[_\"urn:b\" ofType _\"urn:c\"]");
         result = rule.apply(in);        
         assertEquals(2, result.toString().split("#").length);
-        assertTrue(result.toString().trim().equals("_\""+ MoleculeDecompositionRule.ofType + "\"(_\"urn:a\",_\"urn:b\",_\"urn:c\")."));
+        assertTrue(result.toString().trim().equals("_\""+ FOLMoleculeDecompositionRule.ofType + "\"(_\"urn:a\",_\"urn:b\",_\"urn:c\")."));
       
         in = LETestHelper.buildLE("_\"urn:a\"[_\"urn:b\" hasValue _\"urn:c\"]");
         result = rule.apply(in);
         assertEquals(2, result.toString().split("#").length);
-        assertTrue(result.toString().trim().equals("_\""+ MoleculeDecompositionRule.hasValue + "\"(_\"urn:a\",_\"urn:b\",_\"urn:c\")."));
+        assertTrue(result.toString().trim().equals("_\""+ FOLMoleculeDecompositionRule.hasValue + "\"(_\"urn:a\",_\"urn:b\",_\"urn:c\")."));
 
         in = LETestHelper.buildLE("_\"urn:a\"[_\"urn:b\" impliesType _#]");
         result = rule.apply(in); 
         assertEquals(3, result.toString().split("#").length);
-        assertTrue(result.toString().trim().equals("_\""+ MoleculeDecompositionRule.impliesType + "\"(_\"urn:a\",_\"urn:b\",_#)."));
+        assertTrue(result.toString().trim().equals("_\""+ FOLMoleculeDecompositionRule.impliesType + "\"(_\"urn:a\",_\"urn:b\",_#)."));
 
         in = LETestHelper.buildLE("_\"urn:a\" subConceptOf _#");
         result = rule.apply(in);  
         assertEquals(3, result.toString().split("#").length);
-        assertTrue(result.toString().trim().equals("_\""+ MoleculeDecompositionRule.sub + "\"(_\"urn:a\",_#)."));
+        assertTrue(result.toString().trim().equals("_\""+ FOLMoleculeDecompositionRule.sub + "\"(_\"urn:a\",_#)."));
         
         in = LETestHelper.buildLE("_\"urn:a\"[_\"urn:b\" ofType _#]");
         result = rule.apply(in);  
         assertEquals(3, result.toString().split("#").length);
-        assertTrue(result.toString().trim().equals("_\""+ MoleculeDecompositionRule.ofType + "\"(_\"urn:a\",_\"urn:b\",_#)."));
+        assertTrue(result.toString().trim().equals("_\""+ FOLMoleculeDecompositionRule.ofType + "\"(_\"urn:a\",_\"urn:b\",_#)."));
         
 
         in = LETestHelper.buildLE("_\"urn:a\"[_\"urn:b\" impliesType _#]");
         result = rule.apply(in);  
         assertEquals(3, result.toString().split("#").length);
-        assertTrue(result.toString().trim().equals("_\""+ MoleculeDecompositionRule.impliesType + "\"(_\"urn:a\",_\"urn:b\",_#)."));
+        assertTrue(result.toString().trim().equals("_\""+ FOLMoleculeDecompositionRule.impliesType + "\"(_\"urn:a\",_\"urn:b\",_#)."));
 
         in = LETestHelper.buildLE("_\"urn:a\"[_\"urn:b\" hasValue _#]");
         result = rule.apply(in);  
         assertEquals(3, result.toString().split("#").length);
-        assertTrue(result.toString().trim().equals("_\""+ MoleculeDecompositionRule.hasValue + "\"(_\"urn:a\",_\"urn:b\",_#)."));
+        assertTrue(result.toString().trim().equals("_\""+ FOLMoleculeDecompositionRule.hasValue + "\"(_\"urn:a\",_\"urn:b\",_#)."));
 
         in = LETestHelper.buildLE("_\"urn:a\"[_# ofType _\"urn:b\"]");
         result = rule.apply(in);  
         assertEquals(3, result.toString().split("#").length);
-        assertTrue(result.toString().trim().equals("_\""+ MoleculeDecompositionRule.ofType + "\"(_\"urn:a\",_#,_\"urn:b\")."));
+        assertTrue(result.toString().trim().equals("_\""+ FOLMoleculeDecompositionRule.ofType + "\"(_\"urn:a\",_#,_\"urn:b\")."));
 
         in = LETestHelper.buildLE("_\"urn:a\"[_# impliesType _\"urn:b\"]");
         result = rule.apply(in);  
         assertEquals(3, result.toString().split("#").length);
-        assertTrue(result.toString().trim().equals("_\""+ MoleculeDecompositionRule.impliesType + "\"(_\"urn:a\",_#,_\"urn:b\")."));
+        assertTrue(result.toString().trim().equals("_\""+ FOLMoleculeDecompositionRule.impliesType + "\"(_\"urn:a\",_#,_\"urn:b\")."));
 
         in = LETestHelper.buildLE("_\"urn:a\"[_# hasValue _\"urn:b\"]");
         result = rule.apply(in);  
         assertEquals(3, result.toString().split("#").length);
-        assertTrue(result.toString().trim().equals("_\""+ MoleculeDecompositionRule.hasValue + "\"(_\"urn:a\",_#,_\"urn:b\")."));
+        assertTrue(result.toString().trim().equals("_\""+ FOLMoleculeDecompositionRule.hasValue + "\"(_\"urn:a\",_#,_\"urn:b\")."));
 
         in = LETestHelper.buildLE("_\"urn:a\"[_# ofType _#]");
         result = rule.apply(in);  
         assertEquals(4, result.toString().split("#").length);
-        assertTrue(result.toString().trim().equals("_\""+ MoleculeDecompositionRule.ofType + "\"(_\"urn:a\",_#,_#)."));
+        assertTrue(result.toString().trim().equals("_\""+ FOLMoleculeDecompositionRule.ofType + "\"(_\"urn:a\",_#,_#)."));
 
         in = LETestHelper.buildLE("_\"urn:a\"[_# impliesType _#]");
         result = rule.apply(in);        
         assertEquals(4, result.toString().split("#").length);
-        assertTrue(result.toString().trim().equals("_\""+ MoleculeDecompositionRule.impliesType + "\"(_\"urn:a\",_#,_#)."));
+        assertTrue(result.toString().trim().equals("_\""+ FOLMoleculeDecompositionRule.impliesType + "\"(_\"urn:a\",_#,_#)."));
 
         
         in = LETestHelper.buildLE("_\"urn:a\"[_# hasValue _#]");
         result = rule.apply(in);        
         assertEquals(4, result.toString().split("#").length);
-        assertTrue(result.toString().trim().equals("_\""+ MoleculeDecompositionRule.hasValue + "\"(_\"urn:a\",_#,_#)."));
+        assertTrue(result.toString().trim().equals("_\""+ FOLMoleculeDecompositionRule.hasValue + "\"(_\"urn:a\",_#,_#)."));
 
     	
 

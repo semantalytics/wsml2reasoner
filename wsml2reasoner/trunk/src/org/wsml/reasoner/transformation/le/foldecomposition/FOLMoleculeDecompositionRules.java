@@ -22,6 +22,8 @@ import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.AnonymousIdTranslator;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
 import org.wsml.reasoner.transformation.le.Rules;
+import org.wsml.reasoner.transformation.le.common.AtomAnonymousIDRule;
+import org.wsml.reasoner.transformation.le.common.MoleculeAnonymousIDRule;
 
 /**
  * This singleton class represents a set of normalization rules for replacing
@@ -34,7 +36,7 @@ public class FOLMoleculeDecompositionRules extends Rules <NormalizationRule>{
     public FOLMoleculeDecompositionRules(WSMO4JManager wsmoManager) {
         AnonymousIdTranslator anonymousIDTranslator = new AnonymousIdTranslator(wsmoManager.getWSMOFactory());
         
-        addRule(new MoleculeDecompositionRule(wsmoManager));
+        addRule(new FOLMoleculeDecompositionRule(wsmoManager));
         addRule(new MoleculeAnonymousIDRule(wsmoManager, anonymousIDTranslator));
         addRule(new AtomAnonymousIDRule(wsmoManager, anonymousIDTranslator));
     }

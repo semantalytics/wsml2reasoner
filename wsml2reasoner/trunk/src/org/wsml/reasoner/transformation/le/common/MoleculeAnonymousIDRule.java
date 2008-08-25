@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package org.wsml.reasoner.transformation.le.foldecomposition;
+package org.wsml.reasoner.transformation.le.common;
 
 import org.omwg.logicalexpression.AttributeConstraintMolecule;
 import org.omwg.logicalexpression.AttributeInferenceMolecule;
@@ -52,6 +52,7 @@ public class MoleculeAnonymousIDRule implements NormalizationRule {
             attribute = anonymousIDTranslator.translate(((AttributeMolecule) molecule).getAttribute());
         }
 
+        // instantiate the appropriate molecule type:
         if (molecule instanceof MembershipMolecule) {
             return leFactory.createMemberShipMolecule(leftOperand, rightOperand);
         }

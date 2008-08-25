@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package org.wsml.reasoner.transformation.le.foldecomposition;
+package org.wsml.reasoner.transformation.le.common;
 
 import java.util.ArrayList;
 import java.util.List;

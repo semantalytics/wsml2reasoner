@@ -20,7 +20,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package org.wsml.reasoner.transformation.le.foldecomposition;
+package org.wsml.reasoner.transformation.le.common;
 
 import junit.framework.TestCase;
 
@@ -29,6 +29,7 @@ import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.AnonymousIdTranslator;
 import org.wsml.reasoner.transformation.AnonymousIdUtils;
 import org.wsml.reasoner.transformation.le.LETestHelper;
+import org.wsml.reasoner.transformation.le.common.AtomAnonymousIDRule;
 import org.wsmo.wsml.ParserException;
 
 
