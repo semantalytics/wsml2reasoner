@@ -26,10 +26,14 @@ package org.wsml.reasoner.transformation;
 import java.util.HashSet;
 import java.util.Set;
 import junit.framework.TestCase;
+
+import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
+import org.wsmo.wsml.ParserException;
 
 
 
@@ -49,7 +53,6 @@ public class ConstraintReplacementNormalizerTest extends TestCase {
 		super.setUp();
 		WSMO4JManager wsmoManager = new WSMO4JManager();
 		normalizer = new ConstraintReplacementNormalizer(wsmoManager);
-
 		wsmoFactory = wsmoManager.getWSMOFactory();
 		leFactory = wsmoManager.getLogicalExpressionFactory();
 	}
@@ -63,27 +66,26 @@ public class ConstraintReplacementNormalizerTest extends TestCase {
 		
 	}
 
-//	public void testInsertViolationsAxiom() {
-//		Set<Axiom> axioms = new HashSet<Axiom>();
-//
-//		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
-//		
-//		// Should always have the violation constraints in an anonymous axiom
-//		assertEquals(1, out.size() );
-//		
-//		Axiom violationsAxiom = out.iterator().next();
-//		
-//		// This axiom should be anonymous
-//		assertEquals( "_#", violationsAxiom.getIdentifier().toString() );
-//		
-//		Set<LogicalExpression> les = violationsAxiom.listDefinitions();
-//		
-////		for( LogicalExpression le : les ){
-////			System.out.println(le.toString());
-//		
-//		
-////		}
-//	}
+	public void testInsertViolationsAxiom() {
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		
+		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
+		
+		// Should always have the violation constraints in an anonymous axiom
+		assertEquals(1, out.size() );
+		
+		Axiom violationsAxiom = out.iterator().next();
+		
+		// This axiom should be anonymous
+		assertEquals( "_#", violationsAxiom.getIdentifier().toString() );
+		
+		Set<LogicalExpression> les = violationsAxiom.listDefinitions();
+		
+		for( LogicalExpression le : les ){
+			assertTrue(le.toString().contains("/VIOLATION"));
+		}
+		assertEquals(5, les.size());
+	}
 
 	public void testEmptyAxiomsAreIgnored() {
 		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom_empty" ));
@@ -94,10 +96,23 @@ public class ConstraintReplacementNormalizerTest extends TestCase {
 			assertFalse(ax.getIdentifier().toString().equals(axiom1.getIdentifier().toString()));
 		}
 		assertEquals(1,out.size());
-
 	}
 
-	public void testConstraintsAreReplaced() {
+	public void testConstraintsAreReplaced() throws ParserException {
+		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(AnonymousIdUtils.MINCARD_PREFIX + "axiom_mincard" ));
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		axiom1.addDefinition(LETestHelper.buildLE("!- _\"urn:a\" memberOf _#"));
+		axioms.add(axiom1);
+		
+		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
+		
+		for(Axiom ax : out) {
+//			System.out.println(ax.getIdentifier().toString());
+			for(LogicalExpression le : ax.listDefinitions()){
+				System.out.println(le.toString());
+			}
+		}
+		
 	}
 
 //	public void testNormalizeAxiomsNormalAxiom() {
