@@ -71,9 +71,8 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
     public Set<Axiom> normalizeAxioms(Collection<Axiom> theAxioms) {
         Set<Axiom> result = new HashSet<Axiom>();
 
-        List<LogicalExpression> tempHolder = new ArrayList<LogicalExpression>();
         for (Axiom axiom : theAxioms) {
-            tempHolder.clear(); // clear any content if exists
+        	List<LogicalExpression> tempHolder = new ArrayList<LogicalExpression>();
 
             for (LogicalExpression definition : axiom.listDefinitions()) {
                 if (definition instanceof Constraint) {
@@ -107,9 +106,10 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
                 }
                 result.add(normAxiom);
             }
-            else {
-                result.add(axiom);
-            }
+            // This is unlikely to ever get called. And doesn't make much sense either.
+//            else {
+//                result.add(axiom);
+//            }
         }
         Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
         for (LogicalExpression le : createMetaViolationAxioms()) {
@@ -216,7 +216,7 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
             }
             else if (conjunct instanceof CompoundMolecule) {
                 CompoundMolecule compound = (CompoundMolecule) conjunct;
-                List attrValMols = compound.listAttributeValueMolecules();
+                List<AttributeValueMolecule> attrValMols = compound.listAttributeValueMolecules();
                 AttributeValueMolecule attrValMol = (AttributeValueMolecule) (attrValMols.get(0));
                 attributeID = attrValMol.getAttribute();
             }
