@@ -23,7 +23,6 @@
 
 package org.wsml.reasoner.transformation;
 
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,25 +36,24 @@ import org.wsmo.wsml.ParserException;
 
 import junit.framework.TestCase;
 
-
 public class ConstructReductionNormalizerTest extends TestCase {
-	
+
 	private ConstructReductionNormalizer normalizer;
 	protected String ns = "http://ex.org#";
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
-	
+
 	public ConstructReductionNormalizerTest() {
 		super();
 	}
-	
+
 	protected void setUp() throws Exception {
 		super.setUp();
 		WSMO4JManager wsmoManager = new WSMO4JManager();
 		normalizer = new ConstructReductionNormalizer(wsmoManager);
-        wsmoFactory = wsmoManager.getWSMOFactory();
-        leFactory = wsmoManager.getLogicalExpressionFactory();
-      
+		wsmoFactory = wsmoManager.getWSMOFactory();
+		leFactory = wsmoManager.getLogicalExpressionFactory();
+
 	}
 
 	protected void tearDown() throws Exception {
@@ -65,332 +63,482 @@ public class ConstructReductionNormalizerTest extends TestCase {
 		wsmoFactory = null;
 
 	}
-	
-	public void testNormalizeAxioms() throws ParserException {
-		
+
+	public void testNormalizeAxiomsNegationPushRules()
+			throws ParserException {
+
 		// 
-		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom00"));
-		axiom1.addDefinition(LETestHelper.buildLE("_\"urn:a\""));
-		
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom00"));
+		axiom.addDefinition(LETestHelper.buildLE("_\"urn:a\""));
+
 		Set<Axiom> axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+		axioms.add(axiom);
 
 		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les) {
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
 				assertEquals(le.toString(), ("_\"urn:a\". "));
-				
+
 			}
 		}
-		
+
 		// doubleNegationrule
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom1"));
-		axiom1.addDefinition(LETestHelper.buildLE("naf( naf _\"urn:a\") "));
-		
+		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom1"));
+		axiom.addDefinition(LETestHelper.buildLE("naf( naf _\"urn:a\") "));
+
 		axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+		axioms.add(axiom);
 
 		out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les) {
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
 				assertEquals(le.toString(), "_\"urn:a\". ");
 			}
 		}
-		
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom2"));
-		axiom1.addDefinition(LETestHelper.buildLE("naf naf( naf _\"urn:a\") "));
-		
+
+		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom2"));
+		axiom.addDefinition(LETestHelper.buildLE("naf naf( naf _\"urn:a\") "));
+
 		axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+		axioms.add(axiom);
 
 		out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les) {
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
 				assertEquals(le.toString(), "naf _\"urn:a\". ");
 			}
 		}
-		
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom3"));
-		axiom1.addDefinition(LETestHelper.buildLE("naf naf naf( naf _\"urn:a\") "));
-		
+
+		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom3"));
+		axiom.addDefinition(LETestHelper
+				.buildLE("naf naf naf( naf _\"urn:a\") "));
+
 		axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+		axioms.add(axiom);
 
 		out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les) {
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
 				assertEquals(le.toString(), "_\"urn:a\". ");
 			}
 		}
-		
-		
+
 		// negateConjunctionRule
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom4"));
-		axiom1.addDefinition(LETestHelper.buildLE(" naf (_\"urn:a\" and _\"urn:b\")"));
-		
+		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom4"));
+		axiom.addDefinition(LETestHelper
+				.buildLE(" naf (_\"urn:a\" and _\"urn:b\")"));
+
 		axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+		axioms.add(axiom);
 
 		out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les) {
-				assertEquals(le.toString(), ("naf _\"urn:a\"\n  or\nnaf _\"urn:b\". "));
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertEquals(le.toString(),
+						("naf _\"urn:a\"\n  or\nnaf _\"urn:b\". "));
 			}
 		}
-		
+
 		// negateConjunctionRule, doubleNegationRule
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom5"));
-		axiom1.addDefinition(LETestHelper.buildLE(" naf (_\"urn:a\" and (naf (naf _\"urn:b\")))"));
-		
+		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom5"));
+		axiom.addDefinition(LETestHelper
+				.buildLE(" naf (_\"urn:a\" and (naf (naf _\"urn:b\")))"));
+
 		axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+		axioms.add(axiom);
 
 		out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les) {
-				assertEquals(le.toString(), ("naf _\"urn:a\"\n  or\nnaf _\"urn:b\". "));
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertEquals(le.toString(),
+						("naf _\"urn:a\"\n  or\nnaf _\"urn:b\". "));
 			}
 		}
-		
+
 		// NegateDisjunctionRule
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom6"));
-		axiom1.addDefinition(LETestHelper.buildLE(" naf (_\"urn:a\" or  _\"urn:b\")"));
-		
+		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom6"));
+		axiom.addDefinition(LETestHelper
+				.buildLE(" naf (_\"urn:a\" or  _\"urn:b\")"));
+
 		axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+		axioms.add(axiom);
 
 		out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les) {
-				assertEquals(le.toString(), ("naf _\"urn:a\"\n  and naf _\"urn:b\". "));
-				
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertEquals(le.toString(),
+						("naf _\"urn:a\"\n  and naf _\"urn:b\". "));
+
 			}
 		}
-		
+
 		// NegateDisjunctionRule, negateConjunctionRule, doubleNegationRule
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom7"));
-		axiom1.addDefinition(LETestHelper.buildLE(" naf (_\"urn:a\" or (naf (naf (naf(_\"urn:b\" and _\"urn:c\")))))"));
-		
+		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom7"));
+		axiom
+				.addDefinition(LETestHelper
+						.buildLE(" naf (_\"urn:a\" or (naf (naf (naf(_\"urn:b\" and _\"urn:c\")))))"));
+
 		axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+		axioms.add(axiom);
 
 		out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les) {
-				assertEquals(le.toString(), ("naf _\"urn:a\"\n  and _\"urn:b\"\n  and _\"urn:c\". "));	
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertEquals(
+						le.toString(),
+						("naf _\"urn:a\"\n  and _\"urn:b\"\n  and _\"urn:c\". "));
 			}
 		}
-		
+
+	}
+
+	public void testNormalizeAxiomsImplicationReductionRules()
+			throws ParserException {
+
 		// EquivalenceReplacementRule
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom8"));
-		axiom1.addDefinition(LETestHelper.buildLE(" _\"urn:a\" equivalent _\"urn:b\" "));
-		
-		axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom8"));
+		axiom.addDefinition(LETestHelper
+				.buildLE(" _\"urn:a\" equivalent _\"urn:b\" "));
 
-		out = normalizer.normalizeAxioms(axioms);
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		axioms.add(axiom);
+
+		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les) {
-				assertTrue(le.toString().contains("(_\"urn:a\"\nimpliedBy\n_\"urn:b\")"));
-				assertTrue(le.toString().contains("(_\"urn:b\"\nimpliedBy\n_\"urn:a\")"));
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertTrue(le.toString().contains(
+						"(_\"urn:a\"\nimpliedBy\n_\"urn:b\")"));
+				assertTrue(le.toString().contains(
+						"(_\"urn:b\"\nimpliedBy\n_\"urn:a\")"));
 			}
 		}
-		
+
 		// EquivalenceReplacementRule, doubleNegationrule
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom9"));
-		axiom1.addDefinition(LETestHelper.buildLE(" (naf (naf(_\"urn:a\"))) equivalent _\"urn:b\" "));
-		
+		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom9"));
+		axiom.addDefinition(LETestHelper
+				.buildLE(" (naf (naf(_\"urn:a\"))) equivalent _\"urn:b\" "));
+
 		axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+		axioms.add(axiom);
 
 		out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les) {
-				assertTrue(le.toString().contains("(_\"urn:a\"\nimpliedBy\n_\"urn:b\")"));
-				assertTrue(le.toString().contains("(_\"urn:b\"\nimpliedBy\n_\"urn:a\")"));
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertTrue(le.toString().contains(
+						"(_\"urn:a\"\nimpliedBy\n_\"urn:b\")"));
+				assertTrue(le.toString().contains(
+						"(_\"urn:b\"\nimpliedBy\n_\"urn:a\")"));
 			}
 		}
-		
+
 		// RightImplicationReplacementRule
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom10"));
-		axiom1.addDefinition(LETestHelper.buildLE(" _\"urn:a\" implies _\"urn:b\" "));
-		
+		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom10"));
+		axiom.addDefinition(LETestHelper
+				.buildLE(" _\"urn:a\" implies _\"urn:b\" "));
+
 		axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+		axioms.add(axiom);
 
 		out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les) {
-				assertEquals(le.toString(), ("_\"urn:b\"\nimpliedBy\n_\"urn:a\". "));
-				
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertEquals(le.toString(),
+						("_\"urn:b\"\nimpliedBy\n_\"urn:a\". "));
+
 			}
 		}
-		
-		// RightImplicationReplacementRule, doubleNegationRule 
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom11"));
-		axiom1.addDefinition(LETestHelper.buildLE(" _\"urn:a\" implies (naf (naf(_\"urn:b\")))"));
-		
+
+		// RightImplicationReplacementRule, doubleNegationRule
+		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom11"));
+		axiom.addDefinition(LETestHelper
+				.buildLE(" _\"urn:a\" implies (naf (naf(_\"urn:b\")))"));
+
 		axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+		axioms.add(axiom);
 
 		out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les) {
-				assertEquals(le.toString(), ("_\"urn:b\"\nimpliedBy\n_\"urn:a\". "));
-				
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertEquals(le.toString(),
+						("_\"urn:b\"\nimpliedBy\n_\"urn:a\". "));
+
 			}
 		}
-		
-		// RightImplicationReplacementRule, EquivalenceReplacementRule, doubleNegationRule 
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom12"));
-		axiom1.addDefinition(LETestHelper.buildLE(" (_\"urn:a\" equivalent _\"urn:c\") implies (naf (naf(_\"urn:b\")))"));
-		
+
+		// RightImplicationReplacementRule, EquivalenceReplacementRule,
+		// doubleNegationRule
+		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom12"));
+		axiom
+				.addDefinition(LETestHelper
+						.buildLE(" (_\"urn:a\" equivalent _\"urn:c\") implies (naf (naf(_\"urn:b\")))"));
+
 		axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+		axioms.add(axiom);
 
 		out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les) {
-				assertEquals(le.toString(), ("_\"urn:b\"\nimpliedBy\n(_\"urn:c\"\nimpliedBy\n_\"urn:a\")\n  and (_\"urn:a\"\nimpliedBy\n_\"urn:c\"). "));
-				
-			}
-		}
-		
-		// moleculeDecompositionRule
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom13"));
-		axiom1.addDefinition(LETestHelper.buildLE("_\"urn:a\"[_\"urn:c\" ofType _\"urn:d\"] subConceptOf _\"urn:b\" "));
-		axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertEquals(
+						le.toString(),
+						("_\"urn:b\"\nimpliedBy\n(_\"urn:c\"\nimpliedBy\n_\"urn:a\")\n  and (_\"urn:a\"\nimpliedBy\n_\"urn:c\"). "));
 
-		out = normalizer.normalizeAxioms(axioms);
-		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les) {
-				assertEquals(le, LETestHelper.buildLE("_\"urn:a\"[_\"urn:c\" ofType _\"urn:d\"] and _\"urn:a\" subConceptOf _\"urn:b\""));
 			}
 		}
+	}
 	
+	public void testNormalizeAxiomsMoleculeDecompositionRules()
+	throws ParserException {
+
+		// moleculeDecompositionRule
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom13"));
+		axiom
+				.addDefinition(LETestHelper
+						.buildLE("_\"urn:a\"[_\"urn:c\" ofType _\"urn:d\"] subConceptOf _\"urn:b\" "));
+		Set <Axiom> axioms = new HashSet<Axiom>();
+		axioms.add(axiom);
+
+		Set <Axiom> out = normalizer.normalizeAxioms(axioms);
+		for (Axiom ax : out) {
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertEquals(
+						le,
+						LETestHelper
+								.buildLE("_\"urn:a\"[_\"urn:c\" ofType _\"urn:d\"] and _\"urn:a\" subConceptOf _\"urn:b\""));
+			}
+		}
+
 		// MoleculeAnonymousIDRule
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom14"));
-		axiom1.addDefinition(LETestHelper.buildLE("_\"urn:a\" subConceptOf _#"));
+		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom14"));
+		axiom
+				.addDefinition(LETestHelper
+						.buildLE("_\"urn:a\" subConceptOf _#"));
 		axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+		axioms.add(axiom);
 
 		out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les) {
-				assertTrue(le.toString().startsWith("_\"urn:a\" subConceptOf _\"" + AnonymousIdUtils.ANONYMOUS_PREFIX));
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertTrue(le.toString().startsWith(
+						"_\"urn:a\" subConceptOf _\""
+								+ AnonymousIdUtils.ANONYMOUS_PREFIX));
 			}
 		}
-		
-		// MoleculeAnonymousIDRule,  moleculeDecompositionRule
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom15"));
-		axiom1.addDefinition(LETestHelper.buildLE("_\"urn:a\" [_\"urn:c\" hasValue _#] memberOf _#  "));
+
+		// MoleculeAnonymousIDRule, moleculeDecompositionRule
+		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom15"));
+		axiom.addDefinition(LETestHelper
+				.buildLE("_\"urn:a\" [_\"urn:c\" hasValue _#] memberOf _#  "));
 		axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+		axioms.add(axiom);
 
 		out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les) {
-				assertTrue(le.toString().contains("_\"urn:a\"[_\"urn:c\" hasValue _\"" +AnonymousIdUtils.ANONYMOUS_PREFIX ));
-				assertTrue(le.toString().contains("_\"urn:a\" memberOf _\"" + AnonymousIdUtils.ANONYMOUS_PREFIX));
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertTrue(le.toString().contains(
+						"_\"urn:a\"[_\"urn:c\" hasValue _\""
+								+ AnonymousIdUtils.ANONYMOUS_PREFIX));
+				assertTrue(le.toString().contains(
+						"_\"urn:a\" memberOf _\""
+								+ AnonymousIdUtils.ANONYMOUS_PREFIX));
 			}
 		}
-		
+
 		// AtomAnonymousIDRule
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom16"));
-		axiom1.addDefinition(LETestHelper.buildLE("_\"urn:a\"(_#)"));
+		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom16"));
+		axiom.addDefinition(LETestHelper.buildLE("_\"urn:a\"(_#)"));
 		axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+		axioms.add(axiom);
 
 		out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les) {
-				assertTrue(le.toString().startsWith("_\"urn:a\"(_\"" + AnonymousIdUtils.ANONYMOUS_PREFIX));
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertTrue(le.toString().startsWith(
+						"_\"urn:a\"(_\"" + AnonymousIdUtils.ANONYMOUS_PREFIX));
 			}
 		}
-		
-		// AtomAnonymousIDRule, doubleNegationRule 
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom17"));
-		axiom1.addDefinition(LETestHelper.buildLE("naf (naf(_\"urn:a\"(_#)))"));
+
+		// AtomAnonymousIDRule, doubleNegationRule
+		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom17"));
+		axiom.addDefinition(LETestHelper.buildLE("naf (naf(_\"urn:a\"(_#)))"));
 		axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+		axioms.add(axiom);
 
 		out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les) {
-				assertTrue(le.toString().startsWith("_\"urn:a\"(_\"" + AnonymousIdUtils.ANONYMOUS_PREFIX));
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertTrue(le.toString().startsWith(
+						"_\"urn:a\"(_\"" + AnonymousIdUtils.ANONYMOUS_PREFIX));
 			}
 		}
-		
-		// AtomAnonymousIDRule, doubleNegationRule, RightImplicationReplacementRule
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom18"));
-		axiom1.addDefinition(LETestHelper.buildLE(" _\"urn:a\" implies naf (naf(_\"urn:b\"(_#)))"));
+
+		// AtomAnonymousIDRule, doubleNegationRule,
+		// RightImplicationReplacementRule
+		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom18"));
+		axiom.addDefinition(LETestHelper
+				.buildLE(" _\"urn:a\" implies naf (naf(_\"urn:b\"(_#)))"));
 		axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+		axioms.add(axiom);
 
 		out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les) {
-				assertTrue(le.toString().startsWith("_\"urn:b\"(_\"" + AnonymousIdUtils.ANONYMOUS_PREFIX));
-				assertTrue(le.toString().contains("impliedBy\n_\"urn:a\"" ));
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertTrue(le.toString().startsWith(
+						"_\"urn:b\"(_\"" + AnonymousIdUtils.ANONYMOUS_PREFIX));
+				assertTrue(le.toString().contains("impliedBy\n_\"urn:a\""));
 			}
 		}
-		
+	}
+
+	public void testNormalizeAxiomsMoleculeDisjunctionPullRules()
+			throws ParserException {
+
 		// ConjunctionPushRule
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom19"));
-		axiom1.addDefinition(LETestHelper.buildLE("(_\"urn:a\" or _\"urn:b\") and _\"urn:c\""));
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom19"));
+		axiom.addDefinition(LETestHelper
+				.buildLE("(_\"urn:a\" or _\"urn:b\") and _\"urn:c\""));
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		axioms.add(axiom);
+
+		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
+		for (Axiom ax : out) {
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertEquals(
+						le,
+						LETestHelper
+								.buildLE("_\"urn:c\" and _\"urn:a\" or _\"urn:c\" and _\"urn:b\""));
+
+			}
+		}
+
+		// ConjunctionPushRule, doubleNegationRule
+		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom20"));
+		axiom
+				.addDefinition(LETestHelper
+						.buildLE("((naf (naf (_\"urn:a\"))) or _\"urn:b\") and _\"urn:c\""));
 		axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+		axioms.add(axiom);
 
 		out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les) {
-				assertEquals(le, LETestHelper.buildLE("_\"urn:c\" and _\"urn:a\" or _\"urn:c\" and _\"urn:b\""));
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertEquals(
+						le,
+						LETestHelper
+								.buildLE("_\"urn:c\" and _\"urn:a\" or _\"urn:c\" and _\"urn:b\""));
+
+			}
+		}
+
+		// ConjunctionPushRule, doubleNegationRule, AtomAnonymousIDRule,
+		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom21"));
+		axiom
+				.addDefinition(LETestHelper
+						.buildLE("((naf (naf (_\"urn:a\"))) or _\"urn:b\") and _\"urn:c\"(_#, _#, _#)"));
+		axioms = new HashSet<Axiom>();
+		axioms.add(axiom);
+
+		out = normalizer.normalizeAxioms(axioms);
+		for (Axiom ax : out) {
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertTrue(le.toString().contains(
+						"_\"urn:c\"(_\"" + AnonymousIdUtils.ANONYMOUS_PREFIX));
+				assertTrue(le.toString().contains(" and _\"urn:b\""));
+			}
+		}
+	}
+
+	public void testNormalizeAxiomsMoleculeRules() throws ParserException {
+
+		// onePassReplacementNormalizer
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom22"));
+		axiom.addDefinition(LETestHelper
+				.buildLE("_\"urn:a\"[_\"urn:a\" ofType _#]"));
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		axioms.add(axiom);
+
+		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
+		for (Axiom ax : out) {
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertTrue(le.toString().startsWith(
+						"_\"urn:a\"[_\"urn:a\" ofType _\""
+								+ AnonymousIdUtils.ANONYMOUS_PREFIX));
 
 			}
 		}
 		
-			
+		
+		// not used / applied in ConstructReductionNormalizer ???? 
+		
+//		// AnonymousIDTranslator
+//		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom23"));
+//		axiom.addDefinition(LETestHelper.buildLE("_\"urn:a\"(_#1, _#2, _#3)"));
+//		axioms = new HashSet<Axiom>();
+//		axioms.add(axiom);
+//
+//		out = normalizer.normalizeAxioms(axioms);
+//		for (Axiom ax : out) {
+//			assertEquals(ax.getIdentifier().toString(), "_#");
+//			Set<LogicalExpression> les = ax.listDefinitions();
+//			for (LogicalExpression le : les) {
+//				System.out.println(le.toString());
+//				assertTrue(!le.toString().contains("_#"));
+//                assertEquals(2, le.toString().split(AnonymousIdUtils.ANONYMOUS_PREFIX).length);
+//                assertTrue(le.toString().startsWith(AnonymousIdUtils.ANONYMOUS_PREFIX));
+//				
+//			}
+//		}
+		
+		
 
 	}
 

@@ -71,43 +71,73 @@ public class AxiomatizationNormalizerTest extends TestCase {
 		
 	}
 
-	public void testNormalizeEntities() throws ParserException, IOException, InvalidModelException {
+	public void testNormalizeEntitiesAxiom() throws ParserException, IOException, InvalidModelException {
 		
 		Set<Entity> in = new HashSet<Entity>();
-		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom"));
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom01"));
+		axiom.addDefinition(LETestHelper.buildLE("!- _\"urn:a\" [_\"urn:a\" hasValue _\"urn:c\"] subConceptOf _\"urn:b\" "));
 		in.add(axiom);
-
-        Instance instance1 = wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "instance"));
-        in.add(instance1);
-        
-        Concept concept1 = wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "concept"));
-        concept1.addInstance(wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "instance")));
-        in.add(concept1);
 		
     	Set <Entity> entities = normalizer.normalizeEntities(in);
 
     	
     	for(Entity en : entities) {
-    		if( en instanceof Concept){
-    			System.out.println("Concept:  "  + en);
-    		}
-    		if( en instanceof Instance){
-    			System.out.println("Instance:  "  + en);
-    		}
-    		if( en instanceof Relation){
-    			System.out.println("Relation:  "  + en);
-    		}
-    			
-    		if( en instanceof RelationInstance){
-    			System.out.println("RelationInstance:  "  + en);
-    		}
     		if( en instanceof Axiom){
-    			System.out.println("Axiom:  "  + en);
+  
+    			Set <LogicalExpression> les = ((Axiom)en).listDefinitions();
+    			for(LogicalExpression le : les) {
+    				assertEquals(le.toString(), "!- _\"urn:a\" [_\"urn:a\" hasValue _\"urn:c\"] subConceptOf _\"urn:b\" .");
+    			}
     		}
     		
     	}
-    	
-    	
+
+	
+	}
+	
+	public void testNormalizeEntitiesConcept() throws ParserException, IOException, InvalidModelException {
+		
+		Set<Entity> in = new HashSet<Entity>();
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom_TestNormalizeEntitiesConcept"));
+		axiom.addDefinition(LETestHelper.buildLE("_\"urn:a\" "));
+		in.add(axiom);
+
+        Instance instance1 = wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "instance1"));   
+        in.add(instance1);
+        
+        Relation rel = wsmoFactory.createRelation(wsmoFactory.createIRI(ns + "relation1"));
+        in.add(rel);
+        
+        Concept concept1 = wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "concept1"));
+        concept1.addInstance(wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "instance")));
+        in.add(concept1);
+        
+    	Set <Entity> entities = normalizer.normalizeEntities(in);
+
+    	for(Entity en : entities) {
+    		if( en instanceof Concept){
+    			fail();
+    		}
+    		if( en instanceof Instance){
+    			fail();
+    		}
+    		if( en instanceof Relation){
+    			fail();
+    		}
+    			
+    		if( en instanceof RelationInstance){
+    			fail();
+    		}
+    		if( en instanceof Axiom){
+    			Set <LogicalExpression> les = ((Axiom)en).listDefinitions();
+    			for(LogicalExpression le : les) {
+    				assertEquals(le.toString(), "_\"urn:a\" .");
+    			}
+    		}
+    		
+    	}
+    	assertFalse(entities.size() == in.size());
+
 	
 	}
 	
@@ -125,6 +155,29 @@ public class AxiomatizationNormalizerTest extends TestCase {
 		set = normalizer.getAxioms(list);
 		assertEquals(set.size(), 2);
 		
+		int count = 0;
+		for(Axiom ax : set){
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for(LogicalExpression le : les){
+				if(equalsLE(le, "_# subConceptOf _\"urn:a\". ")){
+					count++;
+				}
+				if(equalsLE(le, "_# subConceptOf _\"urn:b\". ")){
+					count++;
+				}
+			}
+			
+		}
+		assertEquals(2,count);
+		
+		
+	}
+	
+	private boolean equalsLE(LogicalExpression le, String lesin) throws ParserException{
+		if (le.toString().equals(lesin))
+			return true;
+
+		return false;
 		
 	}
 	
