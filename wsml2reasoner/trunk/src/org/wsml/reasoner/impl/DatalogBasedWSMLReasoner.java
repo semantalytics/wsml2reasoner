@@ -154,7 +154,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         	return new Kaon2LPFacade( wsmoManager, config );
         case MINS:
         	return new MinsWellFoundedFacade( wsmoManager, config );
-//        case MINS_NAIVE:
+//      case MINS_NAIVE:
 //        	return new MinsWellNaive( wsmoManager, config );
         case XSB:
         	return new XSBFacade( wsmoManager, config );
