@@ -70,12 +70,16 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 		assertTrue(reasoner.checkQueryContainment(LETestHelper.buildLE("_\"urn:a\" subConceptOf _\"urn:c\""), LETestHelper.buildLE("_\"urn:a\" subConceptOf _\"urn:c\"")));
 		assertTrue(reasoner.checkQueryContainment(LETestHelper.buildLE("_\"urn:e\" subConceptOf _\"urn:d\""), LETestHelper.buildLE("_\"urn:e\" subConceptOf _\"urn:d\"")));
 		
+		assertTrue(reasoner.checkQueryContainment(LETestHelper.buildLE("_\"urn:e\" subConceptOf _\"urn:d\""), LETestHelper.buildLE("?x subConceptOf _\"urn:d\" and ?y subConceptOf _\"urn:d\"")));
+		
 		assertFalse(reasoner.checkQueryContainment(LETestHelper.buildLE("_\"urn:a\""), LETestHelper.buildLE("_\"urn:b\"")));
 		
 	}
 	
-	public void TestGetQueryContainment() throws ParserException {
-		Set<Map<Variable, Term>> set = reasoner.getQueryContainment(LETestHelper.buildLE("_\"urn:a\" subConceptOf _\"urn:c\""), LETestHelper.buildLE("_\"urn:a\" subConceptOf _\"urn:c\""));
+	public void testGetQueryContainment() throws ParserException {
+		
+		assertTrue(reasoner.checkQueryContainment(LETestHelper.buildLE("?x subConceptOf _\"urn:d\""), LETestHelper.buildLE("?x subConceptOf _\"urn:d\" and ?y subConceptOf _\"urn:d\"")));
+		Set<Map<Variable, Term>> set = reasoner.getQueryContainment(LETestHelper.buildLE("_\"urn:e\" subConceptOf _\"urn:d\""), LETestHelper.buildLE("?x subConceptOf _\"urn:d\" and _\"urn:e\" subConceptOf _\"urn:d\""));
 		System.out.println(set.size());
 		for(Map <Variable, Term> map: set ){
 			  for (Variable var : map.keySet()) {
@@ -83,8 +87,6 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 				  
 			  }
 		}
-		
-		assertTrue(false);
 		
 	}
 	
@@ -148,6 +150,7 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 		assertEquals(2,count);
 	}
 	
+
 }
 	
 
