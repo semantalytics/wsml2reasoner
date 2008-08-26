@@ -62,14 +62,7 @@ public class AxiomatizationNormalizerTest extends TestCase {
         leFactory = wsmoManager.getLogicalExpressionFactory();
 
 	}
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		normalizer = null;
-		leFactory = null;
-		wsmoFactory = null;
-		
-		
-	}
+
 
 	public void testNormalizeEntitiesAxiom() throws ParserException, IOException, InvalidModelException {
 		

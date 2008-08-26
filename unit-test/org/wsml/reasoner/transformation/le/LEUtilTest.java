@@ -44,9 +44,6 @@ public class LEUtilTest extends TestCase {
 		super.setUp();
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
 
 	public void testBuildNary() throws ParserException {
 

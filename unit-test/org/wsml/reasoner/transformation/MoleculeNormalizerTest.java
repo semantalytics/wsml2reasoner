@@ -38,7 +38,7 @@ import org.wsmo.wsml.ParserException;
 import junit.framework.TestCase;
 
 public class MoleculeNormalizerTest extends TestCase {
-	
+
 	private MoleculeNormalizer normalizer;
 	protected String ns = "http://ex.org#";
 	protected WsmoFactory wsmoFactory;
@@ -58,125 +58,132 @@ public class MoleculeNormalizerTest extends TestCase {
 
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		normalizer = null;
-		leFactory = null;
-		wsmoFactory = null;
-	}
-	
-	public void testNormalizeAxioms() throws ParserException {
-		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom1"));
-		axiom.addDefinition(LETestHelper.buildLE("_\"urn:a\" memberOf _\"urn:b\""));
+	public void testNormalizeAxiomsMemberOf() throws ParserException {
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom1"));
+		axiom.addDefinition(LETestHelper
+				.buildLE("_\"urn:a\" memberOf _\"urn:b\""));
 
 		Set<Axiom> axioms = new HashSet<Axiom>();
 		axioms.add(axiom);
 
 		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les){
-				assertEquals(le.toString(), "_\"" + FOLMoleculeDecompositionRule.isa + "\"" + "(_\"urn:a\",_\"urn:b\"). ");
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertEquals(le.toString(), "_\""
+						+ FOLMoleculeDecompositionRule.isa + "\""
+						+ "(_\"urn:a\",_\"urn:b\"). ");
 			}
 		}
-		
-		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom2"));
-		axiom.addDefinition(LETestHelper.buildLE("_\"urn:a\" subConceptOf _\"urn:b\""));
-
-		axioms = new HashSet<Axiom>();
-		axioms.add(axiom);
-
-		out = normalizer.normalizeAxioms(axioms);
-		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les){
-				assertEquals(le.toString(), "_\"" + FOLMoleculeDecompositionRule.sub + "\"" + "(_\"urn:a\",_\"urn:b\"). ");
-			}
-		}
-		
-		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom3"));
-		axiom.addDefinition(LETestHelper.buildLE("_\"urn:a\"[_\"urn:a\" impliesType _\"urn:b\"]"));
-
-		axioms = new HashSet<Axiom>();
-		axioms.add(axiom);
-
-		out = normalizer.normalizeAxioms(axioms);
-		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les){
-				assertEquals(le.toString(), "_\"" + FOLMoleculeDecompositionRule.impliesType + "\"" + "(_\"urn:a\",_\"urn:a\",_\"urn:b\"). ");
-			}
-		}
-		
-		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom4"));
-		axiom.addDefinition(LETestHelper.buildLE("_\"urn:a\"[_\"urn:a\" ofType _\"urn:b\"]"));
-
-		axioms = new HashSet<Axiom>();
-		axioms.add(axiom);
-
-		out = normalizer.normalizeAxioms(axioms);
-		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les){
-				assertEquals(le.toString(), "_\"" + FOLMoleculeDecompositionRule.ofType + "\"" + "(_\"urn:a\",_\"urn:a\",_\"urn:b\"). ");
-			}
-		}
-		
-		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom5"));
-		axiom.addDefinition(LETestHelper.buildLE("_\"urn:a\"[_\"urn:a\" ofType _\"urn:b\"]"));
-
-		axioms = new HashSet<Axiom>();
-		axioms.add(axiom);
-
-		out = normalizer.normalizeAxioms(axioms);
-		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les){
-				assertEquals(le.toString(), "_\"" + FOLMoleculeDecompositionRule.ofType + "\"" + "(_\"urn:a\",_\"urn:a\",_\"urn:b\"). ");
-			}
-		}
-		
-		
-		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom6"));
-		axiom.addDefinition(LETestHelper.buildLE("!- _\"urn:a\" memberOf _\"urn:b\"" ));
-
-		axioms = new HashSet<Axiom>();
-		axioms.add(axiom);
-
-		out = normalizer.normalizeAxioms(axioms);
-		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les){
-				assertEquals(le.toString(), "!- _\"" + FOLMoleculeDecompositionRule.isa + "\"" + "(_\"urn:a\",_\"urn:b\"). ");
-			}
-		}
-		
-		// anonymousIDTranslator 
-		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom7"));
-		axiom.addDefinition(LETestHelper.buildLE("!- _\"urn:a\" memberOf _\"urn:b\"(_#1, _#2, _#3)" ));
-
-		axioms = new HashSet<Axiom>();
-		axioms.add(axiom);
-
-		out = normalizer.normalizeAxioms(axioms);
-		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			for(LogicalExpression le : les){
-				assertEquals(le.toString(), "!- _\"" + FOLMoleculeDecompositionRule.isa + "\"" + "(_\"urn:a\",_\"urn:b\"(_#1,_#2,_#3)). ");
-			}
-		}
-		
-		
-		
 	}
 
-	
+	public void testNormalizeAxiomsSubConceptOf() throws ParserException {
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom2"));
+		axiom.addDefinition(LETestHelper
+				.buildLE("_\"urn:a\" subConceptOf _\"urn:b\""));
+
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		axioms.add(axiom);
+
+		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
+		for (Axiom ax : out) {
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertEquals(le.toString(), "_\""
+						+ FOLMoleculeDecompositionRule.sub + "\""
+						+ "(_\"urn:a\",_\"urn:b\"). ");
+			}
+		}
+	}
+
+	public void testNormalizeAxiomsImpliesType() throws ParserException {
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom3"));
+		axiom.addDefinition(LETestHelper
+				.buildLE("_\"urn:a\"[_\"urn:a\" impliesType _\"urn:b\"]"));
+
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		axioms.add(axiom);
+
+		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
+		for (Axiom ax : out) {
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertEquals(le.toString(), "_\""
+						+ FOLMoleculeDecompositionRule.impliesType + "\""
+						+ "(_\"urn:a\",_\"urn:a\",_\"urn:b\"). ");
+			}
+		}
+	}
+
+	public void testNormalizeAxiomsOfType() throws ParserException {
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom4"));
+		axiom.addDefinition(LETestHelper
+				.buildLE("_\"urn:a\"[_\"urn:a\" ofType _\"urn:b\"]"));
+
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		axioms.add(axiom);
+
+		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
+		for (Axiom ax : out) {
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertEquals(le.toString(), "_\""
+						+ FOLMoleculeDecompositionRule.ofType + "\""
+						+ "(_\"urn:a\",_\"urn:a\",_\"urn:b\"). ");
+			}
+		}
+	}
+
+
+	public void testNormalizeAxiomsMemberOfconstraint() throws ParserException {
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom6"));
+		axiom.addDefinition(LETestHelper
+				.buildLE("!- _\"urn:a\" memberOf _\"urn:b\""));
+
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		axioms.add(axiom);
+
+		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
+		for (Axiom ax : out) {
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertEquals(le.toString(), "!- _\""
+						+ FOLMoleculeDecompositionRule.isa + "\""
+						+ "(_\"urn:a\",_\"urn:b\"). ");
+			}
+		}
+	}
+
+	public void testNormalizeAxiomsMemberOfAnonymousID() throws ParserException {
+		// anonymousIDTranslator
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom7"));
+		axiom.addDefinition(LETestHelper
+				.buildLE("!- _\"urn:a\" memberOf _\"urn:b\"(_#1, _#2, _#3)"));
+
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		axioms.add(axiom);
+
+		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
+		for (Axiom ax : out) {
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			for (LogicalExpression le : les) {
+				assertEquals(le.toString(), "!- _\""
+						+ FOLMoleculeDecompositionRule.isa + "\""
+						+ "(_\"urn:a\",_\"urn:b\"(_#1,_#2,_#3)). ");
+			}
+		}
+	}
 
 }

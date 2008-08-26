@@ -36,7 +36,6 @@ import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
 
-
 public class LloydToporNormalizerTest extends TestCase {
 
 	protected LloydToporNormalizer normalizer;
@@ -58,206 +57,227 @@ public class LloydToporNormalizerTest extends TestCase {
 
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		normalizer = null;
-		leFactory = null;
-		wsmoFactory = null;
-	}
-
-	public void testNormalizeAxioms() throws ParserException {
+	public void testNormalizeAxiomsTopDownLESplitter() throws ParserException {
 		// TopDownLESplitter:
-		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom"));
-		axiom1.addDefinition(LETestHelper.buildLE("_\"urn:a\" and _\"urn:b\" and _\"urn:c\" and _\"urn:f\" :- _\"urn:d\""));
-		
+		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom"));
+		axiom1
+				.addDefinition(LETestHelper
+						.buildLE("_\"urn:a\" and _\"urn:b\" and _\"urn:c\" and _\"urn:f\" :- _\"urn:d\""));
+
 		Set<Axiom> axioms = new HashSet<Axiom>();
 		axioms.add(axiom1);
 
+		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
+		for (Axiom ax : out) {
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			int all = 0;
+			for (LogicalExpression le : les) {
+				if (checkContains(le, "_\"urn:f\"\n:-\n_\"urn:d\". ")) {
+					all++;
+				}
+				if (checkContains(le, "_\"urn:a\"\n:-\n_\"urn:d\". ")) {
+					all++;
+				}
+				if (checkContains(le, "_\"urn:b\"\n:-\n_\"urn:d\". ")) {
+					all++;
+				}
+				if (checkContains(le, "_\"urn:c\"\n:-\n_\"urn:d\". ")) {
+					all++;
+				}
+
+			}
+			assertEquals(4, all);
+
+		}
+	}
+
+	public void testNormalizeAxiomsSplitDisjunctiveBody()
+			throws ParserException {
+
+		// splitDisjunctiveBody
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom2"));
+		axiom
+				.addDefinition(LETestHelper
+						.buildLE("_\"urn:a\" :- _\"urn:b\" or (_\"urn:c\" and _\"urn:f\" and _\"urn:d\")"));
+
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		axioms.add(axiom);
 
 		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
 			int all = 0;
-			for(LogicalExpression le : les) {
-				if(checkContains(le ,"_\"urn:f\"\n:-\n_\"urn:d\". ")){
+			for (LogicalExpression le : les) {
+				if (checkContains(le, "_\"urn:a\"\n:-\n_\"urn:b\". ")) {
 					all++;
 				}
-				if (checkContains(le ,"_\"urn:a\"\n:-\n_\"urn:d\". ")){
+				if (checkContains(le,
+						"_\"urn:a\"\n:-\n_\"urn:c\"\n  and _\"urn:f\"\n  and _\"urn:d\". ")) {
 					all++;
 				}
-				if (checkContains(le ,"_\"urn:b\"\n:-\n_\"urn:d\". ")){
-					all++;
-				}
-				if (checkContains(le ,"_\"urn:c\"\n:-\n_\"urn:d\". ")){
-					all++;
-				}
-				
-			}
-			assertEquals(4,all);
-			
-		}
-		
-		// splitDisjunctiveBody
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom2"));
-		axiom1.addDefinition(LETestHelper.buildLE("_\"urn:a\" :- _\"urn:b\" or (_\"urn:c\" and _\"urn:f\" and _\"urn:d\")"));
-		
-	    axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
 
-
-		out = normalizer.normalizeAxioms(axioms);
-		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
-			int all = 0;
-			for(LogicalExpression le : les) {
-				if(checkContains(le ,"_\"urn:a\"\n:-\n_\"urn:b\". ")){
-					all++;
-				}
-				if(checkContains(le ,"_\"urn:a\"\n:-\n_\"urn:c\"\n  and _\"urn:f\"\n  and _\"urn:d\". ")){
-					all++;
-				}
-				
 			}
-			assertEquals(2,all);
+			assertEquals(2, all);
 		}
-		
-		
+	}
+
+	public void testNormalizeAxiomsSplitConstraint() throws ParserException {
+
 		// SplitConstraint
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom3"));
-		axiom1.addDefinition(LETestHelper.buildLE("!- _\"urn:a\" or _\"urn:b\" and _\"urn:c\" "));
-		
-	    axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom3"));
+		axiom.addDefinition(LETestHelper
+				.buildLE("!- _\"urn:a\" or _\"urn:b\" and _\"urn:c\" "));
 
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		axioms.add(axiom);
 
-		out = normalizer.normalizeAxioms(axioms);
+		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
 			int all = 0;
-			for(LogicalExpression le : les) {
-				if(checkContains(le ,"!- _\"urn:a\". ")){
+			for (LogicalExpression le : les) {
+				if (checkContains(le, "!- _\"urn:a\". ")) {
 					all++;
 				}
-				if(checkContains(le ,"!- _\"urn:a\"\n  and _\"urn:c\". ")){
-					
+				if (checkContains(le, "!- _\"urn:a\"\n  and _\"urn:c\". ")) {
+
 					all++;
 				}
-				
+
 			}
-			assertEquals(1,all);
+			assertEquals(1, all);
 		}
-		
+	}
+
+	public void testNormalizeAxiomsSplitConjunctiveHead()
+			throws ParserException {
+
 		// SplitConjunctiveHead
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom4"));
-		axiom1.addDefinition(LETestHelper.buildLE("_\"urn:a\" and _\"urn:b\" and _\"urn:c\" :- _\"urn:d\""));
-		
-	    axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom4"));
+		axiom
+				.addDefinition(LETestHelper
+						.buildLE("_\"urn:a\" and _\"urn:b\" and _\"urn:c\" :- _\"urn:d\""));
 
-		out = normalizer.normalizeAxioms(axioms);
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		axioms.add(axiom);
+
+		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
 			int all = 0;
-			for(LogicalExpression le : les) {
-				if(checkContains(le ,"_\"urn:a\"\n:-\n_\"urn:d\". ")){
+			for (LogicalExpression le : les) {
+				if (checkContains(le, "_\"urn:a\"\n:-\n_\"urn:d\". ")) {
 					all++;
 				}
-				if(checkContains(le ,"_\"urn:b\"\n:-\n_\"urn:d\". ")){
+				if (checkContains(le, "_\"urn:b\"\n:-\n_\"urn:d\". ")) {
 					all++;
 				}
-				if(checkContains(le ,"_\"urn:c\"\n:-\n_\"urn:d\". ")){	
+				if (checkContains(le, "_\"urn:c\"\n:-\n_\"urn:d\". ")) {
 					all++;
 				}
-				
+
 			}
-			assertEquals(3,all);
+			assertEquals(3, all);
 		}
-		
-		
+	}
+
+	public void testNormalizeAxiomsTransformNestedImplication()
+			throws ParserException {
+
 		// TransformNestedImplication
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom5"));
-		axiom1.addDefinition(LETestHelper.buildLE("_\"urn:a\" impliedBy _\"urn:b\" :- _\"urn:c\""));
-		
-	    axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom5"));
+		axiom.addDefinition(LETestHelper
+				.buildLE("_\"urn:a\" impliedBy _\"urn:b\" :- _\"urn:c\""));
 
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		axioms.add(axiom);
 
-		out = normalizer.normalizeAxioms(axioms);
+		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
 			int all = 0;
-			for(LogicalExpression le : les) {
-				if(checkContains(le ,"_\"urn:a\"\n:-\n_\"urn:b\"\n  and _\"urn:c\". ")){
+			for (LogicalExpression le : les) {
+				if (checkContains(le,
+						"_\"urn:a\"\n:-\n_\"urn:b\"\n  and _\"urn:c\". ")) {
 					all++;
 				}
 			}
-			assertEquals(1,all);
+			assertEquals(1, all);
 		}
-		
+	}
+
+	public void testNormalizeAxiomsSplitConjunction() throws ParserException {
 		// SplitConjunction
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom6"));
-		axiom1.addDefinition(LETestHelper.buildLE("_\"urn:a\" and _\"urn:b\" and _\"urn:c\""));
-		
-	    axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom6"));
+		axiom.addDefinition(LETestHelper
+				.buildLE("_\"urn:a\" and _\"urn:b\" and _\"urn:c\""));
 
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		axioms.add(axiom);
 
-		out = normalizer.normalizeAxioms(axioms);
+		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
 			int all = 0;
-			for(LogicalExpression le : les) {
-				if(checkContains(le ,"_\"urn:a\". ")){
+			for (LogicalExpression le : les) {
+				if (checkContains(le, "_\"urn:a\". ")) {
 					all++;
 				}
-				if(checkContains(le ,"_\"urn:b\". ")){
+				if (checkContains(le, "_\"urn:b\". ")) {
 					all++;
 				}
-				if(checkContains(le ,"_\"urn:c\". ")){
+				if (checkContains(le, "_\"urn:c\". ")) {
 					all++;
 				}
 			}
-			assertEquals(3,all);
+			assertEquals(3, all);
 		}
-		
-		
+	}
+
+	public void testNormalizeAxiomsTransformImplication()
+			throws ParserException {
+
 		// TransformImplication
-		axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom7"));
-		axiom1.addDefinition(LETestHelper.buildLE("_\"urn:a\" impliedBy _\"urn:b\""));
-		
-	    axioms = new HashSet<Axiom>();
-		axioms.add(axiom1);
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom7"));
+		axiom.addDefinition(LETestHelper
+				.buildLE("_\"urn:a\" impliedBy _\"urn:b\""));
 
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		axioms.add(axiom);
 
-		out = normalizer.normalizeAxioms(axioms);
+		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
 		for (Axiom ax : out) {
-			assertEquals(ax.getIdentifier().toString(),"_#");
-			Set <LogicalExpression> les = ax.listDefinitions();
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
 			int all = 0;
-			for(LogicalExpression le : les) {
-				System.out.println(le);
-				if(checkContains(le ,"_\"urn:a\"\n:-\n_\"urn:b\". ")){
+			for (LogicalExpression le : les) {
+				if (checkContains(le, "_\"urn:a\"\n:-\n_\"urn:b\". ")) {
 					all++;
 				}
-				
+
 			}
-			assertEquals(1,all);
+			assertEquals(1, all);
 		}
-		
-		
 
 	}
-	
+
 	private boolean checkContains(LogicalExpression le, String g) {
-		if(le.toString().equals(g))
+		if (le.toString().equals(g))
 			return true;
-		
+
 		return false;
 	}
 
