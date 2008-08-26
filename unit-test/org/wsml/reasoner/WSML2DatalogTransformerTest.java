@@ -60,10 +60,10 @@ public class WSML2DatalogTransformerTest extends TestCase {
         wsmoFactory = wsmoManager.getWSMOFactory();
         leFactory = wsmoManager.getLogicalExpressionFactory();
         
-        ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ont" + System.currentTimeMillis()));
+        ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ont"));
         ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));	
         
-        axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom" + System.currentTimeMillis()));
+        axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom" ));
         ontology.addAxiom(axiom);
 	}
 
