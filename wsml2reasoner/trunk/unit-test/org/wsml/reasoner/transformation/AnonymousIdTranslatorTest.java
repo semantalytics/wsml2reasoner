@@ -52,10 +52,6 @@ public class AnonymousIdTranslatorTest extends TestCase {
 		
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		translator = null;
-	}
 	
 	public void testTranslateTerm() throws ParserException {
 		
