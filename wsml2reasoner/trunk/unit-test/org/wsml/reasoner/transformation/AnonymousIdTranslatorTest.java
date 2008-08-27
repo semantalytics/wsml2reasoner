@@ -52,8 +52,25 @@ public class AnonymousIdTranslatorTest extends TestCase {
 		
 	}
 
+	public void testTranslateTermNumberedAnonymous() throws ParserException {
+		
+		LogicalExpression in = LETestHelper.buildLE("_\"urn:a\"(_#)");
+		Atom atom = (Atom) in;
+		int i = 0;
+		for (i = 0; i < atom.getArity(); i++) {
+            Term term = atom.getParameter(i);
+            if (term instanceof Identifier) {
+                term = translator.translate(term);
+                assertTrue(!term.toString().contains("_#"));
+                assertEquals(2, term.toString().split(AnonymousIdUtils.ANONYMOUS_PREFIX).length);
+                assertTrue(term.toString().startsWith(AnonymousIdUtils.ANONYMOUS_PREFIX));
+            }
+        }
+		assertEquals(1,i);
+       
+	}
 	
-	public void testTranslateTerm() throws ParserException {
+	public void testTranslateTermAnonymousID() throws ParserException {
 		
 		
 		LogicalExpression in = LETestHelper.buildLE("_\"urn:a\"(_#, _#, _#)");
@@ -72,8 +89,13 @@ public class AnonymousIdTranslatorTest extends TestCase {
         }
 		assertEquals(i,3);
 		
-		in = LETestHelper.buildLE("_\"urn:a\"(_#1, _#2, _#3)");
-		atom = (Atom) in;
+	}
+	
+	public void testTranslateTermNumberedAnonymousID() throws ParserException {
+		
+		LogicalExpression in = LETestHelper.buildLE("_\"urn:a\"(_#1, _#2, _#3)");
+		Atom atom = (Atom) in;
+		int i = 0;
 		for (i = 0; i < atom.getArity(); i++) {
             Term term = atom.getParameter(i);
             if (term instanceof Identifier) {

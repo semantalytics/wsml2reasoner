@@ -31,6 +31,7 @@ import junit.framework.TestCase;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
+import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Relation;
 import org.omwg.ontology.RelationInstance;
 import org.wsml.reasoner.impl.WSMO4JManager;
@@ -63,14 +64,25 @@ public class WSMLDLLogExprNormalizerTest extends TestCase {
 	
     public void testNormalizeEntities() throws IOException, ParserException, InvalidModelException {
     
+    	Ontology ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ont"));
+	    ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));	
+	    
     	Set<Entity> in = new HashSet<Entity>();
-    	Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom" + System.currentTimeMillis()));
-    	in.add(axiom);
+    	Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom01"));
+    	axiom.setOntology(ontology);
+    	ontology.addAxiom(axiom);
 
-        Instance instance1 = wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "instance" + System.currentTimeMillis()));
-        in.add(instance1);
+        Instance instance1 = wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "instance01"));
+        instance1.setOntology(ontology);
+        ontology.addInstance(instance1);
         
-        Concept concept1 = wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "concept" + System.currentTimeMillis()));
+        Concept concept1 = wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "concept01"));
+        concept1.setOntology(ontology);
+        ontology.addConcept(concept1);
+       
+        
+        in.add(axiom);
+        in.add(instance1);
         in.add(concept1);
        
     	
