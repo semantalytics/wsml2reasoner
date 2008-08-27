@@ -211,7 +211,7 @@ public abstract class InfixOrderLogicalExpressionVisitor implements Visitor {
     }
 
     private void visitOperands(CompoundExpression arg0) {
-        for (Iterator i = arg0.listOperands().iterator(); i.hasNext();) {
+        for (Iterator<LogicalExpression> i = arg0.listOperands().iterator(); i.hasNext();) {
             LogicalExpression operand = (LogicalExpression) i.next();
             operand.accept(this);
         }
