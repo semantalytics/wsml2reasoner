@@ -46,11 +46,7 @@ public class MoleculeDecompositionRuleTest extends TestCase{
 	        WSMO4JManager wsmoManager = new WSMO4JManager();
 	        this.rule = new MoleculeDecompositionRule(wsmoManager);
 	   }
-	    
-	   protected void tearDown() throws Exception {
-	        super.tearDown();
-	        this.rule = null;
-	   }
+	 
 	    
 	    public void testIsApplicable() throws ParserException {
 	    	

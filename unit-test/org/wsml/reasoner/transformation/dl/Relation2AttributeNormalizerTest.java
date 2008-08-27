@@ -62,11 +62,6 @@ public class Relation2AttributeNormalizerTest extends TestCase {
 	
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		normalizer = null;
-
-	}
 
 	public void testNormalizeEntities() throws IOException, ParserException, InvalidModelException  {
 

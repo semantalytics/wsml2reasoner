@@ -41,10 +41,6 @@ public class NegationPushRulesTest extends TestCase {
         this.rules = new NegationPushRules(new WSMO4JManager());
     }
     
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        this.rules = null;
-    }
     
     public void testGetRules() throws ParserException {
         assertEquals(3, rules.getRules().size());

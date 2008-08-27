@@ -46,11 +46,7 @@ public class AtomAnonymousIDRuleTest extends TestCase {
         WSMO4JManager wsmoManager = new WSMO4JManager();
         this.rule = new AtomAnonymousIDRule(wsmoManager, new AnonymousIdTranslator(wsmoManager.getWSMOFactory()));
     }
-    
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        this.rule = null;
-    }
+   
     
     public void testIsApplicable() throws ParserException {
         assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" subConceptOf _#")));

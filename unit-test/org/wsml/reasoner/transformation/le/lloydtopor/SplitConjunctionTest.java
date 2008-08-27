@@ -45,10 +45,6 @@ public class SplitConjunctionTest extends TestCase {
         this.rule = new SplitConjunction();
     }
     
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        this.rule = null;
-    }
     
     public void testIsApplicable() throws ParserException {
           assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\"")));

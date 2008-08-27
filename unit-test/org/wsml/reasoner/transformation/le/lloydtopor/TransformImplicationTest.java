@@ -45,10 +45,6 @@ public class TransformImplicationTest extends TestCase {
 		this.rule = new TransformImplication(new WSMO4JManager());
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		this.rule = null;
-	}
 
 	public void testIsApplicable() throws ParserException {
 		assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\"")));
