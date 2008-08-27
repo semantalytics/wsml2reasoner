@@ -188,7 +188,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         return consTime;
     }
 
-    Set<org.wsml.reasoner.Rule> convertEntities(Set<Entity> theEntities) {
+    protected Set<org.wsml.reasoner.Rule> convertEntities(Set<Entity> theEntities) {
         Set<org.wsml.reasoner.Rule> p = new HashSet<org.wsml.reasoner.Rule>();
 
         long normTime_start = System.currentTimeMillis();

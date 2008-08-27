@@ -150,6 +150,11 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 		assertEquals(2,count);
 	}
 	
+	public void testConvertEntities() {
+		
+		reasoner.convertEntities(null);
+	}
+	
 
 }
 	
