@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.wsml.reasone.impl;
+package org.wsml.reasoner.impl;
 
 import java.util.HashMap;
 import java.util.HashSet;
