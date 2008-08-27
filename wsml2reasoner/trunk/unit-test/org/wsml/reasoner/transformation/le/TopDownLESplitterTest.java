@@ -46,13 +46,6 @@ public class TopDownLESplitterTest extends TestCase {
 		LloydToporRules lloydToporRules = new LloydToporRules(wsmoManager);
 		splitter = new TopDownLESplitter(lloydToporRules.getRules());
 	}
-
-
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		splitter = null;
-	}
-	
 	
 	public void testTransform() throws ParserException {	
 		

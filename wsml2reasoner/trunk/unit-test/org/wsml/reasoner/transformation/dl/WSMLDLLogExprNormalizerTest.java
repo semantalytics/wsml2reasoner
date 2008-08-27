@@ -60,14 +60,6 @@ public class WSMLDLLogExprNormalizerTest extends TestCase {
       
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		normalizer = null;
-		leFactory = null;
-		wsmoFactory = null;
-
-	}
-	
 	
     public void testNormalizeEntities() throws IOException, ParserException, InvalidModelException {
     

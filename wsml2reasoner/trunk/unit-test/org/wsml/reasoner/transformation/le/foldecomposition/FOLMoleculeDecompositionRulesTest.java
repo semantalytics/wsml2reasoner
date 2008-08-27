@@ -45,11 +45,6 @@ public class FOLMoleculeDecompositionRulesTest extends TestCase {
         this.rule = new FOLMoleculeDecompositionRule(wsmoManager);
     }
     
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        this.rule = null;
-    }
-    
     public void testIsApplicable() throws ParserException {
         assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\"(_#)")));
         assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\"(_#, _#)")));

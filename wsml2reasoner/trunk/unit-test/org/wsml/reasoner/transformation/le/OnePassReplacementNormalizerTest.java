@@ -47,13 +47,6 @@ public class OnePassReplacementNormalizerTest extends TestCase {
 		super.setUp();
 		
 	}
-
-
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		normalizer = null;
-	}
-	
 	
 	public void testNormalize() throws ParserException {
 		WSMO4JManager wsmoManager = new WSMO4JManager();
