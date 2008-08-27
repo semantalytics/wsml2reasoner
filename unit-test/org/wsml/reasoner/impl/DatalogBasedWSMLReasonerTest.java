@@ -1,12 +1,34 @@
 /**
+ * WSML2Reasoner
+ * An extensible framework for reasoning with WSML ontologies.
  * 
+ * Copyright (C) 2008 Semantic Technology Institute (STI) Innsbruck, 
+ * University of Innsbruck, Technikerstrasse 21a, 6020 Innsbruck, Austria.
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
+ * MA  02110-1301, USA.
  */
+
 package org.wsml.reasoner.impl;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import junit.framework.TestCase;
 
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
@@ -16,16 +38,11 @@ import org.omwg.ontology.Variable;
 import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
-import org.wsml.reasoner.impl.DatalogBasedWSMLReasoner;
-import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.common.Entity;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
-
-import junit.framework.TestCase;
 
 public class DatalogBasedWSMLReasonerTest extends TestCase {
 	
@@ -81,27 +98,27 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 	public void testGetQueryContainment() throws ParserException {
 		
 		assertTrue(reasoner.checkQueryContainment(LETestHelper.buildLE("?x subConceptOf _\"urn:d\""), LETestHelper.buildLE("?x subConceptOf _\"urn:d\" and ?y subConceptOf _\"urn:d\"")));
-		Set<Map<Variable, Term>> set = reasoner.getQueryContainment(LETestHelper.buildLE("_\"urn:e\" subConceptOf _\"urn:d\""), LETestHelper.buildLE("?x subConceptOf _\"urn:d\" and _\"urn:e\" subConceptOf _\"urn:d\""));
-		assertEquals(2,set.size());
-		for(Map <Variable, Term> map: set ){
-			  for (Variable var : map.keySet()) {
-				  System.out.println(var +" ; " + map.get(var));
-				  
-			  }
-		}
+		
+//		Set<Map<Variable, Term>> set = reasoner.getQueryContainment(LETestHelper.buildLE("_\"urn:e\" subConceptOf _\"urn:d\""), LETestHelper.buildLE("?x subConceptOf _\"urn:d\" and _\"urn:e\" subConceptOf _\"urn:d\""));
+		Set<Map<Variable, Term>> set = reasoner.getQueryContainment(LETestHelper.buildLE("?x subConceptOf _\"urn:d\" and ?x subConceptOf _\"urn:d\""), LETestHelper.buildLE("?x subConceptOf _\"urn:d\""));
+		assertEquals(0,set.size());
+//		for(Map <Variable, Term> map: set ){
+//			  for (Variable var : map.keySet()) {
+//				  System.out.println(var +" ; " + map.get(var));
+//				  
+//			  }
+//		}
 		
 	}
-	
+
 	public void testCheckConsistency() {
 		
 		Set<ConsistencyViolation> viols = reasoner.checkConsistency();
 		
 		for(ConsistencyViolation vio : viols) {
-//			System.out.println(vio.toString());
-			fail();
+			assertEquals(vio, null);
 			
 		}
-
 	}
 	
 	public void testEntails() throws ParserException {
@@ -152,14 +169,49 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 		assertEquals(2,count);
 	}
 	
-	public void testConvertEntities01() {
+	public void testConvertEntitiesStdRules() {
 		
 		Set<Entity> in = new HashSet<Entity>();
 		
 		Set<Rule> out = reasoner.convertEntities(in);
-		int rules = 0;
+		// test if out contains standard rules 
+		assertTrue(containStdRules(out));
+	}
 	
+	
+	public void testConvertEntities() throws ParserException {
+		
+		Set<Entity> in = new HashSet<Entity>();
+		
+
+//      Variable Concept01 = leFactory.createVariable("concept88");
+//      Variable Concept02 = leFactory.createVariable("concept99");
+//		
+//		List<Literal> body = new LinkedList<Literal>();
+//		Literal head = new Literal(true, WSML2DatalogTransformer.PRED_SUB_CONCEPT_OF, Concept01, Concept02);
+//		
+//		Rule rule = new Rule(head,body);
+		
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns+ "axiom00"));
+		axiom.addDefinition(LETestHelper.buildLE("?concept99 subConceptOf ?concept99"));
+//		axiom.addDefinition(rule);
+		in.add(axiom);
+//		in.add((Entity) rule);
+		
+		Set<Rule> out = reasoner.convertEntities(in);
+		assertTrue(containStdRules(out));
+		
 		for(Rule r : out) {
+			System.out.println(r.toString());
+		}
+		
+		
+	}
+	
+	private boolean containStdRules(Set<Rule> theRules){
+		int rules = 0;
+		
+		for(Rule r : theRules) {
 			// test if out contains standard rules
 			if(r.getHead().toString().equals("http://www.wsmo.org/reasoner/VIOLATION()") && r.getBody().toString().equals("[http://www.wsmo.org/reasoner/MIN_CARD(?v1, ?v2, ?v3)]")) {
 				rules++;
@@ -232,26 +284,15 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 			else if(r.getHead().toString().equals("http://temp/indirect/subConceptOf(?concept, ?concept2)") && r.getBody().toString().equals("[wsml-subconcept-of(?concept, ?concept3), wsml-subconcept-of(?concept3, ?concept2), http://www.wsmo.org/wsml/wsml-syntax#inequal(?concept, ?concept3), http://www.wsmo.org/wsml/wsml-syntax#inequal(?concept3, ?concept2)]")) {
 				rules++;
 			}
+		
 		}
-		assertEquals(18,rules);
-
+		
+		if(rules == 18) {
+			return true;
+		}
+		
+		return false;
 	}
-	
-//	public void testConvertEntities02() throws ParserException {
-//		
-//		Set<Entity> in = new HashSet<Entity>();
-//		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns+ "axiom00"));
-//		axiom.addDefinition(LETestHelper.buildLE("?concept99 subConceptOf ?concept99"));
-//		in.add(axiom);
-//		
-//		Set<Rule> out = reasoner.convertEntities(in);
-//		
-//		for(Rule r : out) {
-//			System.out.println(r.toString());
-//		}
-//		
-//		
-//	}
 	
 }
 	

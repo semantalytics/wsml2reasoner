@@ -28,9 +28,12 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
+import org.omwg.ontology.Ontology;
+import org.omwg.ontology.Parameter;
 import org.omwg.ontology.Relation;
 import org.omwg.ontology.RelationInstance;
 import org.wsml.reasoner.impl.WSMO4JManager;
@@ -65,16 +68,46 @@ public class Relation2AttributeNormalizerTest extends TestCase {
 
 	public void testNormalizeEntities() throws IOException, ParserException, InvalidModelException  {
 
+		Ontology ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ont"));
+	    ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));	
+	    
 		Set<Entity> in = new HashSet<Entity>();
-		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom" + System.currentTimeMillis()));
+		
+		Concept concept2 = wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "concept02"));
+		concept2.setOntology(ontology);
+		ontology.addConcept(concept2);
+		
+		Concept concept3 = wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "concept03"));
+		concept3.setOntology(ontology);
+		ontology.addConcept(concept3);
+		
+		Relation rela = wsmoFactory.createRelation(wsmoFactory.createIRI(ns + "relation1"));
+		RelationInstance reli = wsmoFactory.createRelationInstance(rela);
+		rela.addRelationInstance(reli);
+		rela.setOntology(ontology);
+		
+		Parameter p1 = rela.createParameter((byte) 0);
+		Parameter p2 = rela.createParameter((byte) 1);
+		
+		p2.addType(concept3);
+		p1.addType(concept2);
+		
+		p1.setConstraining(true);
+		p2.setConstraining(true);
+
+		
+        in.add(rela);
+			
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom01"));
+		axiom.setOntology(ontology);
 		in.add(axiom);
 		
-		Instance instance1 = wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "instance" + System.currentTimeMillis()));
+		Instance instance1 = wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "instance01" ));
 	    in.add(instance1);
 	        
-	    Concept concept1 = wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "concept" + System.currentTimeMillis()));
+	    Concept concept1 = wsmoFactory.createConcept(wsmoFactory.createIRI(ns + "concept01"));
 	    in.add(concept1);
-		
+		ontology.addConcept(concept1);
 
     	Set <Entity> entities = normalizer.normalizeEntities(in);
     	
@@ -83,8 +116,12 @@ public class Relation2AttributeNormalizerTest extends TestCase {
     	int rel = 0;
     	int rei = 0;
     	int axi = 0;
+    	int att = 0;
     	
     	for(Entity en : entities) {
+    		if(en instanceof Attribute){
+    			att++;
+    		}
     		if( en instanceof Concept){
     			con++;
     		}
@@ -99,10 +136,11 @@ public class Relation2AttributeNormalizerTest extends TestCase {
     		}
     		if( en instanceof Axiom){
     			axi++;
-    		}
-    		
+    		}		
     	}
-    	assertEquals(con,1);
+    	
+    	assertEquals(att,0);
+    	assertEquals(con,2);
     	assertEquals(ins,1);
     	assertEquals(rel,0);
     	assertEquals(rei,0);
