@@ -54,6 +54,7 @@ public interface WSMLReasonerFactory {
         XSB,
         IRIS_STRATIFIED,
         IRIS_WELL_FOUNDED,
+        IRIS_SLDNF,
         TPTP,
         SPASS
     };

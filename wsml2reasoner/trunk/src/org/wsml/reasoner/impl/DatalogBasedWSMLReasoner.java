@@ -53,6 +53,7 @@ import org.wsml.reasoner.api.inconsistency.MaxCardinalityViolation;
 import org.wsml.reasoner.api.inconsistency.MinCardinalityViolation;
 import org.wsml.reasoner.api.inconsistency.NamedUserConstraintViolation;
 import org.wsml.reasoner.api.inconsistency.UnNamedUserConstraintViolation;
+import org.wsml.reasoner.builtin.iris.IrisSLDNFFacade;
 import org.wsml.reasoner.builtin.iris.IrisStratifiedFacade;
 import org.wsml.reasoner.builtin.iris.IrisWellFoundedFacade;
 import org.wsml.reasoner.builtin.kaon2.Kaon2LPFacade;
@@ -162,6 +163,8 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         	return new IrisStratifiedFacade( wsmoManager, config );
         case IRIS_WELL_FOUNDED:
         	return new IrisWellFoundedFacade( wsmoManager, config );
+        case IRIS_SLDNF:
+        	return new IrisSLDNFFacade( wsmoManager, config );
         }
         
         throw new InternalReasonerException( "An built-in reasoner could not be instantiated. " +
