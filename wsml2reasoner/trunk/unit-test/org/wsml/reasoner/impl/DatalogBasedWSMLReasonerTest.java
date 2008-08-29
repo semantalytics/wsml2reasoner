@@ -35,6 +35,7 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
+import org.wsml.reasoner.ConjunctiveQuery;
 import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
@@ -75,6 +76,10 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 		axiom2.addDefinition(LETestHelper.buildLE("_\"urn:e\" and _\"urn:f\""));
 		axiom2.addDefinition(LETestHelper.buildLE("_\"urn:e\" memberOf _\"urn:d\""));
 		ontology.addAxiom(axiom2);
+		
+//		Axiom axiom3 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom03"));
+//		axiom1.addDefinition(LETestHelper.buildLE("?concept03 memberOf ?concept04"));
+//		ontology.addAxiom(axiom3);
 		
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER, WSMLReasonerFactory.BuiltInReasoner.IRIS_WELL_FOUNDED);
@@ -163,7 +168,6 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 				if( (map.get(var)).toString().equals("urn:a")) {
 					count++;
 				}
-				
 			}
 		}
 		assertEquals(2,count);
@@ -183,30 +187,86 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 		
 		Set<Entity> in = new HashSet<Entity>();
 		
-
-//      Variable Concept01 = leFactory.createVariable("concept88");
-//      Variable Concept02 = leFactory.createVariable("concept99");
-//		
-//		List<Literal> body = new LinkedList<Literal>();
-//		Literal head = new Literal(true, WSML2DatalogTransformer.PRED_SUB_CONCEPT_OF, Concept01, Concept02);
-//		
-//		Rule rule = new Rule(head,body);
-		
 		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns+ "axiom00"));
 		axiom.addDefinition(LETestHelper.buildLE("?concept99 subConceptOf ?concept99"));
-//		axiom.addDefinition(rule);
+
 		in.add(axiom);
-//		in.add((Entity) rule);
+
 		
 		Set<Rule> out = reasoner.convertEntities(in);
 		assertTrue(containStdRules(out));
 		
+		boolean b = false;
 		for(Rule r : out) {
-			System.out.println(r.toString());
+			if(r.getHead().toString().equals("wsml-subconcept-of(?concept99, ?concept99)")){
+				assertEquals(r.getBody().toString(), "[]");
+				b = true;
+			}
+		}
+		assertEquals(true, b);
+		
+	
+		
+	}
+	public void testConvertQuery() throws ParserException {
+		
+		Set <ConjunctiveQuery> out =  reasoner.convertQuery(LETestHelper.buildLE("_\"urn:a\"")); 
+		for(ConjunctiveQuery cq : out) {
+			assertEquals( (" ?- urn:a()."), cq.toString()); 
+		}
+		
+		out = reasoner.convertQuery(LETestHelper.buildLE("_\"urn:a\" and _\"urn:b\""));
+		for(ConjunctiveQuery cq : out) {
+			assertEquals( (" ?- urn:a(), urn:b()."), cq.toString());
+		}
+
+		out = reasoner.convertQuery(LETestHelper.buildLE("?concept0 subConceptOf ?concept1"));
+		for(ConjunctiveQuery cq : out) {
+			assertEquals( (" ?- wsml-subconcept-of(?concept0, ?concept1)."), cq.toString());
+		}
+		
+		out = reasoner.convertQuery(LETestHelper.buildLE("?concept0 subConceptOf ?x"));
+		for(ConjunctiveQuery cq : out) {
+			assertEquals( (" ?- wsml-subconcept-of(?concept0, ?x)."), cq.toString());
+		}
+		
+		out = reasoner.convertQuery(LETestHelper.buildLE("?x subConceptOf ?x"));
+		for(ConjunctiveQuery cq : out) {
+			assertEquals( (" ?- wsml-subconcept-of(?x, ?x)."), cq.toString());
+		}
+		
+		out = reasoner.convertQuery(LETestHelper.buildLE("?x memberOf ?x"));
+		for(ConjunctiveQuery cq : out) {
+			assertEquals( (" ?- wsml-member-of(?x, ?x)."), cq.toString());
+		}	
+		
+		out = reasoner.convertQuery(LETestHelper.buildLE("_\"urn:a\" or _\"urn:b\""));
+		for(ConjunctiveQuery cq : out) {
+			if(!(cq.toString().equals(" ?- urn:a().") || cq.toString().equals(" ?- urn:b().")))
+				assertEquals("should be: \" ?- urn:a().\" or \" ?- urn:b().\"", cq.toString());
+		}	
+		
+		out = reasoner.convertQuery(LETestHelper.buildLE("?x[?x hasValue ?x]"));
+		for(ConjunctiveQuery cq : out) {
+			assertEquals( (" ?- wsml-has-value(?x, ?x, ?x)."), cq.toString());
+		}
+		
+		out = reasoner.convertQuery(LETestHelper.buildLE("?x[?x ofType ?x]"));
+		for(ConjunctiveQuery cq : out) {
+			assertEquals( (" ?- wsml-of-type(?x, ?x, ?x)."), cq.toString());
+		}
+		
+		out = reasoner.convertQuery(LETestHelper.buildLE("?x[?x impliesType ?x]"));
+		for(ConjunctiveQuery cq : out) {
+			assertEquals( (" ?- wsml-implies-type(?x, ?x, ?x)."), cq.toString());
 		}
 		
 		
+		// TODO more of that Queries ??? 
+		
+		
 	}
+
 	
 	private boolean containStdRules(Set<Rule> theRules){
 		int rules = 0;
