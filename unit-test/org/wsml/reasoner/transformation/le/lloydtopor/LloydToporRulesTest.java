@@ -1,4 +1,4 @@
-/*
+/**
  * WSML2Reasoner
  * An extensible framework for reasoning with WSML ontologies.
  * 
@@ -20,28 +20,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package org.wsml.reasoner.transformation.le.foldecomposition;
-
-import junit.framework.TestCase;
+package org.wsml.reasoner.transformation.le.lloydtopor;
 
 import org.wsml.reasoner.impl.WSMO4JManager;
 
-public class FOLMoleculeDecompositionRulesTest extends TestCase {
+import junit.framework.TestCase;
 
-	private FOLMoleculeDecompositionRules rules;
+public class LloydToporRulesTest extends TestCase {
 
-	public FOLMoleculeDecompositionRulesTest() {
+	protected LloydToporRules rules;
+
+	public LloydToporRulesTest() {
 		super();
 	}
 
 	protected void setUp() throws Exception {
 		super.setUp();
 		WSMO4JManager wsmoManager = new WSMO4JManager();
-		this.rules = new FOLMoleculeDecompositionRules(wsmoManager);
+		rules = new LloydToporRules(wsmoManager);
 	}
 
 	public void testGetRules() {
-		assertEquals(3, rules.getRules().size());
+		assertEquals(6, rules.getRules().size());
 	}
 
 }
