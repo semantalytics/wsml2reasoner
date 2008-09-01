@@ -25,9 +25,11 @@ package org.wsml.reasoner.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
@@ -38,6 +40,7 @@ import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DLBasedWSMLReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.common.exception.SynchronisationException;
@@ -91,25 +94,25 @@ public class DLBasedWSMLReasonerTest extends TestCase {
         
         Instance person1 = wsmoFactory.createInstance(wsmoFactory.createIRI("urn://Person1"), humanConcept);
         Instance person2 = wsmoFactory.createInstance(wsmoFactory.createIRI("urn://Person2"), humanConcept);
-        Instance person3 = wsmoFactory.createInstance(wsmoFactory.createIRI("urn://Person3"), humanConcept);
+//        Instance person3 = wsmoFactory.createInstance(wsmoFactory.createIRI("urn://Person3"), humanConcept);
         person1.addAttributeValue(hasParentAttr.getIdentifier(), person2);
         person1.addAttributeValue(hasParentAttr.getIdentifier(), wsmoFactory.createInstance(wsmoFactory.createAnonymousID()));
-        
-        Axiom person1LivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "urn://person1LivesSomewhere"));
-        person1LivesAx.addDefinition(leFactory.createConjunction(leFactory.createAttributeValue(person1.getIdentifier(), livesAtAttr.getIdentifier(), leFactory.createAnonymousID((byte)1)) , leFactory.createMemberShipMolecule(leFactory.createAnonymousID((byte)1),locationConcept.getIdentifier())));
-        Axiom person2LivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "urn://person2LivesSomewhere"));
-        person2LivesAx.addDefinition(leFactory.createConjunction(leFactory.createConjunction(leFactory.createConjunction(leFactory.createConjunction(leFactory.createAttributeValue(person2.getIdentifier(), livesAtAttr.getIdentifier(), leFactory.createAnonymousID((byte)1)), leFactory.createMemberShipMolecule(leFactory.createAnonymousID((byte)1), locationConcept.getIdentifier())), leFactory.createAttributeValue(person3.getIdentifier(),livesAtAttr.getIdentifier(), leFactory.createAnonymousID((byte)2))), leFactory.createMemberShipMolecule(leFactory.createAnonymousID((byte)2), locationConcept.getIdentifier())), leFactory.createAttributeValue(person3.getIdentifier(), livesAtAttr.getIdentifier(), wsmoFactory.createAnonymousID())));
+          
+//        Axiom person1LivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "urn://person1LivesSomewhere"));
+//        person1LivesAx.addDefinition(leFactory.createConjunction(leFactory.createAttributeValue(person1.getIdentifier(), livesAtAttr.getIdentifier(), leFactory.createAnonymousID((byte)1)) , leFactory.createMemberShipMolecule(leFactory.createAnonymousID((byte)1),locationConcept.getIdentifier())));
+//        Axiom person2LivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "urn://person2LivesSomewhere"));
+//        person2LivesAx.addDefinition(leFactory.createConjunction(leFactory.createConjunction(leFactory.createConjunction(leFactory.createConjunction(leFactory.createAttributeValue(person2.getIdentifier(), livesAtAttr.getIdentifier(), leFactory.createAnonymousID((byte)1)), leFactory.createMemberShipMolecule(leFactory.createAnonymousID((byte)1), locationConcept.getIdentifier())), leFactory.createAttributeValue(person3.getIdentifier(),livesAtAttr.getIdentifier(), leFactory.createAnonymousID((byte)2))), leFactory.createMemberShipMolecule(leFactory.createAnonymousID((byte)2), locationConcept.getIdentifier())), leFactory.createAttributeValue(person3.getIdentifier(), livesAtAttr.getIdentifier(), wsmoFactory.createAnonymousID())));
         
         ontology.addConcept(humanConcept);
         ontology.addConcept(locationConcept);
         ontology.addInstance(person1);
         ontology.addInstance(person2);
-        ontology.addAxiom(person1LivesAx);
-        ontology.addAxiom(person2LivesAx);
+//        ontology.addAxiom(person1LivesAx);
+//        ontology.addAxiom(person2LivesAx);
         
 
         ontology.addConcept(humanConcept);
-        System.out.println(ontology.listConcepts());
+//        System.out.println(ontology.listConcepts());
        
         
         
@@ -119,12 +122,8 @@ public class DLBasedWSMLReasonerTest extends TestCase {
         reasoner =  (DLBasedWSMLReasoner) DefaultWSMLReasonerFactory.getFactory().createDLReasoner(params);
 		
 	}
-	public void test01() {
-		assertTrue(true);
-	}
 	
-	public void test() throws ParserException, SynchronisationException, InvalidModelException, InconsistencyException {
-		
+	public void testValidiation() {
 		
 		WsmlValidator validator = Factory.createWsmlValidator(null);
 		ArrayList<ValidationError> arError = new ArrayList<ValidationError>();
@@ -135,15 +134,80 @@ public class DLBasedWSMLReasonerTest extends TestCase {
 				System.out.println(er.toString());
 			}
 		}
+		assertEquals(0, arError.size());
+	}
+	
+	public void testGetAllAttributes() throws ParserException, SynchronisationException, InvalidModelException, InconsistencyException {
 		
 		reasoner.registerOntology(ontology);
-		
 		Set <IRI> set = reasoner.getAllAttributes();
+		int count = 0;
 		for(IRI iri : set){
-			System.out.println(iri.toString());
+			if (iri.toString().equals(ns + "urn://hasParent")){
+				count++;
+			}
+			if (iri.toString().equals(ns + "urn://livesAt")){
+				count++;
+			}
+			if (iri.toString().equals(ns + "urn://hasRelative")){
+				count++;
+			}
 		}
+		assertEquals(3, count);
+		
+	}
+	
+	public void test() {
 		
 		
+		
+	}
+	
+	
+	public void testConvertEntities() {
+		Set<Entity> entities = new HashSet<Entity>();
+        entities.addAll(ontology.listConcepts());
+        entities.addAll(ontology.listInstances());
+        entities.addAll(ontology.listRelations());
+        entities.addAll(ontology.listRelationInstances());
+        entities.addAll(ontology.listAxioms());
+        
+        Set<Axiom> axes = reasoner.convertEntities(entities);
+        for(Axiom ax : axes) {
+        	Set<LogicalExpression> expr = ax.listDefinitions();
+        	assertEquals(true,containsExpr(expr));
+        }
+		
+	}
+	
+	private boolean containsExpr(Set<LogicalExpression> expr) {
+		int count = 0;
+		for(LogicalExpression le : expr){
+			
+			if(le.toString().equals("_\"http://ex.org#urn://Human\"[_\"http://ex.org#urn://hasRelative\" impliesType _\"http://ex.org#urn://Human\"]. ")) {
+				count++;
+			}
+			else if(le.toString().equals("_\"http://ex.org#urn://Human\"[_\"http://ex.org#urn://hasParent\" impliesType _\"http://ex.org#urn://Human\"]. ")) {
+				count++;
+			}
+			else if(le.toString().equals("_\"urn://Person1\" memberOf _\"http://ex.org#urn://Human\". ")) {
+				count++;
+			}
+			else if(le.toString().equals("_\"urn://Person2\" memberOf _\"http://ex.org#urn://Human\". ")) {
+				count++;
+			}
+			else if(le.toString().startsWith("_\"urn://Person1\"[_\"http://ex.org#urn://hasParent\" hasValue _\"http://www.wsmo.org/reasoner/anonymous")) {
+				count++;
+			}
+			else if(le.toString().equals("_\"http://ex.org#urn://Human\"[_\"http://ex.org#urn://livesAt\" impliesType _\"http://ex.org#urn://Location\"]. ")) {
+				count++;
+			}
+		}
+		if(count == 6){
+			return true;
+		}
+
+		return false;
 	}
 	
 	
