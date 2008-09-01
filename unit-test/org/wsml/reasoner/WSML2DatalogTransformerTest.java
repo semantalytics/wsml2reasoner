@@ -118,7 +118,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		}
 
 		in = new HashSet<LogicalExpression>();
-		le = LETestHelper.buildLE("_\"urn:a\" subConceptOf \"urn:b\" ");
+		le = LETestHelper.buildLE("_\"urn:a\" subConceptOf \"urn:b\"");
 		in.add(le);
 		out = transformer.transform(in);
 		for (Rule r : out) {
@@ -126,6 +126,34 @@ public class WSML2DatalogTransformerTest extends TestCase {
 					("wsml-subconcept-of(urn:a, urn:b).")));
 		}
 
+	}
+
+	public void testTransformSubConceptOfInHead() throws ParserException {
+		LogicalExpression le = LETestHelper .buildLE("_\"urn:a\" subConceptOf \"urn:b\" :- _\"urn:c\" ");
+		Set<Rule> out = transformer.transform(le);
+		for (Rule r : out) {
+			assertEquals("wsml-subconcept-of(urn:a, urn:b) :- urn:c().", r.toString());
+		}
+	}
+	
+	public void testTransformSubConceptOfInBody() throws ParserException {
+		LogicalExpression le = LETestHelper .buildLE(" _\"urn:c\" :- _\"urn:a\" subConceptOf \"urn:b\"  ");
+		Set<Rule> out = transformer.transform(le);
+		int count = 0;
+		for (Rule r : out) {
+			System.out.println(r.toString());
+			if (r.toString().equals("http://temp/knownConcept(urn:b).")) {
+				count++;
+			}
+			else if (r.toString().equals("http://temp/knownConcept(urn:a).")) {
+				count++;	
+			}
+			else if (r.toString().equals("urn:c() :- wsml-subconcept-of(urn:a, urn:b).")){
+				count++;	
+			}
+			
+		}
+		assertEquals(3,count);
 	}
 
 	public void testTransformBodyHead() throws ParserException {
