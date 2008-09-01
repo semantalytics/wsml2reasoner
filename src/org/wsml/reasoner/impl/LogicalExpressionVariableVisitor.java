@@ -104,7 +104,6 @@ public class LogicalExpressionVariableVisitor extends PostfixOrderLogicalExpress
      *         expression.
      */
     public Set<Variable> getFreeVariables(LogicalExpression le) {
-        // System.out.println("freevars=" + freeVars);
         Set<Variable> result = freeVars.get(le);
         return result;
     }
@@ -193,14 +192,14 @@ public class LogicalExpressionVariableVisitor extends PostfixOrderLogicalExpress
         Set<Variable> bvs = new HashSet<Variable>();
 
         // extract left term
-        List operands = arg0.listOperands();
+        List<?> operands = arg0.listOperands();
         if (operands.size() > 0) {
             Molecule m = (Molecule) operands.get(0);
             Term t = m.getLeftParameter();
             internalDoTerm(t, fvs);
         }
 
-        for (Iterator i = operands.iterator(); i.hasNext();) {
+        for (Iterator<?> i = operands.iterator(); i.hasNext();) {
             Molecule m = (Molecule) i.next();
             internalDoTerm(m.getRightParameter(), fvs);
             if (m instanceof AttributeMolecule) {
@@ -284,7 +283,7 @@ public class LogicalExpressionVariableVisitor extends PostfixOrderLogicalExpress
         Set<Variable> fvs = new HashSet<Variable>();
         Set<Variable> bvs = new HashSet<Variable>();
 
-        for (Iterator i = arg0.listOperands().iterator(); i.hasNext();) {
+        for (Iterator<?> i = arg0.listOperands().iterator(); i.hasNext();) {
             LogicalExpression expr = (LogicalExpression) i.next();
             fvs.addAll(freeVars.get(expr));
             bvs.addAll(freeVars.get(expr));

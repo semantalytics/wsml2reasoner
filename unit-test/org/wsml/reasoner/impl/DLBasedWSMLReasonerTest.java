@@ -29,32 +29,25 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
-import org.semanticweb.owl.model.OWLDescription;
 import org.semanticweb.owl.model.OWLException;
 import org.semanticweb.owl.model.OWLOntology;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
-import org.wsml.reasoner.impl.DLBasedWSMLReasoner;
-import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.common.exception.SynchronisationException;
-
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
-
 import org.wsmo.wsml.ParserException;
-
-import junit.framework.TestCase;
 
 public class DLBasedWSMLReasonerTest extends TestCase {
 
@@ -116,34 +109,36 @@ public class DLBasedWSMLReasonerTest extends TestCase {
 		person1.addAttributeValue(hasParentAttr.getIdentifier(), wsmoFactory
 				.createInstance(wsmoFactory.createAnonymousID()));
 
-//		 Axiom person1LivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
-//				+ "urn://person1LivesSomewhere"));
-//		person1LivesAx.addDefinition(leFactory.createConjunction(
-//				leFactory.createAttributeValue(person1.getIdentifier(),
-//						livesAtAttr.getIdentifier(), leFactory
-//								.createAnonymousID((byte) 1)), leFactory
-//						.createMemberShipMolecule(leFactory
-//								.createAnonymousID((byte) 1), locationConcept
-//								.getIdentifier())));
-//		Axiom person2LivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
-//				+ "urn://person2LivesSomewhere"));
-//		person2LivesAx.addDefinition(leFactory.createConjunction(leFactory
-//				.createConjunction(leFactory.createConjunction(leFactory
-//						.createConjunction(leFactory.createAttributeValue(
-//								person2.getIdentifier(), livesAtAttr
-//										.getIdentifier(), leFactory
-//										.createAnonymousID((byte) 1)),
-//								leFactory.createMemberShipMolecule(leFactory
-//										.createAnonymousID((byte) 1),
-//										locationConcept.getIdentifier())),
-//						leFactory.createAttributeValue(person3.getIdentifier(),
-//								livesAtAttr.getIdentifier(), leFactory
-//										.createAnonymousID((byte) 2))),
-//						leFactory.createMemberShipMolecule(leFactory
-//								.createAnonymousID((byte) 2), locationConcept
-//								.getIdentifier())), leFactory
-//				.createAttributeValue(person3.getIdentifier(), livesAtAttr
-//						.getIdentifier(), wsmoFactory.createAnonymousID())));
+		// Axiom person1LivesAx =
+		// wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+		// + "urn://person1LivesSomewhere"));
+		// person1LivesAx.addDefinition(leFactory.createConjunction(
+		// leFactory.createAttributeValue(person1.getIdentifier(),
+		// livesAtAttr.getIdentifier(), leFactory
+		// .createAnonymousID((byte) 1)), leFactory
+		// .createMemberShipMolecule(leFactory
+		// .createAnonymousID((byte) 1), locationConcept
+		// .getIdentifier())));
+		// Axiom person2LivesAx =
+		// wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+		// + "urn://person2LivesSomewhere"));
+		// person2LivesAx.addDefinition(leFactory.createConjunction(leFactory
+		// .createConjunction(leFactory.createConjunction(leFactory
+		// .createConjunction(leFactory.createAttributeValue(
+		// person2.getIdentifier(), livesAtAttr
+		// .getIdentifier(), leFactory
+		// .createAnonymousID((byte) 1)),
+		// leFactory.createMemberShipMolecule(leFactory
+		// .createAnonymousID((byte) 1),
+		// locationConcept.getIdentifier())),
+		// leFactory.createAttributeValue(person3.getIdentifier(),
+		// livesAtAttr.getIdentifier(), leFactory
+		// .createAnonymousID((byte) 2))),
+		// leFactory.createMemberShipMolecule(leFactory
+		// .createAnonymousID((byte) 2), locationConcept
+		// .getIdentifier())), leFactory
+		// .createAttributeValue(person3.getIdentifier(), livesAtAttr
+		// .getIdentifier(), wsmoFactory.createAnonymousID())));
 
 		ontology.addConcept(humanConcept);
 		ontology.addConcept(locationConcept);
@@ -153,7 +148,6 @@ public class DLBasedWSMLReasonerTest extends TestCase {
 		// ontology.addAxiom(person2LivesAx);
 
 		ontology.addConcept(humanConcept);
-		// System.out.println(ontology.listConcepts());
 
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
@@ -163,40 +157,6 @@ public class DLBasedWSMLReasonerTest extends TestCase {
 				.getFactory().createDLReasoner(params);
 
 	}
-	
-	
-
-//	public void testValidiation() {
-//		WsmlValidator validator = Factory.createWsmlValidator(null);
-//		ArrayList<ValidationError> arError = new ArrayList<ValidationError>();
-//		ArrayList<ValidationWarning> arWarn = new ArrayList<ValidationWarning>();
-//		validator
-//				.isValid(ontology,
-//						"http://www.wsmo.org/wsml/wsml-syntax/wsml-dl",
-//						arError, arWarn);
-//		if (arError.size() != 0) {
-//			for (ValidationError er : arError) {
-//				System.out.println(er.toString());
-//			}
-//		}
-//		assertEquals(0, arError.size());
-//	}
-	
-	public void testTransformLogicalExpression() throws ParserException, OWLException {
-		
-//		LogicalExpression le = LETestHelper.buildLE("!- _\"urn:a\" [_\"urn:a\" hasValue _\"urn:c\"] subConceptOf _\"urn:b\" ");
-//		LogicalExpression le = LETestHelper.buildLE("?x subConceptOf _\"urn:b\"");
-		LogicalExpression le = LETestHelper.buildLE("_\"urn:a\" subConceptOf _\"urn:b\" :- _\"urn:c\"");
-	
-		try {
-		OWLDescription ds = reasoner.transformLogicalExpression(le);
-		System.out.println(ds.toString());
-		}catch(java.lang.NullPointerException e) {
-			fail();
-		}
-
-	}
-	
 
 	public void testGetAllAttributes() throws ParserException,
 			SynchronisationException, InvalidModelException,
@@ -237,13 +197,11 @@ public class DLBasedWSMLReasonerTest extends TestCase {
 		person1LivesAx.setOntology(ontology);
 		ontology.addAxiom(person1LivesAx);
 
-		OWLOntology owlOntology = reasoner.transformOntology(ontology.listAxioms());
+		OWLOntology owlOntology = reasoner.transformOntology(ontology
+				.listAxioms());
 		Set<?> set = owlOntology.getIndividuals();
 		assertEquals(2, set.size());
 	}
-	
-	
-	
 
 	public void testConvertEntities() {
 		Set<Entity> entities = new HashSet<Entity>();

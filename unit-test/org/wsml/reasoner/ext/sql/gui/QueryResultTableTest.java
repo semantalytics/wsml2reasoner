@@ -20,38 +20,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package org.wsml.reasoner.impl;
+package org.wsml.reasoner.ext.sql.gui;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
-import org.wsml.reasoner.api.WSMLReasonerFactory;
-import org.wsml.reasoner.api.FOLReasoner.EntailmentType;
-import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
-import org.wsml.reasoner.api.inconsistency.InconsistencyException;
-import org.wsml.reasoner.transformation.le.LETestHelper;
+import org.omwg.ontology.Variable;
+import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
 
 import junit.framework.TestCase;
 
-public class FOLBasedWSMLReasonerTest extends TestCase {
+
+public class QueryResultTableTest extends TestCase {
 	
-	protected FOLBasedWSMLReasoner reasoner;
+	protected QueryResultTable table;
 	protected WSMO4JManager wsmoManager;
 	protected String ns = "http://ex.org#";
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
 	protected Ontology ontology;
 
-	public FOLBasedWSMLReasonerTest() {
+	public QueryResultTableTest() {
 		super();
 	}
 
-	
 	protected void setUp() throws Exception {
 		super.setUp();
 		WSMO4JManager wsmoManager = new WSMO4JManager(); 
@@ -60,24 +59,29 @@ public class FOLBasedWSMLReasonerTest extends TestCase {
         
         ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ont"));
         ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));	
-        
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER, WSMLReasonerFactory.BuiltInReasoner.SPASS);
-        
-        reasoner = (FOLBasedWSMLReasoner) DefaultWSMLReasonerFactory.getFactory().createFOLReasoner(params);	
-//        reasoner.registerOntology(ontology);
-        
-	}
-	
-	public void testCheckEntailment() throws ParserException, InconsistencyException{
+		table = new QueryResultTable();
 		
-		EntailmentType t1 = reasoner.checkEntailment(LETestHelper.buildLE("?x subConceptOf _\"urn:a\""));
-		System.out.println(t1.toString());
 	}
 	
-	public void test() {
-		Set <ConsistencyViolation> set = reasoner.checkConsistency();
-		System.out.println(set.size());
+	public void testTable() throws ParserException {
+		Variable v1 = leFactory.createVariable("var01");
+		Variable v2 = leFactory.createVariable("var02");
+		Term t1 = (Term) (v1);
+		Term t2 = (Term) (v2);
+		
+		Map<Variable, Term> map = new HashMap<Variable, Term>();
+		map.put(v1, t1);
+		map.put(v2, t2);
+		
+		Set<Map<Variable,Term>> set = new HashSet<Map<Variable,Term>>();
+		set.add(map);
+		table.setContent(set, ontology);
+		assertEquals(2,table.getColumnCount());
+		assertEquals(1,table.getRowCount());
+		
+	    assertEquals(v1.toString(),table.getValueAt(0,0).toString());
+	    assertEquals(v2.toString(),table.getValueAt(0,1).toString());
+	
 	}
 	
 	

@@ -141,7 +141,6 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		Set<Rule> out = transformer.transform(le);
 		int count = 0;
 		for (Rule r : out) {
-			System.out.println(r.toString());
 			if (r.toString().equals("http://temp/knownConcept(urn:b).")) {
 				count++;
 			}
@@ -172,19 +171,13 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		// More than one implication in the given WSML rule detected!
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\" implies _\"urn:b\" :- _\"urn:c\"");
-		try {
+		
 			Set<Rule> out = transformer.transform(le);
 
 			for (Rule r : out) {
-				System.out.println("Head: " + r.getHead().toString());
-				System.out.println("Body: " + r.getBody().toString());
 				assertEquals("urn:a()", r.getHead().toString());
 				assertEquals("[urn:b()]", r.getBody().toString());
 			}
-		} catch (DatalogException e) {
-			System.out.println(e.toString());
-			fail();
-		}
 
 	}
 
@@ -193,17 +186,13 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		// More than one implication in the given WSML rule detected!
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\"  :- _\"urn:c\" implies _\"urn:b\"");
-		try {
+		
 			Set<Rule> out = transformer.transform(le);
 
 			for (Rule r : out) {
 				System.out.println("Head: " + r.getHead().toString());
 				System.out.println("Body: " + r.getBody().toString());
 			}
-		} catch (DatalogException e) {
-			System.out.println(e.toString());
-			fail();
-		}
 
 	}
 
@@ -212,18 +201,14 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		// More than one implication in the given WSML rule detected!
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\" equivalent _\"urn:b\" :- _\"urn:c\"");
-		try {
+		
 			Set<Rule> out = transformer.transform(le);
 
 			for (Rule r : out) {
 				System.out.println("Head: " + r.getHead().toString());
 				System.out.println("Body: " + r.getBody().toString());
 			}
-		} catch (DatalogException e) {
-			System.out.println(e.toString());
-			fail();
-		}
-
+		
 	}
 
 	public void testTransformEquivalentInBody() throws ParserException {
@@ -231,55 +216,44 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		// More than one implication in the given WSML rule detected!
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\"  :- _\"urn:c\" equivalent _\"urn:b\"");
-		try {
+		
 			Set<Rule> out = transformer.transform(le);
 
 			for (Rule r : out) {
 				System.out.println("Head: " + r.getHead().toString());
 				System.out.println("Body: " + r.getBody().toString());
 			}
-		} catch (DatalogException e) {
-			System.out.println(e.toString());
-			fail();
-		}
+		
 
 	}
 
-	public void testTransformInpliedByInHead() throws ParserException {
+	public void testTransformImpliedByInHead() throws ParserException {
 
 		// More than one implication in the given WSML rule detected!
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\" impliedBy _\"urn:b\" :- _\"urn:c\"");
-		try {
+		
 			Set<Rule> out = transformer.transform(le);
 
 			for (Rule r : out) {
 				System.out.println("Head: " + r.getHead().toString());
 				System.out.println("Body: " + r.getBody().toString());
 			}
-		} catch (DatalogException e) {
-			System.out.println(e.toString());
-			fail();
-		}
 
 	}
 
-	public void testTransformInpliedByInBody() throws ParserException {
+	public void testTransformImpliedByInBody() throws ParserException {
 
 		// More than one implication in the given WSML rule detected!
-		LogicalExpression le = LETestHelper
-				.buildLE("_\"urn:a\" :- _\"urn:c\" impliedBy _\"urn:b\"");
-		try {
+		LogicalExpression le = LETestHelper.buildLE("_\"urn:a\" :- _\"urn:c\" impliedBy _\"urn:b\"");
+		
 			Set<Rule> out = transformer.transform(le);
 
 			for (Rule r : out) {
 				System.out.println("Head: " + r.getHead().toString());
 				System.out.println("Body: " + r.getBody().toString());
 			}
-		} catch (DatalogException e) {
-			System.out.println(e.toString());
-			fail();
-		}
+		
 
 	}
 
