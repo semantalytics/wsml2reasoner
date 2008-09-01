@@ -42,12 +42,6 @@ public class TableTest extends TestCase {
 		table = new Table();
 	}
 
-	
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		table = null;
-	}
-	
 	public void testInstantiate() {
 		
 		// store row, getRow
