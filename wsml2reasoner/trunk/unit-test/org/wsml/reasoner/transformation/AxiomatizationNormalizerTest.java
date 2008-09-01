@@ -67,7 +67,6 @@ public class AxiomatizationNormalizerTest extends TestCase {
 	public void testNormalizeEntitiesAxiom() throws ParserException, IOException, InvalidModelException {
 		
 		Set<Entity> in = new HashSet<Entity>();
-//		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom01"));
 		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
 		axiom.addDefinition(LETestHelper.buildLE("!- _\"urn:a\" [_\"urn:a\" hasValue _\"urn:c\"] subConceptOf _\"urn:b\" "));
 		in.add(axiom);

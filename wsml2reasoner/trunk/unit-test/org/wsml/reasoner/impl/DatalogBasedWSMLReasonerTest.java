@@ -41,6 +41,8 @@ import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.common.Entity;
+import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.common.exception.SynchronisationException;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
@@ -96,8 +98,7 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 		assertTrue(reasoner.checkQueryContainment(LETestHelper.buildLE("_\"urn:a\" subConceptOf _\"urn:c\""), LETestHelper.buildLE("_\"urn:a\" subConceptOf _\"urn:c\"")));
 		assertTrue(reasoner.checkQueryContainment(LETestHelper.buildLE("_\"urn:e\" subConceptOf _\"urn:d\""), LETestHelper.buildLE("_\"urn:e\" subConceptOf _\"urn:d\"")));
 		assertTrue(reasoner.checkQueryContainment(LETestHelper.buildLE("_\"urn:e\" subConceptOf _\"urn:d\""), LETestHelper.buildLE("?x subConceptOf _\"urn:d\" and ?y subConceptOf _\"urn:d\"")));
-		
-		
+
 		
 	}
 	
@@ -117,14 +118,26 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 		
 	}
 
-	public void testCheckConsistency() {
+	public void testCheckConsistency() throws ParserException, SynchronisationException, InvalidModelException {
 		
 		Set<ConsistencyViolation> viols = reasoner.checkConsistency();
 		
 		for(ConsistencyViolation vio : viols) {
-			assertEquals(vio, null);
-			
+			assertEquals(vio, null);	
 		}
+		
+		Axiom axiom6 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom06"));;
+		axiom6.addDefinition(LETestHelper.buildLE("!- ?x subConceptOf ?x"));
+		ontology.addAxiom(axiom6);
+
+		viols = reasoner.checkConsistency();
+		
+		for(ConsistencyViolation vio : viols) {
+			assertEquals(vio, null);	
+		}
+		
+		ontology.removeAxiom(axiom6);
+		
 	}
 	
 	public void testEntails() throws ParserException {
@@ -189,7 +202,7 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 		Set<Entity> in = new HashSet<Entity>();
 		
 		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns+ "axiom00"));
-		axiom.addDefinition(LETestHelper.buildLE("?concept99 subConceptOf ?concept99"));
+		axiom.addDefinition(LETestHelper.buildLE("?x subConceptOf ?concept99"));
 
 		in.add(axiom);
 
@@ -199,7 +212,7 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 		
 		boolean b = false;
 		for(Rule r : out) {
-			if(r.getHead().toString().equals("wsml-subconcept-of(?concept99, ?concept99)")){
+			if(r.getHead().toString().equals("wsml-subconcept-of(?x, ?concept99)")){
 				assertEquals(r.getBody().toString(), "[]");
 				b = true;
 			}

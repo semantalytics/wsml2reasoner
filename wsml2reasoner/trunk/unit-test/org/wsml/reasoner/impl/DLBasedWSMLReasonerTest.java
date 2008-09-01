@@ -24,7 +24,6 @@
 package org.wsml.reasoner.impl;
 
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -36,6 +35,7 @@ import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
+import org.semanticweb.owl.model.OWLDescription;
 import org.semanticweb.owl.model.OWLException;
 import org.semanticweb.owl.model.OWLOntology;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
@@ -43,16 +43,15 @@ import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DLBasedWSMLReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.common.exception.SynchronisationException;
-import org.wsmo.factory.Factory;
+
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
-import org.wsmo.validator.ValidationError;
-import org.wsmo.validator.ValidationWarning;
-import org.wsmo.validator.WsmlValidator;
+
 import org.wsmo.wsml.ParserException;
 
 import junit.framework.TestCase;
@@ -164,23 +163,40 @@ public class DLBasedWSMLReasonerTest extends TestCase {
 				.getFactory().createDLReasoner(params);
 
 	}
+	
+	
 
-	public void testValidiation() {
-
-		WsmlValidator validator = Factory.createWsmlValidator(null);
-		ArrayList<ValidationError> arError = new ArrayList<ValidationError>();
-		ArrayList<ValidationWarning> arWarn = new ArrayList<ValidationWarning>();
-		validator
-				.isValid(ontology,
-						"http://www.wsmo.org/wsml/wsml-syntax/wsml-dl",
-						arError, arWarn);
-		if (arError.size() != 0) {
-			for (ValidationError er : arError) {
-				System.out.println(er.toString());
-			}
+//	public void testValidiation() {
+//		WsmlValidator validator = Factory.createWsmlValidator(null);
+//		ArrayList<ValidationError> arError = new ArrayList<ValidationError>();
+//		ArrayList<ValidationWarning> arWarn = new ArrayList<ValidationWarning>();
+//		validator
+//				.isValid(ontology,
+//						"http://www.wsmo.org/wsml/wsml-syntax/wsml-dl",
+//						arError, arWarn);
+//		if (arError.size() != 0) {
+//			for (ValidationError er : arError) {
+//				System.out.println(er.toString());
+//			}
+//		}
+//		assertEquals(0, arError.size());
+//	}
+	
+	public void testTransformLogicalExpression() throws ParserException, OWLException {
+		
+//		LogicalExpression le = LETestHelper.buildLE("!- _\"urn:a\" [_\"urn:a\" hasValue _\"urn:c\"] subConceptOf _\"urn:b\" ");
+//		LogicalExpression le = LETestHelper.buildLE("?x subConceptOf _\"urn:b\"");
+		LogicalExpression le = LETestHelper.buildLE("_\"urn:a\" subConceptOf _\"urn:b\" :- _\"urn:c\"");
+	
+		try {
+		OWLDescription ds = reasoner.transformLogicalExpression(le);
+		System.out.println(ds.toString());
+		}catch(java.lang.NullPointerException e) {
+			fail();
 		}
-		assertEquals(0, arError.size());
+
 	}
+	
 
 	public void testGetAllAttributes() throws ParserException,
 			SynchronisationException, InvalidModelException,
