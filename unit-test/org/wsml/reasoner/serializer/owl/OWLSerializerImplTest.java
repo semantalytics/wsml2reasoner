@@ -22,11 +22,37 @@
  */
 package org.wsml.reasoner.serializer.owl;
 
+import java.util.HashMap;
+
+import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.ontology.Axiom;
+import org.omwg.ontology.Ontology;
+import org.semanticweb.owl.io.RendererException;
+import org.semanticweb.owl.model.OWLOntology;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.impl.DLBasedWSMLReasoner;
+import org.wsml.reasoner.impl.FOLBasedWSMLReasoner;
+import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsml.reasoner.transformation.le.LETestHelper;
+import org.wsmo.factory.LogicalExpressionFactory;
+import org.wsmo.factory.WsmoFactory;
+import org.wsmo.wsml.ParserException;
+
 import junit.framework.TestCase;
 
 public class OWLSerializerImplTest extends TestCase {
-	
-	protected OWLSerializerImpl owlImpl;
+
+	protected OWLSerializer owlImpl;
+	protected HashMap<String, String> prefs;
+	protected DLBasedWSMLReasoner dlReasoner;
+	protected FOLBasedWSMLReasoner reasoner;
+	protected WSMO4JManager wsmoManager;
+	protected String ns = "http://ex.org#";
+	protected WsmoFactory wsmoFactory;
+	protected LogicalExpressionFactory leFactory;
+	protected Ontology ontology;
+	protected OWLOntology owlOntology;
+	protected Axiom axiom;
 
 	public OWLSerializerImplTest() {
 		super();
@@ -34,6 +60,68 @@ public class OWLSerializerImplTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
+
+		owlImpl = new OWLSerializerImpl();
+		WSMO4JManager wsmoManager = new WSMO4JManager();
+		wsmoFactory = wsmoManager.getWSMOFactory();
+		leFactory = wsmoManager.getLogicalExpressionFactory();
+		dlReasoner = new DLBasedWSMLReasoner(
+				WSMLReasonerFactory.BuiltInReasoner.PELLET, wsmoManager);
+		ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns
+				+ "ontology01"));
+		ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));
+		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom01"));
+		ontology.addAxiom(axiom);
 	}
-	
+
+	public void testSerialize() throws ParserException, RendererException {
+
+		LogicalExpression le = LETestHelper
+				.buildLE("_\"urn:a\" [_\"urn:a\" hasValue _\"urn:b\"].");
+		axiom.addDefinition(le);
+		owlOntology = dlReasoner.createOWLOntology(ontology);
+		prefs = new HashMap<String, String>();
+		prefs.put(OWLSerializer.OWL_SERIALIZER, OWLSerializer.OWL_ABSTRACT);
+		StringBuffer b = new StringBuffer();
+		owlImpl.serialize(owlOntology, b, prefs);
+		int count = 0;
+
+		if (b
+				.toString()
+				.contains(
+						"Namespace(rdf	= <http://www.w3.org/1999/02/22-rdf-syntax-ns#>)")) {
+			count++;
+		}
+
+		if (b.toString().contains(
+				"Namespace(owl	= <http://www.w3.org/2002/07/owl#>)")) {
+			count++;
+		}
+
+		if (b.toString().contains(
+				"Namespace(xsd	= <http://www.w3.org/2001/XMLSchema#>)")) {
+			count++;
+		}
+
+		if (b.toString().contains(
+				"Namespace(rdfs	= <http://www.w3.org/2000/01/rdf-schema#>)")) {
+			count++;
+		}
+
+		if (b.toString().contains("ObjectProperty(<urn:a>)")) {
+			count++;
+		}
+
+		if (b.toString().contains("Individual(<urn:a>")) {
+			count++;
+		}
+
+		if (b.toString().contains("value(<urn:a> <urn:b>))")) {
+			count++;
+		}
+
+		assertEquals(7, count);
+
+	}
+
 }

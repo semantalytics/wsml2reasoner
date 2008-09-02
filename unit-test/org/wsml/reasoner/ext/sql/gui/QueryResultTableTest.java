@@ -81,6 +81,10 @@ public class QueryResultTableTest extends TestCase {
 		
 	    assertEquals(v1.toString(),table.getValueAt(0,0).toString());
 	    assertEquals(v2.toString(),table.getValueAt(0,1).toString());
+	    
+	    assertEquals( "var01", table.getColumnName(0).toString());
+	    assertEquals( "var02", table.getColumnName(1).toString());
+	 
 	
 	}
 	
