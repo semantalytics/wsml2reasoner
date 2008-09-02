@@ -87,7 +87,8 @@ public class FOLBasedWSMLReasoner implements FOLReasoner {
      */
     public List<EntailmentType> checkEntailment(List<LogicalExpression> conjectures) {
 
-    	LogicalExpressionNormalizer moleculeNormalizer = new OnePassReplacementNormalizer((List<NormalizationRule>) new FOLMoleculeDecompositionRules(wsmoManager), wsmoManager);
+    	List<NormalizationRule> lst =(new FOLMoleculeDecompositionRules(wsmoManager)).getRules();
+    	LogicalExpressionNormalizer moleculeNormalizer = new OnePassReplacementNormalizer(lst, wsmoManager);
 
         List<LogicalExpression> newconjectures = new ArrayList<LogicalExpression>();
         for (LogicalExpression le : conjectures) {
