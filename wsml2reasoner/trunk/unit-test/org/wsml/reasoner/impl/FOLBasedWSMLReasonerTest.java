@@ -24,19 +24,18 @@ package org.wsml.reasoner.impl;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
+import junit.framework.TestCase;
+
+import org.omwg.ontology.Concept;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.FOLReasoner.EntailmentType;
-import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
-
-import junit.framework.TestCase;
 
 public class FOLBasedWSMLReasonerTest extends TestCase {
 	
@@ -61,11 +60,14 @@ public class FOLBasedWSMLReasonerTest extends TestCase {
         ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ont"));
         ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));	
         
+        Concept humanConcept = wsmoFactory.createConcept(wsmoFactory.createIRI(ns+ "urn://Human"));
+        
+        ontology.addConcept(humanConcept);
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER, WSMLReasonerFactory.BuiltInReasoner.SPASS);
+        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER, WSMLReasonerFactory.BuiltInReasoner.TPTP);
         
         reasoner = (FOLBasedWSMLReasoner) DefaultWSMLReasonerFactory.getFactory().createFOLReasoner(params);	
-//        reasoner.registerOntology(ontology);
+        reasoner.registerOntology(ontology);
         
 	}
 	
@@ -75,10 +77,11 @@ public class FOLBasedWSMLReasonerTest extends TestCase {
 		System.out.println(t1.toString());
 	}
 	
-	public void test() {
-		Set <ConsistencyViolation> set = reasoner.checkConsistency();
-		System.out.println(set.size());
-	}
+//	public void test() {
+//		Set <ConsistencyViolation> set = reasoner.checkConsistency();
+//		System.out.println(set.size());
+//		System.out.println("");
+//	}
 	
 	
 	
