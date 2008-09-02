@@ -65,7 +65,6 @@ public class FOLBasedWSMLReasonerTest extends TestCase {
         ontology.addConcept(humanConcept);
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER, WSMLReasonerFactory.BuiltInReasoner.TPTP);
-        
         reasoner = (FOLBasedWSMLReasoner) DefaultWSMLReasonerFactory.getFactory().createFOLReasoner(params);	
         reasoner.registerOntology(ontology);
         
