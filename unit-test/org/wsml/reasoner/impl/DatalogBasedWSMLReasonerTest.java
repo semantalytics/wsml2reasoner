@@ -23,29 +23,33 @@
 
 package org.wsml.reasoner.impl;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 import junit.framework.TestCase;
-
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Axiom;
+import org.omwg.ontology.Concept;
+import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
+import org.omwg.ontology.WsmlDataType;
 import org.wsml.reasoner.ConjunctiveQuery;
 import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.common.Entity;
-import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.common.exception.SynchronisationException;
+import org.wsmo.factory.DataFactory;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
+import com.ontotext.wsmo4j.ontology.InstanceImpl;
 
 public class DatalogBasedWSMLReasonerTest extends TestCase {
 	
@@ -55,6 +59,7 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
 	protected Ontology ontology;
+	protected DataFactory dataFactory;
 	
 	public DatalogBasedWSMLReasonerTest() {
 		super();
@@ -64,12 +69,34 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 		super.setUp();
 		WSMO4JManager wsmoManager = new WSMO4JManager(); 
 		wsmoFactory = wsmoManager.getWSMOFactory();
+		dataFactory = wsmoManager.getDataFactory();
         leFactory = wsmoManager.getLogicalExpressionFactory();
         
         ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ont"));
-        ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));	
+        ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));
         
-        Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom01"));
+        Concept badConcept = wsmoFactory.createConcept( wsmoFactory.createIRI( ns + "c" ) );
+        badConcept.setOntology(ontology);
+        Attribute badAttribute = badConcept.createAttribute(wsmoFactory.createIRI(ns + "a"));
+		badAttribute.addType(dataFactory.createWsmlDataType(WsmlDataType.WSML_STRING));
+
+//        Attribute atrr = badConcept.createAttribute( wsmoFactory.createIRI( "stringAttribute" ) );
+//        
+//        atrr.addType( Type. );
+        
+//        Concept aa = wsmoFactory.createConcept( wsmoFactory.createIRI( ns + "aa" ) );
+//        Concept bb = wsmoFactory.createConcept( wsmoFactory.createIRI( ns + "bb" ) );
+//        Concept cc = wsmoFactory.createConcept( wsmoFactory.createIRI( ns + "cc" ) );
+//        cc.addSubConcept( bb );
+////        bb.addSubConcept( aa );
+//        aa.addSubConcept( cc );
+//        ontology.addConcept( aa );
+//        
+//        Axiom axiom0 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom00"));
+//		axiom0.addDefinition(LETestHelper.buildLE("?x subConceptOf _\"" + ns + "aa\" :- ?x subConceptOf _\"" + ns + "bb\"" ));
+//		ontology.addAxiom(axiom0);
+
+		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom01"));
 		axiom1.addDefinition(LETestHelper.buildLE("_\"urn:a\" and _\"urn:b\""));
 		axiom1.addDefinition(LETestHelper.buildLE("_\"urn:a\" subConceptOf _\"urn:c\""));
 		ontology.addAxiom(axiom1);
@@ -118,7 +145,7 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 		
 	}
 
-	public void testCheckConsistency() throws ParserException, SynchronisationException, InvalidModelException {
+	public void testCheckConsistency() throws Exception {
 		
 		Set<ConsistencyViolation> viols = reasoner.checkConsistency();
 		
@@ -126,9 +153,21 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 			assertEquals(vio, null);	
 		}
 		
-		Axiom axiom6 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom06"));;
-		axiom6.addDefinition(LETestHelper.buildLE("!- ?x subConceptOf ?x"));
-		ontology.addAxiom(axiom6);
+//		Axiom axiom6 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom06"));;
+//		axiom6.addDefinition(LETestHelper.buildLE("!- ?x subConceptOf ?x"));
+//		ontology.addAxiom(axiom6);
+		
+		Instance i = new InstanceImpl(wsmoFactory.createIRI(ns + "aa"));
+		i.addConcept(ontology.findConcept(wsmoFactory.createIRI(ns + "c")));
+		i.addAttributeValue( wsmoFactory.createIRI( ns + "a" ), dataFactory.createWsmlInteger( new BigInteger ("3") ) );
+		ontology.addInstance(i);
+		
+//		Axiom axiom6 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom06"));
+//		String badLE = "_\"" + ns + "badConcept\"[ _\"" + ns + "badAttribute\" hasValue _integer(3)]";
+//		axiom6.addDefinition(LETestHelper.buildLE(badLE));
+//		ontology.addAxiom(axiom6);
+
+        reasoner.registerOntology(ontology);
 
 		viols = reasoner.checkConsistency();
 		
@@ -136,7 +175,7 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 			assertEquals(vio, null);	
 		}
 		
-		ontology.removeAxiom(axiom6);
+//		ontology.removeAxiom(axiom6);
 		
 	}
 	
