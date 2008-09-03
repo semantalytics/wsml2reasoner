@@ -1,4 +1,4 @@
-/*
+/**
  * WSML2Reasoner
  * An extensible framework for reasoning with WSML ontologies.
  * 
@@ -20,16 +20,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package concreteTests.irisSLDNF;
+package concreteTests.irisStratified;
 
 import org.wsml.reasoner.api.LPReasoner;
-import abstractTests.lp.AbstractConceptWithAttribute;
 
-public class ConceptWithAttributeTest extends AbstractConceptWithAttribute
-{
-	
-	public LPReasoner getLPReasoner()
-	{
+import abstractTests.lp.AbstractAttributeInheritance;
+
+
+public class AttributeInheritanceTest extends AbstractAttributeInheritance {
+
+	public LPReasoner getLPReasoner() {
 		return IrisHelper.getReasoner();
 	}
+
 }
