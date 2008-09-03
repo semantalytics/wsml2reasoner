@@ -22,13 +22,18 @@
  */
 package concreteTests.irisSLDNF;
 
+
 import org.wsml.reasoner.api.LPReasoner;
+
 import abstractTests.lp.AbstractConsistencyViolation;
 
 public class ConsistencyViolationTest extends AbstractConsistencyViolation
 {
+	
+	
 	public LPReasoner getLPReasoner()
 	{
 		return IrisHelper.getReasoner();
 	}
+	
 }

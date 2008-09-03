@@ -31,4 +31,5 @@ public class BooleanTest extends AbstractBoolean
 	{
 		return IrisHelper.getReasoner();
 	}
+
 }
