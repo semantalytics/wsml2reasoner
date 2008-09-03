@@ -23,6 +23,8 @@
 
 package org.wsml.reasoner.impl;
 
+import helper.OntologyHelper;
+
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,6 +44,7 @@ import org.wsml.reasoner.ConjunctiveQuery;
 import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
+import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.common.Entity;
 import org.wsmo.factory.DataFactory;
@@ -144,115 +147,32 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 		for(ConsistencyViolation vio : viols) {
 			assertEquals(vio, null);	
 		}
-		// should be:
-//		Concept[attribute ofType OtherConcept].
-//		f[attribute hasValue 10] memberOf Concept.
+		// TODO
+		// maybe better tested in a functional-test:
 		
-		 Concept Concept01 = wsmoFactory.createConcept( wsmoFactory.createIRI(ns + "aConcept" ) );
-	     Concept01.setOntology(ontology);
-	     ontology.addConcept(Concept01);
-	     Instance i1 = wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Instance1"), Concept01);
-	     
-	     
-	     Concept OtherConcept01 = wsmoFactory.createConcept( wsmoFactory.createIRI(ns + "OtherConcept" ) );
-	     OtherConcept01.setOntology(ontology);
-	     ontology.addConcept(OtherConcept01);
-	     
-	     Attribute at = Concept01.createAttribute( wsmoFactory.createIRI(ns + "aAttribute"));
-	     at.addType(OtherConcept01);
-	     
-	     Instance i2 = wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Instance2"), OtherConcept01);
-	     i1.addAttributeValue(OtherConcept01.getIdentifier(), i2);
-
-	     
-	     Axiom axiomX1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiomX1"));
-//		 axiomX1.addDefinition(LETestHelper.buildLE(Concept01.getIdentifier() + " ["+ Concept01.getIdentifier()+" ofType " + OtherConcept01.getIdentifier() +"]. "));
-//	     axiomX1.addDefinition(LETestHelper.buildLE("_\"urn:a\"[_\"urn:a\" hasValue 10] memberOf " + OtherConcept01.getIdentifier() +" ."));
-//	     axiomX1.addDefinition(LETestHelper.buildLE("_\"urn:a\"[_\"urn:a\" ofType _\"urn:b\"]" ));
-//	     axiomX1.addDefinition(LETestHelper.buildLE("_\"urn:a\" memberOf OtherConcept"));
-//	     axiomX1.addDefinition(LETestHelper.buildLE("_\"urn:a\"[_\"urn:a\" hasValue _\"urn:d\"]" ));
-	     axiomX1.addDefinition(LETestHelper.buildLE("_\"urn:a\" memberOf OtherConcept"));
-	     axiomX1.addDefinition(LETestHelper.buildLE("_\"urn:a\"[_\"urn:a\" hasValue _\"urn:d\"]" ));
-		 ontology.addAxiom(axiomX1);
-
-		/////////////////////////////////////////////////////////////////		 
-//			Ontology ontology2 = wsmoFactory.createOntology(wsmoFactory.createIRI(ns
-//					+ "AboutHumans"));
-//			ontology2.setDefaultNamespace(wsmoFactory.createIRI(ns));
-//
-//			Concept humanConcept = wsmoFactory.createConcept(wsmoFactory.createIRI(ns+ "urn://Human"));
-//			Attribute hasRelativeAttr = humanConcept.createAttribute(wsmoFactory.createIRI(ns+ "urn://hasRelative"));
-//			// hasRelativeAttr.setSymmetric(true);
-//			hasRelativeAttr.addType(humanConcept);
-//			Concept locationConcept = wsmoFactory.createConcept(wsmoFactory.createIRI(ns
-//					+ "urn://Location"));
-//
-//			Attribute hasParentAttr = humanConcept.createAttribute(wsmoFactory.createIRI(ns
-//					+ "urn://hasParent"));
-//			hasParentAttr.addType(humanConcept);
-//
-//			Attribute livesAtAttr = humanConcept.createAttribute(wsmoFactory.createIRI(ns
-//					+ "urn://livesAt"));
-//			livesAtAttr.addType(locationConcept);
-//
-//			Instance person1 = wsmoFactory.createInstance(wsmoFactory
-//					.createIRI("urn://Person1"), humanConcept);
-//			Instance person2 = wsmoFactory.createInstance(wsmoFactory
-//					.createIRI("urn://Person2"), humanConcept);
-//			Instance person3 = wsmoFactory.createInstance(wsmoFactory
-//					.createIRI("urn://Person3"), humanConcept);
-//
-//			person1.addAttributeValue(hasParentAttr.getIdentifier(), person2);
-//			person1.addAttributeValue(hasParentAttr.getIdentifier(), wsmoFactory
-//					.createInstance(wsmoFactory.createAnonymousID()));
-//
-//			Axiom person1LivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "urn://person1LivesSomewhere"));
-//			person1LivesAx.addDefinition(leFactory.createConjunction(
-//					leFactory.createAttributeValue(person1.getIdentifier(),
-//							livesAtAttr.getIdentifier(), leFactory
-//									.createAnonymousID((byte) 1)), leFactory
-//							.createMemberShipMolecule(leFactory
-//									.createAnonymousID((byte) 1), locationConcept
-//									.getIdentifier())));
-//	
-//			Axiom person2LivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
-//					+ "urn://person2LivesSomewhere"));
-//			person2LivesAx.addDefinition(leFactory.createConjunction(leFactory
-//					.createConjunction(leFactory.createConjunction(leFactory
-//							.createConjunction(leFactory.createAttributeValue(
-//									person2.getIdentifier(), livesAtAttr
-//											.getIdentifier(), leFactory
-//											.createAnonymousID((byte) 1)),
-//									leFactory.createMemberShipMolecule(leFactory
-//											.createAnonymousID((byte) 1),
-//											locationConcept.getIdentifier())),
-//							leFactory.createAttributeValue(person3.getIdentifier(),
-//									livesAtAttr.getIdentifier(), leFactory
-//											.createAnonymousID((byte) 2))),
-//							leFactory.createMemberShipMolecule(leFactory
-//									.createAnonymousID((byte) 2), locationConcept
-//									.getIdentifier())), leFactory
-//					.createAttributeValue(person3.getIdentifier(), livesAtAttr
-//							.getIdentifier(), wsmoFactory.createAnonymousID())));
-//
-//			ontology2.addConcept(humanConcept);
-//			ontology2.addConcept(locationConcept);
-//			ontology2.addInstance(person1);
-//			ontology2.addInstance(person2);
-//			ontology2.addAxiom(person1LivesAx);
-//			ontology2.addAxiom(person2LivesAx);
-//
-//
-//		reasoner.deRegister();
-        reasoner.registerOntology(ontology);
-
+		 String ns = "http://ex1.org#";
+	     String test = "namespace _\""+ns+"\" \n" +
+	     "ontology inconsistencyOntology" +
+	     " axiom " + " definedBy "+
+	     " Concept[attribute ofType OtherConcept]. " +
+	     " f[attribute hasValue 10] memberOf Concept. ";
+ 
+	    Ontology ontology2 = OntologyHelper.parseOntology( test );
+	    reasoner.deRegister();
+       
+        try {
+        reasoner.registerOntology(ontology2);
 		viols = reasoner.checkConsistency();
+        } catch (InconsistencyException e) {
+        	assertEquals(1, viols.size());
+			for(ConsistencyViolation vio : viols) {
+				System.out.println(vio.toString());
+			}
+        }
 		
-		for(ConsistencyViolation vio : viols) {
-			assertEquals(vio, null);	
-		}
+		reasoner.deRegister();
+	    reasoner.registerOntology(ontology);
 
-		
 	}
 	
 	public void testEntails() throws ParserException {
