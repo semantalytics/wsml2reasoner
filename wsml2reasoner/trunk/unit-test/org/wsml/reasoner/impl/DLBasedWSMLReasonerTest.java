@@ -110,41 +110,12 @@ public class DLBasedWSMLReasonerTest extends TestCase {
 				.createInstance(wsmoFactory.createAnonymousID()));
 
 		Axiom person1LivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "urn://person1LivesSomewhere"));
-//		person1LivesAx.addDefinition(leFactory.createConjunction(
-//				leFactory.createAttributeValue(person1.getIdentifier(),
-//						livesAtAttr.getIdentifier(), leFactory
-//								.createAnonymousID((byte) 1)), leFactory
-//						.createMemberShipMolecule(leFactory
-//								.createAnonymousID((byte) 1), locationConcept
-//								.getIdentifier())));
-//
-//		Axiom person2LivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
-//				+ "urn://person2LivesSomewhere"));
-//		person2LivesAx.addDefinition(leFactory.createConjunction(leFactory
-//				.createConjunction(leFactory.createConjunction(leFactory
-//						.createConjunction(leFactory.createAttributeValue(
-//								person2.getIdentifier(), livesAtAttr
-//										.getIdentifier(), leFactory
-//										.createAnonymousID((byte) 1)),
-//								leFactory.createMemberShipMolecule(leFactory
-//										.createAnonymousID((byte) 1),
-//										locationConcept.getIdentifier())),
-//						leFactory.createAttributeValue(person3.getIdentifier(),
-//								livesAtAttr.getIdentifier(), leFactory
-//										.createAnonymousID((byte) 2))),
-//						leFactory.createMemberShipMolecule(leFactory
-//								.createAnonymousID((byte) 2), locationConcept
-//								.getIdentifier())), leFactory
-//				.createAttributeValue(person3.getIdentifier(), livesAtAttr
-//						.getIdentifier(), wsmoFactory.createAnonymousID())));
 
 		ontology.addConcept(humanConcept);
 		ontology.addConcept(locationConcept);
 		ontology.addInstance(person1);
 		ontology.addInstance(person2);
 		ontology.addAxiom(person1LivesAx);
-		// ontology.addAxiom(person2LivesAx);
-
 	
 
 		Map<String, Object> params = new HashMap<String, Object>();
