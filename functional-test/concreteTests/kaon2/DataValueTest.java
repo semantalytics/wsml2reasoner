@@ -1,4 +1,4 @@
-/*
+/**
  * WSML2Reasoner
  * An extensible framework for reasoning with WSML ontologies.
  * 
@@ -20,13 +20,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package helper;
+package concreteTests.kaon2;
 
+import org.wsml.reasoner.api.DLReasoner;
 
-/**
- * Helper utilities for DL based tests.
- */
-public class DLHelper
-{
+import abstractTests.dl.AbstractDataValue;
+
+public class DataValueTest extends AbstractDataValue{
+
+	public DLReasoner getDLReasoner() {
+		return Kaon2Helper.getReasoner();
+	}
 	
+
 }
