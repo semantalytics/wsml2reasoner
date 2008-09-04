@@ -26,7 +26,7 @@ However, there are three release variants in accordance with the license agreeme
 </div>
 
 <p>
-	The nightly build process creates a <a href="nightly_build">snapshot</a> of all release configurations, tests, javadoc and source code.
+	The nightly build process creates a <a href="nightly_build">snapshot</a> of all release configurations, test results, javadoc and source code.
 </p>
 
 <p>
