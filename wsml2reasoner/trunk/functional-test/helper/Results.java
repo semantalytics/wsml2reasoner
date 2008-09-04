@@ -48,7 +48,7 @@ public class Results
 	 * Create the result set.
 	 * @param variableNames One instance for each variable in each 'row' of the result.
 	 */
-	public Results( String...variableNames )
+	public Results( String...variableNames)
 	{
 		int count = variableNames.length;
 		
@@ -131,7 +131,6 @@ public class Results
     static{
     	// 	 Set up factories for creating WSML elements
 	   	wsmoManager = new WSMO4JManager();
-	
 	   	leFactory = wsmoManager.getLogicalExpressionFactory();
 	   	wsmoFactory = wsmoManager.getWSMOFactory();
 	   	dataFactory = wsmoManager.getDataFactory();

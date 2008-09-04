@@ -24,41 +24,42 @@ package abstractTests.lp;
 
 import helper.LPHelper;
 import helper.OntologyHelper;
-
-import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
-
+import helper.Results;
 import junit.framework.TestCase;
 
-import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.inconsistency.InconsistencyException;
-import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.wsml.ParserException;
+import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.factory.LogicalExpressionFactory;
+import org.wsmo.factory.WsmoFactory;
 
 import abstractTests.LP;
 
+public abstract class AbstractAttributeInheritance extends TestCase implements LP {
 
-public abstract class AbstractAttributeInheritance extends TestCase implements LP{
+	protected WSMO4JManager wsmoManager;
+	protected String ns = "http://ex.org#";
+	protected WsmoFactory wsmoFactory;
+	protected LogicalExpressionFactory leFactory;
 
-	
-	public void testAttributeInheritance() throws ParserException, InconsistencyException, IOException, InvalidModelException {
-		
+	protected void setUp() throws Exception {
+		super.setUp();
+		WSMO4JManager wsmoManager = new WSMO4JManager();
+		wsmoFactory = wsmoManager.getWSMOFactory();
+		leFactory = wsmoManager.getLogicalExpressionFactory();
+	}
+
+	public void testAttributeInheritance() throws Exception {
+
 		String ns = "http://ex1.org#";
-        String test = "namespace _\""+ns+"\" \n" +
-                "ontology o1 \n" +
-                "concept A \n" +
-                "  attr ofType A \n " +
-                "concept B subConceptOf A \n ";
-        
-        String query = "?x[?attribute ofType ?range]";
-       
-        Set<Map<Variable, Term>> result = LPHelper.executeQuery(OntologyHelper.parseOntology(test), query, getLPReasoner() );
-        assertEquals(2, result.size());
-//        for( Map<Variable, Term> p : result){
-//        	
-//        }
-	}   
-	
+		String ontology = "namespace _\"" + ns + "\" \n" + "ontology o1 \n"
+				+ "concept A \n" + "  attr ofType A \n "
+				+ "concept B subConceptOf A \n ";
+
+		String query = "?x[?attribute ofType ?range]";
+
+		Results r = new Results("range", "attribute", "x");
+		r.addBinding(Results.iri(ns + "A"), Results.iri(ns + "attr"), Results.iri(ns + "B"));
+		r.addBinding(Results.iri(ns + "A"), Results.iri(ns + "attr"), Results.iri(ns + "A"));
+
+		LPHelper.executeQueryAndCheckResults(OntologyHelper.parseOntology(ontology), query, r.get(), getLPReasoner());
+	}
 }
