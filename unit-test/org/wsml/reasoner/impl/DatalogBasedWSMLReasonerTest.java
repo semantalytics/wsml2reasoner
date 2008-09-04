@@ -23,7 +23,6 @@
 
 package org.wsml.reasoner.impl;
 
-import helper.OntologyHelper;
 
 import java.math.BigInteger;
 import java.util.HashMap;
@@ -44,7 +43,6 @@ import org.wsml.reasoner.ConjunctiveQuery;
 import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
-import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.common.Entity;
 import org.wsmo.factory.DataFactory;
@@ -141,37 +139,21 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 	}
 
 	public void testCheckConsistency() throws Exception {
+		// just testing if an empty reasoner is consistent
+		
+		Ontology ontology2 = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ont"));
+	    ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));
+	    reasoner.deRegister();
+	    reasoner.registerOntology(ontology2);
 		
 		Set<ConsistencyViolation> viols = reasoner.checkConsistency();
 		
 		for(ConsistencyViolation vio : viols) {
 			assertEquals(vio, null);	
 		}
-		// TODO
-		// maybe better tested in a functional-test:
-		
-		 String ns = "http://ex1.org#";
-	     String test = "namespace _\""+ns+"\" \n" +
-	     "ontology inconsistencyOntology" +
-	     " axiom " + " definedBy "+
-	     " Concept[attribute ofType OtherConcept]. " +
-	     " f[attribute hasValue 10] memberOf Concept. ";
- 
-	    Ontology ontology2 = OntologyHelper.parseOntology( test );
-	    reasoner.deRegister();
-       
-        try {
-        reasoner.registerOntology(ontology2);
-		viols = reasoner.checkConsistency();
-        } catch (InconsistencyException e) {
-        	assertEquals(1, viols.size());
-			for(ConsistencyViolation vio : viols) {
-				System.out.println(vio.toString());
-			}
-        }
 		
 		reasoner.deRegister();
-	    reasoner.registerOntology(ontology);
+		reasoner.registerOntology(ontology);
 
 	}
 	
