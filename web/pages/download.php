@@ -8,7 +8,7 @@ The WSML2Reasoner software is licensed under the GNU lesser GPL (LGPL).
 However, there are three release variants in accordance with the license agreements for the bundled reasoning engine libraries.
 <ul>
 	<li>
-		LGPL - This release includes the all the LGPL libraries (jars) used by WSML2Reasoner,
+		LGPL - This release includes all the LGPL libraries (jars) used by WSML2Reasoner,
 		including the IRIS and PELLET reasoning engines.  
 	</li>
 	<li>
