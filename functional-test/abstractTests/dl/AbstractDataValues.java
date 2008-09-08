@@ -326,13 +326,13 @@ public abstract class AbstractDataValues extends TestCase implements DL {
 	     serializer = new OWLSerializerImpl();
 	     serializer.serialize(owlOntology, writer, prefs);
 	     
-	     if(!writer.toString().contains(res)) {
-		     System.out.println("- Expected: ");
-		     System.out.println("-" + res);
-		     System.out.println("- Actual: ");
-		     System.out.println(writer.toString());
-		     System.out.println("_______________________");
-	     }
+//	     if(!writer.toString().contains(res)) {
+//		     System.out.println("- Expected: ");
+//		     System.out.println("-" + res);
+//		     System.out.println("- Actual: ");
+//		     System.out.println(writer.toString());
+//		     System.out.println("_______________________");
+//	     }
 	     
 	     assertTrue(writer.toString().contains(res)); 
 
