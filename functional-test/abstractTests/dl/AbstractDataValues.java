@@ -76,7 +76,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
 	 */
 	public void testString() throws SynchronisationException, InvalidModelException, ParserException, RendererException{
 		String in = "A[hasName hasValue _string(\"StringValue\")].";
-		String expected = "value(a:hasName \"StringValue\"^^<http://www.w3.org/2001/XMLSchema#string>))";
+		String expected = "value(a:hasName \"StringValue\"^^<http://www.w3.org/2001/XMLSchema#string>)";
 			
 		testValue(in, expected);
 	}
@@ -86,7 +86,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
      */
 	public void testDecimal() throws SynchronisationException, InvalidModelException, ParserException, RendererException{
 		String in = "A[hasDecimal hasValue _decimal(-1.5)].";
-		String expected = "value(a:hasDecimal \"-1.5\"^^<http://www.w3.org/2001/XMLSchema#decimal>))";
+		String expected = "value(a:hasDecimal \"-1.5\"^^<http://www.w3.org/2001/XMLSchema#decimal>)";
 			
 		testValue(in, expected);
 	}
@@ -96,7 +96,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
      */
 	public void testInteger() throws SynchronisationException, InvalidModelException, ParserException, RendererException{
 		String in =  "A[hasInt hasValue _integer(77)].";
-		String expected = "value(a:hasInt \"77\"^^<http://www.w3.org/2001/XMLSchema#integer>))";
+		String expected = "value(a:hasInt \"77\"^^<http://www.w3.org/2001/XMLSchema#integer>)";
 			
 		testValue(in, expected);
 	}
@@ -106,7 +106,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
      */
 	public void testDouble() throws SynchronisationException, InvalidModelException, ParserException, RendererException{
 		String in =  "A[hasDouble hasValue _double(\"58.5E-5\")].";
-		String expected = "value(a:hasDouble \"5.85E-4\"^^<http://www.w3.org/2001/XMLSchema#double>))";
+		String expected = "value(a:hasDouble \"5.85E-4\"^^<http://www.w3.org/2001/XMLSchema#double>)";
 			
 		testValue(in, expected);
 	}
@@ -117,7 +117,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
      */
 	public void testFloat() throws SynchronisationException, InvalidModelException, ParserException, RendererException{
 		String in =  "A[hasFloat hasValue _float(\"-60.5e-3\")].";
-		String expected = "value(a:hasFloat \"-0.0605\"^^<http://www.w3.org/2001/XMLSchema#float>))";
+		String expected = "value(a:hasFloat \"-0.0605\"^^<http://www.w3.org/2001/XMLSchema#float>)";
 			
 		testValue(in, expected);
 	}
@@ -129,7 +129,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
      */
 	public void testIRI() throws SynchronisationException, InvalidModelException, ParserException, RendererException{
 		String in =  "A[hasLocation hasValue _iri(_\"http://www.example.com/tests#testOntology\")].";
-		String expected = "value(b:hasLocation a:testOntology))";
+		String expected = "value(a:hasLocation b:testOntology)";
 			
 		testValue(in, expected);
 	}
@@ -140,7 +140,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
 	public void testSqname() throws SynchronisationException, InvalidModelException, ParserException, RendererException{
 		
 		String in =  "A[hasSQName hasValue _sqname(\"b\", \"testOntology\")].";
-		String expected = "value(a:hasSQName b:testOntology))";
+		String expected = "value(a:hasSQName b:testOntology)";
 	
 		testValue(in, expected);
 	}
@@ -150,7 +150,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
      */
 	public void testBoolean() throws SynchronisationException, InvalidModelException, ParserException, RendererException{
 		String in =   "A[isData hasValue _boolean(\"true\")].";
-		String expected = "value(a:isData \"true\"^^<http://www.w3.org/2001/XMLSchema#boolean>))";
+		String expected = "value(a:isData \"true\"^^<http://www.w3.org/2001/XMLSchema#boolean>)";
 			
 		testValue(in, expected);
 	}
@@ -160,7 +160,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
      */
 	public void testDuration() throws SynchronisationException, InvalidModelException, ParserException, RendererException{
 		String in =   "A[hasDuration hasValue _duration(66, 2, 3, 10, 20, 10)].";
-		String expected = "value(a:hasDuration \"P66Y2M3DT10H20M10S\"^^<http://www.w3.org/2001/XMLSchema#duration>))";
+		String expected = "value(a:hasDuration \"P66Y2M3DT10H20M10S\"^^<http://www.w3.org/2001/XMLSchema#duration>)";
 			
 		testValue(in, expected);
 	}
@@ -170,7 +170,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
      */
 	public void testDateTime() throws SynchronisationException, InvalidModelException, ParserException, RendererException{
 		String in =   "A[hasDate hasValue _dateTime(1977, 02, 07, 10, 20, 10.0, 12, 30)].";
-		String expected = "value(a:hasDate \"1977-02-07T10:20:10GMT+00:12\"^^<http://www.w3.org/2001/XMLSchema#dateTime>))";
+		String expected = "value(a:hasDate \"1977-02-07T10:20:10GMT+00:12\"^^<http://www.w3.org/2001/XMLSchema#dateTime>)";
 			
 		testValue(in, expected);
 	}
@@ -180,7 +180,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
      */
 	public void testDateTimeShort() throws SynchronisationException, InvalidModelException, ParserException, RendererException{
 		String in =   "A[hasDate hasValue _dateTime(1977, 02, 07, 10, 20, 10.0)].";
-		String expected = "value(a:hasDate \"1977-02-07T10:20:10\"^^<http://www.w3.org/2001/XMLSchema#dateTime>))";
+		String expected = "value(a:hasDate \"1977-02-07T10:20:10\"^^<http://www.w3.org/2001/XMLSchema#dateTime>)";
 			
 		testValue(in, expected);
 	}
@@ -190,7 +190,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
     */
 	public void testTime() throws SynchronisationException, InvalidModelException, ParserException, RendererException{
 		String in =   "A[hasName hasValue _time(10, 20, 10.0, 12, 30)].";
-		String expected = "value(a:hasName \"10:20:10GMT+00:12\"^^<http://www.w3.org/2001/XMLSchema#time>))";
+		String expected = "value(a:hasName \"10:20:10GMT+00:12\"^^<http://www.w3.org/2001/XMLSchema#time>)";
 			
 		testValue(in, expected);
 	}
@@ -200,7 +200,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
 	*/
 	public void testTimeShort() throws SynchronisationException, InvalidModelException, ParserException, RendererException{
 		String in =  "A[hasName hasValue _time(10, 20, 10.0)].";
-		String expected = "value(a:hasName \"10:20:10\"^^<http://www.w3.org/2001/XMLSchema#time>))";
+		String expected = "value(a:hasName \"10:20:10\"^^<http://www.w3.org/2001/XMLSchema#time>)";
 				
 		testValue(in, expected);
 	}
@@ -210,7 +210,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
 	*/
 	public void testDate() throws SynchronisationException, InvalidModelException, ParserException, RendererException{
 		String in = "A[hasDate hasValue _date(1967, 08, 16, 12, 30)].";
-		String expected = "value(a:hasDate \"1967-08-16GMT+00:12\"^^<http://www.w3.org/2001/XMLSchema#date>))";
+		String expected = "value(a:hasDate \"1967-08-16GMT+00:12\"^^<http://www.w3.org/2001/XMLSchema#date>)";
 				
 		testValue(in, expected);
 	}
@@ -220,7 +220,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
 	*/
 	public void testDateShort() throws SynchronisationException, InvalidModelException, ParserException, RendererException{
 		String in = "A[hasDate hasValue _date(1967, 08, 16)].";
-		String expected = "value(a:hasDate \"1967-08-16\"^^<http://www.w3.org/2001/XMLSchema#date>))";
+		String expected = "value(a:hasDate \"1967-08-16\"^^<http://www.w3.org/2001/XMLSchema#date>)";
 				
 		testValue(in, expected);
 	}
@@ -230,7 +230,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
 	*/
 	public void testGyearmonth() throws SynchronisationException, InvalidModelException, ParserException, RendererException{
 		String in = "A[hasName hasValue _gyearmonth(1977, 02)].";
-		String expected = "value(a:hasName \"1977-02\"^^<http://www.w3.org/2001/XMLSchema#gYearMonth>))";
+		String expected = "value(a:hasName \"1977-02\"^^<http://www.w3.org/2001/XMLSchema#gYearMonth>)";
 				
 		testValue(in, expected);
 	}
@@ -240,7 +240,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
 	*/
 	public void testGyear() throws SynchronisationException, InvalidModelException, ParserException, RendererException{
 		String in =  "A[hasName hasValue _gyear(1977)].";
-		String expected = "value(a:hasName \"1977\"^^<http://www.w3.org/2001/XMLSchema#gYear>))";
+		String expected = "value(a:hasName \"1977\"^^<http://www.w3.org/2001/XMLSchema#gYear>)";
 				
 		testValue(in, expected);
 	}
@@ -251,7 +251,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
 	*/
 	public void testGmonthday() throws SynchronisationException, InvalidModelException, ParserException, RendererException{
 		String in =  "A[hasName hasValue _gmonthday(02, 07)].";
-		String expected = "value(a:hasName \"02-07\"^^<http://www.w3.org/2001/XMLSchema#gMonthDay>))";
+		String expected = "value(a:hasName \"02-07\"^^<http://www.w3.org/2001/XMLSchema#gMonthDay>)";
 				
 		testValue(in, expected);
 	}
@@ -261,7 +261,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
 	*/
 	public void testGday() throws SynchronisationException, InvalidModelException, ParserException, RendererException{
 		String in =  "A[hasName hasValue _gday(07)].";
-		String expected = "value(a:hasName \"7\"^^<http://www.w3.org/2001/XMLSchema#gDay>))";
+		String expected = "value(a:hasName \"7\"^^<http://www.w3.org/2001/XMLSchema#gDay>)";
 				
 		testValue(in, expected);
 	}
@@ -271,7 +271,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
 	*/
 	public void testGmonth() throws SynchronisationException, InvalidModelException, ParserException, RendererException{
 		String in = "A[hasName hasValue _gmonth(02)].";
-		String expected = "value(a:hasName \"2\"^^<http://www.w3.org/2001/XMLSchema#gMonth>))";
+		String expected = "value(a:hasName \"2\"^^<http://www.w3.org/2001/XMLSchema#gMonth>)";
 				
 		testValue(in, expected);
 	}
@@ -281,7 +281,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
 	*/
 	public void testHexbinary() throws SynchronisationException, InvalidModelException, ParserException, RendererException{
 		String in = "A[hasName hasValue _hexbinary(\"0FB7\")].";
-		String expected = "value(a:hasName \"0FB7\"^^<http://www.w3.org/2001/XMLSchema#hexBinary>))";
+		String expected = "value(a:hasName \"0FB7\"^^<http://www.w3.org/2001/XMLSchema#hexBinary>)";
 				
 		testValue(in, expected);
 	}
@@ -291,7 +291,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
 	*/
 	public void testBase64binary() throws SynchronisationException, InvalidModelException, ParserException, RendererException{
 		String in = "A[hasName hasValue _base64binary(\"R01G0DdhNgAPAPAAAAACTYyPq\")].";
-		String expected = "value(a:hasName \"R01G0DdhNgAPAPAAAAACTYyPq\"^^<http://www.w3.org/2001/XMLSchema#base64Binary>))";
+		String expected = "value(a:hasName \"R01G0DdhNgAPAPAAAAACTYyPq\"^^<http://www.w3.org/2001/XMLSchema#base64Binary>)";
 				
 		testValue(in, expected);
 	}
@@ -301,14 +301,19 @@ public abstract class AbstractDataValues extends TestCase implements DL {
 	
 	
 	
-	private void testValue(String in, String expected) throws ParserException, RendererException{
+	private void testValue(String in, String expected) throws ParserException, RendererException, SynchronisationException, InvalidModelException{
+		
+		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiomTestValues"));
+	    ontology.addAxiom(axiom);
+		
 		LogicalExpression le = leFactory.createLogicalExpression(in, ontology);
         axiom.addDefinition(le);
         
         DLBasedWSMLReasoner reasoner = (DLBasedWSMLReasoner) this.getDLReasoner();
         OWLOntology owlOntology = reasoner.createOWLOntology(ontology);
         checkValue(owlOntology,expected );
-        axiom.removeDefinition(le);   
+        axiom.removeDefinition(le);  
+        ontology.removeAxiom(axiom);
 	}
 	
 	
@@ -321,13 +326,16 @@ public abstract class AbstractDataValues extends TestCase implements DL {
 	     serializer = new OWLSerializerImpl();
 	     serializer.serialize(owlOntology, writer, prefs);
 	     
-//	     System.out.println("- Expected: ");
-//	     System.out.println("-" + res);
-//	     System.out.println("- Actual: ");
-//	     System.out.println(writer.toString());
-//	     System.out.println("_______________________");
+	     if(!writer.toString().contains(res)) {
+		     System.out.println("- Expected: ");
+		     System.out.println("-" + res);
+		     System.out.println("- Actual: ");
+		     System.out.println(writer.toString());
+		     System.out.println("_______________________");
+	     }
 	     
-	     assertTrue(writer.toString().contains(res));   
+	     assertTrue(writer.toString().contains(res)); 
+
 	}
 	
 	
