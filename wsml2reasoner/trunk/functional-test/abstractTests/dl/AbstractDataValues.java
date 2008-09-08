@@ -68,7 +68,6 @@ public abstract class AbstractDataValues extends TestCase implements DL {
 	        axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiomTestValues"));
 	        ontology.addAxiom(axiom);
 	        ontology.addNamespace(wsmoFactory.createNamespace("b", wsmoFactory.createIRI("http://www.example.com/tests#")));
-
 	}
 	 
 	 /**
@@ -296,14 +295,9 @@ public abstract class AbstractDataValues extends TestCase implements DL {
 		testValue(in, expected);
 	}
 	
-	
-	
-	
-	
-	
+
 	private void testValue(String in, String expected) throws ParserException, RendererException, SynchronisationException, InvalidModelException{
-		
-		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiomTestValues"));
+		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiomTestValues_" + (in.trim())));
 	    ontology.addAxiom(axiom);
 		
 		LogicalExpression le = leFactory.createLogicalExpression(in, ontology);
