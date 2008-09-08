@@ -24,13 +24,12 @@ package concreteTests.kaon2;
 
 import org.wsml.reasoner.api.DLReasoner;
 
-import abstractTests.dl.AbstractDataValue;
+import abstractTests.dl.AbstractDataValues;
 
-public class DataValueTest extends AbstractDataValue{
-
-	public DLReasoner getDLReasoner() {
-		return Kaon2Helper.getReasoner();
-	}
+public class DataValuesTest extends AbstractDataValues {
 	
+	public DLReasoner getDLReasoner() {
+		return null;
+	}
 
 }
