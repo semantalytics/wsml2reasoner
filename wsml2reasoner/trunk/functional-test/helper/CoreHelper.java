@@ -35,7 +35,6 @@ import org.wsml.reasoner.api.DLReasoner;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -135,7 +134,7 @@ public class CoreHelper
 	
     private static final WsmoFactory wsmoFactory;
     private static final LogicalExpressionFactory leFactory;
-    private static final DataFactory dataFactory;
+//    private static final DataFactory dataFactory;
     private static final WSMO4JManager wsmoManager;
     
     static{
@@ -144,7 +143,7 @@ public class CoreHelper
 	
 	   	leFactory = wsmoManager.getLogicalExpressionFactory();
 	   	wsmoFactory = wsmoManager.getWSMOFactory();
-	   	dataFactory = wsmoManager.getDataFactory();
+//	   	dataFactory = wsmoManager.getDataFactory();
     }
 
 }
