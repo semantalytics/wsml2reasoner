@@ -60,13 +60,11 @@ if( !file_exists( $filelocation ) ) {
       <div>nightly build</div>
 		<a href="nightly_build">overview</a>
         <a href="snapshot/javadoc/">java doc</a>
+        <a href="snapshot/report/unit_test">unit test report</a>
+        <a href="snapshot/report/functional_test">functional test report</a>
 		<!--
-		<a href="snapshot/junit_report">test results</a>
-		
         <a href="source">source code</a>
-        
-        <a href="history">release history</a>
-        <a href="guide">user guide</a>-->
+		-->
     </div>
     
     <div class="sideBox LHS">
@@ -74,11 +72,6 @@ if( !file_exists( $filelocation ) ) {
         <!--<a href="http://tools.deri.org/wsml/rule-reasoner/">online demo</a>-->
 		<a href="demos">online demo</a>
 		<a href="services">web service</a>
-		<!--
-        <a href="source">source code</a>
-        
-        <a href="history">release history</a>
-        <a href="guide">user guide</a>-->
     </div>
     
      <!-- ###### Body Text ###### -->
