@@ -544,7 +544,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
             if (!m.matches()) {
                 throw new IllegalArgumentException("The duration string got the wrong format");
             }
-            return CONCRETE.createDuration(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3)), Integer.parseInt(m.group(4)), Integer.parseInt(m.group(5)), Integer.parseInt(m.group(6)));
+            return CONCRETE.createDuration(true,Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3)), Integer.parseInt(m.group(4)), Integer.parseInt(m.group(5)), Integer.parseInt(m.group(6)));
         }
         else if (t.equals(WsmlDataType.WSML_FLOAT)) {
             return CONCRETE.createFloat(Float.parseFloat(v.getValue().toString()));
