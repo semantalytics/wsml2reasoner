@@ -36,8 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.deri.iris.Configuration;
 import org.deri.iris.EvaluationException;
 import org.deri.iris.api.basics.IAtom;
@@ -77,6 +75,7 @@ import org.deri.iris.builtins.IsStringBuiltin;
 import org.deri.iris.facts.IDataSource;
 import org.deri.iris.querycontainment.QueryContainment;
 import org.deri.iris.storage.IRelation;
+import org.deri.iris.storage.simple.SimpleRelationFactory;
 import org.omwg.logicalexpression.Constants;
 import org.omwg.logicalexpression.terms.BuiltInConstructedTerm;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
@@ -105,10 +104,7 @@ import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
 /**
- * <p>
- * The facade for the iris reasoner with (locally) stratified negation,
- * i.e. for WSML-Flight.
- * </p>
+ * The base class for all facades based on the iris reasoner.
  */
 public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 
@@ -128,17 +124,13 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
     /** Factory to create the wsmo objects. */
     private final WsmoFactory WSMO_FACTORY;
 
-    /** Pattern to convert a wsmo duration to an iris one. */
-    private static final Pattern DURATION_PATTERN = Pattern.compile("P(\\d{4})Y(\\d{1,2})M(\\d{1,2})DT(\\d{1,2})H(\\d{1,2})M(\\d{1,2})S");
-
     /** knowledge-base. */
     private org.deri.iris.api.IKnowledgeBase prog;
 
     private QueryContainment queryCont = null;
 
     /** Map that contains the variable mapping from the query containment check. */
-    // private org.deri.iris.storage.IRelation QCResult = new
-    // SimpleRelationFactory().createRelation();
+    private org.deri.iris.storage.IRelation QCResult = new SimpleRelationFactory().createRelation();
 
     /**
      * The external data sources.
@@ -160,10 +152,6 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         }
     }
 
-//    public AbstractIrisFacade() {
-//        this(new WSMO4JManager(), null);
-//    }
-//
     public synchronized void deregister() throws ExternalToolException {
         prog = null;
     }
@@ -265,27 +253,29 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
     }
 
     public synchronized Set<Map<Variable, Term>> getQueryContainment(ConjunctiveQuery query1, ConjunctiveQuery query2) throws ExternalToolException {
-        /*
-         * // check query containment and get IRIS result set if
-         * (checkQueryContainment(query1, query2)) { QCResult =
-         * queryCont.getContainmentMappings();
-         *  // constructing the result set to return final Set<Map<Variable,
-         * Term>> result = new HashSet<Map<Variable, Term>>();
-         *  // getting the variables from query2 in the execution order List<IVariable>
-         * variableBindings = queryCont.getVariableBindings();
-         * 
-         * assert QCResult.size() > 0; assert variableBindings.size() ==
-         * QCResult.get(0).size();
-         * 
-         * for (int i =0; i< QCResult.size(); i++){ ITuple t = QCResult.get(i);
-         * final Map<Variable, Term> tmp = new HashMap<Variable, Term>(); for(
-         * int pos = 0; pos < t.size(); pos++){ tmp.put(
-         * (Variable)convertTermFromIrisToWsmo4j(variableBindings.get(pos)),
-         * convertTermFromIrisToWsmo4j(t.get(pos))); } result.add(tmp); }
-         * QCResult = new SimpleRelationFactory().createRelation(); return
-         * result; }
-         */
+    	
+    	// check query containment and get IRIS result set
+    	if (checkQueryContainment(query1, query2)) {
+    		QCResult = queryCont.getContainmentMappings();
+	        // constructing the result set to return
+	        final Set<Map<Variable,Term>> result = new HashSet<Map<Variable, Term>>();
+	        // getting the variables from query2 in the execution order
+	        List<IVariable> variableBindings = queryCont.getVariableBindings();
+        
+	        assert QCResult.size() > 0;
+	        assert variableBindings.size() == QCResult.get(0).size();
+	        
+	        for (int i =0; i< QCResult.size(); i++){ ITuple t = QCResult.get(i);
+	        final Map<Variable, Term> tmp = new HashMap<Variable, Term>();
+	        for( int pos = 0; pos < t.size(); pos++){
+	        	tmp.put( (Variable)convertTermFromIrisToWsmo4j(variableBindings.get(pos)),
+	        					convertTermFromIrisToWsmo4j(t.get(pos))); } result.add(tmp);
+	        }
+	        QCResult = new SimpleRelationFactory().createRelation();
+	        return result;
+        }
         return new HashSet<Map<Variable, Term>>();
+
     }
 
     public synchronized void register(Set<Rule> kb) throws ExternalToolException {
@@ -357,11 +347,8 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
     /**
      * Converts a wsmo4j literal to an iris literal.
      * 
-     * @param l
-     *            the wsmo4j literal to convert
+     * @param l the wsmo4j literal to convert
      * @return the iris literal
-     * @throws NullPointerException
-     *             if the literal is {@code null}
      */
     static ILiteral literal2Literal(final Literal l) {
         if (l == null) {
@@ -375,11 +362,8 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
      * Converts a wsmo4j literal to an iris atom. Watch out, the sighn (whether
      * it is positive, or not) will be ignored.
      * 
-     * @param l
-     *            the wsmo4j literal to convert
+     * @param l the wsmo4j literal to convert
      * @return the iris atom
-     * @throws NullPointerException
-     *             if the literal is {@code null}
      */
     static IAtom literal2Atom(final Literal l) {
         if (l == null) {
@@ -440,13 +424,8 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
     /**
      * Converts a wsmo4j term to an iris term
      * 
-     * @param t
-     *            the wsmo4j term
+     * @param t the wsmo4j term
      * @return the converted iris term
-     * @throws NullPointerException
-     *             if the term is {@code null}
-     * @throws IllegalArgumentException
-     *             if the term-type couldn't be converted
      */
 
     static ITerm convertTermFromWsmo4jToIris(final Term t) {
@@ -488,16 +467,8 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
     /**
      * Converts a wsmo4j DataValue to an iris ITerm.
      * 
-     * @param v
-     *            the wsmo4j value to convert
+     * @param v the wsmo4j value to convert
      * @return the corresponding ITerm implementation
-     * @throws NullPointerException
-     *             if the value is {@code null}
-     * @throws IllegalArgumentException
-     *             if the term-type couln't be converted
-     * @throws IllegalArgumentException
-     *             if the value was a duration and the duration string couldn't
-     *             be parsed
      */
     static ITerm convertWsmo4jDataValueToIrisTerm(final DataValue v) {
         if (v == null) {
@@ -511,26 +482,26 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
             return CONCRETE.createBoolean(Boolean.valueOf(v.getValue().toString()));
         }
         else if (t.equals(WsmlDataType.WSML_DATE)) {
-            // TODO: a date in wsml has timezone values, too, which are ignored
-            // here.
             final ComplexDataValue cv = (ComplexDataValue) v;
-            return CONCRETE.createDate(getIntFromValue(cv, 0), getIntFromValue(cv, 1), getIntFromValue(cv, 2));
+            int length = cv.getArity();
+            return CONCRETE.createDate(getIntFromValue(cv, 0), getIntFromValue(cv, 1), getIntFromValue(cv, 2),
+            				length > 3 ? getIntFromValue(cv, 3) : 0,
+            	            length > 4 ? getIntFromValue(cv, 4) : 0);
         }
         else if (t.equals(WsmlDataType.WSML_DATETIME)) {
             final ComplexDataValue cv = (ComplexDataValue) v;
-            double seconds = Double.parseDouble(getFieldValue(cv, 5));
-            int int_seconds = (int) seconds;
-            int milliseconds = (int) ((seconds - int_seconds) * 1000.0);
-
-            return CONCRETE.createDateTime(getIntFromValue(cv, 0), getIntFromValue(cv, 1), getIntFromValue(cv, 2), getIntFromValue(cv, 3), getIntFromValue(cv, 4), int_seconds, milliseconds, getIntFromValue(cv, 6), getIntFromValue(cv, 7));
+            int length = cv.getArity();
+            return CONCRETE.createDateTime(getIntFromValue(cv, 0), getIntFromValue(cv, 1), getIntFromValue(cv, 2),
+            				getIntFromValue(cv, 3), getIntFromValue(cv, 4), getDoubleFromValue(cv, 5),
+            				length > 6 ? getIntFromValue(cv, 6) : 0,
+            				length > 7 ? getIntFromValue(cv, 7) : 0);
         }
         else if (t.equals(WsmlDataType.WSML_TIME)) {
             final ComplexDataValue cv = (ComplexDataValue) v;
-            double seconds = Double.parseDouble(getFieldValue(cv, 2));
-            int int_seconds = (int) seconds;
-            int milliseconds = (int) ((seconds - int_seconds) * 1000.0);
-
-            return CONCRETE.createTime(getIntFromValue(cv, 0), getIntFromValue(cv, 1), int_seconds, milliseconds, getIntFromValue(cv, 3), getIntFromValue(cv, 4));
+            int length = cv.getArity();
+            return CONCRETE.createTime(getIntFromValue(cv, 0), getIntFromValue(cv, 1), getDoubleFromValue(cv, 2),
+            				length > 3 ? getIntFromValue(cv, 3) : 0,
+							length > 4 ? getIntFromValue(cv, 4) : 0);
         }
         else if (t.equals(WsmlDataType.WSML_DECIMAL)) {
             return CONCRETE.createDecimal(Double.parseDouble(v.getValue().toString()));
@@ -540,11 +511,9 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         }
         else if (t.equals(WsmlDataType.WSML_DURATION)) {
             final ComplexDataValue cv = (ComplexDataValue) v;
-            final Matcher m = DURATION_PATTERN.matcher(cv.getArgumentValue((byte) 0).getValue().toString());
-            if (!m.matches()) {
-                throw new IllegalArgumentException("The duration string got the wrong format");
-            }
-            return CONCRETE.createDuration(true,Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3)), Integer.parseInt(m.group(4)), Integer.parseInt(m.group(5)), Integer.parseInt(m.group(6)));
+            return CONCRETE.createDuration( true,
+            				getIntFromValue(cv, 0), getIntFromValue(cv, 1), getIntFromValue(cv, 2),
+            				getIntFromValue(cv, 3), getIntFromValue(cv, 4), getDoubleFromValue(cv, 5) );
         }
         else if (t.equals(WsmlDataType.WSML_FLOAT)) {
             return CONCRETE.createFloat(Float.parseFloat(v.getValue().toString()));
@@ -576,11 +545,9 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
             return CONCRETE.createInteger(Integer.parseInt(v.toString()));
         }
         else if (t.equals(WsmlDataType.WSML_IRI)) {
-            // never created by the DataFactory, but nevermind...
             return CONCRETE.createIri(v.getValue().toString());
         }
         else if (t.equals(WsmlDataType.WSML_SQNAME)) {
-            // somehow they seem not to exist/be created in wsmo4j
             return CONCRETE.createSqName(v.getValue().toString());
         }
         else if (t.equals(WsmlDataType.WSML_STRING)) {
@@ -592,10 +559,8 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
     /**
      * Returns the integer value of a ComplexDataValue at a given position.
      * 
-     * @param value
-     *            the complex data value from where to get the int
-     * @param pos
-     *            the index of the integer
+     * @param value the complex data value from where to get the int
+     * @param pos the index of the integer
      * @return the extracted and converted integer
      */
     private static int getIntFromValue(final ComplexDataValue value, int pos) {
@@ -603,6 +568,19 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         assert pos >= 0;
 
         return Integer.parseInt(getFieldValue(value, pos));
+    }
+
+    /**
+     * Get a double value from the specified position.
+     * @param value The complex data value from which the double is extracted.
+     * @param pos The zero-basd index of the desired value.
+     * @return
+     */
+    private static double getDoubleFromValue(final ComplexDataValue value, int pos) {
+        assert value != null;
+        assert pos >= 0;
+
+        return Double.parseDouble(getFieldValue(value, pos));
     }
 
     /**
@@ -673,15 +651,15 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         }
         else if (t instanceof IDateTime) {
             final IDateTime dt = (IDateTime) t;
-            float seconds = (float) (dt.getSecond() + (dt.getMillisecond() / 1000.0));
             int[] tzData = getTZData(dt.getTimeZone());
-            return DATA_FACTORY.createWsmlDateTime(dt.getYear(), dt.getMonth(), dt.getDay(), dt.getHour(), dt.getMinute(), seconds, tzData[0], tzData[1]);
+            return DATA_FACTORY.createWsmlDateTime(dt.getYear(), dt.getMonth(), dt.getDay(),
+            				dt.getHour(), dt.getMinute(), dt.getDecimalSecond(), tzData[0], tzData[1]);
         }
         else if (t instanceof ITime) {
             final ITime time = (ITime) t;
-            float seconds = (float) (time.getSecond() + (time.getMillisecond() / 1000.0));
             int[] tzData = getTZData(time.getTimeZone());
-            return DATA_FACTORY.createWsmlTime(time.getHour(), time.getMinute(), seconds, tzData[0], tzData[1]);
+            return DATA_FACTORY.createWsmlTime(time.getHour(), time.getMinute(), time.getDecimalSecond(),
+            				tzData[0], tzData[1]);
         }
         else if (t instanceof IDecimalTerm) {
             return DATA_FACTORY.createWsmlDecimal(new BigDecimal(((IDecimalTerm) t).toString()));
@@ -691,7 +669,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         }
         else if (t instanceof IDuration) {
             final IDuration dt = (IDuration) t;
-            return DATA_FACTORY.createWsmlDuration(0, 0, dt.getDay(), dt.getHour(), dt.getMinute(), dt.getSecond());
+            return DATA_FACTORY.createWsmlDuration(0, 0, dt.getDay(), dt.getHour(), dt.getMinute(), dt.getDecimalSecond());
         }
         else if (t instanceof IFloatTerm) {
             return DATA_FACTORY.createWsmlFloat(((IFloatTerm) t).getValue());
@@ -799,8 +777,6 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 
     /**
      * Wrapper for the w2r datasource to the iris datasource.
-     * 
-     * @author Richard Pöttler (richard dot poettler at sti2 dot at)
      */
     private class IrisDataSource implements IDataSource {
 
