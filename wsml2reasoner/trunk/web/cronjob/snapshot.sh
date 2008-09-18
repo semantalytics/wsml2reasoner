@@ -1,6 +1,7 @@
 # Setup
 DIR=/var/www/html/tools_deri_org/wsml2reasoner/nightly-build/wsml2reasoner_trunk
 SNAPSHOT=../../snapshot
+export JAVA_HOME=/usr/lib/jvm/java-6-sun/
 export ANT_HOME=/home/barryb/apache-ant-1.7.0
 
 echo ====================================================================
