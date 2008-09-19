@@ -1,7 +1,7 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
-namespace { _"http://example.com/relations2_simple_unnamed#" }
+namespace { _"http://example.com/relations2#" }
 
-ontology Relations
+ontology Relations2
 
 concept C1
 concept C2

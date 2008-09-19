@@ -14,7 +14,7 @@ import abstractTests.LP;
  */
 public abstract class AbstractRelations2SimpleUnnamed extends TestCase implements LP {
 
-    private static final String NS = "http://example.com/relations2_simple_unnamed#";
+    private static final String NS = "http://example.com/relations2#";
 
     private static final String ONTOLOGY_FILE = "files/relations2_simple_unnamed.wsml";
 

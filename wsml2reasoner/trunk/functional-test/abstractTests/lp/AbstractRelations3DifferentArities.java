@@ -15,7 +15,7 @@ import abstractTests.LP;
  */
 public abstract class AbstractRelations3DifferentArities extends TestCase implements LP {
 
-    private static final String NS = "http://example.com/relations3_different_arities#";
+    private static final String NS = "http://example.com/relations3#";
 
     private static final String ONTOLOGY_FILE = "files/relations3_different_arities.wsml";
 
