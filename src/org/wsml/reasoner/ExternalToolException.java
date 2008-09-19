@@ -45,7 +45,7 @@ public class ExternalToolException extends Exception {
      * Creates an
      */
     public ExternalToolException(ConjunctiveQuery q) {
-        super("Failed to translate query: " + q.toString());
+        super("Failed to translate query: " + (q==null ? "(none)" : q.toString()));
     }
 
     /**
@@ -53,7 +53,7 @@ public class ExternalToolException extends Exception {
      * @param arg1
      */
     public ExternalToolException(ConjunctiveQuery q, Throwable t) {
-        super("Failed to translate query: " + q.toString(), t);
+        super("Failed to translate query: " + (q==null ? "(none)" : q.toString()), t);
     }
 
 }
