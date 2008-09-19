@@ -22,6 +22,7 @@
  */
 package helper;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import junit.framework.Assert;
@@ -42,16 +43,32 @@ public class LPHelper
 {
     public static void executeQueryAndCheckResults( Ontology ontology, String query, Set<Map<Variable, Term>> expectedResults, LPReasoner reasoner ) throws Exception
     {
-		Set<Map<Variable, Term>> actualResults = executeQuery(ontology, query, reasoner );
+    	Set<Ontology> ontologies = new HashSet<Ontology>();
+    	ontologies.add( ontology );
+
+        executeQueryAndCheckResults( ontologies, query, expectedResults, reasoner );
+    }
+    
+    public static void executeQueryAndCheckResults( Set<Ontology> ontologies, String query, Set<Map<Variable, Term>> expectedResults, LPReasoner reasoner ) throws Exception
+    {
+		Set<Map<Variable, Term>> actualResults = executeQuery(ontologies, query, reasoner );
 		
 		checkResults( actualResults, expectedResults );
     }
     
     public static Set<Map<Variable, Term>> executeQuery( Ontology ontology, String query, LPReasoner reasoner ) throws ParserException, InconsistencyException
     {
-        reasoner.registerOntology(ontology);
+    	Set<Ontology> ontologies = new HashSet<Ontology>();
+    	ontologies.add( ontology );
+    	
+    	return executeQuery( ontologies, query, reasoner );
+    }
+    
+    public static Set<Map<Variable, Term>> executeQuery( Set<Ontology> ontologies, String query, LPReasoner reasoner ) throws ParserException, InconsistencyException
+    {
+        reasoner.registerOntologies(ontologies);
 
-        LogicalExpression qExpression = leFactory.createLogicalExpression( query, ontology);
+        LogicalExpression qExpression = leFactory.createLogicalExpression( query, ontologies.iterator().next());
 
 //		System.out.println("Executing query string '" + query + "'");
 //		System.out.println("Executing query LE: '" + OntologyHelper.toString( ontology, qExpression ) + "'");
