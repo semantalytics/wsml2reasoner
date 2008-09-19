@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
@@ -89,6 +90,42 @@ public class Results
 		List<Term> termList = Arrays.asList( terms );
 		
 		return leFactory.createConstructedTerm( wsmoFactory.createIRI( functionSymbolIri ), termList );
+	}
+	
+	/**
+	 * Create a duration.
+	 * @return The new wsml object.
+	 */
+	public static ComplexDataValue duration(boolean sign, int year, int month, int day, int hour, int minute, double second)
+	{
+		return dataFactory.createWsmlDuration( sign, year, month, day, hour, minute, second );
+	}
+	
+	/**
+	 * Create a datetime.
+	 * @return The new wsml object.
+	 */
+	public static ComplexDataValue datetime(int year, int month, int day, int hour, int minute, double second, int tzHour, int tzMinute)
+	{
+		return dataFactory.createWsmlDateTime( year, month, day, hour, minute, second, tzHour, tzMinute );
+	}
+	
+	/**
+	 * Create a time.
+	 * @return The new wsml object.
+	 */
+	public static ComplexDataValue time(int hour, int minute, double second, int tzHour, int tzMinute)
+	{
+		return dataFactory.createWsmlTime( hour, minute, second, tzHour, tzMinute );
+	}
+	
+	/**
+	 * Create a date.
+	 * @return The new wsml object.
+	 */
+	public static ComplexDataValue date(int year, int month, int day, int tzHour, int tzMinute)
+	{
+		return dataFactory.createWsmlDate( year, month, day, tzHour, tzMinute );
 	}
 	
 	/**
