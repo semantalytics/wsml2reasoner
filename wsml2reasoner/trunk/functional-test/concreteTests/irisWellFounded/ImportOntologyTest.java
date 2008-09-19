@@ -20,12 +20,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package concreteTests.irisSLDNF;
+package concreteTests.irisWellFounded;
 
 import org.wsml.reasoner.api.WSMLReasoner;
 import abstractTests.core.AbstractImportOntology;
 
-public class ImportOntology extends AbstractImportOntology
+public class ImportOntologyTest extends AbstractImportOntology
 {
 	public WSMLReasoner getReasoner()
 	{
