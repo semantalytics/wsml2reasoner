@@ -1,0 +1,37 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://example.com/date_time_types#",
+	wsml _"http://www.wsmo.org/wsml/wsml-syntax#" }
+
+ontology DatatypesTestOntology
+
+concept AnEntity
+// Need to investigate why these two can not be properly declared
+//	aDuration ofType _duration
+//	aTime ofType _time		// _"http://www.wsmo.org/wsml/wsml-syntax#time" doesn't work either
+	aDate ofType _date		// _"http://www.wsmo.org/wsml/wsml-syntax#date" also works
+	aDateTime ofType _dateTime
+
+instance integerSeconds memberOf AnEntity
+	aTime hasValue _time( 23, 59, 58 )
+	aDate hasValue _date( 1981, 12, 31 )
+	aDateTime hasValue _dateTime( 1981, 12, 31, 23, 59, 58 )
+	aDuration hasValue _duration( 1, 2, 3, 4, 5, 6 )
+
+instance decimalSeconds memberOf AnEntity
+	aTime hasValue _time( 23, 59, 58.98765 )
+	aDate hasValue _date( 1981, 12, 31 )
+	aDateTime hasValue _dateTime( 1981, 12, 31, 23, 59, 58.98765 )
+	aDuration hasValue _duration( 1, 2, 3, 4, 5, 6.98765 )
+
+instance integerSecondsWithTimeZones memberOf AnEntity
+	aTime hasValue _time( 23, 59, 58, 13, 30 )
+	aDate hasValue _date( 1981, 12, 31, 13, 30 )
+	aDateTime hasValue _dateTime( 1981, 12, 31, 23, 59, 58, 13, 30 )
+	aDuration hasValue _duration( 1, 2, 3, 4, 5, 6 )
+
+instance decimalSecondsWithTimeZones memberOf AnEntity
+	aTime hasValue _time( 23, 59, 58.98765, 13, 30 )
+	aDate hasValue _date( 1981, 12, 31, 13, 30 )
+	aDateTime hasValue _dateTime( 1981, 12, 31, 23, 59, 58.98765, 13, 30 )
+	aDuration hasValue _duration( 1, 2, 3, 4, 5, 6.98765 )
+
