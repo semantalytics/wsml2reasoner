@@ -511,8 +511,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         }
         else if (t.equals(WsmlDataType.WSML_DURATION)) {
             final ComplexDataValue cv = (ComplexDataValue) v;
-            return CONCRETE.createDuration( true,
-            				getIntFromValue(cv, 0), getIntFromValue(cv, 1), getIntFromValue(cv, 2),
+            return CONCRETE.createDuration( true, getIntFromValue(cv, 0), getIntFromValue(cv, 1), getIntFromValue(cv, 2),
             				getIntFromValue(cv, 3), getIntFromValue(cv, 4), getDoubleFromValue(cv, 5) );
         }
         else if (t.equals(WsmlDataType.WSML_FLOAT)) {
@@ -646,8 +645,8 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         }
         else if (t instanceof IDateTerm) {
             final IDateTerm dt = (IDateTerm) t;
-            // TODO: the IDateTerm at the moment doesn't support timezone
-            return DATA_FACTORY.createWsmlDate(dt.getYear(), dt.getMonth(), dt.getDay(), 0, 0);
+            int[] tzData = getTZData(dt.getTimeZone());
+            return DATA_FACTORY.createWsmlDate(dt.getYear(), dt.getMonth(), dt.getDay(), tzData[0], tzData[1]);
         }
         else if (t instanceof IDateTime) {
             final IDateTime dt = (IDateTime) t;
@@ -669,7 +668,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         }
         else if (t instanceof IDuration) {
             final IDuration dt = (IDuration) t;
-            return DATA_FACTORY.createWsmlDuration(0, 0, dt.getDay(), dt.getHour(), dt.getMinute(), dt.getDecimalSecond());
+            return DATA_FACTORY.createWsmlDuration(dt.getValue().getSign() > 0, dt.getYear(), dt.getMonth(), dt.getDay(), dt.getHour(), dt.getMinute(), dt.getDecimalSecond());
         }
         else if (t instanceof IFloatTerm) {
             return DATA_FACTORY.createWsmlFloat(((IFloatTerm) t).getValue());
