@@ -1,7 +1,7 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
-namespace { _"http://example.com/relations3_different_arities#" }
+namespace { _"http://example.com/relations3#" }
 
-ontology Relations
+ontology Relations3
 
 concept C1
 concept C2
