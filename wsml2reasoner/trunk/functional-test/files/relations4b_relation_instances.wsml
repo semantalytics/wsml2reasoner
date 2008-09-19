@@ -1,0 +1,12 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://example.com/relations4b#",
+	r4a _"http://example.com/relations4a#" }
+
+ontology Relations4b
+	importsOntology { _"http://example.com/relations4a#Relations4a" } 
+
+instance i1 memberOf r4a#X
+
+instance i2 memberOf r4a#Y
+
+relationInstance r4a#binary(i1, i2)
