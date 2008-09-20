@@ -1,7 +1,6 @@
 package abstractTests.lp;
 
 import helper.LPHelper;
-import helper.OntologyHelper;
 import helper.Results;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,7 +25,7 @@ public abstract class AbstractRelations4ImportsOntologyBase extends TestCase imp
 
 		String query = "_\"http://example.com/relations4a#binary\"(?x,?y)";
     	Results r = new Results( "x", "y" );
-    	r.addBinding( r.iri( NS + "i1" ), r.iri( NS + "i2" ) );
+    	r.addBinding( Results.iri( NS + "i1" ), Results.iri( NS + "i2" ) );
 		
 //    	System.out.println( OntologyHelper.toString( LPHelper.executeQuery( ontologies, query, getLPReasoner() ) ) );
 		LPHelper.executeQueryAndCheckResults( ontologies, query, r.get(), getLPReasoner() );
