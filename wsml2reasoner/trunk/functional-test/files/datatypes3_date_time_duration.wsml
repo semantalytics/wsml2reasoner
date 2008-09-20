@@ -1,15 +1,10 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
-namespace { _"http://example.com/date_time_types#",
+namespace { _"http://example.com/datatypes3#",
 	wsml _"http://www.wsmo.org/wsml/wsml-syntax#" }
 
 ontology DatatypesTestOntology
 
 concept AnEntity
-// Need to investigate why these two can not be properly declared
-//	aDuration ofType _duration
-//	aTime ofType _time		// _"http://www.wsmo.org/wsml/wsml-syntax#time" doesn't work either
-	aDate ofType _date		// _"http://www.wsmo.org/wsml/wsml-syntax#date" also works
-	aDateTime ofType _dateTime
 
 instance integerSeconds memberOf AnEntity
 	aTime hasValue _time( 23, 59, 58 )

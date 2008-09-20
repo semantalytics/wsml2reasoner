@@ -20,12 +20,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package concreteTests.irisStratified;
+package concreteTests.irisWellFounded;
 
 import org.wsml.reasoner.api.LPReasoner;
-import abstractTests.lp.AbstractDateTimeSubtraction;
+import abstractTests.lp.AbstractDataTypes4DateTimeSubtraction;
 
-public class DateTimeSubtractionTest extends AbstractDateTimeSubtraction
+public class DataTypes4DateTimeSubtractionTest extends AbstractDataTypes4DateTimeSubtraction
 {
 	public LPReasoner getLPReasoner()
 	{
