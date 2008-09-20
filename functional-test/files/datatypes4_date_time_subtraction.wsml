@@ -2,7 +2,7 @@ wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
 namespace { _"http://example.com/datatypes4#",
 	wsml _"http://www.wsmo.org/wsml/wsml-syntax#" }
 
-ontology DatatypesTestOntology
+ontology DatatypesTestOntology4
 
 // Compute an age attribute from rightNow and the instance's dob (date of birth)
 axiom computeAge definedBy
