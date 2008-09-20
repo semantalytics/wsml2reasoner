@@ -84,7 +84,11 @@ public class LPHelper
     	Assert.assertEquals(expectedResults.size(), actualResults.size());
 
 		for (Map<Variable, Term> binding : expectedResults)
+		{
+			if( ! contains( actualResults, binding ) )
+				System.out.println( binding );
 			Assert.assertTrue( contains( actualResults, binding ) );
+		}
     }
     	
 	/**

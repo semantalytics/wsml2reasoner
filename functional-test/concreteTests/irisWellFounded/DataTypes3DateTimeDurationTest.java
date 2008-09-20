@@ -23,9 +23,9 @@
 package concreteTests.irisWellFounded;
 
 import org.wsml.reasoner.api.LPReasoner;
-import abstractTests.lp.AbstractDateTimeSubtraction;
+import abstractTests.lp.AbstractDataTypes3DateTimeDurationTypes;
 
-public class DateTimeSubtractionTest extends AbstractDateTimeSubtraction
+public class DataTypes3DateTimeDurationTest extends AbstractDataTypes3DateTimeDurationTypes
 {
 	public LPReasoner getLPReasoner()
 	{

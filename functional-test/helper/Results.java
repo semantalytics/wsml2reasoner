@@ -22,6 +22,8 @@
  */
 package helper;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -58,7 +60,32 @@ public class Results
 		for( int v = 0; v < mVariables.length; ++v )
 			mVariables[ v ] = leFactory.createVariable( variableNames[ v ] );
 	}
+
+	public static Term string( String value )
+	{
+		return dataFactory.createWsmlString( value );
+	}
 	
+	public static Term decimal( double value )
+	{
+		return dataFactory.createWsmlDecimal( new BigDecimal( Double.toString( value ) ) );
+	}
+	
+	public static Term _integer( int value )
+	{
+		return dataFactory.createWsmlInteger( new BigInteger( Integer.toString( value ) ) );
+	}
+	
+	public static Term _float( float value )
+	{
+		return dataFactory.createWsmlFloat( value );
+	}
+	
+	public static Term _double( double value )
+	{
+		return dataFactory.createWsmlDouble( value );
+	}
+
 	/**
 	 * Create a wsml boolean term. 
 	 * @param b The value of the term.
@@ -67,29 +94,6 @@ public class Results
 	public static Term bool( boolean b )
 	{
 		return dataFactory.createWsmlBoolean( b );
-	}
-	
-	/**
-	 * Create an IRI.
-	 * @param value The value of the IRI.
-	 * @return The IRI object.
-	 */
-	public static IRI iri( String value )
-	{
-		return wsmoFactory.createIRI( value );
-	}
-	
-	/**
-	 * Create a constructed term object.
-	 * @param functionSymbolIri The IRI identifier of the constructed term.
-	 * @param terms The list of term values.
-	 * @return The new term object.
-	 */
-	public static ConstructedTerm fn( String functionSymbolIri, Term...terms )
-	{
-		List<Term> termList = Arrays.asList( terms );
-		
-		return leFactory.createConstructedTerm( wsmoFactory.createIRI( functionSymbolIri ), termList );
 	}
 	
 	/**
@@ -126,6 +130,64 @@ public class Results
 	public static ComplexDataValue date(int year, int month, int day, int tzHour, int tzMinute)
 	{
 		return dataFactory.createWsmlDate( year, month, day, tzHour, tzMinute );
+	}
+	
+	public static Term yearMonth( int year, int month )
+	{
+		return dataFactory.createWsmlGregorianYearMonth( year, month );
+	}
+
+	public static Term year( int year )
+	{
+		return dataFactory.createWsmlGregorianYear( year );
+	}
+
+	public static Term monthDay( int month, int day )
+	{
+		return dataFactory.createWsmlGregorianMonthDay( month, day );
+	}
+
+	public static Term day( int day )
+	{
+		return dataFactory.createWsmlGregorianDay( day );
+	}
+
+	public static Term month( int month )
+	{
+		return dataFactory.createWsmlGregorianMonth( month );
+	}
+
+	public static Term hexBinary( String value )
+	{
+		return dataFactory.creatWsmlHexBinary( value.getBytes() );
+	}
+
+	public static Term base64Binary( String value )
+	{
+		return dataFactory.createWsmlBase64Binary( value.getBytes() );
+	}
+
+	/**
+	 * Create an IRI.
+	 * @param value The value of the IRI.
+	 * @return The IRI object.
+	 */
+	public static IRI iri( String value )
+	{
+		return wsmoFactory.createIRI( value );
+	}
+	
+	/**
+	 * Create a constructed term object.
+	 * @param functionSymbolIri The IRI identifier of the constructed term.
+	 * @param terms The list of term values.
+	 * @return The new term object.
+	 */
+	public static ConstructedTerm fn( String functionSymbolIri, Term...terms )
+	{
+		List<Term> termList = Arrays.asList( terms );
+		
+		return leFactory.createConstructedTerm( wsmoFactory.createIRI( functionSymbolIri ), termList );
 	}
 	
 	/**

@@ -28,11 +28,11 @@ import helper.Results;
 import junit.framework.TestCase;
 import abstractTests.LP;
 
-public abstract class AbstractDateTimeSubtraction extends TestCase implements LP {
+public abstract class AbstractDataTypes4DateTimeSubtraction extends TestCase implements LP {
 
-    private static final String NS = "http://example.com/date_time_sub#";
+    private static final String NS = "http://example.com/datatypes4#";
 
-    private static final String ONTOLOGY_FILE = "files/date_time_subtraction.wsml";
+    private static final String ONTOLOGY_FILE = "files/datatypes4_date_time_subtraction.wsml";
 
     public void testDateTimeSubtract() throws Exception {
     	String query = "?x[age hasValue ?t]";
