@@ -20,15 +20,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package concreteTests.mins;
+package concreteTests.irisStratified;
 
 import org.wsml.reasoner.api.LPReasoner;
-import abstractTests.lp.AbstractBoolean;
+import abstractTests.lp.AbstractDataTypes6Boolean;
 
-public class BooleanTest extends AbstractBoolean
+public class DataTypes6BooleanTest extends AbstractDataTypes6Boolean
 {
 	public LPReasoner getLPReasoner()
 	{
-		return MinsHelper.getReasoner();
+		return IrisHelper.getReasoner();
 	}
+
 }

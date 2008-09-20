@@ -23,9 +23,9 @@
 package concreteTests.irisSLDNF;
 
 import org.wsml.reasoner.api.LPReasoner;
-import abstractTests.lp.AbstractBoolean;
+import abstractTests.lp.AbstractDataTypes6Boolean;
 
-public class BooleanTest extends AbstractBoolean
+public class DataTypes6BooleanTest extends AbstractDataTypes6Boolean
 {
 	public LPReasoner getLPReasoner()
 	{

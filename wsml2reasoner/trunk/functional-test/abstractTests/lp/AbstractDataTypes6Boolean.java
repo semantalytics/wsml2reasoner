@@ -32,15 +32,22 @@ import abstractTests.LP;
 /**
  * Currently does not work with PELLET (due to detected inconsistency)
  */
-public abstract class AbstractBoolean extends TestCase implements LP{
+public abstract class AbstractDataTypes6Boolean extends TestCase implements LP{
    
     public void testSimplerBoolean() throws Exception {
-    	final String ns = "http://www.yabooleantest.org#";
+    	final String ns = "http://example.com/datatypes6#";
+    	
+    	final Ontology ontology = OntologyHelper.loadOntology("files/datatypes6_boolean.wsml");
     	
     	Results r = new Results( "x" );
     	r.addBinding( Results.iri( ns + "truth" ) );
     	
-    	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology("files/simplerBoolean.wsml"), "?x[reallyExists hasValue _boolean(\"true\")]", r.get(), getLPReasoner() );
+    	LPHelper.executeQueryAndCheckResults( ontology, "?x[reallyExists hasValue _boolean(\"true\")]", r.get(), getLPReasoner() );
+
+    	r = new Results( "x" );
+    	r.addBinding( Results.iri( ns + "mysticism" ) );
+    	
+    	LPHelper.executeQueryAndCheckResults( ontology, "?x[reallyExists hasValue _boolean(\"false\")]", r.get(), getLPReasoner() );
     }
     
     /**
