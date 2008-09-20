@@ -9,23 +9,19 @@ import junit.framework.TestCase;
 import org.omwg.ontology.Ontology;
 import abstractTests.LP;
 
-public abstract class AbstractRelations4ImportsOntology extends TestCase implements LP {
+public abstract class AbstractRelations4ImportsOntologyBase extends TestCase implements LP {
 
-	public void testImportedRelation() throws Exception
+	protected abstract void loadOntologies( Set<Ontology> ontologies ) throws Exception;
+	
+	public void testRelationPopulated() throws Exception
 	{
 		Set<Ontology> ontologies = new HashSet<Ontology>();
+
+		loadOntologies( ontologies );
 		
-		// The order should not matter, but it does at the moment.
-		// Loading/parsing 4a and then 4b works.
-		// Loading/parsing 4b and then 4a does not work.
-		Ontology o1 = OntologyHelper.loadOntology( "files/relations4b_relation_instances.wsml" );
-		Ontology o2 = OntologyHelper.loadOntology( "files/relations4a_relation_definitions.wsml" );
-		ontologies.add( o1 );
-		ontologies.add( o2 );
-
-//		System.out.println( OntologyHelper.toString( o1 ) );
-//		System.out.println( OntologyHelper.toString( o2 ) );
-
+//		for( Ontology ontology : ontologies )
+//			System.out.println( OntologyHelper.toString( ontology ) );
+			
 		String NS = "http://example.com/relations4b#";
 
 		String query = "_\"http://example.com/relations4a#binary\"(?x,?y)";
