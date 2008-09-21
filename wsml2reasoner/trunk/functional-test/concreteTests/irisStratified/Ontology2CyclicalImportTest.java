@@ -20,14 +20,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package concreteTests.irisSLDNF;
+package concreteTests.irisStratified;
 
-import org.wsml.reasoner.api.LPReasoner;
-import abstractTests.core.AbstractCyclicalImports;
+import org.wsml.reasoner.api.WSMLReasoner;
+import abstractTests.core.AbstractOntology2CyclicalImport;
 
-public class CyclicalImportsTest extends AbstractCyclicalImports
+public class Ontology2CyclicalImportTest extends AbstractOntology2CyclicalImport
 {
-	public LPReasoner getReasoner()
+	public WSMLReasoner getReasoner()
 	{
 		return IrisHelper.getReasoner();
 	}

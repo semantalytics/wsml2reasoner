@@ -1,8 +1,8 @@
 
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
 
-namespace { _"http://here.comes.the.whistleman/CyclicalImports2#",
-	    CycImp1 _"http://here.comes.the.whistleman/CyclicalImports1#"}
+namespace { _"http://example.com/ontology2b#",
+	CycImp1 _"http://example.com/ontology2a#"}
 
 ontology CyclicalImports2
 

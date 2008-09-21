@@ -29,13 +29,13 @@ import junit.framework.TestCase;
 import org.omwg.ontology.Ontology;
 import abstractTests.Core;
 
-public abstract class AbstractCyclicalImports extends TestCase implements Core {
+public abstract class AbstractOntology2CyclicalImport extends TestCase implements Core {
 	
-    private static final String ONTOLOGY_FILE1 = "files/CyclicalImports1.wsml";
-    private static final String ONTOLOGY_FILE2 = "files/CyclicalImports2.wsml";
+    private static final String ONTOLOGY_FILE1 = "files/ontology2_cyclical_import1.wsml";
+    private static final String ONTOLOGY_FILE2 = "files/ontology2_cyclical_import2.wsml";
     
-    private static final String ns1 = "http://here.comes.the.whistleman/CyclicalImports1#";
-    private static final String ns2 = "http://here.comes.the.whistleman/CyclicalImports2#";
+    private static final String ns1 = "http://example.com/ontology2a#";
+    private static final String ns2 = "http://example.com/ontology2b#";
 
     // A reference for the imported ontology.
     private Ontology importedOntology;
