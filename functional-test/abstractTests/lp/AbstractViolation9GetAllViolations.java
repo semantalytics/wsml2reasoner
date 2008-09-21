@@ -54,7 +54,7 @@ public abstract class AbstractViolation9GetAllViolations extends TestCase implem
 	private Set<ConsistencyViolation> errors;
 	
 	private static final String NS = "http://example.com/violations9#";
-	private static final String ONTOLOGY_FILE = "files/violations9_get_all.wsml";
+	private static final String ONTOLOGY_FILE = "files/violation9_get_all.wsml";
 
 	protected void setUp() throws Exception {
 		getViolations();
