@@ -53,7 +53,7 @@ import abstractTests.LP;
 public abstract class AbstractViolation9GetAllViolations extends TestCase implements LP {
 	private Set<ConsistencyViolation> errors;
 	
-	private static final String NS = "http://example.com/violations9#";
+	private static final String NS = "http://example.com/violation9#";
 	private static final String ONTOLOGY_FILE = "files/violation9_get_all.wsml";
 
 	protected void setUp() throws Exception {
