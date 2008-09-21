@@ -1,0 +1,30 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+
+namespace {_"http://example.com/violations9#"}
+ 
+ontology violations9
+
+concept C
+	ai ofType D
+	ad ofType _integer
+	amin impliesType (2 *) D
+	amax impliesType (0 1) D
+
+axiom ax1 definedBy
+	!- ?x memberOf X.
+	
+axiom definedBy
+	!- ?x memberOf Y.
+
+instance iC memberOf C
+	ai hasValue iE
+	ad hasValue "blah"
+	amin hasValue iD1
+	amax hasValue iD1
+	amax hasValue iD2
+	
+instance iD1 memberOf D
+instance iD2 memberOf D
+instance iE memberOf E
+instance iX memberOf X
+instance iY memberOf Y
