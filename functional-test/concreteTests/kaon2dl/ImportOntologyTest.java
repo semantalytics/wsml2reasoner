@@ -23,9 +23,9 @@
 package concreteTests.kaon2dl;
 
 import org.wsml.reasoner.api.WSMLReasoner;
-import abstractTests.core.AbstractImportOntology;
+import abstractTests.core.AbstractOntology1SimpleImport;
 
-public class ImportOntologyTest extends AbstractImportOntology
+public class ImportOntologyTest extends AbstractOntology1SimpleImport
 {
 	public WSMLReasoner getReasoner()
 	{

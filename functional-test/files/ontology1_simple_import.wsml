@@ -1,7 +1,7 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
-namespace { _"http://www.importtester.org#"}
+namespace { _"http://www.example-com/ontology1#"}
 
-ontology simpleImports
+ontology simpleImports1
 
 importsOntology simpleImports2
 

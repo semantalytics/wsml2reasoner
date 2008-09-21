@@ -26,39 +26,24 @@ import helper.LPHelper;
 import helper.OntologyHelper;
 import helper.Results;
 import junit.framework.TestCase;
-
-import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
-
 import abstractTests.LP;
 
 public abstract class AbstractAttributeInheritance extends TestCase implements LP {
 
-	protected WSMO4JManager wsmoManager;
-	protected String ns = "http://ex.org#";
-	protected WsmoFactory wsmoFactory;
-	protected LogicalExpressionFactory leFactory;
-
-	protected void setUp() throws Exception {
-		super.setUp();
-		WSMO4JManager wsmoManager = new WSMO4JManager();
-		wsmoFactory = wsmoManager.getWSMOFactory();
-		leFactory = wsmoManager.getLogicalExpressionFactory();
-	}
-
 	public void testAttributeInheritance() throws Exception {
 
 		String ns = "http://ex1.org#";
-		String ontology = "namespace _\"" + ns + "\" \n" + "ontology o1 \n"
-				+ "concept A \n" + "  attr ofType A \n "
+		String ontology = "namespace _\"" + ns + "\" \n"
+				+ "ontology o1 \n"
+				+ "concept A \n"
+				+ "  attr ofType C \n "
 				+ "concept B subConceptOf A \n ";
 
-		String query = "?x[?attribute ofType ?range]";
+		String query = "?x[?attribute ofType ?type]";
 
-		Results r = new Results("range", "attribute", "x");
-		r.addBinding(Results.iri(ns + "A"), Results.iri(ns + "attr"), Results.iri(ns + "B"));
-		r.addBinding(Results.iri(ns + "A"), Results.iri(ns + "attr"), Results.iri(ns + "A"));
+		Results r = new Results("x", "attribute", "type");
+		r.addBinding(Results.iri(ns + "B"), Results.iri(ns + "attr"), Results.iri(ns + "C"));
+		r.addBinding(Results.iri(ns + "A"), Results.iri(ns + "attr"), Results.iri(ns + "C"));
 
 		LPHelper.executeQueryAndCheckResults(OntologyHelper.parseOntology(ontology), query, r.get(), getLPReasoner());
 	}
