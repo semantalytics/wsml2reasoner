@@ -1,0 +1,16 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
+
+namespace {_"http://example.com/violation4#"}
+ 
+ontology Violation4
+
+
+concept B subConceptOf A
+
+concept C subConceptOf B
+
+concept D subConceptOf C
+
+concept A subConceptOf D
+
+  
