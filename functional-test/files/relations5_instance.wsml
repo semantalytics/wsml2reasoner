@@ -1,0 +1,16 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://example.com/relations5_instance#", 
+     sub _"http://example.com/SubOntology#" }
+
+ontology InstanceOntology
+     importsOntology
+          { _"http://example.com/relations5_super#SuperOntology", 
+            _"http://example.com/relations5_sub#SubOntology"}
+
+concept Child subConceptOf _"http://example.com/relations5_super#Human"
+
+instance Peter memberOf sub#Man
+
+instance Mary memberOf sub#Woman
+
+relationInstance ri sub#loves(Peter, Mary)
