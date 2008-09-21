@@ -1,0 +1,24 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://www.example.com/stratified1#" }
+
+ontology example1
+
+concept c1
+	name ofType _string
+	
+concept c2 subConceptOf c1
+
+instance i memberOf c2
+
+axiom c1Axiom 
+	definedBy
+		?x[name hasValue "c1"] :- di(?x, c1).	
+
+axiom c2Axiom 
+	definedBy
+		?x[name hasValue "c2"] :- di(?x, c2).
+
+axiom direct_instance definedBy
+	di(?x, ?T) :- ?x memberOf ?T and naf(ndi(?x, ?T)).
+	ndi(?x, ?T) :- ?x memberOf ?T and ?subT subConceptOf ?T and ?x memberOf ?subT and naf equals(?T, ?subT).
+	equals(?x, ?y) :- ?x subConceptOf ?y and ?y subConceptOf ?x.
