@@ -20,25 +20,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package abstractTests.lp;
+package concreteTests.irisSLDNF;
 
-import helper.LPHelper;
-import helper.OntologyHelper;
-import junit.framework.TestCase;
-import org.wsml.reasoner.api.inconsistency.InconsistencyException;
-import abstractTests.LP;
+import org.wsml.reasoner.api.LPReasoner;
+import abstractTests.lp.AbstractViolation1AttributeConstrainedToUnknownConcept;
 
-public abstract class AbstractConsistencyViolation extends TestCase implements LP {
-
-    private static final String ONTOLOGY_FILE = "files/InconsistentOntology.wsml";
-    
-    public void testInconsistency() throws Exception {
-        String query = "?x memberOf ?y";
-        try{
-            LPHelper.executeQuery( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, getLPReasoner() );
-            fail("Should have thrown InconsistencyException");
-        }
-        catch (InconsistencyException e){
-        }
-    }
+public class Violation1AttributeConstrainedToUnknownConceptTest extends AbstractViolation1AttributeConstrainedToUnknownConcept {
+	public LPReasoner getLPReasoner() {
+		return IrisHelper.getReasoner();
+	}
 }
