@@ -50,7 +50,7 @@ public class CoreHelper
 
 	private static void queryXMemberOfYAndCheckResults( Ontology ontology, LPReasoner reasoner, Set<Map<Variable, Term>> expectedResults ) throws Exception {
 		
-		LPHelper.executeQueryAndCheckResults( ontology, "?X memberOf ?Y", expectedResults, reasoner );
+		LPHelper.executeQueryAndCheckResults( ontology, X_MEMBER_OF_Y, expectedResults, reasoner );
 	}
 
 	private static void queryXMemberOfYAndCheckResults( Ontology ontology, DLReasoner reasoner, Set<Map<Variable, Term>> expectedResults ) throws Exception {
@@ -79,6 +79,13 @@ public class CoreHelper
 		Set<Map<Variable, Term>> actualResults = queryXMemberOfConcept( ontology, reasoner, concept );
 		
 		LPHelper.checkResults( actualResults, expectedResults );
+	}
+	
+	public static Set<Map<Variable, Term>> queryXMemberOfY( Ontology ontology, WSMLReasoner reasoner ) throws Exception {
+		if( reasoner instanceof DLReasoner )
+			return queryXMemberOfY( ontology, (DLReasoner) reasoner );
+		else
+			return LPHelper.executeQuery( ontology, X_MEMBER_OF_Y, (LPReasoner) reasoner );
 	}
 	
 	public static Set<Map<Variable, Term>> queryXMemberOfY( Ontology ontology, DLReasoner reasoner ) throws Exception {
@@ -131,6 +138,8 @@ public class CoreHelper
 		
 		return lpResults;
 	}
+	
+	private static final String X_MEMBER_OF_Y = "?X memberOf ?Y";
 	
     private static final WsmoFactory wsmoFactory;
     private static final LogicalExpressionFactory leFactory;
