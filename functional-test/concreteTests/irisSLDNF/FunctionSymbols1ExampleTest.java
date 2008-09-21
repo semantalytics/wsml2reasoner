@@ -20,12 +20,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package concreteTests.irisStratified;
+package concreteTests.irisSLDNF;
 
 import org.wsml.reasoner.api.LPReasoner;
-import abstractTests.lp.AbstractFunctionSymbols;
+import abstractTests.lp.AbstractFunctionSymbols1Example;
 
-public class FunctionSymbolsTest extends AbstractFunctionSymbols
+public class FunctionSymbols1ExampleTest extends AbstractFunctionSymbols1Example
 {
 	public LPReasoner getLPReasoner()
 	{

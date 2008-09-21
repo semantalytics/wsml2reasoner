@@ -29,13 +29,13 @@ import junit.framework.TestCase;
 import abstractTests.LP;
 
 /** 
- * Simple tests for function symbols (constructed terms).
+ * Example tests for function symbols (constructed terms).
  */
-public abstract class AbstractFunctionSymbols extends TestCase implements LP{
+public abstract class AbstractFunctionSymbols1Example extends TestCase implements LP{
 
-    private static final String NS = "http://examples.com/ontologies/mytravel#";
+    private static final String NS = "http://example.com/function_symbols1#";
 
-    private static final String ONTOLOGY_FILE = "files/Travel.wsml";
+    private static final String ONTOLOGY_FILE = "files/function_symbols1_example.wsml";
     
     public void testFSHasVoucher() throws Exception {
         String query = "?x memberOf travelVoucher";
