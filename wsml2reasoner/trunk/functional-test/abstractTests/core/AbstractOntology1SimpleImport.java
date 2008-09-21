@@ -24,11 +24,11 @@ import helper.Results;
 import junit.framework.TestCase;
 import abstractTests.Core;
 
-public abstract class AbstractImportOntology extends TestCase implements Core {
+public abstract class AbstractOntology1SimpleImport extends TestCase implements Core {
 
     public void testImportOntologyFromSameWsmlFile() throws Exception {
-        String ns = "http://www.importtester.org#";
-        String ONTOLOGY_FILE = "files/SimpleImport.wsml";
+        String ns = "http://www.example-com/ontology1#";
+        String ONTOLOGY_FILE = "files/ontology1_simple_import.wsml";
         String concept = ns + "c";
         
         Results r = new Results( "X" );
