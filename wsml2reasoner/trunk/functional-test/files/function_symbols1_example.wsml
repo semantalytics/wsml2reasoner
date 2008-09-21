@@ -1,5 +1,5 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-rule"
-namespace { _"http://examples.com/ontologies/mytravel#"
+namespace { _"http://example.com/function_symbols1#"
 , 
      wsml _"http://www.wsmo.org/wsml/wsml-syntax#" }
 
