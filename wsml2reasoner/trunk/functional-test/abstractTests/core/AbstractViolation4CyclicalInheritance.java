@@ -28,9 +28,9 @@ import junit.framework.TestCase;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import abstractTests.Core;
 
-public abstract class AbstractViolation3AttributeIsWrongType extends TestCase implements Core {
+public abstract class AbstractViolation4CyclicalInheritance extends TestCase implements Core {
 
-    private static final String ONTOLOGY_FILE = "files/violation3_attribute_is_wrong_type.wsml";
+    private static final String ONTOLOGY_FILE = "files/violation4_cyclical_inheritance.wsml";
     
     public void testInconsistency() throws Exception {
         try{

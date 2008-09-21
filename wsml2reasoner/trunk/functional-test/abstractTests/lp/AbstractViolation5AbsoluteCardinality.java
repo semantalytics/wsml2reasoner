@@ -20,21 +20,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package abstractTests.core;
+package abstractTests.lp;
 
-import helper.CoreHelper;
+import helper.LPHelper;
 import helper.OntologyHelper;
 import junit.framework.TestCase;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
-import abstractTests.Core;
+import abstractTests.LP;
 
-public abstract class AbstractViolation3AttributeIsWrongType extends TestCase implements Core {
+public abstract class AbstractViolation5AbsoluteCardinality extends TestCase implements LP {
 
-    private static final String ONTOLOGY_FILE = "files/violation3_attribute_is_wrong_type.wsml";
+    private static final String ONTOLOGY_FILE = "files/violation5_absolute_cardinality.wsml";
     
     public void testInconsistency() throws Exception {
+        String query = "?x memberOf ?y";
         try{
-        	CoreHelper.queryXMemberOfY( OntologyHelper.loadOntology( ONTOLOGY_FILE ), getReasoner() );
+            LPHelper.executeQuery( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, getLPReasoner() );
             fail("Should have thrown InconsistencyException");
         }
         catch (InconsistencyException e){

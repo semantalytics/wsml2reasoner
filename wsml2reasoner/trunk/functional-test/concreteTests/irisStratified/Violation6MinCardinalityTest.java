@@ -20,24 +20,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package abstractTests.core;
+package concreteTests.irisStratified;
 
-import helper.CoreHelper;
-import helper.OntologyHelper;
-import junit.framework.TestCase;
-import org.wsml.reasoner.api.inconsistency.InconsistencyException;
-import abstractTests.Core;
+import org.wsml.reasoner.api.LPReasoner;
+import abstractTests.lp.AbstractViolation6MinCardinality;
 
-public abstract class AbstractViolation3AttributeIsWrongType extends TestCase implements Core {
-
-    private static final String ONTOLOGY_FILE = "files/violation3_attribute_is_wrong_type.wsml";
-    
-    public void testInconsistency() throws Exception {
-        try{
-        	CoreHelper.queryXMemberOfY( OntologyHelper.loadOntology( ONTOLOGY_FILE ), getReasoner() );
-            fail("Should have thrown InconsistencyException");
-        }
-        catch (InconsistencyException e){
-        }
-    }
+public class Violation6MinCardinalityTest extends AbstractViolation6MinCardinality {
+	public LPReasoner getLPReasoner() {
+		return IrisHelper.getReasoner();
+	}
 }
