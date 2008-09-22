@@ -38,10 +38,6 @@ if( !file_exists( $filelocation ) ) {
 
     <div id="header">
       <a href="/wsml2reasoner/" style="text-decoration:none" class="headerTitle"><img src="/wsml2reasoner/images/wsmlThinker.png" alt="wsml-thinker" vspace="5" align="absmiddle" /> WSML2Reasoner</a>
-     <!-- <div class="menuBar">
-        <a href="download">download</a>|
-        <a href="source">source code</a>
-      </div>-->
     </div>
 
     <!-- ###### Side Boxes ###### -->
@@ -62,9 +58,6 @@ if( !file_exists( $filelocation ) ) {
         <a href="snapshot/javadoc/">java doc</a>
         <a href="snapshot/report/unit_test">unit test report</a>
         <a href="snapshot/report/functional_test">functional test report</a>
-		<!--
-        <a href="source">source code</a>
-		-->
     </div>
     
     <div class="sideBox LHS">
