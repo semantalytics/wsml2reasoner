@@ -24,9 +24,9 @@ package concreteTests.mins;
 
 import org.wsml.reasoner.api.LPReasoner;
 
-import abstractTests.lp.AbstractAttributeInheritance;
+import abstractTests.lp.AbstractAttribute1Inheritance;
 
-public class AttributeInheritanceTest extends AbstractAttributeInheritance {
+public class AttributeInheritanceTest extends AbstractAttribute1Inheritance {
 
 	public LPReasoner getLPReasoner() {
 		return MinsHelper.getReasoner();
