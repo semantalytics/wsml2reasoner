@@ -6,7 +6,7 @@ SNAPSHOT=../../snapshot
 # Uncomment this line to choose sun java 1.6
 #export JAVA_HOME=/usr/lib/jvm/java-6-sun/
 
-# This installation in barry's home directory has the ant junit plug-ins 
+# This installation in barrys home directory has the ant junit plug-ins 
 export ANT_HOME=/home/barryb/apache-ant-1.7.0
 
 echo ====================================================================
