@@ -20,14 +20,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package concreteTests.irisSLDNF;
+package concreteTests.irisStratified;
 
 import org.wsml.reasoner.api.LPReasoner;
 
-import abstractTests.lp.AbstractAttributeInheritance;
+import abstractTests.lp.AbstractAttribute1Inheritance;
 
 
-public class AttributeInheritanceTest extends AbstractAttributeInheritance {
+public class Attribute1InheritanceTest extends AbstractAttribute1Inheritance {
 
 	public LPReasoner getLPReasoner() {
 		return IrisHelper.getReasoner();

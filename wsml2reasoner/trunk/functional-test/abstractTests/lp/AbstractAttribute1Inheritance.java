@@ -20,16 +20,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package concreteTests.irisWellFounded;
+package abstractTests.lp;
 
-import org.wsml.reasoner.api.LPReasoner;
+import helper.LPHelper;
+import helper.OntologyHelper;
+import helper.Results;
+import junit.framework.TestCase;
+import abstractTests.LP;
 
-import abstractTests.lp.AbstractAttributeInheritance;
+public abstract class AbstractAttribute1Inheritance extends TestCase implements LP {
 
-public class AttributeInheritanceTest extends AbstractAttributeInheritance {
+	public void testAttributeInheritance() throws Exception {
 
-	public LPReasoner getLPReasoner() {
-		return IrisHelper.getReasoner();
+		String ns = "http://ex1.org#";
+		String ontology = "namespace _\"" + ns + "\" \n"
+				+ "ontology o1 \n"
+				+ "concept A \n"
+				+ "  attr ofType C \n "
+				+ "concept B subConceptOf A \n ";
+
+		String query = "?x[?attribute ofType ?type]";
+
+		Results r = new Results("x", "attribute", "type");
+		r.addBinding(Results.iri(ns + "B"), Results.iri(ns + "attr"), Results.iri(ns + "C"));
+		r.addBinding(Results.iri(ns + "A"), Results.iri(ns + "attr"), Results.iri(ns + "C"));
+
+		LPHelper.executeQueryAndCheckResults(OntologyHelper.parseOntology(ontology), query, r.get(), getLPReasoner());
 	}
-
 }
