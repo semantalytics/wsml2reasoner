@@ -247,7 +247,7 @@ public class DataValuesTest extends BaseNormalizationTest {
      * This test checks for transformation of wsml _dateTime datavalue.
      */
     public void testDateTimeShort() throws Exception {
-        String s = "Mary[hasBirthday hasValue _dateTime(1977, 02, 07, 10, 20, 10.0)].";
+        String s = "Mary[hasBirthday hasValue _dateTime(1977, 02, 07, 10, 20, 10)].";
         LogicalExpression le = leFactory.createLogicalExpression(s, ontology);
         axiom.addDefinition(le);
 
