@@ -166,11 +166,11 @@ public class DatatypeVisitor implements Visitor {
         }
         else if (complextType.equals(WsmlDataType.WSML_FLOAT)) {
             Float f = (Float) t.getValue();
-            value = BigDecimal.valueOf(f);
+            value = new BigDecimal(Float.toString( f ));
         }
         else if (complextType.equals(WsmlDataType.WSML_DOUBLE)) {
             Double d = (Double) t.getValue();
-            value = BigDecimal.valueOf(d);
+            value = new BigDecimal( Double.toString( d ));
         }
         else {
             // otherwise the type matches
