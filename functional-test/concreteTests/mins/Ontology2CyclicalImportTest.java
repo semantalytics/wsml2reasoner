@@ -29,6 +29,6 @@ public class Ontology2CyclicalImportTest extends AbstractOntology2CyclicalImport
 {
 	public WSMLReasoner getReasoner()
 	{
-		return MinsHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

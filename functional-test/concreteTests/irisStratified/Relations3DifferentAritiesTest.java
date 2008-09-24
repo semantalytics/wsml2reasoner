@@ -7,6 +7,6 @@ public class Relations3DifferentAritiesTest extends AbstractRelations3DifferentA
 {
 	public LPReasoner getLPReasoner()
 	{
-		return IrisHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

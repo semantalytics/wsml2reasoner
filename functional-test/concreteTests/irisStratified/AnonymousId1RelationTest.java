@@ -28,6 +28,6 @@ import abstractTests.lp.AbstractAnonymousId1Relation;
 public class AnonymousId1RelationTest extends AbstractAnonymousId1Relation{
 
 	public LPReasoner getLPReasoner() {
-		return IrisHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

@@ -29,7 +29,7 @@ import abstractTests.dl.AbstractInconsistentOntology;
 public class InconsistentOntologyTest extends AbstractInconsistentOntology {
 
 	public DLReasoner getDLReasoner() {
-		return PelletHelper.getReasoner();
+		return Reasoner.get();
 	}
 
 }

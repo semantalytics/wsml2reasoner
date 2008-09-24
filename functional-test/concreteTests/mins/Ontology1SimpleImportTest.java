@@ -29,6 +29,6 @@ public class Ontology1SimpleImportTest extends AbstractOntology1SimpleImport
 {
 	public WSMLReasoner getReasoner()
 	{
-		return MinsHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

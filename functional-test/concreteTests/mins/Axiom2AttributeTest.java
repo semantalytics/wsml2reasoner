@@ -7,6 +7,6 @@ public class Axiom2AttributeTest extends AbstractAxiom2Attribute
 {
 	public LPReasoner getLPReasoner()
 	{
-		return MinsHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

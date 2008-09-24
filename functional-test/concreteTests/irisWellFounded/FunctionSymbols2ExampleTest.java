@@ -29,6 +29,6 @@ public class FunctionSymbols2ExampleTest extends AbstractFunctionSymbols2Example
 {
 	public LPReasoner getLPReasoner()
 	{
-		return IrisHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

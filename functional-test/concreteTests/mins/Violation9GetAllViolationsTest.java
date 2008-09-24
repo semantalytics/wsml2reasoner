@@ -29,7 +29,7 @@ import abstractTests.lp.AbstractViolation9GetAllViolations;
 public class Violation9GetAllViolationsTest extends AbstractViolation9GetAllViolations {
 
 	public LPReasoner getLPReasoner() {
-		return MinsHelper.getReasoner();
+		return Reasoner.get();
 	}
 
 }

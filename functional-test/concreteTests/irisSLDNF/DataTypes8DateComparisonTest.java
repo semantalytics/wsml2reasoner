@@ -29,7 +29,7 @@ public class DataTypes8DateComparisonTest extends AbstractDataTypes8DateComparis
 {
 	public LPReasoner getLPReasoner()
 	{
-		return IrisHelper.getReasoner();
+		return Reasoner.get();
 	}
 
 }

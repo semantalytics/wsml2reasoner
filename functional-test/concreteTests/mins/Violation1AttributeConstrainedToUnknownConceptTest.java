@@ -27,6 +27,6 @@ import abstractTests.lp.AbstractViolation1AttributeConstrainedToUnknownConcept;
 
 public class Violation1AttributeConstrainedToUnknownConceptTest extends AbstractViolation1AttributeConstrainedToUnknownConcept {
 	public LPReasoner getLPReasoner() {
-		return MinsHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

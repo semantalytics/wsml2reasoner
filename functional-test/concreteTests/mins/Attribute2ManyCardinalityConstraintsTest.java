@@ -28,6 +28,6 @@ import abstractTests.lp.AbstractAttribute2ManyCardinalityConstraints;
 public class Attribute2ManyCardinalityConstraintsTest extends AbstractAttribute2ManyCardinalityConstraints {
 
 	public LPReasoner getLPReasoner() {
-		return MinsHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

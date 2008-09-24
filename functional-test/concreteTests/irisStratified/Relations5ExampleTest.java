@@ -7,6 +7,6 @@ public class Relations5ExampleTest extends AbstractRelations5Example
 {
 	public LPReasoner getLPReasoner()
 	{
-		return IrisHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

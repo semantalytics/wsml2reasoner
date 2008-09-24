@@ -1,4 +1,4 @@
-/**
+/*
  * WSML2Reasoner
  * An extensible framework for reasoning with WSML ontologies.
  * 
@@ -20,14 +20,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package concreteTests.kaon2;
+package concreteTests.xsb;
 
+import helper.ReasonerHelper;
 import org.wsml.reasoner.api.LPReasoner;
-import abstractTests.lp.AbstractAttribute2ManyCardinalityConstraints;
+import org.wsml.reasoner.api.WSMLReasonerFactory;
 
-public class Attribute2ManyCardinalityConstraintsTest extends AbstractAttribute2ManyCardinalityConstraints {
-
-	public LPReasoner getLPReasoner() {
-		return Reasoner.get();
+class Reasoner
+{
+	static LPReasoner get()
+	{
+		return ReasonerHelper.getLPReasoner(WSMLReasonerFactory.BuiltInReasoner.XSB );
 	}
 }

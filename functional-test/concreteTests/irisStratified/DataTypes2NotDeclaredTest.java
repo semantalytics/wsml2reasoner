@@ -29,7 +29,7 @@ public class DataTypes2NotDeclaredTest extends AbstractDataTypes2NotDeclared
 {
 	public LPReasoner getLPReasoner()
 	{
-		return IrisHelper.getReasoner();
+		return Reasoner.get();
 	}
 
 }

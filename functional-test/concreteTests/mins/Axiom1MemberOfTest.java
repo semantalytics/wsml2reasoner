@@ -7,6 +7,6 @@ public class Axiom1MemberOfTest extends AbstractAxiom1MemberOf
 {
 	public LPReasoner getLPReasoner()
 	{
-		return MinsHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

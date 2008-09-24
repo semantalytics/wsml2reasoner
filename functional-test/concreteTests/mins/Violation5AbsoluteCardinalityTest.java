@@ -27,6 +27,6 @@ import abstractTests.lp.AbstractViolation5AbsoluteCardinality;
 
 public class Violation5AbsoluteCardinalityTest extends AbstractViolation5AbsoluteCardinality {
 	public LPReasoner getLPReasoner() {
-		return MinsHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

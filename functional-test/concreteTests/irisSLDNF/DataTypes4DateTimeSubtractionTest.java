@@ -29,7 +29,7 @@ public class DataTypes4DateTimeSubtractionTest extends AbstractDataTypes4DateTim
 {
 	public LPReasoner getLPReasoner()
 	{
-		return IrisHelper.getReasoner();
+		return Reasoner.get();
 	}
 
 }

@@ -29,7 +29,7 @@ public class DataTypes5CaseSensitivityTest extends AbstractDataTypes5CaseSensiti
 {
 	public LPReasoner getLPReasoner()
 	{
-		return IrisHelper.getReasoner();
+		return Reasoner.get();
 	}
 
 }

@@ -29,6 +29,6 @@ public class DataTypes6BooleanTest extends AbstractDataTypes6Boolean
 {
 	public LPReasoner getLPReasoner()
 	{
-		return MinsHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

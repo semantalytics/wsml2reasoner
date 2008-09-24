@@ -7,6 +7,6 @@ public class Axiom6RuleImplicationsInBodyTest extends AbstractAxiom6RuleImplicat
 {
 	public LPReasoner getLPReasoner()
 	{
-		return MinsHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

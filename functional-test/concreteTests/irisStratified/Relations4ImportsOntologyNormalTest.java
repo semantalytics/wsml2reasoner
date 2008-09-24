@@ -7,6 +7,6 @@ public class Relations4ImportsOntologyNormalTest extends AbstractRelations4Impor
 {
 	public LPReasoner getLPReasoner()
 	{
-		return IrisHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

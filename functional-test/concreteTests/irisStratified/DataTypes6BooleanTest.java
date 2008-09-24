@@ -29,7 +29,7 @@ public class DataTypes6BooleanTest extends AbstractDataTypes6Boolean
 {
 	public LPReasoner getLPReasoner()
 	{
-		return IrisHelper.getReasoner();
+		return Reasoner.get();
 	}
 
 }

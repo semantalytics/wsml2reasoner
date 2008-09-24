@@ -7,6 +7,6 @@ public class Stratification1NotStratifiedTest extends AbstractStratification1Not
 {
 	public LPReasoner getLPReasoner()
 	{
-		return MinsHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

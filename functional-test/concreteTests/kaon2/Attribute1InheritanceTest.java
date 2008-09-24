@@ -30,7 +30,7 @@ import abstractTests.lp.AbstractAttribute1Inheritance;
 public class Attribute1InheritanceTest extends AbstractAttribute1Inheritance {
 
 	public LPReasoner getLPReasoner() {
-		return Kaon2Helper.getReasoner();
+		return Reasoner.get();
 	}
 
 }

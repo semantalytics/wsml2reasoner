@@ -27,6 +27,6 @@ import abstractTests.lp.AbstractViolation8UserConstraint;
 
 public class Violation8UserConstraintTest extends AbstractViolation8UserConstraint {
 	public LPReasoner getLPReasoner() {
-		return IrisHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

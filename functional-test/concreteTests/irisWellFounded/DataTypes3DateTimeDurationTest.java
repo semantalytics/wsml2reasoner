@@ -29,7 +29,7 @@ public class DataTypes3DateTimeDurationTest extends AbstractDataTypes3DateTimeDu
 {
 	public LPReasoner getLPReasoner()
 	{
-		return IrisHelper.getReasoner();
+		return Reasoner.get();
 	}
 
 }
