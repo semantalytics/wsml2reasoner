@@ -26,26 +26,25 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
+import junit.framework.TestCase;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
 
-import junit.framework.TestCase;
-
 
 public class QueryResultTableTest extends TestCase {
 	
-	protected QueryResultTable table;
-	protected WSMO4JManager wsmoManager;
-	protected String ns = "http://ex.org#";
-	protected WsmoFactory wsmoFactory;
-	protected LogicalExpressionFactory leFactory;
-	protected Ontology ontology;
+	private QueryResultTable table;
+	private String ns = "http://ex.org#";
+	private WsmoFactory wsmoFactory;
+	private LogicalExpressionFactory leFactory;
+	private DataFactory dataFactory;
+	private Ontology ontology;
 
 	public QueryResultTableTest() {
 		super();
@@ -56,6 +55,7 @@ public class QueryResultTableTest extends TestCase {
 		WSMO4JManager wsmoManager = new WSMO4JManager(); 
 		wsmoFactory = wsmoManager.getWSMOFactory();
         leFactory = wsmoManager.getLogicalExpressionFactory();
+        dataFactory = wsmoManager.getDataFactory();
         
         ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ont"));
         ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));	
@@ -66,30 +66,30 @@ public class QueryResultTableTest extends TestCase {
 	public void testTable() throws ParserException {
 		Variable v1 = leFactory.createVariable("var01");
 		Variable v2 = leFactory.createVariable("var02");
-		Term t1 = (Term) (v1);
-		Term t2 = (Term) (v2);
+		Term t1 = dataFactory.createWsmlString( "term1" );
+		Term t2 = dataFactory.createWsmlString( "term2" );
 		
-		Map<Variable, Term> map = new HashMap<Variable, Term>();
-		map.put(v1, t1);
-		map.put(v2, t2);
+		Map<Variable, Term> row = new HashMap<Variable, Term>();
+		row.put(v1, t1);
+		row.put(v2, t2);
 		
-		Set<Map<Variable,Term>> set = new HashSet<Map<Variable,Term>>();
-		set.add(map);
-		table.setContent(set, ontology);
+		Set<Map<Variable,Term>> resultSet = new HashSet<Map<Variable,Term>>();
+		resultSet.add(row);
+		table.setContent(resultSet, ontology);
 		assertEquals(2,table.getColumnCount());
 		assertEquals(1,table.getRowCount());
 		
-	    assertEquals(v1.toString(),table.getValueAt(0,0).toString());
-	    assertEquals(v2.toString(),table.getValueAt(0,1).toString());
-	    
-	    assertEquals( "var01", table.getColumnName(0).toString());
-	    assertEquals( "var02", table.getColumnName(1).toString());
-	 
-	
+		String colName1 = table.getColumnName(0);
+		String colName2 = table.getColumnName(1);
+		
+		// The ordering of the elements in 'row' can not be assured!
+		assertTrue( colName1.equals( "var01" ) && colName2.equals( "var02" ) ||
+					colName1.equals( "var02" ) && colName2.equals( "var01" ) );
+		
+		String value1 = table.getValueAt(0,0).toString();
+		String value2 = table.getValueAt(0,1).toString();
+		
+		assertTrue( value1.equals( "\"term1\"" ) && value2.equals( "\"term2\"" ) ||
+					value1.equals( "\"term2\"" ) && value2.equals( "\"term1\"" ) );
 	}
-	
-	
-	
-	
-
 }
