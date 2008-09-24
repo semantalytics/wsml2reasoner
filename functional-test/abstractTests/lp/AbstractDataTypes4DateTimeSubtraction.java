@@ -38,10 +38,11 @@ public abstract class AbstractDataTypes4DateTimeSubtraction extends TestCase imp
     	String query = "?x[age hasValue ?t]";
 
     	Results r = new Results( "x", "a" );
-    	r.addBinding( r.iri( NS + "i1" ), r.duration( true, 1, 2, 3, 4, 5, 6.7 ) );
-    	r.addBinding( r.iri( NS + "i2" ), r.duration( true, 0, 0, 0, 0, 0, 0.1 ) );
-    	r.addBinding( r.iri( NS + "i3" ), r.duration( false, 0, 0, 0, 0, 0, 0.1 ) );
+    	r.addBinding( r.iri( NS + "allFields" ), r.duration( true, 1, 2, 3, 4, 5, 6.7 ) );
+    	r.addBinding( r.iri( NS + "smallPositive" ), r.duration( true, 0, 0, 0, 0, 0, 0.1 ) );
+    	r.addBinding( r.iri( NS + "smallNegative" ), r.duration( false, 0, 0, 0, 0, 0, 0.1 ) );
 
+    	r.addBinding( r.iri( NS + "oneMicro" ), r.duration( true, 0, 0, 0, 0, 0, 0.000001 ) );
     	r.addBinding( r.iri( NS + "oneMilli" ), r.duration( true, 0, 0, 0, 0, 0, 0.001 ) );
     	
     	r.addBinding( r.iri( NS + "oneSecond" ), r.duration( true, 0, 0, 0, 0, 0, 1 ) );
