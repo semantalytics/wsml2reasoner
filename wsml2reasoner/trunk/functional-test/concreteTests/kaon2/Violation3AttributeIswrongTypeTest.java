@@ -27,6 +27,6 @@ import abstractTests.core.AbstractViolation3AttributeIsWrongType;
 
 public class Violation3AttributeIswrongTypeTest extends AbstractViolation3AttributeIsWrongType {
 	public LPReasoner getReasoner() {
-		return Kaon2Helper.getReasoner();
+		return Reasoner.get();
 	}
 }

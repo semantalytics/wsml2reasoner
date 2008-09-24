@@ -27,6 +27,6 @@ import abstractTests.lp.AbstractViolation7MaxCardinality;
 
 public class Violation7MaxCardinalityTest extends AbstractViolation7MaxCardinality {
 	public LPReasoner getLPReasoner() {
-		return IrisHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

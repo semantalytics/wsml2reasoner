@@ -7,6 +7,6 @@ public class Axiom4CoreTest extends AbstractAxiom4Core
 {
 	public WSMLReasoner getReasoner()
 	{
-		return MinsHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

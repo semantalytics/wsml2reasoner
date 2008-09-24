@@ -27,6 +27,6 @@ import abstractTests.core.AbstractViolation3AttributeIsWrongType;
 
 public class Violation3AttributeIswrongTypeTest extends AbstractViolation3AttributeIsWrongType {
 	public WSMLReasoner getReasoner() {
-		return PelletHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

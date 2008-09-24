@@ -29,7 +29,7 @@ public class DataTypes7DateTimeComparisonTest extends AbstractDataTypes7DateTime
 {
 	public LPReasoner getLPReasoner()
 	{
-		return IrisHelper.getReasoner();
+		return Reasoner.get();
 	}
 
 }

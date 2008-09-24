@@ -7,6 +7,6 @@ public class Axiom3FlightTest extends AbstractAxiom3Flight
 {
 	public LPReasoner getLPReasoner()
 	{
-		return IrisHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

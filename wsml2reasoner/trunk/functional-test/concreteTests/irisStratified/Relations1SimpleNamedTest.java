@@ -7,6 +7,6 @@ public class Relations1SimpleNamedTest extends AbstractRelations1SimpleNamed
 {
 	public LPReasoner getLPReasoner()
 	{
-		return IrisHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

@@ -30,6 +30,6 @@ public class OntologyWithCyclesTest extends AbstractOntologyWithCycles
 {
 	public DLReasoner getDLReasoner()
     {
-	    return PelletHelper.getReasoner();
+	    return Reasoner.get();
     }
 }

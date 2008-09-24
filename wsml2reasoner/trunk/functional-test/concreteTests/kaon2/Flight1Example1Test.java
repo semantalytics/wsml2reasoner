@@ -28,6 +28,6 @@ import abstractTests.lp.AbstractFlight1Example1;
 public class Flight1Example1Test extends AbstractFlight1Example1{
 
 	public LPReasoner getLPReasoner() {
-		return Kaon2Helper.getReasoner();
+		return Reasoner.get();
 	}
 }

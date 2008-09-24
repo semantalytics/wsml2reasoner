@@ -27,6 +27,6 @@ import abstractTests.lp.AbstractViolation2AttributeIsWrongConcept;
 
 public class Violation2AttributeIswrongConceptTest extends AbstractViolation2AttributeIsWrongConcept {
 	public LPReasoner getLPReasoner() {
-		return MinsHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

@@ -30,7 +30,7 @@ import abstractTests.dl.AbstractSimpleInference;
 public class SimpleInferenceTest extends AbstractSimpleInference {
 	
 	public DLReasoner getDLReasoner() {
-		return PelletHelper.getReasoner();
+		return Reasoner.get();
 	}
 
 }

@@ -29,6 +29,6 @@ public class Ontology2CyclicalImportTest extends AbstractOntology2CyclicalImport
 {
 	public LPReasoner getReasoner()
 	{
-		return Kaon2Helper.getReasoner();
+		return Reasoner.get();
 	}
 }

@@ -7,6 +7,6 @@ public class Axiom5RuleFreeVariableTest extends AbstractAxiom5RuleFreeVariable
 {
 	public LPReasoner getLPReasoner()
 	{
-		return MinsHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

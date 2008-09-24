@@ -29,7 +29,7 @@ public class DataTypes1DeclaredTest extends AbstractDataTypes1Declared
 {
 	public LPReasoner getLPReasoner()
 	{
-		return IrisHelper.getReasoner();
+		return Reasoner.get();
 	}
 
 }

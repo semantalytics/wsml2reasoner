@@ -27,6 +27,6 @@ import abstractTests.core.AbstractViolation4CyclicalInheritance;
 
 public class Violation4CyclicalInheritanceTest extends AbstractViolation4CyclicalInheritance {
 	public WSMLReasoner getReasoner() {
-		return IrisHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

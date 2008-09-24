@@ -29,7 +29,7 @@ import abstractTests.lp.AbstractAttribute1Inheritance;
 public class AttributeInheritanceTest extends AbstractAttribute1Inheritance {
 
 	public LPReasoner getLPReasoner() {
-		return MinsHelper.getReasoner();
+		return Reasoner.get();
 	}
 
 }

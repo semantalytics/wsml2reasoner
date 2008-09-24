@@ -7,6 +7,6 @@ public class Relations4ImportsOntologyReversedTest extends AbstractRelations4Imp
 {
 	public LPReasoner getLPReasoner()
 	{
-		return IrisHelper.getReasoner();
+		return Reasoner.get();
 	}
 }

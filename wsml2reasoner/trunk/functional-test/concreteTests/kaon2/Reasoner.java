@@ -20,16 +20,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package concreteTests.xsb;
+package concreteTests.kaon2;
 
 import helper.ReasonerHelper;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 
-public class XSBHelper
+class Reasoner
 {
-	static LPReasoner getReasoner()
+	static LPReasoner get()
 	{
-		return ReasonerHelper.getLPReasoner(WSMLReasonerFactory.BuiltInReasoner.XSB );
+		return ReasonerHelper.getLPReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2 );
 	}
 }

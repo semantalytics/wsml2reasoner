@@ -20,16 +20,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package concreteTests.irisSLDNF;
+package concreteTests.mins;
 
 import helper.ReasonerHelper;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 
-public class IrisHelper
+class Reasoner
 {
-	static LPReasoner getReasoner()
+	static LPReasoner get()
 	{
-		return ReasonerHelper.getLPReasoner(WSMLReasonerFactory.BuiltInReasoner.IRIS_SLDNF );
+		return ReasonerHelper.getLPReasoner(WSMLReasonerFactory.BuiltInReasoner.MINS);
 	}
 }

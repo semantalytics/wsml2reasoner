@@ -29,7 +29,7 @@ import abstractTests.dl.AbstractDataValues;
 public class DataValuesTest extends AbstractDataValues{
 
 	public DLReasoner getDLReasoner() {
-		return PelletHelper.getReasoner();
+		return Reasoner.get();
 	}
 	
 
