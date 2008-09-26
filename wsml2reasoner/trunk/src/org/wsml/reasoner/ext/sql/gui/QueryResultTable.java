@@ -14,15 +14,22 @@ import org.wsml.reasoner.ext.sql.QueryUtil;
 public class QueryResultTable extends AbstractTableModel {
 
     private static final long serialVersionUID = -6135102911102779203L;
+    
+    boolean empty;
+    private void setEmpty()
+    {
+    	assert columnNames != null;
+    	
+    	empty = true;
+        columnNames.add( "info" );
+    }
+    
+    private void populate( Set<Map<Variable, Term>> content, Ontology ontology )
+    {
+    	assert content != null;
+    	assert ontology != null;
 
-    public void setContent(Set<Map<Variable, Term>> content, Ontology ontology) {
-        columnNames = new ArrayList<String>();
-        entries = new ArrayList<ArrayList<Term>>();
-
-        if (content == null || ontology == null) {
-            throw new IllegalArgumentException("Cannot set content of table model with null parameter");
-        }
-
+    	empty = false;
         o = ontology;
 
         int j = 0;
@@ -43,6 +50,20 @@ public class QueryResultTable extends AbstractTableModel {
             entries.add(j, r);
             j++;
         }
+    }
+
+    public void setContent(Set<Map<Variable, Term>> content, Ontology ontology) {
+        columnNames = new ArrayList<String>();
+        entries = new ArrayList<ArrayList<Term>>();
+
+        if (content == null || ontology == null) {
+            throw new IllegalArgumentException("Cannot set content of table model with null parameter");
+        }
+        
+        if( content.size() == 0 )
+        	setEmpty();
+        else
+        	populate( content, ontology );
 
         fireTableStructureChanged();
     }
@@ -56,13 +77,21 @@ public class QueryResultTable extends AbstractTableModel {
     }
 
     public int getRowCount() {
-        return entries.size();
+    	if( empty )
+    		return 1;
+    	else
+    		return entries.size();
     }
 
     public Object getValueAt(int row, int col) {
-        Term t = entries.get(row).get(col);
-
-        return QueryUtil.termToString(t, o);
+    	if( empty )
+    		return "The query returned no results";
+    	else
+    	{
+	        Term t = entries.get(row).get(col);
+	
+	        return QueryUtil.termToString(t, o);
+    	}
     }
 
     // public Class<?> getColumnClass(int c) {

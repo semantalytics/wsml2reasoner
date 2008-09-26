@@ -475,17 +475,17 @@ public class QueryProcessor {
     }
 
     private void processFromClause(ArrayList<String> sequence) throws QueryFormatException {
-        if (sequence.size() != 3 || !sequence.get(1).equals("_") || sequence.get(2).charAt(0) != DQUOTE)
+        if (sequence.size() < 2 || !sequence.get(1).startsWith( "_" ))
             throw new QueryFormatException("The FROM clause is badly formatted, it should be of the form 'FROM _\"<ontology IRI>\"");
 
-        mOntologyIRI = sequence.get(1) + sequence.get(2);
+        mOntologyIRI = sequence.get(1);
     }
 
     private void processWhereClause(ArrayList<String> sequence) throws QueryFormatException {
         if (sequence.size() < 2)
             throw new QueryFormatException("The WHERE clause is badly formatted, it should be of the form 'WHERE <WSML-Flight query>");
 
-        mClauseTokens.put(sequence.get(0), mCurrentClause);
+        mClauseTokens.put(sequence.get(0), sequence);
     }
 
     private void processOrderClause(ArrayList<String> sequence) throws QueryFormatException {
@@ -497,7 +497,7 @@ public class QueryProcessor {
             throw new QueryFormatException("The ORDER BY clause is empty.");
         }
 
-        mClauseTokens.put(sequence.get(0), mCurrentClause);
+        mClauseTokens.put(sequence.get(0), sequence);
     }
 
     private void processGroupClause(ArrayList<String> sequence) throws QueryFormatException {
@@ -509,14 +509,14 @@ public class QueryProcessor {
             throw new QueryFormatException("The GROUP BY clause is empty.");
         }
 
-        mClauseTokens.put(sequence.get(0), mCurrentClause);
+        mClauseTokens.put(sequence.get(0), sequence);
     }
 
     private void processHavingClause(ArrayList<String> sequence) throws QueryFormatException {
         if (sequence.size() == 1)
             throw new QueryFormatException("The HAVING clause is empty.");
 
-        mClauseTokens.put(sequence.get(0), mCurrentClause);
+        mClauseTokens.put(sequence.get(0), sequence);
     }
 
     private void processLimitClause(ArrayList<String> sequence) throws QueryFormatException {
@@ -536,7 +536,7 @@ public class QueryProcessor {
         if (value < 0)
             throw new QueryFormatException(message);
 
-        mClauseTokens.put(sequence.get(0), mCurrentClause);
+        mClauseTokens.put(sequence.get(0), sequence);
     }
 
     private void processOffsetClause(ArrayList<String> sequence) throws QueryFormatException {
@@ -556,7 +556,7 @@ public class QueryProcessor {
         if (value < 0)
             throw new QueryFormatException(message);
 
-        mClauseTokens.put(sequence.get(0), mCurrentClause);
+        mClauseTokens.put(sequence.get(0), sequence);
     }
 
     private void processClause(ArrayList<String> sequence) throws QueryFormatException {
@@ -595,12 +595,33 @@ public class QueryProcessor {
      */
     private void endClause() throws QueryFormatException {
         if (mCurrentClause.size() > 0) {
-            processClause(mCurrentClause);
+        	ArrayList<String> tokens = reConnectIRIs( mCurrentClause );
+            processClause(tokens);
             mCurrentClause = new ArrayList<String>();
         }
     }
 
-    /**
+    private ArrayList<String> reConnectIRIs( ArrayList<String> input )
+    {
+    	ArrayList<String> output = new ArrayList<String>();
+    	
+    	for( int t = 0; t < input.size(); ++ t )
+    	{
+    		String token = input.get( t );
+
+    		if( token.equals( "_" ) && t + 1 < input.size() && input.get( t + 1 ).startsWith( "\"" ) )
+    		{
+    			output.add( token + input.get( t + 1 ) );
+    			++t;
+    		}
+    		else
+    			output.add( token );
+    	}
+    		
+	    return output;
+    }
+
+	/**
      * Process the token just parsed.
      * 
      * @param token
