@@ -69,7 +69,10 @@ public class DemoW {
         private void setup() {
             setLayout(new BorderLayout());
 
-            mQuery.setText("SELECT ?child, ?school, ?principle " + NEW_LINE + "FROM _\"http://wsml2reasoner.svn.sourceforge.net/viewvc/*checkout*/wsml2reasoner/wsml2reasoner/trunk/test/files/simpsons.wsml\" " + NEW_LINE + "WHERE ?child[attends hasValue ?school] and ?principle[principleOf hasValue ?school] " + NEW_LINE + "\n" + "\n" + "\n" + "\n");
+            mQuery.setText("SELECT ?child " + NEW_LINE +
+            				"FROM _\"http://wsml2reasoner.svn.sourceforge.net/viewvc/*checkout*/wsml2reasoner/wsml2reasoner/trunk/test/files/simpsons.wsml\" " + NEW_LINE +
+            				"WHERE ?child[attends hasValue _\"http://ontologies.deri.org#springfield_elementary\"] " + NEW_LINE +
+            				"\n" + "\n" + "\n" + "\n");
 
             mRun.addActionListener(this);
 

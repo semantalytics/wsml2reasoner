@@ -81,7 +81,7 @@ public class WSMLQuery {
             throw new IllegalArgumentException();
         }
 
-        Set<Map<Variable, Term>> queryResult = null;
+        Set<Map<Variable, Term>> queryResult = new HashSet<Map<Variable, Term>>();
 
         try {
             QueryProcessor qp = new QueryProcessor(query);
@@ -92,19 +92,22 @@ public class WSMLQuery {
 
             ReasonerResult result = reasonerFacade.executeWsmlQuery(wsmlQuery, ontologyIRI);
             onto = reasonerFacade.getOntology();
-
-            try {
-                dbmanager.openConnection();
-                String tableName = dbmanager.storeReasonerResult(new WSMLResultProcessor().process(result));
-                ResultSet sqlResult = dbmanager.executeQuery(qp.constructSqlQueryWithColumnNamesSubstitutedForVariables(tableName));
-
-                queryResult = convertSQLResult(sqlResult);
-                dbmanager.dropTable(tableName);
-                dbmanager.closeConnection();
-            }
-            catch (SQLException e) {
-                logger.error(e.getMessage());
-                e.printStackTrace();
+            
+            if( result.size() > 0 )
+            {
+	            try {
+	                dbmanager.openConnection();
+	                String tableName = dbmanager.storeReasonerResult(new WSMLResultProcessor().process(result));
+	                ResultSet sqlResult = dbmanager.executeQuery(qp.constructSqlQueryWithColumnNamesSubstitutedForVariables(tableName));
+	
+	                queryResult = convertSQLResult(sqlResult);
+	                dbmanager.dropTable(tableName);
+	                dbmanager.closeConnection();
+	            }
+	            catch (SQLException e) {
+	                logger.error(e.getMessage());
+	                e.printStackTrace();
+	            }
             }
 
         }
