@@ -5,6 +5,11 @@ namespace {_"http://example.com/violation6#"}
 ontology Violation6
 
 concept C
-	attribute ofType (1 2) _integer
+	attribute ofType (5 6) _integer
 
 instance i memberOf C
+	attribute hasValue 1
+	attribute hasValue 2
+	attribute hasValue 3
+	attribute hasValue 4
+	
