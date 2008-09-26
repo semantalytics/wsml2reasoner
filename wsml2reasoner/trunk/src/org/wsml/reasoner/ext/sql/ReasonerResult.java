@@ -40,6 +40,10 @@ public class ReasonerResult {
     public Set<Map<Variable, Term>> getResult() {
         return result;
     }
+    
+    public int size() {
+    	return result.size();
+    }
 
     protected Set<Map<Variable, Term>> result;
 }
