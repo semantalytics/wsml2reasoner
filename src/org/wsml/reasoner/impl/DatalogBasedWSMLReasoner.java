@@ -196,7 +196,9 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
 
         long normTime_start = System.currentTimeMillis();
 
-        Set<Entity> entities = handleAttributeInheritance(theEntities);
+        // We don't do this any more.
+//        Set<Entity> entities = handleAttributeInheritance(theEntities);
+        Set<Entity> entities = theEntities;
 
         // Convert conceptual syntax to logical expressions
         OntologyNormalizer normalizer = new AxiomatizationNormalizer(wsmoManager);
@@ -234,9 +236,69 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         normTime = normTime_end - normTime_start;
         return p;
     }
+    
+    /*
+     * Helper method for handleAttributeInheritance()
+     * See the note before that method.
+     */
+    private void inheritAttributesToSubConcepts( Concept concept )
+    {
+        Set<Attribute> attributes = concept.listAttributes();
+        
+        for (Concept subConcept : concept.listSubConcepts()) {
+            for (Attribute a : attributes) {
+                try {
+                	Attribute attribute = subConcept.createAttribute(a.getIdentifier());
+                    // process range types:
+                    for (Type type : a.listTypes()) {
+                        attribute.addType(type);
+                        // create an appropriate molecule per range
+                        // type:
+                        if (a.isConstraining()) {
+                            attribute.setConstraining(true);
+                        }
+                    }
 
+                    // process attribute properties:
+                    if (a.isReflexive()) {
+                        attribute.setReflexive(true);
+                    }
+                    if (a.isSymmetric()) {
+                        attribute.setSymmetric(true);
+                    }
+                    if (a.isTransitive()) {
+                        attribute.setTransitive(true);
+                    }
+                    Identifier inverseAttribute = a.getInverseOf();
+                    if (inverseAttribute != null) {
+                        attribute.setInverseOf(inverseAttribute);
+                    }
+
+                    // process cardinality constraints:
+                    if (a.getMinCardinality() > 0) {
+                        attribute.setMinCardinality(a.getMinCardinality());
+                    }
+                    if (a.getMaxCardinality() < Integer.MAX_VALUE) {
+                        attribute.setMaxCardinality(a.getMaxCardinality());
+                    }
+                }
+                catch (InvalidModelException ex) {
+                    throw new RuntimeException( "An error occurred while propogating attributes to sub-concepts", ex );
+                }
+            }
+        }
+
+        // Now recurse all the way down to concepts that don't have any sub-concepts
+        for (Concept subConcept : concept.listSubConcepts()) {
+        	inheritAttributesToSubConcepts( subConcept );
+        }
+    }
     /*
      * Add all attributes of superconcepts to the subconcepts
+     * This is a BAD way to do it! 
+     * This is now accomplished with two new rules in WSML2DatalogTransformer,
+     * but in case these new rules cause some problems this code will be left
+     * for a little while.
      */
     private Set<Entity> handleAttributeInheritance(Set<Entity> theEntities) {
         Set<Entity> result = new HashSet<Entity>();
@@ -244,57 +306,11 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         for (Entity e : theEntities) {
             if (e instanceof Concept) {
                 Concept concept = (Concept) e;
-                // process superconcepts:
-                for (Concept superconcept : concept.listSuperConcepts()) {
-                    // handle inherited attributes
-                    Set<Attribute> superAttr = superconcept.listAttributes();
-                    for (Attribute a : superAttr) {
-                        Attribute attribute;
-                        try {
-                            attribute = concept.createAttribute(a.getIdentifier());
-                            // process range types:
-                            for (Type type : a.listTypes()) {
-                                attribute.addType(type);
-                                // create an appropriate molecule per range
-                                // type:
-                                if (a.isConstraining()) {
-                                    attribute.setConstraining(true);
-                                }
-                            }
-
-                            // process attribute properties:
-                            if (a.isReflexive()) {
-                                attribute.setReflexive(true);
-                            }
-                            if (a.isSymmetric()) {
-                                attribute.setSymmetric(true);
-                            }
-                            if (a.isTransitive()) {
-                                attribute.setTransitive(true);
-                            }
-                            Identifier inverseAttribute = a.getInverseOf();
-                            if (inverseAttribute != null) {
-                                attribute.setInverseOf(inverseAttribute);
-                            }
-
-                            // process cardinality constraints:
-                            if (a.getMinCardinality() > 0) {
-                                attribute.setMinCardinality(a.getMinCardinality());
-                            }
-                            if (a.getMaxCardinality() < Integer.MAX_VALUE) {
-                                attribute.setMaxCardinality(a.getMaxCardinality());
-                            }
-                        }
-                        catch (InvalidModelException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                }
-                result.add(concept);
+                // If this is a base concept, then push attributes
+                if( concept.listSuperConcepts().size() == 0 )
+                	inheritAttributesToSubConcepts( concept );
             }
-            else {
-                result.add(e);
-            }
+            result.add(e);
         }
         return result;
     }
