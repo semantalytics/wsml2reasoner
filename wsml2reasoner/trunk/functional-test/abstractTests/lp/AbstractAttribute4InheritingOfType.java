@@ -46,7 +46,6 @@ public abstract class AbstractAttribute4InheritingOfType extends TestCase implem
 			}
 		}
 
-//		System.out.println( OntologyHelper.toString( LPHelper.executeQuery(OntologyHelper.loadOntology(ONTOLOGY_FILE), "?i[?attr ofType ?type]", getLPReasoner()) ) );
 		LPHelper.executeQueryAndCheckResults(OntologyHelper.loadOntology(ONTOLOGY_FILE), "?concept[?attribute ofType ?type]", r.get(), getLPReasoner());
 	}
 }
