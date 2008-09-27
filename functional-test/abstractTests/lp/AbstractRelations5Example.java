@@ -28,7 +28,7 @@ public abstract class AbstractRelations5Example extends TestCase implements LP {
     	
     	String NS = "http://sukesh.com/example/InstanceOntology#";
 
-    	r.addBinding( r.iri( NS + "Peter" ), r.iri( NS + "Mary" ) );
+    	r.addBinding( Results.iri( NS + "Peter" ), Results.iri( NS + "Mary" ) );
 
 //    	System.out.println( OntologyHelper.toString( LPHelper.executeQuery( ontologies, queryString, getLPReasoner() ) ) );
 //    	if(true)return;
