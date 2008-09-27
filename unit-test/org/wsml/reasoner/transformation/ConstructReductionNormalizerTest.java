@@ -53,7 +53,7 @@ public class ConstructReductionNormalizerTest extends TestCase {
 
 	private String replaceAnonymousIds( String expression )
 	{
-		String regex = "_\"" + AnonymousIdUtils.ANONYMOUS_PREFIX + "[A-Z0-9-]*\"";
+		String regex = "_\"" + AnonymousIdUtils.ANONYMOUS_PREFIX + "[a-zA-Z0-9]*\"";
 		return expression.replaceAll( regex, PSEUDO_ANONYMOUS );
 	}
 
