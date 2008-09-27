@@ -327,6 +327,7 @@ public class WSML2DatalogTransformer {
         Variable vInstance = f.createVariable("instance");
         Variable vInstance2 = f.createVariable("instance2");
         // Variable vAttributeValue = f.createVariable("attributevalue");
+        Variable vType = f.createVariable("type");
 
         List<Literal> body;
         Literal head;
@@ -446,6 +447,27 @@ public class WSML2DatalogTransformer {
          * vAttributeValue)); body.add(new Literal(false, PRED_MEMBER_OF,
          * vAttributeValue, vRange)); result.add(new Rule(null, body));
          */
+        
+        /*
+         * The following two rules have been added so that the reasoner infers the attributes.
+         * The was previously done programmatically in:
+         * 		DatalogBasedWSMLReasoner.inheritAttributesToSubConcepts()
+         */
+        
+        //wsml-of-type(?sub, ?a, ?t) :- wsml-subconcept-of(?sub, ?super), wsml-of-type(?super, ?a, ?t).
+        head = new Literal(true, PRED_OF_TYPE, vConcept2, vAttribute, vType);
+        body = new LinkedList<Literal>();
+        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept2, vConcept));
+        body.add(new Literal(true, PRED_OF_TYPE, vConcept, vAttribute, vType));
+        result.add(new Rule(head, body));
+
+        // baz
+        //wsml-implies-type(?sub, ?a, ?t) :- wsml-subconcept-of(?sub, ?super), wsml-implies-type(?super, ?a, ?t).
+        head = new Literal(true, PRED_IMPLIES_TYPE, vConcept2, vAttribute, vType);
+        body = new LinkedList<Literal>();
+        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept2, vConcept));
+        body.add(new Literal(true, PRED_IMPLIES_TYPE, vConcept, vAttribute, vType));
+        result.add(new Rule(head, body));
 
         return result;
     }

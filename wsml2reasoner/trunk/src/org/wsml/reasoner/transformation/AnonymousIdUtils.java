@@ -6,7 +6,7 @@ import java.util.Random;
  * @author Gabor Nagypal (FZI)
  */
 public abstract class AnonymousIdUtils {
-    protected static final Random RND = new Random();
+    //protected static final Random RND = new Random();
     
     public static final String ANONYMOUS_PREFIX = "http://www.wsmo.org/reasoner/anonymous_";
     public static final String OFTYPE_PREFIX = "http://www.wsmo.org/reasoner/oftype_";
@@ -21,9 +21,12 @@ public abstract class AnonymousIdUtils {
      *            the prefix of the URI
      * @return unique URI
      */
-    private static String getNewIri(String prefix) {
-        return prefix + System.currentTimeMillis() + "-" + Math.abs(RND.nextInt());
+    private static synchronized String getNewIri(String prefix) {
+    		return prefix + Long.toHexString( ++mNextIriTrailer );
+//        return prefix + System.currentTimeMillis() + "-" + Math.abs(RND.nextInt());
     }
+    
+    private static long mNextIriTrailer = 0x1000000000000000L;
 
     public static String getNewAnonymousIri() {
         return getNewIri(ANONYMOUS_PREFIX);
