@@ -26,7 +26,6 @@ import helper.LPHelper;
 import helper.OntologyHelper;
 import helper.Results;
 import junit.framework.TestCase;
-import org.wsml.reasoner.api.LPReasoner;
 import abstractTests.LP;
 
 /**

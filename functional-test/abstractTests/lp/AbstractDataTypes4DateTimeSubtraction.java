@@ -38,20 +38,20 @@ public abstract class AbstractDataTypes4DateTimeSubtraction extends TestCase imp
     	String query = "?x[age hasValue ?t]";
 
     	Results r = new Results( "x", "a" );
-    	r.addBinding( r.iri( NS + "allFields" ), r.duration( true, 1, 2, 3, 4, 5, 6.7 ) );
-    	r.addBinding( r.iri( NS + "smallPositive" ), r.duration( true, 0, 0, 0, 0, 0, 0.1 ) );
-    	r.addBinding( r.iri( NS + "smallNegative" ), r.duration( false, 0, 0, 0, 0, 0, 0.1 ) );
+    	r.addBinding( Results.iri( NS + "allFields" ), Results.duration( true, 1, 2, 3, 4, 5, 6.7 ) );
+    	r.addBinding( Results.iri( NS + "smallPositive" ), Results.duration( true, 0, 0, 0, 0, 0, 0.1 ) );
+    	r.addBinding( Results.iri( NS + "smallNegative" ), Results.duration( false, 0, 0, 0, 0, 0, 0.1 ) );
 
-    	r.addBinding( r.iri( NS + "oneMicro" ), r.duration( true, 0, 0, 0, 0, 0, 0.000001 ) );
-    	r.addBinding( r.iri( NS + "oneMilli" ), r.duration( true, 0, 0, 0, 0, 0, 0.001 ) );
+    	r.addBinding( Results.iri( NS + "oneMicro" ), Results.duration( true, 0, 0, 0, 0, 0, 0.000001 ) );
+    	r.addBinding( Results.iri( NS + "oneMilli" ), Results.duration( true, 0, 0, 0, 0, 0, 0.001 ) );
     	
-    	r.addBinding( r.iri( NS + "oneSecond" ), r.duration( true, 0, 0, 0, 0, 0, 1 ) );
-    	r.addBinding( r.iri( NS + "oneMinute" ), r.duration( true, 0, 0, 0, 0, 1, 0 ) );
-    	r.addBinding( r.iri( NS + "oneHour" ), r.duration( true, 0, 0, 0, 1, 0, 0 ) );
+    	r.addBinding( Results.iri( NS + "oneSecond" ), Results.duration( true, 0, 0, 0, 0, 0, 1 ) );
+    	r.addBinding( Results.iri( NS + "oneMinute" ), Results.duration( true, 0, 0, 0, 0, 1, 0 ) );
+    	r.addBinding( Results.iri( NS + "oneHour" ), Results.duration( true, 0, 0, 0, 1, 0, 0 ) );
     	
-    	r.addBinding( r.iri( NS + "oneDay" ), r.duration( true, 0, 0, 1, 0, 0, 0 ) );
-    	r.addBinding( r.iri( NS + "oneMonth" ), r.duration( true, 0, 1, 0, 0, 0, 0 ) );
-    	r.addBinding( r.iri( NS + "oneYear" ), r.duration( true, 1, 0, 0, 0, 0, 0 ) );
+    	r.addBinding( Results.iri( NS + "oneDay" ), Results.duration( true, 0, 0, 1, 0, 0, 0 ) );
+    	r.addBinding( Results.iri( NS + "oneMonth" ), Results.duration( true, 0, 1, 0, 0, 0, 0 ) );
+    	r.addBinding( Results.iri( NS + "oneYear" ), Results.duration( true, 1, 0, 0, 0, 0, 0 ) );
     	
     	query = "?x[age hasValue ?a]";
     	

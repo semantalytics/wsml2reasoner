@@ -22,18 +22,17 @@
  */
 package abstractTests.lp;
 
-import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import helper.LPHelper;
 import helper.OntologyHelper;
-import helper.Results;
 import junit.framework.TestCase;
+import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import abstractTests.LP;
 
 public abstract class AbstractAttribute6InheritingCardinalityConstraints extends TestCase implements LP {
 
 	private static final String ONTOLOGY_FILE = "files/attribute6_inheriting_cardinality_constraints.wsml";
-	private static final String NS = "http://example.com/attribute6#";
-	private static final String WSML_STRING = "http://www.wsmo.org/wsml/wsml-syntax#string";
+//	private static final String NS = "http://example.com/attribute6#";
+//	private static final String WSML_STRING = "http://www.wsmo.org/wsml/wsml-syntax#string";
 	
 	public void testAttributeInheritance() throws Exception {
 

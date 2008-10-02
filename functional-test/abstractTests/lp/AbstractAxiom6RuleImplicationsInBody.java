@@ -34,7 +34,7 @@ import abstractTests.LP;
  */
 public abstract class AbstractAxiom6RuleImplicationsInBody extends TestCase implements LP {
 
-    private static final String NS = "http://example.com/axiom6#";
+//    private static final String NS = "http://example.com/axiom6#";
 
     private static final String ONTOLOGY_FILE = "files/axiom6_rule_implications_in_body.wsml";
 

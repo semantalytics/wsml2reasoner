@@ -18,10 +18,6 @@
  */
 package abstractTests.lp;
 
-import java.util.Map;
-import java.util.Set;
-import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Variable;
 import helper.LPHelper;
 import helper.OntologyHelper;
 import junit.framework.TestCase;
@@ -31,7 +27,8 @@ public abstract class AbstractAnonymousId2Attribute extends TestCase implements 
 
 	public void testAnonymousIdInAttributeValue() throws Exception {
 		
-		Set<Map<Variable, Term>> results = 
+		// This should not throw an exception
+//		Set<Map<Variable, Term>> results = 
 			LPHelper.executeQuery( OntologyHelper.loadOntology( "files/anonymous_id2_attribute.wsml" ),
 	    					"?x[hasC hasValue ?c]", getLPReasoner() );
 //		System.out.println( OntologyHelper.toString( results ) );
