@@ -35,19 +35,16 @@ import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
 
-
-
 public class ConstraintReplacementNormalizerTest extends TestCase {
-	
+
 	private ConstraintReplacementNormalizer normalizer;
 	protected String ns = "http://ex.org#";
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
-	
+
 	public ConstraintReplacementNormalizerTest() {
 		super();
 	}
-
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -59,89 +56,83 @@ public class ConstraintReplacementNormalizerTest extends TestCase {
 
 	public void testInsertViolationsAxiom() {
 		Set<Axiom> axioms = new HashSet<Axiom>();
-		
+
 		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
-		
+
 		// Should always have the violation constraints in an anonymous axiom
-		assertEquals(1, out.size() );
-		
+		assertEquals(1, out.size());
+
 		Axiom violationsAxiom = out.iterator().next();
-		
+
 		// This axiom should be anonymous
-		assertEquals( "_#", violationsAxiom.getIdentifier().toString() );
-		
+		assertEquals("_#", violationsAxiom.getIdentifier().toString());
+
 		Set<LogicalExpression> les = violationsAxiom.listDefinitions();
-		
-		for( LogicalExpression le : les ){
+
+		for (LogicalExpression le : les) {
 			assertTrue(le.toString().contains("/VIOLATION"));
 		}
 		assertEquals(5, les.size());
 	}
 
 	public void testEmptyAxiomsAreIgnored() {
-		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom_empty" ));
+		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom_empty"));
 		Set<Axiom> axioms = new HashSet<Axiom>();
 		axioms.add(axiom1);
 		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
-		for(Axiom ax : out) {
-			assertFalse(ax.getIdentifier().toString().equals(axiom1.getIdentifier().toString()));
+		for (Axiom ax : out) {
+			assertFalse(ax.getIdentifier().toString().equals(
+					axiom1.getIdentifier().toString()));
 		}
-		assertEquals(1,out.size());
+		assertEquals(1, out.size());
 	}
 
 	public void testConstraintsAreReplaced() throws ParserException {
-		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(AnonymousIdUtils.MINCARD_PREFIX + "axiom_mincard" ));
+		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom1"));
 		Set<Axiom> axioms = new HashSet<Axiom>();
-//		axiom1.addDefinition(LETestHelper.buildLE("!- _\"urn:a\" memberOf _#"));
-		axiom1.addDefinition(LETestHelper.buildLE("!- _\"urn:a\" implies _\"urn:b\""));
+		axiom1.addDefinition(LETestHelper.buildLE("!- _\"urn:a\" memberOf _#"));
 		axioms.add(axiom1);
-//		fail();
-		
+
 		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
-		
-		for(Axiom ax : out) {
-			System.out.println(ax.getIdentifier().toString());
-			for(LogicalExpression le : ax.listDefinitions()){
-				System.out.println(le.toString());
+		String expected = "_# http://www.wsmo.org/reasoner/anonymous_1000000000000001";
+
+		assertEquals(2, out.size());
+		for (Axiom ax : out) {
+			assertTrue(expected.contains(ax.getIdentifier().toString()));
+			for (LogicalExpression le : ax.listDefinitions()) {
+				assertTrue(checkContains(le));
 			}
 		}
-		
+
 	}
 
 	public void testNormalizeAxiomsNormalAxiom() {
 		String axiomUri = ns + "axiom_normaliser_test";
-		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(axiomUri ));
+		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(axiomUri));
 
 		Set<Axiom> axioms = new HashSet<Axiom>();
 		axioms.add(axiom1);
 
 		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
-		
-		assertTrue( contains( out, axiomUri ) );
-		
+
+		assertFalse(contains(out, axiomUri));
+
 		// Is this the correct behavior ?
-		assertTrue( contains( out, "_#" ) );
-		assertEquals(1, out.size() );
+		assertTrue(contains(out, "_#"));
+		assertEquals(1, out.size());
 	}
-	
-	private boolean contains( Set<Axiom> axioms, String identifier )
-	{
-		boolean found = false;
-		for (Axiom ax : axioms) {
-//			System.out.println(ax.getIdentifier());
-			if( ax.getIdentifier().toString().equals( identifier  ))
-				found = true;
-		}
-		
-		return found;
-	}
-	
+
 	public void testNormalizeAxioms() {
-		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom_normaliser_test" ));
-		Axiom axiom2 = wsmoFactory.createAxiom(wsmoFactory.createIRI(AnonymousIdUtils.MINCARD_PREFIX));	
-		Axiom axiom3 = wsmoFactory.createAxiom(wsmoFactory.createIRI(AnonymousIdUtils.MAXCARD_PREFIX));	
+		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom_normaliser_test"));
+		Axiom axiom2 = wsmoFactory.createAxiom(wsmoFactory
+				.createIRI(AnonymousIdUtils.MINCARD_PREFIX));
+		Axiom axiom3 = wsmoFactory.createAxiom(wsmoFactory
+				.createIRI(AnonymousIdUtils.MAXCARD_PREFIX));
 		Axiom axiom4 = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
-		
+
 		Set<Axiom> axioms = new HashSet<Axiom>();
 		axioms.add(axiom1);
 		axioms.add(axiom2);
@@ -152,11 +143,62 @@ public class ConstraintReplacementNormalizerTest extends TestCase {
 		assertEquals(1, out.size());
 		assertFalse(axioms.equals(out));
 	}
-
-	
-	
-	
 	
 
+	private boolean contains(Set<Axiom> axioms, String identifier) {
+		boolean found = false;
+		for (Axiom ax : axioms) {
+			if (ax.getIdentifier().toString().equals(identifier))
+				found = true;
+		}
+
+		return found;
+	}
+	
+	private boolean checkContains(LogicalExpression le) throws ParserException {
+		if (le
+				.toString()
+				.trim()
+				.equals(
+						"_\"http://www.wsmo.org/reasoner/VIOLATION\"\n:-\n_\"http://www.wsmo.org/reasoner/ATTR_OFTYPE\"(?v1,?v2,?v3,?v4,?v5).")) {
+			return true;
+		}
+		if (le
+				.toString()
+				.trim()
+				.equals(
+						"_\"http://www.wsmo.org/reasoner/VIOLATION\"\n:-\n_\"http://www.wsmo.org/reasoner/MIN_CARD\"(?v1,?v2,?v3).")) {
+			return true;
+		}
+		if (le
+				.toString()
+				.trim()
+				.equals(
+						"_\"http://www.wsmo.org/reasoner/VIOLATION\"\n:-\n_\"http://www.wsmo.org/reasoner/MAX_CARD\"(?v1,?v2,?v3).")) {
+			return true;
+		}
+		if (le
+				.toString()
+				.trim()
+				.equals(
+						"_\"http://www.wsmo.org/reasoner/VIOLATION\"\n:-\n_\"http://www.wsmo.org/reasoner/NAMED_USER\"(?v1).")) {
+			return true;
+		}
+		if (le
+				.toString()
+				.trim()
+				.equals(
+						"_\"http://www.wsmo.org/reasoner/VIOLATION\"\n:-\n_\"http://www.wsmo.org/reasoner/UNNAMED_USER\"(?v1).")) {
+			return true;
+		}
+		if (le
+				.toString()
+				.trim()
+				.equals(
+						"_\"http://www.wsmo.org/reasoner/NAMED_USER\"(_\"http://ex.org#axiom1\")\n:-\n_\"urn:a\" memberOf _#.")) {
+			return true;
+		}
+		return false;
+	}
 
 }
