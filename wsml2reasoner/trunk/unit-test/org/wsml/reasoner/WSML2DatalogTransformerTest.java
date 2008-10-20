@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 
@@ -67,10 +68,11 @@ public class WSML2DatalogTransformerTest extends TestCase {
 
 		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom"));
 		ontology.addAxiom(axiom);
+		
 	}
 
 	public void testTransform() throws ParserException {
-
+		
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\"[_\"urn:a\" hasValue _#]");
 		Set<Rule> out = transformer.transform(le);
@@ -125,7 +127,33 @@ public class WSML2DatalogTransformerTest extends TestCase {
 			assertTrue(r.toString().contains(
 					("wsml-subconcept-of(urn:a, urn:b).")));
 		}
+		
+		in = new HashSet<LogicalExpression>();
+		le = LETestHelper.buildLE("\"_urn:a\"[\"_urn:a\" hasValue \"_urn:b\"] and \"_urn:b\" memberOf \"_urn:a\"");
+		in.add(le);
+		out = transformer.transform(in);
+		for (Rule r : out) {
+			assertTrue(r.toString().contains(("wsml-member-of(_urn:b, _urn:a).")));
+		}
 
+	}
+	
+	public void testGenerateAuxilliaryRules() {
+		Set<Rule> set = transformer.generateAuxilliaryRules();
+		assertEquals(15, set.size());	
+	}
+	
+	public void testExtractConstantsUsedAsConcepts() throws ParserException {
+//		LogicalExpression le = LETestHelper.buildLE("_\"urn:a\" subConceptOf _#");
+		
+		LogicalExpression le = LETestHelper.buildLE("\"_urn:a\"[\"_urn:a\" hasValue \"_urn:b\"] and \"_urn:b\" memberOf \"_urn:a\"");
+		
+		Set<Term> set = transformer.extractConstantsUsedAsConcepts(le);
+//		assertTrue(set.size() != 0 );
+		for(Term t : set) {
+			System.out.println(t.toString());
+		}
+		
 	}
 
 	public void testTransformSubConceptOfInHead() throws ParserException {
@@ -169,6 +197,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 	public void testTransformImpliesInHead() throws ParserException {
 
 		// More than one implication in the given WSML rule detected!
+		// [ 2002256 ] 'implies' should be allowed in rule bodies.
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\" implies _\"urn:b\" :- _\"urn:c\"");
 		
@@ -184,6 +213,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 	public void testTransformImpliesInBody() throws ParserException {
 
 		// More than one implication in the given WSML rule detected!
+		// [ 2002256 ] 'implies' should be allowed in rule bodies.
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\"  :- _\"urn:c\" implies _\"urn:b\"");
 		
@@ -199,6 +229,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 	public void testTransformEquivalentInHead() throws ParserException {
 
 		// More than one implication in the given WSML rule detected!
+		// [ 2002256 ] 'implies' should be allowed in rule bodies.
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\" equivalent _\"urn:b\" :- _\"urn:c\"");
 		
@@ -214,6 +245,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 	public void testTransformEquivalentInBody() throws ParserException {
 
 		// More than one implication in the given WSML rule detected!
+		// [ 2002256 ] 'implies' should be allowed in rule bodies.
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\"  :- _\"urn:c\" equivalent _\"urn:b\"");
 		
@@ -230,6 +262,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 	public void testTransformImpliedByInHead() throws ParserException {
 
 		// More than one implication in the given WSML rule detected!
+		// [ 2002256 ] 'implies' should be allowed in rule bodies.
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\" impliedBy _\"urn:b\" :- _\"urn:c\"");
 		
@@ -245,6 +278,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 	public void testTransformImpliedByInBody() throws ParserException {
 
 		// More than one implication in the given WSML rule detected!
+		// [ 2002256 ] 'implies' should be allowed in rule bodies.
 		LogicalExpression le = LETestHelper.buildLE("_\"urn:a\" :- _\"urn:c\" impliedBy _\"urn:b\"");
 		
 			Set<Rule> out = transformer.transform(le);
