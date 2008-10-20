@@ -37,7 +37,7 @@ public class OWLSerializerImpl implements OWLSerializer {
         new org.semanticweb.owl.io.owl_rdf.Renderer().renderOntology(owlOntology, arg1);
     }
 
-    public void serialize(OWLOntology owlOntology, Writer theWriter, Map theMap) throws RendererException {
+    public void serialize(OWLOntology owlOntology, Writer theWriter, Map<?, ?> theMap) throws RendererException {
         if (theMap != null && theMap.containsKey(OWLSerializer.OWL_SERIALIZER) && theMap.get(OWLSerializer.OWL_SERIALIZER).equals(OWLSerializer.OWL_ABSTRACT)) {
             new Renderer().renderOntology(owlOntology, theWriter);
         }
@@ -52,7 +52,7 @@ public class OWLSerializerImpl implements OWLSerializer {
         arg1.append(writer.getBuffer());
     }
 
-    public void serialize(OWLOntology owlOntology, StringBuffer arg1, Map arg2) throws RendererException {
+    public void serialize(OWLOntology owlOntology, StringBuffer arg1, Map<?, ?> arg2) throws RendererException {
         StringWriter writer = new StringWriter();
         serialize(owlOntology, writer, arg2);
         arg1.append(writer.getBuffer());

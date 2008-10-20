@@ -128,13 +128,15 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 		
 		Set<Map<Variable, Term>> set = reasoner.getQueryContainment(LETestHelper.buildLE("?x subConceptOf _\"urn:d\" and ?x subConceptOf _\"urn:d\""), LETestHelper.buildLE("?x subConceptOf _\"urn:d\""));
 		
+		String str = "";
 		for(Map <Variable, Term> map: set ){
 			  for (Variable var : map.keySet()) {
-				  System.out.println(var +" ; " + map.get(var));
-				  
+				 str = str + " " + map.get(var).toString();  
 			  }
 		}
-		assertEquals(0,set.size());
+		assertEquals(2, set.size());
+		assertTrue(str.contains("urn:d FROZEN_VARIABLE_x"));
+		
 		
 	}
 

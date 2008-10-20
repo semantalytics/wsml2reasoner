@@ -1,6 +1,5 @@
 package org.wsml.reasoner.transformation;
 
-import java.util.Random;
 
 /**
  * @author Gabor Nagypal (FZI)
