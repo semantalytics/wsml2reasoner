@@ -253,8 +253,6 @@ public class WSML2DatalogTransformerTest extends TestCase {
 				System.out.println("Head: " + r.getHead().toString());
 				System.out.println("Body: " + r.getBody().toString());
 			}
-		
-
 	}
 
 }

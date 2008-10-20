@@ -78,6 +78,7 @@ public abstract class AbstractSimpleInference extends TestCase implements DL {
 
 	public void testGetAllConcepts() {
 		Set<Concept> set = wsmlReasoner.getAllConcepts();
+		assertEquals(19, set.size());
 		set.remove(wsmoFactory.createConcept(wsmoFactory
 				.createIRI("http://www.w3.org/2002/07/owl#Thing")));
 		set.remove(wsmoFactory.createConcept(wsmoFactory

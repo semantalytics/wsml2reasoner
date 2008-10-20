@@ -116,8 +116,8 @@ public abstract class FOLAbstractSerializeVisitor implements Visitor {
      */
     protected String helpQuantified(Quantified expr) {
         String res = "";
-        Set s = expr.listVariables();
-        Iterator i = s.iterator();
+        Set<?> s = expr.listVariables();
+        Iterator<?> i = s.iterator();
         res = res + "[";
         while (i.hasNext()) {
             ((Term) i.next()).accept(visitor);
