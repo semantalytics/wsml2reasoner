@@ -102,21 +102,21 @@ public class DLBasedWSMLReasonerTest extends TestCase {
 				.createIRI("urn://Person1"), humanConcept);
 		person2 = wsmoFactory.createInstance(wsmoFactory
 				.createIRI("urn://Person2"), humanConcept);
-//		Instance person3 = wsmoFactory.createInstance(wsmoFactory
-//				.createIRI("urn://Person3"), humanConcept);
+		// Instance person3 = wsmoFactory.createInstance(wsmoFactory
+		// .createIRI("urn://Person3"), humanConcept);
 
 		person1.addAttributeValue(hasParentAttr.getIdentifier(), person2);
 		person1.addAttributeValue(hasParentAttr.getIdentifier(), wsmoFactory
 				.createInstance(wsmoFactory.createAnonymousID()));
 
-		Axiom person1LivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "urn://person1LivesSomewhere"));
+		Axiom person1LivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "urn://person1LivesSomewhere"));
 
 		ontology.addConcept(humanConcept);
 		ontology.addConcept(locationConcept);
 		ontology.addInstance(person1);
 		ontology.addInstance(person2);
 		ontology.addAxiom(person1LivesAx);
-	
 
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
@@ -124,6 +124,8 @@ public class DLBasedWSMLReasonerTest extends TestCase {
 
 		reasoner = (DLBasedWSMLReasoner) DefaultWSMLReasonerFactory
 				.getFactory().createDLReasoner(params);
+
+		// reasoner.registerOntology(ontology);
 
 	}
 
@@ -186,6 +188,51 @@ public class DLBasedWSMLReasonerTest extends TestCase {
 			assertEquals(true, containsExpr(expr));
 		}
 
+	}
+
+	public void testGetAllConceptsWithNoRelatives()
+			throws InconsistencyException, InvalidModelException {
+
+		Ontology ontology1 = wsmoFactory.createOntology(wsmoFactory
+				.createIRI(ns + "SomeOntology"));
+
+		// Bug [ 2003873 ] Concept with no relatives not returned from
+		// getAllConcepts()
+		// Concept with no relatives not returned from getAllConcepts()
+		// A concept that does not have any relationship with any other concept
+		// via
+		// attributes, super-concept, sub-concept etc, is not returned in a call
+		// to
+		// WSMLResoner.getAllConcepts()
+
+		ontology1.setDefaultNamespace(wsmoFactory.createIRI(ns));
+		Concept concept01 = wsmoFactory.createConcept(wsmoFactory.createIRI(ns
+				+ "urn://Concept01"));
+		ontology1.addConcept(concept01);
+		reasoner.registerOntology(ontology1);
+
+		Set<Concept> set = reasoner.getAllConcepts();
+		assertEquals(1, set.size());
+	}
+
+	public void testGetAllConcepts() throws InconsistencyException,
+			InvalidModelException {
+
+		Ontology ontology1 = wsmoFactory.createOntology(wsmoFactory
+				.createIRI(ns + "SomeOntology"));
+
+		ontology1.setDefaultNamespace(wsmoFactory.createIRI(ns));
+		Concept concept01 = wsmoFactory.createConcept(wsmoFactory.createIRI(ns
+				+ "urn://Concept01"));
+
+		Attribute attr01 = concept01.createAttribute(wsmoFactory.createIRI(ns
+				+ "urn://anAttribute"));
+		attr01.addType(concept01);
+		ontology1.addConcept(concept01);
+		reasoner.registerOntology(ontology1);
+		Set<Concept> set = reasoner.getAllConcepts();
+		assertEquals(1, set.size());
+		reasoner.deRegister();
 	}
 
 	private boolean containsExpr(Set<LogicalExpression> expr) {

@@ -1041,9 +1041,10 @@ public class WSMLDL2OWLTransformer implements Visitor {
         private void createExplicitSubClass(OWLDescription subClass, OWLDescription superClass) {
             boolean equivalent = false;
             try {
-				Iterator<OWLClassAxiom> it = owlOntology.getClassAxioms().iterator();
+//				Iterator<OWLClassAxiom> it = owlOntology.getClassAxioms().iterator();
+            	Iterator<?> it = owlOntology.getClassAxioms().iterator();
                 while (it.hasNext()) {
-                    OWLClassAxiom axiom = it.next();
+                    OWLClassAxiom axiom = (OWLClassAxiom) it.next();
                     if (axiom instanceof OWLSubClassAxiom && ((OWLSubClassAxiom) axiom).getSubClass().equals(superClass) && ((OWLSubClassAxiom) axiom).getSuperClass().equals(subClass)) {
                         equivalent = true;
                         HashSet<OWLDescription> set = new HashSet<OWLDescription>();

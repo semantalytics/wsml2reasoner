@@ -241,6 +241,17 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 	
 		
 	}
+	
+//	public void testReasonerSomething() throws ParserException {
+//		Set<Entity> in = new HashSet<Entity>();
+//		
+//		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns+ "axiom002"));
+//		
+//
+//		in.add(axiom);
+//	}
+	
+	
 	public void testConvertQuery() throws ParserException {
 		
 		Set <ConjunctiveQuery> out =  reasoner.convertQuery(LETestHelper.buildLE("_\"urn:a\"")); 
@@ -293,7 +304,6 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 		for(ConjunctiveQuery cq : out) {
 			assertEquals( (" ?- wsml-implies-type(?x, ?x, ?x)."), cq.toString());
 		}
-		
 		
 		// TODO more of that Queries ??? 
 		
