@@ -63,7 +63,7 @@ public interface OWLSerializer {
      *            default
      * @throws IOException
      */
-    public void serialize(OWLOntology ontology, Writer arg1, Map arg2) throws RendererException;
+    public void serialize(OWLOntology ontology, Writer arg1, Map<?, ?> arg2) throws RendererException;
 
     /**
      * This method serializes to OWL-RDF syntax.
@@ -90,6 +90,6 @@ public interface OWLSerializer {
      *            default
      * @throws IOException
      */
-    public void serialize(OWLOntology ontology, StringBuffer arg1, Map arg2) throws RendererException;
+    public void serialize(OWLOntology ontology, StringBuffer arg1, Map<?, ?> arg2) throws RendererException;
 
 }

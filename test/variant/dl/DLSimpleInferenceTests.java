@@ -395,7 +395,7 @@ public class DLSimpleInferenceTests extends TestCase {
 				wsmoFactory.createIRI(ns + "ageOfHuman")).contains("40"));
 		
 		// test getInferingAttributeValues
-		Set set4 = wsmlReasoner.getInferingAttributeValues(
+		Set<?> set4 = wsmlReasoner.getInferingAttributeValues(
 				 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Clare")),
 				wsmoFactory.createIRI(ns + "hasChild"));
