@@ -67,7 +67,6 @@ public class DLBasedWSMLReasonerTest extends TestCase {
 
 	public DLBasedWSMLReasonerTest() {
 		super();
-
 	}
 
 	protected void setUp() throws Exception {
