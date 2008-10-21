@@ -149,7 +149,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 	public void testExtractConstantsUsedAsConcepts() throws ParserException {
 //		LogicalExpression le = LETestHelper.buildLE("_\"urn:a\" subConceptOf _#");
 		
-		LogicalExpression le = LETestHelper.buildLE("\"_urn:a\"[\"_urn:a\" hasValue \"_urn:b\"] and \"_urn:b\" memberOf \"_urn:a\"");
+		LogicalExpression le = LETestHelper.buildLE("\"_urn:a\" ");
 		
 		Set<Term> set = transformer.extractConstantsUsedAsConcepts(le);
 //		assertTrue(set.size() != 0 );

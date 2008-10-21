@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
@@ -38,7 +39,6 @@ import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DatalogBasedWSMLReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.common.IRI;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.common.exception.SynchronisationException;
@@ -160,6 +160,11 @@ public class DLUtilitiesTest extends TestCase {
 
 		Concept humanConcept = wsmoFactory.createConcept(wsmoFactory.createIRI(ns
 				+ "urn://Human"));
+		Concept personConcept = wsmoFactory.createConcept(wsmoFactory.createIRI(ns
+				+ "urn://Person"));
+		
+		humanConcept.addSubConcept(personConcept);
+		
 		Attribute hasRelativeAttr = humanConcept.createAttribute(wsmoFactory.createIRI(ns
 				+ "urn://hasRelative"));
 		hasRelativeAttr.setSymmetric(true);
@@ -172,7 +177,6 @@ public class DLUtilitiesTest extends TestCase {
 				+ "urn://hasParent"));
 		hasParentAttr.addType(humanConcept);
 		
-
 	    Attribute livesAtAttr = humanConcept.createAttribute(wsmoFactory.createIRI(ns
 				+ "urn://livesAt"));
 		livesAtAttr.addType(locationConcept);
@@ -181,6 +185,9 @@ public class DLUtilitiesTest extends TestCase {
 				.createIRI("urn://Person1"), humanConcept);
 		Instance person2 = wsmoFactory.createInstance(wsmoFactory
 				.createIRI("urn://Person2"), humanConcept);
+		
+		Instance person3 = wsmoFactory.createInstance(wsmoFactory
+				.createIRI("urn://Person3"), locationConcept);
 		
 		Instance location1 = wsmoFactory.createInstance(wsmoFactory
 				.createIRI("urn://Location01"), locationConcept);
@@ -191,12 +198,18 @@ public class DLUtilitiesTest extends TestCase {
 
 		Axiom person1LivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
 				+ "urn://person1LivesSomewhere"));
-
+		
+		String s = "?x memberOf Person :- naf ?x memberOf Human.";
+	    LogicalExpression le = leFactory.createLogicalExpression(s, ontologyUnSatisfiable);
+		person1LivesAx.addDefinition(le);
+		
+		ontologyUnSatisfiable.addConcept(personConcept);
 		ontologyUnSatisfiable.addConcept(humanConcept);
 		ontologyUnSatisfiable.addConcept(locationConcept);
 		ontologyUnSatisfiable.addInstance(location1);
 		ontologyUnSatisfiable.addInstance(person1);
 		ontologyUnSatisfiable.addInstance(person2);
+		ontologyUnSatisfiable.addInstance(person3);
 		ontologyUnSatisfiable.addAxiom(person1LivesAx);
 
 		reasoner.registerOntology(ontologyUnSatisfiable);
