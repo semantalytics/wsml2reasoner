@@ -24,6 +24,7 @@ package org.wsml.reasoner.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -31,6 +32,7 @@ import org.omwg.ontology.Concept;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.FOLReasoner.EntailmentType;
+import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -70,17 +72,23 @@ public class FOLBasedWSMLReasonerTest extends TestCase {
         
 	}
 	
+	public void testRegisterOntologyNoVerification() {
+		reasoner.deRegister();
+		reasoner.registerOntologyNoVerification(ontology);
+	}
+	
 	public void testCheckEntailment() throws ParserException, InconsistencyException{
 		
 		EntailmentType t1 = reasoner.checkEntailment(LETestHelper.buildLE("?x subConceptOf _\"urn:a\""));
 		System.out.println(t1.toString());
 	}
 	
-//	public void test() {
-//		Set <ConsistencyViolation> set = reasoner.checkConsistency();
-//		System.out.println(set.size());
-//		System.out.println("");
-//	}
+	public void testCheckConsistency() throws InconsistencyException {
+		reasoner.registerOntology(ontology);
+		Set <ConsistencyViolation> set = reasoner.checkConsistency();
+		System.out.println(set.size());
+		System.out.println("");
+	}
 	
 	
 	
