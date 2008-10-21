@@ -94,7 +94,7 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 		ontology.addAxiom(axiom2);
 		
 		Axiom axiom3 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom03"));
-		axiom1.addDefinition(LETestHelper.buildLE("_\"urn:g\" memberOf _\"urn:m\" :- _\"urn:f\""));
+		axiom3.addDefinition(LETestHelper.buildLE("_\"urn:g\" memberOf _\"urn:m\" :- _\"urn:f\""));
 		ontology.addAxiom(axiom3);
 		
 		Instance i = new InstanceImpl(wsmoFactory.createIRI(ns + "aa"));

@@ -41,17 +41,6 @@ public class ConjunctiveQueryTest extends TestCase {
 		super();
 	}
 
-	protected void setUp() throws Exception {
-		super.setUp();
-		
-
-	}
-
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		query = null;
-	}
-
 	public void testGetLiterals() {
 		ArrayList <Literal> list = new ArrayList<Literal>();
 		int i = 0;
