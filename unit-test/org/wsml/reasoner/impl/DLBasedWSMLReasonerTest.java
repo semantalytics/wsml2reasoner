@@ -84,7 +84,7 @@ public class DLBasedWSMLReasonerTest extends TestCase {
 				+ "urn://Human"));
 		hasRelativeAttr = humanConcept.createAttribute(wsmoFactory.createIRI(ns
 				+ "urn://hasRelative"));
-		// hasRelativeAttr.setSymmetric(true);
+
 		hasRelativeAttr.addType(humanConcept);
 		locationConcept = wsmoFactory.createConcept(wsmoFactory.createIRI(ns
 				+ "urn://Location"));
@@ -101,8 +101,6 @@ public class DLBasedWSMLReasonerTest extends TestCase {
 				.createIRI("urn://Person1"), humanConcept);
 		person2 = wsmoFactory.createInstance(wsmoFactory
 				.createIRI("urn://Person2"), humanConcept);
-		// Instance person3 = wsmoFactory.createInstance(wsmoFactory
-		// .createIRI("urn://Person3"), humanConcept);
 
 		person1.addAttributeValue(hasParentAttr.getIdentifier(), person2);
 		person1.addAttributeValue(hasParentAttr.getIdentifier(), wsmoFactory
@@ -228,10 +226,40 @@ public class DLBasedWSMLReasonerTest extends TestCase {
 				+ "urn://anAttribute"));
 		attr01.addType(concept01);
 		ontology1.addConcept(concept01);
+
 		reasoner.registerOntology(ontology1);
 		Set<Concept> set = reasoner.getAllConcepts();
 		assertEquals(1, set.size());
 		reasoner.deRegister();
+	}
+
+	public void testCreateOWLOntology() throws InvalidModelException,
+			OWLException {
+		Ontology ontology1 = wsmoFactory.createOntology(wsmoFactory
+				.createIRI(ns + "SomeOntology"));
+
+		ontology1.setDefaultNamespace(wsmoFactory.createIRI(ns));
+		Concept concept01 = wsmoFactory.createConcept(wsmoFactory.createIRI(ns
+				+ "urn://Concept03"));
+
+		Attribute attr01 = concept01.createAttribute(wsmoFactory.createIRI(ns
+				+ "urn://anAttribute03"));
+		attr01.addType(concept01);
+		ontology1.addConcept(concept01);
+
+		OWLOntology owlonto = reasoner.createOWLOntology(ontology1);
+		assertTrue(owlonto != null);
+
+	}
+
+	public void testCreateOWLOntologyWithEntities() throws InvalidModelException {
+		Set<Entity> theEntities = new HashSet<Entity>();
+		Concept concept01 = wsmoFactory.createConcept(wsmoFactory.createIRI(ns
+				+ "urn://Concept04"));
+		theEntities.add(concept01);
+
+		OWLOntology owlonto = reasoner.createOWLOntology(theEntities);
+		assertTrue(owlonto != null);
 	}
 
 	private boolean containsExpr(Set<LogicalExpression> expr) {
