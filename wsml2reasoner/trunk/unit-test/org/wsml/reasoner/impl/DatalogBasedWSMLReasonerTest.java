@@ -136,11 +136,8 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 		assertTrue(reasoner.checkQueryContainment(LETestHelper.buildLE("_\"urn:e\" subConceptOf _\"urn:d\""), LETestHelper.buildLE("_\"urn:e\" subConceptOf _\"urn:d\"")));
 		assertTrue(reasoner.checkQueryContainment(LETestHelper.buildLE("_\"urn:e\" subConceptOf _\"urn:d\""), LETestHelper.buildLE("?x subConceptOf _\"urn:d\" and ?y subConceptOf _\"urn:d\"")));
 
-		
 	}
 	
-	
-
 	public void testCheckConsistency() throws Exception {
 		// just testing if an empty reasoner is consistent
 		
@@ -161,7 +158,6 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 	}
 	
 	public void testEntails() throws ParserException {
-		
 		assertTrue(reasoner.entails(LETestHelper.buildLE("_\"urn:a\"")));
 		assertTrue(reasoner.entails(LETestHelper.buildLE("_\"urn:b\"")));
 		assertTrue(reasoner.entails(LETestHelper.buildLE("_\"urn:a\" subConceptOf _\"urn:c\"")));
@@ -238,20 +234,7 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 			}
 		}
 		assertEquals(true, b);
-		
-	
-		
 	}
-	
-//	public void testReasonerSomething() throws ParserException {
-//		Set<Entity> in = new HashSet<Entity>();
-//		
-//		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns+ "axiom002"));
-//		
-//
-//		in.add(axiom);
-//	}
-	
 	
 	public void testConvertQuery() throws ParserException {
 		

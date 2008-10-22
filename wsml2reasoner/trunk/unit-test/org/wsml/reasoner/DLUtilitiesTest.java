@@ -27,29 +27,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.omwg.logicalexpression.LogicalExpression;
+import junit.framework.TestCase;
+
 import org.omwg.ontology.Attribute;
-import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.WsmlDataType;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
-import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DatalogBasedWSMLReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
-import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.common.exception.SynchronisationException;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
-import org.wsmo.wsml.ParserException;
 
 import com.ontotext.wsmo4j.ontology.InstanceImpl;
-
-import junit.framework.TestCase;
 
 public class DLUtilitiesTest extends TestCase {
 
@@ -64,165 +58,112 @@ public class DLUtilitiesTest extends TestCase {
 
 	public DLUtilitiesTest() {
 	}
-	
+
 	protected void setUp() throws Exception {
 		super.setUp();
 		wsmoManager = new WSMO4JManager();
 		wsmoFactory = wsmoManager.getWSMOFactory();
 		dataFactory = wsmoManager.getDataFactory();
-        leFactory = wsmoManager.getLogicalExpressionFactory();
-        
-        ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ont"));
-        ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));
-        
-        Concept conceptWithoutAnyAttr =  wsmoFactory.createConcept( wsmoFactory.createIRI( ns + "conceptWithoutAttribute" ) );
-        conceptWithoutAnyAttr.setOntology(ontology);
-        ontology.addConcept(conceptWithoutAnyAttr);
-        
-        Concept badConcept = wsmoFactory.createConcept( wsmoFactory.createIRI( ns + "concept01" ) );
-        badConcept.setOntology(ontology);
-        ontology.addConcept(badConcept);
-        
-        Attribute badAttribute = badConcept.createAttribute(wsmoFactory.createIRI(ns + "a"));
-		badAttribute.addType(dataFactory.createWsmlDataType(WsmlDataType.WSML_STRING));
-		
+		leFactory = wsmoManager.getLogicalExpressionFactory();
+
+		ontology = wsmoFactory
+				.createOntology(wsmoFactory.createIRI(ns + "ont"));
+		ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));
+
+		Concept conceptWithoutAnyAttr = wsmoFactory.createConcept(wsmoFactory
+				.createIRI(ns + "conceptWithoutAttribute"));
+		conceptWithoutAnyAttr.setOntology(ontology);
+		ontology.addConcept(conceptWithoutAnyAttr);
+
+		Concept badConcept = wsmoFactory.createConcept(wsmoFactory.createIRI(ns
+				+ "concept01"));
+		badConcept.setOntology(ontology);
+		ontology.addConcept(badConcept);
+
+		Concept badSubConcept = wsmoFactory.createConcept(wsmoFactory
+				.createIRI(ns + "subconcept01"));
+		badSubConcept.setOntology(ontology);
+
+		badConcept.addSubConcept(badSubConcept);
+
+		Attribute badAttribute = badConcept.createAttribute(wsmoFactory
+				.createIRI(ns + "a"));
+		badAttribute.addType(dataFactory
+				.createWsmlDataType(WsmlDataType.WSML_STRING));
+
 		Instance i = new InstanceImpl(wsmoFactory.createIRI(ns + "aa"));
 		i.addConcept(badConcept);
-		i.addAttributeValue( wsmoFactory.createIRI( ns + "a" ), dataFactory.createWsmlInteger( new BigInteger("3")) );
-		
+		i.addAttributeValue(wsmoFactory.createIRI(ns + "a"), dataFactory
+				.createWsmlInteger(new BigInteger("3")));
+
 		ontology.addInstance(i);
-        
+
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
 				WSMLReasonerFactory.BuiltInReasoner.IRIS_WELL_FOUNDED);
 		reasoner = (DatalogBasedWSMLReasoner) DefaultWSMLReasonerFactory
 				.getFactory().createFlightReasoner(params);
-		
+
 		reasoner.registerOntology(ontology);
 		dlUtils = new DLUtilities(reasoner, wsmoManager);
 	}
-	
-	public void testGetAllConcepts(){
+
+	public void testGetAllConcepts() {
 
 		Set<Concept> s = dlUtils.getAllConcepts();
-		//[ 2003873 ] Concept with no relatives not returned from getAllConcepts()
+		// [ 2003873 ] Concept with no relatives not returned from
+		// getAllConcepts()
 		// 
-		assertEquals(2,s.size());
-		for(Concept c :s ){
+		assertEquals(3, s.size());
+		for (Concept c : s) {
 			System.out.println(c.toString());
 		}
 	}
-	
-	public void testGetAllInstances(){
+
+	public void testGetAllInstances() {
 		Set<Instance> s = dlUtils.getAllInstances();
 		assertEquals(1, s.size());
 	}
-	
+
 	public void testgetAllAttributes() {
 		Set<IRI> s = dlUtils.getAllAttributes();
-		assertEquals(1,s.size());
+		assertEquals(1, s.size());
 	}
-	
+
 	public void testgetAttributes() {
 		Set<IRI> s1 = dlUtils.getAllConstraintAttributes();
 		Set<IRI> s2 = dlUtils.getAllInferenceAttributes();
-		assertEquals(0,s1.size());
-		assertEquals(1,s2.size());
+		assertEquals(0, s1.size());
+		assertEquals(1, s2.size());
 	}
-	
+
 	public void testGetConcepts() {
 		Instance i = new InstanceImpl(wsmoFactory.createIRI(ns + "aa"));
 		Set<Concept> s = dlUtils.getConcepts(i);
-		assertEquals(1,s.size());
-		for(Concept c : s) {
-			assertEquals(  wsmoFactory.createIRI( ns + "concept01" ), c.getIdentifier());
+		assertEquals(1, s.size());
+		for (Concept c : s) {
+			assertEquals(wsmoFactory.createIRI(ns + "concept01"), c
+					.getIdentifier());
 		}
 	}
-	
+
 	public void testGetConceptsOf() {
-		Set<Concept> s = dlUtils.getConceptsOf(wsmoFactory.createIRI( ns + "a" ));
-		assertEquals(1,s.size());
-		for(Concept c : s) {
-			assertEquals(  wsmoFactory.createIRI( ns + "concept01" ), c.getIdentifier());
+		Set<Concept> s = dlUtils.getConceptsOf(wsmoFactory.createIRI(ns + "a"));
+		assertEquals(1, s.size());
+		for (Concept c : s) {
+			assertEquals(wsmoFactory.createIRI(ns + "concept01"), c
+					.getIdentifier());
 		}
 
 	}
-	
-	public void testIsSatisfiable() throws SynchronisationException, InvalidModelException, InconsistencyException, ParserException {
-		
-		assertTrue(dlUtils.isSatisfiable());
-		
-		reasoner.deRegister();
-		
-		Ontology ontologyUnSatisfiable = wsmoFactory.createOntology(wsmoFactory.createIRI(ns
-				+ "AboutHumans"));
-		ontologyUnSatisfiable.setDefaultNamespace(wsmoFactory.createIRI(ns));
 
-		Concept humanConcept = wsmoFactory.createConcept(wsmoFactory.createIRI(ns
-				+ "urn://Human"));
-		Concept personConcept = wsmoFactory.createConcept(wsmoFactory.createIRI(ns
-				+ "urn://Person"));
-		
-		humanConcept.addSubConcept(personConcept);
-		
-		Attribute hasRelativeAttr = humanConcept.createAttribute(wsmoFactory.createIRI(ns
-				+ "urn://hasRelative"));
-		hasRelativeAttr.setSymmetric(true);
-		hasRelativeAttr.addType(humanConcept);
-		
-		Concept locationConcept = wsmoFactory.createConcept(wsmoFactory.createIRI(ns
-				+ "urn://Location"));
-
-		Attribute hasParentAttr = humanConcept.createAttribute(wsmoFactory.createIRI(ns
-				+ "urn://hasParent"));
-		hasParentAttr.addType(humanConcept);
-		
-	    Attribute livesAtAttr = humanConcept.createAttribute(wsmoFactory.createIRI(ns
-				+ "urn://livesAt"));
-		livesAtAttr.addType(locationConcept);
-
-		Instance person1 = wsmoFactory.createInstance(wsmoFactory
-				.createIRI("urn://Person1"), humanConcept);
-		Instance person2 = wsmoFactory.createInstance(wsmoFactory
-				.createIRI("urn://Person2"), humanConcept);
-		
-		Instance person3 = wsmoFactory.createInstance(wsmoFactory
-				.createIRI("urn://Person3"), locationConcept);
-		
-		Instance location1 = wsmoFactory.createInstance(wsmoFactory
-				.createIRI("urn://Location01"), locationConcept);
-
-		person1.addAttributeValue(hasParentAttr.getIdentifier(), location1);
-		person1.addAttributeValue(hasParentAttr.getIdentifier(), wsmoFactory
-				.createInstance(wsmoFactory.createAnonymousID()));
-
-		Axiom person1LivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
-				+ "urn://person1LivesSomewhere"));
-		
-		String s = "?x memberOf Person :- naf ?x memberOf Human.";
-	    LogicalExpression le = leFactory.createLogicalExpression(s, ontologyUnSatisfiable);
-		person1LivesAx.addDefinition(le);
-		
-		ontologyUnSatisfiable.addConcept(personConcept);
-		ontologyUnSatisfiable.addConcept(humanConcept);
-		ontologyUnSatisfiable.addConcept(locationConcept);
-		ontologyUnSatisfiable.addInstance(location1);
-		ontologyUnSatisfiable.addInstance(person1);
-		ontologyUnSatisfiable.addInstance(person2);
-		ontologyUnSatisfiable.addInstance(person3);
-		ontologyUnSatisfiable.addAxiom(person1LivesAx);
-
-		reasoner.registerOntology(ontologyUnSatisfiable);
-		dlUtils = new DLUtilities(reasoner, wsmoManager);	
-		
-//		Set<Concept> s = dlUtils.getAllConcepts();
-//		System.out.println(s.size());
-//		for(Concept c : s ){
-//			System.out.println(c.toString());
-//		}
-		assertTrue(dlUtils.isSatisfiable());
-		reasoner.deRegister();
-		reasoner.registerOntology(ontology);
+	public void testGetSubConcept() {
+		Set<Concept> s = dlUtils.getSubConcepts(wsmoFactory
+				.createConcept(wsmoFactory.createIRI(ns + "concept01")));
+		assertEquals(1, s.size());
+		for (Concept c : s) {
+			assertEquals(wsmoFactory.createIRI(ns + "subconcept01"), c
+					.getIdentifier());
+		}
 	}
-
 }

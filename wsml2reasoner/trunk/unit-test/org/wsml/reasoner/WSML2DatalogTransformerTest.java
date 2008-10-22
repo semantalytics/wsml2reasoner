@@ -138,11 +138,26 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		}
 		assertTrue(str.contains("wsml-of-type(urn:a, urn:a, _#)."));
 		assertTrue(str.contains("wsml-has-value(urn:a, urn:a, _urn:c)."));
+		
+		out = checkTransform(" _#[_# ofType _#]");
+		str = "";
+		for (Rule r : out) {
+			str += r.toString();
+		}
+		assertTrue(str.contains("wsml-of-type(_#, _#, _#)."));
+
+		out = checkTransform("_\"urn:a\"[_\"urn:a\" hasValue  _\"urn:b\"] :- _\"urn:c\" ");
+		str = "";
+		for (Rule r : out) {
+			str += r.toString();
+		}
+		assertTrue(str.contains("wsml-has-value(urn:a, urn:a, urn:b) :- urn:c()."));
+		
 	}
 	
 	public void testGenerateAuxilliaryRules() {
 		Set<Rule> set = transformer.generateAuxilliaryRules();
-		assertEquals(15, set.size());	
+		assertEquals(15, set.size());
 	}
 	
 	
@@ -299,7 +314,6 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		}
 		return transformer.transform(h);
 	}
-	
-	
+			
 
 }
