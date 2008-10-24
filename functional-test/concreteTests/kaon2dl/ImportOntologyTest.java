@@ -29,6 +29,6 @@ public class ImportOntologyTest extends AbstractOntology1SimpleImport
 {
 	public WSMLReasoner getReasoner()
 	{
-		return Kaon2Helper.getReasoner();
+		return Reasoner.get();
 	}
 }

@@ -29,6 +29,6 @@ public class OntologyWithCyclesTest extends AbstractOntologyWithCycles
 {
 	public DLReasoner getDLReasoner()
     {
-	    return Kaon2Helper.getReasoner();
+	    return Reasoner.get();
     }
 }
