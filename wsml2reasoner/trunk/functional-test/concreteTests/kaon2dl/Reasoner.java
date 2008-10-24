@@ -26,9 +26,9 @@ import helper.ReasonerHelper;
 import org.wsml.reasoner.api.DLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 
-public class Kaon2Helper
+public class Reasoner
 {
-	static DLReasoner getReasoner()
+	static DLReasoner get()
 	{
 		return ReasonerHelper.getDLReasoner(WSMLReasonerFactory.BuiltInReasoner.KAON2DL );
 	}

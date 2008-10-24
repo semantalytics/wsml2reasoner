@@ -22,11 +22,26 @@
  */
 package helper;
 
+import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.ontology.Ontology;
+import org.wsml.reasoner.api.DLReasoner;
+import org.wsml.reasoner.api.inconsistency.InconsistencyException;
+import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.factory.LogicalExpressionFactory;
+
 
 /**
  * Helper utilities for DL based tests.
  */
 public class DLHelper
 {
-	
+	public static boolean isEntailed( Ontology ontology, String expression, DLReasoner reasoner ) throws InconsistencyException, org.wsmo.wsml.ParserException {
+    	
+    	reasoner.registerOntology( ontology );
+        LogicalExpression le = leFactory.createLogicalExpression( expression, ontology);
+
+    	return reasoner.isConceptSatisfiable( le );
+	}
+
+    private static final LogicalExpressionFactory leFactory = new WSMO4JManager().getLogicalExpressionFactory();
 }
