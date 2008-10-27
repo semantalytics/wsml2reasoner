@@ -155,6 +155,23 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		
 	}
 	
+	public void testTransform03() throws IllegalArgumentException, ParserException {
+		Set<Rule> out = checkTransform("_\"urn:a\" subConceptOf _\"urn:b\" :- _\"urn:c\" ");
+		String str = "";
+		for (Rule r : out) {
+			str += r.toString();
+		}
+		assertTrue(str.contains("wsml-subconcept-of(urn:a, urn:b) :- urn:c()."));
+	
+		out = checkTransform("_\"urn:a\"[_\"urn:a\" hasValue _#] :- _\"urn:d\" ");
+		str = "";
+		for (Rule r : out) {
+			str += r.toString();
+		}
+		System.out.println(str);
+		assertTrue(str.contains("wsml-has-value(urn:a, urn:a, _#) :- urn:d()."));
+	}
+	
 	public void testGenerateAuxilliaryRules() {
 		Set<Rule> set = transformer.generateAuxilliaryRules();
 		assertEquals(15, set.size());
