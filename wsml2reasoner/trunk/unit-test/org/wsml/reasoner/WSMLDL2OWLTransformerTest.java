@@ -103,8 +103,6 @@ public class WSMLDL2OWLTransformerTest extends TestCase {
 		
 		Set<?> set = owlOntology.getIndividuals();
 		assertEquals(2, set.size());
-		
-		
 	}
 
 }
