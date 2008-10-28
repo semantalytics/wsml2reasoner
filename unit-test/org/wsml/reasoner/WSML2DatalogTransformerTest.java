@@ -68,11 +68,11 @@ public class WSML2DatalogTransformerTest extends TestCase {
 
 		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom"));
 		ontology.addAxiom(axiom);
-		
+
 	}
 
 	public void testTransform01() throws ParserException {
-		
+
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\"[_\"urn:a\" hasValue _#]");
 		Set<Rule> out = transformer.transform(le);
@@ -102,43 +102,44 @@ public class WSML2DatalogTransformerTest extends TestCase {
 			assertTrue(r.toString().contains("urn:a, urn:b"));
 		}
 
-		le = LETestHelper.buildLE("_\"urn:a\" implies _\"urn:b\"");
+		le = LETestHelper.buildLE(" _\"urn:a\" implies _\"urn:b\"");
 		out = transformer.transform(le);
 		for (Rule r : out) {
-			assertEquals(r.toString(), ("urn:b() :- urn:a()."));
+			assertEquals(("urn:b() :- urn:a()."), r.toString());
 		}
 
-		
 		out = checkTransform("_\"urn:a\"[_\"urn:a\" impliesType _#]");
-		
+
 		for (Rule r : out) {
 			assertTrue(r.toString().contains(
 					("wsml-implies-type(urn:a, urn:a, _#).")));
 		}
 
-		
 		out = checkTransform("_\"urn:a\" subConceptOf \"urn:b\"");
-		
+
 		for (Rule r : out) {
 			assertTrue(r.toString().contains(
 					("wsml-subconcept-of(urn:a, urn:b).")));
-		}	
+		}
 	}
-	
-	public void testTransform02() throws IllegalArgumentException, ParserException {
+
+	public void testTransform02() throws IllegalArgumentException,
+			ParserException {
 		Set<Rule> out = checkTransform("\"_urn:a\"[\"_urn:a\" hasValue \"_urn:b\"] and \"_urn:b\" memberOf \"_urn:a\"");
 		for (Rule r : out) {
-			assertTrue(r.toString().contains(("wsml-member-of(_urn:b, _urn:a).")));
+			assertTrue(r.toString().contains(
+					("wsml-member-of(_urn:b, _urn:a).")));
 		}
-		
-		out = checkTransform("_\"urn:a\"[_\"urn:a\" ofType _#]", "_\"urn:a\"[_\"urn:a\" hasValue \"_urn:c\" ]");
+
+		out = checkTransform("_\"urn:a\"[_\"urn:a\" ofType _#]",
+				"_\"urn:a\"[_\"urn:a\" hasValue \"_urn:c\" ]");
 		String str = "";
 		for (Rule r : out) {
 			str += r.toString();
 		}
 		assertTrue(str.contains("wsml-of-type(urn:a, urn:a, _#)."));
 		assertTrue(str.contains("wsml-has-value(urn:a, urn:a, _urn:c)."));
-		
+
 		out = checkTransform(" _#[_# ofType _#]");
 		str = "";
 		for (Rule r : out) {
@@ -151,71 +152,82 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		for (Rule r : out) {
 			str += r.toString();
 		}
-		assertTrue(str.contains("wsml-has-value(urn:a, urn:a, urn:b) :- urn:c()."));
-		
+		assertTrue(str
+				.contains("wsml-has-value(urn:a, urn:a, urn:b) :- urn:c()."));
+
 	}
-	
-	public void testTransform03() throws IllegalArgumentException, ParserException {
+
+	public void testTransform03() throws IllegalArgumentException,
+			ParserException {
 		Set<Rule> out = checkTransform("_\"urn:a\" subConceptOf _\"urn:b\" :- _\"urn:c\" ");
 		String str = "";
 		for (Rule r : out) {
 			str += r.toString();
 		}
 		assertTrue(str.contains("wsml-subconcept-of(urn:a, urn:b) :- urn:c()."));
-	
+
 		out = checkTransform("_\"urn:a\"[_\"urn:a\" hasValue _#] :- _\"urn:d\" ");
 		str = "";
 		for (Rule r : out) {
 			str += r.toString();
 		}
-		System.out.println(str);
 		assertTrue(str.contains("wsml-has-value(urn:a, urn:a, _#) :- urn:d()."));
+
+		// out = checkTransform("_\"urn:a\" :- _\"urn:d\" implies _\"urn:e\" ");
+		// str = "";
+		// for (Rule r : out) {
+		// str += r.toString();
+		// }
+		// System.out.println(str);
+
 	}
-	
+
 	public void testGenerateAuxilliaryRules() {
 		Set<Rule> set = transformer.generateAuxilliaryRules();
 		assertEquals(15, set.size());
 	}
-	
-	
+
 	public void testExtractConstantsUsedAsConcepts() throws ParserException {
-		LogicalExpression le = LETestHelper.buildLE("_\"urn:a\"[_\"urn:a\" ofType _\"urn:b\"] implies _\"urn:d\"[_\"urn:d\" hasValue \"_urn:c\" ] ");
+		LogicalExpression le = LETestHelper
+				.buildLE("_\"urn:a\"[_\"urn:a\" ofType _\"urn:b\"] implies _\"urn:d\"[_\"urn:d\" hasValue \"_urn:c\" ] ");
 		Set<Term> set = transformer.extractConstantsUsedAsConcepts(le);
-		assertEquals(2 ,set.size());
+		assertEquals(2, set.size());
 		String r = "";
-		for(Term t : set) {
+		for (Term t : set) {
 			r += " " + t.toString();
 		}
 		assertTrue(r.contains("urn:b"));
 		assertTrue(r.contains("urn:a"));
-		
+
 	}
 
 	public void testTransformSubConceptOfInHead() throws ParserException {
-		LogicalExpression le = LETestHelper.buildLE("_\"urn:a\" subConceptOf \"urn:b\" :- _\"urn:c\" ");
+		LogicalExpression le = LETestHelper
+				.buildLE("_\"urn:a\" subConceptOf \"urn:b\" :- _\"urn:c\" ");
 		Set<Rule> out = transformer.transform(le);
 		for (Rule r : out) {
-			assertEquals("wsml-subconcept-of(urn:a, urn:b) :- urn:c().", r.toString());
+			assertEquals("wsml-subconcept-of(urn:a, urn:b) :- urn:c().", r
+					.toString());
 		}
 	}
-	
+
 	public void testTransformSubConceptOfInBody() throws ParserException {
-		LogicalExpression le = LETestHelper .buildLE(" _\"urn:c\" :- _\"urn:a\" subConceptOf \"urn:b\"  ");
+		LogicalExpression le = LETestHelper
+				.buildLE(" _\"urn:c\" :- _\"urn:a\" subConceptOf \"urn:b\"  ");
 		Set<Rule> out = transformer.transform(le);
 		int count = 0;
 		for (Rule r : out) {
 			if (r.toString().equals("http://temp/knownConcept(urn:b).")) {
 				count++;
+			} else if (r.toString().equals("http://temp/knownConcept(urn:a).")) {
+				count++;
+			} else if (r.toString().equals(
+					"urn:c() :- wsml-subconcept-of(urn:a, urn:b).")) {
+				count++;
 			}
-			else if (r.toString().equals("http://temp/knownConcept(urn:a).")) {
-				count++;	
-			}
-			else if (r.toString().equals("urn:c() :- wsml-subconcept-of(urn:a, urn:b).")){
-				count++;	
-			}
-			
+
 		}
-		assertEquals(3,count);
+		assertEquals(3, count);
 	}
 
 	public void testTransformBodyHead() throws ParserException {
@@ -235,13 +247,18 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		// [ 2002256 ] 'implies' should be allowed in rule bodies.
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\" implies _\"urn:b\" :- _\"urn:c\"");
-		
-			Set<Rule> out = transformer.transform(le);
 
-			for (Rule r : out) {
-				assertEquals("urn:a()", r.getHead().toString());
-				assertEquals("[urn:b()]", r.getBody().toString());
-			}
+		Set<Rule> out = transformer.transform(le);
+
+		// B :- A and C
+		for (Rule r : out) {
+			System.out.println(" \n ___ " + "_\"urn:a\" implies _\"urn:b\" :- _\"urn:c\"");
+			System.out.println("Head: " + r.getHead().toString());
+			System.out.println("Body: " + r.getBody().toString());
+			
+			assertEquals("urn:b()", r.getHead().toString());
+			assertEquals("[urn:a(), urn:c()]", r.getBody().toString());
+		}
 
 	}
 
@@ -251,13 +268,14 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		// [ 2002256 ] 'implies' should be allowed in rule bodies.
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\"  :- _\"urn:c\" implies _\"urn:b\"");
-		
-			Set<Rule> out = transformer.transform(le);
 
-			for (Rule r : out) {
-				System.out.println("Head: " + r.getHead().toString());
-				System.out.println("Body: " + r.getBody().toString());
-			}
+		Set<Rule> out = transformer.transform(le);
+		// 
+		for (Rule r : out) {
+			System.out.println(" \n ___ " + "_\"urn:a\"  :- _\"urn:c\" implies _\"urn:b\"");
+			System.out.println("Head: " + r.getHead().toString());
+			System.out.println("Body: " + r.getBody().toString());
+		}
 
 	}
 
@@ -267,14 +285,16 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		// [ 2002256 ] 'implies' should be allowed in rule bodies.
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\" equivalent _\"urn:b\" :- _\"urn:c\"");
-		
-			Set<Rule> out = transformer.transform(le);
 
-			for (Rule r : out) {
-				System.out.println("Head: " + r.getHead().toString());
-				System.out.println("Body: " + r.getBody().toString());
-			}
-		
+		Set<Rule> out = transformer.transform(le);
+
+		// A implies B :- C
+		// A impliedBy B :- C
+		for (Rule r : out) {
+			System.out.println(" \n ___ " + "_\"urn:a\" equivalent _\"urn:b\" :- _\"urn:c\"");
+			System.out.println("Head: " + r.getHead().toString());
+			System.out.println("Body: " + r.getBody().toString());
+		}
 	}
 
 	public void testTransformEquivalentInBody() throws ParserException {
@@ -283,14 +303,15 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		// [ 2002256 ] 'implies' should be allowed in rule bodies.
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\"  :- _\"urn:c\" equivalent _\"urn:b\"");
-		
-			Set<Rule> out = transformer.transform(le);
 
-			for (Rule r : out) {
-				System.out.println("Head: " + r.getHead().toString());
-				System.out.println("Body: " + r.getBody().toString());
-			}
-		
+		Set<Rule> out = transformer.transform(le);
+
+		// 
+		for (Rule r : out) {
+			System.out.println(" \n ___ " + "_\"urn:a\"  :- _\"urn:c\" equivalent _\"urn:b\"");
+			System.out.println("Head: " + r.getHead().toString());
+			System.out.println("Body: " + r.getBody().toString());
+		}
 
 	}
 
@@ -300,13 +321,17 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		// [ 2002256 ] 'implies' should be allowed in rule bodies.
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\" impliedBy _\"urn:b\" :- _\"urn:c\"");
-		
-			Set<Rule> out = transformer.transform(le);
 
-			for (Rule r : out) {
-				System.out.println("Head: " + r.getHead().toString());
-				System.out.println("Body: " + r.getBody().toString());
-			}
+		Set<Rule> out = transformer.transform(le);
+
+		// A :- B and C
+		for (Rule r : out) {
+			System.out.println(" \n ___ " + "_\"urn:a\" impliedBy _\"urn:b\" :- _\"urn:c\"");
+			System.out.println("Head: " + r.getHead().toString());
+			System.out.println("Body: " + r.getBody().toString());
+			assertEquals("urn:a()", r.getHead().toString());
+			assertEquals("[urn:b(), urn:c()]", r.getBody().toString());
+		}
 
 	}
 
@@ -314,23 +339,110 @@ public class WSML2DatalogTransformerTest extends TestCase {
 
 		// More than one implication in the given WSML rule detected!
 		// [ 2002256 ] 'implies' should be allowed in rule bodies.
-		LogicalExpression le = LETestHelper.buildLE("_\"urn:a\" :- _\"urn:c\" impliedBy _\"urn:b\"");
-		
-			Set<Rule> out = transformer.transform(le);
+		LogicalExpression le = LETestHelper
+				.buildLE("_\"urn:a\" :- _\"urn:c\" impliedBy _\"urn:b\"");
 
-			for (Rule r : out) {
-				System.out.println("Head: " + r.getHead().toString());
-				System.out.println("Body: " + r.getBody().toString());
-			}
+		Set<Rule> out = transformer.transform(le);
+		// 
+		for (Rule r : out) {
+			System.out.println(" \n ___ " + "_\"urn:a\" :- _\"urn:c\" impliedBy _\"urn:b\"");
+			System.out.println("Head: " + r.getHead().toString());
+			System.out.println("Body: " + r.getBody().toString());
+		}
 	}
 	
-	private Set<Rule> checkTransform(String ... le) throws IllegalArgumentException, ParserException{
+	public void testTransformHasValueInHead() throws ParserException {
+
+		LogicalExpression le = LETestHelper
+				.buildLE("_\"urn:c\"[_\"urn:c\" hasValue  _\"urn:b\"] :- _\"urn:a\" ");
+
+		Set<Rule> out = transformer.transform(le);
+		// 
+		for (Rule r : out) {
+			assertEquals("wsml-has-value(urn:c, urn:c, urn:b)",r.getHead().toString());
+			assertEquals("[urn:a()]",r.getBody().toString());
+		}
+	}
+	
+	public void testTransformHasValueInBody() throws ParserException {
+
+		LogicalExpression le = LETestHelper
+				.buildLE("_\"urn:a\" :- _\"urn:c\"[_\"urn:c\" hasValue  _\"urn:b\"]");
+
+		Set<Rule> out = transformer.transform(le);
+		// 
+		for (Rule r : out) {
+			assertEquals("urn:a()",r.getHead().toString());
+			assertEquals("[wsml-has-value(urn:c, urn:c, urn:b)]",r.getBody().toString());
+		}
+	}
+	
+	
+	
+	public void testTransformOfTypeInHead() throws ParserException {
+
+		LogicalExpression le = LETestHelper
+				.buildLE("_\"urn:a\"[_\"urn:a\" ofType _\"urn:b\"] :- _\"urn:c\"");
+
+		Set<Rule> out = transformer.transform(le);
+		// 
+		for (Rule r : out) {
+			assertEquals("wsml-of-type(urn:a, urn:a, urn:b)",r.getHead().toString());
+			assertEquals("[urn:c()]",r.getBody().toString());
+		}
+	}
+	
+	public void testTransformOfTypeInBody() throws ParserException {
+
+		LogicalExpression le = LETestHelper
+				.buildLE(" _\"urn:c\"  :- _\"urn:a\"[_\"urn:a\" ofType _\"urn:b\"]");
+
+		Set<Rule> out = transformer.transform(le);
+		// 
+		String str = "";
+		for (Rule r : out) {
+			str += r.toString();
+		}
+		assertTrue(str.contains("http://temp/knownConcept(urn:b)."));
+		assertTrue(str.contains("http://temp/knownConcept(urn:a)."));
+		assertTrue(str.contains("urn:c() :- wsml-of-type(urn:a, urn:a, urn:b)."));
+	}
+	
+	public void testTransformMemberOfInHead() throws ParserException {
+
+		LogicalExpression le = LETestHelper
+				.buildLE("\"_urn:a\" memberOf \"_urn:b\" :- _\"urn:c\"");
+
+		Set<Rule> out = transformer.transform(le);
+		// 
+		for (Rule r : out) {
+			assertEquals("wsml-member-of(_urn:a, _urn:b)",r.getHead().toString());
+			assertEquals("[urn:c()]",r.getBody().toString());
+		}
+	}
+	
+//	public void testTransformMemberOfInBody() throws ParserException {
+//
+//		LogicalExpression le = LETestHelper
+//				.buildLE("\"_urn:c\" :- \"_urn:a\" memberOf \"_urn:b\"");
+//
+//		Set<Rule> out = transformer.transform(le);
+//		// 
+//		for (Rule r : out) {
+//			assertEquals("wsml-member-of(_urn:a, _urn:b)",r.getHead().toString());
+//			assertEquals("[urn:c()]",r.getBody().toString());
+//		}
+//	}
+	
+
+
+	private Set<Rule> checkTransform(String... le)
+			throws IllegalArgumentException, ParserException {
 		HashSet<LogicalExpression> h = new HashSet<LogicalExpression>();
-		for(String str : le) {
+		for (String str : le) {
 			h.add(LETestHelper.buildLE(str));
 		}
 		return transformer.transform(h);
 	}
-			
 
 }
