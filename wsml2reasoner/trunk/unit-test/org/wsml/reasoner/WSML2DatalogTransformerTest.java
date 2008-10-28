@@ -421,20 +421,20 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		}
 	}
 	
-//	public void testTransformMemberOfInBody() throws ParserException {
-//
-//		LogicalExpression le = LETestHelper
-//				.buildLE("\"_urn:c\" :- \"_urn:a\" memberOf \"_urn:b\"");
-//
-//		Set<Rule> out = transformer.transform(le);
-//		// 
-//		for (Rule r : out) {
-//			assertEquals("wsml-member-of(_urn:a, _urn:b)",r.getHead().toString());
-//			assertEquals("[urn:c()]",r.getBody().toString());
-//		}
-//	}
+	public void testTransformMemberOfInBody() throws ParserException {
+		
+		LogicalExpression le = LETestHelper.buildLE("_\"urn:c\" :- _\"urn:a\" memberOf \"_urn:b\"");
+		Set<Rule> out = transformer.transform(le);
+		// 
+		String str = "";
+		for (Rule r : out) {
+			str += r.toString();
+		}
+		assertTrue(str.contains("urn:c() :- wsml-member-of(urn:a, _urn:b)."));
+		assertTrue(str.contains("http://temp/knownConcept(_urn:b)."));
+		
+	}
 	
-
 
 	private Set<Rule> checkTransform(String... le)
 			throws IllegalArgumentException, ParserException {
