@@ -53,6 +53,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		wsmoManager = new WSMO4JManager();
+
 		transformer = new WSML2DatalogTransformer(wsmoManager);
 
 		wsmoFactory = wsmoManager.getWSMOFactory();
@@ -64,11 +65,9 @@ public class WSML2DatalogTransformerTest extends TestCase {
 
 		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom"));
 		ontology.addAxiom(axiom);
-
 	}
 
 	public void testTransform01() throws ParserException {
-
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\"[_\"urn:a\" hasValue _\"urn:b\"]");
 		Set<Rule> out = transformer.transform(le);
@@ -378,12 +377,12 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\"[_\"urn:a\" ofType _\"urn:b\"] :- _\"urn:c\"");
 		Set<Rule> out = transformer.transform(le);
-		
+
 		assertEquals(1, out.size());
 		checkContainsRule(out, LiteralTestHelper
 				.createPosLiteral(WSML2DatalogTransformer.PRED_OF_TYPE,
-						"urn:a", "urn:a", "urn:b") , LiteralTestHelper
-						.createSimplePosLiteral("urn:c"));
+						"urn:a", "urn:a", "urn:b"), LiteralTestHelper
+				.createSimplePosLiteral("urn:c"));
 	}
 
 	public void testTransformOfTypeInBody() throws ParserException {
@@ -391,11 +390,15 @@ public class WSML2DatalogTransformerTest extends TestCase {
 				.buildLE(" _\"urn:c\"  :- _\"urn:a\"[_\"urn:a\" ofType _\"urn:b\"]");
 
 		Set<Rule> out = transformer.transform(le);
-		assertEquals(3,out.size());
-		checkContainsRule(out, LiteralTestHelper.createSimplePosLiteral("urn:c"), LiteralTestHelper
-				.createPosLiteral(WSML2DatalogTransformer.PRED_OF_TYPE,"urn:a", "urn:a", "urn:b") );	
-		checkContainsRule(out, LiteralTestHelper.createPosLiteral(WSML2DatalogTransformer.PRED_KNOWN_CONCEPT, "urn:a") );
-		checkContainsRule(out, LiteralTestHelper.createPosLiteral(WSML2DatalogTransformer.PRED_KNOWN_CONCEPT, "urn:b") );
+		assertEquals(3, out.size());
+		checkContainsRule(out, LiteralTestHelper
+				.createSimplePosLiteral("urn:c"), LiteralTestHelper
+				.createPosLiteral(WSML2DatalogTransformer.PRED_OF_TYPE,
+						"urn:a", "urn:a", "urn:b"));
+		checkContainsRule(out, LiteralTestHelper.createPosLiteral(
+				WSML2DatalogTransformer.PRED_KNOWN_CONCEPT, "urn:a"));
+		checkContainsRule(out, LiteralTestHelper.createPosLiteral(
+				WSML2DatalogTransformer.PRED_KNOWN_CONCEPT, "urn:b"));
 	}
 
 	public void testTransformMemberOfInHead() throws ParserException {
@@ -405,7 +408,6 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		Set<Rule> out = transformer.transform(le);
 		// 
 		for (Rule r : out) {
-			System.out.println(r.toString());
 			checkRule(r, LiteralTestHelper.createLiteral(true,
 					WSML2DatalogTransformer.PRED_MEMBER_OF, "urn:a", "urn:b"),
 					LiteralTestHelper.createSimplePosLiteral("urn:c"));
@@ -427,9 +429,29 @@ public class WSML2DatalogTransformerTest extends TestCase {
 						WSML2DatalogTransformer.PRED_KNOWN_CONCEPT, "urn:b"))));
 	}
 
+	public void testImpliedByImplies() throws ParserException {
+		LogicalExpression le1 = LETestHelper
+				.buildLE("_\"urn:a\" implies _\"urn:b\" :- _\"urn:c\"");
+		Set<Rule> out1 = transformer.transform(le1);
+
+		LogicalExpression le2 = LETestHelper
+				.buildLE("_\"urn:b\" impliedBy _\"urn:a\" :- _\"urn:c\"");
+		Set<Rule> out2 = transformer.transform(le2);
+
+		assertEquals(out1, out2);
+		for (Rule r1 : out1) {
+			for (Rule r2 : out2) {
+				assertEquals(r1, r2);
+			}
+		}
+	}
+
 	public void testTransformAndInHead() throws ParserException {
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\" and _\"urn:b\" :- _\"urn:c\"");
+
+		// should be a :- c ???
+		// b :- c ??? wsml-flight ??
 		try {
 			Set<Rule> out = transformer.transform(le);
 			System.out.println(out.toString());
