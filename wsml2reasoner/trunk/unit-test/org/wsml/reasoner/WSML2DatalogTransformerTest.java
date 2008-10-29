@@ -24,21 +24,18 @@
 package org.wsml.reasoner;
 
 import java.util.HashSet;
-
+import java.util.LinkedList;
 import java.util.Set;
-
+import junit.framework.TestCase;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
-
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
-
-import junit.framework.TestCase;
 
 public class WSML2DatalogTransformerTest extends TestCase {
 
@@ -443,6 +440,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		Set<Rule> out = transformer.transform(le);
 		// 
 		for (Rule r : out) {
+			// checkRule(r, "wsml-member-of(_urn:a, _urn:b)", "[urn:c]");
 			assertEquals("wsml-member-of(_urn:a, _urn:b)", r.getHead()
 					.toString());
 			assertEquals("[urn:c()]", r.getBody().toString());
@@ -452,15 +450,14 @@ public class WSML2DatalogTransformerTest extends TestCase {
 	public void testTransformMemberOfInBody() throws ParserException {
 
 		LogicalExpression le = LETestHelper
-				.buildLE("_\"urn:c\" :- _\"urn:a\" memberOf \"_urn:b\"");
+				.buildLE("_\"urn:c\" :- _\"urn:a\" memberOf _\"urn:b\"");
 		Set<Rule> out = transformer.transform(le);
-		// 
-		String str = "";
-		for (Rule r : out) {
-			str += r.toString();
-		}
-		assertTrue(str.contains("urn:c() :- wsml-member-of(urn:a, _urn:b)."));
-		assertTrue(str.contains("http://temp/knownConcept(_urn:b)."));
+
+		assertTrue(out.contains(createRule(createSimpleLiteral("urn:c"),
+				createLiteral(true, WSML2DatalogTransformer.PRED_MEMBER_OF,
+						"urn:a", "urn:b"))));
+		assertTrue(out.contains(createRule(createLiteral(true,
+				WSML2DatalogTransformer.PRED_KNOWN_CONCEPT, "urn:b"))));
 
 	}
 
@@ -471,11 +468,9 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		try {
 			Set<Rule> out = transformer.transform(le);
 			System.out.println(out.toString());
+			fail();
 		} catch (DatalogException ex) {
-			return;
 		}
-
-		fail();
 	}
 
 	public void testTransformAndInBody() throws ParserException {
@@ -483,10 +478,9 @@ public class WSML2DatalogTransformerTest extends TestCase {
 				.buildLE("_\"urn:c\" :- _\"urn:a\" and  _\"urn:b\"");
 		Set<Rule> out = transformer.transform(le);
 		for (Rule r : out) {
-			assertEquals("urn:c()", r.getHead().toString());
-			assertEquals("[urn:a(), urn:b()]", r.getBody().toString());
+			checkRule(r, createSimpleLiteral("urn:c"),
+					createSimpleLiteral("urn:a"), createSimpleLiteral("urn:b"));
 		}
-
 	}
 
 	public void testTransformNafInHead() throws ParserException {
@@ -495,11 +489,9 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		try {
 			Set<Rule> out = transformer.transform(le);
 			System.out.println(out.toString());
+			fail();
 		} catch (DatalogException ex) {
-			return;
 		}
-		fail();
-
 	}
 
 	public void testTransformNafInBody() throws ParserException {
@@ -507,9 +499,45 @@ public class WSML2DatalogTransformerTest extends TestCase {
 				.buildLE("_\"urn:c\" :- naf _\"urn:a\" and naf _\"urn:b\"");
 		Set<Rule> out = transformer.transform(le);
 		for (Rule r : out) {
-			assertEquals("urn:c()", r.getHead().toString());
-			assertEquals("[!urn:a(), !urn:b()]", r.getBody().toString());
+			checkRule(r, createSimpleLiteral("urn:c"), createLiteral(false,
+					"urn:a", new String[0]), createLiteral(false, "urn:b",
+					new String[0]));
 		}
+	}
+
+	private void checkRule(Rule r, Literal head, Literal... body) {
+		Rule r2 = createRule(head, body);
+		assertEquals(r2, r);
+	}
+
+	private Rule createRule(Literal head, Literal... body) {
+		LinkedList<Literal> bodylist = new LinkedList<Literal>();
+		for (Literal l : body) {
+			bodylist.add(l);
+		}
+		return new Rule(head, bodylist);
+	}
+
+	private Literal createSimpleLiteral(String name) {
+		return createLiteral(true, name, new String[0]);
+	}
+
+	private Literal createLiteral(boolean isPositive, String wsmlString,
+			String... iriNames) {
+
+		WsmoFactory wf = org.wsmo.factory.Factory.createWsmoFactory(null);
+
+		Term[] terms;
+		terms = new Term[iriNames.length];
+		int i = 0;
+		for (String str : iriNames) {
+			terms[i] = wf.createIRI(str);
+			;
+			i++;
+		}
+
+		Literal h = new Literal(isPositive, wsmlString, terms);
+		return h;
 	}
 
 	private Set<Rule> checkTransform(String... le)
