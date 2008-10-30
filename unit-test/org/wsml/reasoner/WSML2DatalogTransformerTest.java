@@ -450,14 +450,18 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\" and _\"urn:b\" :- _\"urn:c\"");
 
-		// should be a :- c ???
-		// b :- c ??? wsml-flight ??
-		try {
-			Set<Rule> out = transformer.transform(le);
-			System.out.println(out.toString());
-			fail();
-		} catch (DatalogException ex) {
-		}
+//		should be:
+//		a :- c 
+//		b :- c 
+//		see : http://www.wsmo.org/TR/d16/d16.1/v1.0/#wsml-flight
+//		Rules of the form A1 and ... and  An :- B are split into n different rules:
+//	    * A1 :- B
+//	    * ...
+//	    * An :- B
+
+		Set<Rule> out = transformer.transform(le);
+		System.out.println(out.toString());
+
 	}
 
 	public void testTransformAndInBody() throws ParserException {
