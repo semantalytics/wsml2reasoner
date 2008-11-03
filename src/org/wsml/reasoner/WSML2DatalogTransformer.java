@@ -491,7 +491,7 @@ public class WSML2DatalogTransformer {
 
         protected boolean inBodyOfRule;
 
-        private int implicationCount;
+//        private int implicationCount;
 
         private boolean positive;
 
@@ -510,7 +510,7 @@ public class WSML2DatalogTransformer {
             datalogHead = null;
             inHeadOfRule = false;
             inBodyOfRule = false;
-            implicationCount = 0;
+//            implicationCount = 0;
             positive = true;
         }
 
@@ -568,7 +568,7 @@ public class WSML2DatalogTransformer {
                     datalogHead = l;
                 }
                 else {
-                    throw new DatalogException("Multiple atoms in the head of a rule are not allowed in simple WSML rules!");
+                	throw new DatalogException("Multiple atoms in the head of a rule are not allowed in simple WSML rules!");
                 }
             }
             else {
@@ -580,17 +580,17 @@ public class WSML2DatalogTransformer {
 
         @Override
         public void enterConstraint(Constraint arg0) {
-            implicationCount++;
-            if (implicationCount > 1) {
-                throw new DatalogException("More than one implication in the given WSML rule detected!");
-            }
+//            implicationCount++;
+//            if (implicationCount > 1) {
+//                throw new DatalogException("More than one implication in the given WSML rule detected!");
+//            }
             inHeadOfRule = false;
             inBodyOfRule = true;
         }
 
         @Override
         public void enterEquivalence(Equivalence arg0) {
-            throw new DatalogException("Equivalent is not allowed in simple WSML datalog rules.");
+//            throw new DatalogException("Equivalent is not allowed in simple WSML datalog rules.");
         }
 
         @Override
@@ -674,10 +674,10 @@ public class WSML2DatalogTransformer {
          */
         @Override
         public void enterInverseImplication(InverseImplication arg0) {
-            implicationCount++;
-            if (implicationCount > 1) {
-                throw new DatalogException("More than one implication in the given WSML rule detected!");
-            }
+//            implicationCount++;
+//            if (implicationCount > 1) {
+//                throw new DatalogException("More than one implication in the given WSML rule detected!");
+//            }
             inHeadOfRule = true;
             inBodyOfRule = false;
         }
@@ -689,10 +689,10 @@ public class WSML2DatalogTransformer {
          */
         @Override
         public void enterImplication(Implication arg0) {
-            implicationCount++;
-            if (implicationCount > 1) {
-                throw new DatalogException("More than one implication in the given WSML rule detected!");
-            }
+//            implicationCount++;
+//            if (implicationCount > 1) {
+//                throw new DatalogException("More than one implication in the given WSML rule detected!");
+//            }
             inHeadOfRule = false;
             inBodyOfRule = true;
         }
@@ -704,10 +704,10 @@ public class WSML2DatalogTransformer {
          */
         @Override
         public void enterLogicProgrammingRule(LogicProgrammingRule arg0) {
-            implicationCount++;
-            if (implicationCount > 1) {
-                throw new DatalogException("More than one implication in the given WSML rule detected!");
-            }
+//            implicationCount++;
+//            if (implicationCount > 1) {
+//                throw new DatalogException("More than one implication in the given WSML rule detected!");
+//            }
             inHeadOfRule = true;
             inBodyOfRule = false;
         }
