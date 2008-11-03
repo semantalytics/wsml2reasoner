@@ -134,9 +134,11 @@ public class WSML2DatalogTransformer {
 
         for (LogicalExpression r : rules) {
             r.accept(datalogVisitor);
-            Rule translation = datalogVisitor.getSerializedObject();
-            if (translation != null) {
-                result.add(translation);
+            Set <Rule> translation = datalogVisitor.getSerializedObject();
+            if (translation.size() != 0) {
+            	for (Rule r1 : translation) {
+            		result.add(r1);
+            	}
             }
             else {
                 throw new IllegalArgumentException("WSML rule can not be translated to datalog: " + r.toString());
@@ -471,7 +473,8 @@ public class WSML2DatalogTransformer {
 
         return result;
     }
-
+    
+  
     // -- Inner class for visiting rules (logical expressions) ...
 
     /**
@@ -485,7 +488,11 @@ public class WSML2DatalogTransformer {
 
         private List<Literal> datalogBody;
 
-        private Literal datalogHead;
+//        private Literal datalogHead;
+        
+//        private List<DatalogRule> datalogRules;
+        
+        private List<Literal> datalogHead;
 
         protected boolean inHeadOfRule;
 
@@ -507,7 +514,8 @@ public class WSML2DatalogTransformer {
          */
         public void reset() {
             datalogBody = new LinkedList<Literal>();
-            datalogHead = null;
+            datalogHead = new LinkedList<Literal>();
+//        	datalogRules = new LinkedList<DatalogRule>();
             inHeadOfRule = false;
             inBodyOfRule = false;
             implicationCount = 0;
@@ -530,29 +538,33 @@ public class WSML2DatalogTransformer {
          * 
          * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#getSerializedObject()
          */
-        @Override
-        public Rule getSerializedObject() {
-            Rule result = null;
-            if (datalogBody != null) {
-                result = new Rule(datalogHead, datalogBody);
-            }
-            else if (datalogHead != null) {
-                result = new Rule(datalogHead);
-            }
-            return result;
-        }
-        
 //        @Override
-//        public Set <Rule> getSerializedObject() {
-//            Set <Rule> results = new HashSet<Rule>();
+//        public Rule getSerializedObject() {
+//            Rule result = null;
 //            if (datalogBody != null) {
-//                results.add(new Rule(datalogHead, datalogBody));
+//                result = new Rule(datalogHead, datalogBody);
 //            }
 //            else if (datalogHead != null) {
-//                results.add(new Rule(datalogHead));
+//                result = new Rule(datalogHead);
 //            }
-//            return results;
+//            return result;
 //        }
+        
+        @Override
+        public Set <Rule> getSerializedObject() {
+            Set <Rule> results = new HashSet<Rule>();
+            if (datalogBody.size() != 0) {
+            	for(Literal l : datalogHead){
+            		results.add(new Rule(l, datalogBody));
+            	}
+            }
+            else if (datalogHead.size() != 0) {
+            	for (Literal l : datalogHead) {
+            		results.add(new Rule(l));
+            	}
+            }
+            return results;
+        }
 
         /*
          * (non-Javadoc)
@@ -576,16 +588,18 @@ public class WSML2DatalogTransformer {
                 datalogBody.add(l);
             }
             else if (inHeadOfRule) {
-                if (datalogHead == null) {
-                    datalogHead = l;
-                }
-                else {
-                	throw new DatalogException("Multiple atoms in the head of a rule are not allowed in simple WSML rules!");
-                }
+//                if (datalogHead == null) {
+//                    datalogHead = l;
+//                }
+//                else {
+                	this.datalogHead.add(l);
+//                	throw new DatalogException("Multiple atoms in the head of a rule are not allowed in simple WSML rules!");
+//                }
             }
             else {
                 // We do not have an implication but only a simple fact.
-                datalogHead = l;
+//                datalogHead = l;
+            	datalogHead.add(l);
             }
             positive = true;
         }
