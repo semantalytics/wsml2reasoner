@@ -491,7 +491,7 @@ public class WSML2DatalogTransformer {
 
         protected boolean inBodyOfRule;
 
-//        private int implicationCount;
+        private int implicationCount;
 
         private boolean positive;
 
@@ -510,7 +510,7 @@ public class WSML2DatalogTransformer {
             datalogHead = null;
             inHeadOfRule = false;
             inBodyOfRule = false;
-//            implicationCount = 0;
+            implicationCount = 0;
             positive = true;
         }
 
@@ -541,6 +541,18 @@ public class WSML2DatalogTransformer {
             }
             return result;
         }
+        
+//        @Override
+//        public Set <Rule> getSerializedObject() {
+//            Set <Rule> results = new HashSet<Rule>();
+//            if (datalogBody != null) {
+//                results.add(new Rule(datalogHead, datalogBody));
+//            }
+//            else if (datalogHead != null) {
+//                results.add(new Rule(datalogHead));
+//            }
+//            return results;
+//        }
 
         /*
          * (non-Javadoc)
@@ -550,9 +562,9 @@ public class WSML2DatalogTransformer {
         @Override
         public void handleAtom(Atom atom) {
             String predUri = atom.getIdentifier().toString();
-            // System.out.println("Atom URI:" + predUri);
-            // System.out.println("Atom arity:" + atom.getArity());
-            // System.out.println("Atom parameters:" + atom.listParamters());
+//             System.out.println("Atom URI:" + predUri);
+//             System.out.println("Atom arity:" + atom.getArity());
+//             System.out.println("Atom parameters:" + atom.listParameters());
             // conditional expression is needed because WSMO4J throws a
             // nullpointerexception for atom.listParameters()
             Literal l = (atom.getArity() > 0) ? new Literal(positive, predUri, atom.listParameters()) : new Literal(positive, predUri, new ArrayList<Term>());
@@ -580,10 +592,10 @@ public class WSML2DatalogTransformer {
 
         @Override
         public void enterConstraint(Constraint arg0) {
-//            implicationCount++;
-//            if (implicationCount > 1) {
-//                throw new DatalogException("More than one implication in the given WSML rule detected!");
-//            }
+            implicationCount++;
+            if (implicationCount > 1) {
+                throw new DatalogException("More than one implication in the given WSML rule detected!");
+            }
             inHeadOfRule = false;
             inBodyOfRule = true;
         }
@@ -674,10 +686,10 @@ public class WSML2DatalogTransformer {
          */
         @Override
         public void enterInverseImplication(InverseImplication arg0) {
-//            implicationCount++;
-//            if (implicationCount > 1) {
-//                throw new DatalogException("More than one implication in the given WSML rule detected!");
-//            }
+            implicationCount++;
+            if (implicationCount > 1) {
+                throw new DatalogException("More than one implication in the given WSML rule detected!");
+            }
             inHeadOfRule = true;
             inBodyOfRule = false;
         }
@@ -689,10 +701,10 @@ public class WSML2DatalogTransformer {
          */
         @Override
         public void enterImplication(Implication arg0) {
-//            implicationCount++;
-//            if (implicationCount > 1) {
-//                throw new DatalogException("More than one implication in the given WSML rule detected!");
-//            }
+            implicationCount++;
+            if (implicationCount > 1) {
+                throw new DatalogException("More than one implication in the given WSML rule detected!");
+            }
             inHeadOfRule = false;
             inBodyOfRule = true;
         }
@@ -704,10 +716,10 @@ public class WSML2DatalogTransformer {
          */
         @Override
         public void enterLogicProgrammingRule(LogicProgrammingRule arg0) {
-//            implicationCount++;
-//            if (implicationCount > 1) {
-//                throw new DatalogException("More than one implication in the given WSML rule detected!");
-//            }
+            implicationCount++;
+            if (implicationCount > 1) {
+                throw new DatalogException("More than one implication in the given WSML rule detected!");
+            }
             inHeadOfRule = true;
             inBodyOfRule = false;
         }
