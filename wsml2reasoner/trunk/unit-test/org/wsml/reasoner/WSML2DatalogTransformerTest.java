@@ -167,6 +167,14 @@ public class WSML2DatalogTransformerTest extends TestCase {
 					WSML2DatalogTransformer.PRED_HAS_VALUE, "urn:a", "urn:a",
 					"urn:c"), LiteralTestHelper.createSimplePosLiteral("urn:d"));
 		}
+		
+//		out = transform("_\"urn:a\"[_\"urn:a\" hasValue _\"urn:c\"] and _\"urn:b\" subConceptOf _\"urn:a\" :- _\"urn:d\" ");
+//		for (Rule r : out) {
+//			System.out.println(r.toString());
+//			checkRule(r, LiteralTestHelper.createPosLiteral(
+//					WSML2DatalogTransformer.PRED_HAS_VALUE, "urn:a", "urn:a",
+//					"urn:c"), LiteralTestHelper.createSimplePosLiteral("urn:d"));
+//		}
 	}
 
 	public void testGenerateAuxilliaryRules() {
@@ -176,7 +184,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 
 	public void testExtractConstantsUsedAsConcepts() throws ParserException {
 		LogicalExpression le = LETestHelper
-				.buildLE("_\"urn:a\"[_\"urn:a\" ofType _\"urn:b\"] implies _\"urn:d\"[_\"urn:d\" hasValue \"_urn:c\" ] ");
+				.buildLE("_\"urn:a\"[_\"urn:a\" ofType _\"urn:b\"] implies _\"urn:d\"[_\"urn:d\" hasValue \"_urn:c\" ]");
 		Set<Term> set = transformer.extractConstantsUsedAsConcepts(le);
 
 		assertEquals(2, set.size());
