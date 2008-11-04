@@ -52,6 +52,7 @@ public class WSMLResultProcessor {
         Set<Map<Variable, Term>> r = result.getResult();
 
         int i = 0;
+        // if necessary this is also the place to add further typing information
         for (Map<Variable, Term> row : r) {
             ArrayList<Entry> entryRow = new ArrayList<Entry>();
             for (Variable var : row.keySet()) {

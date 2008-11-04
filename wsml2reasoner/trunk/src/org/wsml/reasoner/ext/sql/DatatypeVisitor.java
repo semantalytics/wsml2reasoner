@@ -120,15 +120,25 @@ public class DatatypeVisitor implements Visitor {
 
         complextDataTypes.put(WsmlDataType.WSML_DURATION, String.class);
 
-        complextDataTypes.put(WsmlDataType.WSML_DATETIME, Calendar.class);
-        complextDataTypes.put(WsmlDataType.WSML_TIME, Calendar.class);
-        complextDataTypes.put(WsmlDataType.WSML_DATE, Calendar.class);
+        complextDataTypes.put(WsmlDataType.WSML_DATETIME, java.sql.Timestamp.class);
+        complextDataTypes.put(WsmlDataType.WSML_TIME, java.sql.Timestamp.class);
+        complextDataTypes.put(WsmlDataType.WSML_DATE, java.sql.Timestamp.class);
 
-        complextDataTypes.put(WsmlDataType.WSML_GYEARMONTH, Calendar.class);
-        complextDataTypes.put(WsmlDataType.WSML_GMONTHDAY, Calendar.class);
-        complextDataTypes.put(WsmlDataType.WSML_GYEAR, Calendar.class);
-        complextDataTypes.put(WsmlDataType.WSML_GDAY, Calendar.class);
-        complextDataTypes.put(WsmlDataType.WSML_GMONTH, Calendar.class);
+        complextDataTypes.put(WsmlDataType.WSML_GYEARMONTH, java.sql.Timestamp.class);
+        complextDataTypes.put(WsmlDataType.WSML_GMONTHDAY, java.sql.Timestamp.class);
+        complextDataTypes.put(WsmlDataType.WSML_GYEAR, java.sql.Timestamp.class);
+        complextDataTypes.put(WsmlDataType.WSML_GDAY, java.sql.Timestamp.class);
+        complextDataTypes.put(WsmlDataType.WSML_GMONTH, java.sql.Timestamp.class);
+        
+//        complextDataTypes.put(WsmlDataType.WSML_DATETIME, Calendar.class);
+//        complextDataTypes.put(WsmlDataType.WSML_TIME, Calendar.class);
+//        complextDataTypes.put(WsmlDataType.WSML_DATE, Calendar.class);
+//
+//        complextDataTypes.put(WsmlDataType.WSML_GYEARMONTH, Calendar.class);
+//        complextDataTypes.put(WsmlDataType.WSML_GMONTHDAY, Calendar.class);
+//        complextDataTypes.put(WsmlDataType.WSML_GYEAR, Calendar.class);
+//        complextDataTypes.put(WsmlDataType.WSML_GDAY, Calendar.class);
+//        complextDataTypes.put(WsmlDataType.WSML_GMONTH, Calendar.class);
     }
 
     /**
@@ -156,7 +166,15 @@ public class DatatypeVisitor implements Visitor {
         // WsmlDataType.WSML_DATE are already stored as Calendar
         if (complextType.equals(WsmlDataType.WSML_GYEARMONTH) || complextType.equals(WsmlDataType.WSML_GMONTHDAY) || complextType.equals(WsmlDataType.WSML_GYEAR) || complextType.equals(WsmlDataType.WSML_GDAY) || complextType.equals(WsmlDataType.WSML_GMONTH)) {
 
-            value = convertTimeValue(t);
+        	Calendar cal = convertTimeValue(t);        
+            value = new java.sql.Date(cal.getTimeInMillis());
+        }
+        else if(complextType.equals(WsmlDataType.WSML_DATE) || 
+        		complextType.equals(WsmlDataType.WSML_DATETIME) || 
+        		complextType.equals(WsmlDataType.WSML_TIME)) {
+        	//these are actually already implemented as calendar in wsmo4j
+        	Calendar cal = (Calendar)t.getValue();
+        	value = new java.sql.Date(cal.getTimeInMillis());
         }
         else if (complextType.equals(WsmlDataType.WSML_SQNAME)) {
             // according to ComplexDataValueImpl SQNames are not supported,
@@ -247,6 +265,7 @@ public class DatatypeVisitor implements Visitor {
      */
     protected Calendar convertTimeValue(ComplexDataValue t) {
         String complextType = t.getType().getIRI().toString();
+        
         GregorianCalendar tempCal = new GregorianCalendar();
         tempCal.clear();
         tempCal.setGregorianChange(new Date(Long.MIN_VALUE));
