@@ -391,7 +391,7 @@ public class DLBasedWSMLReasoner implements DLReasoner {
         Set<Concept> elements = new HashSet<Concept>();
         Set<OWLEntity> set;
         try {
-            set = builtInFacade.allClasses();
+        	set = builtInFacade.allClasses();
         }
         catch (OWLException e) {
             throw new InternalReasonerException(e);
@@ -402,7 +402,6 @@ public class DLBasedWSMLReasoner implements DLReasoner {
         for (OWLEntity entity : set) {
             try {
                 elements.add(getWSMOConcept(entity));
-
             }
             catch (OWLException e) {
                 throw new InternalReasonerException(e);

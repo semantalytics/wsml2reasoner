@@ -237,7 +237,7 @@ public class DLUtilities {
 
         extractConcepts(bindings, concept1, concepts);
         extractConcepts(bindings, concept2, concepts);
-
+        
         return concepts;
         /*
          * This has been commented out, because concepts can also be instances
@@ -284,7 +284,7 @@ public class DLUtilities {
         // submit query to reasoner:
         bindings = mReasoner.executeQuery(query);
 
-        // extract instances from result:
+        // extract instancesbindings from result:
         for (Map<Variable, Term> binding : bindings) {
             IRI instanceID = (IRI) binding.get(leFactory.createVariable("x"));
             if (!instanceID.getNamespace().toString().startsWith("http://www.wsmo.org/wsml/wsml-syntax")) {
