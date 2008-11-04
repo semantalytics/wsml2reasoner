@@ -118,6 +118,9 @@ public class DLBasedWSMLReasonerTest extends TestCase {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
 				WSMLReasonerFactory.BuiltInReasoner.PELLET);
+		
+//		params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
+//				WSMLReasonerFactory.BuiltInReasoner.KAON2DL);
 
 		reasoner = (DLBasedWSMLReasoner) DefaultWSMLReasonerFactory
 				.getFactory().createDLReasoner(params);

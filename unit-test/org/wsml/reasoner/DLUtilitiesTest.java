@@ -114,10 +114,12 @@ public class DLUtilitiesTest extends TestCase {
 		// [ 2003873 ] Concept with no relatives not returned from
 		// getAllConcepts()
 		// 
+		
 		assertEquals(3, s.size());
 		for (Concept c : s) {
 			System.out.println(c.toString());
 		}
+		
 	}
 
 	public void testGetAllInstances() {
