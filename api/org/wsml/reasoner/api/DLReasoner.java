@@ -21,9 +21,11 @@ package org.wsml.reasoner.api;
 import java.util.Map;
 import java.util.Set;
 
+import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
+import org.wsml.reasoner.api.exception.InternalReasonerException;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 
@@ -36,6 +38,29 @@ import org.wsmo.common.Identifier;
 public interface DLReasoner extends WSMLReasoner {
 
     public boolean isSatisfiable();
+    
+//    boolean isEntails( LogicalExpression expression );
+
+	/**
+	 * This method does a "CONCEPT SATIFIABLITY TEST" on the given logical expression 
+	 * that must identify a (possible) set of instances.
+	 * It must be created using the following language elements:
+	 * <br />
+	 * - Atom<br />
+	 * - MembershipMolecule<br />
+	 * - Conjunction<br />
+	 * - Disjunction<br />
+	 * - Negation<br />
+	 * - UniversalQuantification<br />
+	 * - ExistentialQuantification<br />
+	 * <br /> 
+	 * and contain exactly one free variable (that represents the instances).
+	 * 
+	 * @return true if the given expression is consistent, false otherwise
+	 * @throws InternalReasonerException if a logical expression different
+	 * 			than the ones mentioned above are given as input
+	 */
+	public boolean isConceptSatisfiable(LogicalExpression expression);
 
     /**
      * @return true if 'subConcept' is a subconcept of 'superConcept', false

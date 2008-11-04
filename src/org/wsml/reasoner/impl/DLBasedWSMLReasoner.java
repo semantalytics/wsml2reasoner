@@ -986,6 +986,20 @@ public class DLBasedWSMLReasoner implements DLReasoner {
         }
         return elements;
     }
+    
+	public boolean isConceptSatisfiable(LogicalExpression expression) {
+		OWLDescription des = transformLogicalExpression(expression);
+		try {
+			if (des != null) 
+				return builtInFacade.isConsistent(des);
+			else 
+				throw new InternalReasonerException("This logical expression" +
+						" is not supported for consistency check!");
+		} catch (Exception e) {
+			throw new InternalReasonerException(e);
+		} 
+	}
+
 
     private Term getDataValue(String value, String type) {
         Term val = null;
