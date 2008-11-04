@@ -23,6 +23,7 @@
 package org.wsml.reasoner;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.omwg.logicalexpression.terms.Term;
 import org.wsmo.factory.WsmoFactory;
@@ -72,6 +73,10 @@ public class LiteralTestHelper {
 			bodylist.add(l);
 		}
 		return new Rule(head, bodylist);
+	}
+	
+	public static Rule createRule(Literal head, List<Literal> body) {	
+		return new Rule(head, body);
 	}
 
 }
