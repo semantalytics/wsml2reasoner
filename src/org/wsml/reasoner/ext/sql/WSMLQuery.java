@@ -161,13 +161,15 @@ public class WSMLQuery {
                     ComplexDataValue dv = f.createWsmlBoolean((Boolean) entry);
                     row.put(v, dv);
                 }
-                else if (className.equals(java.sql.Date.class.getCanonicalName())) {
-                    java.sql.Date date = (java.sql.Date) entry;
-                    Calendar cal = Calendar.getInstance();
-                    cal.clear();
-                    cal.setTimeInMillis(date.getTime());
-                    ComplexDataValue dv = f.createWsmlDateTime(cal);
-                    row.put(v, dv);
+                //it is here where additional type information could be needed.
+                else if(className.equals(java.sql.Timestamp.class.getCanonicalName()))
+                {
+                	java.sql.Timestamp time = (java.sql.Timestamp) entry;
+                	Calendar cal = Calendar.getInstance();
+                	cal.clear();
+                	cal.setTimeInMillis(time.getTime());
+                	ComplexDataValue dv = f.createWsmlDateTime(cal);
+                	row.put(v, dv);               	
                 }
                 // this is mainly needed because COUNT returns integers
                 else if (className.equals(java.lang.Integer.class.getCanonicalName())) {

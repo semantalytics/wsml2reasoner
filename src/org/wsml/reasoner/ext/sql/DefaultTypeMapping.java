@@ -24,7 +24,9 @@ package org.wsml.reasoner.ext.sql;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.sql.Time;
 import java.sql.Types;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,8 +47,11 @@ public class DefaultTypeMapping {
         typeMap.put(Boolean.class, Types.BIT);
         typeMap.put(Float.class, Types.FLOAT);
         typeMap.put(Double.class, Types.DOUBLE);
-        typeMap.put(Date.class, Types.DATE);
-        typeMap.put(Timestamp.class, Types.TIMESTAMP);
+        
+        typeMap.put(java.sql.Date.class, Types.DATE);
+        typeMap.put(java.sql.Timestamp.class, Types.TIMESTAMP);
+        typeMap.put(java.sql.Time.class, Types.TIME);
+        typeMap.put(Calendar.class, Types.TIMESTAMP);
 
         // for convenience all the common sql types are mapped here
         syntaxMap.put(java.sql.Types.BIT, "BIT");
@@ -62,14 +67,17 @@ public class DefaultTypeMapping {
         syntaxMap.put(java.sql.Types.CHAR, "CHAR");
         syntaxMap.put(java.sql.Types.VARCHAR, "VARCHAR(255)");
         syntaxMap.put(java.sql.Types.LONGVARCHAR, "LONGVARCHAR");
-        syntaxMap.put(java.sql.Types.TIME, "TIME");
-        syntaxMap.put(java.sql.Types.TIMESTAMP, "TIMESTAMP");
         syntaxMap.put(java.sql.Types.BINARY, "BINARY");
         syntaxMap.put(java.sql.Types.VARBINARY, "VARBINARY");
         syntaxMap.put(java.sql.Types.LONGVARBINARY, "LONGVARBINARY");
         syntaxMap.put(java.sql.Types.NULL, "NULL");
         syntaxMap.put(java.sql.Types.OTHER, "OTHER");
         syntaxMap.put(java.sql.Types.CLOB, "CLOB");
+        
+        syntaxMap.put(java.sql.Types.TIME, "TIME");
+        syntaxMap.put(java.sql.Types.TIMESTAMP, "TIMESTAMP");
+        syntaxMap.put(java.sql.Types.DATE, "DATE");
+        
 
     }
 
