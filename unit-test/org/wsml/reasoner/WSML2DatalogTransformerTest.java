@@ -134,10 +134,13 @@ public class WSML2DatalogTransformerTest extends TestCase {
 	public void testTransform02() throws IllegalArgumentException,
 			ParserException {
 		Set<Rule> out = transform("_\"urn:a\"[_\"urn:a\" hasValue _\"urn:b\"] and _\"urn:b\" memberOf _\"urn:a\"");
-		// for (Rule r : out) {
-		// checkRule(r, LiteralTestHelper.createPosLiteral(
-		// WSML2DatalogTransformer.PRED_MEMBER_OF, "urn:b", "urn:a"));
-		// }
+		assertEquals(2, out.size());
+		checkContainsRule(out, LiteralTestHelper.createPosLiteral(
+				WSML2DatalogTransformer.PRED_HAS_VALUE, "urn:a", "urn:a",
+				"urn:b"));
+		checkContainsRule(out, LiteralTestHelper.createPosLiteral(
+				WSML2DatalogTransformer.PRED_MEMBER_OF, "urn:b", "urn:a"));
+
 		out = transform("_\"urn:a\"[_\"urn:a\" ofType _\"urn:b\"]",
 				"_\"urn:a\"[_\"urn:a\" hasValue _\"urn:c\" ]");
 
@@ -176,15 +179,15 @@ public class WSML2DatalogTransformerTest extends TestCase {
 					"urn:c"), LiteralTestHelper.createSimplePosLiteral("urn:d"));
 		}
 
-		// out = transform(
-		// "_\"urn:a\"[_\"urn:a\" hasValue _\"urn:c\"] and _\"urn:b\" subConceptOf _\"urn:a\" :- _\"urn:d\" "
-		// );
-		// for (Rule r : out) {
-		// System.out.println(r.toString());
-		// checkRule(r, LiteralTestHelper.createPosLiteral(
-		// WSML2DatalogTransformer.PRED_HAS_VALUE, "urn:a", "urn:a",
-		// "urn:c"), LiteralTestHelper.createSimplePosLiteral("urn:d"));
-		// }
+		out = transform("_\"urn:a\"[_\"urn:a\" hasValue _\"urn:c\"] and _\"urn:b\" subConceptOf _\"urn:a\" :- _\"urn:d\" ");
+		assertEquals(2, out.size());
+		checkContainsRule(out, LiteralTestHelper.createPosLiteral(
+				WSML2DatalogTransformer.PRED_SUB_CONCEPT_OF, "urn:b", "urn:a"),
+				LiteralTestHelper.createSimplePosLiteral("urn:d"));
+		checkContainsRule(out, LiteralTestHelper.createPosLiteral(
+				WSML2DatalogTransformer.PRED_HAS_VALUE, "urn:a", "urn:a",
+				"urn:c"), LiteralTestHelper.createSimplePosLiteral("urn:d"));
+
 	}
 
 	public void testGenerateAuxilliaryRules() {
@@ -251,6 +254,12 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		printLE(le);
 		printRules(out);
 
+		assertEquals(1, out.size());
+		this.checkContainsRule(out, LiteralTestHelper
+				.createSimplePosLiteral("urn:b"), LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimplePosLiteral("urn:c"));
+
 	}
 
 	public void testTransformImpliesInBody() throws ParserException {
@@ -265,6 +274,18 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		Set<Rule> out = transformer.transform(le);
 		printLE(le);
 		printRules(out);
+
+		assertEquals(2, out.size());
+
+		checkContainsRule(out, LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimplePosLiteral("urn:c"), LiteralTestHelper
+				.createPosLiteral("urn:b"));
+
+		checkContainsRule(out, LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimpleNegLiteral("urn:c"));
+
 	}
 
 	public void testTransformEquivalentInHead() throws ParserException {
@@ -278,8 +299,25 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		// result should be:
 		// A implies B :- C
 		// A impliedBy B :- C
+
+		// and this should again be:
+		// B :- A and C
+		// A :- B and C
+
 		printLE(le);
 		printRules(out);
+
+		assertEquals(2, out.size());
+		checkContainsRule(out, LiteralTestHelper
+				.createSimplePosLiteral("urn:b"), LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimplePosLiteral("urn:c"));
+
+		checkContainsRule(out, LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimplePosLiteral("urn:b"), LiteralTestHelper
+				.createSimplePosLiteral("urn:c"));
+
 	}
 
 	public void testTransformEquivalentInBody() throws ParserException {
@@ -293,9 +331,16 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		// result should be:
 		// A :- C implies B
 		// A :- C impliedBy B
+
+		// and then:
+		// A :- not C
+		// A :- C and B
+		// A :- not B
+		// A :- C and B
+
 		printLE(le);
 		printRules(out);
-
+		fail(); // ??
 	}
 
 	public void testTransformImpliedByInHead() throws ParserException {
@@ -312,6 +357,10 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		printLE(le);
 		printRules(out);
 
+		checkContainsRule(out, LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimplePosLiteral("urn:b"), LiteralTestHelper
+				.createSimplePosLiteral("urn:c"));
 	}
 
 	public void testTransformImpliedByInBody() throws ParserException {
@@ -325,9 +374,17 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		// result should be:
 		// A :- not B
 		// A :- C and B
-		assertEquals(1, out.size());
+		assertEquals(2, out.size());
 		printLE(le);
 		printRules(out);
+		checkContainsRule(out, LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimpleNegLiteral("urn:b"));
+
+		checkContainsRule(out, LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimplePosLiteral("urn:c"), LiteralTestHelper
+				.createSimplePosLiteral("urn:b"));
 	}
 
 	public void testTransformImpliesTypeInHead() throws ParserException {
@@ -450,11 +507,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		assertEquals(1, out1.size());
 		assertEquals(1, out2.size());
 		assertEquals(out1, out2);
-		for (Rule r1 : out1) {
-			for (Rule r2 : out2) {
-				assertEquals(r1, r2);
-			}
-		}
+
 	}
 
 	public void testTransformAndInHead() throws ParserException {
@@ -480,6 +533,8 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:c\" :- _\"urn:a\" and  _\"urn:b\"");
 		Set<Rule> out = transformer.transform(le);
+		this.printRules(out);
+		assertEquals(1, out.size());
 		for (Rule r : out) {
 			checkRule(r, LiteralTestHelper.createSimplePosLiteral("urn:c"),
 					LiteralTestHelper.createSimplePosLiteral("urn:a"),
@@ -529,19 +584,23 @@ public class WSML2DatalogTransformerTest extends TestCase {
 	}
 
 	private void printRules(Set<Rule> rules) {
-		printRules((Rule[]) rules.toArray());
+		System.out.println("Result: ");
+		for (Rule r : rules) {
+			printRules(r);
+		}
 	}
 
 	private void printRules(Rule... rules) {
-		System.out.println("Result: ");
 		for (Rule r : rules) {
-			System.out.println("Rule: " + r.toString());
+			System.out.println("Rule: " + r.toString() + "  (isConstraint: "
+					+ r.isConstraint() + " )" + " (isFact: " + r.isFact()
+					+ " )");
 		}
 	}
 
 	private void printLE(LogicalExpression... les) {
 		for (LogicalExpression le : les) {
-			System.out.println("LogicalExpression: " + le.toString());
+			System.out.println("\nLogicalExpression: " + le.toString());
 		}
 	}
 

@@ -487,18 +487,12 @@ public class WSML2DatalogTransformer {
     private static class DatalogVisitor extends InfixOrderLogicalExpressionVisitor {
 
         private List<Literal> datalogBody;
-
-//        private Literal datalogHead;
-        
-//        private List<DatalogRule> datalogRules;
         
         private List<Literal> datalogHead;
 
         protected boolean inHeadOfRule;
 
         protected boolean inBodyOfRule;
-
-        private int implicationCount;
 
         private boolean positive;
 
@@ -515,10 +509,8 @@ public class WSML2DatalogTransformer {
         public void reset() {
             datalogBody = new LinkedList<Literal>();
             datalogHead = new LinkedList<Literal>();
-//        	datalogRules = new LinkedList<DatalogRule>();
             inHeadOfRule = false;
             inBodyOfRule = false;
-            implicationCount = 0;
             positive = true;
         }
 
@@ -538,17 +530,6 @@ public class WSML2DatalogTransformer {
          * 
          * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#getSerializedObject()
          */
-//        @Override
-//        public Rule getSerializedObject() {
-//            Rule result = null;
-//            if (datalogBody != null) {
-//                result = new Rule(datalogHead, datalogBody);
-//            }
-//            else if (datalogHead != null) {
-//                result = new Rule(datalogHead);
-//            }
-//            return result;
-//        }
         
         @Override
         public Set <Rule> getSerializedObject() {
@@ -588,13 +569,8 @@ public class WSML2DatalogTransformer {
                 datalogBody.add(l);
             }
             else if (inHeadOfRule) {
-//                if (datalogHead == null) {
-//                    datalogHead = l;
-//                }
-//                else {
+            		// new Rule
                 	this.datalogHead.add(l);
-//                	throw new DatalogException("Multiple atoms in the head of a rule are not allowed in simple WSML rules!");
-//                }
             }
             else {
                 // We do not have an implication but only a simple fact.
@@ -606,10 +582,6 @@ public class WSML2DatalogTransformer {
 
         @Override
         public void enterConstraint(Constraint arg0) {
-            implicationCount++;
-            if (implicationCount > 1) {
-                throw new DatalogException("More than one implication in the given WSML rule detected!");
-            }
             inHeadOfRule = false;
             inBodyOfRule = true;
         }
@@ -700,10 +672,6 @@ public class WSML2DatalogTransformer {
          */
         @Override
         public void enterInverseImplication(InverseImplication arg0) {
-            implicationCount++;
-            if (implicationCount > 1) {
-                throw new DatalogException("More than one implication in the given WSML rule detected!");
-            }
             inHeadOfRule = true;
             inBodyOfRule = false;
         }
@@ -715,10 +683,6 @@ public class WSML2DatalogTransformer {
          */
         @Override
         public void enterImplication(Implication arg0) {
-            implicationCount++;
-            if (implicationCount > 1) {
-                throw new DatalogException("More than one implication in the given WSML rule detected!");
-            }
             inHeadOfRule = false;
             inBodyOfRule = true;
         }
@@ -730,10 +694,6 @@ public class WSML2DatalogTransformer {
          */
         @Override
         public void enterLogicProgrammingRule(LogicProgrammingRule arg0) {
-            implicationCount++;
-            if (implicationCount > 1) {
-                throw new DatalogException("More than one implication in the given WSML rule detected!");
-            }
             inHeadOfRule = true;
             inBodyOfRule = false;
         }
