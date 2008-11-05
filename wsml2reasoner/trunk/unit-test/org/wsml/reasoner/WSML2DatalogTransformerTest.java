@@ -248,7 +248,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 				.buildLE("_\"urn:a\" implies _\"urn:b\" :- _\"urn:c\"");
 
 		Set<Rule> out = transformer.transform(le);
-		assertEquals(1, out.size());
+//		assertEquals(1, out.size());
 
 		// B :- A and C
 		printLE(le);
@@ -340,8 +340,22 @@ public class WSML2DatalogTransformerTest extends TestCase {
 
 		printLE(le);
 		printRules(out);
-		fail(); // ??
+		
+		assertEquals(4, out.size());
+		checkContainsRule(out, LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimpleNegLiteral("urn:c"));
+		
+		checkContainsRule(out, LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimplePosLiteral("urn:c"), LiteralTestHelper
+				.createSimplePosLiteral("urn:b"));
+		
+		checkContainsRule(out, LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimpleNegLiteral("urn:b"));
 	}
+
 
 	public void testTransformImpliedByInHead() throws ParserException {
 		// More than one implication in the given WSML rule detected!
@@ -525,7 +539,14 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		// * An :- B
 
 		Set<Rule> out = transformer.transform(le);
-		System.out.println(out.toString());
+		assertEquals(2, out.size());
+		checkContainsRule(out, LiteralTestHelper
+				.createSimplePosLiteral("urn:b"), LiteralTestHelper
+				.createSimplePosLiteral("urn:c"));
+
+		checkContainsRule(out, LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimplePosLiteral("urn:c"));
 
 	}
 
@@ -540,6 +561,72 @@ public class WSML2DatalogTransformerTest extends TestCase {
 					LiteralTestHelper.createSimplePosLiteral("urn:a"),
 					LiteralTestHelper.createSimplePosLiteral("urn:b"));
 		}
+	}
+
+	public void testTransformNafAndInHead() throws ParserException {
+
+		String le1 = ("_\"urn:c\" and _\"urn:b\" :- _\"urn:a\" ");
+		String le2 = (" naf _\"urn:c\" :- _\"urn:a\"");
+
+		try {
+			Set<Rule> out = this.transform(le1, le2);
+			printRules(out);
+			fail();
+		} catch (DatalogException ex) {
+		}
+
+	}
+
+	public void testTransformNafAndInBody() throws ParserException {
+		String le1 = ("_\"urn:a\" :-_\"urn:c\" and _\"urn:b\"");
+		String le2 = ("_\"urn:a\" :- naf _\"urn:c\" ");
+
+		Set<Rule> out = this.transform(le1, le2);
+		printRules(out);
+
+		assertEquals(2, out.size());
+		checkContainsRule(out, LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimpleNegLiteral("urn:c"));
+
+		checkContainsRule(out, LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimplePosLiteral("urn:c"), LiteralTestHelper
+				.createPosLiteral("urn:b"));
+	}
+	
+	public void testTransformDuplicateRules() throws IllegalArgumentException, ParserException {
+		String le1 = ("_\"urn:a\" :-_\"urn:c\" and _\"urn:b\"");
+		String le2 = ("_\"urn:a\" :- naf _\"urn:c\" ");
+		String le3 = ("_\"urn:a\" :- naf _\"urn:b\" ");
+		String le4 = ("_\"urn:a\" :-_\"urn:c\" and _\"urn:b\"");
+
+		Set<Rule> out = this.transform(le1, le2, le3, le4);
+		printRules(out);
+
+		assertEquals(3, out.size());
+		checkContainsRule(out, LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimpleNegLiteral("urn:c"));
+
+		checkContainsRule(out, LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimpleNegLiteral("urn:b"));
+		
+		checkContainsRule(out, LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimplePosLiteral("urn:c"), LiteralTestHelper
+				.createPosLiteral("urn:b"));
+	}
+	
+	public void testMoreImplications() throws IllegalArgumentException, ParserException {
+		String le = ("_\"urn:a\" implies _\"urn:c\"  :-_\"urn:c\" impliedBy _\"urn:b\"");
+
+		Set<Rule> out = this.transform(le);
+		printRules(out);
+
+		assertEquals(1, out.size());
+		fail();
 	}
 
 	public void testTransformNafInHead() throws ParserException {

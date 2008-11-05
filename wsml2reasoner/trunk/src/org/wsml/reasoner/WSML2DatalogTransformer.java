@@ -231,8 +231,19 @@ public class WSML2DatalogTransformer {
                 bodyMolecules.add(arg0);
             }
         }
+        
 
         @Override
+		public void handleImplication(Implication arg0) {
+			super.handleImplication(arg0);
+		}
+
+		@Override
+		public void handleInverseImplication(InverseImplication arg0) {
+			super.handleInverseImplication(arg0);
+		}
+
+		@Override
         public void handleAtom(Atom atom) {
             // do nothing.
         }
@@ -560,7 +571,7 @@ public class WSML2DatalogTransformer {
 //             System.out.println("Atom parameters:" + atom.listParameters());
             // conditional expression is needed because WSMO4J throws a
             // nullpointerexception for atom.listParameters()
-            Literal l = (atom.getArity() > 0) ? new Literal(positive, predUri, atom.listParameters()) : new Literal(positive, predUri, new ArrayList<Term>());
+            Literal l = (atom.getArity() > 0) ? new Literal(positive, predUri, atom.listParameters()) : new Literal(positive, predUri, new ArrayList<Term>()); 
             storeLiteral(l);
         }
 
@@ -588,7 +599,8 @@ public class WSML2DatalogTransformer {
 
         @Override
         public void enterEquivalence(Equivalence arg0) {
-//            throw new DatalogException("Equivalent is not allowed in simple WSML datalog rules.");
+        	inHeadOfRule = true;
+        	inBodyOfRule = false;
         }
 
         @Override
@@ -615,8 +627,8 @@ public class WSML2DatalogTransformer {
 
         @Override
         public void handleAttributeInferenceMolecule(AttributeInferenceMolecule arg0) {
-            Literal l = new Literal(positive, PRED_IMPLIES_TYPE, arg0.getLeftParameter(), arg0.getAttribute(), arg0.getRightParameter());
-            storeLiteral(l);
+           Literal l = new Literal(positive, PRED_IMPLIES_TYPE, arg0.getLeftParameter(), arg0.getAttribute(), arg0.getRightParameter());
+           storeLiteral(l);
         }
 
         @Override
@@ -630,6 +642,7 @@ public class WSML2DatalogTransformer {
             Literal l = new Literal(positive, PRED_HAS_VALUE, arg0.getLeftParameter(), arg0.getAttribute(), arg0.getRightParameter());
             storeLiteral(l);
         }
+        
 
         /*
          * (non-Javadoc)
@@ -716,7 +729,7 @@ public class WSML2DatalogTransformer {
          */
         @Override
         public void handleImplication(Implication arg0) {
-            inHeadOfRule = true;
+        	inHeadOfRule = true;
             inBodyOfRule = false;
         }
 
@@ -730,6 +743,12 @@ public class WSML2DatalogTransformer {
             inHeadOfRule = false;
             inBodyOfRule = true;
         }
+
+		@Override
+		public void handleEquivalence(Equivalence arg0) {
+			inHeadOfRule = false;
+	        inBodyOfRule = true;
+		}
 
     }
 
