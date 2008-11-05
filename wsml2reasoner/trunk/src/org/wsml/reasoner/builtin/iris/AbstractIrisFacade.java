@@ -136,6 +136,39 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
      * The external data sources.
      */
     private final Collection<ExternalDataSource> sources;
+    
+    
+    /**
+     * These are constants for additional WSML builtin predicates not covered in org.omwg.logicalexpression.Constants in WSMO4j
+     */
+    final static String DATE_EQUAL = Constants.WSML_NAMESPACE  + "dateEqual";
+    final static String DATE_INEQUAL = Constants.WSML_NAMESPACE  + "dateInequal";
+    final static String DATE_GREATER_THAN = Constants.WSML_NAMESPACE + "dateGreaterThan";
+    final static String DATE_LESS_THAN = Constants.WSML_NAMESPACE + "dateLessThan";
+    
+    final static String TIME_EQUAL = Constants.WSML_NAMESPACE + "timeEqual";
+    final static String TIME_INEQUAL = Constants.WSML_NAMESPACE + "timeInequal";
+    final static String TIME_GREATER_THAN = Constants.WSML_NAMESPACE + "timeGreaterThan";
+    final static String TIME_LESS_THAN = Constants.WSML_NAMESPACE + "timeLessThan";
+    
+    final static String DATETIME_EQUAL = Constants.WSML_NAMESPACE + "dateTimeEqual";
+    final static String DATETIME_INEQUAL = Constants.WSML_NAMESPACE + "dateTimeInequal";
+    final static String DATETIME_GREATER_THAN = Constants.WSML_NAMESPACE + "dateTimeGreaterThan";
+    final static String DATETIME_LESS_THAN = Constants.WSML_NAMESPACE + "dateTimeLessThan";
+    
+    final static String GYEARMONTH_EQUAL = Constants.WSML_NAMESPACE + "gyearmonthEqual";
+    final static String GYEAR_EQUAL = Constants.WSML_NAMESPACE + "gyearEqual";
+    final static String GMONTHDAY_EQUAL = Constants.WSML_NAMESPACE + "gmonthdayEqual";
+    final static String GMONTH_EQUAL = Constants.WSML_NAMESPACE + "gmonthEqual";
+    final static String GDAY_EQUAL = Constants.WSML_NAMESPACE + "gdayEqual";
+    final static String DURATION_EQUAL = Constants.WSML_NAMESPACE + "durationEqual";
+    final static String DAYTIMEDURATION_GREATER_THAN = Constants.WSML_NAMESPACE + "dayTimeDurationGreaterThan";
+    final static String DAYTIMEDURATION_LESS_THAN = Constants.WSML_NAMESPACE + "dayTimeDurationLessThan";
+    final static String YEARMONTHDURATION_GREATER_THAN = Constants.WSML_NAMESPACE + "yearMonthDurationGreaterThan";
+    final static String YEARMONTHDURATION_LESS_THAN = Constants.WSML_NAMESPACE + "yearMonthDurationLessThan";
+
+    
+    
 
     public AbstractIrisFacade(final WSMO4JManager m, final Map<String, Object> config) {
         DATA_FACTORY = m.getDataFactory();
@@ -378,15 +411,20 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 
         final String sym = l.getPredicateUri();
         // checking whether the predicate is a builtin
-        if (sym.equals(Constants.EQUAL) || sym.equals(Constants.NUMERIC_EQUAL) || sym.equals(Constants.STRING_EQUAL) || sym.equals(Constants.STRONG_EQUAL)) {
+        if (sym.equals(Constants.EQUAL) || sym.equals(Constants.NUMERIC_EQUAL) || sym.equals(Constants.STRING_EQUAL) 
+        		|| sym.equals(Constants.STRONG_EQUAL) || sym.equals(DATE_EQUAL) || sym.equals(TIME_EQUAL) 
+        		|| sym.equals(DATETIME_EQUAL) || sym.equals(GYEAR_EQUAL) || sym.equals(GYEARMONTH_EQUAL)
+        		|| sym.equals(GMONTHDAY_EQUAL) || sym.equals(GDAY_EQUAL) || sym.equals(GMONTH_EQUAL)
+        		|| sym.equals(DURATION_EQUAL)) {
             return BUILTIN.createEqual(terms.get(0), terms.get(1));
 
         }
-        else if (sym.equals(Constants.INEQUAL) || sym.equals(Constants.NUMERIC_INEQUAL) || sym.equals(Constants.STRING_INEQUAL)) {
+        else if (sym.equals(Constants.INEQUAL) || sym.equals(Constants.NUMERIC_INEQUAL) || sym.equals(Constants.STRING_INEQUAL)
+        		|| sym.equals(DATE_INEQUAL) || sym.equals(TIME_INEQUAL) || sym.equals(DATETIME_INEQUAL)) {
             return BUILTIN.createUnequal(terms.get(0), terms.get(1));
-
         }
-        else if (sym.equals(Constants.LESS_THAN)) {
+        else if (sym.equals(Constants.LESS_THAN) || sym.equals(DATE_LESS_THAN) || sym.equals(TIME_LESS_THAN)
+        		|| sym.equals(DATETIME_LESS_THAN) || sym.equals(DAYTIMEDURATION_LESS_THAN) || sym.endsWith(YEARMONTHDURATION_LESS_THAN)) {
             return BUILTIN.createLess(terms.get(0), terms.get(1));
 
         }
@@ -394,9 +432,9 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
             return BUILTIN.createLessEqual(terms.get(0), terms.get(1));
 
         }
-        else if (sym.equals(Constants.GREATER_THAN)) {
+        else if (sym.equals(Constants.GREATER_THAN) || sym.equals(DATE_GREATER_THAN) || sym.equals(TIME_GREATER_THAN)
+        		|| sym.equals(DATETIME_GREATER_THAN) || sym.equals(DAYTIMEDURATION_GREATER_THAN) || sym.equals(YEARMONTHDURATION_GREATER_THAN)) {
             return BUILTIN.createGreater(terms.get(0), terms.get(1));
-
         }
         else if (sym.equals(Constants.GREATER_EQUAL)) {
             return BUILTIN.createGreaterEqual(terms.get(0), terms.get(1));
