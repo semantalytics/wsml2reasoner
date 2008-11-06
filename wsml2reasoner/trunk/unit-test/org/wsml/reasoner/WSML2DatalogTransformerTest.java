@@ -487,6 +487,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 
 		Set<Rule> out = transformer.transform(le);
 		// 
+		assertEquals(1, out.size());
 		for (Rule r : out) {
 			checkRule(r, LiteralTestHelper.createLiteral(true,
 					WSML2DatalogTransformer.PRED_MEMBER_OF, "urn:a", "urn:b"),
@@ -499,6 +500,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:c\" :- _\"urn:a\" memberOf _\"urn:b\"");
 		Set<Rule> out = transformer.transform(le);
+		assertEquals(2, out.size());
 
 		assertTrue(out.contains(LiteralTestHelper.createRule(LiteralTestHelper
 				.createSimplePosLiteral("urn:c"), LiteralTestHelper
@@ -539,6 +541,8 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		// * An :- B
 
 		Set<Rule> out = transformer.transform(le);
+		printLE(le);
+		printRules(out);
 		assertEquals(2, out.size());
 		checkContainsRule(out, LiteralTestHelper
 				.createSimplePosLiteral("urn:b"), LiteralTestHelper
@@ -549,10 +553,37 @@ public class WSML2DatalogTransformerTest extends TestCase {
 				.createSimplePosLiteral("urn:c"));
 
 	}
+	public void testTransformMoreAndInHead() throws ParserException {
+		LogicalExpression le = LETestHelper
+				.buildLE("_\"urn:a\" and _\"urn:b\" and _\"urn:c\" :- _\"urn:d\" ");
+
+		// should be:
+		// a :- d
+		// b :- d
+		// c :- d
+	
+		Set<Rule> out = transformer.transform(le);
+		printLE(le);
+		printRules(out);
+		assertEquals(3, out.size());
+		checkContainsRule(out, LiteralTestHelper
+				.createSimplePosLiteral("urn:b"), LiteralTestHelper
+				.createSimplePosLiteral("urn:d"));
+
+		checkContainsRule(out, LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimplePosLiteral("urn:d"));
+		
+		checkContainsRule(out, LiteralTestHelper
+				.createSimplePosLiteral("urn:c"), LiteralTestHelper
+				.createSimplePosLiteral("urn:d"));
+		
+
+	}
 
 	public void testTransformAndInBody() throws ParserException {
 		LogicalExpression le = LETestHelper
-				.buildLE("_\"urn:c\" :- _\"urn:a\" and  _\"urn:b\"");
+				.buildLE("_\"urn:c\" :- _\"urn:a\" and _\"urn:b\"");
 		Set<Rule> out = transformer.transform(le);
 		this.printRules(out);
 		assertEquals(1, out.size());
