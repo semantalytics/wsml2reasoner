@@ -12,7 +12,7 @@ public abstract class AbstractRelations8ConstrainedToMultipleTypes extends TestC
 
     public void testPopulated() throws Exception
 	{
-		String queryString = "RelationOfPrimitives(?x,?y,?z)";
+		String queryString = "rel(?x,?y,?z)";
     	Results r = new Results( "x", "y", "z" );
     	
     	String NS = "http://example.com/relations8#";
