@@ -8,10 +8,11 @@ concept B
 concept C
 concept D
 
-
 relation rel(ofType A, ofType {B, C}, ofType {B, C, D})
 
 instance a memberOf A
+instance b memberOf B
+instance c memberOf C
 instance bc memberOf {B, C}
 instance bcd memberOf {B, C, D}
 
