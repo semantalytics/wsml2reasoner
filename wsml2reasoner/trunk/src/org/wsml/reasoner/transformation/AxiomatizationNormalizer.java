@@ -417,7 +417,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         // process relation parameters:
         List<Parameter> parameters = relation.listParameters();
         Collection<LogicalExpression> parameterAxioms = new LinkedList<LogicalExpression>();
-        int i = 0;
+        int paramIndex = 0;
         for (Parameter parameter : parameters) {
             List<Molecule> typeMemberships = new ArrayList<Molecule>(parameter.listTypes().size());
             for (Type type : parameter.listTypes()) {
@@ -431,20 +431,23 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 else {
                     typeID = ((ComplexDataType) type).getIRI();
                 }
-                typeMemberships.add(leFactory.createMemberShipMolecule(terms.get(i++), typeID));
+                typeMemberships.add(leFactory.createMemberShipMolecule(terms.get(paramIndex), typeID));
             }
             if (!typeMemberships.isEmpty()) {
                 if (parameter.isConstraining()) {
-                    LogicalExpression molecule = buildMolecule(typeMemberships);
-                    NegationAsFailure naf = leFactory.createNegationAsFailure(molecule);
-                    Conjunction conjunction = leFactory.createConjunction(relP, naf);
-                    parameterAxioms.add(leFactory.createConstraint(conjunction));
+                    // One rule for each param and each constraining type
+                	for( Molecule type : typeMemberships ) {
+	                    NegationAsFailure naf = leFactory.createNegationAsFailure(type);
+	                    Conjunction conjunction = leFactory.createConjunction(relP, naf);
+	                    parameterAxioms.add(leFactory.createConstraint(conjunction));
+	                }
                 }
                 else {
                     LogicalExpression molecule = buildMolecule(typeMemberships);
                     parameterAxioms.add(leFactory.createImplication(relP, molecule));
                 }
             }
+            ++paramIndex;
         }
         resultExpressions.addAll(parameterAxioms);
 
