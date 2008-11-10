@@ -10,32 +10,15 @@ public abstract class AbstractRelations6WsmlDataTypes extends TestCase implement
 
     private static final String ONTOLOGY_FILE = "files/relations6_wsml_data_types.wsml";
 
-//    public void testPopulated() throws Exception
-//	{
-//		String queryString = "RelationOfPrimitives(?x,?y)";
-//    	Results r = new Results( "x", "y" );
-//    	
-//    	String NS = "http://example.com/relations6#";
-//
-//    	r.addBinding( Results.iri( NS + "a1" ), Results.iri( NS + "b1" ) );
-//    	r.addBinding( Results.iri( NS + "a2" ), Results.iri( NS + "b2" ) );
-//
-//    	System.out.println( OntologyHelper.toString( LPHelper.executeQuery( OntologyHelper.loadOntology( ONTOLOGY_FILE ), queryString, getLPReasoner() ) ) );
-//
-//		LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), queryString, r.get(), getLPReasoner() );
-//	}
-
     public void testPopulated() throws Exception
 	{
-		String queryString = "RelationOfPrimitives(?x,?y)";
-    	Results r = new Results( "x", "y" );
+		String queryString = "RelationOfPrimitives(?x,?y,?z)";
+    	Results r = new Results( "x", "y", "z" );
     	
     	String NS = "http://example.com/relations6#";
 
-    	r.addBinding( Results._integer( 1 ), Results.string( "one" ) );
-    	r.addBinding( Results._integer( 2 ), Results.string( "two" ) );
-
-    	System.out.println( OntologyHelper.toString( LPHelper.executeQuery( OntologyHelper.loadOntology( ONTOLOGY_FILE ), queryString, getLPReasoner() ) ) );
+    	r.addBinding( Results._integer( 1 ), Results.string( "one" ), Results.yearMonth( 2008, 12 ) );
+    	r.addBinding( Results._integer( 2 ), Results.string( "two" ), Results.yearMonth( 2009, 12 ) );
 
 		LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), queryString, r.get(), getLPReasoner() );
 	}

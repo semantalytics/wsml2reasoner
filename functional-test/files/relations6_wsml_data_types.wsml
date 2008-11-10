@@ -5,7 +5,7 @@ namespace { _"http://example.com/relations6#",
 ontology Relations6
 
 
-relation RelationOfPrimitives(ofType _integer, ofType _string)
+relation RelationOfPrimitives(ofType _integer, ofType _string, ofType _gyearmonth)
 
-relationInstance r1 RelationOfPrimitives(1, "one")
-relationInstance r2 RelationOfPrimitives(2, "two")
+relationInstance r1 RelationOfPrimitives(1, "one", _gyearmonth( 2008, 12 ))
+relationInstance r2 RelationOfPrimitives(2, "two", _gyearmonth( 2009, 12 ))
