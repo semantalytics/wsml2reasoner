@@ -66,12 +66,25 @@ import org.deri.iris.api.terms.concrete.IIntegerTerm;
 import org.deri.iris.api.terms.concrete.IIri;
 import org.deri.iris.api.terms.concrete.ISqName;
 import org.deri.iris.api.terms.concrete.ITime;
+import org.deri.iris.builtins.IsBase64BinaryBuiltin;
 import org.deri.iris.builtins.IsBooleanBuiltin;
 import org.deri.iris.builtins.IsDateBuiltin;
 import org.deri.iris.builtins.IsDateTimeBuiltin;
 import org.deri.iris.builtins.IsDecimalBuiltin;
+import org.deri.iris.builtins.IsDoubleBuiltin;
+import org.deri.iris.builtins.IsDurationBuiltin;
+import org.deri.iris.builtins.IsFloatBuiltin;
+import org.deri.iris.builtins.IsGDayBuiltin;
+import org.deri.iris.builtins.IsGMonthBuiltin;
+import org.deri.iris.builtins.IsGMonthDayBuiltin;
+import org.deri.iris.builtins.IsGYearBuiltin;
+import org.deri.iris.builtins.IsGYearMonthBuiltin;
+import org.deri.iris.builtins.IsHexBinaryBuiltin;
 import org.deri.iris.builtins.IsIntegerBuiltin;
+import org.deri.iris.builtins.IsIriBuiltin;
+import org.deri.iris.builtins.IsSqNameBuiltin;
 import org.deri.iris.builtins.IsStringBuiltin;
+import org.deri.iris.builtins.IsTimeBuiltin;
 import org.deri.iris.facts.IDataSource;
 import org.deri.iris.querycontainment.QueryContainment;
 import org.deri.iris.storage.IRelation;
@@ -201,7 +214,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         final List<ILiteral> body = new ArrayList<ILiteral>(q.getLiterals().size());
         // converting the literals of the query
         for (final Literal l : q.getLiterals()) {
-            body.add(literal2Literal(l));
+            body.add(literal2Literal(l, false));
         }
 
         // create query
@@ -251,7 +264,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 
         // converting the literals of the query
         for (final Literal l : query1.getLiterals()) {
-            body.add(literal2Literal(l));
+            body.add(literal2Literal(l, false));
         }
 
         final IQuery iQuery1 = BASIC.createQuery(body);
@@ -262,7 +275,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 
         // converting the literals of the query
         for (final Literal l : query2.getLiterals()) {
-            body2.add(literal2Literal(l));
+            body2.add(literal2Literal(l, false));
         }
 
         // creating the query
@@ -325,7 +338,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         // translating all the rules
         for (final Rule r : kb) {
             if (r.isFact()) { // the rule is a fact
-                IAtom atom = literal2Atom(r.getHead());
+                IAtom atom = literal2Atom(r.getHead(), true);
                 IPredicate pred = atom.getPredicate();
 
                 org.deri.iris.storage.IRelation relation = facts.get(atom.getPredicate());
@@ -339,18 +352,19 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
                 final List<ILiteral> head = new ArrayList<ILiteral>(1);
                 final List<ILiteral> body = new ArrayList<ILiteral>(r.getBody().size());
                 // converting the head of the rule
-                head.add(literal2Literal(r.getHead()));
+                head.add(literal2Literal(r.getHead(), true));
                 // converting the body of the rule
                 for (final Literal l : r.getBody()) {
-                    body.add(literal2Literal(l));
+                    body.add(literal2Literal(l, false));
                 }
                 rules.add(BASIC.createRule(head, body));
             }
         }
-        // add the wsml-member-of rules
-        for (final IRule r : getWsmlMemberOfRules()) {
-            rules.add(r);
-        }
+        // add the wsml-member-of rules for primitive data types
+        // Removed. See bug 2248622
+//        for (final IRule r : getWsmlMemberOfRules()) {
+//            rules.add(r);
+//        }
 
         final Configuration configuration = org.deri.iris.KnowledgeBaseFactory.getDefaultConfiguration();
         
@@ -383,34 +397,35 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
      * @param l the wsmo4j literal to convert
      * @return the iris literal
      */
-    static ILiteral literal2Literal(final Literal l) {
-        if (l == null) {
-            throw new NullPointerException("The literal must not be null");
-        }
+    static ILiteral literal2Literal(final Literal l, boolean headLiteral) {
+        assert l != null;
+        assert (headLiteral && l.isPositive()) || ! headLiteral;
 
-        return BASIC.createLiteral(l.isPositive(), literal2Atom(l));
+        return BASIC.createLiteral(l.isPositive(), literal2Atom(l, headLiteral));
     }
 
     /**
-     * Converts a wsmo4j literal to an iris atom. Watch out, the sighn (whether
-     * it is positive, or not) will be ignored.
+     * Converts a wsml reasoner atomic formula in a literal to an iris atom.
      * 
-     * @param l the wsmo4j literal to convert
+     * @param literal the wsmo4j literal to convert
      * @return the iris atom
      */
-    static IAtom literal2Atom(final Literal l) {
-        if (l == null) {
-            throw new NullPointerException("The literal must not be null");
-        }
+    static IAtom literal2Atom(Literal literal, boolean headLiteral) {
+    	assert literal != null;
+    	
+    	String sym = literal.getPredicateUri();
+    	Term[] inTerms = literal.getTerms();
+    	
+        assert sym != null;
+        assert inTerms != null;
 
-        final List<ITerm> terms = new ArrayList<ITerm>(l.getTerms().length);
-        // converting the terms of the literal
-        for (final Term t : l.getTerms()) {
+        final List<ITerm> terms = new ArrayList<ITerm>(inTerms.length);
+        // convert the terms of the literal
+        for (final Term t : inTerms) {
             terms.add(convertTermFromWsmo4jToIris(t));
         }
 
-        final String sym = l.getPredicateUri();
-        // checking whether the predicate is a builtin
+        // check whether the predicate is a builtin
         if (sym.equals(Constants.EQUAL) || sym.equals(Constants.NUMERIC_EQUAL) || sym.equals(Constants.STRING_EQUAL) 
         		|| sym.equals(Constants.STRONG_EQUAL) || sym.equals(DATE_EQUAL) || sym.equals(TIME_EQUAL) 
         		|| sym.equals(DATETIME_EQUAL) || sym.equals(GYEAR_EQUAL) || sym.equals(GYEARMONTH_EQUAL)
@@ -454,6 +469,62 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         }
         else if (sym.equals(Constants.NUMERIC_DIV)) {
             return BUILTIN.createDivideBuiltin(terms.get(1), terms.get(2), terms.get(0));
+        }
+        else if( ! headLiteral && sym.equals( WSML2DatalogTransformer.PRED_MEMBER_OF ) ) {
+        	// Special case! Look for wsml-member-of( ?x, wsml#<datatype> )
+        	// and change it to one of IRIS's IS_XXXXX() built-ins
+        	
+        	// We only do this for rule body predicates
+        	
+        	if( terms.size() == 2 ) {
+        		ITerm t0 = terms.get(0);
+        		ITerm t1 = terms.get(1);
+        		
+//        		if( t0 instanceof IVariable && t1 instanceof IIri ) {
+           		if( t1 instanceof IIri ) {
+        			IIri iri = (IIri) t1;
+        			String type = iri.getValue();
+        			if( type.equals( WsmlDataType.WSML_STRING ) )
+        				return new IsStringBuiltin( t0 );
+        			else if( type.equals( WsmlDataType.WSML_DECIMAL ) )
+        				return new IsDecimalBuiltin( t0 );
+        			else if( type.equals( WsmlDataType.WSML_DOUBLE ) )
+        				return new IsDoubleBuiltin( t0 );
+        			else if( type.equals( WsmlDataType.WSML_BOOLEAN ) )
+        				return new IsBooleanBuiltin( t0 );
+        			else if( type.equals( WsmlDataType.WSML_INTEGER ) )
+        				return new IsIntegerBuiltin( t0 );
+        			else if( type.equals( WsmlDataType.WSML_BASE64BINARY ) )
+        				return new IsBase64BinaryBuiltin( t0 );
+        			else if( type.equals( WsmlDataType.WSML_DATE ) )
+        				return new IsDateBuiltin( t0 );
+        			else if( type.equals( WsmlDataType.WSML_DATETIME ) )
+        				return new IsDateTimeBuiltin( t0 );
+        			else if( type.equals( WsmlDataType.WSML_DURATION ) )
+        				return new IsDurationBuiltin( t0 );
+        			else if( type.equals( WsmlDataType.WSML_FLOAT ) )
+        				return new IsFloatBuiltin( t0 );
+        			else if( type.equals( WsmlDataType.WSML_GDAY ) )
+        				return new IsGDayBuiltin( t0 );
+        			else if( type.equals( WsmlDataType.WSML_GMONTH ) )
+        				return new IsGMonthBuiltin( t0 );
+        			else if( type.equals( WsmlDataType.WSML_GMONTHDAY ) )
+        				return new IsGMonthDayBuiltin( t0 );
+        			else if( type.equals( WsmlDataType.WSML_GYEAR ) )
+        				return new IsGYearBuiltin( t0 );
+        			else if( type.equals( WsmlDataType.WSML_GYEARMONTH ) )
+        				return new IsGYearMonthBuiltin( t0 );
+        			else if( type.equals( WsmlDataType.WSML_HEXBINARY ) )
+        				return new IsHexBinaryBuiltin( t0 );
+        			else if( type.equals( WsmlDataType.WSML_IRI ) )
+        				return new IsIriBuiltin( t0 );
+        			else if( type.equals( WsmlDataType.WSML_SQNAME ) )
+        				return new IsSqNameBuiltin( t0 );
+        			else if( type.equals( WsmlDataType.WSML_TIME ) )
+        				return new IsTimeBuiltin( t0 );
+        		}
+        	}
+        	// If none of these then drop through to normal atom processing.
         }
         // return an ordinary atom
         return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()), BASIC.createTuple(terms));
@@ -753,64 +824,65 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         return new int[] { t.getRawOffset() / 3600000, t.getRawOffset() % 3600000 / 60000 };
     }
 
-    /**
-     * Returns the rules for the wsml-member-of rules.
-     * 
-     * @return the wsml-member-of rules
-     */
-    private static Set<IRule> getWsmlMemberOfRules() {
-        final Set<IRule> res = new HashSet<IRule>();
-        final IPredicate WSML_MEBER_OF = BASIC.createPredicate(WSML2DatalogTransformer.PRED_MEMBER_OF, 2);
-        final IVariable X = TERM.createVariable("X");
-        final IVariable Y = TERM.createVariable("Y");
-        final IVariable Z = TERM.createVariable("Z");
-        final ILiteral hasValue = BASIC.createLiteral(true, BASIC.createPredicate(WSML2DatalogTransformer.PRED_HAS_VALUE, 3), BASIC.createTuple(Y, Z, X));
-        final List<ILiteral> body = new ArrayList<ILiteral>();
-        final List<ILiteral> head = new ArrayList<ILiteral>();
-        // rules for member of string
-        head.add(BASIC.createLiteral(true, WSML_MEBER_OF, BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_STRING))));
-        body.add(hasValue);
-        body.add(BASIC.createLiteral(true, new IsStringBuiltin(X)));
-        res.add(BASIC.createRule(head, body));
-        head.clear();
-        body.clear();
-        // rules for member of integer
-        head.add(BASIC.createLiteral(true, WSML_MEBER_OF, BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_INTEGER))));
-        body.add(hasValue);
-        body.add(BASIC.createLiteral(true, new IsIntegerBuiltin(X)));
-        res.add(BASIC.createRule(head, body));
-        head.clear();
-        body.clear();
-        // rules for member of decimal
-        head.add(BASIC.createLiteral(true, WSML_MEBER_OF, BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_DECIMAL))));
-        body.add(hasValue);
-        body.add(BASIC.createLiteral(true, new IsDecimalBuiltin(X)));
-        res.add(BASIC.createRule(head, body));
-        head.clear();
-        body.clear();
-        // rules for member of boolean
-        head.add(BASIC.createLiteral(true, WSML_MEBER_OF, BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_BOOLEAN))));
-        body.add(hasValue);
-        body.add(BASIC.createLiteral(true, new IsBooleanBuiltin(X)));
-        res.add(BASIC.createRule(head, body));
-        head.clear();
-        body.clear();
-        // rules for member of date
-        head.add(BASIC.createLiteral(true, WSML_MEBER_OF, BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_DATE))));
-        body.add(hasValue);
-        body.add(BASIC.createLiteral(true, new IsDateBuiltin(X)));
-        res.add(BASIC.createRule(head, body));
-        head.clear();
-        body.clear();
-        // rules for member of dateTime
-        head.add(BASIC.createLiteral(true, WSML_MEBER_OF, BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_DATETIME))));
-        body.add(hasValue);
-        body.add(BASIC.createLiteral(true, new IsDateTimeBuiltin(X)));
-        res.add(BASIC.createRule(head, body));
-        head.clear();
-        body.clear();
-        return res;
-    }
+   // ****** REMOVED. SEE BUG 2248622 **********
+//    /**
+//     * Returns the rules for the wsml-member-of rules.
+//     * 
+//     * @return the wsml-member-of rules
+//     */
+//    private static Set<IRule> getWsmlMemberOfRules() {
+//        final Set<IRule> res = new HashSet<IRule>();
+//        final IPredicate WSML_MEBER_OF = BASIC.createPredicate(WSML2DatalogTransformer.PRED_MEMBER_OF, 2);
+//        final IVariable X = TERM.createVariable("X");
+//        final IVariable Y = TERM.createVariable("Y");
+//        final IVariable Z = TERM.createVariable("Z");
+//        final ILiteral hasValue = BASIC.createLiteral(true, BASIC.createPredicate(WSML2DatalogTransformer.PRED_HAS_VALUE, 3), BASIC.createTuple(Y, Z, X));
+//        final List<ILiteral> body = new ArrayList<ILiteral>();
+//        final List<ILiteral> head = new ArrayList<ILiteral>();
+//        // rules for member of string
+//        head.add(BASIC.createLiteral(true, WSML_MEBER_OF, BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_STRING))));
+//        body.add(hasValue);
+//        body.add(BASIC.createLiteral(true, new IsStringBuiltin(X)));
+//        res.add(BASIC.createRule(head, body));
+//        head.clear();
+//        body.clear();
+//        // rules for member of integer
+//        head.add(BASIC.createLiteral(true, WSML_MEBER_OF, BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_INTEGER))));
+//        body.add(hasValue);
+//        body.add(BASIC.createLiteral(true, new IsIntegerBuiltin(X)));
+//        res.add(BASIC.createRule(head, body));
+//        head.clear();
+//        body.clear();
+//        // rules for member of decimal
+//        head.add(BASIC.createLiteral(true, WSML_MEBER_OF, BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_DECIMAL))));
+//        body.add(hasValue);
+//        body.add(BASIC.createLiteral(true, new IsDecimalBuiltin(X)));
+//        res.add(BASIC.createRule(head, body));
+//        head.clear();
+//        body.clear();
+//        // rules for member of boolean
+//        head.add(BASIC.createLiteral(true, WSML_MEBER_OF, BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_BOOLEAN))));
+//        body.add(hasValue);
+//        body.add(BASIC.createLiteral(true, new IsBooleanBuiltin(X)));
+//        res.add(BASIC.createRule(head, body));
+//        head.clear();
+//        body.clear();
+//        // rules for member of date
+//        head.add(BASIC.createLiteral(true, WSML_MEBER_OF, BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_DATE))));
+//        body.add(hasValue);
+//        body.add(BASIC.createLiteral(true, new IsDateBuiltin(X)));
+//        res.add(BASIC.createRule(head, body));
+//        head.clear();
+//        body.clear();
+//        // rules for member of dateTime
+//        head.add(BASIC.createLiteral(true, WSML_MEBER_OF, BASIC.createTuple(X, CONCRETE.createIri(WsmlDataType.WSML_DATETIME))));
+//        body.add(hasValue);
+//        body.add(BASIC.createLiteral(true, new IsDateTimeBuiltin(X)));
+//        res.add(BASIC.createRule(head, body));
+//        head.clear();
+//        body.clear();
+//        return res;
+//    }
 
     /**
      * Wrapper for the w2r datasource to the iris datasource.

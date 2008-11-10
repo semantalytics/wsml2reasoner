@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.TimeZone;
 import junit.framework.TestCase;
+import org.deri.iris.api.basics.IAtom;
 import org.deri.iris.api.factory.IBasicFactory;
 import org.deri.iris.api.factory.IConcreteFactory;
 import org.deri.iris.api.factory.ITermFactory;
@@ -158,12 +159,16 @@ public class IrisFacadeTest extends TestCase {
 		final LogicalExpressionFactory LF = org.wsmo.factory.Factory
 				.createLogicalExpressionFactory(null);
 
-		assertEquals(BF.createAtom(BF.createPredicate("lit", 3), BF
-				.createTuple(TF.createString("a"), TF.createVariable("b"), TF
-						.createString("c"))), IrisStratifiedFacade
-				.literal2Atom(new Literal(true, "lit",
-						DF.createWsmlString("a"), LF.createVariable("b"), DF
-								.createWsmlString("c"))));
+		Literal wsmlLiteral = new Literal(true, "lit", DF.createWsmlString("a"), LF.createVariable("b"),
+						DF.createWsmlString("c"));
+
+		IAtom expected = BF.createAtom(BF.createPredicate("lit", 3),
+							BF.createTuple( TF.createString("a"),
+											TF.createVariable("b"),
+											TF.createString("c"))
+						);
+		
+		assertEquals( expected, IrisStratifiedFacade.literal2Atom( wsmlLiteral, false ) );
 	}
 
 	public void testLiteral2Literal() {
@@ -178,13 +183,13 @@ public class IrisFacadeTest extends TestCase {
 						.createString("c"))), IrisStratifiedFacade
 				.literal2Literal(new Literal(false, "lit", DF
 						.createWsmlString("a"), LF.createVariable("b"), DF
-						.createWsmlString("c"))));
+						.createWsmlString("c")), false));
 		assertEquals(BF.createLiteral(true, BF.createPredicate("lit", 3), BF
 				.createTuple(TF.createString("a"), TF.createVariable("b"), TF
 						.createString("c"))), IrisStratifiedFacade
 				.literal2Literal(new Literal(true, "lit", DF
 						.createWsmlString("a"), LF.createVariable("b"), DF
-						.createWsmlString("c"))));
+						.createWsmlString("c")), false));
 	}
 
 	public void testConvertWsmo4jDataValueToIrisTerm() {
