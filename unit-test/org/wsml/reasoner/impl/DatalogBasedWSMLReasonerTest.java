@@ -157,35 +157,17 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 
 	}
 	
-	public void testEntails() throws ParserException {
-		assertTrue(reasoner.entails(LETestHelper.buildLE("_\"urn:a\"")));
-		assertTrue(reasoner.entails(LETestHelper.buildLE("_\"urn:b\"")));
-		assertTrue(reasoner.entails(LETestHelper.buildLE("_\"urn:a\" subConceptOf _\"urn:c\"")));
-		assertTrue(reasoner.entails(LETestHelper.buildLE("?x subConceptOf _\"urn:c\"")));
+	public void testAsk() throws ParserException {
+		assertTrue(reasoner.ask(LETestHelper.buildLE("_\"urn:a\"")));
+		assertTrue(reasoner.ask(LETestHelper.buildLE("_\"urn:b\"")));
+		assertTrue(reasoner.ask(LETestHelper.buildLE("_\"urn:a\" subConceptOf _\"urn:c\"")));
+		assertTrue(reasoner.ask(LETestHelper.buildLE("?x subConceptOf _\"urn:c\"")));
 		
-		assertFalse(reasoner.entails(LETestHelper.buildLE("?x subConceptOf _\"urn:h\"")));
-		assertFalse(reasoner.entails(LETestHelper.buildLE("_\"urn:z\"")));
-		assertFalse(reasoner.entails(LETestHelper.buildLE("_\"urn:c\"")));
+		assertFalse(reasoner.ask(LETestHelper.buildLE("?x subConceptOf _\"urn:h\"")));
+		assertFalse(reasoner.ask(LETestHelper.buildLE("_\"urn:z\"")));
+		assertFalse(reasoner.ask(LETestHelper.buildLE("_\"urn:c\"")));
 		
 	}
-	
-	public void testEntailsSetTrue() throws ParserException {
-		Set <LogicalExpression> set = new HashSet<LogicalExpression>();
-		set.add(LETestHelper.buildLE("_\"urn:a\""));
-		set.add(LETestHelper.buildLE("_\"urn:a\" subConceptOf _\"urn:c\""));
-		
-		assertTrue(reasoner.entails(set));
-		
- 	}
-	
-	public void testEntailsSetFalse() throws ParserException {
-		Set <LogicalExpression> set = new HashSet<LogicalExpression>();
-		set.add(LETestHelper.buildLE("_\"urn:z\""));
-		set.add(LETestHelper.buildLE("_\"urn:a\" subConceptOf _\"urn:c\""));
-		
-		assertFalse(reasoner.entails(set));
-		
- 	}
 	
 	public void testExecuteQuery () throws ParserException {
 		Set <Map <Variable, Term>> set = reasoner.executeQuery(LETestHelper.buildLE("?x subConceptOf _\"urn:c\""));

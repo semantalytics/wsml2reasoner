@@ -39,7 +39,7 @@ public class DLUtilities {
     public boolean isSatisfiable() {
         IRI violationIRI = wsmoFactory.createIRI(ConstraintReplacementNormalizer.VIOLATION_IRI);
         Atom violation = leFactory.createAtom(violationIRI, new ArrayList<Term>());
-        return !mReasoner.executeGroundQuery(violation);
+        return !mReasoner.ask(violation);
     }
 
     public Set<Concept> getConcepts(Instance instance) {

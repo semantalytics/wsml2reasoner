@@ -90,11 +90,18 @@ public interface LPReasoner extends WSMLReasoner {
      */
     public Set<Map<Variable, Term>> getQueryContainment(LogicalExpression query1, LogicalExpression query2);
 
-    public boolean executeGroundQuery(LogicalExpression query);
-
+    /**
+     * Execute a query.
+     * @param query A WSML logical expression with or without variables.
+     * @return The variable bindings.
+     */
     public Set<Map<Variable, Term>> executeQuery(LogicalExpression query);
 
-    public boolean entails(LogicalExpression expression);
-
-    public boolean entails(Set<LogicalExpression> expressions);
+    /**
+     * Ask if a given logical expression is satisfied.
+     * The given query is executed and if one or more results are returned then the method returns true.
+     * @param query The logical expression to test. 
+     * @return true, if the logical expression can be satisfied.
+     */
+    public boolean ask(LogicalExpression query);
 }

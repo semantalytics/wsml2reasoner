@@ -324,22 +324,6 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         }
     }
 
-    public boolean entails(LogicalExpression expression) {
-        return executeGroundQuery(expression);
-    }
-
-    public boolean entails(Set<LogicalExpression> expressions) {
-        for (LogicalExpression e : expressions) {
-            if (!executeGroundQuery(e))
-                return false;
-        }
-        return true;
-    }
-
-    public boolean executeGroundQuery(LogicalExpression query) {
-        return executeQuery(query).size() != 0;
-    }
-
     public Set<Map<Variable, Term>> executeQuery(LogicalExpression query) {
         return internalExecuteQuery(query);
     }
@@ -643,7 +627,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         Set<ConsistencyViolation> errors = new HashSet<ConsistencyViolation>();
         IRI violationIRI = wsmoFactory.createIRI(ConstraintReplacementNormalizer.VIOLATION_IRI);
         Atom violation = leFactory.createAtom(violationIRI, new ArrayList<Term>());
-        if (executeGroundQuery(violation)) {
+        if (executeQuery(violation).size() > 0) {
             try {
                 addAttributeOfTypeViolations(errors);
                 addMinCardinalityViolations(errors);
@@ -702,5 +686,9 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         entities.addAll(ontology.listRelationInstances());
         entities.addAll(ontology.listAxioms());
         registerEntitiesNoVerification(entities);
+    }
+
+    public boolean ask(LogicalExpression query) {
+    	return executeQuery( query ).size() != 0;
     }
 }
