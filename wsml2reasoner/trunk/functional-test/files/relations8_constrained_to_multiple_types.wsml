@@ -1,0 +1,18 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://example.com/relations8#" }
+
+ontology Relations8
+
+concept A
+concept B
+concept C
+concept D
+
+
+relation rel(ofType A, ofType {B, C}, ofType {B, C, D})
+
+instance a memberOf A
+instance bc memberOf {B, C}
+instance bcd memberOf {B, C, D}
+
+relationInstance r1 rel(a, bc, bcd)
