@@ -92,7 +92,7 @@ public class DataSourceTest extends BaseReasonerTest {
 		String query = "Anne memberOf CatOwner";
 		LogicalExpression qExpression = leFactory.createLogicalExpression(
 				query, o);
-		assertTrue(((LPReasoner) wsmlReasoner).executeGroundQuery(qExpression));
+		assertTrue(((LPReasoner) wsmlReasoner).ask(qExpression));
 	}
 
 	/**
