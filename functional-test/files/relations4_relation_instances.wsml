@@ -9,4 +9,4 @@ instance i1 memberOf r4a#X
 
 instance i2 memberOf r4a#Y
 
-relationInstance r4a#binary(i1, i2)
+relationInstance instance1 r4a#binary(i1, i2)
