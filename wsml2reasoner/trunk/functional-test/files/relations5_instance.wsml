@@ -1,6 +1,6 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
 namespace { _"http://example.com/relations5_instance#", 
-     sub _"http://example.com/SubOntology#" }
+     sub _"http://example.com/relations5_sub#" }
 
 ontology InstanceOntology
      importsOntology
