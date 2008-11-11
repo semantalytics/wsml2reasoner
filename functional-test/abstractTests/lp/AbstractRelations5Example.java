@@ -22,13 +22,15 @@ public abstract class AbstractRelations5Example extends TestCase implements LP {
 		ontologies.add( o1 );
 		ontologies.add( o2 );
 		ontologies.add( o3 );
+		
+		String NS_SUB = "http://example.com/relations5_sub#";
+		String NS_INSTANCE = "http://example.com/relations5_instance#";
 
-		String queryString = "_\"http://www.sukesh.com/example/SubOntology#loves\"(?x,?y)";
+		String queryString = "_\"" + NS_SUB + "loves\"(?x,?y)";
+		
     	Results r = new Results( "x", "y" );
     	
-    	String NS = "http://sukesh.com/example/InstanceOntology#";
-
-    	r.addBinding( Results.iri( NS + "Peter" ), Results.iri( NS + "Mary" ) );
+    	r.addBinding( Results.iri( NS_INSTANCE + "Peter" ), Results.iri( NS_INSTANCE + "Mary" ) );
 
 //    	System.out.println( OntologyHelper.toString( LPHelper.executeQuery( ontologies, queryString, getLPReasoner() ) ) );
 //    	if(true)return;
