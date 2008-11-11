@@ -35,6 +35,28 @@ However, there are three release variants in accordance with the license agreeme
 
 <h2>Release History</h2>
 
+<p><b><a id="v0_6_3" href="https://sourceforge.net/project/showfiles.php?group_id=208169&package_id=249452&release_id=639704">v0.6.3</a></b> 11-11-2008</p>
+    
+<p>Bug fixes</p>
+<ul>
+	<li>2261565 Relation instances discarded when relation not defined.</li>
+	<li>2261570 Relation instances discarded if relation defined later.</li>
+	<li>2017365 RelationInstance is not working with multiple ontologies</li>
+	<li>2220187 Badly named concept satisfiability method (entails)</li>
+	<li>2248622 Type constraints in relations not working with simple types.</li>
+	<li>2255284 Constraints with multiple types do not work in relations.</li>
+	<li>2041579 Implement missing WSML built-in predicates</li>
+	<li>2211574 Strange behaviour of WSML-A (Exception)</li>
+	<li>2132425 Not all attributes are inherited</li>
+	<li>2014982 dateTime Subtracts don't work properly</li>
+	<li>2010916 Implies type in WSML-Flight Query</li>
+	<li>2031567 Skip table creation when WSML-Flight-A query result is empty</li>
+	<li>2027777 WSML-Flight-A queries don't allow constants in WHERE clause</li>
+	<li>2010454 DateTime and Time types do not properly support seconds.</li>
+	<li>2003876 getAllConcepts() does not return concepts that are instances</li>
+</ul>
+
+
 <p><b><a id="v0_6_2" href="https://sourceforge.net/project/showfiles.php?group_id=208169&package_id=249452&release_id=580329">v0.6.2</a></b> 14-03-2008</p> 
 <p><b><a id="v0_6_1" href="https://sourceforge.net/project/showfiles.php?group_id=208169&package_id=249452&release_id=569342">v0.6.1</a></b> 18-02-2008</p> 
 <p><b><a id="v0_6"   href="https://sourceforge.net/project/showfiles.php?group_id=208169&package_id=249452&release_id=569571">v0.6</a></b>   18-01-2008</p>
