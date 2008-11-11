@@ -1,0 +1,12 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://example.com/datatypes5#",
+	wsml _"http://www.wsmo.org/wsml/wsml-syntax#" }
+
+ontology DatatypesTestOntology5
+	
+instance i1
+	lowerCaseHex hasValue _hexbinary( "abcd" )
+	upperCaseHex hasValue _hexbinary( "ABCD" )
+	lowerCaseString hasValue "string"
+	upperCaseString hasValue "STRING"
+

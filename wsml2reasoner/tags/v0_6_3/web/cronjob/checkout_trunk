@@ -1,0 +1,6 @@
+
+# Use this script to checkout the wsml2reasoner trunk from the repository.
+
+
+svn co https://wsml2reasoner.svn.sourceforge.net/svnroot/wsml2reasoner/wsml2reasoner/trunk wsml2reasoner_trunk
+

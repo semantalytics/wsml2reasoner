@@ -1,0 +1,3 @@
+Pellet Reasoner uses a modified version of the original OWL-API:
+
+http://lists.mindswap.org/pipermail/pellet-users/2006-May/000705.html
