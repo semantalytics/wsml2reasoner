@@ -167,14 +167,14 @@ public class DatatypeVisitor implements Visitor {
         if (complextType.equals(WsmlDataType.WSML_GYEARMONTH) || complextType.equals(WsmlDataType.WSML_GMONTHDAY) || complextType.equals(WsmlDataType.WSML_GYEAR) || complextType.equals(WsmlDataType.WSML_GDAY) || complextType.equals(WsmlDataType.WSML_GMONTH)) {
 
         	Calendar cal = convertTimeValue(t);        
-            value = new java.sql.Date(cal.getTimeInMillis());
+            value = new java.sql.Timestamp(cal.getTimeInMillis());
         }
         else if(complextType.equals(WsmlDataType.WSML_DATE) || 
         		complextType.equals(WsmlDataType.WSML_DATETIME) || 
         		complextType.equals(WsmlDataType.WSML_TIME)) {
         	//these are actually already implemented as calendar in wsmo4j
         	Calendar cal = (Calendar)t.getValue();
-        	value = new java.sql.Date(cal.getTimeInMillis());
+        	value = new java.sql.Timestamp(cal.getTimeInMillis());
         }
         else if (complextType.equals(WsmlDataType.WSML_SQNAME)) {
             // according to ComplexDataValueImpl SQNames are not supported,

@@ -57,52 +57,50 @@ public class VisitorDataTypeTest extends TestCase {
 		ComplexDataValue wsmlYearMonth = df.createWsmlGregorianYearMonth(1980, 11);
 		wsmlYearMonth.accept(visitor);
 		m = visitor.getMapping();
-		assertTrue(m.getValue() instanceof Calendar);
-		assertEquals(Calendar.class, m.getClassMapping());
+		assertTrue(m.getValue() instanceof java.sql.Timestamp);
+		assertEquals(java.sql.Timestamp.class, m.getClassMapping());
 				
 		ComplexDataValue wsmlMonthDay = df.createWsmlGregorianMonthDay(11, 3);
 		wsmlMonthDay.accept(visitor);
 		m = visitor.getMapping();
-		assertTrue(m.getValue() instanceof Calendar);
-		assertEquals(Calendar.class, m.getClassMapping());
+		assertTrue(m.getValue() instanceof java.sql.Timestamp);
+		assertEquals(java.sql.Timestamp.class, m.getClassMapping());
 		
 		ComplexDataValue wsmlGregorianDay = df.createWsmlGregorianDay(20);
 		wsmlGregorianDay.accept(visitor);
 		m = visitor.getMapping();
-		assertTrue(m.getValue() instanceof Calendar);
-		assertEquals(Calendar.class, m.getClassMapping());
+		assertTrue(m.getValue() instanceof java.sql.Timestamp);
+		assertEquals(java.sql.Timestamp.class, m.getClassMapping());
 		
 		ComplexDataValue wsmlGregorianMonth = df.createWsmlGregorianMonth(1);
 		wsmlGregorianMonth.accept(visitor);
 		m = visitor.getMapping();
-		assertTrue(m.getValue() instanceof Calendar);
-		assertEquals(Calendar.class, m.getClassMapping());
+		assertTrue(m.getValue() instanceof java.sql.Timestamp);
+		assertEquals(java.sql.Timestamp.class, m.getClassMapping());
 		
 		ComplexDataValue wsmlGregorianYear = df.createWsmlGregorianYear(1981);
 		wsmlGregorianYear.accept(visitor);
 		m = visitor.getMapping();
-		assertTrue(m.getValue() instanceof Calendar);
-		assertEquals(Calendar.class, m.getClassMapping());
+		assertTrue(m.getValue() instanceof java.sql.Timestamp);
+		assertEquals(java.sql.Timestamp.class, m.getClassMapping());
 		
 		ComplexDataValue wsmlTime = df.createWsmlTime(22, 32, 58, 0, 0);
 		wsmlTime.accept(visitor);
 		m = visitor.getMapping();
-		assertTrue(m.getValue() instanceof Calendar);
-		assertEquals(Calendar.class, m.getClassMapping());
+		assertTrue(m.getValue() instanceof java.sql.Timestamp);
+		assertEquals(java.sql.Timestamp.class, m.getClassMapping());
 		
 		ComplexDataValue wsmlDate = df.createWsmlDate(1999, 12, 30, 0, 0);
 		wsmlDate.accept(visitor);
 		m = visitor.getMapping();
-		assertTrue(m.getValue() instanceof Calendar);
-		assertEquals(Calendar.class, m.getClassMapping());
+		assertTrue(m.getValue() instanceof java.sql.Timestamp);
+		assertEquals(java.sql.Timestamp.class, m.getClassMapping());
 		
 		ComplexDataValue wsmlDateTime = df.createWsmlDateTime(1997, 1, 2, 13, 1, 12, 0, 0);
 		wsmlDateTime.accept(visitor);
 		m = visitor.getMapping();
-		assertTrue(m.getValue() instanceof Calendar);
-		assertEquals(Calendar.class, m.getClassMapping());
-		
-		//complextDataTypes.put(WsmlDataType.WSML_SQNAME, String.class);				 					
+		assertTrue(m.getValue() instanceof java.sql.Timestamp);
+		assertEquals(java.sql.Timestamp.class, m.getClassMapping());			 					
 	}
 	
 	public void testVisitSimpleDataValue() {	
