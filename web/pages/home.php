@@ -98,3 +98,31 @@
 <p>
 	Pellet is integrated into the WSML2Reasoner framework in order to provide DL reasoning support for WSML-DL ontologies (via translation from WSML-DL to OWL-DL). The Pellet libraries are included in the LGPL <a href="download">release</a>. For further information, please visit the Pellet <a href="http://pellet.owldl.com/">website</a>.
 </p>
+
+
+<h2>News</h2>
+
+<table>
+	<tr valign=top>
+		<td width=150>
+			<p align=left>
+				11 Nov 2008
+			</p>
+		</td>
+		<td>
+			<p align=left>
+				WSML2Reasoner <a href="download#v0_6_3">version 0.6.3</a> released.<br />
+				This version includes refactoring work to simplify the interfaces to the
+				different reasoner functionalities, i.e. to properly separate description logic and
+				logic programming reasoning activities. <br />
+				Numerous bugs have been fixed, including important fixes for date-time arithmetic
+				and proper support for floating point seconds. <br />
+				Also, there have been a number of fixes related to processing WSML relations and
+				their instances. <br />
+				This release also includes the latest IRIS v0.58 Datalog reasoner and
+				a patched version of the wsmo4j jar files.
+			</p>
+		</td>
+	</tr>
+</table>
+	
