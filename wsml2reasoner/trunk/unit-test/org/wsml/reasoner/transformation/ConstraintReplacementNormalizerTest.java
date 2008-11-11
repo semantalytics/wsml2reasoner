@@ -96,11 +96,11 @@ public class ConstraintReplacementNormalizerTest extends TestCase {
 		axioms.add(axiom1);
 
 		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
-		String expected = "_# http://www.wsmo.org/reasoner/anonymous_1000000000000001";
+		String expected = "" + AnonymousIdUtils.ANONYMOUS_PREFIX;
 
+		assertTrue(containsString(out, expected));
 		assertEquals(2, out.size());
 		for (Axiom ax : out) {
-			assertTrue(expected.contains(ax.getIdentifier().toString()));
 			for (LogicalExpression le : ax.listDefinitions()) {
 				assertTrue(checkContains(le));
 			}
@@ -155,6 +155,15 @@ public class ConstraintReplacementNormalizerTest extends TestCase {
 		return found;
 	}
 	
+	private boolean containsString(Set<Axiom> axioms, String expected) {
+		boolean found = false;
+		for (Axiom ax : axioms) {
+			if (ax.getIdentifier().toString().contains(expected))
+				found = true;
+		}
+		return found;
+	}
+	
 	private boolean checkContains(LogicalExpression le) throws ParserException {
 		if (le
 				.toString()
@@ -200,5 +209,7 @@ public class ConstraintReplacementNormalizerTest extends TestCase {
 		}
 		return false;
 	}
+	
+
 
 }
