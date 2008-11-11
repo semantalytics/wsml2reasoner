@@ -139,6 +139,9 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
             else if (e instanceof Relation) {
                 result.addAll(getAxioms(normalizeRelation((Relation) e)));
             }
+            else if (e instanceof RelationInstance) {
+                result.addAll(getAxioms(normalizeRelationInstance((RelationInstance) e)));
+            }
             else if (e instanceof Instance) {
                 result.addAll(getAxioms(normalizeInstance((Instance) e)));
             }
@@ -398,9 +401,9 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
     }
 
     protected Set<LogicalExpression> normalizeRelation(Relation relation) {
+        Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
         Identifier relationID = relation.getIdentifier();
 
-        Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
 
         // process super relations:
         int arity = relation.listParameters().size();
@@ -451,20 +454,29 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         }
         resultExpressions.addAll(parameterAxioms);
 
-        // process relation instances:
-        for (RelationInstance relInstance : relation.listRelationInstances()) {
-            List<Term> args = new LinkedList<Term>();
-            for (Value value : relInstance.listParameterValues()) {
-                if (value instanceof Instance) {
-                    args.add(((Instance) value).getIdentifier());
-                }
-                else if (value instanceof DataValue) {
-                    args.add((DataValue) value);
-                }
-            }
-            resultExpressions.add(leFactory.createAtom(relationID, args));
-        }
+        return resultExpressions;
+    }
 
+    protected Set<LogicalExpression> normalizeRelationInstance(RelationInstance relationInstance) {
+        Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
+    	
+        Relation relation = relationInstance.getRelation();
+        if( relation != null ) {
+	        Identifier relationID = relation.getIdentifier();
+	        
+	        if( relationID != null ) {
+		        List<Term> args = new LinkedList<Term>();
+		        for (Value value : relationInstance.listParameterValues()) {
+		            if (value instanceof Instance) {
+		                args.add(((Instance) value).getIdentifier());
+		            }
+		            else if (value instanceof DataValue) {
+		                args.add((DataValue) value);
+		            }
+		        }
+		        resultExpressions.add(leFactory.createAtom(relationID, args));
+	        }
+        }
         return resultExpressions;
     }
 
