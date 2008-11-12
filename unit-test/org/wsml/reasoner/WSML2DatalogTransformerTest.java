@@ -247,18 +247,25 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\" implies _\"urn:b\" :- _\"urn:c\"");
 
-		Set<Rule> out = transformer.transform(le);
-//		assertEquals(1, out.size());
-
 		// B :- A and C
-		printLE(le);
-		printRules(out);
 
-		assertEquals(1, out.size());
-		this.checkContainsRule(out, LiteralTestHelper
-				.createSimplePosLiteral("urn:b"), LiteralTestHelper
-				.createSimplePosLiteral("urn:a"), LiteralTestHelper
-				.createSimplePosLiteral("urn:c"));
+		// should never be given to WSML2DatalogTransformer - should be
+		// normalized:
+		try {
+			Set<Rule> out = transformer.transform(le);
+			System.out.println(out.toString());
+			fail();
+		} catch (DatalogException e1) {
+
+		}
+		// printLE(le);
+		// printRules(out);
+		//
+		// assertEquals(1, out.size());
+		// this.checkContainsRule(out, LiteralTestHelper
+		// .createSimplePosLiteral("urn:b"), LiteralTestHelper
+		// .createSimplePosLiteral("urn:a"), LiteralTestHelper
+		// .createSimplePosLiteral("urn:c"));
 
 	}
 
@@ -271,20 +278,29 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		// result should be:
 		// A :- not C
 		// A :- C and B
-		Set<Rule> out = transformer.transform(le);
-		printLE(le);
-		printRules(out);
 
-		assertEquals(2, out.size());
-
-		checkContainsRule(out, LiteralTestHelper
-				.createSimplePosLiteral("urn:a"), LiteralTestHelper
-				.createSimplePosLiteral("urn:c"), LiteralTestHelper
-				.createPosLiteral("urn:b"));
-
-		checkContainsRule(out, LiteralTestHelper
-				.createSimplePosLiteral("urn:a"), LiteralTestHelper
-				.createSimpleNegLiteral("urn:c"));
+		// should never be given to WSML2DatalogTransformer - should be
+		// normalized:
+		try {
+			Set<Rule> out = transformer.transform(le);
+			System.out.println(out.toString());
+			fail();
+		} catch (DatalogException e1) {
+			e1.toString();
+		}
+		// printLE(le);
+		// printRules(out);
+		//
+		// assertEquals(2, out.size());
+		//
+		// checkContainsRule(out, LiteralTestHelper
+		// .createSimplePosLiteral("urn:a"), LiteralTestHelper
+		// .createSimplePosLiteral("urn:c"), LiteralTestHelper
+		// .createPosLiteral("urn:b"));
+		//
+		// checkContainsRule(out, LiteralTestHelper
+		// .createSimplePosLiteral("urn:a"), LiteralTestHelper
+		// .createSimpleNegLiteral("urn:c"));
 
 	}
 
@@ -294,8 +310,6 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\" equivalent _\"urn:b\" :- _\"urn:c\"");
 
-		Set<Rule> out = transformer.transform(le);
-
 		// result should be:
 		// A implies B :- C
 		// A impliedBy B :- C
@@ -304,19 +318,15 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		// B :- A and C
 		// A :- B and C
 
-		printLE(le);
-		printRules(out);
+		// should never be given to WSML2DatalogTransformer - should be
+		// normalized:
+		try {
+			Set<Rule> out = transformer.transform(le);
+			System.out.println(out.toString());
+			fail();
+		} catch (DatalogException e1) {
 
-		assertEquals(2, out.size());
-		checkContainsRule(out, LiteralTestHelper
-				.createSimplePosLiteral("urn:b"), LiteralTestHelper
-				.createSimplePosLiteral("urn:a"), LiteralTestHelper
-				.createSimplePosLiteral("urn:c"));
-
-		checkContainsRule(out, LiteralTestHelper
-				.createSimplePosLiteral("urn:a"), LiteralTestHelper
-				.createSimplePosLiteral("urn:b"), LiteralTestHelper
-				.createSimplePosLiteral("urn:c"));
+		}
 
 	}
 
@@ -325,8 +335,6 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		// [ 2002256 ] 'implies' should be allowed in rule bodies.
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\"  :- _\"urn:c\" equivalent _\"urn:b\"");
-
-		Set<Rule> out = transformer.transform(le);
 
 		// result should be:
 		// A :- C implies B
@@ -338,24 +346,16 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		// A :- not B
 		// A :- C and B
 
-		printLE(le);
-		printRules(out);
-		
-		assertEquals(4, out.size());
-		checkContainsRule(out, LiteralTestHelper
-				.createSimplePosLiteral("urn:a"), LiteralTestHelper
-				.createSimpleNegLiteral("urn:c"));
-		
-		checkContainsRule(out, LiteralTestHelper
-				.createSimplePosLiteral("urn:a"), LiteralTestHelper
-				.createSimplePosLiteral("urn:c"), LiteralTestHelper
-				.createSimplePosLiteral("urn:b"));
-		
-		checkContainsRule(out, LiteralTestHelper
-				.createSimplePosLiteral("urn:a"), LiteralTestHelper
-				.createSimpleNegLiteral("urn:b"));
-	}
+		// should never be given to WSML2DatalogTransformer - should be
+		// normalized:
+		try {
+			Set<Rule> out = transformer.transform(le);
+			System.out.println(out.toString());
+			fail();
+		} catch (DatalogException e1) {
 
+		}
+	}
 
 	public void testTransformImpliedByInHead() throws ParserException {
 		// More than one implication in the given WSML rule detected!
@@ -363,18 +363,17 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\" impliedBy _\"urn:b\" :- _\"urn:c\"");
 
-		Set<Rule> out = transformer.transform(le);
-
 		// result should be:
 		// A :- B and C
-		assertEquals(1, out.size());
-		printLE(le);
-		printRules(out);
+		// should never be given to WSML2DatalogTransformer - should be
+		// normalized:
+		try {
+			Set<Rule> out = transformer.transform(le);
+			System.out.println(out.toString());
+			fail();
+		} catch (DatalogException e1) {
 
-		checkContainsRule(out, LiteralTestHelper
-				.createSimplePosLiteral("urn:a"), LiteralTestHelper
-				.createSimplePosLiteral("urn:b"), LiteralTestHelper
-				.createSimplePosLiteral("urn:c"));
+		}
 	}
 
 	public void testTransformImpliedByInBody() throws ParserException {
@@ -383,22 +382,19 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\" :- _\"urn:c\" impliedBy _\"urn:b\"");
 
-		Set<Rule> out = transformer.transform(le);
-
 		// result should be:
 		// A :- not B
 		// A :- C and B
-		assertEquals(2, out.size());
-		printLE(le);
-		printRules(out);
-		checkContainsRule(out, LiteralTestHelper
-				.createSimplePosLiteral("urn:a"), LiteralTestHelper
-				.createSimpleNegLiteral("urn:b"));
 
-		checkContainsRule(out, LiteralTestHelper
-				.createSimplePosLiteral("urn:a"), LiteralTestHelper
-				.createSimplePosLiteral("urn:c"), LiteralTestHelper
-				.createSimplePosLiteral("urn:b"));
+		// should never be given to WSML2DatalogTransformer - should be
+		// normalized:
+		try {
+			Set<Rule> out = transformer.transform(le);
+			System.out.println(out.toString());
+			fail();
+		} catch (DatalogException e1) {
+
+		}
 	}
 
 	public void testTransformImpliesTypeInHead() throws ParserException {
@@ -514,15 +510,26 @@ public class WSML2DatalogTransformerTest extends TestCase {
 	public void testImpliedByImplies() throws ParserException {
 		LogicalExpression le1 = LETestHelper
 				.buildLE("_\"urn:a\" implies _\"urn:b\" :- _\"urn:c\"");
-		Set<Rule> out1 = transformer.transform(le1);
+		try {
+			Set<Rule> out1 = transformer.transform(le1);
+			System.out.println(out1.toString());
+			fail();
+		} catch (DatalogException e1) {
+
+		}
 
 		LogicalExpression le2 = LETestHelper
 				.buildLE("_\"urn:b\" impliedBy _\"urn:a\" :- _\"urn:c\"");
-		Set<Rule> out2 = transformer.transform(le2);
+		try {
+			Set<Rule> out2 = transformer.transform(le2);
+			System.out.println(out2.toString());
+			fail();
+		} catch (DatalogException e2) {
 
-		assertEquals(1, out1.size());
-		assertEquals(1, out2.size());
-		assertEquals(out1, out2);
+		}
+		// assertEquals(1, out1.size());
+		// assertEquals(1, out2.size());
+		// assertEquals(out1, out2);
 
 	}
 
@@ -541,8 +548,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		// * An :- B
 
 		Set<Rule> out = transformer.transform(le);
-		printLE(le);
-		printRules(out);
+
 		assertEquals(2, out.size());
 		checkContainsRule(out, LiteralTestHelper
 				.createSimplePosLiteral("urn:b"), LiteralTestHelper
@@ -553,6 +559,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 				.createSimplePosLiteral("urn:c"));
 
 	}
+
 	public void testTransformMoreAndInHead() throws ParserException {
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\" and _\"urn:b\" and _\"urn:c\" :- _\"urn:d\" ");
@@ -561,10 +568,9 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		// a :- d
 		// b :- d
 		// c :- d
-	
+
 		Set<Rule> out = transformer.transform(le);
-		printLE(le);
-		printRules(out);
+
 		assertEquals(3, out.size());
 		checkContainsRule(out, LiteralTestHelper
 				.createSimplePosLiteral("urn:b"), LiteralTestHelper
@@ -573,11 +579,10 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		checkContainsRule(out, LiteralTestHelper
 				.createSimplePosLiteral("urn:a"), LiteralTestHelper
 				.createSimplePosLiteral("urn:d"));
-		
+
 		checkContainsRule(out, LiteralTestHelper
 				.createSimplePosLiteral("urn:c"), LiteralTestHelper
 				.createSimplePosLiteral("urn:d"));
-		
 
 	}
 
@@ -585,7 +590,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:c\" :- _\"urn:a\" and _\"urn:b\"");
 		Set<Rule> out = transformer.transform(le);
-		this.printRules(out);
+
 		assertEquals(1, out.size());
 		for (Rule r : out) {
 			checkRule(r, LiteralTestHelper.createSimplePosLiteral("urn:c"),
@@ -601,7 +606,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 
 		try {
 			Set<Rule> out = this.transform(le1, le2);
-			printRules(out);
+			System.out.println(out.toString());
 			fail();
 		} catch (DatalogException ex) {
 		}
@@ -613,7 +618,6 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		String le2 = ("_\"urn:a\" :- naf _\"urn:c\" ");
 
 		Set<Rule> out = this.transform(le1, le2);
-		printRules(out);
 
 		assertEquals(2, out.size());
 		checkContainsRule(out, LiteralTestHelper
@@ -625,15 +629,15 @@ public class WSML2DatalogTransformerTest extends TestCase {
 				.createSimplePosLiteral("urn:c"), LiteralTestHelper
 				.createPosLiteral("urn:b"));
 	}
-	
-	public void testTransformDuplicateRules() throws IllegalArgumentException, ParserException {
+
+	public void testTransformDuplicateRules() throws IllegalArgumentException,
+			ParserException {
 		String le1 = ("_\"urn:a\" :-_\"urn:c\" and _\"urn:b\"");
 		String le2 = ("_\"urn:a\" :- naf _\"urn:c\" ");
 		String le3 = ("_\"urn:a\" :- naf _\"urn:b\" ");
 		String le4 = ("_\"urn:a\" :-_\"urn:c\" and _\"urn:b\"");
 
 		Set<Rule> out = this.transform(le1, le2, le3, le4);
-		printRules(out);
 
 		assertEquals(3, out.size());
 		checkContainsRule(out, LiteralTestHelper
@@ -643,21 +647,25 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		checkContainsRule(out, LiteralTestHelper
 				.createSimplePosLiteral("urn:a"), LiteralTestHelper
 				.createSimpleNegLiteral("urn:b"));
-		
+
 		checkContainsRule(out, LiteralTestHelper
 				.createSimplePosLiteral("urn:a"), LiteralTestHelper
 				.createSimplePosLiteral("urn:c"), LiteralTestHelper
 				.createPosLiteral("urn:b"));
 	}
-	
-	public void testMoreImplications() throws IllegalArgumentException, ParserException {
+
+	public void testMoreImplications() throws IllegalArgumentException,
+			ParserException {
 		String le = ("_\"urn:a\" implies _\"urn:c\"  :-_\"urn:c\" impliedBy _\"urn:b\"");
 
-		Set<Rule> out = this.transform(le);
-		printRules(out);
+		try {
+			Set<Rule> out = this.transform(le);
+			System.out.println(out.toString());
+			fail();
+		} catch (DatalogException e) {
 
-		assertEquals(1, out.size());
-		fail();
+		}
+
 	}
 
 	public void testTransformNafInHead() throws ParserException {
@@ -701,25 +709,25 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		return transformer.transform(h);
 	}
 
-	private void printRules(Set<Rule> rules) {
-		System.out.println("Result: ");
-		for (Rule r : rules) {
-			printRules(r);
-		}
-	}
+	// private void printRules(Set<Rule> rules) {
+	// System.out.println("Result: ");
+	// for (Rule r : rules) {
+	// printRules(r);
+	// }
+	// }
 
-	private void printRules(Rule... rules) {
-		for (Rule r : rules) {
-			System.out.println("Rule: " + r.toString() + "  (isConstraint: "
-					+ r.isConstraint() + " )" + " (isFact: " + r.isFact()
-					+ " )");
-		}
-	}
+	// private void printRules(Rule... rules) {
+	// for (Rule r : rules) {
+	// System.out.println("Rule: " + r.toString() + "  (isConstraint: "
+	// + r.isConstraint() + " )" + " (isFact: " + r.isFact()
+	// + " )");
+	// }
+	// }
 
-	private void printLE(LogicalExpression... les) {
-		for (LogicalExpression le : les) {
-			System.out.println("\nLogicalExpression: " + le.toString());
-		}
-	}
+	// private void printLE(LogicalExpression... les) {
+	// for (LogicalExpression le : les) {
+	// System.out.println("\nLogicalExpression: " + le.toString());
+	// }
+	// }
 
 }
