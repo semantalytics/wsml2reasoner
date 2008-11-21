@@ -50,18 +50,48 @@ import org.wsmo.wsml.ParserException;
 public class WSMLReasonerFacade {
 
     /**
-     * Constructs a new WSMLReasoenrFacade by setting up WSML4J resources, the
+     * Constructs a new WSMLReasonerFacade by setting up WSMO4J resources, the
      * parser, the reasoner.
      */
     public WSMLReasonerFacade() {
         manager = new WSMO4JManager();
-        parser = Factory.createParser(null);
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER, WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED);
+        parser = Factory.createParser(null);      
 
-        reasoner = DefaultWSMLReasonerFactory.getFactory().createFlightReasoner(params);
+        reasoner = DefaultWSMLReasonerFactory.getFactory().createFlightReasoner(null);
+    }
+    
+    /**
+     *  Constructs a new WSMLReasonerFacade by setting up WSMO4j resources, the parser 
+     *  and used a predefined reasoner.
+     * @param reasoner The reasoner to use.
+     */
+    public WSMLReasonerFacade(LPReasoner reasoner) {
+    	manager = new WSMO4JManager();
+        parser = Factory.createParser(null);
+       
+        this.reasoner = reasoner;
     }
 
+    public ReasonerResult executeWsmlQuery(String query) throws InconsistencyException, IOException, InvalidModelException, ParserException {
+    	if(query == null) {
+    		throw new IllegalArgumentException();
+    	}
+    	
+    	LogicalExpressionFactory leFactory = manager.getLogicalExpressionFactory();    	
+        LogicalExpression lequery = leFactory.createLogicalExpression(query);
+      
+        return doQuery(lequery);
+    }
+    
+    /**
+     * Sets the reasoner object that should be used internally.
+     * 
+     * @param reasoner The reasoner
+     */
+    public void setReasoner(LPReasoner reasoner) {
+    	this.reasoner = reasoner;
+    }
+    
     /**
      * Executes a WSML query against a certain ontology.
      * 
@@ -89,12 +119,7 @@ public class WSMLReasonerFacade {
         LogicalExpressionFactory leFactory = manager.getLogicalExpressionFactory();
         LogicalExpression lequery = leFactory.createLogicalExpression(query, onto);
 
-        // a set of variable bindings (map with variables as keys, and the
-        // bindings: IRIs or DataValues as values
-        Set<Map<Variable, Term>> queryResult = reasoner.executeQuery(lequery);
-        ReasonerResult reasonerResult = new ReasonerResult(queryResult);
-
-        return reasonerResult;
+        return doQuery(lequery);
     }
 
     /**
@@ -104,6 +129,16 @@ public class WSMLReasonerFacade {
      */
     public Ontology getOntology() {
         return onto;
+    }
+    
+    
+    protected ReasonerResult doQuery(LogicalExpression lequery) {
+    	// a set of variable bindings (map with variables as keys, and the
+        // bindings: IRIs or DataValues as values
+        Set<Map<Variable, Term>> queryResult = reasoner.executeQuery(lequery);
+        ReasonerResult reasonerResult = new ReasonerResult(queryResult);
+
+        return reasonerResult;
     }
 
     /**

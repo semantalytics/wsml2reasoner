@@ -60,6 +60,13 @@ public class QueryProcessor {
 
         parse();
     }
+    
+    public QueryProcessor(String sqlLikeQuery, boolean preLoadedReasoner) throws QueryFormatException {
+    	mSqlLikeQuery = sqlLikeQuery;
+    	queryWorkingOnPreloadedOntologies = preLoadedReasoner;
+    	
+    	parse();
+    }
 
     /**
      * Override from Object.
@@ -74,11 +81,19 @@ public class QueryProcessor {
      * Get the ontology IRI from the FROM clause.
      * 
      * @return The ontology IRI.
+     * @throws QueryFormatException 
      */
-    public String getOntologyIRI() {
+    public String getOntologyIRI() throws QueryFormatException { 	
+    	
+    	if(mOntologyIRI == null) {
+    		throw new QueryFormatException("The query: " + mSqlLikeQuery + " does not contain a FROM clause."
+    				+ " Such queries are only admitable with preloaded reasoners in which case the Ontology" 
+    				+ " is explictely available as a precondition.");
+    	}
+    	
         return mOntologyIRI;
     }
-
+ 
     /**
      * Get the WSML query from the WHERE clause.
      * 
@@ -386,8 +401,10 @@ public class QueryProcessor {
         if (mSelectExpressions.size() == 0)
             throw new QueryFormatException("There is no 'SELECT' clause in the query.");
 
-        if (mOntologyIRI == null)
-            throw new QueryFormatException("There is no 'FROM' clause in the query.");
+        if (mOntologyIRI == null) {
+        	if(! queryWorkingOnPreloadedOntologies)
+        		throw new QueryFormatException("There is no 'FROM' clause in the query.");
+        }
 
         if (mClauseTokens.get(WHERE) == null)
             throw new QueryFormatException("There is no WHERE clause.");
@@ -733,6 +750,13 @@ public class QueryProcessor {
         final String mPattern;
     }
 
+    /** This indicates if the query is working with a preloaded reasoner. In this case no loading of
+     * ontologies and thus also no FROM clause is required. The working set of ontologies is exactly those 
+     * which have been manually registered with the reasoner passed to the query object 
+     * in that case.
+     */
+    private boolean queryWorkingOnPreloadedOntologies = false;
+    
     /** List of LIKE sub-clauses in SELECT clause. */
     private ArrayList<Like> mLikes = new ArrayList<Like>();
 

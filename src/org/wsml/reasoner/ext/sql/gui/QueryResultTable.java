@@ -24,13 +24,11 @@ public class QueryResultTable extends AbstractTableModel {
         columnNames.add( "info" );
     }
     
-    private void populate( Set<Map<Variable, Term>> content, Ontology ontology )
+    private void populate( Set<Map<Variable, Term>> content)
     {
-    	assert content != null;
-    	assert ontology != null;
+    	assert content != null;    	
 
-    	empty = false;
-        o = ontology;
+    	empty = false;       
 
         int j = 0;
         for (Map<Variable, Term> row : content) {
@@ -52,18 +50,18 @@ public class QueryResultTable extends AbstractTableModel {
         }
     }
 
-    public void setContent(Set<Map<Variable, Term>> content, Ontology ontology) {
+    public void setContent(Set<Map<Variable, Term>> content) {
         columnNames = new ArrayList<String>();
         entries = new ArrayList<ArrayList<Term>>();
 
-        if (content == null || ontology == null) {
+        if (content == null) {
             throw new IllegalArgumentException("Cannot set content of table model with null parameter");
         }
         
         if( content.size() == 0 )
         	setEmpty();
         else
-        	populate( content, ontology );
+        	populate( content );
 
         fireTableStructureChanged();
     }
@@ -90,13 +88,9 @@ public class QueryResultTable extends AbstractTableModel {
     	{
 	        Term t = entries.get(row).get(col);
 	
-	        return QueryUtil.termToString(t, o);
+	        return QueryUtil.termToString(t);
     	}
     }
-
-    // public Class<?> getColumnClass(int c) {
-    // return getValueAt(0, c).getClass();
-    // }
 
     @Override
     public boolean isCellEditable(int row, int col) {
@@ -107,5 +101,4 @@ public class QueryResultTable extends AbstractTableModel {
 
     private ArrayList<String> columnNames = new ArrayList<String>();
 
-    private Ontology o;
 }
