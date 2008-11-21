@@ -57,6 +57,9 @@ public class QueryUtil {
         return str.toString();
     }
 
+    public static String termToString(Term t) {
+    	return termToString(t, null);
+    }
     public static String termToString(Term t, Ontology o) {
         VisitorSerializeWSMLTerms v = new VisitorSerializeWSMLTerms(o);
         t.accept(v);

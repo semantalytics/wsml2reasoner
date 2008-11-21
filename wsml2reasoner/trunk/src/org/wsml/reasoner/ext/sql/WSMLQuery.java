@@ -41,6 +41,8 @@ import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.Variable;
+import org.wsml.reasoner.api.LPReasoner;
+import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.DataFactory;
@@ -59,6 +61,26 @@ public class WSMLQuery {
     public final static Logger logger = initLogger();
 
     /**
+     * This constructs a query object that works on an allready existing and 
+     * preloaded reasoner. Note that in this case ontologies are not loaded on
+     * demand based on a certain query and that the FROM part in a query can
+     * in fact even be ommited. The query in this case will simply work on whatever
+     * ontologies had been registered with the reasoner before.
+     * 
+     * @param reasoner The preloaded reasoner.
+     */
+    public WSMLQuery(LPReasoner reasoner) {
+    	SimpleLayout layout = new SimpleLayout();
+        ConsoleAppender consoleAppender = new ConsoleAppender(layout);
+        logger.addAppender(consoleAppender);
+        // ALL, DEBUG, INFO, WARN, ERROR, FATAL, OFF
+        logger.setLevel(Level.ERROR);
+        
+        preLoadedWithReasoner = true;
+        reasonerFacade = new WSMLReasonerFacade(reasoner);
+    }
+    
+    /**
      * Constructs an initial WSMLQuery object and sets up logging.
      */
     public WSMLQuery() {
@@ -67,6 +89,8 @@ public class WSMLQuery {
         logger.addAppender(consoleAppender);
         // ALL, DEBUG, INFO, WARN, ERROR, FATAL, OFF
         logger.setLevel(Level.ERROR);
+        
+        reasonerFacade = new WSMLReasonerFacade();
     }
 
     /**
@@ -79,44 +103,34 @@ public class WSMLQuery {
     public Set<Map<Variable, Term>> executeQuery(String query) {
         if (query == null) {
             throw new IllegalArgumentException();
-        }
+        }       
 
-        Set<Map<Variable, Term>> queryResult = new HashSet<Map<Variable, Term>>();
-
+        Set<Map<Variable, Term>> finalResult = new HashSet<Map<Variable, Term>>();
+        ReasonerResult reasonerResult;
         try {
-            QueryProcessor qp = new QueryProcessor(query);
-            String ontologyIRI = qp.getOntologyIRI();
-            // strip formating
-            ontologyIRI = ontologyIRI.substring(2, ontologyIRI.length() - 1);
+            QueryProcessor qp = new QueryProcessor(query, preLoadedWithReasoner);
             String wsmlQuery = qp.getWsmlQuery();
-
-            ReasonerResult result = reasonerFacade.executeWsmlQuery(wsmlQuery, ontologyIRI);
-            onto = reasonerFacade.getOntology();
             
-            if( result.size() > 0 )
-            {
-	            try {
-	                dbmanager.openConnection();
-	                String tableName = dbmanager.storeReasonerResult(new WSMLResultProcessor().process(result));
-	                ResultSet sqlResult = dbmanager.executeQuery(qp.constructSqlQueryWithColumnNamesSubstitutedForVariables(tableName));
-	
-	                queryResult = convertSQLResult(sqlResult);
-	                dbmanager.dropTable(tableName);
-	                dbmanager.closeConnection();
-	            }
-	            catch (SQLException e) {
-	                logger.error(e.getMessage());
-	                e.printStackTrace();
-	            }
+            if(!preLoadedWithReasoner) {
+            	String ontologyIRI = qp.getOntologyIRI();
+                // strip formating
+                ontologyIRI = ontologyIRI.substring(2, ontologyIRI.length() - 1);
+                reasonerResult = reasonerFacade.executeWsmlQuery(wsmlQuery, ontologyIRI);
+                onto = reasonerFacade.getOntology();
             }
-
+            else {
+            	reasonerResult = reasonerFacade.executeWsmlQuery(wsmlQuery);
+            }
+                    
+            if( reasonerResult.size() > 0 )
+            {
+            	finalResult = proccessOnDB(reasonerResult, qp);
+            }
         }
         catch (QueryFormatException e) {
             logger.error(e.toString());
         }
-        catch (ParserException e) {
-            logger.error(e.toString());
-        }
+        
         catch (IOException e) {
             logger.error(e.toString());
         }
@@ -125,9 +139,35 @@ public class WSMLQuery {
         }
         catch (InconsistencyException e) {
             logger.error(e.toString());
-        }
+        } catch (ParserException e) {
+			
+			e.printStackTrace();
+		}
+        
+        return finalResult;       
+    }
+    
+    private Set<Map<Variable, Term>> proccessOnDB(ReasonerResult result, QueryProcessor qp) {
+    	assert result != null;
+    	assert qp != null;
+    	
+    	 Set<Map<Variable, Term>> queryResult = new HashSet<Map<Variable, Term>>();
+    	 
+    	 try {
+             dbmanager.openConnection();
+             String tableName = dbmanager.storeReasonerResult(new WSMLResultProcessor().process(result));
+             ResultSet sqlResult = dbmanager.executeQuery(qp.constructSqlQueryWithColumnNamesSubstitutedForVariables(tableName));
 
-        return queryResult;
+             queryResult = convertSQLResult(sqlResult);
+             dbmanager.dropTable(tableName);
+             dbmanager.closeConnection();
+         }
+         catch (SQLException e) {
+             logger.error(e.getMessage());
+             e.printStackTrace();
+         }
+    	 
+    	 return queryResult;
     }
 
     private Set<Map<Variable, Term>> convertSQLResult(ResultSet sqlResult) throws SQLException {
@@ -203,9 +243,12 @@ public class WSMLQuery {
         return Logger.getRootLogger();
     }
 
+    /* For backward compatibility it is still possible to use one single registered ontology for query answering */
     private Ontology onto;
-
-    private final WSMLReasonerFacade reasonerFacade = new WSMLReasonerFacade();
+    
+    boolean preLoadedWithReasoner = false;
+     
+    private final WSMLReasonerFacade reasonerFacade;
 
     private final DatabaseManager dbmanager = new DatabaseManager();
 }

@@ -71,7 +71,7 @@ public class DemoW {
 
             mQuery.setText("SELECT ?child " + NEW_LINE +
             				"FROM _\"http://wsml2reasoner.svn.sourceforge.net/viewvc/*checkout*/wsml2reasoner/wsml2reasoner/trunk/test/files/simpsons.wsml\" " + NEW_LINE +
-            				"WHERE ?child[attends hasValue _\"http://ontologies.deri.org#springfield_elementary\"] " + NEW_LINE +
+            				"WHERE ?child[attends hasValue _\"http://ontologies.deri.org/springfield_elementary\"] " + NEW_LINE +
             				"\n" + "\n" + "\n" + "\n");
 
             mRun.addActionListener(this);
@@ -131,10 +131,10 @@ public class DemoW {
          * @param output
          *            The evaluation output
          */
-        synchronized void setOutput(Set<Map<Variable, Term>> output, Ontology o) {
+        synchronized void setOutput(Set<Map<Variable, Term>> output) {
             mRun.setEnabled(true);
             mAbort.setEnabled(false);
-            queryResult.setContent(output, o);
+            queryResult.setContent(output);
         }
 
         /**
@@ -142,18 +142,15 @@ public class DemoW {
          * the UI thread.
          */
         class NotifyOutput implements Runnable {
-            public NotifyOutput(Set<Map<Variable, Term>> result, Ontology ontology) {
-                r = result;
-                o = ontology;
+            public NotifyOutput(Set<Map<Variable, Term>> result) {
+                r = result;              
             }
 
             public void run() {
-                setOutput(r, o);
+                setOutput(r);
             }
 
-            private final Set<Map<Variable, Term>> r;
-
-            private final Ontology o;
+            private final Set<Map<Variable, Term>> r;         
         }
 
         /**
@@ -199,7 +196,7 @@ public class DemoW {
                     queryDuration += System.currentTimeMillis();
                     Ontology o = wqe.getOntology();
 
-                    SwingUtilities.invokeLater(new NotifyOutput(r, o));
+                    SwingUtilities.invokeLater( new NotifyOutput(r) );
                 }
                 catch (Exception e) {
                     e.printStackTrace();

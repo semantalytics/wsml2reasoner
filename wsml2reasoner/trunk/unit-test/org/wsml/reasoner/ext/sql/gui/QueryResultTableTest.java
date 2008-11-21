@@ -75,7 +75,7 @@ public class QueryResultTableTest extends TestCase {
 		
 		Set<Map<Variable,Term>> resultSet = new HashSet<Map<Variable,Term>>();
 		resultSet.add(row);
-		table.setContent(resultSet, ontology);
+		table.setContent(resultSet);
 		assertEquals(2,table.getColumnCount());
 		assertEquals(1,table.getRowCount());
 		
