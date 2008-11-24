@@ -63,6 +63,7 @@ import org.wsml.reasoner.transformation.AnonymousIdUtils;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.ConstraintReplacementNormalizer;
 import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
+import org.wsml.reasoner.transformation.InverseImplicationNormalizer;
 import org.wsml.reasoner.transformation.LloydToporNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsml.reasoner.transformation.le.LogicalExpressionNormalizer;
@@ -218,11 +219,15 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         // Simplify axioms
         normalizer = new ConstructReductionNormalizer(wsmoManager);
         axioms = normalizer.normalizeAxioms(axioms);
-
+        
+        // Apply InverseImplicationTransformation (wsml-rule)
+        normalizer = new InverseImplicationNormalizer(wsmoManager);
+        axioms = normalizer.normalizeAxioms(axioms);
+        
         // Apply Lloyd-Topor rules to get Datalog-compatible LEs
         normalizer = new LloydToporNormalizer(wsmoManager);
         axioms = normalizer.normalizeAxioms(axioms);
-
+        
         org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(wsmoManager);
         Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
         for (Axiom a : axioms) {
