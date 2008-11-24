@@ -105,7 +105,6 @@ public class ConstraintReplacementNormalizerTest extends TestCase {
 				assertTrue(checkContains(le));
 			}
 		}
-
 	}
 
 	public void testNormalizeAxiomsNormalAxiom() {
