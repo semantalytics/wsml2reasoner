@@ -41,6 +41,7 @@ import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.ConstraintReplacementNormalizer;
 import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
+import org.wsml.reasoner.transformation.InverseImplicationNormalizer;
 import org.wsml.reasoner.transformation.LloydToporNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsml.reasoner.transformation.le.LETestHelper;
@@ -100,6 +101,10 @@ public class TransformationNormalizationTest extends TestCase {
 				.createOntology(wsmoFactory.createIRI(ns + "ont"));
 		ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));
 
+		for (Axiom a : ontology.listAxioms()) {
+			ontology.removeAxiom(a);
+		}
+
 		reasoner.registerOntology(ontology);
 
 	}
@@ -127,13 +132,56 @@ public class TransformationNormalizationTest extends TestCase {
 
 	}
 
+	public void testConvertEntitiesMoreAndInBody() throws ParserException {
+
+		Set<Entity> in = new HashSet<Entity>();
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom01"));
+		axiom
+				.addDefinition(LETestHelper
+						.buildLE("_\"urn:a\" :- (_\"urn:b\" and _\"urn:c\") and  (_\"urn:d\" and  _\"urn:e\")"));
+		in.add(axiom);
+
+		// expected output:
+		// urn:a() :- urn:b(), urn:c(), urn:d().
+		Rule expected = LiteralTestHelper.createRule(LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimplePosLiteral("urn:b"), LiteralTestHelper
+				.createSimplePosLiteral("urn:c"), LiteralTestHelper
+				.createSimplePosLiteral("urn:d"), LiteralTestHelper
+				.createSimplePosLiteral("urn:e"));
+
+		Set<Rule> out = reasoner.convertEntities(in);
+		in.remove(axiom);
+		printRules(out);
+		outputContains(expected, out);
+	}
+
+	public void testConvertEntitiesImplies() throws ParserException {
+
+		Set<Entity> in = new HashSet<Entity>();
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom01"));
+		axiom.addDefinition(LETestHelper
+				.buildLE("_\"urn:a\" implies _\"urn:b\""));
+		in.add(axiom);
+
+		// expected output:
+		// B :- A
+
+		Set<Rule> expected = new HashSet<Rule>();
+		Set<Rule> out = reasoner.convertEntities(in);
+		printRules(out);
+		outputContains(expected, out);
+	}
+
 	public void testConvertEntitiesImpliesInBody() throws ParserException {
 
 		Set<Entity> in = new HashSet<Entity>();
 		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
 				+ "axiom01"));
 		axiom.addDefinition(LETestHelper
-				.buildLE("_\"urn:c\" :- _\"urn:a\" implies _\"urn:b\""));
+				.buildLE("_\"urn:a\" :- _\"urn:c\" implies _\"urn:b\""));
 		in.add(axiom);
 
 		// expected output:
@@ -145,8 +193,8 @@ public class TransformationNormalizationTest extends TestCase {
 
 		Rule expected02 = LiteralTestHelper.createRule(LiteralTestHelper
 				.createSimplePosLiteral("urn:a"), LiteralTestHelper
-				.createSimplePosLiteral("urn:c"), LiteralTestHelper
-				.createSimplePosLiteral("urn:b"));
+				.createSimplePosLiteral("urn:b"), LiteralTestHelper
+				.createSimplePosLiteral("urn:c"));
 
 		Set<Rule> expected = new HashSet<Rule>();
 		expected.add(expected01);
@@ -213,7 +261,6 @@ public class TransformationNormalizationTest extends TestCase {
 
 		// and then:
 		// A :- not C
-		// A :- C and B
 		// A :- not B
 		// A :- C and B
 
@@ -249,7 +296,7 @@ public class TransformationNormalizationTest extends TestCase {
 
 		Set<Entity> in = new HashSet<Entity>();
 		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
-				+ "axiom01"));
+				+ "axiom04"));
 		axiom.addDefinition(LETestHelper
 				.buildLE("_\"urn:a\" impliedBy _\"urn:b\" :- _\"urn:c\""));
 		in.add(axiom);
@@ -272,7 +319,7 @@ public class TransformationNormalizationTest extends TestCase {
 
 		Set<Entity> in = new HashSet<Entity>();
 		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
-				+ "axiom01"));
+				+ "axiom05"));
 		axiom.addDefinition(LETestHelper
 				.buildLE("_\"urn:a\" :- _\"urn:c\" impliedBy _\"urn:b\""));
 		in.add(axiom);
@@ -286,8 +333,8 @@ public class TransformationNormalizationTest extends TestCase {
 
 		Rule expected02 = LiteralTestHelper.createRule(LiteralTestHelper
 				.createSimplePosLiteral("urn:a"), LiteralTestHelper
-				.createSimplePosLiteral("urn:b"), LiteralTestHelper
-				.createSimplePosLiteral("urn:c"));
+				.createSimplePosLiteral("urn:c"), LiteralTestHelper
+				.createSimplePosLiteral("urn:b"));
 
 		Set<Rule> expected = new HashSet<Rule>();
 		expected.add(expected01);
@@ -297,6 +344,91 @@ public class TransformationNormalizationTest extends TestCase {
 		printRules(out);
 		outputContains(expected, out);
 	}
+	
+	
+
+	public void testTransformImpliesInHead() throws ParserException,
+			SynchronisationException, InvalidModelException,
+			InconsistencyException {
+
+		Set<Rule> p = new HashSet<Rule>();
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom06"));
+		axiom.addDefinition(LETestHelper
+				.buildLE(" _\"urn:a\" implies _\"urn:b\" :-  _\"urn:c\""));
+		ontology.addAxiom(axiom);
+
+		Set<Entity> entities = new HashSet<Entity>();
+
+		entities.addAll(ontology.listConcepts());
+		entities.addAll(ontology.listInstances());
+		entities.addAll(ontology.listRelations());
+		entities.addAll(ontology.listRelationInstances());
+		entities.addAll(ontology.listAxioms());
+
+		// 1.
+		// Convert conceptual syntax to logical expressions
+		OntologyNormalizer normalizer = new AxiomatizationNormalizer(
+				new WSMO4JManager());
+		entities = normalizer.normalizeEntities(entities);
+
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		for (Entity e : entities) {
+			if (e instanceof Axiom) {
+				axioms.add((Axiom) e);
+			}
+		}
+
+		// printAxioms(axioms);
+
+		// 2.
+		// Convert constraints to support debugging
+		normalizer = new ConstraintReplacementNormalizer(new WSMO4JManager());
+		axioms = normalizer.normalizeAxioms(axioms);
+
+		// printAxioms(axioms);
+
+		// Simplify axioms
+		// OnePassReplacementNormalizer should change C :- A implies B to C :- B
+		// impliedBy A
+		normalizer = new ConstructReductionNormalizer(new WSMO4JManager());
+		axioms = normalizer.normalizeAxioms(axioms);
+		axiomsContainLE(axioms, LETestHelper
+				.buildLE("(_\"urn:b\" impliedBy _\"urn:a\") :-_\"urn:c\""));
+		printAxioms(axioms);
+
+		// Apply Lloyd-Topor rules to get Datalog-compatible LEs
+		normalizer = new LloydToporNormalizer(new WSMO4JManager());
+		axioms = normalizer.normalizeAxioms(axioms);
+
+		// printAxioms(axioms);
+
+		org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
+				new WSMO4JManager());
+		Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
+		for (Axiom a : axioms) {
+			lExprs.addAll(a.listDefinitions());
+		}
+
+		p = wsml2datalog.transform(lExprs);
+		printRules(p);
+		ontology.removeAxiom(axiom);
+
+		// expected output:
+		// B :- A and C
+
+		Rule expected01 = LiteralTestHelper.createRule(LiteralTestHelper
+				.createSimplePosLiteral("urn:b"), LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimplePosLiteral("urn:c"));
+
+		Set<Rule> expected = new HashSet<Rule>();
+
+		expected.add(expected01);
+
+		outputContains(expected, p);
+
+	}
 
 	public void testTransformImpliesInBody() throws ParserException,
 			SynchronisationException, InvalidModelException,
@@ -304,7 +436,7 @@ public class TransformationNormalizationTest extends TestCase {
 
 		Set<Rule> p = new HashSet<Rule>();
 		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
-				+ "axiom04"));
+				+ "axiom07"));
 		axiom.addDefinition(LETestHelper
 				.buildLE("_\"urn:c\" :- _\"urn:a\" implies _\"urn:b\""));
 		ontology.addAxiom(axiom);
@@ -348,6 +480,194 @@ public class TransformationNormalizationTest extends TestCase {
 				.buildLE("_\"urn:c\" :- (_\"urn:b\" impliedBy _\"urn:a\")"));
 		printAxioms(axioms);
 
+		 // Apply InverseImplicationTransformation (wsml-rule)
+        normalizer = new InverseImplicationNormalizer(new WSMO4JManager());
+        axioms = normalizer.normalizeAxioms(axioms);
+		
+		// Apply Lloyd-Topor rules to get Datalog-compatible LEs
+		normalizer = new LloydToporNormalizer(new WSMO4JManager());
+		axioms = normalizer.normalizeAxioms(axioms);
+
+		// printAxioms(axioms);
+
+		org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
+				new WSMO4JManager());
+		Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
+		for (Axiom a : axioms) {
+			lExprs.addAll(a.listDefinitions());
+		}
+
+		p = wsml2datalog.transform(lExprs);
+		printRules(p);
+		ontology.removeAxiom(axiom);
+
+		// expected output:
+		// C :- not A
+		// C :- A and B
+		Rule expected01 = LiteralTestHelper.createRule(LiteralTestHelper
+				.createSimplePosLiteral("urn:c"), LiteralTestHelper
+				.createSimpleNegLiteral("urn:a"));
+
+		Rule expected02 = LiteralTestHelper.createRule(LiteralTestHelper
+				.createSimplePosLiteral("urn:c"), LiteralTestHelper
+				.createSimplePosLiteral("urn:b"), LiteralTestHelper
+				.createSimplePosLiteral("urn:a"));
+
+		Set<Rule> expected = new HashSet<Rule>();
+		expected.add(expected01);
+		expected.add(expected02);
+
+		outputContains(expected, p);
+
+	}
+
+	public void testTransformEquivalentInBody() throws ParserException,
+			SynchronisationException, InvalidModelException,
+			InconsistencyException {
+
+		Set<Rule> p = new HashSet<Rule>();
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom08"));
+		axiom.addDefinition(LETestHelper
+				.buildLE("_\"urn:c\" :- _\"urn:a\" equivalent _\"urn:b\""));
+		ontology.addAxiom(axiom);
+
+		Set<Entity> entities = new HashSet<Entity>();
+
+		entities.addAll(ontology.listConcepts());
+		entities.addAll(ontology.listInstances());
+		entities.addAll(ontology.listRelations());
+		entities.addAll(ontology.listRelationInstances());
+		entities.addAll(ontology.listAxioms());
+
+		// 1.
+		// Convert conceptual syntax to logical expressions
+		OntologyNormalizer normalizer = new AxiomatizationNormalizer(
+				new WSMO4JManager());
+		entities = normalizer.normalizeEntities(entities);
+
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		for (Entity e : entities) {
+			if (e instanceof Axiom) {
+				axioms.add((Axiom) e);
+			}
+		}
+
+		// printAxioms(axioms);
+
+		// 2.
+		// Convert constraints to support debugging
+		normalizer = new ConstraintReplacementNormalizer(new WSMO4JManager());
+		axioms = normalizer.normalizeAxioms(axioms);
+
+		// printAxioms(axioms);
+
+		// Simplify axioms
+		// OnePassReplacementNormalizer should change C :- A implies B to C :- B
+		// impliedBy A
+		normalizer = new ConstructReductionNormalizer(new WSMO4JManager());
+		axioms = normalizer.normalizeAxioms(axioms);
+
+		printAxioms(axioms);
+
+		// Apply Lloyd-Topor rules to get Datalog-compatible LEs
+		normalizer = new LloydToporNormalizer(new WSMO4JManager());
+		axioms = normalizer.normalizeAxioms(axioms);
+
+		// printAxioms(axioms);
+
+		org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
+				new WSMO4JManager());
+		Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
+		for (Axiom a : axioms) {
+			lExprs.addAll(a.listDefinitions());
+		}
+
+		p = wsml2datalog.transform(lExprs);
+		printRules(p);
+		ontology.removeAxiom(axiom);
+
+		// result should be:
+		// A :- C implies B
+		// A :- C impliedBy B
+
+		// and then:
+		// A :- not C
+		// A :- not B
+		// A :- C and B
+
+		// expected output:
+
+		Rule expected01 = LiteralTestHelper.createRule(LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimpleNegLiteral("urn:c"));
+
+		Rule expected02 = LiteralTestHelper.createRule(LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimplePosLiteral("urn:c"), LiteralTestHelper
+				.createSimplePosLiteral("urn:b"));
+
+		Rule expected03 = LiteralTestHelper.createRule(LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimpleNegLiteral("urn:b"));
+
+		Set<Rule> expected = new HashSet<Rule>();
+		expected.add(expected01);
+		expected.add(expected02);
+		expected.add(expected03);
+
+		outputContains(expected, p);
+
+	}
+
+	public void testTransformEuqiImpliedByInBody() throws ParserException,
+			SynchronisationException, InvalidModelException,
+			InconsistencyException {
+
+		Set<Rule> p = new HashSet<Rule>();
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom09"));
+		axiom
+				.addDefinition(LETestHelper
+						.buildLE("_\"urn:c\" :- (_\"urn:a\" impliedBy _\"urn:b\") and (_\"urn:b\" impliedBy _\"urn:a\")"));
+		ontology.addAxiom(axiom);
+
+		Set<Entity> entities = new HashSet<Entity>();
+
+		entities.addAll(ontology.listConcepts());
+		entities.addAll(ontology.listInstances());
+		entities.addAll(ontology.listRelations());
+		entities.addAll(ontology.listRelationInstances());
+		entities.addAll(ontology.listAxioms());
+
+		// 1.
+		// Convert conceptual syntax to logical expressions
+		OntologyNormalizer normalizer = new AxiomatizationNormalizer(
+				new WSMO4JManager());
+		entities = normalizer.normalizeEntities(entities);
+
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		for (Entity e : entities) {
+			if (e instanceof Axiom) {
+				axioms.add((Axiom) e);
+			}
+		}
+
+		// printAxioms(axioms);
+
+		// 2.
+		// Convert constraints to support debugging
+		normalizer = new ConstraintReplacementNormalizer(new WSMO4JManager());
+		axioms = normalizer.normalizeAxioms(axioms);
+
+		printAxioms(axioms);
+
+		// Simplify axioms
+
+		normalizer = new ConstructReductionNormalizer(new WSMO4JManager());
+		axioms = normalizer.normalizeAxioms(axioms);
+		printAxioms(axioms);
+
 		// Apply Lloyd-Topor rules to get Datalog-compatible LEs
 		normalizer = new LloydToporNormalizer(new WSMO4JManager());
 		axioms = normalizer.normalizeAxioms(axioms);
@@ -363,6 +683,389 @@ public class TransformationNormalizationTest extends TestCase {
 
 		p = wsml2datalog.transform(lExprs);
 		printRules(p);
+		ontology.removeAxiom(axiom);
+
+		// expected output:
+		// A :- not C
+		// A :- not B
+		// A :- C and B
+	
+		Rule expected01 = LiteralTestHelper.createRule(LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimpleNegLiteral("urn:c"));
+
+		Rule expected02 = LiteralTestHelper.createRule(LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimpleNegLiteral("urn:b"));
+
+		Rule expected03 = LiteralTestHelper.createRule(LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimplePosLiteral("urn:c"), LiteralTestHelper
+				.createSimplePosLiteral("urn:b"));
+
+		Set<Rule> expected = new HashSet<Rule>();
+		expected.add(expected01);
+		expected.add(expected02);
+		expected.add(expected03);
+
+		outputContains(expected, p);
+
+	}
+
+	public void testTransformEquivalentInHead() throws ParserException,
+			SynchronisationException, InvalidModelException,
+			InconsistencyException {
+
+		Set<Rule> p = new HashSet<Rule>();
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom10"));
+		axiom.addDefinition(LETestHelper
+				.buildLE("_\"urn:a\" equivalent _\"urn:b\" :- _\"urn:c\" "));
+		ontology.addAxiom(axiom);
+
+		Set<Entity> entities = new HashSet<Entity>();
+
+		entities.addAll(ontology.listConcepts());
+		entities.addAll(ontology.listInstances());
+		entities.addAll(ontology.listRelations());
+		entities.addAll(ontology.listRelationInstances());
+		entities.addAll(ontology.listAxioms());
+
+		// 1.
+		// Convert conceptual syntax to logical expressions
+		OntologyNormalizer normalizer = new AxiomatizationNormalizer(
+				new WSMO4JManager());
+		entities = normalizer.normalizeEntities(entities);
+
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		for (Entity e : entities) {
+			if (e instanceof Axiom) {
+				axioms.add((Axiom) e);
+			}
+		}
+
+		// printAxioms(axioms);
+
+		// 2.
+		// Convert constraints to support debugging
+		normalizer = new ConstraintReplacementNormalizer(new WSMO4JManager());
+		axioms = normalizer.normalizeAxioms(axioms);
+
+		// printAxioms(axioms);
+
+		// Simplify axioms
+		// OnePassReplacementNormalizer should change C :- A implies B to C :- B
+		// impliedBy A
+		normalizer = new ConstructReductionNormalizer(new WSMO4JManager());
+		axioms = normalizer.normalizeAxioms(axioms);
+
+		printAxioms(axioms);
+
+		// Apply Lloyd-Topor rules to get Datalog-compatible LEs
+		normalizer = new LloydToporNormalizer(new WSMO4JManager());
+		axioms = normalizer.normalizeAxioms(axioms);
+
+		// printAxioms(axioms);
+
+		org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
+				new WSMO4JManager());
+		Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
+		for (Axiom a : axioms) {
+			lExprs.addAll(a.listDefinitions());
+		}
+
+		p = wsml2datalog.transform(lExprs);
+		printRules(p);
+		ontology.removeAxiom(axiom);
+
+		// result should be:
+		// A implies B :- C
+		// A impliedBy B :- C
+
+		// and this should again be:
+		// B :- A and C
+		// A :- B and C
+
+		// expected output:
+
+		Rule expected01 = LiteralTestHelper.createRule(LiteralTestHelper
+				.createSimplePosLiteral("urn:b"), LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimplePosLiteral("urn:c"));
+
+		Rule expected02 = LiteralTestHelper.createRule(LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimplePosLiteral("urn:b"), LiteralTestHelper
+				.createSimplePosLiteral("urn:c"));
+
+		Set<Rule> expected = new HashSet<Rule>();
+		expected.add(expected01);
+		expected.add(expected02);
+
+		outputContains(expected, p);
+
+	}
+	
+
+
+	public void testTransformEquivalent() throws ParserException,
+			SynchronisationException, InvalidModelException,
+			InconsistencyException {
+
+		Set<Rule> p = new HashSet<Rule>();
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom11"));
+		axiom.addDefinition(LETestHelper
+				.buildLE("_\"urn:a\" equivalent _\"urn:b\""));
+		ontology.addAxiom(axiom);
+
+		Set<Entity> entities = new HashSet<Entity>();
+
+		entities.addAll(ontology.listConcepts());
+		entities.addAll(ontology.listInstances());
+		entities.addAll(ontology.listRelations());
+		entities.addAll(ontology.listRelationInstances());
+		entities.addAll(ontology.listAxioms());
+
+		// 1.
+		// Convert conceptual syntax to logical expressions
+		OntologyNormalizer normalizer = new AxiomatizationNormalizer(
+				new WSMO4JManager());
+		entities = normalizer.normalizeEntities(entities);
+
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		for (Entity e : entities) {
+			if (e instanceof Axiom) {
+				axioms.add((Axiom) e);
+			}
+		}
+
+		// printAxioms(axioms);
+
+		// 2.
+		// Convert constraints to support debugging
+		normalizer = new ConstraintReplacementNormalizer(new WSMO4JManager());
+		axioms = normalizer.normalizeAxioms(axioms);
+
+		// printAxioms(axioms);
+
+		// Simplify axioms
+		// OnePassReplacementNormalizer should change C :- A implies B to C :- B
+		// impliedBy A
+		normalizer = new ConstructReductionNormalizer(new WSMO4JManager());
+		axioms = normalizer.normalizeAxioms(axioms);
+
+		printAxioms(axioms);
+
+		// Apply Lloyd-Topor rules to get Datalog-compatible LEs
+		normalizer = new LloydToporNormalizer(new WSMO4JManager());
+		axioms = normalizer.normalizeAxioms(axioms);
+
+		// printAxioms(axioms);
+
+		org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
+				new WSMO4JManager());
+		Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
+		for (Axiom a : axioms) {
+			lExprs.addAll(a.listDefinitions());
+		}
+
+		p = wsml2datalog.transform(lExprs);
+		printRules(p);
+		ontology.removeAxiom(axiom);
+
+		// result should be:
+		// (A impliedBy B) and (B impliedBy a)
+
+		// expected output:
+
+		Rule expected01 = LiteralTestHelper.createRule(LiteralTestHelper
+				.createSimplePosLiteral("urn:b"), LiteralTestHelper
+				.createSimplePosLiteral("urn:a"));
+
+		Rule expected02 = LiteralTestHelper.createRule(LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimplePosLiteral("urn:b"));
+
+		Set<Rule> expected = new HashSet<Rule>();
+		expected.add(expected01);
+		expected.add(expected02);
+
+		outputContains(expected, p);
+
+	}
+
+	public void testTransformMoreAndInHead() throws ParserException,
+			SynchronisationException, InvalidModelException,
+			InconsistencyException {
+
+		Set<Rule> p = new HashSet<Rule>();
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom12"));
+		axiom
+				.addDefinition(LETestHelper
+						.buildLE("_\"urn:a\" and _\"urn:b\" and _\"urn:c\" :- _\"urn:d\" "));
+		ontology.addAxiom(axiom);
+
+		Set<Entity> entities = new HashSet<Entity>();
+
+		entities.addAll(ontology.listConcepts());
+		entities.addAll(ontology.listInstances());
+		entities.addAll(ontology.listRelations());
+		entities.addAll(ontology.listRelationInstances());
+		entities.addAll(ontology.listAxioms());
+
+		// 1.
+		// Convert conceptual syntax to logical expressions
+		OntologyNormalizer normalizer = new AxiomatizationNormalizer(
+				new WSMO4JManager());
+		entities = normalizer.normalizeEntities(entities);
+
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		for (Entity e : entities) {
+			if (e instanceof Axiom) {
+				axioms.add((Axiom) e);
+			}
+		}
+
+		// printAxioms(axioms);
+
+		// 2.
+		// Convert constraints to support debugging
+		normalizer = new ConstraintReplacementNormalizer(new WSMO4JManager());
+		axioms = normalizer.normalizeAxioms(axioms);
+
+		// printAxioms(axioms);
+
+		// Simplify axioms
+		normalizer = new ConstructReductionNormalizer(new WSMO4JManager());
+		axioms = normalizer.normalizeAxioms(axioms);
+		printAxioms(axioms);
+
+		// Apply Lloyd-Topor rules to get Datalog-compatible LEs
+		// 
+		normalizer = new LloydToporNormalizer(new WSMO4JManager());
+		axioms = normalizer.normalizeAxioms(axioms);
+
+		System.out.println("LloydTopor");
+		printAxioms(axioms);
+
+		org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
+				new WSMO4JManager());
+		Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
+		for (Axiom a : axioms) {
+			lExprs.addAll(a.listDefinitions());
+		}
+
+		p = wsml2datalog.transform(lExprs);
+		printRules(p);
+		ontology.removeAxiom(axiom);
+
+		// result should be:
+		// a :- d
+		// b :- d
+		// c :- d
+
+		// expected output:
+
+		Rule expected01 = LiteralTestHelper.createRule(LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimplePosLiteral("urn:d"));
+
+		Rule expected02 = LiteralTestHelper.createRule(LiteralTestHelper
+				.createSimplePosLiteral("urn:b"), LiteralTestHelper
+				.createSimplePosLiteral("urn:d"));
+
+		Rule expected03 = LiteralTestHelper.createRule(LiteralTestHelper
+				.createSimplePosLiteral("urn:c"), LiteralTestHelper
+				.createSimplePosLiteral("urn:d"));
+
+		Set<Rule> expected = new HashSet<Rule>();
+		expected.add(expected01);
+		expected.add(expected02);
+		expected.add(expected03);
+
+		outputContains(expected, p);
+
+	}
+
+	public void testTransformMoreAndInBody() throws ParserException,
+			SynchronisationException, InvalidModelException,
+			InconsistencyException {
+
+		Set<Rule> p = new HashSet<Rule>();
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom12"));
+		axiom
+				.addDefinition(LETestHelper
+						.buildLE("_\"urn:a\" :- _\"urn:b\" and _\"urn:c\" and _\"urn:d\" "));
+		ontology.addAxiom(axiom);
+
+		Set<Entity> entities = new HashSet<Entity>();
+
+		entities.addAll(ontology.listConcepts());
+		entities.addAll(ontology.listInstances());
+		entities.addAll(ontology.listRelations());
+		entities.addAll(ontology.listRelationInstances());
+		entities.addAll(ontology.listAxioms());
+
+		// 1.
+		// Convert conceptual syntax to logical expressions
+		OntologyNormalizer normalizer = new AxiomatizationNormalizer(
+				new WSMO4JManager());
+		entities = normalizer.normalizeEntities(entities);
+
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		for (Entity e : entities) {
+			if (e instanceof Axiom) {
+				axioms.add((Axiom) e);
+			}
+		}
+
+		// printAxioms(axioms);
+
+		// 2.
+		// Convert constraints to support debugging
+		normalizer = new ConstraintReplacementNormalizer(new WSMO4JManager());
+		axioms = normalizer.normalizeAxioms(axioms);
+
+		// printAxioms(axioms);
+
+		// Simplify axioms
+		normalizer = new ConstructReductionNormalizer(new WSMO4JManager());
+		axioms = normalizer.normalizeAxioms(axioms);
+		printAxioms(axioms);
+
+		// Apply Lloyd-Topor rules to get Datalog-compatible LEs
+		// 
+		normalizer = new LloydToporNormalizer(new WSMO4JManager());
+		axioms = normalizer.normalizeAxioms(axioms);
+
+		System.out.println("LloydTopor");
+		printAxioms(axioms);
+
+		org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
+				new WSMO4JManager());
+		Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
+		for (Axiom a : axioms) {
+			lExprs.addAll(a.listDefinitions());
+		}
+
+		p = wsml2datalog.transform(lExprs);
+		printRules(p);
+		ontology.removeAxiom(axiom);
+
+		// result should be:
+		// urn:a() :- urn:b(), urn:c(), urn:d().
+		Rule expected01 = LiteralTestHelper.createRule(LiteralTestHelper
+				.createSimplePosLiteral("urn:a"), LiteralTestHelper
+				.createSimplePosLiteral("urn:b"), LiteralTestHelper
+				.createSimplePosLiteral("urn:c"),  LiteralTestHelper
+				.createSimplePosLiteral("urn:d") );
+		
+		Set<Rule> expected = new HashSet<Rule>();
+		expected.add(expected01);
+		outputContains(expected, p);
 
 	}
 
@@ -382,6 +1085,31 @@ public class TransformationNormalizationTest extends TestCase {
 
 		assertEquals(1, counter);
 
+	}
+	public void testConvertEntitiesImpliedByImplies() throws ParserException {
+		Set<Entity> in = new HashSet<Entity>();
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom13"));
+		axiom.addDefinition(LETestHelper
+				.buildLE("_\"urn:a\" :- _\"urn:c\" impliedBy _\"urn:b\""));
+		in.add(axiom);
+
+		Set<Rule> out01 = reasoner.convertEntities(in);
+		in.remove(axiom);
+		
+		in = new HashSet<Entity>();
+		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom14"));
+		axiom.addDefinition(LETestHelper
+				.buildLE("_\"urn:a\" :- _\"urn:b\" implies _\"urn:c\""));
+		in.add(axiom);
+		
+		Set<Rule> out02 = reasoner.convertEntities(in);
+		in.remove(axiom);
+		
+		outputContains(out02, out01);
+		
+		
 	}
 
 	private void outputContains(Set<Rule> expected, Set<Rule> output) {
