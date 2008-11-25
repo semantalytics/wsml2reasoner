@@ -30,7 +30,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import junit.framework.TestCase;
-import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Axiom;
@@ -184,30 +183,18 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 		}
 		assertEquals(2,count);
 	}
-	
-	public void testConvertEntitiesStdRules() {
 		
-		Set<Entity> in = new HashSet<Entity>();
-		
-		Set<Rule> out = reasoner.convertEntities(in);
-		// test if out contains standard rules 
-		assertTrue(containStdRules(out));
-	}
-	
-	
 	public void testConvertEntities() throws ParserException {
 		
 		Set<Entity> in = new HashSet<Entity>();
 		
 		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns+ "axiom00"));
 		axiom.addDefinition(LETestHelper.buildLE("?x subConceptOf ?concept99"));
-
 		in.add(axiom);
-
-		
 		Set<Rule> out = reasoner.convertEntities(in);
-		assertTrue(containStdRules(out));
 		
+		assertEquals(21, out.size());
+
 		boolean b = false;
 		for(Rule r : out) {
 			if(r.getHead().toString().equals("wsml-subconcept-of(?x, ?concept99)")){
@@ -217,6 +204,7 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 		}
 		assertEquals(true, b);
 	}
+	
 	
 	public void testConvertQuery() throws ParserException {
 		
@@ -271,100 +259,8 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 			assertEquals( (" ?- wsml-implies-type(?x, ?x, ?x)."), cq.toString());
 		}
 		
-		// TODO more of that Queries ??? 
-		
-		
 	}
 
-	
-	private boolean containStdRules(Set<Rule> theRules){
-		int rules = 0;
-		
-		for(Rule r : theRules) {
-			// test if out contains standard rules
-			if(r.getHead().toString().equals("http://www.wsmo.org/reasoner/VIOLATION()") && r.getBody().toString().equals("[http://www.wsmo.org/reasoner/MIN_CARD(?v1, ?v2, ?v3)]")) {
-				rules++;
-			}
-			
-			else if(r.getHead().toString().equals("wsml-member-of(?instance, ?concept2)") && r.getBody().toString().equals("[wsml-member-of(?instance, ?concept), wsml-subconcept-of(?concept, ?concept2)]")) {
-				rules++;
-			}
-			
-			else if(r.getHead().toString().equals("http://www.wsmo.org/reasoner/VIOLATION()") && r.getBody().toString().equals("[http://www.wsmo.org/reasoner/NAMED_USER(?v1)]")) {
-				rules++;
-			}
-			
-			else if(r.getHead().toString().equals("http://temp/knownConcept(?concept)") && r.getBody().toString().equals("[wsml-of-type(?concept, ?attribute, ?concept2)]")) {
-				rules++;
-			}
-			
-			else if(r.getHead().toString().equals("http://temp/knownConcept(?concept)") && r.getBody().toString().equals("[wsml-member-of(?instance, ?concept)]")) {
-				rules++;
-			}
-			
-			else if(r.getHead().toString().equals("http://temp/direct/subConceptOf(?concept, ?concept3)") && r.getBody().toString().equals("[wsml-subconcept-of(?concept, ?concept3), !http://temp/indirect/subConceptOf(?concept, ?concept3)]")) {
-				rules++;
-			}
-			
-			else if(r.getHead().toString().equals("http://temp/indirect/memberOf(?instance, ?concept)") && r.getBody().toString().equals("[wsml-member-of(?instance, ?concept), wsml-member-of(?instance, ?concept2), wsml-subconcept-of(?concept2, ?concept), http://www.wsmo.org/wsml/wsml-syntax#inequal(?concept2, ?concept)]")) {
-				rules++;
-			}
-			
-			else if(r.getHead().toString().equals("http://www.wsmo.org/reasoner/VIOLATION()") && r.getBody().toString().equals("[http://www.wsmo.org/reasoner/MAX_CARD(?v1, ?v2, ?v3)]")) {
-				rules++;
-			}
-			
-			else if(r.getHead().toString().equals("http://temp/knownConcept(?concept2)") && r.getBody().toString().equals("[wsml-subconcept-of(?concept2, ?concept3)]")) {
-				rules++;
-			}
-			
-			else if(r.getHead().toString().equals("wsml-subconcept-of(?concept, ?concept)") && r.getBody().toString().equals("[http://temp/knownConcept(?concept)]")) {
-				rules++;
-			}
-			
-			else if(r.getHead().toString().equals("http://www.wsmo.org/reasoner/VIOLATION()") && r.getBody().toString().equals("[http://www.wsmo.org/reasoner/ATTR_OFTYPE(?v1, ?v2, ?v3, ?v4, ?v5)]")) {
-				rules++;
-			}
-			
-			else if(r.getHead().toString().equals("http://www.wsmo.org/reasoner/VIOLATION()") && r.getBody().toString().equals("[http://www.wsmo.org/reasoner/UNNAMED_USER(?v1)]")) {
-				rules++;
-			}
-			
-			else if(r.getHead().toString().equals("http://temp/knownConcept(?concept)") && r.getBody().toString().equals("[wsml-implies-type(?concept, ?attribute, ?concept2)]")) {
-				rules++;
-			}
-			
-			else if(r.getHead().toString().equals("http://temp/knownConcept(?concept3)") && r.getBody().toString().equals("[wsml-subconcept-of(?concept2, ?concept3)]")) {
-				rules++;
-			}
-			
-			else if(r.getHead().toString().equals("wsml-member-of(?instance2, ?concept2)") && r.getBody().toString().equals("[wsml-implies-type(?concept, ?attribute, ?concept2), wsml-member-of(?instance, ?concept), wsml-has-value(?instance, ?attribute, ?instance2)]")) {
-				rules++;
-			}
-			
-			else if(r.getHead().toString().equals("wsml-subconcept-of(?concept, ?concept3)") && r.getBody().toString().equals("[wsml-subconcept-of(?concept, ?concept2), wsml-subconcept-of(?concept2, ?concept3)]")) {
-				rules++;
-			}
-			
-			else if(r.getHead().toString().equals("http://temp/direct/memberOf(?instance, ?concept)") && r.getBody().toString().equals("[wsml-member-of(?instance, ?concept), !http://temp/indirect/memberOf(?instance, ?concept)]")) {
-				rules++;
-			}
-			
-			else if(r.getHead().toString().equals("http://temp/indirect/subConceptOf(?concept, ?concept2)") && r.getBody().toString().equals("[wsml-subconcept-of(?concept, ?concept3), wsml-subconcept-of(?concept3, ?concept2), http://www.wsmo.org/wsml/wsml-syntax#inequal(?concept, ?concept3), http://www.wsmo.org/wsml/wsml-syntax#inequal(?concept3, ?concept2)]")) {
-				rules++;
-			}
-		
-		}
-		
-		if(rules == 18) {
-			return true;
-		}
-		
-		return false;
-	}
-	
-
-	
 }
 	
 
