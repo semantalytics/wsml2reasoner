@@ -57,6 +57,7 @@ public class SplitDisjunctiveBodyTest extends TestCase {
           assertFalse(rule.isApplicable(LETestHelper.buildLE(" _\"urn:a\" and _\"urn:b\" and _\"urn:c\" or _\"urn:f\" :- _\"urn:d\""))); 
           assertFalse(rule.isApplicable(LETestHelper.buildLE(" _\"urn:a\" :- _\"urn:b\"")));
           assertFalse(rule.isApplicable(LETestHelper.buildLE(" _\"urn:a\" :- (_\"urn:b\" and _\"urn:d\")")));
+          assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" :- _\"urn:c\" impliedBy _\"urn:b\"")));
           
           assertTrue(rule.isApplicable(LETestHelper.buildLE(" _\"urn:a\" :- _\"urn:b\" or _\"urn:c\"")));
           assertTrue(rule.isApplicable(LETestHelper.buildLE(" _\"urn:a\" :- _\"urn:b\" or (naf _\"urn:c\")")));

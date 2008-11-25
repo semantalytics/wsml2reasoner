@@ -52,12 +52,12 @@ public class TransformNestedImplicationTest extends TestCase {
 		assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" and _\"urn:b\" and _\"urn:c\" or _\"urn:d\"")));
 		assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" :-  _\"urn:b\" impliedBy _\"urn:c\" or _\"urn:d\" ")));
 		assertFalse(rule.isApplicable(LETestHelper.buildLE("(_\"urn:a\" or _\"urn:b\" ) and (_\"urn:c\" impliedBy  _\"urn:d\")")));
+		assertFalse(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\"  :- _\"urn:c\" impliedBy _\"urn:b\" ")));
 
 		
 		assertTrue(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" impliedBy _\"urn:b\"  :- _\"urn:c\" ")));
 		assertTrue(rule.isApplicable(LETestHelper.buildLE("(naf _\"urn:a\") impliedBy (_\"urn:b\"  or _\"urn:c\") :- _\"urn:d\" ")));
 		assertTrue(rule.isApplicable(LETestHelper.buildLE("_\"urn:a\" impliedBy _\"urn:b\" impliedBy _\"urn:c\" :- _\"urn:d\" ")));
-
 
 	}
 

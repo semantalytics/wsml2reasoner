@@ -61,6 +61,13 @@ public class TransformImplicationTest extends TestCase {
 		assertFalse(rule
 				.isApplicable(LETestHelper
 						.buildLE("(_\"urn:a\" or _\"urn:b\" ) and (_\"urn:c\" impliedBy  _\"urn:d\")")));
+		
+		assertFalse(rule
+				.isApplicable(LETestHelper
+						.buildLE("_\"urn:c\" impliedBy _\"urn:b\" :- _\"urn:a\"")));
+		assertFalse(rule
+				.isApplicable(LETestHelper
+						.buildLE(" _\"urn:a\" :- _\"urn:c\" impliedBy _\"urn:b\" ")));
 
 		assertTrue(rule.isApplicable(LETestHelper
 				.buildLE("_\"urn:a\" impliedBy _\"urn:b\"")));
@@ -69,6 +76,7 @@ public class TransformImplicationTest extends TestCase {
 		assertTrue(rule
 				.isApplicable(LETestHelper
 						.buildLE("_\"urn:a\" impliedBy _\"urn:b\" impliedBy  _\"urn:d\" or _\"urn:e\" ")));
+		
 
 	}
 
