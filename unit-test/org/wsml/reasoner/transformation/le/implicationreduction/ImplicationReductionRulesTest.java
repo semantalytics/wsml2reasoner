@@ -36,7 +36,6 @@ public class ImplicationReductionRulesTest extends TestCase {
 		super();
 	}
 
-
 	protected void setUp() throws Exception {
 		super.setUp();
 		WSMO4JManager wsmoManager = new WSMO4JManager();
@@ -45,7 +44,6 @@ public class ImplicationReductionRulesTest extends TestCase {
 	
 	public void testGetRules() {
 		assertEquals(2, rules.getRules().size());
-	
 	}
 	
 	

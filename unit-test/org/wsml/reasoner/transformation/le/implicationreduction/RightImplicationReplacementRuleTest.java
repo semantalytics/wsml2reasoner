@@ -71,4 +71,5 @@ public class RightImplicationReplacementRuleTest extends TestCase {
         out = LETestHelper.buildLE("( (_\"urn:b\") impliedBy (_\"urn:b\") )");
         assertEquals(out, rule.apply(in));
     }
+   
 }
