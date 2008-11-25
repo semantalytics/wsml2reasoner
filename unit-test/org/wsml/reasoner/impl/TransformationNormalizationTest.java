@@ -1108,8 +1108,6 @@ public class TransformationNormalizationTest extends TestCase {
 		in.remove(axiom);
 		
 		outputContains(out02, out01);
-		
-		
 	}
 
 	private void outputContains(Set<Rule> expected, Set<Rule> output) {
