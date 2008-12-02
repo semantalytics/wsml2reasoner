@@ -1,0 +1,27 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://example.com/relations2#" }
+
+ontology Relations2
+
+concept C1
+concept C2
+
+
+instance i11 memberOf C1
+instance i12 memberOf C1
+instance i13 memberOf C1
+instance i21 memberOf C2
+instance i22 memberOf C2
+instance i23 memberOf C2
+
+
+relation Declared(ofType C1, ofType C2)
+relationInstance Declared(i11, i21)
+relationInstance Declared(i11, i23)
+
+relationInstance NotDeclared(i12, i22)
+relationInstance NotDeclared(i12, i21)
+
+relationInstance DeclaredAfter(i13, i23)
+relationInstance DeclaredAfter(i13, i22)
+relation DeclaredAfter(ofType C1, ofType C2)

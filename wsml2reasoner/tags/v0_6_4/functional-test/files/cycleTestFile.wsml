@@ -1,0 +1,29 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-dl"
+
+namespace { _"http://www.example.org/ontologies/example#",
+  dc  _"http://purl.org/dc/elements/1.1#"}
+
+ontology _"http://www.example.org/ontologies/cycleTestFile"
+
+concept country
+
+concept region subConceptOf country
+
+concept place subConceptOf region
+
+concept school subConceptOf place
+
+concept university subConceptOf school
+
+concept church subConceptOf place
+
+concept supermarket subConceptOf place
+
+concept mpreis subConceptOf supermarket
+
+concept workplace subConceptOf place
+
+instance springfield_elementary memberOf {school, workplace}
+
+axiom definedBy
+	place subConceptOf university.

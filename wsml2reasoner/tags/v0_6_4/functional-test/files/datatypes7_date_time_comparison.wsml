@@ -1,0 +1,24 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://example.com/datatypes7#" } 
+
+ontology DatatypesTestOntology7
+
+concept Human
+  birthday ofType _dateTime
+  
+concept Child subConceptOf Human  
+  
+instance Peter memberOf c1
+  birthday hasValue _dateTime(1957, 02, 20, 13, 56, 00, 12, 30)
+  
+instance Carla memberOf c1
+  birthday hasValue _dateTime(1976, 08, 16, 13, 56, 00, 12, 30)
+  
+instance Anna memberOf c1
+  birthday hasValue _dateTime(1996, 05, 23, 13, 56, 00, 12, 30)
+  
+instance Chris memberOf c1 
+  birthday hasValue _dateTime(2001, 09, 15, 13, 56, 00, 12, 30)
+
+axiom child definedBy
+  ?x[birthday hasValue ?y] and ?y > _dateTime(1995,01,01,13,56,00, 12, 30) implies ?x memberOf Child.

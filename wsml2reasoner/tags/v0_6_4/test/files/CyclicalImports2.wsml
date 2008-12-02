@@ -1,0 +1,20 @@
+
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
+
+namespace { _"http://here.comes.the.whistleman/CyclicalImports2#",
+	    CycImp1 _"http://here.comes.the.whistleman/CyclicalImports1#"}
+
+ontology CyclicalImports2
+
+importsOntology {CycImp1#CyclicalImports1}
+
+concept Slave
+
+instance Cy2i1 memberOf CycImp1#Master
+
+instance KarlDenson memberOf CycImp1#JazzMusician
+
+instance JohnMedeski memberOf CycImp1#JazzMusician
+
+
+

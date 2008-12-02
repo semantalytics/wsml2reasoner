@@ -1,0 +1,48 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-rule"
+namespace { _"http://example.com/function_symbols2#", 
+     o1 _"http://example.com/function_symbols2_o1#", 
+     o2 _"http://example.com/function_symbols2_o2#" }
+
+ontology o2#mediated_ontology_1
+
+axiom o2#caMapingRule16
+     definedBy 
+          o2#mediated1(?X13,o2#Citizen)[o2#hasName hasValue o2#mediated1(?X13,o2#Name)] memberOf o2#Citizen
+:-
+?X13 memberOf o1#Person
+  and o2#mediated1(?X13,o2#Name) memberOf o2#Name
+  and o2#mediated1(?X13,o2#Name)[?A14 hasValue ?V15]. 
+
+axiom o2#ccMapingRule2
+     definedBy 
+          o2#mappedConcepts(o1#Person,o2#Citizen,?X1)
+  and o2#mediated1(?X1,o2#Citizen) memberOf o2#Citizen
+:-
+?X1 memberOf o1#Person. 
+
+axiom o2#aaMapingRule8
+     definedBy 
+          o2#mediated1(?X5,o2#Name)[o2#hasSurname hasValue ?Y6] memberOf o2#Name
+:-
+?X5[o1#hasSurname hasValue ?Y6] memberOf o1#Person
+  and ?X5 memberOf ?SC7
+  and o2#mappedConcepts(?SC7,o2#Name,?X5). 
+
+axiom o2#ccMapingRule4
+     definedBy 
+          o2#mappedConcepts(o1#Person,o2#Name,?X3)
+  and o2#mediated1(?X3,o2#Name) memberOf o2#Name
+:-
+?X3 memberOf o1#Person. 
+
+axiom o2#aaMapingRule12
+     definedBy 
+          o2#mediated1(?X9,o2#Name)[o2#hasFirstName hasValue ?Y10] memberOf o2#Name
+:-
+?X9[o1#hasChristianName hasValue ?Y10] memberOf o1#Person
+  and ?X9 memberOf ?SC11
+  and o2#mappedConcepts(?SC11,o2#Name,?X9). 
+
+instance me memberOf o1#Person
+     o1#hasSurname hasValue "Mocan"
+     o1#hasChristianName hasValue "Adrian"

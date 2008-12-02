@@ -1,0 +1,10 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://example.com/relations4a#" }
+
+ontology Relations4a
+
+concept X
+
+concept Y
+
+relation binary( ofType X, ofType Y )
