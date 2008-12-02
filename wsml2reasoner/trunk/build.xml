@@ -81,9 +81,9 @@
 			</fileset>
 		</copy>
 		
-		<javac srcdir="${dir.classes}" destdir="${dir.classes}" deprecation="on" debug="on" >
-			<compilerarg value="-Xlint:unchecked" compiler="modern" />
-			<compilerarg value="-Xlint:unchecked" compiler="classic" />
+		<javac srcdir="${dir.classes}" destdir="${dir.classes}" compiler="modern" deprecation="on" debug="on" debuglevel="lines,vars,source" >
+			<compilerarg value="-Xlint:-unchecked" />
+			<compilerarg value="-version" />
 			<classpath>
 				<fileset dir="${dir.lib}" />
 			</classpath>
@@ -109,9 +109,9 @@
 			</fileset>
 		</copy>
 		
-		<javac srcdir="${dir.classes.proprietary}" destdir="${dir.classes.proprietary}" deprecation="on" debug="on">
-			<compilerarg value="-Xlint:unchecked" compiler="modern" />
-			<compilerarg value="-Xlint:unchecked" compiler="classic" />
+		<javac srcdir="${dir.classes.proprietary}" destdir="${dir.classes.proprietary}" compiler="modern" deprecation="on" debug="on" debuglevel="lines,vars,source">
+			<compilerarg value="-Xlint:unchecked" />
+			<compilerarg value="-version" />
 			<classpath>
 				<pathelement location ="${dir.classes}" />
 				<fileset dir="${dir.lib}" />
@@ -247,9 +247,9 @@
 		<delete dir="${dir.classes.unit.test}" />
 		<mkdir dir="${dir.classes.unit.test}" />
 
-		<javac srcdir="${dir.src.unit.test}" destdir="${dir.classes.unit.test}" deprecation="on">
-			<compilerarg value="-Xlint:unchecked" compiler="modern" />
-			<compilerarg value="-Xlint:unchecked" compiler="classic" />
+		<javac srcdir="${dir.src.unit.test}" destdir="${dir.classes.unit.test}" compiler="modern" deprecation="on" debug="on" debuglevel="lines,vars,source">
+			<compilerarg value="-Xlint:unchecked" />
+			<compilerarg value="-version" />
 			<include name="**/*.java" />
 			<classpath>
 				<fileset dir="${dir.lib}" />
@@ -263,9 +263,9 @@
 		<delete dir="${dir.classes.functional.test}" />
 		<mkdir dir="${dir.classes.functional.test}" />
 
-		<javac srcdir="${dir.src.functional.test}" destdir="${dir.classes.functional.test}" deprecation="on">
-			<compilerarg value="-Xlint:unchecked" compiler="modern" />
-			<compilerarg value="-Xlint:unchecked" compiler="classic" />
+		<javac srcdir="${dir.src.functional.test}" destdir="${dir.classes.functional.test}" compiler="modern" deprecation="on" debug="on" debuglevel="lines,vars,source">
+			<compilerarg value="-Xlint:unchecked" />
+			<compilerarg value="-version" />
 			<include name="**/*.java" />
 			<classpath>
 				<fileset dir="${dir.lib}" />
