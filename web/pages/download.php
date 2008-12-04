@@ -35,6 +35,16 @@ However, there are three release variants in accordance with the license agreeme
 
 <h2>Release History</h2>
 
+<p><b><a id="v0_6_4" href="https://sourceforge.net/project/showfiles.php?group_id=208169&package_id=249452&release_id=644356">v0.6.4</a></b> 02-12-2008</p>
+    
+<p>
+This version contains no significant updates of WSML2Reasoner,
+but is being released because it contains a new version of the bundled WSMO4J
+(the wsmo object model for java) jar files.
+The latest WSMO4J release contains several important bug fixes
+relating to the WSMO4J date-time types.
+</p>
+
 <p><b><a id="v0_6_3" href="https://sourceforge.net/project/showfiles.php?group_id=208169&package_id=249452&release_id=639704">v0.6.3</a></b> 11-11-2008</p>
     
 <p>Bug fixes</p>

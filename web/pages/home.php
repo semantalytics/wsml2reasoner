@@ -106,6 +106,20 @@
 	<tr valign=top>
 		<td width=150>
 			<p align=left>
+				02 Dec 2008
+			</p>
+		</td>
+		<td>
+			<p align=left>
+				WSML2Reasoner <a href="download#v0_6_4">version 0.6.4</a> released.<br />
+				This version includes the latest (v0.6.2) WSMO4J jar files that contain many important bug fixes.
+			</p>
+		</td>
+	</tr>
+
+	<tr valign=top>
+		<td width=150>
+			<p align=left>
 				11 Nov 2008
 			</p>
 		</td>
