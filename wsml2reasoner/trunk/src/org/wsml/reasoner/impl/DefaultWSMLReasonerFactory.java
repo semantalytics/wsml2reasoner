@@ -100,6 +100,15 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         }
     }
 
+    private void setAllowImportsFlag(DLBasedWSMLReasoner reasoner, Map<String, Object> params) {
+        assert params != null;
+
+        Object o = params.get(PARAM_ALLOW_IMPORTS);
+        if (o != null && o instanceof Integer) {
+            reasoner.setAllowImports((Integer) o);
+        }
+    }
+
     public WSMLReasoner createWSMLReasoner(Map<String, Object> params, Ontology ontology) {
         if (ontology == null){
             throw new IllegalArgumentException("The ontology paramter may not be null");
@@ -133,8 +142,9 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         if (params == null){
             params = new HashMap<String, Object>();
         }
-        // TODO: BARRY - Can you pass the allow imports flag in here (see LPReasoner)
-        return new DLBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.PELLET), extractWsmoManager(params));
+        DLBasedWSMLReasoner reasoner = new DLBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.PELLET), extractWsmoManager(params));
+        setAllowImportsFlag(reasoner, params);
+        return reasoner;
     }
 
     public LPReasoner createFlightReasoner(Map<String, Object> params) {
