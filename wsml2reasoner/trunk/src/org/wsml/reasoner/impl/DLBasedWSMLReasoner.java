@@ -288,12 +288,12 @@ public class DLBasedWSMLReasoner implements DLReasoner {
             ontologies = getAllOntologies(ontologies);
         }
 
-        WsmlValidator validator = Factory.createWsmlValidator(null);
-        for (Ontology ontology : ontologies) {
-            if (!validator.isValid(ontology, "http://www.wsmo.org/wsml/wsml-syntax/wsml-dl", new ArrayList<ValidationError>(), new ArrayList<ValidationWarning>())) {
-                throw new RuntimeException("The given WSML-DL ontology is not " + "valid! Please use a WSML Validator to check why this " + "is not valid WSML-DL (e.g. " + "http://tools.deri.org/wsml/validator/v1.2/");
-            }
-        }
+//        WsmlValidator validator = Factory.createWsmlValidator(null);
+//        for (Ontology ontology : ontologies) {
+//            if (!validator.isValid(ontology, "http://www.wsmo.org/wsml/wsml-syntax/wsml-dl", new ArrayList<ValidationError>(), new ArrayList<ValidationWarning>())) {
+//                throw new RuntimeException("The given WSML-DL ontology is not " + "valid! Please use a WSML Validator to check why this " + "is not valid WSML-DL (e.g. " + "http://tools.deri.org/wsml/validator/v1.2/");
+//            }
+//        }
 
         // TODO: this does not handle imported ontologies
         // if (ontology.getDefaultNamespace() != null) {
