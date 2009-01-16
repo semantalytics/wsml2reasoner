@@ -243,7 +243,7 @@ public class QueryProcessor {
             buffer.append(convertVariableToColumnName(expression.mExpression.replaceAll("\\*", "STAR")));
         }
         else {
-            buffer.append(expression.mExpression);
+            buffer.append(convertVariableToColumnName(expression.mExpression));
         }
 
         return buffer.toString();
