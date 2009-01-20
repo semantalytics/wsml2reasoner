@@ -129,7 +129,7 @@ public class Table {
                 else // for every further row we need to determine the
                         // biggest type
                 {
-                    Class< ? > derived = doPromote(e.getClass(), columnTypes.get(j));
+                    Class< ? > derived = doPromote(e.getClassMapping(), columnTypes.get(j));
                     columnTypes.add(j, derived);
                 }
             }
