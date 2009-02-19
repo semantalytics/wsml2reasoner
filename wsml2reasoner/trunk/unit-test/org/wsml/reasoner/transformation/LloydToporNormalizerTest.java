@@ -124,6 +124,38 @@ public class LloydToporNormalizerTest extends TestCase {
 			assertEquals(2, all);
 		}
 	}
+	
+	public void testNormalizeAxiomsSplitComplexDisjunctiveBody() 
+			throws ParserException {
+		
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
+				+ "axiom2"));
+		axiom
+				.addDefinition(LETestHelper		
+		//added to replicate bug no. 2615905 on sourceforge
+        //this is bound to fail right now
+        //remove when fixed
+        .buildLE(" _\"urn:r\"  :- _\"urn:a\" and ( _\"urn:b\" or _\"urn:c\")  and ( _\"urn:d\" or _\"urn:e\" )"));
+		
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		axioms.add(axiom);
+
+		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
+		//afterwards there should be no disjunctions left in the set of output axioms, i.e. they should be "simple"
+		
+		for (Axiom ax : out) {
+			assertEquals(ax.getIdentifier().toString(), "_#");
+			Set<LogicalExpression> les = ax.listDefinitions();
+			int disjunctions = 0;
+			
+			for (LogicalExpression le : les) {
+				if (le.toString().contains("or")) {
+					disjunctions++;					
+				}		
+			}
+			assertEquals(0, disjunctions);
+		}           	
+	}
 
 	public void testNormalizeAxiomsSplitConstraint() throws ParserException {
 
