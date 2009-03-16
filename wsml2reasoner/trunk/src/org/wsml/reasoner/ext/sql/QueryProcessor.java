@@ -23,6 +23,7 @@ package org.wsml.reasoner.ext.sql;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -266,10 +267,25 @@ public class QueryProcessor {
             else
                 buffer.append(COMMA).append(SPACE);
 
-            buffer.append(convertVariableToColumnName(like.mVariable)).append(SPACE).append(LIKE).append(SPACE).append(QUOTE).append(like.mPattern).append(QUOTE);
+            buffer.append(convertVariableToColumnName(like.mVariable)).append(SPACE);
+            buffer.append(LIKE).append(SPACE).append( quoteIfNecessary( like.mPattern) );
         }
 
         return buffer.toString();
+    }
+    
+    private String quoteIfNecessary( String text ) {
+    	int len = text.length();
+    	if( len == 0 )
+    		return "''";
+
+    	if ( text.charAt( 0 ) == QUOTE && text.charAt( len - 1 ) == QUOTE )
+    		return text;
+
+    	if ( text.charAt( 0 ) == DQUOTE && text.charAt( len - 1 ) == DQUOTE )
+    		return text;
+    	
+    	return '\'' + text + '\'';
     }
 
     private String concatenate(Iterator<String> iterator, TokenAdapter adapter) {
@@ -727,10 +743,25 @@ public class QueryProcessor {
             mExpression = expression;
             mAggregate = aggregate;
         }
+        
+        public String toString() {
+        	if( mAggregate == null )
+        		return mExpression;
+        	else
+        		return mAggregate + "(" + mExpression + ")";
+        }
 
         final String mExpression;
 
         final String mAggregate;
+    }
+    
+    public List<String> getSelectExpressions() {
+    	List<String> result = new ArrayList<String>();
+    	
+    	for( SelectExpression exp : mSelectExpressions )
+    		result.add( exp.toString() );
+    	return result;
     }
 
     /** The list of select expressions. */

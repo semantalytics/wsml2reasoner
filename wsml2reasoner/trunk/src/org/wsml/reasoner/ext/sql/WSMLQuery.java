@@ -21,17 +21,17 @@
 
 package org.wsml.reasoner.ext.sql;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -42,13 +42,9 @@ import org.omwg.ontology.Ontology;
 import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.LPReasoner;
-import org.wsml.reasoner.api.WSMLReasoner;
-import org.wsml.reasoner.api.inconsistency.InconsistencyException;
-import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.wsml.ParserException;
 
 /**
  * The main entry point to process a WSML-Flight-A query. Only this class needs
@@ -99,52 +95,43 @@ public class WSMLQuery {
      * @param query
      *            The query in string format.
      * @return The result.
+     * @throws Exception 
      */
-    public Set<Map<Variable, Term>> executeQuery(String query) {
+    public Set<Map<Variable, Term>> executeQuery(String query) throws Exception {
         if (query == null) {
             throw new IllegalArgumentException();
-        }       
+        }
+        
+        mSelectExpressions.clear();
 
         Set<Map<Variable, Term>> finalResult = new HashSet<Map<Variable, Term>>();
         ReasonerResult reasonerResult;
-        try {
-            QueryProcessor qp = new QueryProcessor(query, preLoadedWithReasoner);
-            String wsmlQuery = qp.getWsmlQuery();
-            
-            if(!preLoadedWithReasoner) {
-            	String ontologyIRI = qp.getOntologyIRI();
-                // strip formating
-                ontologyIRI = ontologyIRI.substring(2, ontologyIRI.length() - 1);
-                reasonerResult = reasonerFacade.executeWsmlQuery(wsmlQuery, ontologyIRI);
-                onto = reasonerFacade.getOntology();
-            }
-            else {
-            	reasonerResult = reasonerFacade.executeWsmlQuery(wsmlQuery);
-            }
-                    
-            if( reasonerResult.size() > 0 )
-            {
-            	finalResult = proccessOnDB(reasonerResult, qp);
-            }
-        }
-        catch (QueryFormatException e) {
-            logger.error(e.toString());
-        }
+
+        QueryProcessor qp = new QueryProcessor(query, preLoadedWithReasoner);
+        String wsmlQuery = qp.getWsmlQuery();
+        mSelectExpressions .addAll( qp.getSelectExpressions() );
         
-        catch (IOException e) {
-            logger.error(e.toString());
+        if(!preLoadedWithReasoner) {
+        	String ontologyIRI = qp.getOntologyIRI();
+            // strip formating
+            ontologyIRI = ontologyIRI.substring(2, ontologyIRI.length() - 1);
+            reasonerResult = reasonerFacade.executeWsmlQuery(wsmlQuery, ontologyIRI);
+            onto = reasonerFacade.getOntology();
         }
-        catch (InvalidModelException e) {
-            logger.error(e.toString());
+        else {
+        	reasonerResult = reasonerFacade.executeWsmlQuery(wsmlQuery);
         }
-        catch (InconsistencyException e) {
-            logger.error(e.toString());
-        } catch (ParserException e) {
-			
-			e.printStackTrace();
-		}
+                
+        if( reasonerResult.size() > 0 )
+        {
+        	finalResult = proccessOnDB(reasonerResult, qp);
+        }
         
         return finalResult;       
+    }
+    
+    public List<String> getSelectExpressions() {
+    	return mSelectExpressions;
     }
     
     private Set<Map<Variable, Term>> proccessOnDB(ReasonerResult result, QueryProcessor qp) {
@@ -251,4 +238,6 @@ public class WSMLQuery {
     private final WSMLReasonerFacade reasonerFacade;
 
     private final DatabaseManager dbmanager = new DatabaseManager();
+    
+    private final List<String> mSelectExpressions = new ArrayList<String>();
 }
