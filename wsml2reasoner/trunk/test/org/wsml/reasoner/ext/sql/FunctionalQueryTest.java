@@ -57,7 +57,7 @@ public class FunctionalQueryTest extends TestCase
         reasoner.registerOntologies(ontos);
 	}
 
-	public void testBasic()
+	public void testBasic() throws Exception
 	{
 		String query = "SELECT ?x " + "FROM " + "_\"" + ontologyIRI1
 				+ "\"" + " WHERE ?x memberOf ?y";
@@ -68,7 +68,7 @@ public class FunctionalQueryTest extends TestCase
 		assertTrue(r.size() > 0);	
 	}
 
-	public void testGroupBy()
+	public void testGroupBy() throws Exception
 	{
 		String query = "SELECT ?x, COUNT(*) " + "FROM " + "_\"" + ontologyIRI1
 				+ "\"" + " WHERE ?x memberOf ?y " + "GROUP BY ?x";
@@ -79,7 +79,7 @@ public class FunctionalQueryTest extends TestCase
 		assertTrue(r.size() > 0);	
 	}
 
-	public void testHavingCount()
+	public void testHavingCount() throws Exception
 	{
 		String query = "SELECT ?place, COUNT(?place) FROM _\"" + ontologyIRI2
 				+ "\"" + " WHERE ?employee[hasWorkingPlace hasValue ?place] "
@@ -92,7 +92,7 @@ public class FunctionalQueryTest extends TestCase
 		assertTrue(r.size() > 0);	
 	}
 
-	public void testOrderBy()
+	public void testOrderBy() throws Exception
 	{
 		String query = "SELECT ?place, ?employee FROM _\"" + ontologyIRI2 
 				+ "\"" + " WHERE ?employee[hasWorkingPlace hasValue ?place] "
@@ -105,7 +105,7 @@ public class FunctionalQueryTest extends TestCase
 		assertTrue(r.size() > 0);			
 	}
 	
-	public void testComplex()
+	public void testComplex() throws Exception
 	{
 		String query = "SELECT ?place, COUNT(?place) FROM _\"" + ontologyIRI2
 				+ "\"" + " WHERE ?employee[hasWorkingPlace hasValue ?place] "
@@ -121,7 +121,7 @@ public class FunctionalQueryTest extends TestCase
 		assertTrue(r.size() > 0);	
 	}
 	
-	public void testPreloadingReasoner()
+	public void testPreloadingReasoner() throws Exception
 	{        
 		String query = "SELECT ?x " + "FROM " + "_\"" + ontologyIRI1
 		+ "\"" + " WHERE ?x memberOf ?y";
@@ -134,7 +134,7 @@ public class FunctionalQueryTest extends TestCase
 	
 	
 	
-	public void testPreloadingReasonerDoesNotNeedFrom()
+	public void testPreloadingReasonerDoesNotNeedFrom() throws Exception
 	{
 		String query = "SELECT ?x " + " WHERE ?x memberOf ?y";
 		
@@ -145,7 +145,7 @@ public class FunctionalQueryTest extends TestCase
 		assertTrue(r.size() > 0);		
 	}
 	
-	public void testComplexPreloadingReasonerDoesNotNeedFrom() 
+	public void testComplexPreloadingReasonerDoesNotNeedFrom() throws Exception 
 	{
 		String query = "SELECT ?place, COUNT(?place) " + " WHERE ?employee[_\"http://ontologies.deri.org/hasWorkingPlace\" hasValue ?place]"
 		+ " GROUP BY ?place " + " HAVING COUNT(?place) > 4 "
@@ -160,7 +160,7 @@ public class FunctionalQueryTest extends TestCase
 		assertTrue(r.size() > 0);			
 	}
 	
-	public void testPreloadingReasonerIgnoresFrom()
+	public void testPreloadingReasonerIgnoresFrom() throws Exception
 	{
 		String garbageURI = "http://garbage";
 		String query = "SELECT ?x " + "FROM " + "_\"" + garbageURI
