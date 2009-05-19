@@ -1,0 +1,67 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"webode://mccarthy.dia.fi.upm.es/Driving_License_Eures_Ontology#" , wsml _"http://www.wsmo.org/wsml/wsml-syntax#" ,
+	ComOnt _"webode://mccarthy.dia.fi.upm.es/Competence_Eures_Ontology#"
+	}
+
+ontology Driving_License_Eures_Ontology
+
+
+importsOntology { ComOnt#Competence_Eures_Ontology }
+
+
+concept Driving_License subConceptOf ComOnt#Competence
+	Name ofType (1) _string
+	Description ofType (1) _string
+
+instance D1E memberOf Driving_License
+	Description hasValue "Trailer has a maximum authorized mass of over than 750 kgs"
+	Name hasValue "D1E"
+
+instance D1 memberOf Driving_License
+	Description hasValue "motor vehicles used for the carriage of passengers and having more than eight seats in addition to the driver's seat but not more than 16 seat"
+	Name hasValue "D1"
+
+instance C1E memberOf Driving_License
+	Description hasValue "combination of vehicles where the tractor vehicle is in subcategory C1 and its trailer has a maximum authorized mass between 750 and 1200 kgs"
+	Name hasValue "C1E"
+
+instance C1 memberOf Driving_License
+	Description hasValue "Vans and lorries weighting between 3500 and 7500 kgs (including vehicles with a trailer weighing up to 750 kgs)"
+	Name hasValue "C1"
+
+instance B1 memberOf Driving_License
+	Description hasValue "Motor-powered tricyles and quadricycles"
+	Name hasValue "B1"
+
+instance DE memberOf Driving_License
+	Description hasValue "D with trailer of more than 750 kgs"
+	Name hasValue "DE"
+
+instance CE memberOf Driving_License
+	Description hasValue "C with trailer of more than 750 kgs"
+	Name hasValue "CE"
+
+instance BE memberOf Driving_License
+	Description hasValue "B with trailer of more than 750 kgs"
+	Name hasValue "BE"
+
+instance D memberOf Driving_License
+	Description hasValue "Car with 9 or more passengers"
+	Name hasValue "D"
+
+instance C memberOf Driving_License
+	Description hasValue "Lorry over 3.5 tons"
+	Name hasValue "C"
+
+instance B memberOf Driving_License
+	Description hasValue "Car with up to 8 passengers; lorry up to 3.5 tons"    //bvt
+	Name hasValue "B"
+
+instance A memberOf Driving_License
+	Description hasValue "Heavy weight motrocycle"
+	Name hasValue "A"
+
+instance A1 memberOf Driving_License
+	Description hasValue "Leight weight motorcycle"
+	Name hasValue "A1"
+

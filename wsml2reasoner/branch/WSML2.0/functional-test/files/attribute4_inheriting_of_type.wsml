@@ -1,0 +1,34 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://example.com/attribute4#" }
+
+ontology attribute4
+
+concept c1
+     a1 ofType _string
+
+concept c2 subConceptOf c1
+     a2 ofType _string
+
+concept c3 subConceptOf c2
+     a3 ofType _string
+
+concept c4 subConceptOf c3
+     a4 ofType _string
+
+concept c5 subConceptOf c4
+     a5 ofType _string
+
+concept c6 subConceptOf c5
+     a6 ofType _string
+     
+concept c7 subConceptOf c6
+     a7 ofType _string
+     
+concept c8 subConceptOf c7
+     a8 ofType _string
+     
+concept c9 subConceptOf c8
+     a9 ofType _string
+     
+concept c10 subConceptOf c9
+     a10 ofType _string
