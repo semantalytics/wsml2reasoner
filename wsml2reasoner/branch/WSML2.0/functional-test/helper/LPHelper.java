@@ -71,7 +71,7 @@ public class LPHelper
         LogicalExpression qExpression = leFactory.createLogicalExpression( query, ontologies.iterator().next());
 
 //		System.out.println("Executing query string '" + query + "'");
-//		System.out.println("Executing query LE: '" + OntologyHelper.toString( ontology, qExpression ) + "'");
+//		System.out.println("Executing query LE: '" + OntologyHelper.toString( ontologies.iterator().next(),  qExpression ) + "'");
 
 		return reasoner.executeQuery(qExpression);
     }
@@ -117,6 +117,7 @@ public class LPHelper
         }
         return contains;
     }
+    
 
     private static final LogicalExpressionFactory leFactory = new WSMO4JManager().getLogicalExpressionFactory();
 }

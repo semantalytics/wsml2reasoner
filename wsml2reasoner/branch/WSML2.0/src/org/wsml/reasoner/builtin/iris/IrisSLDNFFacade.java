@@ -24,7 +24,6 @@ package org.wsml.reasoner.builtin.iris;
 
 import java.util.Map;
 import org.deri.iris.Configuration;
-import org.deri.iris.evaluation.stratifiedbottomup.StratifiedBottomUpEvaluationStrategyFactory;
 import org.deri.iris.evaluation.topdown.sldnf.SLDNFEvaluationStrategyFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 

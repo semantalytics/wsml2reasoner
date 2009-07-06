@@ -45,6 +45,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 	protected LogicalExpressionFactory leFactory;
 	protected Axiom axiom;
 	protected WSMO4JManager wsmoManager;
+	
 
 	public WSML2DatalogTransformerTest() {
 		super();
@@ -314,10 +315,12 @@ public class WSML2DatalogTransformerTest extends TestCase {
 
 	public void testTransformEquivalentInHead() throws ParserException {
 		// More than one implication in the given WSML rule detected!
-		// [ 2002256 ] 'implies' should be allowed in rule bodies.
+		// [ 2002256 ] 'implies' should be allowed in rule bodies.         // TODO
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\" equivalent _\"urn:b\" :- _\"urn:c\"");
-
+		
+//		LogicalExpression le = LETestHelper.buildLE("_\"urn:a\" = _\"urn:b\" :- _\"urn:c\"");
+		
 		// result should be:
 		// A implies B :- C
 		// A impliedBy B :- C
@@ -330,10 +333,12 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		// normalized:
 		try {
 			Set<Rule> out = transformer.transform(le);
-			System.out.println(out.toString());
+//			checkContainsRule(out, LiteralTestHelper.createSimplePosLiteral("urn:b"),  LiteralTestHelper.createPosLiteral(("urn_a"));
+			System.out.println("Output: " + out.toString());
 			fail();
 		} catch (DatalogException e1) {
-
+			e1.printStackTrace();
+			
 		}
 
 	}
@@ -358,6 +363,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		// normalized:
 		try {
 			Set<Rule> out = transformer.transform(le);
+//			checkContainsRule(out, LiteralTestHelper.createSimplePosLiteral("urn:a"), LiteralTestHelper.createNegLiteral("urn_c"));
 			System.out.println(out.toString());
 			fail();
 		} catch (DatalogException e1) {
@@ -378,7 +384,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		try {
 			Set<Rule> out = transformer.transform(le);
 			System.out.println(out.toString());
-//			fail();
+			fail();
 		} catch (DatalogException e1) {
 
 		}

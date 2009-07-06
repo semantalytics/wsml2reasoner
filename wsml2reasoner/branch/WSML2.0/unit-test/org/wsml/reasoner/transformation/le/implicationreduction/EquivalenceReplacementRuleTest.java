@@ -55,6 +55,10 @@ public class EquivalenceReplacementRuleTest extends TestCase {
         assertTrue(rule.isApplicable(LETestHelper.buildLE("( _\"urn:a\" equivalent naf _\"urn:b\")")));
         assertTrue(rule.isApplicable(LETestHelper.buildLE("( (_\"urn:a\" and _\"urn:b\") equivalent ( _\"urn:c\" or _\"urn:d\") )")));
         assertTrue(rule.isApplicable(LETestHelper.buildLE("( _\"urn:a\" equivalent _\"urn:b\" )")));
+        
+        assertTrue(rule.isApplicable(LETestHelper.buildLE(" _\"urn:a\" equivalent _\"urn:b\"")));
+        
+        assertTrue(rule.isApplicable(LETestHelper.buildLE(" _\"urn:a\" equivalent _\"urn:b\"")));
     }
     
     public void testApply() throws ParserException {
@@ -69,5 +73,8 @@ public class EquivalenceReplacementRuleTest extends TestCase {
         in = LETestHelper.buildLE("( _\"urn:a\" equivalent naf _\"urn:b\")");
         out = LETestHelper.buildLE("( naf _\"urn:b\" impliedBy _\"urn:a\") and ( _\"urn:a\" impliedBy naf _\"urn:b\")");
         assertEquals(out, rule.apply(in));
+        
+        in = LETestHelper.buildLE(" _\"urn:a\" equivalent _\"urn:b\"");
+        System.out.println(rule.apply(in));
     }
 }

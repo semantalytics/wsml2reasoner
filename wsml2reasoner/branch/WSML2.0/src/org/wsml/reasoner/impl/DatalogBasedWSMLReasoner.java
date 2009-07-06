@@ -611,7 +611,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
                 // DATALOG PROGRAM
                 // for each query! which is bad if one precomputes the model for
                 // a program
-                // an materializes the result, since the materializtion needs to
+                // an materializes the result, since the materialization needs to
                 // be done all
                 // the time again and again.
                 // CurrentlY this does not fit to our reasoner implementation.

@@ -114,6 +114,20 @@ public class ConjunctiveQueryTest extends TestCase {
 		
 	}
 	
+	public void testEquals02() {
+		query = null;
+		ArrayList <Literal> list = new ArrayList<Literal>();
+	
+		Literal literal01 = new Literal(true, new String("TEST_PREDICATE_A"), new Term[0]);
+		Literal literal02 = new Literal(true, new String("TEST_PREDICATE_B"), new Term[0]);
+		list.add(literal01);
+		list.add(literal02);
+		
+		
+		query = new ConjunctiveQuery(list);
+		
+	}
+	
 	
 
 }

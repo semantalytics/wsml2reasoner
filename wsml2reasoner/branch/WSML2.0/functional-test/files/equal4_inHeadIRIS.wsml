@@ -1,0 +1,16 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
+namespace { _"http://simple#"
+}
+
+ontology simple
+
+concept C1
+
+instance a memberOf C1
+	name hasValue aName
+
+instance b memberOf C1
+
+axiom equalInHead definedBy
+	a = b :- wsml#true. 
+

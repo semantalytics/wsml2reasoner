@@ -1,0 +1,28 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
+namespace { _"http://simple#"
+}
+
+ontology simple
+
+concept X
+
+concept Y
+
+instance x1 memberOf X
+     name hasValue Adrian
+         
+instance x2 memberOf Y
+     name hasValue Adrian  
+
+axiom equalInHead definedBy
+	 ?x = ?y :- ?x[name hasValue ?n1] and ?y[name hasValue ?n2] and ?n1=?n2.
+
+
+
+
+
+
+
+
+
+

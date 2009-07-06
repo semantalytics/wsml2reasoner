@@ -69,7 +69,9 @@ public class IrisReasonerExample {
             return;
         LogicalExpressionFactory leFactory = new WSMO4JManager().getLogicalExpressionFactory();
 
-        String queryString = "?x memberOf ?y";
+//        String queryString = "?x memberOf ?y";
+//        String queryString = "?x = ?y";
+        String queryString = "?x = ?y :- ?x[name hasValue ?n1] and ?y[name hasValue ?n2] and ?n1=?n2.";
 
         LogicalExpression query = leFactory.createLogicalExpression(queryString, exampleOntology);
 

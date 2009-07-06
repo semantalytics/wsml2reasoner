@@ -150,7 +150,6 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
      */
     private final Collection<ExternalDataSource> sources;
     
-    
     /**
      * These are constants for additional WSML builtin predicates not covered in org.omwg.logicalexpression.Constants in WSMO4j
      */
@@ -299,7 +298,6 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
     }
 
     public synchronized Set<Map<Variable, Term>> getQueryContainment(ConjunctiveQuery query1, ConjunctiveQuery query2) throws ExternalToolException {
-    	
     	// check query containment and get IRIS result set
     	if (checkQueryContainment(query1, query2)) {
     		QCResult = queryCont.getContainmentMappings();
@@ -349,10 +347,11 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
                 relation.add(atom.getTuple());
             }
             else { // the rule is an ordinary rule
-                final List<ILiteral> head = new ArrayList<ILiteral>(1);
+            	final List<ILiteral> head = new ArrayList<ILiteral>(1);
                 final List<ILiteral> body = new ArrayList<ILiteral>(r.getBody().size());
                 // converting the head of the rule
                 head.add(literal2Literal(r.getHead(), true));
+               
                 // converting the body of the rule
                 for (final Literal l : r.getBody()) {
                     body.add(literal2Literal(l, false));
@@ -431,8 +430,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         		|| sym.equals(DATETIME_EQUAL) || sym.equals(GYEAR_EQUAL) || sym.equals(GYEARMONTH_EQUAL)
         		|| sym.equals(GMONTHDAY_EQUAL) || sym.equals(GDAY_EQUAL) || sym.equals(GMONTH_EQUAL)
         		|| sym.equals(DURATION_EQUAL)) {
-            return BUILTIN.createEqual(terms.get(0), terms.get(1));
-
+        	return BUILTIN.createEqual(terms.get(0), terms.get(1));
         }
         else if (sym.equals(Constants.INEQUAL) || sym.equals(Constants.NUMERIC_INEQUAL) || sym.equals(Constants.STRING_INEQUAL)
         		|| sym.equals(DATE_INEQUAL) || sym.equals(TIME_INEQUAL) || sym.equals(DATETIME_INEQUAL)) {
@@ -441,11 +439,9 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         else if (sym.equals(Constants.LESS_THAN) || sym.equals(DATE_LESS_THAN) || sym.equals(TIME_LESS_THAN)
         		|| sym.equals(DATETIME_LESS_THAN) || sym.equals(DAYTIMEDURATION_LESS_THAN) || sym.endsWith(YEARMONTHDURATION_LESS_THAN)) {
             return BUILTIN.createLess(terms.get(0), terms.get(1));
-
         }
         else if (sym.equals(Constants.LESS_EQUAL)) {
             return BUILTIN.createLessEqual(terms.get(0), terms.get(1));
-
         }
         else if (sym.equals(Constants.GREATER_THAN) || sym.equals(DATE_GREATER_THAN) || sym.equals(TIME_GREATER_THAN)
         		|| sym.equals(DATETIME_GREATER_THAN) || sym.equals(DAYTIMEDURATION_GREATER_THAN) || sym.equals(YEARMONTHDURATION_GREATER_THAN)) {

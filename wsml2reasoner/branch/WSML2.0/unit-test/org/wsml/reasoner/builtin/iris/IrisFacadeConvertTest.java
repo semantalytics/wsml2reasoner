@@ -24,6 +24,9 @@ package org.wsml.reasoner.builtin.iris;
 
 import junit.framework.TestCase;
 
+import org.omwg.logicalexpression.Constants;
+import org.wsml.reasoner.Literal;
+import org.wsml.reasoner.LiteralTestHelper;
 import org.wsmo.factory.WsmoFactory;
 
 public class IrisFacadeConvertTest extends TestCase {
@@ -36,10 +39,34 @@ public class IrisFacadeConvertTest extends TestCase {
 		// Anonymous IDs cause exception when using IRIS.
 		// The use of anonymous IDs causes an IllegalArgumentException().
 		// The problem seems to lie in IrisFacade.wsmoTermConverter().
-		
+
 		assertTrue(IrisStratifiedFacade.convertTermFromWsmo4jToIris(WF
 				.createAnonymousID()) != null);
 
+	}
+
+	public void testLiteral2Atom() {
+		try{
+			IrisStratifiedFacade.literal2Atom(null, false);
+			fail(); // should throw an exception
+		}catch (Exception e) {
+		}
+		
+	}
+
+	public void testLiteral2AtomHead() {
+		
+		Literal wsmlLiteral = new Literal(true, Constants.EQUAL, LiteralTestHelper
+				.createVariable("x"), LiteralTestHelper.createVariable("y"));
+		
+		Literal expected = new Literal(true, Constants.EQUAL, LiteralTestHelper
+				.createVariable("x"), LiteralTestHelper.createVariable("y"));
+		
+		// TODO what has to come out
+//		System.out.println(IrisStratifiedFacade.literal2Atom(wsmlLiteral, true));
+
+		assertEquals(expected, IrisStratifiedFacade.literal2Atom(wsmlLiteral,
+				true));
 	}
 
 }

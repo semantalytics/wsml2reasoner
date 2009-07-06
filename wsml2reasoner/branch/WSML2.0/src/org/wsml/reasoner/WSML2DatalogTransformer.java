@@ -495,261 +495,297 @@ public class WSML2DatalogTransformer {
      * 
      * Implements a left-first, depth-first, infix traversal.
      */
-    private static class DatalogVisitor extends InfixOrderLogicalExpressionVisitor {
+    private static class DatalogVisitor extends
+			InfixOrderLogicalExpressionVisitor {
 
-        private List<Literal> datalogBody;
-        
-        private List<Literal> datalogHead;
+		private List<Literal> datalogBody;
 
-        protected boolean inHeadOfRule;
+		private List<Literal> datalogHead;
 
-        protected boolean inBodyOfRule;
+		protected boolean inHeadOfRule;
 
-        private boolean positive;
+		protected boolean inBodyOfRule;
 
-        public DatalogVisitor() {
-            super();
-            reset();
-        }
+		private boolean positive;
 
-        /**
-         * Resets the state of the visitor to the intial state such that the
-         * visitor can be reused again.
-         * 
-         */
-        public void reset() {
-            datalogBody = new LinkedList<Literal>();
-            datalogHead = new LinkedList<Literal>();
-            inHeadOfRule = false;
-            inBodyOfRule = false;
-            positive = true;
-        }
+		public DatalogVisitor() {
+			super();
+			reset();
+		}
 
-        /**
-         * Constructs a datalog representation of the given (visited) WSML rule.
-         * The representation is a datalog program.
-         * 
-         * The construction introduces new predicates for which a defining
-         * datalog rules will not be generated here (in order to avoid multiple
-         * generation of the same rules). Instead they will be generated only
-         * once in WSML2Datalog.transform().
-         * 
-         * @return the Datalog program that represents the WSML rule or null if
-         *         the visited rule does not conform to the syntax requirements
-         *         stated in class WSML2Datalog and thus can not be translated
-         *         to datalog.
-         * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#getSerializedObject()
-         */
-        
-        @Override
-        public Set <Rule> getSerializedObject() {
-            Set <Rule> results = new HashSet<Rule>();
-            if (datalogBody.size() != 0) {
-            	for(Literal l : datalogHead){
-            		results.add(new Rule(l, datalogBody));
-            	}
-            }
-            else if (datalogHead.size() != 0) {
-            	for (Literal l : datalogHead) {
-            		results.add(new Rule(l));
-            	}
-            }
-            return results;
-        }
+		/**
+		 * Resets the state of the visitor to the intial state such that the
+		 * visitor can be reused again.
+		 * 
+		 */
+		public void reset() {
+			datalogBody = new LinkedList<Literal>();
+			datalogHead = new LinkedList<Literal>();
+			inHeadOfRule = false;
+			inBodyOfRule = false;
+			positive = true;
+		}
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.wsml.reasoner.normalization.DepthFirstLogicalExpressionVisitor#handleAtom(org.omwg.logicalexpression.Atom)
-         */
-        @Override
-        public void handleAtom(Atom atom) {
-            String predUri = atom.getIdentifier().toString();
-//             System.out.println("Atom URI:" + predUri);
-//             System.out.println("Atom arity:" + atom.getArity());
-//             System.out.println("Atom parameters:" + atom.listParameters());
-            // conditional expression is needed because WSMO4J throws a
-            // nullpointerexception for atom.listParameters()
-            Literal l = (atom.getArity() > 0) ? new Literal(positive, predUri, atom.listParameters()) : new Literal(positive, predUri, new ArrayList<Term>()); 
-            storeLiteral(l);
-        }
+		/**
+		 * Constructs a datalog representation of the given (visited) WSML rule.
+		 * The representation is a datalog program.
+		 * 
+		 * The construction introduces new predicates for which a defining
+		 * datalog rules will not be generated here (in order to avoid multiple
+		 * generation of the same rules). Instead they will be generated only
+		 * once in WSML2Datalog.transform().
+		 * 
+		 * @return the Datalog program that represents the WSML rule or null if
+		 *         the visited rule does not conform to the syntax requirements
+		 *         stated in class WSML2Datalog and thus can not be translated
+		 *         to datalog.
+		 * 
+		 * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#getSerializedObject()
+		 */
 
-        private void storeLiteral(Literal l) {
-            if (inBodyOfRule) {
-                datalogBody.add(l);
-            }
-            else if (inHeadOfRule) {
-            		// new Rule
-                	this.datalogHead.add(l);
-            }
-            else {
-                // We do not have an implication but only a simple fact.
-//                datalogHead = l;
-            	datalogHead.add(l);
-            }
-            positive = true;
-        }
+		@Override
+		public Set<Rule> getSerializedObject() {
+			Set<Rule> results = new HashSet<Rule>();
+			if (datalogBody.size() != 0) {
+				for (Literal l : datalogHead) {
+					results.add(new Rule(l, datalogBody));
+				}
+			} else if (datalogHead.size() != 0) {
+				for (Literal l : datalogHead) {
+					results.add(new Rule(l));
+				}
+			}
+			return results;
+		}
 
-        @Override
-        public void enterConstraint(Constraint arg0) {
-            inHeadOfRule = false;
-            inBodyOfRule = true;
-        }
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.wsml.reasoner.normalization.DepthFirstLogicalExpressionVisitor
+		 * #handleAtom(org.omwg.logicalexpression.Atom)
+		 */
+		@Override
+		public void handleAtom(Atom atom) {
+			String predUri = atom.getIdentifier().toString();
+			// System.out.println("Atom URI:" + predUri);
+			// System.out.println("Atom arity:" + atom.getArity());
+			// System.out.println("Atom parameters:" + atom.listParameters());
+			// conditional expression is needed because WSMO4J throws a
+			// nullpointerexception for atom.listParameters()
+			Literal l = (atom.getArity() > 0) ? new Literal(positive, predUri,
+					atom.listParameters()) : new Literal(positive, predUri,
+					new ArrayList<Term>());
+			storeLiteral(l);
+		}
 
-        @Override
-        public void enterEquivalence(Equivalence arg0) {
-        	inHeadOfRule = true;
-        	inBodyOfRule = false;
-        }
+		private void storeLiteral(Literal l) {
+			if (inBodyOfRule) {
+				datalogBody.add(l);
+			} else if (inHeadOfRule) {
+				// new Rule
+				this.datalogHead.add(l);
+			} else {
+				// We do not have an implication but only a simple fact.
+				// datalogHead = l;
+				datalogHead.add(l);
+			}
+			positive = true;
+		}
 
-        @Override
-        public void enterExistentialQuantification(ExistentialQuantification arg0) {
-            throw new DatalogException("Quantifier is not allowed in simple WSML datalog rules.");
-        }
+		@Override
+		public void enterConstraint(Constraint arg0) {
+			inHeadOfRule = false;
+			inBodyOfRule = true;
+		}
 
-        @Override
-        public void enterUniversalQuantification(UniversalQuantification arg0) {
-            throw new DatalogException("Quantifier is not allowed in simple WSML datalog rules.");
-        }
+		@Override
+		public void enterEquivalence(Equivalence arg0) {
+			System.out.println("Enter: " + arg0);
+			inHeadOfRule = true;
+			inBodyOfRule = false;
+		}
 
-        @Override
-        public void handleSubConceptMolecule(SubConceptMolecule arg0) {
-            Literal l = new Literal(positive, PRED_SUB_CONCEPT_OF, arg0.getLeftParameter(), arg0.getRightParameter());
-            storeLiteral(l);
-        }
+		@Override
+		public void enterExistentialQuantification(
+				ExistentialQuantification arg0) {
+			throw new DatalogException(
+					"Quantifier is not allowed in simple WSML datalog rules.");
+		}
 
-        @Override
-        public void handleMemberShipMolecule(MembershipMolecule arg0) {
-            Literal l = new Literal(positive, PRED_MEMBER_OF, arg0.getLeftParameter(), arg0.getRightParameter());
-            storeLiteral(l);
-        }
+		@Override
+		public void enterUniversalQuantification(UniversalQuantification arg0) {
+			throw new DatalogException(
+					"Quantifier is not allowed in simple WSML datalog rules.");
+		}
 
-        @Override
-        public void handleAttributeInferenceMolecule(AttributeInferenceMolecule arg0) {
-           Literal l = new Literal(positive, PRED_IMPLIES_TYPE, arg0.getLeftParameter(), arg0.getAttribute(), arg0.getRightParameter());
-           storeLiteral(l);
-        }
+		@Override
+		public void handleSubConceptMolecule(SubConceptMolecule arg0) {
+			Literal l = new Literal(positive, PRED_SUB_CONCEPT_OF, arg0
+					.getLeftParameter(), arg0.getRightParameter());
+			storeLiteral(l);
+		}
 
-        @Override
-        public void handleAttributeConstraintMolecule(AttributeConstraintMolecule arg0) {
-            Literal l = new Literal(positive, PRED_OF_TYPE, arg0.getLeftParameter(), arg0.getAttribute(), arg0.getRightParameter());
-            storeLiteral(l);
-        }
+		@Override
+		public void handleMemberShipMolecule(MembershipMolecule arg0) {
+			Literal l = new Literal(positive, PRED_MEMBER_OF, arg0
+					.getLeftParameter(), arg0.getRightParameter());
+			storeLiteral(l);
+		}
 
+		@Override
+		public void handleAttributeInferenceMolecule(
+				AttributeInferenceMolecule arg0) {
+			Literal l = new Literal(positive, PRED_IMPLIES_TYPE, arg0
+					.getLeftParameter(), arg0.getAttribute(), arg0
+					.getRightParameter());
+			storeLiteral(l);
+		}
 
-        @Override
-        public void handleAttributeValueMolecule(AttributeValueMolecule arg0) {
-            Literal l = new Literal(positive, PRED_HAS_VALUE, arg0.getLeftParameter(), arg0.getAttribute(), arg0.getRightParameter());
-            storeLiteral(l);
-        }
-        
+		@Override
+		public void handleAttributeConstraintMolecule(
+				AttributeConstraintMolecule arg0) {
+			Literal l = new Literal(positive, PRED_OF_TYPE, arg0
+					.getLeftParameter(), arg0.getAttribute(), arg0
+					.getRightParameter());
+			storeLiteral(l);
+		}
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleNeg(org.omwg.logicalexpression.Unary)
-         */
-        @Override
-        public void enterNegation(Negation arg0) {
-            throw new DatalogException("Classical negation is not allowed in simple WSML datalog rules.");
-        }
+		@Override
+		public void handleAttributeValueMolecule(AttributeValueMolecule arg0) {
+			Literal l = new Literal(positive, PRED_HAS_VALUE, arg0
+					.getLeftParameter(), arg0.getAttribute(), arg0
+					.getRightParameter());
+			storeLiteral(l);
+		}
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#enterNaf(org.omwg.logicalexpression.Unary)
-         */
-        @Override
-        public void enterNegationAsFailure(NegationAsFailure naf) {
-            LogicalExpression arg = naf.getOperand();
-            if (!(arg instanceof AtomicExpression))
-                throw new DatalogException("Negation as failure is allowed only on atoms or molecules in simple WSML datalog rules.");
-            positive = false;
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor
+		 * #handleNeg(org.omwg.logicalexpression.Unary)
+		 */
+		@Override
+		public void enterNegation(Negation arg0) {
+			throw new DatalogException(
+					"Classical negation is not allowed in simple WSML datalog rules.");
+		}
 
-        }
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor
+		 * #enterNaf(org.omwg.logicalexpression.Unary)
+		 */
+		@Override
+		public void enterNegationAsFailure(NegationAsFailure naf) {
+			LogicalExpression arg = naf.getOperand();
+			if (!(arg instanceof AtomicExpression))
+				throw new DatalogException(
+						"Negation as failure is allowed only on atoms or molecules in simple WSML datalog rules.");
+			positive = false;
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleOr(org.omwg.logicalexpression.Binary)
-         */
-        @Override
-        public void enterDisjunction(Disjunction arg0) {
-            throw new DatalogException("Disjunction is not allowed in simple WSML datalog rules.");
-        }
+		}
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#enterImpliedBy(org.omwg.logicalexpression.Binary)
-         */
-        @Override
-        public void enterInverseImplication(InverseImplication arg0) {
-            inHeadOfRule = true;
-            inBodyOfRule = false;
-        }
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor
+		 * #handleOr(org.omwg.logicalexpression.Binary)
+		 */
+		@Override
+		public void enterDisjunction(Disjunction arg0) {
+			throw new DatalogException(
+					"Disjunction is not allowed in simple WSML datalog rules.");
+		}
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#enterImplies(org.omwg.logicalexpression.Binary)
-         */
-        @Override
-        public void enterImplication(Implication arg0) {
-            inHeadOfRule = false;
-            inBodyOfRule = true;
-        }
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor
+		 * #enterImpliedBy(org.omwg.logicalexpression.Binary)
+		 */
+		@Override
+		public void enterInverseImplication(InverseImplication arg0) {
+			inHeadOfRule = true;
+			inBodyOfRule = false;
+		}
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#enterImpliesLP(org.omwg.logicalexpression.Binary)
-         */
-        @Override
-        public void enterLogicProgrammingRule(LogicProgrammingRule arg0) {
-            inHeadOfRule = true;
-            inBodyOfRule = false;
-        }
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor
+		 * #enterImplies(org.omwg.logicalexpression.Binary)
+		 */
+		@Override
+		public void enterImplication(Implication arg0) {
+			inHeadOfRule = false;
+			inBodyOfRule = true;
+		}
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleImpliedBy(org.omwg.logicalexpression.Binary)
-         */
-        @Override
-        public void handleInverseImplication(InverseImplication arg0) {
-            inHeadOfRule = false;
-            inBodyOfRule = true;
-        }
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor
+		 * #enterImpliesLP(org.omwg.logicalexpression.Binary)
+		 */
+		@Override
+		public void enterLogicProgrammingRule(LogicProgrammingRule arg0) {
+			inHeadOfRule = true;
+			inBodyOfRule = false;
+		}
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleImplies(org.omwg.logicalexpression.Binary)
-         */
-        @Override
-        public void handleImplication(Implication arg0) {
-        	inHeadOfRule = true;
-            inBodyOfRule = false;
-        }
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor
+		 * #handleImpliedBy(org.omwg.logicalexpression.Binary)
+		 */
+		@Override
+		public void handleInverseImplication(InverseImplication arg0) {
+			inHeadOfRule = false;
+			inBodyOfRule = true;
+		}
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor#handleImpliesLP(org.omwg.logicalexpression.Binary)
-         */
-        @Override
-        public void handleLogicProgrammingRule(LogicProgrammingRule arg0) {
-            inHeadOfRule = false;
-            inBodyOfRule = true;
-        }
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor
+		 * #handleImplies(org.omwg.logicalexpression.Binary)
+		 */
+		@Override
+		public void handleImplication(Implication arg0) {
+			inHeadOfRule = true;
+			inBodyOfRule = false;
+		}
 
-	@Override
-	public void handleEquivalence(Equivalence arg0) {
-		inHeadOfRule = false;
-	        inBodyOfRule = true;
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.wsml.reasoner.normalization.InfixOrderLogicalExpressionVisitor
+		 * #handleImpliesLP(org.omwg.logicalexpression.Binary)
+		 */
+		@Override
+		public void handleLogicProgrammingRule(LogicProgrammingRule arg0) {
+			inHeadOfRule = false;
+			inBodyOfRule = true;
+		}
+
+		@Override
+		public void handleEquivalence(Equivalence arg0) {
+			System.out.println("Handle: " + arg0);
+			inHeadOfRule = false;
+			inBodyOfRule = true;
+		}
 	}
-    }
 
 }

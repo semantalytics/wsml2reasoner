@@ -167,7 +167,6 @@ public class IrisFacadeTest extends TestCase {
 											TF.createVariable("b"),
 											TF.createString("c"))
 						);
-		
 		assertEquals( expected, IrisStratifiedFacade.literal2Atom( wsmlLiteral, false ) );
 	}
 
