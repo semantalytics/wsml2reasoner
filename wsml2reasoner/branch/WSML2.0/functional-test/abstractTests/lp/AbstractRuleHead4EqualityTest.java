@@ -1,21 +1,11 @@
 package abstractTests.lp;
 
-import helper.AbstractTestHelper;
 import helper.LPHelper;
 import helper.OntologyHelper;
-
-import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
-
+import helper.Results;
 import junit.framework.TestCase;
 
-import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.LPReasoner;
-import org.wsml.reasoner.api.inconsistency.InconsistencyException;
-import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.wsml.ParserException;
 
 import abstractTests.LP;
 
@@ -23,7 +13,7 @@ public abstract class AbstractRuleHead4EqualityTest extends TestCase implements
 		LP {
 
 	
-	protected static final String ONTOLOGY_FILE_03 = "files/equal4_inHeadIRIS.wsml";
+	protected static final String ONTOLOGY_FILE = "files/equal4_inHeadIRIS.wsml";
 
 	protected LPReasoner reasoner;
 	
@@ -33,16 +23,35 @@ public abstract class AbstractRuleHead4EqualityTest extends TestCase implements
 	}
 	
 	
-	public void testExample() throws ParserException, InconsistencyException,
-	IOException, InvalidModelException {
+	public void testExample() throws Exception {
 
 		String query = "?x[?n1 hasValue ?y]";
 		
-		Set<Map<Variable, Term>> result = LPHelper.executeQuery(OntologyHelper
-		.loadOntology(ONTOLOGY_FILE_03), query, reasoner);
-
+//		Set<Map<Variable, Term>> result = LPHelper.executeQuery(OntologyHelper
+//		.loadOntology(ONTOLOGY_FILE), query, reasoner);
+//		AbstractTestHelper.printResult(result, query);
 		
-		AbstractTestHelper.printResult(result, query);
+		Results r = new Results("n1","x","y");
+		r.addBinding( Results.iri("http://simple#name"), Results.iri("http://simple#aName"), Results.iri("http://simple#a") );
+		r.addBinding( Results.iri("http://simple#name"), Results.iri("http://simple#aName"), Results.iri("http://simple#a") );
+		
+		LPHelper.executeQueryAndCheckResults(OntologyHelper.loadOntology(ONTOLOGY_FILE), query, r.get(), reasoner);
+	
+	}
+	
+	public void testExample1() throws Exception {
+
+		String query = "p(?x)";
+		
+//		Set<Map<Variable, Term>> result = LPHelper.executeQuery(OntologyHelper
+//		.loadOntology(ONTOLOGY_FILE), query, reasoner);
+//		AbstractTestHelper.printResult(result, query);
+		
+		Results r = new Results("x");
+		r.addBinding( Results.iri("http://simple#a") );
+		r.addBinding( Results.iri("http://simple#b") );
+		
+		LPHelper.executeQueryAndCheckResults(OntologyHelper.loadOntology(ONTOLOGY_FILE), query, r.get(), reasoner);
 	
 	}
 

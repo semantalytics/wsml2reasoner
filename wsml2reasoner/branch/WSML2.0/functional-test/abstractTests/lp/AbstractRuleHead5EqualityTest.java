@@ -1,21 +1,11 @@
 package abstractTests.lp;
 
-import helper.AbstractTestHelper;
 import helper.LPHelper;
 import helper.OntologyHelper;
-
-import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
-
+import helper.Results;
 import junit.framework.TestCase;
 
-import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.LPReasoner;
-import org.wsml.reasoner.api.inconsistency.InconsistencyException;
-import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.wsml.ParserException;
 
 import abstractTests.LP;
 
@@ -32,30 +22,39 @@ public abstract class AbstractRuleHead5EqualityTest extends TestCase implements
 		reasoner = getLPReasoner();
 	}
 	
-	public void testExample() throws ParserException, InconsistencyException,
-	IOException, InvalidModelException {
-
-//		String query = "?x = ?y :- wsml#true.";
+	public void testExample() throws Exception {
 		String query = "?x[?y hasValue ?z]";
 		
-		Set<Map<Variable, Term>> result = LPHelper.executeQuery(OntologyHelper
-		.loadOntology(ONTOLOGY_FILE), query,reasoner);
-
+//		Set<Map<Variable, Term>> result = LPHelper.executeQuery(OntologyHelper
+//		.loadOntology(ONTOLOGY_FILE), query,reasoner);
+//		AbstractTestHelper.printResult(result, query);
 		
-		AbstractTestHelper.printResult(result, query);
+		Results r = new Results("z","y","x");
+		r.addBinding( Results.iri("http://simple#aa"), Results.iri("http://simple#other"), Results.iri("http://simple#A1") );
+		r.addBinding( Results.iri("http://simple#a"), Results.iri("http://simple#some"), Results.iri("http://simple#A1") );
+		r.addBinding( Results.iri("http://simple#a"), Results.iri("http://simple#some"), Results.iri("http://simple#B1") );
+		r.addBinding( Results.iri("http://simple#bb"), Results.iri("http://simple#other"), Results.iri("http://simple#B1") );
+		
+		LPHelper.executeQueryAndCheckResults(OntologyHelper.loadOntology(ONTOLOGY_FILE), query, r.get(), reasoner);
+	
 	
 	}
 	
-	public void testExample2() throws ParserException, InconsistencyException,
-	IOException, InvalidModelException {
+	public void testExample2() throws Exception {
 
 		String query = "p(?x)";
 		
-		Set<Map<Variable, Term>> result = LPHelper.executeQuery(OntologyHelper
-		.loadOntology(ONTOLOGY_FILE), query,reasoner);
-
-		// should also write ?x: http://simple#A1	
-		AbstractTestHelper.printResult(result, query);
+//		Set<Map<Variable, Term>> result = LPHelper.executeQuery(OntologyHelper
+//		.loadOntology(ONTOLOGY_FILE), query,reasoner);
+//		// should also write ?x: http://simple#A1	
+//		AbstractTestHelper.printResult(result, query);
+		
+		Results r = new Results("x");
+		r.addBinding( Results.iri("http://simple#B1"));
+		r.addBinding( Results.iri("http://simple#A1"));
+		
+		LPHelper.executeQueryAndCheckResults(OntologyHelper.loadOntology(ONTOLOGY_FILE), query, r.get(), reasoner);
+	
 	
 	}
 	
