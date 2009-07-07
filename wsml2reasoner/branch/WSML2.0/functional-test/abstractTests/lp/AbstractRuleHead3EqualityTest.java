@@ -28,7 +28,7 @@ public abstract class AbstractRuleHead3EqualityTest extends TestCase implements
 		reasoner = getLPReasoner();
 	}
 
-	public void testExample04() throws Exception {
+	public void testEqual() throws Exception {
 
 		String query = "?x memberOf C1";
 
@@ -45,7 +45,7 @@ public abstract class AbstractRuleHead3EqualityTest extends TestCase implements
 
 	}
 
-	public void testExample05() throws Exception {
+	public void testEqual1() throws Exception {
 
 		String query = "?x[?n hasValue ?y] ";
 

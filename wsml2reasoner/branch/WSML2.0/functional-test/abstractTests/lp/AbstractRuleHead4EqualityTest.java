@@ -21,7 +21,7 @@ public abstract class AbstractRuleHead4EqualityTest extends TestCase implements
 		reasoner = getLPReasoner();
 	}
 
-	public void testExample() throws Exception {
+	public void testEqual() throws Exception {
 
 		String query = "?x[?n1 hasValue ?y]";
 
@@ -41,7 +41,7 @@ public abstract class AbstractRuleHead4EqualityTest extends TestCase implements
 
 	}
 
-	public void testExample1() throws Exception {
+	public void testEqual1() throws Exception {
 
 		String query = "p(?x)";
 

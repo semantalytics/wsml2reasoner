@@ -21,7 +21,7 @@ public abstract class AbstractRuleHead5EqualityTest extends TestCase implements
 		reasoner = getLPReasoner();
 	}
 
-	public void testExample() throws Exception {
+	public void testEqual() throws Exception {
 		String query = "?x[?y hasValue ?z]";
 
 		// Set<Map<Variable, Term>> result =
@@ -44,7 +44,7 @@ public abstract class AbstractRuleHead5EqualityTest extends TestCase implements
 
 	}
 
-	public void testExample2() throws Exception {
+	public void testEqual2() throws Exception {
 
 		String query = "p(?x)";
 

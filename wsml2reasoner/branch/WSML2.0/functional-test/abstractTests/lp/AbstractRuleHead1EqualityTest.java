@@ -21,7 +21,7 @@ public abstract class AbstractRuleHead1EqualityTest extends TestCase implements
 		reasoner = getLPReasoner();
 	}
 
-	public void testExample01() throws Exception {
+	public void testEqual01() throws Exception {
 
 		String query = "?x[name hasValue ?n1] and ?y[name hasValue ?n2] and ?n1=?n2.";
 
@@ -39,7 +39,7 @@ public abstract class AbstractRuleHead1EqualityTest extends TestCase implements
 				.loadOntology(ONTOLOGY_FILE), query, r.get(), reasoner);
 	}
 
-	public void testExample02() throws Exception {
+	public void testEqual02() throws Exception {
 
 		String query = "?x memberOf Y";
 
@@ -51,5 +51,4 @@ public abstract class AbstractRuleHead1EqualityTest extends TestCase implements
 				.loadOntology(ONTOLOGY_FILE), query, r.get(), reasoner);
 
 	}
-
 }

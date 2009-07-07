@@ -21,7 +21,7 @@ public abstract class AbstractRuleHead2EqualityTest extends TestCase implements
 		reasoner = getLPReasoner();
 	}
 
-	public void testExample() throws Exception {
+	public void testEqual() throws Exception {
 
 		String query = "p(?x)";
 
