@@ -9,11 +9,10 @@ import org.wsml.reasoner.api.LPReasoner;
 
 import abstractTests.LP;
 
-public abstract class AbstractRuleHead6EqualityTest extends TestCase implements
+public abstract class AbstractRuleHead7EqualityTest extends TestCase implements
 		LP {
 
-	protected static final String ONTOLOGY_FILE = "files/equal6_inHeadIRIS.wsml";
-
+	protected static final String ONTOLOGY_FILE = "files/equal7_inHeadIRIS.wsml";
 	protected LPReasoner reasoner;
 
 	protected void setUp() throws Exception {
@@ -31,8 +30,8 @@ public abstract class AbstractRuleHead6EqualityTest extends TestCase implements
 		// AbstractTestHelper.printResult(result, query);
 
 		Results r = new Results("x");
-		r.addBinding(Results.iri("http://simple#B1"));
-		r.addBinding(Results.iri("http://simple#A1"));
+		r.addBinding(Results.iri("http://simple#B"));
+		r.addBinding(Results.iri("http://simple#A"));
 
 		LPHelper.executeQueryAndCheckResults(OntologyHelper
 				.loadOntology(ONTOLOGY_FILE), query, r.get(), reasoner);
