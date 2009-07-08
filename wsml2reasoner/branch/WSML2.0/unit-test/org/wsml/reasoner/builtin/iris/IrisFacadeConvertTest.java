@@ -42,31 +42,29 @@ public class IrisFacadeConvertTest extends TestCase {
 
 		assertTrue(IrisStratifiedFacade.convertTermFromWsmo4jToIris(WF
 				.createAnonymousID()) != null);
-
 	}
 
 	public void testLiteral2Atom() {
-		try{
+		try {
 			IrisStratifiedFacade.literal2Atom(null, false);
 			fail(); // should throw an exception
-		}catch (Exception e) {
+		} catch (Exception e) {
 		}
-		
+
 	}
 
 	public void testLiteral2AtomHead() {
-		
-		Literal wsmlLiteral = new Literal(true, Constants.EQUAL, LiteralTestHelper
-				.createVariable("x"), LiteralTestHelper.createVariable("y"));
-		
-		Literal expected = new Literal(true, Constants.EQUAL, LiteralTestHelper
-				.createVariable("x"), LiteralTestHelper.createVariable("y"));
-		
-		// TODO what has to come out
-//		System.out.println(IrisStratifiedFacade.literal2Atom(wsmlLiteral, true));
 
-		assertEquals(expected, IrisStratifiedFacade.literal2Atom(wsmlLiteral,
-				true));
+		Literal wsmlLiteral = new Literal(true, Constants.EQUAL,
+				LiteralTestHelper.createVariable("x"), LiteralTestHelper
+						.createVariable("y"));
+
+		// Literal expected = new Literal(true, Constants.EQUAL,
+		// LiteralTestHelper
+		// .createVariable("x"), LiteralTestHelper.createVariable("y"));
+
+		assertEquals("EQUAL(?x, ?y)", IrisStratifiedFacade.literal2Atom(
+				wsmlLiteral, true).toString());
 	}
 
 }

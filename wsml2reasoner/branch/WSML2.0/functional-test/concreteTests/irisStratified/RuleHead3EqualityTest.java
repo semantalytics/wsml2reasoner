@@ -2,9 +2,9 @@ package concreteTests.irisStratified;
 
 import org.wsml.reasoner.api.LPReasoner;
 
-import abstractTests.lp.AbstractRuleHead5EqualityTest;
+import abstractTests.lp.AbstractRuleHead3EqualityTest;
 
-public class RuleHead_5_EqualityTest extends AbstractRuleHead5EqualityTest{
+public class RuleHead3EqualityTest extends AbstractRuleHead3EqualityTest{
 
 	@Override
 	public LPReasoner getLPReasoner() {
