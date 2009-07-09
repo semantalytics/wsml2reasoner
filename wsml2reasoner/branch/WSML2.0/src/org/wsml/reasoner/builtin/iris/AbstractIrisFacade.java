@@ -180,10 +180,96 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
     final static String DAYTIMEDURATION_LESS_THAN = Constants.WSML_NAMESPACE + "dayTimeDurationLessThan";
     final static String YEARMONTHDURATION_GREATER_THAN = Constants.WSML_NAMESPACE + "yearMonthDurationGreaterThan";
     final static String YEARMONTHDURATION_LESS_THAN = Constants.WSML_NAMESPACE + "yearMonthDurationLessThan";
-
     
-    
+    /**
+     *  New WSML builtin predicates from  D3.1.4 Defining the features of the WSML-Rule v2.0 language
+	 *
+     */
+	 // wsml#to<Datatype>
+	private final static String TO_DATATYPE = Constants.WSML_NAMESPACE + "to"; // + DATATYPE					// RIF : xs:<datatype>
+	final static String TO_DOUBLE = TO_DATATYPE + "Double";												// RIF : xs:double
+	final static String TO_STRING = TO_DATATYPE + "String";												// RIF : xs:string
+	final static String TO_DECIMAL = TO_DATATYPE + "Decimal";											// RIF : xs:decimal
+	final static String TO_BOOLEAN = TO_DATATYPE + "Boolean";											// RIF : xs:boolean
+	final static String TO_INTEGER = TO_DATATYPE + "Integer";											// RIF : xs:integer
+	final static String TO_BASE64BINARY = TO_DATATYPE + "Base64Binary";									// RIF : xs:base64binary
+	final static String TO_DATE = TO_DATATYPE + "Date";													// RIF : xs:date
+	final static String TO_DATETIME = TO_DATATYPE + "DateTime";											// RIF : xs:datetime
+	final static String TO_DURATION = TO_DATATYPE + "Duration";											// RIF : xs:duration	
+	final static String TO_FLOAT = TO_DATATYPE + "Float";												// RIF : xs:float
+	final static String TO_GDAY = TO_DATATYPE + "GDay";													// RIF : xs:gday
+	final static String TO_GMONTH = TO_DATATYPE + "GMonth";												// RIF : xs:gmonth
+	final static String TO_GMONTHDAY = TO_DATATYPE + "GMonthDay";										// RIF : xs:gmonthday
+	final static String TO_GYEAR = TO_DATATYPE + "GYear";												// RIF : xs:gyear
+	final static String TO_GYEARMONTH = TO_DATATYPE + "GYearMonth";										// RIF : xs:gyearmonth
+	final static String TO_HEXBINARY = TO_DATATYPE + "HexBinary";										// RIF : xs:hexbinary
+	final static String TO_TIME = TO_DATATYPE + "Time";													// RIF : xs:time
+	final static String TO_DAYTIME_DURATION = TO_DATATYPE + "DayTimeDuration";							// RIF : xs:daytimeduration 
+	final static String TO_YEAR_MONTH_DURATION = TO_DATATYPE + "YearMonthDuration";						// RIF : xs:yearmonthduration
+	final static String TO_IRI = TO_DATATYPE + "IRI";													// RIF : rif:iri
+	final static String TO_TEXT = TO_DATATYPE + "Text";													// RIF : rdf:text
+	final static String TO_XML_LITERAL = TO_DATATYPE + "XMLLiteral";									// RIF : rdf:xmlliteral 
 
+	private final static String IS_PREFIX = Constants.WSML_NAMESPACE + "is"; // + DATATYPE				// RIF : pred:isLiteralOfType
+	final static String IS_DOUBLE = IS_PREFIX + "Double";
+	final static String IS_STRING = IS_PREFIX + "String";
+	final static String IS_DECIMAL = IS_PREFIX + "Decimal";
+	final static String IS_BOOLEAN = IS_PREFIX + "Boolean";
+	final static String IS_INTEGER = IS_PREFIX + "Integer";
+	final static String IS_BASE64BINARY = IS_PREFIX + "Base64Binary";
+	final static String IS_DATE = IS_PREFIX + "Date";
+	final static String IS_DATETIME = IS_PREFIX + "DateTime";
+	final static String IS_DURATION = IS_PREFIX + "Duration";
+	final static String IS_FLOAT = IS_PREFIX + "Float";
+	final static String IS_GDAY = IS_PREFIX + "GDay";
+	final static String IS_GMONTH = IS_PREFIX + "GMonth";
+	final static String IS_GMONTHDAY = IS_PREFIX + "GMonthDay";
+	final static String IS_GYEAR = IS_PREFIX + "GYear";
+	final static String IS_GYEARMONTH= IS_PREFIX + "GYearMonth";
+	final static String IS_HEXBINARY = IS_PREFIX + "HexBinary";
+	final static String IS_TIME = IS_PREFIX + "Time";
+	final static String IS_DAYTIME_DURATION = IS_PREFIX + "DayTimeDuration";
+	final static String IS_YEAR_MONTH_DURATION = IS_PREFIX + "YearMonthDuration";
+	final static String IS_IRI = IS_PREFIX + "IRI";
+	final static String IS_TEXT = IS_PREFIX + "Text";
+	final static String IS_XML_LITERAL = IS_PREFIX + "XMLLiteral";
+
+	
+	final static String IS_DATATYPE = Constants.WSML_NAMESPACE + "isDatatype";							// RIF : pred:isLiteralOfType	
+	final static String IS_NOT_DATATYPE = Constants.WSML_NAMESPACE + "isNotDatatype";					// RIF : pred:isLiteralNotOfType
+//	final static String HAS_DATATYPE = Constants.WSML_NAMESPACE + "hasDatatype";						// RIF : pred:hasDatatype  // TODO check
+	final static String NUMERIC_MODULUS = Constants.WSML_NAMESPACE + "numericModulus";					// RIF : func:numeric-mod
+	final static String STRING_COMPARE = Constants.WSML_NAMESPACE + "stringCompare";					// RIF : func:compare
+	final static String STRING_CONCAT = Constants.WSML_NAMESPACE + "stringConcat";						// RIF : func:concat
+	final static String STRING_JOIN = Constants.WSML_NAMESPACE + "stringJoin";							// RIF : func:string-join<N>
+	final static String STRING_SUBSTRING = Constants.WSML_NAMESPACE + "stringSubstring";				// RIF : func:substring1 , func:substring1
+	final static String STRING_LENGTH = Constants.WSML_NAMESPACE + "stringLength";						// RIF : func:string-length
+	final static String STRING_TO_UPPER = Constants.WSML_NAMESPACE + "stringToUpper";					// RIF : func:upper-case
+	final static String STRING_TO_LOWER = Constants.WSML_NAMESPACE + "stringToLower";					// RIF : func:lower-case
+	final static String STRING_URI_ENCODE = Constants.WSML_NAMESPACE + "stringUriEncode";				// RIF : func:encode-for-uri
+	final static String STRING_IRI_TO_URI = Constants.WSML_NAMESPACE + "stringIriToUri";				// RIF : func:iri-to-uri
+	final static String STRING_ESCAPE_HTML_URI = Constants.WSML_NAMESPACE + "stringEscapeHtmlUri";		// RIF : func:escape-html-uri
+	final static String STRING_SUBSTRING_BEFORE = Constants.WSML_NAMESPACE + "stringSubstringBefore";	// RIF : func:substring-before1 , func:substring-before2
+	final static String STRING_SUBSTRING_AFTER = Constants.WSML_NAMESPACE + "stringSubstringAfter";		// RIF : func:substring-after1 , func:substring-after2
+	final static String STRING_REPLACE = Constants.WSML_NAMESPACE + "stringReplace";					// RIF : func:substring-replace1 , func:substring-replace2
+	final static String STRING_CONTAINS = Constants.WSML_NAMESPACE + "stringContains";					// RIF : pred:contains1 , pred:contains2
+	final static String STRING_STARTS_WITH = Constants.WSML_NAMESPACE + "stringStartsWith";				// RIF : pred:starts-with1 , pred:starts-with2
+	final static String STRING_ENDS_WITH = Constants.WSML_NAMESPACE + "stringEndsWith";					// RIF : pres:ends-with1 , pred:ends-with2
+	final static String STRING_MATCHES = Constants.WSML_NAMESPACE + "stringMatches";					// RIF : pres:matches1 , pred:matches2
+	final static String YEAR_PART = Constants.WSML_NAMESPACE + "yearPart";								// RIF : func:year-from-dateTime , func:year-from-date , func:years-from-duration
+	final static String MONTH_PART = Constants.WSML_NAMESPACE + "monthPart";							// RIF : func:month-from-dateTime , func:month-from-date , func:month-from-duration
+	final static String DAY_PART = Constants.WSML_NAMESPACE + "dayPart";								// RIF : func:day-from-dateTime , func:day-from-date , func:day-from-duration
+	final static String HOUR_PART = Constants.WSML_NAMESPACE + "hourPart";								// RIF : func:hour-from-dateTime , func:hour-from-date , func:hour-from-duration
+	final static String MINUTE_PART = Constants.WSML_NAMESPACE + "minutePart";							// RIF : func:minute-from-dateTime , func:minute-from-date , func:minute-from-duration
+	final static String SECOND_PART = Constants.WSML_NAMESPACE + "secondPart";							// RIF : func:second-from-dateTime , func:second-from-date , func:second-from-duration
+	final static String TIMEZONE_PART = Constants.WSML_NAMESPACE + "timezonePart";						// RIF : func:timezone-from-dateTime , func:timezone-from-date , func:timezone-from-duration
+	final static String TEXT_FROM_STRING_LANG = Constants.WSML_NAMESPACE + "textFromStringLang";		// RIF : func:text-from-string-lang
+	final static String TEXT_FROM_STRING = Constants.WSML_NAMESPACE + "textFromString";					// RIF : func:text-from-string
+	final static String STRING_FROM_TEXT = Constants.WSML_NAMESPACE + "stringFromText";					// RIF : func:string-from-text
+	final static String LANG_FROM_TEXT = Constants.WSML_NAMESPACE + "langFromText";						// RIF : func:lang-from-text
+	final static String TEXT_COMPARE = Constants.WSML_NAMESPACE + "textCompare";						// RIF : func:text-compare
+	final static String TEXT_LENGTH = Constants.WSML_NAMESPACE + "textLength";							// RIF : func:text-length
+    
     public AbstractIrisFacade(final WSMO4JManager m, final Map<String, Object> config) {
         DATA_FACTORY = m.getDataFactory();
         WSMO_FACTORY = m.getWSMOFactory();
@@ -425,13 +511,17 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         for (final Term t : inTerms) {
             terms.add(convertTermFromWsmo4jToIris(t));
         }
-
+        return checkBuiltin(headLiteral ,sym, terms);
+    }
+    
+    
+    private static IAtom checkBuiltin(boolean headLiteral, String sym, List<ITerm> terms) {
         // check whether the predicate is a builtin
         if (sym.equals(Constants.EQUAL) || sym.equals(Constants.NUMERIC_EQUAL) || sym.equals(Constants.STRING_EQUAL) 
         		|| sym.equals(Constants.STRONG_EQUAL) || sym.equals(DATE_EQUAL) || sym.equals(TIME_EQUAL) 
         		|| sym.equals(DATETIME_EQUAL) || sym.equals(GYEAR_EQUAL) || sym.equals(GYEARMONTH_EQUAL)
         		|| sym.equals(GMONTHDAY_EQUAL) || sym.equals(GDAY_EQUAL) || sym.equals(GMONTH_EQUAL)
-        		|| sym.equals(DURATION_EQUAL)) {
+        		|| sym.equals(DURATION_EQUAL) ) {
         	return BUILTIN.createEqual(terms.get(0), terms.get(1));
         }
         else if (sym.equals(Constants.INEQUAL) || sym.equals(Constants.NUMERIC_INEQUAL) || sym.equals(Constants.STRING_INEQUAL)
@@ -468,6 +558,173 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         else if (sym.equals(Constants.NUMERIC_DIV)) {
             return BUILTIN.createDivideBuiltin(terms.get(1), terms.get(2), terms.get(0));
         }
+        else if (sym.equals(IS_DATATYPE)) {
+        	return BUILTIN.createIsDatatype(toArray(terms));
+        }
+        else if (sym.equals(IS_NOT_DATATYPE)) {
+        	return BUILTIN.createIsNotDatatype(toArray(terms));
+        }
+//        else if (sym.equals(HAS_DATATYPE)) { // TODO check
+//        	return BUILTIN.createHasDatatype(toArray(terms));
+//        }
+        else if (sym.equals(NUMERIC_MODULUS)) { // check is done by normal Modulus
+        	return BUILTIN.createNumericModulus(toArray(terms));
+        }
+        else if (sym.equals(STRING_COMPARE)) {
+        	return BUILTIN.createStringCompare(toArray(terms));
+        }
+        else if (sym.equals(STRING_CONCAT)) {
+        	return BUILTIN.createStringConcat(toArray(terms));
+        }
+        else if (sym.equals(STRING_JOIN)) {
+        	return BUILTIN.createStringJoin(toArray(terms));
+        }
+        else if (sym.equals(STRING_SUBSTRING)) {
+        	return BUILTIN.createStringSubstring(toArray(terms));
+        }
+        else if (sym.equals(STRING_LENGTH)) {
+        	return BUILTIN.createStringLength(toArray(terms));
+        }
+        else if (sym.equals(STRING_TO_UPPER)) {
+        	return BUILTIN.createStringToUpper(toArray(terms));
+        }
+        else if (sym.equals(STRING_TO_LOWER)) {
+        	return BUILTIN.createStringToLower(toArray(terms));
+        }
+        else if (sym.equals(STRING_URI_ENCODE)) {
+        	return BUILTIN.createStringUriEncode(toArray(terms));
+        }
+        else if (sym.equals(STRING_IRI_TO_URI)) {
+        	return BUILTIN.createStringIriToUri(toArray(terms));
+        }
+        else if (sym.equals(STRING_ESCAPE_HTML_URI)) {
+        	return BUILTIN.createStringEscapeHtmlUri(toArray(terms));
+        }
+        else if (sym.equals(STRING_SUBSTRING_BEFORE)) {
+        	return BUILTIN.createStringSubstringBefore(toArray(terms));
+        }
+        else if (sym.equals(STRING_SUBSTRING_AFTER)) {
+        	return BUILTIN.createStringSubstringAfter(toArray(terms));
+        }
+        else if (sym.equals(STRING_REPLACE)) {
+        	return BUILTIN.createStringReplace(toArray(terms));
+        }
+        else if (sym.equals(STRING_CONTAINS)) {
+        	return BUILTIN.createStringContains(toArray(terms));
+        }
+        else if (sym.equals(STRING_STARTS_WITH)) {
+        	return BUILTIN.createStringStartsWith(toArray(terms));
+        }
+        else if (sym.equals(STRING_ENDS_WITH)) {
+        	return BUILTIN.createStringEndsWith(toArray(terms));
+        }
+        else if (sym.equals(STRING_MATCHES)) {
+        	return BUILTIN.createStringMatches(toArray(terms));
+        }
+        else if (sym.equals(YEAR_PART)) {
+        	return BUILTIN.createYearPart(toArray(terms));
+        }
+        else if (sym.equals(MONTH_PART)) {
+        	return BUILTIN.createMonthPart(toArray(terms));
+        }
+        else if (sym.equals(DAY_PART)) {
+        	return BUILTIN.createDayPart(toArray(terms));
+        }
+        else if (sym.equals(HOUR_PART)) {
+        	return BUILTIN.createHourPart(toArray(terms));
+        }
+        else if (sym.equals(MINUTE_PART)) {
+        	return BUILTIN.createMinutePart(toArray(terms));
+        }
+        else if (sym.equals(SECOND_PART)) {
+        	return BUILTIN.createSecondPart(toArray(terms));
+        }
+        else if (sym.equals(TIMEZONE_PART)) {
+        	return BUILTIN.createTimezonePart(toArray(terms));
+        }
+        else if (sym.equals(TEXT_FROM_STRING_LANG)) {
+        	return BUILTIN.createTextFromStringLang(toArray(terms));
+        }
+        else if (sym.equals(TEXT_FROM_STRING)) {
+        	return BUILTIN.createTextFromStringLang(toArray(terms));
+        }
+        else if (sym.equals(STRING_FROM_TEXT)) {
+        	return BUILTIN.createStringFromText(toArray(terms));
+        }
+        else if (sym.equals(LANG_FROM_TEXT)) {
+        	return BUILTIN.createLangFromText(toArray(terms));
+        }
+        else if (sym.equals(TEXT_COMPARE)) {
+        	return BUILTIN.createTextCompare(toArray(terms));
+        }
+        else if (sym.equals(TO_BASE64BINARY)) {
+        	return BUILTIN.createToBase64Binary(toArray(terms));
+        }
+        else if (sym.equals(TO_BOOLEAN)) {
+        	return BUILTIN.createToBoolean(toArray(terms));
+        }
+        else if (sym.equals(TO_DATE)) {
+        	return BUILTIN.createToDate(toArray(terms));
+        }
+        else if (sym.equals(TO_DATETIME)) {
+        	return BUILTIN.createToDateTime(toArray(terms));
+        }
+        else if (sym.equals(TO_DAYTIME_DURATION)) {
+        	return BUILTIN.createToDayTimeDuration(toArray(terms));
+        }
+        else if (sym.equals(TO_DECIMAL)) {
+        	return BUILTIN.createToDecimal(toArray(terms));
+        }
+        else if (sym.equals(TO_DOUBLE)) {
+        	return BUILTIN.createToDouble(toArray(terms));
+        }
+        else if (sym.equals(TO_DURATION)) {
+        	return BUILTIN.createToDuration(toArray(terms));
+        }
+        else if (sym.equals(TO_FLOAT)) {
+        	return BUILTIN.createToFloat(toArray(terms));
+        }
+        else if (sym.equals(TO_GDAY)) {
+        	return BUILTIN.createToGDay(toArray(terms));
+        }
+        else if (sym.equals(TO_GMONTH)) {
+        	return BUILTIN.createToGMonth(toArray(terms));
+        }
+        else if (sym.equals(TO_GMONTHDAY)) {
+        	return BUILTIN.createToGMonthDay(toArray(terms));
+        }
+        else if (sym.equals(TO_GYEAR)) {
+        	return BUILTIN.createToGYear(toArray(terms));
+        }
+        else if (sym.equals(TO_GYEARMONTH)) {
+        	return BUILTIN.createToGYearMonth(toArray(terms));
+        }
+        else if (sym.equals(TO_HEXBINARY)) {
+        	return BUILTIN.createToHexBinary(toArray(terms));
+        }
+        else if (sym.equals(TO_INTEGER)) {
+        	return BUILTIN.createToInteger(toArray(terms));
+        }
+        else if (sym.equals(TO_IRI)) {
+        	return BUILTIN.createToIRI(toArray(terms));
+        }
+        else if (sym.equals(TO_STRING)) {
+        	return BUILTIN.createToString(toArray(terms));
+        }
+        else if (sym.equals(TO_TEXT)) {
+        	return BUILTIN.createToText(toArray(terms));
+        }
+        else if (sym.equals(TO_TIME)) {
+        	return BUILTIN.createToTime(toArray(terms));
+        }
+        else if (sym.equals(TO_XML_LITERAL)) {
+        	return BUILTIN.createToXMLLiteral(toArray(terms));
+        }
+        else if (sym.equals(TO_YEAR_MONTH_DURATION)) {
+        	return BUILTIN.createToYearMonthDuration(toArray(terms));
+        }
+        
+        
         else if( ! headLiteral && sym.equals( WSML2DatalogTransformer.PRED_MEMBER_OF ) ) {
         	// Special case! Look for wsml-member-of( ?x, wsml#<datatype> )
         	// and change it to one of IRIS's IS_XXXXX() built-ins
@@ -520,22 +777,28 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         				return new IsSqNameBuiltin( t0 );
         			else if( type.equals( WsmlDataType.WSML_TIME ) )
         				return new IsTimeBuiltin( t0 );
+//        			else if( type.equals( WsmlDataType.WSML_TEXT ) )  // TODO CHECK that is things!
+//        				return new IsTimeBuiltin( t0 );
+//        			
         		}
         	}
         	// If none of these then drop through to normal atom processing.
         }
         // return an ordinary atom
         return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()), BASIC.createTuple(terms));
-    }
+	}
 
+	private static ITerm[] toArray(List<ITerm> terms) {
+    	ITerm[] array = new ITerm[terms.size()];
+    	return terms.toArray(array);
+    }
     /**
      * Converts a wsmo4j term to an iris term
      * 
      * @param t the wsmo4j term
      * @return the converted iris term
      */
-
-    static ITerm convertTermFromWsmo4jToIris(final Term t) {
+	static ITerm convertTermFromWsmo4jToIris(final Term t) {
         if (t == null) {
             throw new NullPointerException("The term must not be null");
         }
