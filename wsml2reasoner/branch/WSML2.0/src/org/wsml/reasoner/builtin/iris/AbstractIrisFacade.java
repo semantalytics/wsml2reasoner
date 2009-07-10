@@ -723,8 +723,79 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         else if (sym.equals(TO_YEAR_MONTH_DURATION)) {
         	return BUILTIN.createToYearMonthDuration(toArray(terms));
         }
-        
-        
+        // the is-datatype-things
+        else if (sym.equals(IS_DATATYPE)) {
+        	return BUILTIN.createIsDatatype(toArray(terms));
+        }
+        else if (sym.equals(IS_NOT_DATATYPE)) {
+        	return BUILTIN.createIsNotDatatype(toArray(terms));
+        }
+        else if (sym.equals(IS_BASE64BINARY)) {
+        	return BUILTIN.createIsBase64Binary(toArray(terms));
+        }
+        else if (sym.equals(IS_BOOLEAN)) {
+        	return BUILTIN.createIsBoolean(toArray(terms));
+        }
+        else if (sym.equals(IS_DATE)) {
+        	return BUILTIN.createIsDate(toArray(terms));
+        }
+        else if (sym.equals(IS_DATETIME)) {
+        	return BUILTIN.createIsDateTime(toArray(terms));
+        }
+        else if (sym.equals(IS_DAYTIME_DURATION)) {
+        	return BUILTIN.createIsDayTimeDuration(toArray(terms));
+        }
+        else if (sym.equals(IS_DECIMAL)) {
+        	return BUILTIN.createIsDecimal(toArray(terms));
+        }
+        else if (sym.equals(IS_DOUBLE)) {
+        	return BUILTIN.createIsDecimal(toArray(terms));
+        }
+        else if (sym.equals(IS_DURATION)) {
+        	return BUILTIN.createIsDuration(toArray(terms));
+        }
+        else if (sym.equals(IS_FLOAT)) {
+        	return BUILTIN.createIsFloat(toArray(terms));
+        }
+        else if (sym.equals(IS_GDAY)) {
+        	return BUILTIN.createIsGDay(toArray(terms));
+        }
+        else if (sym.equals(IS_GMONTH)) {
+        	return BUILTIN.createIsGMonth(toArray(terms));
+        }
+        else if (sym.equals(IS_GMONTHDAY)) {
+        	return BUILTIN.createIsGMonthDay(toArray(terms));
+        }
+        else if (sym.equals(IS_GYEAR)) {
+        	return BUILTIN.createIsGYear(toArray(terms));
+        }
+        else if (sym.equals(IS_GYEARMONTH)) {
+        	return BUILTIN.createIsGYearMonth(toArray(terms));
+        }
+        else if (sym.equals(IS_HEXBINARY)) {
+        	return BUILTIN.createIsHexBinary(toArray(terms));
+        }
+        else if (sym.equals(IS_INTEGER)) {
+        	return BUILTIN.createIsInteger(toArray(terms));
+        }
+        else if (sym.equals(IS_IRI)) {
+        	return BUILTIN.createIsIRI(toArray(terms));
+        }
+        else if (sym.equals(IS_STRING)) {
+        	return BUILTIN.createIsString(toArray(terms));
+        }
+        else if (sym.equals(IS_TEXT)) {
+        	return BUILTIN.createIsText(toArray(terms));
+        }
+        else if (sym.equals(IS_TIME)) {
+        	return BUILTIN.createIsTime(toArray(terms));
+        }
+        else if (sym.equals(IS_XML_LITERAL)) {
+        	return BUILTIN.createIsXMLLiteral(toArray(terms));
+        }
+        else if (sym.equals(IS_YEAR_MONTH_DURATION)) {
+        	return BUILTIN.createIsYearMonthDuration(toArray(terms));
+        }
         else if( ! headLiteral && sym.equals( WSML2DatalogTransformer.PRED_MEMBER_OF ) ) {
         	// Special case! Look for wsml-member-of( ?x, wsml#<datatype> )
         	// and change it to one of IRIS's IS_XXXXX() built-ins
