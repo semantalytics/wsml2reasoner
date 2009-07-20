@@ -24,21 +24,22 @@ public abstract class AbstractRuleHead5EqualityTest extends TestCase implements
 	public void testEqual() throws Exception {
 		String query = "?x[?y hasValue ?z]";
 
-		// Set<Map<Variable, Term>> result =
-		// LPHelper.executeQuery(OntologyHelper
-		// .loadOntology(ONTOLOGY_FILE), query,reasoner);
-		// AbstractTestHelper.printResult(result, query);
-
 		Results r = new Results("z", "y", "x");
-		r.addBinding(Results.iri("http://simple#aa"), Results
-				.iri("http://simple#other"), Results.iri("http://simple#A1"));
-		r.addBinding(Results.iri("http://simple#a"), Results
-				.iri("http://simple#some"), Results.iri("http://simple#A1"));
-		r.addBinding(Results.iri("http://simple#a"), Results
-				.iri("http://simple#some"), Results.iri("http://simple#B1"));
-		r.addBinding(Results.iri("http://simple#bb"), Results
-				.iri("http://simple#other"), Results.iri("http://simple#B1"));
+		r.addBinding(Results.iri("http://simple5#aa"), Results
+				.iri("http://simple5#other"), Results.iri("http://simple5#A1"));
+		r.addBinding(Results.iri("http://simple5#a"), Results
+				.iri("http://simple5#some"), Results.iri("http://simple5#A1"));
+		r.addBinding(Results.iri("http://simple5#a"), Results
+				.iri("http://simple5#some"), Results.iri("http://simple5#B1"));
+		r.addBinding(Results.iri("http://simple5#bb"), Results
+				.iri("http://simple5#other"), Results.iri("http://simple5#B1"));
+		r.addBinding(Results.iri("http://simple5#bb"), Results
+				.iri("http://simple5#other"), Results.iri("http://simple5#A1"));
+		r.addBinding(Results.iri("http://simple5#aa"), Results
+				.iri("http://simple5#other"), Results.iri("http://simple5#B1"));
 
+		
+//		LPHelper.output = true;
 		LPHelper.executeQueryAndCheckResults(OntologyHelper
 				.loadOntology(ONTOLOGY_FILE), query, r.get(), reasoner);
 
@@ -48,15 +49,9 @@ public abstract class AbstractRuleHead5EqualityTest extends TestCase implements
 
 		String query = "p(?x)";
 
-		// Set<Map<Variable, Term>> result =
-		// LPHelper.executeQuery(OntologyHelper
-		// .loadOntology(ONTOLOGY_FILE), query,reasoner);
-		// // should also write ?x: http://simple#A1
-		// AbstractTestHelper.printResult(result, query);
-
 		Results r = new Results("x");
-		r.addBinding(Results.iri("http://simple#B1"));
-		r.addBinding(Results.iri("http://simple#A1"));
+		r.addBinding(Results.iri("http://simple5#B1"));
+		r.addBinding(Results.iri("http://simple5#A1"));
 
 		LPHelper.executeQueryAndCheckResults(OntologyHelper
 				.loadOntology(ONTOLOGY_FILE), query, r.get(), reasoner);

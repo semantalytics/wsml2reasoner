@@ -1,8 +1,8 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
-namespace { _"http://simple#"
+namespace { _"http://simple2#"
 }
 
-ontology simple
+ontology simple_2
 
 concept C1
 
@@ -18,7 +18,8 @@ instance e memberOf C2
 
      
 axiom testEqualInHead definedBy
-		 b = d :- wsml#true.
+//		 b = d :- wsml#true.  whats the term for true ?!?
+ 		 b = d :- 1 = 1.
 		 p(?x) :- ?x memberOf C1 and ?x memberOf C2.
 
 

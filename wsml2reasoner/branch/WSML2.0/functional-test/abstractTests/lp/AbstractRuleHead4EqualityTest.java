@@ -25,17 +25,13 @@ public abstract class AbstractRuleHead4EqualityTest extends TestCase implements
 
 		String query = "?x[?n1 hasValue ?y]";
 
-		// Set<Map<Variable, Term>> result =
-		// LPHelper.executeQuery(OntologyHelper
-		// .loadOntology(ONTOLOGY_FILE), query, reasoner);
-		// AbstractTestHelper.printResult(result, query);
-
 		Results r = new Results("n1", "x", "y");
-		r.addBinding(Results.iri("http://simple#name"), Results
-				.iri("http://simple#aName"), Results.iri("http://simple#a"));
-		r.addBinding(Results.iri("http://simple#name"), Results
-				.iri("http://simple#aName"), Results.iri("http://simple#a"));
+		r.addBinding(Results.iri("http://simple4#name"), Results
+				.iri("http://simple4#a"), Results.iri("http://simple4#aName"));
+		r.addBinding(Results.iri("http://simple4#name"), Results
+				.iri("http://simple4#b"), Results.iri("http://simple4#aName"));
 
+//		LPHelper.output = true;
 		LPHelper.executeQueryAndCheckResults(OntologyHelper
 				.loadOntology(ONTOLOGY_FILE), query, r.get(), reasoner);
 
@@ -45,14 +41,11 @@ public abstract class AbstractRuleHead4EqualityTest extends TestCase implements
 
 		String query = "p(?x)";
 
-		// Set<Map<Variable, Term>> result =
-		// LPHelper.executeQuery(OntologyHelper
-		// .loadOntology(ONTOLOGY_FILE), query, reasoner);
-		// AbstractTestHelper.printResult(result, query);
-
 		Results r = new Results("x");
-		r.addBinding(Results.iri("http://simple#a"));
-		r.addBinding(Results.iri("http://simple#b"));
+		r.addBinding(Results.iri("http://simple4#a"));
+		r.addBinding(Results.iri("http://simple4#b"));
+
+//		LPHelper.output = true;
 
 		LPHelper.executeQueryAndCheckResults(OntologyHelper
 				.loadOntology(ONTOLOGY_FILE), query, r.get(), reasoner);

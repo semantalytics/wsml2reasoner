@@ -151,6 +151,14 @@ public class IrisFacadeTest extends TestCase {
 		// test sqname
 		// there is no sqname in wsmo4j
 	}
+	public void testBuiltinsExtended() {
+		final DataFactory DF = org.wsmo.factory.Factory.createDataFactory(null);
+//		final ITermFactory TF = org.deri.iris.factory.Factory.TERM;
+		final IConcreteFactory CF = org.deri.iris.factory.Factory.CONCRETE;
+		final IrisStratifiedFacade IF = new IrisStratifiedFacade( new WSMO4JManager(), new HashMap<String, Object>() );
+		
+		assertEquals(DF.createWsmlGregorianDay(1), IF.convertTermFromIrisToWsmo4j(CF.createGDay(1)));
+	}
 
 	public void testLiteral2Atom() {
 		final DataFactory DF = org.wsmo.factory.Factory.createDataFactory(null);

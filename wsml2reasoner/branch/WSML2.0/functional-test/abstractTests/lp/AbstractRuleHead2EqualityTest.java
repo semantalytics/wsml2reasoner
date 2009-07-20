@@ -12,7 +12,7 @@ import abstractTests.LP;
 public abstract class AbstractRuleHead2EqualityTest extends TestCase implements
 		LP {
 
-	protected static final String ONTOLOGY_FILE = "files/equal2_inHeadIRIS.wsml";
+	protected static final String ONTOLOGY_FILE_2 = "files/equal2_inHeadIRIS.wsml";
 
 	protected LPReasoner reasoner;
 
@@ -26,25 +26,14 @@ public abstract class AbstractRuleHead2EqualityTest extends TestCase implements
 		String query = "p(?x)";
 
 		Results r = new Results("x");
-		r.addBinding(Results.iri("http://simple#c"));
-		r.addBinding(Results.iri("http://simple#b"));
-		r.addBinding(Results.iri("http://simple#d"));
+		r.addBinding(Results.iri("http://simple2#c"));
+		r.addBinding(Results.iri("http://simple2#b"));
+		r.addBinding(Results.iri("http://simple2#d"));
 
+//		LPHelper.output = true;
 		LPHelper.executeQueryAndCheckResults(OntologyHelper
-				.loadOntology(ONTOLOGY_FILE), query, r.get(), reasoner);
+				.loadOntology(ONTOLOGY_FILE_2), query, r.get(), reasoner);
 
-		// Set<Map<Variable, Term>> result =
-		// LPHelper.executeQuery(OntologyHelper
-		// .loadOntology(ONTOLOGY_FILE_02), query, reasoner);
-		//
-		// AbstractTestHelper.printResult(result, query);
-		//
-		// assertTrue(AbstractTestHelper.checkIsIn(result, "?x",
-		// AbstractTestHelper.createIRI("http://simple#c")));
-		// assertTrue(AbstractTestHelper.checkIsIn(result, "?x",
-		// AbstractTestHelper.createIRI("http://simple#b")));
-		// assertTrue(AbstractTestHelper.checkIsIn(result, "?x",
-		// AbstractTestHelper.createIRI("http://simple#d")));
 	}
 
 }

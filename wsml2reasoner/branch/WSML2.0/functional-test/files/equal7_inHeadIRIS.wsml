@@ -1,8 +1,8 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
-namespace { _"http://simple#"
+namespace { _"http://simple7#"
 }
 
-ontology simple
+ontology simple_7
 
 concept C1
 concept C2
@@ -17,6 +17,6 @@ instance C memberOf C3
 
 		
 axiom equal definedBy
-		A = B :- wsml#true.
+		A = B :- 1 = 1.
 		p(?x) :- ?x[?n1 hasValue name].
 	

@@ -1,8 +1,8 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
-namespace { _"http://simple#"
+namespace { _"http://simple3#"
 }
 
-ontology simple
+ontology simple_3
 
 concept C1
 concept C2
@@ -14,7 +14,7 @@ instance b memberOf C2
 	name hasValue bb
 
 axiom equalInHead definedBy
-	a = b :- wsml#true. 
+	a = b :- 1 = 1.
 
 
 

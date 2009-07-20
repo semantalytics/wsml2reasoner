@@ -1,8 +1,8 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
-namespace { _"http://simple#"
+namespace { _"http://simple5#"
 }
 
-ontology simple
+ontology simple_5
 
 concept A
 concept B

@@ -25,15 +25,11 @@ public abstract class AbstractRuleHead6EqualityTest extends TestCase implements
 
 		String query = "p(?x)";
 
-		// Set<Map<Variable, Term>> result =
-		// LPHelper.executeQuery(OntologyHelper
-		// .loadOntology(ONTOLOGY_FILE), query,reasoner);
-		// AbstractTestHelper.printResult(result, query);
-
 		Results r = new Results("x");
-		r.addBinding(Results.iri("http://simple#B1"));
-		r.addBinding(Results.iri("http://simple#A1"));
+		r.addBinding(Results.iri("http://simple6#B1"));
+		r.addBinding(Results.iri("http://simple6#A1"));
 
+		// LPHelper.output = true;
 		LPHelper.executeQueryAndCheckResults(OntologyHelper
 				.loadOntology(ONTOLOGY_FILE), query, r.get(), reasoner);
 	}

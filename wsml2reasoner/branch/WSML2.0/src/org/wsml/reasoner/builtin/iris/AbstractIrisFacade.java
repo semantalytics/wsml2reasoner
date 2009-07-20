@@ -464,6 +464,11 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 
         try {
             prog = org.deri.iris.KnowledgeBaseFactory.createKnowledgeBase(facts, rules, configuration);
+            // output ...
+//            for (IRule foo : rules) {
+//            	System.out.println("RULES: ");
+//            	System.out.println(foo);
+//            }
         }
         catch (EvaluationException e) {
 

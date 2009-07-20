@@ -24,6 +24,7 @@ package org.wsml.reasoner.builtin.iris;
 
 import junit.framework.TestCase;
 
+import org.deri.iris.api.basics.IAtom;
 import org.omwg.logicalexpression.Constants;
 import org.wsml.reasoner.Literal;
 import org.wsml.reasoner.LiteralTestHelper;
@@ -65,6 +66,19 @@ public class IrisFacadeConvertTest extends TestCase {
 
 		assertEquals("EQUAL(?x, ?y)", IrisStratifiedFacade.literal2Atom(
 				wsmlLiteral, true).toString());
+	}
+	
+	public void testBuiltins() {
+		
+		String irins = "http://iris.sti-innsbruck.at/urn:";
+		String ns = "http://www.wsmo.org/wsml/wsml-syntax#";
+		
+		// String
+		Literal l = LiteralTestHelper.createLiteral(true, ns +"String", irins + "a", irins + "b" );
+		IAtom atom = IrisStratifiedFacade.literal2Atom(l, false);
+		System.out.println(atom);
+		assertTrue(atom.toString().contains(ns + "String"));
+		
 	}
 
 }
