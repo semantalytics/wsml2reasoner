@@ -128,11 +128,11 @@ public class LPHelper
 
     private static final LogicalExpressionFactory leFactory = new WSMO4JManager().getLogicalExpressionFactory();
     
-   synchronized public static void outputON(){
+   public static void outputON(){
     	output = true;
    }
    
-   synchronized public static void outputOFF(){
+   public static void outputOFF(){
    		output = false;
    }
     

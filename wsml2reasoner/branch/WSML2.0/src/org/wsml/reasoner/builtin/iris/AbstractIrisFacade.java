@@ -180,6 +180,11 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
     final static String DAYTIMEDURATION_LESS_THAN = Constants.WSML_NAMESPACE + "dayTimeDurationLessThan";
     final static String YEARMONTHDURATION_GREATER_THAN = Constants.WSML_NAMESPACE + "yearMonthDurationGreaterThan";
     final static String YEARMONTHDURATION_LESS_THAN = Constants.WSML_NAMESPACE + "yearMonthDurationLessThan";
+    /**
+     *  New Datatypes from  D3.1.4 Defining the features of the WSML-Rule v2.0 language
+	 *
+     */
+    final static String XMLLiteral = Constants.WSML_NAMESPACE + "xmlLiteral";
     
     /**
      *  New WSML builtin predicates from  D3.1.4 Defining the features of the WSML-Rule v2.0 language

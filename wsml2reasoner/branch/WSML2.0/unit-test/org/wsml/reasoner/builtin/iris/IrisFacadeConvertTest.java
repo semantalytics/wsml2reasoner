@@ -69,15 +69,22 @@ public class IrisFacadeConvertTest extends TestCase {
 	}
 	
 	public void testBuiltins() {
-		
 		String irins = "http://iris.sti-innsbruck.at/urn:";
 		String ns = "http://www.wsmo.org/wsml/wsml-syntax#";
+		Literal l = null;
+		IAtom atom = null;
 		
 		// String
-		Literal l = LiteralTestHelper.createLiteral(true, ns +"String", irins + "a", irins + "b" );
-		IAtom atom = IrisStratifiedFacade.literal2Atom(l, false);
+		l = LiteralTestHelper.createLiteral(true, ns +"String", irins + "a" );
+		atom = IrisStratifiedFacade.literal2Atom(l, false);
 		System.out.println(atom);
 		assertTrue(atom.toString().contains(ns + "String"));
+		
+		// double
+		l = LiteralTestHelper.createLiteral(true, ns +"Double", irins + "a" );
+		atom = IrisStratifiedFacade.literal2Atom(l, false);
+		System.out.println(atom);
+		assertTrue(atom.toString().contains(ns + "Double"));
 		
 	}
 
