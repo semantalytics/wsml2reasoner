@@ -89,6 +89,7 @@ import org.deri.iris.builtins.datatype.IsStringBuiltin;
 import org.deri.iris.builtins.datatype.IsTimeBuiltin;
 import org.deri.iris.facts.IDataSource;
 import org.deri.iris.querycontainment.QueryContainment;
+import org.deri.iris.rules.compiler.Builtin;
 import org.deri.iris.storage.IRelation;
 import org.deri.iris.storage.simple.SimpleRelationFactory;
 import org.omwg.logicalexpression.Constants;
@@ -180,6 +181,10 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
     final static String DAYTIMEDURATION_LESS_THAN = Constants.WSML_NAMESPACE + "dayTimeDurationLessThan";
     final static String YEARMONTHDURATION_GREATER_THAN = Constants.WSML_NAMESPACE + "yearMonthDurationGreaterThan";
     final static String YEARMONTHDURATION_LESS_THAN = Constants.WSML_NAMESPACE + "yearMonthDurationLessThan";
+    
+    final static String TRUE = Constants.WSML_NAMESPACE + "true";
+    final static String FALSE = Constants.WSML_NAMESPACE + "false";
+    
     /**
      *  New Datatypes from  D3.1.4 Defining the features of the WSML-Rule v2.0 language
 	 *
@@ -275,7 +280,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 	final static String TEXT_COMPARE = Constants.WSML_NAMESPACE + "textCompare";						// RIF : func:text-compare
 	final static String TEXT_LENGTH = Constants.WSML_NAMESPACE + "textLength";							// RIF : func:text-length
     
-    public AbstractIrisFacade(final WSMO4JManager m, final Map<String, Object> config) {
+	public AbstractIrisFacade(final WSMO4JManager m, final Map<String, Object> config) {
         DATA_FACTORY = m.getDataFactory();
         WSMO_FACTORY = m.getWSMOFactory();
         LOGIC_FACTORY = m.getLogicalExpressionFactory();
@@ -577,6 +582,12 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 //        else if (sym.equals(HAS_DATATYPE)) { // TODO check
 //        	return BUILTIN.createHasDatatype(toArray(terms));
 //        }
+        else if (sym.equals(TRUE)){
+        	return BUILTIN.createTrue();
+        }
+        else if (sym.equals(FALSE)){
+        	return BUILTIN.createFalse();
+        }
         else if (sym.equals(NUMERIC_MODULUS)) { // check is done by normal Modulus
         	return BUILTIN.createNumericModulus(toArray(terms));
         }
@@ -858,7 +869,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         				return new IsSqNameBuiltin( t0 );
         			else if( type.equals( WsmlDataType.WSML_TIME ) )
         				return new IsTimeBuiltin( t0 );
-//        			else if( type.equals( WsmlDataType.WSML_TEXT ) )  // TODO CHECK that is things!
+//        			else if( type.equals( WsmlDataType.WSML_TEXT ) )  // TODO CHECK 
 //        				return new IsTimeBuiltin( t0 );
 //        			
         		}
@@ -883,10 +894,20 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         if (t == null) {
             throw new NullPointerException("The term must not be null");
         }
+        // TODO remove
         if (t instanceof BuiltInConstructedTerm) {
+//        	  System.out.println("BUILTIN CONSTRUCTED TERM: " + t);
+//        	  final BuiltInConstructedTerm ct = (BuiltInConstructedTerm) t;
+//              final List<ITerm> terms = new ArrayList<ITerm>(ct.getArity());
+//              for (final Term term : (List<Term>) ct.listParameters()) {
+//                  terms.add(convertTermFromWsmo4jToIris(term));
+//              }
+//              return TERM.createConstruct(ct.getFunctionSymbol().toString(), terms);
+        	// return convertWSMO4JBuiltin2IrisBuiltin
             // TODO: builtins are left out at the moment
         }
         else if (t instanceof ConstructedTerm) {
+//            System.out.println("CONSTRUCTED TERM: " + t);
             final ConstructedTerm ct = (ConstructedTerm) t;
             final List<ITerm> terms = new ArrayList<ITerm>(ct.getArity());
             for (final Term term : (List<Term>) ct.listParameters()) {
@@ -895,22 +916,28 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
             return TERM.createConstruct(ct.getFunctionSymbol().toString(), terms);
         }
         else if (t instanceof DataValue) {
+//        	 System.out.println("DATAVALUE: " + t);
             return convertWsmo4jDataValueToIrisTerm((DataValue) t);
         }
         else if (t instanceof IRI) {
+//        	System.out.println("IRI: " + t);
             return CONCRETE.createIri(t.toString());
         }
         else if (t instanceof Variable) {
+//        	System.out.println("VARIABLE: " + t);
             return TERM.createVariable(((Variable) t).getName());
         }
         else if (t instanceof Identifier) {
-            // i doupt we got something analogous in iris -> exception
+//        	System.out.println("IDENTIFIER: " + t);
+            // i doubt we got something analogous in iris -> exception
         }
         else if (t instanceof NumberedAnonymousID) {
-            // i doupt we got something analogous in iris -> exception
+//        	System.out.println("NUMBEREDANONYMOUSID: " + t);
+            // i doubt we got something analogous in iris -> exception
         }
         else if (t instanceof UnnumberedAnonymousID) {
-            // i doupt we got something analogous in iris -> exception
+//        	System.out.println("UNNUMBEREDANONYMOUSID: " + t);
+            // i doubt we got something analogous in iris -> exception
         }
         throw new IllegalArgumentException("Can't convert a term of type " + t.getClass().getName());
     }

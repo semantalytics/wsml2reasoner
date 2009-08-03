@@ -14,7 +14,7 @@ instance b memberOf C2
 	name hasValue bb
 
 axiom equalInHead definedBy
-	a = b :- 1 = 1.
+	a = b :- true.
 
 
 

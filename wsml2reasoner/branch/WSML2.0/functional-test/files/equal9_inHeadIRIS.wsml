@@ -11,5 +11,5 @@ instance A memberOf C1
 instance B memberOf C2
 		
 axiom equal definedBy
-	C1 = C2 :- 1 = 1.
+	C1 = C2 :-true.
 	p(?x) :- ?x memberOf C2.

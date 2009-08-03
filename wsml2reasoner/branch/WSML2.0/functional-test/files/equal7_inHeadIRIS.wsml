@@ -17,6 +17,6 @@ instance C memberOf C3
 
 		
 axiom equal definedBy
-		A = B :- 1 = 1.
+		A = B :- true.
 		p(?x) :- ?x[?n1 hasValue name].
 	
