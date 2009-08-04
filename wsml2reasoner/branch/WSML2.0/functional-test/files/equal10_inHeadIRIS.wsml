@@ -18,4 +18,4 @@ instance B memberOf C2
 		
 axiom equal definedBy
 	// C1 = C2 :- 1 = 1.
-	A = B :- 1 = 1.
+	A = B :- true.

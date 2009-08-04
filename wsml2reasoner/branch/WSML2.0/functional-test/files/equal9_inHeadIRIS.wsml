@@ -7,8 +7,17 @@ ontology simple_9
 concept C1
 concept C2 
 
+concept C3 
+	aString ofType _string
+	//aStringCompare ofType _stringCompare
+
 instance A memberOf C1
 instance B memberOf C2
+
+// change for builtin Test
+instance BB memberOf C3
+	aString hasValue _string( "string-value" )
+	//aStringCompare hasValue _stringCompare()
 		
 axiom equal definedBy
 	C1 = C2 :-true.
