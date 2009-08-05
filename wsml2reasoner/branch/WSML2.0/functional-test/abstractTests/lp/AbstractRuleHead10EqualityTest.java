@@ -25,13 +25,13 @@ public abstract class AbstractRuleHead10EqualityTest extends TestCase implements
 		String query = "?instance[?attribute hasValue ?value]";
 
 		Results r = new Results("instance", "attribute", "value");
+		r.addBinding(Results.iri("http://simple10#A"), Results.iri("http://simple10#aString"), Results.string("string-value") );
+		r.addBinding(Results.iri("http://simple10#A"), Results.iri("http://simple10#anotherString"), Results.string("another string-value"));
+		r.addBinding(Results.iri("http://simple10#B"), Results.iri("http://simple10#anotherString"),  Results.string("another string-value"));
+		r.addBinding(Results.iri("http://simple10#B"), Results.iri("http://simple10#aString"), Results.string("string-value") );
 		
-
-		// TODO check
-		// if concepts set equal just 2 results - if instances set equal 4 results.
-		LPHelper.outputON();  
+//		LPHelper.outputON();
 		LPHelper.executeQueryAndCheckResults(OntologyHelper
 				.loadOntology(ONTOLOGY_FILE), query, r.get(), reasoner);
-		LPHelper.outputOFF();
 	}
 }

@@ -1,0 +1,38 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-full"
+namespace { _"http://builtin01#",
+	wsml _"http://www.wsmo.org/wsml/wsml-syntax#" }
+
+
+ontology builtin01
+
+concept C1
+concept C2 
+concept C3 
+
+instance A memberOf C1
+  aStringValue hasValue _string( "InstanceA" )	
+
+instance B memberOf C2
+  bStringValue hasValue _string( "InstanceB" )	
+		
+axiom testRIFBuiltin definedBy
+       
+       isDecimalTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isDecimal(_decimal( 123456.78901 )).
+       isStringTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isString(_string("string-value")).
+       isDoubleTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isDouble(_double( "12345.6789" )).
+       isBooleanTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isBoolean(_boolean("true")).
+       isIntegerTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isInteger(_integer(5)).
+       isBase64Binary(?x) :- ?x[?attribute hasValue ?value] and wsml#isBase64Binary(_base64binary( "QmFycnkgQmlzaG9w" )).
+       isDateTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isDate( _date( 1981, 12, 31 )).
+       isDurationTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isDuration( _duration( 1, 2, 3, 4, 5, 6 )).
+       isDateTimeTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isDateTime(_dateTime( 1981, 12, 31, 23, 59, 58 )).
+        
+	   stringCompareTest(?x) :-  ?x[?attribute hasValue ?value] and wsml#stringCompare(?value, "InstanceA") = -2.
+	   stringEqualTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEqual(?value, "InstanceA").
+	   stringConcatTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEqual( wsml#stringConcat(_string("con"), _string("cat")), _string("concat")).  
+	  
+	 
+	   gyearEqualTest(?x) :- ?x[?attribute hasValue ?value] and wsml#gyearEqual(_integer("2"),_integer("2")). 
+	   numericModulusTest(?x) :- ?x[?attribute hasValue ?value] and (wsml#numericModulus( 1, 1) = 0).
+	   
+

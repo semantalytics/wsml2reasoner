@@ -513,6 +513,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
      * @return the iris atom
      */
     static IAtom literal2Atom(Literal literal, boolean headLiteral) {
+//    	System.out.println("Literal : " + literal);
     	assert literal != null;
     	
     	String sym = literal.getPredicateUri();
@@ -770,7 +771,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         	return BUILTIN.createIsDecimal(toArray(terms));
         }
         else if (sym.equals(IS_DOUBLE)) {
-        	return BUILTIN.createIsDecimal(toArray(terms));
+        	return BUILTIN.createIsDouble(toArray(terms));
         }
         else if (sym.equals(IS_DURATION)) {
         	return BUILTIN.createIsDuration(toArray(terms));
