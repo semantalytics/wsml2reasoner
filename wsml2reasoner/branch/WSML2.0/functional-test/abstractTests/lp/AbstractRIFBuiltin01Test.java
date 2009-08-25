@@ -87,6 +87,53 @@ public abstract class AbstractRIFBuiltin01Test extends TestCase implements LP {
 		checkSTD(query);
 	}
 	
+	public void test_isGYearMonth() throws Exception {
+
+		String query = "isGYearMonthTest(?x)";
+		checkSTD(query);
+	}
+	
+	public void test_isHexBinary() throws Exception {
+
+		String query = "isHexBinaryTest(?x)";
+		checkSTD(query);
+	}
+	
+	public void test_isTime() throws Exception {
+
+		String query = "isTimeTest(?x)";
+		checkSTD(query);
+	}
+
+	public void test_isDayTimeDuration() throws Exception {
+
+		String query = "isDayTimeDurationTest(?x)";
+		checkSTD(query);
+	}
+	
+	public void test_isYearMonthDuration() throws Exception {
+
+		String query = "isYearMonthDurationTest(?x)";
+		checkSTD(query);
+	}
+	
+	public void test_isIRI() throws Exception {
+
+		String query = "isIRITest(?x)";
+		checkSTD(query);
+	}
+	
+	public void test_isText() throws Exception {
+
+		String query = "isTextTest(?x)";
+		checkSTD(query);
+	}
+	
+	public void test_isXMLLiteral() throws Exception {
+
+		String query = "isXMLLiteralTest(?x)";
+		checkSTD(query);
+	}
 	
 // TODO DOES NOT WORK YET !!!
 	public void test_StringEqual() throws Exception {
