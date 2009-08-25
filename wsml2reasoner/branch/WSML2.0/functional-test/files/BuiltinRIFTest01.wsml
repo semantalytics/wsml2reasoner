@@ -1,4 +1,4 @@
-wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-full"
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
 namespace { _"http://builtin01#",
 	wsml _"http://www.wsmo.org/wsml/wsml-syntax#" }
 
@@ -26,12 +26,26 @@ axiom testRIFBuiltin definedBy
        isDateTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isDate( _date( 1981, 12, 31 )).
        isDurationTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isDuration( _duration( 1, 2, 3, 4, 5, 6 )).
        isDateTimeTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isDateTime(_dateTime( 1981, 12, 31, 23, 59, 58 )).
+       
+       isFloatTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isFloat(_float(3.4)).
+       isGDay(?x) :- ?x[?attribute hasValue ?value] and wsml#isGDay(_gDay(3)).
+       isGMonth(?x) :- ?x[?attribute hasValue ?value] and wsml#isGMonth(_gMonth(3)).
+       isGMonthDay(?x) :- ?x[?attribute hasValue ?value] and wsml#isGMonthDay(_gMonthDay(3,4)).
+       isGYear(?x) :- ?x[?attribute hasValue ?value] and wsml#isGYear(_gYear(1965)).
+       isGYearMonth	:- ?x[?attribute hasValue ?value] and wsml#isGYearMonth(_gYearMonth(1965,6)).
+       isHexBinary	:- ?x[?attribute hasValue ?value] and wsml#isHexBinary(_HexBinary(6ac)).
+       isTime	:- ?x[?attribute hasValue ?value] and wsml#isTime(_time(6.00)).
+       isDayTimeDuration :- ?x[?attribute hasValue ?value] and wsml#isDayTimeDuration(_dayTimeDuration(6.00)).
+	   isYearMonthDuration :- ?x[?attribute hasValue ?value] and wsml#isYearMonthDuratation(_yearMonthDuration(6.00)).
+	   isIRI :- ?x[?attribute hasValue ?value] and wsml#isIRI(_iri("http://www.iri.com/THIS_IS_AN_IRI)).
+	   isText :- ?x[?attribute hasValue ?value] and wsml#isText(_text("Text")).
+	   isXMLLiteral :- ?x[?attribute hasValue ?value] and wsml#isXMLLiteral(_xmlLiteral("<tag>Text</tag>")).
+
         
 	   stringCompareTest(?x) :-  ?x[?attribute hasValue ?value] and wsml#stringCompare(?value, "InstanceA") = -2.
 	   stringEqualTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEqual(?value, "InstanceA").
 	   stringConcatTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEqual( wsml#stringConcat(_string("con"), _string("cat")), _string("concat")).  
 	  
-	 
 	   gyearEqualTest(?x) :- ?x[?attribute hasValue ?value] and wsml#gyearEqual(_integer("2"),_integer("2")). 
 	   numericModulusTest(?x) :- ?x[?attribute hasValue ?value] and (wsml#numericModulus( 1, 1) = 0).
 	   

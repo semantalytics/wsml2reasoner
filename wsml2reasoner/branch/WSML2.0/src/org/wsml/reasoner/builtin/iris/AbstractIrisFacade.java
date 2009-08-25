@@ -89,7 +89,6 @@ import org.deri.iris.builtins.datatype.IsStringBuiltin;
 import org.deri.iris.builtins.datatype.IsTimeBuiltin;
 import org.deri.iris.facts.IDataSource;
 import org.deri.iris.querycontainment.QueryContainment;
-import org.deri.iris.rules.compiler.Builtin;
 import org.deri.iris.storage.IRelation;
 import org.deri.iris.storage.simple.SimpleRelationFactory;
 import org.omwg.logicalexpression.Constants;
@@ -896,6 +895,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
             throw new NullPointerException("The term must not be null");
         }
         // TODO remove
+        System.out.println("\n** TERM : " + t);
         if (t instanceof BuiltInConstructedTerm) {
 //        	  System.out.println("BUILTIN CONSTRUCTED TERM: " + t);
 //        	  final BuiltInConstructedTerm ct = (BuiltInConstructedTerm) t;

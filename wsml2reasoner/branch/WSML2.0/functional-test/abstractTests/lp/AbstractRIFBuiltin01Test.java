@@ -74,10 +74,24 @@ public abstract class AbstractRIFBuiltin01Test extends TestCase implements LP {
 		String query = "isDateTimeTest(?x)";
 		checkSTD(query);
 	}
+	
+	public void test_isFloat() throws Exception {
 
-	public void test_stringEqual() throws Exception {
+		String query = "isFloatTest(?x)";
+		checkSTD(query);
+	}
+	
+	public void test_isGDay() throws Exception {
 
-		String query = "isStringTest(?x)";
+		String query = "isGDayTest(?x)";
+		checkSTD(query);
+	}
+	
+	
+// TODO DOES NOT WORK YET !!!
+	public void test_StringEqual() throws Exception {
+
+		String query = "stringEqualTest(?x)";
 		checkSTD(query);
 	}
 

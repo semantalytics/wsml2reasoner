@@ -45,7 +45,7 @@ public abstract class AbstractRuleHead4EqualityTest extends TestCase implements
 		r.addBinding(Results.iri("http://simple4#a"));
 		r.addBinding(Results.iri("http://simple4#b"));
 
-//		LPHelper.output = true;
+		LPHelper.outputON();
 
 		LPHelper.executeQueryAndCheckResults(OntologyHelper
 				.loadOntology(ONTOLOGY_FILE), query, r.get(), reasoner);
