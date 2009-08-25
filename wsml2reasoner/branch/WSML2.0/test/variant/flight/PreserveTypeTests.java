@@ -65,9 +65,9 @@ public class PreserveTypeTests extends BaseReasonerTest {
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
         binding.put(leFactory.createVariable("x"), 
-                dataFactory.createWsmlInteger("1"));
+                dataFactory.createInteger("1"));
         binding.put(leFactory.createVariable("y"), 
-                dataFactory.createWsmlDecimal("1.0"));
+                dataFactory.createDecimal("1.0"));
         expected.add(binding);
         performQuery(query, expected);
         System.out.println("Finished query.");
@@ -97,7 +97,7 @@ public class PreserveTypeTests extends BaseReasonerTest {
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
         binding.put(leFactory.createVariable("x"), 
-                dataFactory.createWsmlDecimal("7.5"));
+                dataFactory.createDecimal("7.5"));
         expected.add(binding);
         performQuery(query, expected);
         System.out.println("Finished query.");

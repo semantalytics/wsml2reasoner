@@ -24,11 +24,9 @@ package org.wsml.reasoner.transformation.le.moleculedecomposition;
 
 import junit.framework.TestCase;
 
-
 import org.omwg.logicalexpression.LogicalExpression;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.LETestHelper;
-import org.wsml.reasoner.transformation.le.moleculedecomposition.MoleculeDecompositionRule;
 import org.wsmo.wsml.ParserException;
 
 public class MoleculeDecompositionRuleTest extends TestCase{

@@ -23,6 +23,7 @@
 package concreteTests.irisStratified;
 
 import org.wsml.reasoner.api.LPReasoner;
+
 import abstractTests.lp.AbstractAnonymousId2Attribute;
 
 public class AnonymousId2AttributeTest extends AbstractAnonymousId2Attribute{

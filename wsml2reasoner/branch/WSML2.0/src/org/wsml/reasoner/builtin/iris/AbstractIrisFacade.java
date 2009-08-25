@@ -94,7 +94,6 @@ import org.deri.iris.storage.simple.SimpleRelationFactory;
 import org.omwg.logicalexpression.Constants;
 import org.omwg.logicalexpression.terms.BuiltInConstructedTerm;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
-import org.omwg.logicalexpression.terms.NumberedAnonymousID;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.DataValue;
@@ -113,6 +112,7 @@ import org.wsml.reasoner.api.exception.InternalReasonerException;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
+import org.wsmo.common.NumberedAnonymousID;
 import org.wsmo.common.UnnumberedAnonymousID;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -280,7 +280,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 	final static String TEXT_LENGTH = Constants.WSML_NAMESPACE + "textLength";							// RIF : func:text-length
     
 	public AbstractIrisFacade(final WSMO4JManager m, final Map<String, Object> config) {
-        DATA_FACTORY = m.getDataFactory();
+        DATA_FACTORY = m.getWsmlDataFactory();
         WSMO_FACTORY = m.getWSMOFactory();
         LOGIC_FACTORY = m.getLogicalExpressionFactory();
 
@@ -863,10 +863,11 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         				return new IsGYearMonthBuiltin( t0 );
         			else if( type.equals( WsmlDataType.WSML_HEXBINARY ) )
         				return new IsHexBinaryBuiltin( t0 );
-        			else if( type.equals( WsmlDataType.WSML_IRI ) )
-        				return new IsIriBuiltin( t0 );
-        			else if( type.equals( WsmlDataType.WSML_SQNAME ) )
-        				return new IsSqNameBuiltin( t0 );
+//        			TODO gigi: delete if they are gone for good
+//        			else if( type.equals( WsmlDataType.WSML_IRI ) )
+//        				return new IsIriBuiltin( t0 );
+//        			else if( type.equals( WsmlDataType.WSML_SQNAME ) )
+//        				return new IsSqNameBuiltin( t0 );
         			else if( type.equals( WsmlDataType.WSML_TIME ) )
         				return new IsTimeBuiltin( t0 );
 //        			else if( type.equals( WsmlDataType.WSML_TEXT ) )  // TODO CHECK 
@@ -953,7 +954,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         if (v == null) {
             throw new NullPointerException("The data value must not be null");
         }
-        final String t = v.getType().getIRI().toString();
+        final String t = v.getType().getIdentifier().toString();
         if (t.equals(WsmlDataType.WSML_BASE64BINARY)) {
             return CONCRETE.createBase64Binary(v.getValue().toString());
         }
@@ -1022,12 +1023,13 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         else if (t.equals(WsmlDataType.WSML_INTEGER)) {
             return CONCRETE.createInteger(Integer.parseInt(v.toString()));
         }
-        else if (t.equals(WsmlDataType.WSML_IRI)) {
-            return CONCRETE.createIri(v.getValue().toString());
-        }
-        else if (t.equals(WsmlDataType.WSML_SQNAME)) {
-            return CONCRETE.createSqName(v.getValue().toString());
-        }
+//        TODO gigi: delete if they are gone for good
+//        else if (t.equals(WsmlDataType.WSML_IRI)) {
+//            return CONCRETE.createIri(v.getValue().toString());
+//        }
+//        else if (t.equals(WsmlDataType.WSML_SQNAME)) {
+//            return CONCRETE.createSqName(v.getValue().toString());
+//        }
         else if (t.equals(WsmlDataType.WSML_STRING)) {
             return TERM.createString(v.toString());
         }
@@ -1097,16 +1099,16 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
          * IStringTerm block
          */
         if (t instanceof IBase64Binary) {
-            return DATA_FACTORY.createWsmlBase64Binary(((IBase64Binary) t).getValue().getBytes());
+            return DATA_FACTORY.createBase64Binary(((IBase64Binary) t).getValue().getBytes());
         }
         else if (t instanceof IHexBinary) {
-            return DATA_FACTORY.creatWsmlHexBinary(((IHexBinary) t).getValue().getBytes());
+            return DATA_FACTORY.creatHexBinary(((IHexBinary) t).getValue().getBytes());
         }
         else if (t instanceof IIri) {
             return WSMO_FACTORY.createIRI(((IIri) t).getValue());
         }
         else if (t instanceof IStringTerm) {
-            return DATA_FACTORY.createWsmlString(((IStringTerm) t).getValue());
+            return DATA_FACTORY.createString(((IStringTerm) t).getValue());
         }
         else if (t instanceof IVariable) {
             return LOGIC_FACTORY.createVariable(((IVariable) t).getValue());
@@ -1120,57 +1122,58 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
             return LOGIC_FACTORY.createConstructedTerm(WSMO_FACTORY.createIRI(ct.getFunctionSymbol()), terms);
         }
         else if (t instanceof IBooleanTerm) {
-            return DATA_FACTORY.createWsmlBoolean(((IBooleanTerm) t).getValue());
+            return DATA_FACTORY.createBoolean(((IBooleanTerm) t).getValue());
         }
         else if (t instanceof IDateTerm) {
             final IDateTerm dt = (IDateTerm) t;
             int[] tzData = getTZData(dt.getTimeZone());
-            return DATA_FACTORY.createWsmlDate(dt.getYear(), dt.getMonth(), dt.getDay(), tzData[0], tzData[1]);
+            return DATA_FACTORY.createDate(dt.getYear(), dt.getMonth(), dt.getDay(), tzData[0], tzData[1]);
         }
         else if (t instanceof IDateTime) {
             final IDateTime dt = (IDateTime) t;
             int[] tzData = getTZData(dt.getTimeZone());
-            return DATA_FACTORY.createWsmlDateTime(dt.getYear(), dt.getMonth(), dt.getDay(),
-            				dt.getHour(), dt.getMinute(), dt.getDecimalSecond(), tzData[0], tzData[1]);
+            return DATA_FACTORY.createDateTime(dt.getYear(), dt.getMonth(), dt.getDay(),
+            				dt.getHour(), dt.getMinute(), (float) dt.getDecimalSecond(), tzData[0], tzData[1]); // TODO gigi: I introduced the float cast, check if this is correct
         }
         else if (t instanceof ITime) {
             final ITime time = (ITime) t;
             int[] tzData = getTZData(time.getTimeZone());
-            return DATA_FACTORY.createWsmlTime(time.getHour(), time.getMinute(), time.getDecimalSecond(),
+            return DATA_FACTORY.createTime(time.getHour(), time.getMinute(), (float) time.getDecimalSecond(), // TODO gigi: I introduced the float cast, check if this is correct
             				tzData[0], tzData[1]);
         }
         else if (t instanceof IDecimalTerm) {
-            return DATA_FACTORY.createWsmlDecimal(new BigDecimal(((IDecimalTerm) t).toString()));
+            return DATA_FACTORY.createDecimal(new BigDecimal(((IDecimalTerm) t).toString()));
         }
         else if (t instanceof IDoubleTerm) {
-            return DATA_FACTORY.createWsmlDouble(((IDoubleTerm) t).getValue());
+            return DATA_FACTORY.createDouble(((IDoubleTerm) t).getValue());
         }
-        else if (t instanceof IDuration) {
-            final IDuration dt = (IDuration) t;
-            return DATA_FACTORY.createWsmlDuration(dt.getValue().getSign() > 0, dt.getYear(), dt.getMonth(), dt.getDay(), dt.getHour(), dt.getMinute(), dt.getDecimalSecond());
-        }
+//        FIXME gigi: add duration support 
+//        else if (t instanceof IDuration) {
+//            final IDuration dt = (IDuration) t;
+//            return DATA_FACTORY.createWsmlDuration(dt.getValue().getSign() > 0, dt.getYear(), dt.getMonth(), dt.getDay(), dt.getHour(), dt.getMinute(), dt.getDecimalSecond());
+//        }
         else if (t instanceof IFloatTerm) {
-            return DATA_FACTORY.createWsmlFloat(((IFloatTerm) t).getValue());
+            return DATA_FACTORY.createFloat(((IFloatTerm) t).getValue());
         }
         else if (t instanceof IGDay) {
-            return DATA_FACTORY.createWsmlGregorianDay(((IGDay) t).getDay());
+            return DATA_FACTORY.createGregorianDay(((IGDay) t).getDay());
         }
         else if (t instanceof IGMonth) {
-            return DATA_FACTORY.createWsmlGregorianMonth(((IGMonth) t).getMonth());
+            return DATA_FACTORY.createGregorianMonth(((IGMonth) t).getMonth());
         }
         else if (t instanceof IGMonthDay) {
             final IGMonthDay md = (IGMonthDay) t;
-            return DATA_FACTORY.createWsmlGregorianMonthDay(md.getMonth(), md.getDay());
+            return DATA_FACTORY.createGregorianMonthDay(md.getMonth(), md.getDay());
         }
         else if (t instanceof IGYear) {
-            return DATA_FACTORY.createWsmlGregorianYear(((IGYear) t).getYear());
+            return DATA_FACTORY.createGregorianYear(((IGYear) t).getYear());
         }
         else if (t instanceof IGYearMonth) {
             final IGYearMonth md = (IGYearMonth) t;
-            return DATA_FACTORY.createWsmlGregorianYearMonth(md.getYear(), md.getMonth());
+            return DATA_FACTORY.createGregorianYearMonth(md.getYear(), md.getMonth());
         }
         else if (t instanceof IIntegerTerm) {
-            return DATA_FACTORY.createWsmlInteger(new BigInteger(t.getValue().toString()));
+            return DATA_FACTORY.createInteger(new BigInteger(t.getValue().toString()));
         }
         else if (t instanceof ISqName) {
             // couldn't find this type in wsmo4j

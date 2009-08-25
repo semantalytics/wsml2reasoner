@@ -23,6 +23,7 @@
 package concreteTests.irisStratified;
 
 import org.wsml.reasoner.api.LPReasoner;
+
 import abstractTests.lp.AbstractDataTypes9MemberOfDatatype;
 
 public class DataTypes9MemberOfDatatypeTest extends AbstractDataTypes9MemberOfDatatype

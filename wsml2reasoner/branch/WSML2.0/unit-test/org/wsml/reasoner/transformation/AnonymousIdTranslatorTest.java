@@ -23,6 +23,8 @@
 
 package org.wsml.reasoner.transformation;
 
+import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
@@ -31,10 +33,6 @@ import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.common.Identifier;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
-
-
-
-import junit.framework.TestCase;
 
 public class AnonymousIdTranslatorTest extends TestCase {
 

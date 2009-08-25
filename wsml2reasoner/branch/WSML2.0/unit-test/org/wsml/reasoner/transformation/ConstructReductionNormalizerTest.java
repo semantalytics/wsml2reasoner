@@ -25,7 +25,9 @@ package org.wsml.reasoner.transformation;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.wsml.reasoner.impl.WSMO4JManager;

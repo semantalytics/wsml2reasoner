@@ -78,7 +78,7 @@ public class MinsTests extends BaseReasonerTest {
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
         binding.put(leFactory.createVariable("x"), 
-                dataFactory.createWsmlDecimal("7.5"));
+                dataFactory.createDecimal("7.5"));
         expected.add(binding);
         performQuery(query, expected);
         System.out.println("Finished query.");

@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.deri.wsmo4j.validator.WsmlValidatorImpl;
+import org.deri.wsmo4j.validator.WsmlValidatorTypedImpl;
 import org.omwg.ontology.Ontology;
 import org.semanticweb.owl.io.RendererException;
 import org.semanticweb.owl.model.OWLOntology;
@@ -146,7 +146,7 @@ public class WsmlOwlSerializer implements Serializer {
     }
 
     private OWLOntology transformOntology(TopEntity[] te) {
-        if (!new WsmlValidatorImpl().isValid(te[0], "http://www.wsmo.org/wsml/wsml-syntax/wsml-dl", new ArrayList<ValidationError>(), new ArrayList<ValidationWarning>())) {
+        if (!new WsmlValidatorTypedImpl().isValid(te[0], "http://www.wsmo.org/wsml/wsml-syntax/wsml-dl", new ArrayList<ValidationError>(), new ArrayList<ValidationWarning>())) {
             throw new RuntimeException("The given WSML-DL ontology is not " + "valid!");
         }
         return new DLBasedWSMLReasoner(BuiltInReasoner.PELLET, new WSMO4JManager()).createOWLOntology((Ontology) te[0]);

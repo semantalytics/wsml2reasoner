@@ -22,9 +22,9 @@
  */
 package org.wsml.reasoner.transformation.le.inverseimplicationreduction;
 
-import org.wsml.reasoner.impl.WSMO4JManager;
-
 import junit.framework.TestCase;
+
+import org.wsml.reasoner.impl.WSMO4JManager;
 
 public class InverseImplicationReductionRulesTest extends TestCase {
 	

@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,15 +31,15 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.LPReasoner;
-import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.TopEntity;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.LogicalExpressionFactory;
+import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
@@ -49,14 +48,28 @@ import org.wsmo.wsml.ParserException;
  */
 public class WSMLReasonerFacade {
 
-    /**
+    private WsmoFactory wsmoFactory;
+
+    private LPReasoner reasoner;
+
+    private Ontology onto;
+
+	private Parser wsmlParser;
+
+	private LogicalExpressionFactory leFactory;
+    
+	/**
      * Constructs a new WSMLReasonerFacade by setting up WSMO4J resources, the
      * parser, the reasoner.
      */
     public WSMLReasonerFacade() {
-        manager = new WSMO4JManager();
-        parser = Factory.createParser(null);      
-
+        wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
+    	wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
+    	
+    	DataFactory xmlDataFactory = FactoryImpl.getInstance().createXmlDataFactory(wsmoFactory);
+		DataFactory wsmlDataFactory = FactoryImpl.getInstance().createWsmlDataFactory(wsmoFactory);
+		leFactory = FactoryImpl.getInstance().createLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
+		
         reasoner = DefaultWSMLReasonerFactory.getFactory().createFlightReasoner(null);
     }
     
@@ -66,8 +79,7 @@ public class WSMLReasonerFacade {
      * @param reasoner The reasoner to use.
      */
     public WSMLReasonerFacade(LPReasoner reasoner) {
-    	manager = new WSMO4JManager();
-        parser = Factory.createParser(null);
+    	this();
        
         this.reasoner = reasoner;
     }
@@ -77,7 +89,6 @@ public class WSMLReasonerFacade {
     		throw new IllegalArgumentException();
     	}
     	
-    	LogicalExpressionFactory leFactory = manager.getLogicalExpressionFactory();    	
         LogicalExpression lequery = leFactory.createLogicalExpression(query);
       
         return doQuery(lequery);
@@ -116,7 +127,6 @@ public class WSMLReasonerFacade {
         }
 
         reasoner.registerOntology(onto);
-        LogicalExpressionFactory leFactory = manager.getLogicalExpressionFactory();
         LogicalExpression lequery = leFactory.createLogicalExpression(query, onto);
 
         return doQuery(lequery);
@@ -159,19 +169,11 @@ public class WSMLReasonerFacade {
         Ontology ontology = null;
         url = new URL(ontologyIri);
         InputStream is = url.openStream();
-        TopEntity[] identifiable = parser.parse(new InputStreamReader(is));
+        TopEntity[] identifiable = wsmlParser.parse(new InputStreamReader(is), null);
         if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {
             ontology = ((Ontology) identifiable[0]);
         }
 
         return ontology;
     }
-
-    private WSMO4JManager manager;
-
-    private Parser parser;
-
-    private LPReasoner reasoner;
-
-    private Ontology onto;
 }

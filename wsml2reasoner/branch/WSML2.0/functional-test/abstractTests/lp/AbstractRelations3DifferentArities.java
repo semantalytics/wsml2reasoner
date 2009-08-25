@@ -7,7 +7,9 @@ import helper.LPHelper;
 import helper.OntologyHelper;
 import helper.Results;
 import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.terms.Term;
+
 import abstractTests.LP;
 
 /**

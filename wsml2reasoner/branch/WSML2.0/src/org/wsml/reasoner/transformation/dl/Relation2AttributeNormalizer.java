@@ -31,13 +31,13 @@ import org.omwg.ontology.Relation;
 import org.omwg.ontology.RelationInstance;
 import org.omwg.ontology.Type;
 import org.omwg.ontology.Value;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.AnonymousIdTranslator;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsmo.common.Entity;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.common.exception.SynchronisationException;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
@@ -65,10 +65,15 @@ public class Relation2AttributeNormalizer implements OntologyNormalizer {
 
     protected AnonymousIdTranslator anonymousIdTranslator;
 
+	private DataFactory xmlDataFactory;
+
+	private DataFactory wsmlDataFactory;
+
     public Relation2AttributeNormalizer(WSMO4JManager wsmoManager) {
-        wsmoFactory = wsmoManager.getWSMOFactory();
-        leFactory = wsmoManager.getLogicalExpressionFactory();
-        dataFactory = wsmoManager.getDataFactory();
+        wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
+        wsmlDataFactory = FactoryImpl.getInstance().createWsmlDataFactory(wsmoFactory);
+        xmlDataFactory = FactoryImpl.getInstance().createXmlDataFactory(wsmoFactory);
+		leFactory = FactoryImpl.getInstance().createLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
         anonymousIdTranslator = new AnonymousIdTranslator(wsmoFactory);
     }
 
@@ -90,9 +95,6 @@ public class Relation2AttributeNormalizer implements OntologyNormalizer {
             else if (e instanceof RelationInstance) {
                 try {
                     result.addAll(normalizeRelationInstance((RelationInstance) e));
-                }
-                catch (SynchronisationException e1) {
-                    e1.printStackTrace();
                 }
                 catch (InvalidModelException e1) {
                     e1.printStackTrace();
@@ -162,7 +164,7 @@ public class Relation2AttributeNormalizer implements OntologyNormalizer {
      * Relation instances are replaced by attribute values.
      */
 
-    private Set<Entity> normalizeRelationInstance(RelationInstance relationInstance) throws SynchronisationException, InvalidModelException {
+    private Set<Entity> normalizeRelationInstance(RelationInstance relationInstance) throws InvalidModelException {
         Set<Entity> result = new HashSet<Entity>();
         Value v1 = relationInstance.getParameterValue((byte) 0);
         Value v2 = relationInstance.getParameterValue((byte) 1);

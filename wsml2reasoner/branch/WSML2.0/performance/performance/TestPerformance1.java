@@ -10,18 +10,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.serializer.wsml.VisitorSerializeWSMLTerms;
+import org.deri.wsmo4j.io.serializer.wsml.SerializeWSMLTermsVisitor;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.TopEntity;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
@@ -270,11 +271,12 @@ public class TestPerformance1 {
     }
     
     private Ontology loadOntology(String file) {
-        Parser wsmlParser = Factory.createParser(null);
+    	WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
+    	Parser wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);
         try {
-            final TopEntity[] identifiable = wsmlParser.parse(new InputStreamReader(is));
+            final TopEntity[] identifiable = wsmlParser.parse(new InputStreamReader(is), null);
             if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {
                 return (Ontology) identifiable[0];
             }
@@ -291,7 +293,7 @@ public class TestPerformance1 {
     }
 
     private String termToString(Term t, Ontology o) {
-        VisitorSerializeWSMLTerms v = new VisitorSerializeWSMLTerms(o);
+        SerializeWSMLTermsVisitor v = new SerializeWSMLTermsVisitor(o);
         t.accept(v);
         return v.getSerializedObject();
     }

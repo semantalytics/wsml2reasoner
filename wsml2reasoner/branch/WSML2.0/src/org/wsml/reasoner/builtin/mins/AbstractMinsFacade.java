@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.deri.mins.Atom;
 import org.deri.mins.Body;
 import org.deri.mins.DB;
@@ -350,7 +351,7 @@ public abstract class AbstractMinsFacade implements DatalogReasonerFacade
         }
         else if (wsmlTerm instanceof SimpleDataValue) {
             SimpleDataValue val = (SimpleDataValue) wsmlTerm;
-            String type = val.getType().getIRI().toString();
+            String type = val.getType().getIdentifier().toString();
             // System.out.println(type);
             if (type.equals(WsmlDataType.WSML_STRING)) {
                 minsTerm = new StringTerm(val.toString());
@@ -365,7 +366,7 @@ public abstract class AbstractMinsFacade implements DatalogReasonerFacade
         }
         else {
             ComplexDataValue val = (ComplexDataValue) wsmlTerm;
-            String type = val.getType().getIRI().toString();
+            String type = val.getType().getIdentifier().toString();
             // int arity = val.getArity();
             if (type.equals(WsmlDataType.WSML_BOOLEAN)) {
                 minsTerm = new StringTerm(val.toString());
@@ -418,7 +419,8 @@ public abstract class AbstractMinsFacade implements DatalogReasonerFacade
         WsmoFactory f = wsmoManager.getWSMOFactory();
         int memberOfNo = symbTransfomer.convertToTool(new Literal(true, WSML2DatalogTransformer.PRED_MEMBER_OF, new Term[2]));
         int integerNo = symbTransfomer.convertToTool(f.createIRI(WsmlDataType.WSML_INTEGER));
-        int iriNo = symbTransfomer.convertToTool(f.createIRI(WsmlDataType.WSML_IRI));
+//        TODO gigi: delete if they are gone for good
+//        int iriNo = symbTransfomer.convertToTool(f.createIRI(WsmlDataType.WSML_IRI));
         int stringNo = symbTransfomer.convertToTool(f.createIRI(WsmlDataType.WSML_STRING));
         int decimalNo = symbTransfomer.convertToTool(f.createIRI(WsmlDataType.WSML_DECIMAL));
         int booleanNo = symbTransfomer.convertToTool(f.createIRI(WsmlDataType.WSML_BOOLEAN));
@@ -445,7 +447,8 @@ public abstract class AbstractMinsFacade implements DatalogReasonerFacade
         rs.addRule(new Rule(new Head[] { new Head(memberOfNo, new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(0), new ConstTerm(booleanNo) }) }, new Body[] { new BuiltinBody(6, false, new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(0), new StringTerm("_boolean(\"false\")") }, new Equal()) }));
 
         // ?x memberOf _integer :- isConst(?x)
-        rs.addRule(new Rule(new Head[] { new Head(memberOfNo, new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(0), new ConstTerm(iriNo) }) }, new Body[] { new BuiltinBody(15, false, new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(0) }, new IsConst()) }));
+//        TODO gigi: remove since IRI is no longer supported
+//        rs.addRule(new Rule(new Head[] { new Head(memberOfNo, new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(0), new ConstTerm(iriNo) }) }, new Body[] { new BuiltinBody(15, false, new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(0) }, new IsConst()) }));
     }
 
     public boolean checkQueryContainment(ConjunctiveQuery query1, ConjunctiveQuery query2) {

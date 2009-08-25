@@ -11,7 +11,6 @@ import org.wsml.reasoner.transformation.ConstraintReplacementNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsmo.common.Entity;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.common.exception.SynchronisationException;
 
 import framework.normalization.BaseNormalizationTest;
 
@@ -34,7 +33,7 @@ public class DebugTransformationsTest extends BaseNormalizationTest
     	super.tearDown();
     }
     
-    public void testAxiomIDGeneration() throws SynchronisationException, InvalidModelException
+    public void testAxiomIDGeneration() throws InvalidModelException
     {
         Ontology ontology = null;
         try

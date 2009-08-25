@@ -32,14 +32,15 @@ import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Relation;
 import org.omwg.ontology.RelationInstance;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.dl.Relation2AttributeNormalizer;
 import org.wsml.reasoner.transformation.dl.WSMLDLLogExprNormalizer;
 import org.wsmo.common.Entity;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.common.exception.SynchronisationException;
 import org.wsmo.factory.Factory;
+import org.wsmo.factory.WsmoFactory;
 import org.wsmo.validator.ValidationError;
 import org.wsmo.validator.ValidationWarning;
 import org.wsmo.wsml.Parser;
@@ -72,9 +73,10 @@ public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
         // read test file and parse it
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/wsml2owlNormExample.wsml");
         assertNotNull(is);
-        Parser wsmlParser = Factory.createParser(null);
+        WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
+    	Parser wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
         // assuming first topentity in file is an ontology
-        ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is))[0];
+        ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is), null)[0];
 
         System.out.println(serializeOntology(ontology) + "\n\n\n-------------\n\n\n");
 
@@ -106,7 +108,7 @@ public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
         System.out.println(serializeOntology(createOntology(e3, "http://www.WSMLDLNormalizerTestOntology3.com")) + "\n\n\n-------------\n\n\n");
     }
 
-    private Ontology createOntology(Set<Entity> entities, String IRI) throws SynchronisationException, InvalidModelException {
+    private Ontology createOntology(Set<Entity> entities, String IRI) throws InvalidModelException {
         Ontology o = wsmoFactory.createOntology(wsmoFactory.createIRI(IRI));
         for (Entity e : entities) {
             if (e instanceof Concept) {
@@ -132,9 +134,10 @@ public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
         // read test file and parse it
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/anonIds.wsml");
         assertNotNull(is);
-        Parser wsmlParser = Factory.createParser(null);
+        WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
+    	Parser wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
         // assuming first topentity in file is an ontology
-        ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is))[0];
+        ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is), null)[0];
 
         System.out.println(serializeOntology(ontology) + "\n\n\n-------------\n\n\n");
 
@@ -166,9 +169,10 @@ public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
         // read test file and parse it
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/relation2attribute.wsml");
         assertNotNull(is);
-        Parser wsmlParser = Factory.createParser(null);
+        WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
+    	Parser wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
         // assuming first topentity in file is an ontology
-        ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is))[0];
+        ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is), null)[0];
 
         System.out.println(serializeOntology(ontology) + "\n\n\n-------------\n\n\n");
 
@@ -200,9 +204,10 @@ public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
         // read test file and parse it
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/decomposition.wsml");
         assertNotNull(is);
-        Parser wsmlParser = Factory.createParser(null);
+        WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
+    	Parser wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
         // assuming first topentity in file is an ontology
-        ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is))[0];
+        ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is), null)[0];
 
         System.out.println(serializeOntology(ontology) + "\n\n\n-------------\n\n\n");
 

@@ -25,12 +25,12 @@ package org.wsml.reasoner.transformation.le;
 
 import java.util.Set;
 
+import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.LogicalExpression;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.lloydtopor.LloydToporRules;
 import org.wsmo.wsml.ParserException;
-
-import junit.framework.TestCase;
 
 public class TopDownLESplitterTest extends TestCase {
 	

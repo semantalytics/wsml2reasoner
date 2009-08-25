@@ -23,6 +23,7 @@
 package concreteTests.irisStratified;
 
 import org.wsml.reasoner.api.LPReasoner;
+
 import abstractTests.lp.AbstractDataTypes3DateTimeDurationTypes;
 
 public class DataTypes3DateTimeDurationTest extends AbstractDataTypes3DateTimeDurationTypes

@@ -2,11 +2,15 @@ package abstractTests.lp;
 
 import helper.OntologyHelper;
 import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Ontology;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.LPReasoner;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.LogicalExpressionFactory;
+import org.wsmo.factory.WsmoFactory;
+
 import abstractTests.LP;
 
 /**
@@ -131,7 +135,11 @@ public abstract class AbstractQueryContainment1 extends TestCase implements LP {
         LPReasoner reasoner = getLPReasoner();
         reasoner.registerOntology(ontology);
         
-        LogicalExpressionFactory leFactory = Factory.createLogicalExpressionFactory(null);
+        WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
+        DataFactory xmlDataFactory = FactoryImpl.getInstance().createXmlDataFactory(wsmoFactory);
+		DataFactory wsmlDataFactory = FactoryImpl.getInstance().createXmlDataFactory(wsmoFactory);
+		
+		LogicalExpressionFactory leFactory = FactoryImpl.getInstance().createLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
 
 		// build queries
         LogicalExpression query1 = leFactory.createLogicalExpression(queryString1, ontology);

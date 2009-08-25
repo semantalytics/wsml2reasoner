@@ -20,16 +20,36 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.deri.wsmo4j.io.parser.wsml.TempVariable;
+import org.omwg.logicalexpression.Atom;
+import org.omwg.logicalexpression.AttributeConstraintMolecule;
+import org.omwg.logicalexpression.AttributeInferenceMolecule;
+import org.omwg.logicalexpression.AttributeValueMolecule;
+import org.omwg.logicalexpression.CompoundMolecule;
+import org.omwg.logicalexpression.Conjunction;
 import org.omwg.logicalexpression.Constants;
+import org.omwg.logicalexpression.Constraint;
+import org.omwg.logicalexpression.Disjunction;
+import org.omwg.logicalexpression.Equivalence;
+import org.omwg.logicalexpression.ExistentialQuantification;
+import org.omwg.logicalexpression.Implication;
+import org.omwg.logicalexpression.InverseImplication;
+import org.omwg.logicalexpression.LogicProgrammingRule;
+import org.omwg.logicalexpression.LogicalExpressionVisitor;
+import org.omwg.logicalexpression.MembershipMolecule;
+import org.omwg.logicalexpression.Negation;
+import org.omwg.logicalexpression.NegationAsFailure;
+import org.omwg.logicalexpression.SubConceptMolecule;
+import org.omwg.logicalexpression.TruthValue;
+import org.omwg.logicalexpression.UniversalQuantification;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
-import org.omwg.logicalexpression.terms.NumberedAnonymousID;
 import org.omwg.logicalexpression.terms.Term;
-import org.omwg.logicalexpression.terms.Visitor;
+import org.omwg.logicalexpression.terms.TermVisitor;
 import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.Variable;
 import org.omwg.ontology.WsmlDataType;
 import org.wsmo.common.IRI;
+import org.wsmo.common.NumberedAnonymousID;
 import org.wsmo.common.TopEntity;
 import org.wsmo.common.UnnumberedAnonymousID;
 
@@ -39,7 +59,7 @@ import org.wsmo.common.UnnumberedAnonymousID;
  * @version $Revision: 1.5 $ $Date: 2007-08-10 09:44:49 $
  * @see org.omwg.logicalexpression.Visitor
  */
-public class TPTPTermSerializer implements Visitor {
+public class TPTPTermSerializer implements LogicalExpressionVisitor, TermVisitor {
 
     private Map atoms2ConstructedTerms;
 
@@ -118,7 +138,7 @@ public class TPTPTermSerializer implements Visitor {
 
     public void visitComplexDataValue(ComplexDataValue value) {
         String s = "";
-        value.getType().getIRI().accept(this);
+        value.getType().getIdentifier().accept(this);
         s = stack.remove(stack.size() - 1);
         int nbParams = value.getArity();
         s = s + "(";
@@ -133,7 +153,7 @@ public class TPTPTermSerializer implements Visitor {
     }
 
     public void visitSimpleDataValue(SimpleDataValue value) {
-        if (value.getType().getIRI().toString().equals(WsmlDataType.WSML_STRING)) {
+        if (value.getType().getIdentifier().toString().equals(WsmlDataType.WSML_STRING)) {
             // escape \ and "
             String content = (String) value.getValue();
             content = content.replaceAll("\\\\", "\\\\\\\\");
@@ -175,4 +195,161 @@ public class TPTPTermSerializer implements Visitor {
     public String getSerializedObject() {
         return stack.remove(0).toString();
     }
+
+	@Override
+	public void visitAtom(Atom expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitAttributeConstraintMolecule(
+			AttributeConstraintMolecule expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitAttributeInferenceMolecule(AttributeInferenceMolecule expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitAttributeValueMolecule(AttributeValueMolecule expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitCompoundMolecule(CompoundMolecule expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitConjunction(Conjunction expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitConstraint(Constraint expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitDisjunction(Disjunction expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitEquivalence(Equivalence expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitExistentialQuantification(ExistentialQuantification expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitImplication(Implication expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitInverseImplication(InverseImplication expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitLogicProgrammingRule(LogicProgrammingRule expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitMemberShipMolecule(MembershipMolecule expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitNegation(Negation expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitNegationAsFailure(NegationAsFailure expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitSubConceptMolecule(SubConceptMolecule expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitTruthValue(TruthValue expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitUniversalQuantification(UniversalQuantification expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(ConstructedTerm t) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(Variable t) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(SimpleDataValue t) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(ComplexDataValue t) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(UnnumberedAnonymousID t) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(NumberedAnonymousID t) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(IRI t) {
+		// TODO Auto-generated method stub
+		
+	}
 }

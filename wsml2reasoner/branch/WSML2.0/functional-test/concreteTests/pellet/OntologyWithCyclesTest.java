@@ -23,6 +23,7 @@
 package concreteTests.pellet;
 
 import org.wsml.reasoner.api.DLReasoner;
+
 import abstractTests.dl.AbstractOntologyWithCycles;
 
 

@@ -23,6 +23,7 @@
 package concreteTests.mins;
 
 import org.wsml.reasoner.api.LPReasoner;
+
 import abstractTests.lp.AbstractViolation2AttributeIsWrongConcept;
 
 public class Violation2AttributeIswrongConceptTest extends AbstractViolation2AttributeIsWrongConcept {

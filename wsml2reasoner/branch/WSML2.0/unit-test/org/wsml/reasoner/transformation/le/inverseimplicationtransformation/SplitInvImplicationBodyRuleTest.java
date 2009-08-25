@@ -24,13 +24,12 @@ package org.wsml.reasoner.transformation.le.inverseimplicationtransformation;
 
 import java.util.Set;
 
+import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.LogicalExpression;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.LETestHelper;
-import org.wsml.reasoner.transformation.le.inverseimplicationtransformation.SplitInvImplicationBodyRule;
 import org.wsmo.wsml.ParserException;
-
-import junit.framework.TestCase;
 
 public class SplitInvImplicationBodyRuleTest extends TestCase {
 

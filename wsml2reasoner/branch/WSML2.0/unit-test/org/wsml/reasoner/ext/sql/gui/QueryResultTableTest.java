@@ -26,7 +26,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
@@ -55,7 +57,7 @@ public class QueryResultTableTest extends TestCase {
 		WSMO4JManager wsmoManager = new WSMO4JManager(); 
 		wsmoFactory = wsmoManager.getWSMOFactory();
         leFactory = wsmoManager.getLogicalExpressionFactory();
-        dataFactory = wsmoManager.getDataFactory();
+        dataFactory = wsmoManager.getWsmlDataFactory();
         
         ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ont"));
         ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));	
@@ -66,8 +68,8 @@ public class QueryResultTableTest extends TestCase {
 	public void testTable() throws ParserException {
 		Variable v1 = leFactory.createVariable("var01");
 		Variable v2 = leFactory.createVariable("var02");
-		Term t1 = dataFactory.createWsmlString( "term1" );
-		Term t2 = dataFactory.createWsmlString( "term2" );
+		Term t1 = dataFactory.createString( "term1" );
+		Term t2 = dataFactory.createString( "term2" );
 		
 		Map<Variable, Term> row = new HashMap<Variable, Term>();
 		row.put(v1, t1);

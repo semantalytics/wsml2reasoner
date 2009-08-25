@@ -24,6 +24,7 @@ package helper;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.wsml.reasoner.api.DLReasoner;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;

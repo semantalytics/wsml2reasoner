@@ -1,7 +1,7 @@
 package org.wsml.reasoner.impl;
 
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -11,16 +11,23 @@ public class WSMO4JManager {
 
     private LogicalExpressionFactory leFactory;
 
-    private DataFactory dataFactory;
+	private DataFactory xmlDataFactory;
+
+	private DataFactory wsmlDataFactory;
+
 
     public WSMO4JManager() {
-        this(Factory.createWsmoFactory(null), Factory.createLogicalExpressionFactory(null), Factory.createDataFactory(null));
+        this.wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
+        this.wsmlDataFactory = FactoryImpl.getInstance().createWsmlDataFactory(wsmoFactory);
+        this.xmlDataFactory = FactoryImpl.getInstance().createXmlDataFactory(wsmoFactory);
+        this.leFactory = FactoryImpl.getInstance().createLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
     }
-
-    public WSMO4JManager(WsmoFactory wsmoFactory, LogicalExpressionFactory leFactory, DataFactory dataFactory) {
+    
+    public WSMO4JManager(WsmoFactory wsmoFactory, LogicalExpressionFactory leFactory, DataFactory wsmlDataFactory, DataFactory xmlDataFactory) {
         this.wsmoFactory = wsmoFactory;
         this.leFactory = leFactory;
-        this.dataFactory = dataFactory;
+        this.wsmlDataFactory = wsmlDataFactory;
+        this.xmlDataFactory = xmlDataFactory;
     }
 
     public WsmoFactory getWSMOFactory() {
@@ -31,8 +38,13 @@ public class WSMO4JManager {
         return leFactory;
     }
 
-    public DataFactory getDataFactory() {
-        return dataFactory;
-    }
+	public DataFactory getXmlDataFactory() {
+		return xmlDataFactory;
+	}
 
+	public DataFactory getWsmlDataFactory() {
+		return wsmlDataFactory;
+	}
+
+    
 }

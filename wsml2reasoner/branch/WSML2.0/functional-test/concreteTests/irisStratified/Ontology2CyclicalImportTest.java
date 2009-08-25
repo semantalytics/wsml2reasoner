@@ -23,6 +23,7 @@
 package concreteTests.irisStratified;
 
 import org.wsml.reasoner.api.WSMLReasoner;
+
 import abstractTests.core.AbstractOntology2CyclicalImport;
 
 public class Ontology2CyclicalImportTest extends AbstractOntology2CyclicalImport

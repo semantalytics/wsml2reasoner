@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.omwg.logicalexpression.Constants;
 import org.omwg.ontology.DataValue;
 import org.omwg.ontology.SimpleDataValue;
@@ -67,7 +68,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 
 	public Kaon2LPWrapperImplementation( WSMO4JManager wsmoManager, final Map<String, Object> config )
 	{
-		df = wsmoManager.getDataFactory();
+		df = wsmoManager.getWsmlDataFactory();
 		wf = wsmoManager.getWSMOFactory();
 		lef = wsmoManager.getLogicalExpressionFactory();
 	}
@@ -530,7 +531,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 				Object value = dv.getValue();
 				terms.add( f.constant( value ) );
 			}
-			else if( WsmlDataType.WSML_BOOLEAN.equals( dv.getType().getIRI().toString() ) )
+			else if( WsmlDataType.WSML_BOOLEAN.equals( dv.getType().getIdentifier().toString() ) )
 			{
 				terms.add( f.constant( dv.getValue() ) );
 			}
@@ -581,19 +582,19 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 				}
 				else if( ((id) obj).getFunctionSymbol() instanceof String )
 				{
-					result[ i ] = df.createWsmlString( (String) ((id) obj).getFunctionSymbol() );
+					result[ i ] = df.createString( (String) ((id) obj).getFunctionSymbol() );
 				}
 				else if( ((id) obj).getFunctionSymbol() instanceof BigInteger )
 				{
-					result[ i ] = df.createWsmlInteger( (BigInteger) ((id) obj).getFunctionSymbol() );
+					result[ i ] = df.createInteger( (BigInteger) ((id) obj).getFunctionSymbol() );
 				}
 				else if( ((id) obj).getFunctionSymbol() instanceof BigDecimal )
 				{
-					result[ i ] = df.createWsmlDecimal( (BigDecimal) ((id) obj).getFunctionSymbol() );
+					result[ i ] = df.createDecimal( (BigDecimal) ((id) obj).getFunctionSymbol() );
 				}
 				else if( ((id) obj).getFunctionSymbol() instanceof Boolean )
 				{
-					result[ i ] = df.createWsmlBoolean( (Boolean) ((id) obj).getFunctionSymbol() );
+					result[ i ] = df.createBoolean( (Boolean) ((id) obj).getFunctionSymbol() );
 				}
 			}
 			else if( obj instanceof ld )
@@ -605,19 +606,19 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 				}
 				else if( ((ld) obj).getFunctionSymbol() instanceof String )
 				{
-					result[ i ] = df.createWsmlString( (String) ((ld) obj).getFunctionSymbol() );
+					result[ i ] = df.createString( (String) ((ld) obj).getFunctionSymbol() );
 				}
 				else if( ((ld) obj).getFunctionSymbol() instanceof BigInteger )
 				{
-					result[ i ] = df.createWsmlInteger( (BigInteger) ((ld) obj).getFunctionSymbol() );
+					result[ i ] = df.createInteger( (BigInteger) ((ld) obj).getFunctionSymbol() );
 				}
 				else if( ((ld) obj).getFunctionSymbol() instanceof BigDecimal )
 				{
-					result[ i ] = df.createWsmlDecimal( (BigDecimal) ((ld) obj).getFunctionSymbol() );
+					result[ i ] = df.createDecimal( (BigDecimal) ((ld) obj).getFunctionSymbol() );
 				}
 				else if( ((ld) obj).getFunctionSymbol() instanceof Boolean )
 				{
-					result[ i ] = df.createWsmlBoolean( (Boolean) ((ld) obj).getFunctionSymbol() );
+					result[ i ] = df.createBoolean( (Boolean) ((ld) obj).getFunctionSymbol() );
 				}
 			}
 			else

@@ -44,7 +44,6 @@ import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.common.exception.SynchronisationException;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
@@ -130,7 +129,7 @@ public class DLBasedWSMLReasonerTest extends TestCase {
 	}
 
 	public void testGetAllAttributes() throws ParserException,
-			SynchronisationException, InvalidModelException,
+			InvalidModelException,
 			InconsistencyException {
 
 		reasoner.registerOntology(ontology);
@@ -152,7 +151,7 @@ public class DLBasedWSMLReasonerTest extends TestCase {
 	}
 
 	public void testTransformOntology() throws ParserException,
-			SynchronisationException, InvalidModelException, OWLException,
+			InvalidModelException, OWLException,
 			URISyntaxException {
 
 		Axiom person1LivesAx = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns

@@ -26,14 +26,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Set;
+
 import junit.framework.TestCase;
+
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Ontology;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.DLReasoner;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
+
 import abstractTests.DL;
 
 public abstract class AbstractOntologyWithCycles extends TestCase implements DL {
@@ -50,9 +54,9 @@ public abstract class AbstractOntologyWithCycles extends TestCase implements DL 
 
         // assuming first topentity in file is an ontology  
 		
-        Parser parser = Factory.createParser(null);
+        Parser parser = FactoryImpl.getInstance().createParser(null);
 
-    	Ontology ontology = (Ontology)parser.parse(new InputStreamReader(is))[0]; 
+    	Ontology ontology = (Ontology)parser.parse(new InputStreamReader(is), null)[0]; 
         final String ns = ontology.getDefaultNamespace().getIRI().toString();
 
         DLReasoner reasoner = getDLReasoner();

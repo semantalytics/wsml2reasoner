@@ -38,6 +38,7 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.DLReasoner;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasoner;
@@ -87,7 +88,7 @@ public class BaseReasonerTest extends TestCase {
 
     protected static WSMO4JManager wsmoManager = null;
     
-    protected static Parser wsmlparserimpl = org.wsmo.factory.Factory.createParser(null);
+    protected static Parser wsmlparserimpl = FactoryImpl.getInstance().createParser(wsmoFactory);
 
     /**
      * Instantiates a new reasoner with a default configuration
@@ -154,7 +155,7 @@ public class BaseReasonerTest extends TestCase {
 
         wsmoFactory = wsmoManager.getWSMOFactory();
 
-        dataFactory = wsmoManager.getDataFactory();
+        dataFactory = wsmoManager.getWsmlDataFactory();
     	
     }
 
@@ -190,8 +191,7 @@ public class BaseReasonerTest extends TestCase {
 
         // Set up serializer
 
-        Serializer ontologySerializer = org.wsmo.factory.Factory
-                .createSerializer(null);
+        Serializer ontologySerializer = FactoryImpl.getInstance().createSerializer();
 
         // Read simple ontology from file
         final Reader ontoReader = getReaderForFile(ontologyFile);
@@ -332,7 +332,7 @@ public class BaseReasonerTest extends TestCase {
     }
     
     public static void parseThis(Reader ontoReader) throws IOException, ParserException, InvalidModelException{
-    	 final TopEntity[] identifiable = wsmlparserimpl.parse(ontoReader);
+    	 final TopEntity[] identifiable = wsmlparserimpl.parse(ontoReader, null);
          if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {
              o = (Ontology) identifiable[0];
          } else {

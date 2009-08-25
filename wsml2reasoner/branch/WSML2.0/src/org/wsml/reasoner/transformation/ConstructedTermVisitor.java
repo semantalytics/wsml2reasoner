@@ -20,12 +20,12 @@
 package org.wsml.reasoner.transformation;
 
 import org.omwg.logicalexpression.terms.ConstructedTerm;
-import org.omwg.logicalexpression.terms.NumberedAnonymousID;
-import org.omwg.logicalexpression.terms.Visitor;
+import org.omwg.logicalexpression.terms.TermVisitor;
 import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.Variable;
 import org.wsmo.common.IRI;
+import org.wsmo.common.NumberedAnonymousID;
 import org.wsmo.common.UnnumberedAnonymousID;
 
 /**
@@ -35,29 +35,29 @@ import org.wsmo.common.UnnumberedAnonymousID;
  * @author Uwe Keller, DERI Innsbruck
  * @author Gabor Nagypal, FZI
  */
-public class TermVisitor implements Visitor {
+public class ConstructedTermVisitor implements TermVisitor {
 
-    public void visitConstructedTerm(ConstructedTerm arg0) {
+    public void visit(ConstructedTerm arg0) {
         for (int i = 0; i < arg0.getArity(); i++) {
             arg0.getParameter(i).accept(this);
         }
     }
 
-    public void visitVariable(Variable arg0) {
+    public void visit(Variable arg0) {
     }
 
-    public void visitSimpleDataValue(SimpleDataValue arg0) {
+    public void visit(SimpleDataValue arg0) {
     }
 
-    public void visitComplexDataValue(ComplexDataValue arg0) {
+    public void visit(ComplexDataValue arg0) {
     }
 
-    public void visitUnnumberedID(UnnumberedAnonymousID arg0) {
+    public void visit(UnnumberedAnonymousID arg0) {
     }
 
-    public void visitNumberedID(NumberedAnonymousID arg0) {
+    public void visit(NumberedAnonymousID arg0) {
     }
 
-    public void visitIRI(IRI arg0) {
+    public void visit(IRI arg0) {
     }
 }

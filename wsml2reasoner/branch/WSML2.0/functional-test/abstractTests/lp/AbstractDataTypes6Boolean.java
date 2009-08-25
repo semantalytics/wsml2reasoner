@@ -26,7 +26,9 @@ import helper.LPHelper;
 import helper.OntologyHelper;
 import helper.Results;
 import junit.framework.TestCase;
+
 import org.omwg.ontology.Ontology;
+
 import abstractTests.LP;
 
 /**

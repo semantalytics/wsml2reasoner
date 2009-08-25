@@ -44,12 +44,13 @@ import org.omwg.logicalexpression.Molecule;
 import org.omwg.logicalexpression.Negation;
 import org.omwg.logicalexpression.NegationAsFailure;
 import org.omwg.logicalexpression.SubConceptMolecule;
+import org.omwg.logicalexpression.TruthValue;
 import org.omwg.logicalexpression.UniversalQuantification;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.InfixOrderLogicalExpressionVisitor;
-import org.wsml.reasoner.transformation.TermVisitor;
+import org.wsml.reasoner.transformation.ConstructedTermVisitor;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 /**
@@ -175,11 +176,11 @@ public class WSML2DatalogTransformer {
     // therefore
     // is no ground term)
 
-    class DetectVariablesTermVisitor extends TermVisitor {
+    class DetectVariablesTermVisitor extends ConstructedTermVisitor {
         boolean foundVariable = false;
 
         @Override
-        public void visitVariable(Variable arg0) {
+        public void visit(Variable arg0) {
             foundVariable = true;
         }
 
@@ -785,6 +786,19 @@ public class WSML2DatalogTransformer {
 			System.out.println("Handle: " + arg0);
 			inHeadOfRule = false;
 			inBodyOfRule = true;
+		}
+
+		@Override
+		public void visitAttributeConstraintMolecule(
+				AttributeConstraintMolecule expr) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void visitTruthValue(TruthValue expr) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 

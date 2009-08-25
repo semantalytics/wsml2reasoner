@@ -25,14 +25,14 @@ package org.wsml.reasoner.transformation.le;
 
 import java.util.ArrayList;
 
+import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.Conjunction;
 import org.omwg.logicalexpression.Disjunction;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.wsml.ParserException;
-
-import junit.framework.TestCase;
 
 public class LEUtilTest extends TestCase {
 

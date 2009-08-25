@@ -7,18 +7,23 @@ import org.deri.iris.api.factory.IBasicFactory;
 import org.deri.iris.api.factory.ITermFactory;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.Literal;
+import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
 public class AbstractTestHelper {
 
-	protected static final WsmoFactory WF = org.wsmo.factory.Factory
-			.createWsmoFactory(null);
+	protected static final WsmoFactory WF = FactoryImpl.getInstance().createWsmoFactory();
 	protected static final IBasicFactory BF = org.deri.iris.factory.Factory.BASIC;
 	protected static final ITermFactory TF = org.deri.iris.factory.Factory.TERM;
-	protected static final LogicalExpressionFactory LF = org.wsmo.factory.Factory
-			.createLogicalExpressionFactory(null);
+	
+	// TODO gigi: probably won't work as expected since the factories changed and are now stateful
+	protected static WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
+	protected static DataFactory wsmlDataFactory = FactoryImpl.getInstance().createWsmlDataFactory(wsmoFactory);
+	protected static DataFactory xmlDataFactory = FactoryImpl.getInstance().createXmlDataFactory(wsmoFactory);
+	protected static final LogicalExpressionFactory LF = FactoryImpl.getInstance().createLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
 
 
 	public static Term createIRI(String iriName) {

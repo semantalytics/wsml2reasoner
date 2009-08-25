@@ -25,7 +25,9 @@ package helper;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 import junit.framework.Assert;
+
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;

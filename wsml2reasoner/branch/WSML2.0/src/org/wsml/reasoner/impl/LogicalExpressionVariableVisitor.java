@@ -48,6 +48,7 @@ import org.omwg.logicalexpression.Negation;
 import org.omwg.logicalexpression.NegationAsFailure;
 import org.omwg.logicalexpression.Quantified;
 import org.omwg.logicalexpression.SubConceptMolecule;
+import org.omwg.logicalexpression.TruthValue;
 import org.omwg.logicalexpression.UniversalQuantification;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
@@ -312,5 +313,24 @@ public class LogicalExpressionVariableVisitor extends PostfixOrderLogicalExpress
         t.accept(tvv);
         fvs.addAll(tvv.getVariables());
     }
+
+	@Override
+	public void visitAtom(Atom expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitAttributeConstraintMolecule(
+			AttributeConstraintMolecule expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitTruthValue(TruthValue expr) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

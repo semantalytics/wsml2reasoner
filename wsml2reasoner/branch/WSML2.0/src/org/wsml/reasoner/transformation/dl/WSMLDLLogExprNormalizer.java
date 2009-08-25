@@ -27,7 +27,6 @@ import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.UnnumberedAnonymousID;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.common.exception.SynchronisationException;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -101,9 +100,6 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
                 try {
                     result.addAll(normalizeConcept((Concept) e));
                 }
-                catch (SynchronisationException e1) {
-                    e1.printStackTrace();
-                }
                 catch (InvalidModelException e1) {
                     e1.printStackTrace();
                 }
@@ -111,9 +107,6 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
             else if (e instanceof Instance) {
                 try {
                     result.addAll(normalizeInstance((Instance) e));
-                }
-                catch (SynchronisationException e1) {
-                    e1.printStackTrace();
                 }
                 catch (InvalidModelException e1) {
                     e1.printStackTrace();
@@ -137,7 +130,7 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
      * identifier, this superconcept's identifier is also replaced.
      */
 
-    private Set<Entity> normalizeConcept(Concept concept) throws SynchronisationException, InvalidModelException {
+    private Set<Entity> normalizeConcept(Concept concept) throws InvalidModelException {
         Set<Entity> result = new HashSet<Entity>();
         if (concept.getIdentifier() instanceof UnnumberedAnonymousID) {
             Identifier id = (Identifier) anonymousIdTranslator.translate(concept.getIdentifier());
@@ -189,7 +182,7 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
      * anonymous identifier, this concept's identifier is also replaced.
      */
 
-    private Set<Entity> normalizeInstance(Instance instance) throws SynchronisationException, InvalidModelException {
+    private Set<Entity> normalizeInstance(Instance instance) throws InvalidModelException {
         Set<Entity> result = new HashSet<Entity>();
         if (instance.getIdentifier() instanceof UnnumberedAnonymousID) {
             Identifier id = (Identifier) anonymousIdTranslator.translate(instance.getIdentifier());

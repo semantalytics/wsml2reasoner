@@ -33,14 +33,18 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Map;
 import java.util.Set;
+
 import junit.framework.Assert;
+
 import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsmo.common.TopEntity;
 import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 import org.wsmo.wsml.Serializer;
@@ -50,6 +54,10 @@ import org.wsmo.wsml.Serializer;
  */
 public class OntologyHelper
 {
+	// TODO gigi: probably won't work as expected since the factories changed and are now stateful
+	private static WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
+	private static Parser wsmlparserimpl = FactoryImpl.getInstance().createParser(wsmoFactory);
+
 	/**
 	 * Load an ontology from a wsml file.
 	 * @param ontologyFile The filenanme containing the wsml.
@@ -77,7 +85,7 @@ public class OntologyHelper
      */
     public static String toString( Ontology ontology )
     {
-        Serializer ontologySerializer = org.wsmo.factory.Factory.createSerializer(null);
+		Serializer ontologySerializer = FactoryImpl.getInstance().createSerializer();
 
 		StringWriter sw = new StringWriter();
 		try
@@ -123,7 +131,7 @@ public class OntologyHelper
     }
     
     private static Ontology parseThis(Reader ontoReader) throws IOException, ParserException, InvalidModelException{
-      	 final TopEntity[] identifiable = wsmlparserimpl.parse(ontoReader);
+      	 final TopEntity[] identifiable = wsmlparserimpl.parse(ontoReader, null);
       	 for( TopEntity entity : identifiable )
       	 {
       		 if (entity instanceof Ontology)
@@ -151,5 +159,4 @@ public class OntologyHelper
         return ontoReader;
     }
     
-    private static Parser wsmlparserimpl = org.wsmo.factory.Factory.createParser(null);
 }

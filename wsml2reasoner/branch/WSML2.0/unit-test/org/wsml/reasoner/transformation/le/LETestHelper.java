@@ -23,13 +23,20 @@
 package org.wsml.reasoner.transformation.le;
 
 import org.omwg.logicalexpression.LogicalExpression;
-import org.wsmo.factory.Factory;
+import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.wsmo.factory.DataFactory;
+import org.wsmo.factory.LogicalExpressionFactory;
+import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
 
 
 public class LETestHelper {
 
     public static LogicalExpression buildLE(String theString) throws ParserException{
-        return Factory.createLogicalExpressionFactory(null).createLogicalExpression(theString);
+    	WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
+		DataFactory wsmlDataFactory = FactoryImpl.getInstance().createWsmlDataFactory(wsmoFactory);
+		DataFactory xmlDataFactory = FactoryImpl.getInstance().createXmlDataFactory(wsmoFactory);
+		LogicalExpressionFactory leF = FactoryImpl.getInstance().createLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
+		return leF.createLogicalExpression(theString);		
     }
 }

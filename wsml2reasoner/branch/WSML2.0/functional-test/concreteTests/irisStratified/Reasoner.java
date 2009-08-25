@@ -23,6 +23,7 @@
 package concreteTests.irisStratified;
 
 import helper.ReasonerHelper;
+
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 

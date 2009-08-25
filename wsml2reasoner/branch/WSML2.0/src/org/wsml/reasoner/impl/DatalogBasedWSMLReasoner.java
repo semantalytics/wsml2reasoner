@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
@@ -78,6 +79,7 @@ import org.wsmo.common.Identifier;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
+
 import com.ontotext.wsmo4j.ontology.AttributeImpl;
 
 /**
@@ -431,20 +433,20 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         Set<Map<Variable, Term>> violations = executeQuery(atom);
         for (Map<Variable, Term> violation : violations) {
             Term rawValue = violation.get(v);
-            Concept concept = wsmoFactory.getConcept((IRI) violation.get(c));
+            Concept concept = wsmoFactory.createConcept((IRI) violation.get(c));
             
             Attribute attribute = findAttributeForError((IRI) violation.get(a), concept);
             Type type;
             IRI typeId = (IRI) violation.get(t);
             if (WsmlDataType.WSML_STRING.equals(typeId.toString()) || WsmlDataType.WSML_INTEGER.equals(typeId.toString()) || WsmlDataType.WSML_DECIMAL.equals(typeId.toString()) || WsmlDataType.WSML_BOOLEAN.equals(typeId.toString())){
-                type = wsmoManager.getDataFactory().createWsmlDataType(typeId);
+                type = wsmoManager.getWsmlDataFactory().createDataType(typeId);
             }
             else{
-                type = wsmoFactory.getConcept(typeId);
+                type = wsmoFactory.createConcept(typeId);
             }
 
             if (violation.get(i) instanceof Identifier) {
-                errors.add(new AttributeTypeViolation(wsmoFactory.getInstance((IRI) violation.get(i)), rawValue, attribute, type));
+                errors.add(new AttributeTypeViolation(wsmoFactory.createInstance((IRI) violation.get(i)), rawValue, attribute, type));
             }
             if (violation.get(i) instanceof ConstructedTerm) {
                 errors.add(new AttributeTypeViolation((ConstructedTerm) violation.get(i), rawValue, attribute, type));
@@ -481,7 +483,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
 
         Set<Map<Variable, Term>> violations = executeQuery(atom);
         for (Map<Variable, Term> violation : violations) {
-            Concept concept = wsmoFactory.getConcept((Identifier) violation.get(c));
+            Concept concept = wsmoFactory.createConcept((Identifier) violation.get(c));
             Attribute attribute = findAttributeForError((Identifier) violation.get(a), concept);
             errors.add(new MinCardinalityViolation(violation.get(i), attribute, concept.getOntology()));
         }
@@ -503,7 +505,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
 
         Set<Map<Variable, Term>> violations = executeQuery(atom);
         for (Map<Variable, Term> violation : violations) {
-            Concept concept = wsmoFactory.getConcept((IRI) violation.get(c));
+            Concept concept = wsmoFactory.createConcept((IRI) violation.get(c));
             Attribute attribute = findAttributeForError((Identifier) violation.get(a), concept);
             errors.add(new MaxCardinalityViolation(violation.get(i), attribute, concept.getOntology()));
         }
@@ -529,7 +531,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
             else {
                 id = id.substring(0, id.indexOf(AnonymousIdUtils.NAMED_AXIOM_SUFFIX));
                 IRI iri = wsmoFactory.createIRI(id);
-                axiom = wsmoFactory.getAxiom(iri);
+                axiom = wsmoFactory.createAxiom(iri);
                 errors.add(new NamedUserConstraintViolation(axiom));
             }
         }
@@ -675,7 +677,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
     }
 
     private void getAllOntologies(Ontology o, Set<Ontology> ontologies) {
-        for (Ontology imported : o.listOntologies()) {
+        for (Ontology imported : o.getImportedOntologies().listOntologies()) {
             if (!ontologies.contains(imported)) {
                 ontologies.add(imported);
                 getAllOntologies(imported, ontologies);

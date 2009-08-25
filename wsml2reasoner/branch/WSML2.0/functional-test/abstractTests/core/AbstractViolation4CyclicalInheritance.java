@@ -25,7 +25,9 @@ package abstractTests.core;
 import helper.CoreHelper;
 import helper.OntologyHelper;
 import junit.framework.TestCase;
+
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
+
 import abstractTests.Core;
 
 public abstract class AbstractViolation4CyclicalInheritance extends TestCase implements Core {

@@ -39,19 +39,20 @@ import org.deri.iris.api.terms.IVariable;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.Variable;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
 public class LiteralTestHelper {
 
-	protected static final DataFactory DF = org.wsmo.factory.Factory.createDataFactory(null);
-	protected static final WsmoFactory WF = org.wsmo.factory.Factory
-			.createWsmoFactory(null);
+	
+	protected static final WsmoFactory WF = FactoryImpl.getInstance().createWsmoFactory();
+	protected static final DataFactory DF = FactoryImpl.getInstance().createWsmlDataFactory(WF);
 	protected static final IBasicFactory BF = org.deri.iris.factory.Factory.BASIC;
 	protected static final ITermFactory TF = org.deri.iris.factory.Factory.TERM;
-	protected static final LogicalExpressionFactory LF = org.wsmo.factory.Factory
-			.createLogicalExpressionFactory(null);
+	protected static final DataFactory XF = FactoryImpl.getInstance().createXmlDataFactory(WF);
+	protected static final LogicalExpressionFactory LF = FactoryImpl.getInstance().createLogicalExpressionFactory(WF, DF, XF);
 
 	public static Literal createSimplePosLiteral(String name) {
 		return createLiteral(true, name, new String[0]);
@@ -109,7 +110,7 @@ public class LiteralTestHelper {
 	}
 	
 	public static SimpleDataValue createWsmlString(String str){
-		return DF.createWsmlString(str);
+		return DF.createString(str);
 	}
 	
 	public static ILiteral createLiteral(boolean isPositive,

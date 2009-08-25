@@ -27,13 +27,14 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.semanticweb.owl.model.OWLOntology;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.impl.DLBasedWSMLReasoner;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.serializer.owl.OWLSerializer;
 import org.wsml.reasoner.serializer.owl.OWLSerializerImpl;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
 import base.BaseReasonerTest;
@@ -89,9 +90,10 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         // read test file and parse it
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/wsml2owlTransExample.wsml");
         assertNotNull(is);
-        Parser wsmlParser = Factory.createParser(null);
+        WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
+    	Parser wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
         // assuming first topentity in file is an ontology
-        ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is))[0];
+        ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is), null)[0];
 
         // System.out.println(serializeOntology(ontology)+"\n\n\n-------------\n\n\n");
 

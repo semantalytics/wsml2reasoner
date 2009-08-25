@@ -24,6 +24,8 @@ package org.wsml.reasoner.serializer.owl;
 
 import java.util.HashMap;
 
+import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
@@ -37,8 +39,6 @@ import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
-
-import junit.framework.TestCase;
 
 public class OWLSerializerImplTest extends TestCase {
 

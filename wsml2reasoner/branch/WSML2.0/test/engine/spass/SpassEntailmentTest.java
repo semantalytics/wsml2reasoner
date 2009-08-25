@@ -25,18 +25,16 @@ import java.util.Map;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.FOLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.FOLReasoner.EntailmentType;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.common.exception.SynchronisationException;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
@@ -56,31 +54,36 @@ import base.BaseReasonerTest;
  */
 public class SpassEntailmentTest extends BaseReasonerTest {
 
-    private WsmoFactory wsmoFactory = null;
-
     private LogicalExpressionFactory leFactory = null;
 
     private FOLReasoner wsmlReasoner = null;
 
     BuiltInReasoner previous;
 
-    private Parser parser = null;
+	private DataFactory xmlDataFactory;
+
+	private DataFactory wsmlDataFactory;
+
+	private Parser wsmlParser;
+
 
     protected void setUp() throws Exception {
         super.setUp();
-        WSMO4JManager wsmoManager = new WSMO4JManager();
-        wsmoFactory = wsmoManager.getWSMOFactory();
-        leFactory = wsmoManager.getLogicalExpressionFactory();
+        wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
+        wsmlDataFactory = FactoryImpl.getInstance().createWsmlDataFactory(wsmoFactory);
+        xmlDataFactory = FactoryImpl.getInstance().createXmlDataFactory(wsmoFactory);
+        leFactory = FactoryImpl.getInstance().createLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
         previous = BaseReasonerTest.reasoner;
         Map<String, Object> m = new HashMap<String, Object>();
         m.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, WSMLReasonerFactory.BuiltInReasoner.SPASS);
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createFOLReasoner(m);
-        parser = Factory.createParser(null);
+        
+    	wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
     }
 
     public void test() throws Exception {
         InputStream in = getClass().getClassLoader().getResourceAsStream("files/family.wsml");
-        Ontology ont = (Ontology) parser.parse(new InputStreamReader(in))[0];
+        Ontology ont = (Ontology) wsmlParser.parse(new InputStreamReader(in), null)[0];
 
         wsmlReasoner.registerOntology(ont);
         LogicalExpression conjecture = leFactory.createLogicalExpression("Lisa[hasAncestor hasValue GrandPa]", ont);
@@ -124,7 +127,7 @@ public class SpassEntailmentTest extends BaseReasonerTest {
         return ont;
     }
 
-    private void addExpression(Ontology ont, String str) throws ParserException, SynchronisationException, InvalidModelException {
+    private void addExpression(Ontology ont, String str) throws ParserException, InvalidModelException {
         LogicalExpression le = leFactory.createLogicalExpression(str, ont);
         Axiom a = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
         a.addDefinition(le);

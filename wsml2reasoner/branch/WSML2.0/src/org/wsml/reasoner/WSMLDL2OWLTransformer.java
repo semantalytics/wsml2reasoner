@@ -43,13 +43,14 @@ import org.omwg.logicalexpression.Implication;
 import org.omwg.logicalexpression.InverseImplication;
 import org.omwg.logicalexpression.LogicProgrammingRule;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionVisitor;
 import org.omwg.logicalexpression.MembershipMolecule;
 import org.omwg.logicalexpression.Molecule;
 import org.omwg.logicalexpression.Negation;
 import org.omwg.logicalexpression.NegationAsFailure;
 import org.omwg.logicalexpression.SubConceptMolecule;
+import org.omwg.logicalexpression.TruthValue;
 import org.omwg.logicalexpression.UniversalQuantification;
-import org.omwg.logicalexpression.Visitor;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.ComplexDataValue;
@@ -108,7 +109,7 @@ import org.wsmo.factory.LogicalExpressionFactory;
  * @author Nathalie Steinmetz, DERI Innsbruck
  * @version $Revision: 1.14 $ $Date: 2007-04-26 17:38:53 $
  */
-public class WSMLDL2OWLTransformer implements Visitor {
+public class WSMLDL2OWLTransformer implements LogicalExpressionVisitor {
 
     private OWLOntology owlOntology = null;
 
@@ -1426,10 +1427,11 @@ public class WSMLDL2OWLTransformer implements Visitor {
                     uri = new URI(xsd + "float");
                 if (value.equals(WsmlDataType.WSML_DOUBLE))
                     uri = new URI(xsd + "double");
-                if (value.equals(WsmlDataType.WSML_IRI))
-                    uri = new URI(xsd + "anyURI");
-                if (value.equals(WsmlDataType.WSML_SQNAME))
-                    uri = new URI(xsd + "QName");
+//                TODO gigi: delete if they are gone for good
+//                if (value.equals(WsmlDataType.WSML_IRI))
+//                    uri = new URI(xsd + "anyURI");
+//                if (value.equals(WsmlDataType.WSML_SQNAME))
+//                    uri = new URI(xsd + "QName");
                 if (value.equals(WsmlDataType.WSML_BOOLEAN))
                     uri = new URI(xsd + "boolean");
                 if (value.equals(WsmlDataType.WSML_DURATION))
@@ -1486,10 +1488,11 @@ public class WSMLDL2OWLTransformer implements Visitor {
                     uri = new URI(xsd + "float");
                 if (value.getType().toString().equals(WsmlDataType.WSML_DOUBLE))
                     uri = new URI(xsd + "double");
-                if (value.getType().toString().equals(WsmlDataType.WSML_IRI))
-                    uri = new URI(xsd + "anyURI");
-                if (value.getType().toString().equals(WsmlDataType.WSML_SQNAME))
-                    uri = new URI(xsd + "QName");
+//                TODO gigi: delete if they are gone for good
+//                if (value.getType().toString().equals(WsmlDataType.WSML_IRI))
+//                    uri = new URI(xsd + "anyURI");
+//                if (value.getType().toString().equals(WsmlDataType.WSML_SQNAME))
+//                    uri = new URI(xsd + "QName");
                 if (value.getType().toString().equals(WsmlDataType.WSML_BOOLEAN))
                     uri = new URI(xsd + "boolean");
                 if (value.getType().toString().equals(WsmlDataType.WSML_DURATION))
@@ -1596,6 +1599,19 @@ public class WSMLDL2OWLTransformer implements Visitor {
             return dataValue;
         }
     }
+
+	@Override
+	public void visitAttributeConstraintMolecule(
+			AttributeConstraintMolecule expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitTruthValue(TruthValue expr) {
+		// TODO Auto-generated method stub
+		
+	}
 }
 /*
  * $Log: not supported by cvs2svn $ Revision 1.13 2007/04/25 15:55:07 graham

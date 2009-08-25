@@ -22,6 +22,7 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.RelationInstance;
 import org.omwg.ontology.Variable;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
@@ -31,8 +32,8 @@ import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.common.exception.SynchronisationException;
 import org.wsmo.factory.Factory;
+import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
@@ -107,7 +108,7 @@ public class TestPerformanceWithUseOfFeatures {
         if (files != null){
 	        for (File f : files) {
 	            try {
-	                Ontology ont = (Ontology) wsmlParser.parse(new FileReader(f))[0];
+	                Ontology ont = (Ontology) wsmlParser.parse(new FileReader(f), null)[0];
 	                onts.put(f.getName(), ont);
 	            }
 	            catch (Exception e) {
@@ -279,7 +280,7 @@ public class TestPerformanceWithUseOfFeatures {
         return runPerformanceTests(reasonerNames, ontologies, path);
     }
 
-    private IndexEntry runPerformanceTests(String[] reasonerNames, Ontology[] ontologies, String path) throws SynchronisationException, InvalidModelException, ParserException, InconsistencyException, IOException {
+    private IndexEntry runPerformanceTests(String[] reasonerNames, Ontology[] ontologies, String path) throws InvalidModelException, ParserException, InconsistencyException, IOException {
     	if (ontologies.length == 0){
     		return null;
     	}
@@ -460,12 +461,13 @@ public class TestPerformanceWithUseOfFeatures {
         return reasoner;
     }
 
-    Parser wsmlParser = Factory.createParser(null);
+    WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
+	Parser wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
 
     private Ontology loadOntology(String file) {
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);
         try {
-            final TopEntity[] identifiable = wsmlParser.parse(new InputStreamReader(is));
+            final TopEntity[] identifiable = wsmlParser.parse(new InputStreamReader(is), null);
             if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {
                 return (Ontology) identifiable[0];
             }

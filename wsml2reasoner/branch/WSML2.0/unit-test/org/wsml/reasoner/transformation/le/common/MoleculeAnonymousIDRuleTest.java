@@ -29,7 +29,6 @@ import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.AnonymousIdTranslator;
 import org.wsml.reasoner.transformation.AnonymousIdUtils;
 import org.wsml.reasoner.transformation.le.LETestHelper;
-import org.wsml.reasoner.transformation.le.common.MoleculeAnonymousIDRule;
 import org.wsmo.wsml.ParserException;
 
 

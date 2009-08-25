@@ -23,6 +23,7 @@
 package concreteTests.irisStratified;
 
 import org.wsml.reasoner.api.LPReasoner;
+
 import abstractTests.lp.AbstractViolation6MinCardinality;
 
 public class Violation6MinCardinalityTest extends AbstractViolation6MinCardinality {

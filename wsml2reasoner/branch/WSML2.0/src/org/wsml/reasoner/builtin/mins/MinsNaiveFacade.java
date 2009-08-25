@@ -1,6 +1,7 @@
 package org.wsml.reasoner.builtin.mins;
 
 import java.util.Map;
+
 import org.wsml.reasoner.impl.WSMO4JManager;
 
 public class MinsNaiveFacade extends AbstractMinsFacade

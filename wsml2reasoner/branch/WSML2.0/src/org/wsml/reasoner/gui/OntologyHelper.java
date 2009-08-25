@@ -33,15 +33,19 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Map;
 import java.util.Set;
+
 import junit.framework.Assert;
+
 import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsmo.common.TopEntity;
 import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 import org.wsmo.wsml.Serializer;
@@ -78,7 +82,7 @@ public class OntologyHelper
      */
     public static String toString( Ontology ontology )
     {
-        Serializer ontologySerializer = org.wsmo.factory.Factory.createSerializer(null);
+        Serializer ontologySerializer = FactoryImpl.getInstance().createSerializer();
 
 		StringWriter sw = new StringWriter();
 		try
@@ -134,14 +138,18 @@ public class OntologyHelper
     }
     
     private static Ontology parseThis(Reader ontoReader) throws IOException, ParserException, InvalidModelException{
-      	 final TopEntity[] identifiable = wsmlparserimpl.parse(ontoReader);
-      	 for( TopEntity entity : identifiable )
-      	 {
-      		 if (entity instanceof Ontology)
-      			 return (Ontology) entity;
-      	 }
-
-      	 throw new RuntimeException( "No ontology found in input." );
+      	 
+    	WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
+    	Parser wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
+    	
+    	final TopEntity[] identifiable = wsmlParser.parse(ontoReader, null);
+    	
+	  	for( TopEntity entity : identifiable ) {
+	  		 if (entity instanceof Ontology)
+	  			 return (Ontology) entity;
+	  	}
+	
+	  	throw new RuntimeException( "No ontology found in input." );
       }
       
     private static Reader getReaderForFile(String location) {
@@ -161,6 +169,4 @@ public class OntologyHelper
                 ontoReader);
         return ontoReader;
     }
-    
-    private static Parser wsmlparserimpl = org.wsmo.factory.Factory.createParser(null);
 }

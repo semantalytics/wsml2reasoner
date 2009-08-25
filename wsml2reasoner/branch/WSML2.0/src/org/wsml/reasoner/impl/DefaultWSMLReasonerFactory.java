@@ -23,8 +23,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.deri.wsmo4j.validator.WsmlValidatorImpl;
+import org.deri.wsmo4j.validator.WsmlValidatorTypedImpl;
 import org.omwg.ontology.Ontology;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.DLReasoner;
 import org.wsml.reasoner.api.FOLReasoner;
 import org.wsml.reasoner.api.LPReasoner;
@@ -33,7 +34,6 @@ import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.builtin.tptp.TPTPFacade;
 import org.wsmo.common.WSML;
 import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.validator.ValidationError;
@@ -64,16 +64,18 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
     private WSMO4JManager extractWsmoManager(Map<String, Object> params) {
         assert params != null;
 
-        WsmoFactory wsmoFactory = params.containsKey(PARAM_WSMO_FACTORY) ? (WsmoFactory) params.get(PARAM_WSMO_FACTORY) : Factory.createWsmoFactory(null);
-        LogicalExpressionFactory leFactory = params.containsKey(PARAM_LE_FACTORY) ? (LogicalExpressionFactory) params.get(PARAM_LE_FACTORY) : Factory.createLogicalExpressionFactory(null);
-        DataFactory dataFactory = params.containsKey(PARAM_DATA_FACTORY) ? (DataFactory) params.get(PARAM_DATA_FACTORY) : Factory.createDataFactory(null);
-        return new WSMO4JManager(wsmoFactory, leFactory, dataFactory);
+        WsmoFactory wsmoFactory = params.containsKey(PARAM_WSMO_FACTORY) ? (WsmoFactory) params.get(PARAM_WSMO_FACTORY) : FactoryImpl.getInstance().createWsmoFactory();
+        DataFactory wsmlDataFactory = params.containsKey(PARAM_DATA_FACTORY) ? (DataFactory) params.get(PARAM_DATA_FACTORY) : FactoryImpl.getInstance().createWsmlDataFactory(wsmoFactory);
+        DataFactory xmlDataFactory = FactoryImpl.getInstance().createXmlDataFactory(wsmoFactory); // TODO gigi: Since the Factory stuff changed quite a bit, is there a parameter for the xml data factory? 
+		LogicalExpressionFactory leFactory = params.containsKey(PARAM_LE_FACTORY) ? (LogicalExpressionFactory) params.get(PARAM_LE_FACTORY) : FactoryImpl.getInstance().createLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory );
+        
+        return new WSMO4JManager(wsmoFactory, leFactory, wsmlDataFactory, xmlDataFactory);
     }
 
     private String determineVariant(Ontology ontology) {
         assert ontology != null;
 
-        WsmlValidator validator = new WsmlValidatorImpl();
+        WsmlValidator validator = new WsmlValidatorTypedImpl();
         String variant = validator.determineVariant(ontology, new ArrayList<ValidationError>(), new ArrayList<ValidationWarning>());
         if (variant == null) {
             throw new RuntimeException("Unable to determine WSML variant from given ontology: " + ontology.getIdentifier());

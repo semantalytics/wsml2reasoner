@@ -229,33 +229,33 @@ public class MinsSymbolMap {
             // BooleanTerms
             if (term.toString().contains("boolean")) {
                 if (term.toString().contains("true")) {
-                    return wsmoManager.getDataFactory().createWsmlBoolean(true);
+                    return wsmoManager.getWsmlDataFactory().createBoolean(true);
                 }
                 else {
-                    return wsmoManager.getDataFactory().createWsmlBoolean(false);
+                    return wsmoManager.getWsmlDataFactory().createBoolean(false);
                 }
             }
-            return wsmoManager.getDataFactory().createWsmlString(((StringTerm) term).s);
+            return wsmoManager.getWsmlDataFactory().createString(((StringTerm) term).s);
         }
         else if (term.isNumTerm()) {
             if (term instanceof IntegerTerm) {
-                return wsmoManager.getDataFactory().createWsmlInteger(((IntegerTerm) term).zahl + "");
+                return wsmoManager.getWsmlDataFactory().createInteger(((IntegerTerm) term).zahl + "");
             }
             if (term instanceof DateTerm) {
                 DateTerm date = (DateTerm) term;
-                return wsmoManager.getDataFactory().createWsmlDate(date.cal);
+                return wsmoManager.getWsmlDataFactory().createDate(date.cal);
             }
             // org.deri.mins.terms.NumTerm numTerm =
             // (org.deri.mins.terms.NumTerm)term;
-            return wsmoManager.getDataFactory().createWsmlDecimal(term.toString());
+            return wsmoManager.getWsmlDataFactory().createDecimal(term.toString());
         }
         else if (term instanceof BooleanTerm) {
             boolean value = ((BooleanTerm) term).getValue();
-            return wsmoManager.getDataFactory().createWsmlBoolean(value);
+            return wsmoManager.getWsmlDataFactory().createBoolean(value);
         }
         else
             System.err.println("ERROR - UNKNOWN MINS TERM: " + term + " " + term.getClass());
-        return wsmoManager.getDataFactory().createWsmlString("unknown");
+        return wsmoManager.getWsmlDataFactory().createString("unknown");
         // throw new RuntimeException("Unknown Term Symbol:"+term);
     }
 }

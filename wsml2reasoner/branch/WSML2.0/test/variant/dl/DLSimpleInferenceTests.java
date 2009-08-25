@@ -31,6 +31,7 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.DLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
@@ -38,7 +39,6 @@ import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
-import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
@@ -71,7 +71,7 @@ public class DLSimpleInferenceTests extends TestCase {
         wsmoFactory = wsmoManager.getWSMOFactory();
         previous = BaseReasonerTest.reasoner;
         wsmlReasoner = null;
-		parser = Factory.createParser(null);
+		parser = FactoryImpl.getInstance().createParser(wsmoFactory);
 		params = new HashMap<String, Object>();
 	}
 	
@@ -99,7 +99,7 @@ public class DLSimpleInferenceTests extends TestCase {
                 "files/wsml2owlExample.wsml");
         assertNotNull(is);
         // assuming first topentity in file is an ontology  
-        ontology = (Ontology)parser.parse(new InputStreamReader(is))[0]; 
+        ontology = (Ontology)parser.parse(new InputStreamReader(is), null)[0]; 
         ns = ontology.getDefaultNamespace().getIRI().toString();
         // Pellet
         base.BaseReasonerTest.resetReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET);
@@ -122,7 +122,7 @@ public class DLSimpleInferenceTests extends TestCase {
                 "files/inconsistentWsml2owlExample.wsml");
         assertNotNull(is);
         // assuming first topentity in file is an ontology  
-        ontology = (Ontology)parser.parse(new InputStreamReader(is))[0]; 
+        ontology = (Ontology)parser.parse(new InputStreamReader(is), null)[0]; 
         // Pellet
         params.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, BuiltInReasoner.PELLET);
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createDLReasoner(params);

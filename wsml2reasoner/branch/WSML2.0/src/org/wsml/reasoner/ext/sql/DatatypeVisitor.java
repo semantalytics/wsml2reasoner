@@ -31,13 +31,13 @@ import java.util.Map;
 import java.util.Queue;
 
 import org.omwg.logicalexpression.terms.ConstructedTerm;
-import org.omwg.logicalexpression.terms.NumberedAnonymousID;
-import org.omwg.logicalexpression.terms.Visitor;
+import org.omwg.logicalexpression.terms.TermVisitor;
 import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.Variable;
 import org.omwg.ontology.WsmlDataType;
 import org.wsmo.common.IRI;
+import org.wsmo.common.NumberedAnonymousID;
 import org.wsmo.common.UnnumberedAnonymousID;
 
 /**
@@ -95,7 +95,7 @@ import org.wsmo.common.UnnumberedAnonymousID;
  * 
  * @author Florian Fischer, florian.fischer@deri.at
  */
-public class DatatypeVisitor implements Visitor {
+public class DatatypeVisitor implements TermVisitor {
 
     private Queue<Entry> derivedMappings = new LinkedList<Entry>();
 
@@ -110,12 +110,15 @@ public class DatatypeVisitor implements Visitor {
         simpleDataTypes.put(WsmlDataType.WSML_STRING, String.class);
         simpleDataTypes.put(WsmlDataType.WSML_DECIMAL, BigDecimal.class);
         simpleDataTypes.put(WsmlDataType.WSML_INTEGER, BigDecimal.class);
-
-        simpleDataTypes.put(WsmlDataType.WSML_IRI, String.class);
+        
+//        TODO gigi: delete if they are gone for good
+//        simpleDataTypes.put(WsmlDataType.WSML_IRI, String.class);
 
         complextDataTypes.put(WsmlDataType.WSML_FLOAT, BigDecimal.class);
         complextDataTypes.put(WsmlDataType.WSML_DOUBLE, BigDecimal.class);
-        complextDataTypes.put(WsmlDataType.WSML_SQNAME, String.class);
+        
+//        TODO gigi: delete if they are gone for good
+//        complextDataTypes.put(WsmlDataType.WSML_SQNAME, String.class);
         complextDataTypes.put(WsmlDataType.WSML_BOOLEAN, Boolean.class);
 
         complextDataTypes.put(WsmlDataType.WSML_DURATION, String.class);
@@ -151,10 +154,10 @@ public class DatatypeVisitor implements Visitor {
         return derivedMappings.remove();
     }
 
-    public void visitComplexDataValue(ComplexDataValue t) {
+    public void visit(ComplexDataValue t) {
         assert t != null;
 
-        String complextType = t.getType().getIRI().toString();
+        String complextType = t.getType().getIdentifier().toString();
         Class< ? > javaTypeForWSMLType = complextDataTypes.get(complextType);
 
         if (javaTypeForWSMLType == null) {
@@ -176,12 +179,13 @@ public class DatatypeVisitor implements Visitor {
         	Calendar cal = (Calendar)t.getValue();
         	value = new java.sql.Timestamp(cal.getTimeInMillis());
         }
-        else if (complextType.equals(WsmlDataType.WSML_SQNAME)) {
-            // according to ComplexDataValueImpl SQNames are not supported,
-            // there seems to be some stale
-            // code in there.
-            throw new UnsupportedOperationException("SQNames not supported");
-        }
+//        TODO gigi: delete if they are gone for good
+//        else if (complextType.equals(WsmlDataType.WSML_SQNAME)) {
+//            // according to ComplexDataValueImpl SQNames are not supported,
+//            // there seems to be some stale
+//            // code in there.
+//            throw new UnsupportedOperationException("SQNames not supported");
+//        }
         else if (complextType.equals(WsmlDataType.WSML_FLOAT)) {
             Float f = (Float) t.getValue();
             value = new BigDecimal(Float.toString( f ));
@@ -203,25 +207,26 @@ public class DatatypeVisitor implements Visitor {
         derivedMappings.add(mapping);
     }
 
-    public void visitConstructedTerm(ConstructedTerm t) {
+    public void visit(ConstructedTerm t) {
         throw new UnsupportedOperationException("ConstructedTerms not supported");
     }
 
-    public void visitIRI(IRI t) {
-        assert t != null;
-
-        Class< ? > javaTypeForWSMLType = simpleDataTypes.get(WsmlDataType.WSML_IRI);
-        derivedMappings.add(new Entry(t.toString(), javaTypeForWSMLType));
+    public void visit(IRI t) {
+//    	TODO gigi: delete if they are gone for good
+//        assert t != null;
+//
+//        Class< ? > javaTypeForWSMLType = simpleDataTypes.get(WsmlDataType.WSML_IRI);
+//        derivedMappings.add(new Entry(t.toString(), javaTypeForWSMLType));
     }
 
-    public void visitNumberedID(NumberedAnonymousID t) {
+    public void visit(NumberedAnonymousID t) {
         throw new UnsupportedOperationException("NumberedAnonymousIDs not supported");
     }
 
-    public void visitSimpleDataValue(SimpleDataValue t) {
+    public void visit(SimpleDataValue t) {
         assert t != null;
 
-        String simpleValueType = t.getType().getIRI().toString();
+        String simpleValueType = t.getType().getIdentifier().toString();
         Class< ? > javaTypeForWSMLType = simpleDataTypes.get(simpleValueType);
         Entry mapping = null;
 
@@ -241,16 +246,16 @@ public class DatatypeVisitor implements Visitor {
         derivedMappings.add(mapping);
     }
 
-    public void visitUnnumberedID(UnnumberedAnonymousID t) {
+    public void visit(UnnumberedAnonymousID t) {
         throw new UnsupportedOperationException("UnnumberedAnonymousIDs not supported");
     }
 
-    public void visitVariable(Variable t) {
+    public void visit(Variable t) {
         throw new UnsupportedOperationException("Variables not supported");
     }
 
     protected BigDecimal convertInteger(SimpleDataValue i) {
-        assert i.getType().getIRI().toString().equals(WsmlDataType.WSML_INTEGER);
+        assert i.getType().getIdentifier().toString().equals(WsmlDataType.WSML_INTEGER);
 
         return new BigDecimal((BigInteger) i.getValue());
     }
@@ -264,7 +269,7 @@ public class DatatypeVisitor implements Visitor {
      * @return the resulting Calendar object.
      */
     protected Calendar convertTimeValue(ComplexDataValue t) {
-        String complextType = t.getType().getIRI().toString();
+        String complextType = t.getType().getIdentifier().toString();
         
         GregorianCalendar tempCal = new GregorianCalendar();
         tempCal.clear();
@@ -296,4 +301,5 @@ public class DatatypeVisitor implements Visitor {
 
         return tempCal;
     }
+
 }

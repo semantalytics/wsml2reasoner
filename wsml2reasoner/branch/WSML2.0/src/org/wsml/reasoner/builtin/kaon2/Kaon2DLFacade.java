@@ -20,6 +20,7 @@ package org.wsml.reasoner.builtin.kaon2;
 import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Set;
+
 import org.semanticweb.owl.impl.model.OWLConcreteDataImpl;
 import org.semanticweb.owl.impl.model.OWLConcreteDataTypeImpl;
 import org.semanticweb.owl.model.OWLClass;

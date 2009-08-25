@@ -42,7 +42,6 @@ import org.wsml.reasoner.impl.DLBasedWSMLReasoner;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.common.exception.SynchronisationException;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
 
@@ -79,7 +78,7 @@ public class WSMLDL2OWLTransformerTest extends TestCase {
 		
 	}
 
-	public void testTransformation() throws OWLException, ParserException, SynchronisationException, InvalidModelException {
+	public void testTransformation() throws OWLException, ParserException, InvalidModelException {
 
 		LogicalExpression le = LETestHelper.buildLE("_\"urn:a\" [_\"urn:a\" hasValue _\"urn:b\"].");
 		axiom.addDefinition(le);

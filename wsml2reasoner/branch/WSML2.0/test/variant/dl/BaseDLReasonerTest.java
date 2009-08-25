@@ -23,10 +23,10 @@ import java.io.Reader;
 import junit.framework.TestCase;
 
 import org.omwg.ontology.Ontology;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsmo.common.TopEntity;
-import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
@@ -76,15 +76,15 @@ public abstract class BaseDLReasonerTest extends TestCase
     
     protected Ontology parseOntology(String fileName) throws Exception
     {
-        Parser parser = Factory.createParser(null);
+        Parser parser = FactoryImpl.getInstance().createParser(wsmoFactory);
         Reader input = BaseReasonerTest.getReaderForFile(fileName);
-        return (Ontology)parser.parse(input)[0];
+        return (Ontology)parser.parse(input, null)[0];
     }
     
     public static String serializeOntology(Ontology ontology)
     {
         StringBuffer buf = new StringBuffer();
-        Serializer serializer = Factory.createSerializer(null);
+        Serializer serializer = FactoryImpl.getInstance().createSerializer();
         serializer.serialize(new TopEntity[] { ontology }, buf);
         return buf.toString();
     }

@@ -28,6 +28,8 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
@@ -36,8 +38,6 @@ import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.WSML2DatalogTransformer;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
-import org.wsml.reasoner.impl.DatalogBasedWSMLReasoner;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.ConstraintReplacementNormalizer;
 import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
@@ -48,12 +48,9 @@ import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
 import org.wsmo.common.Entity;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.common.exception.SynchronisationException;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
-
-import junit.framework.TestCase;
 
 public class TransformationNormalizationTest extends TestCase {
 
@@ -348,7 +345,7 @@ public class TransformationNormalizationTest extends TestCase {
 	
 
 	public void testTransformImpliesInHead() throws ParserException,
-			SynchronisationException, InvalidModelException,
+			InvalidModelException,
 			InconsistencyException {
 
 		Set<Rule> p = new HashSet<Rule>();
@@ -431,7 +428,7 @@ public class TransformationNormalizationTest extends TestCase {
 	}
 
 	public void testTransformImpliesInBody() throws ParserException,
-			SynchronisationException, InvalidModelException,
+			InvalidModelException,
 			InconsistencyException {
 
 		Set<Rule> p = new HashSet<Rule>();
@@ -522,7 +519,7 @@ public class TransformationNormalizationTest extends TestCase {
 	}
 
 	public void testTransformEquivalentInBody() throws ParserException,
-			SynchronisationException, InvalidModelException,
+			InvalidModelException,
 			InconsistencyException {
 
 		Set<Rule> p = new HashSet<Rule>();
@@ -621,7 +618,7 @@ public class TransformationNormalizationTest extends TestCase {
 	}
 
 	public void testTransformEuqiImpliedByInBody() throws ParserException,
-			SynchronisationException, InvalidModelException,
+			InvalidModelException,
 			InconsistencyException {
 
 		Set<Rule> p = new HashSet<Rule>();
@@ -713,7 +710,7 @@ public class TransformationNormalizationTest extends TestCase {
 	}
 
 	public void testTransformEquivalentInHead() throws ParserException,
-			SynchronisationException, InvalidModelException,
+			InvalidModelException,
 			InconsistencyException {
 
 		Set<Rule> p = new HashSet<Rule>();
@@ -809,7 +806,7 @@ public class TransformationNormalizationTest extends TestCase {
 
 
 	public void testTransformEquivalent() throws ParserException,
-			SynchronisationException, InvalidModelException,
+			InvalidModelException,
 			InconsistencyException {
 
 		Set<Rule> p = new HashSet<Rule>();
@@ -896,7 +893,7 @@ public class TransformationNormalizationTest extends TestCase {
 	}
 
 	public void testTransformMoreAndInHead() throws ParserException,
-			SynchronisationException, InvalidModelException,
+			InvalidModelException,
 			InconsistencyException {
 
 		Set<Rule> p = new HashSet<Rule>();
@@ -990,7 +987,7 @@ public class TransformationNormalizationTest extends TestCase {
 	}
 
 	public void testTransformMoreAndInBody() throws ParserException,
-			SynchronisationException, InvalidModelException,
+			InvalidModelException,
 			InconsistencyException {
 
 		Set<Rule> p = new HashSet<Rule>();

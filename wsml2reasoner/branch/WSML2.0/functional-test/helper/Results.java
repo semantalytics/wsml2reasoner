@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.ComplexDataValue;
@@ -63,27 +64,27 @@ public class Results
 
 	public static Term string( String value )
 	{
-		return dataFactory.createWsmlString( value );
+		return dataFactory.createString( value );
 	}
 	
 	public static Term decimal( double value )
 	{
-		return dataFactory.createWsmlDecimal( new BigDecimal( Double.toString( value ) ) );
+		return dataFactory.createDecimal( new BigDecimal( Double.toString( value ) ) );
 	}
 	
 	public static Term _integer( int value )
 	{
-		return dataFactory.createWsmlInteger( new BigInteger( Integer.toString( value ) ) );
+		return dataFactory.createInteger( new BigInteger( Integer.toString( value ) ) );
 	}
 	
 	public static Term _float( float value )
 	{
-		return dataFactory.createWsmlFloat( value );
+		return dataFactory.createFloat( value );
 	}
 	
 	public static Term _double( double value )
 	{
-		return dataFactory.createWsmlDouble( value );
+		return dataFactory.createDouble( value );
 	}
 
 	/**
@@ -93,7 +94,7 @@ public class Results
 	 */
 	public static Term bool( boolean b )
 	{
-		return dataFactory.createWsmlBoolean( b );
+		return dataFactory.createBoolean( b );
 	}
 	
 	/**
@@ -102,7 +103,9 @@ public class Results
 	 */
 	public static ComplexDataValue duration(boolean sign, int year, int month, int day, int hour, int minute, double second)
 	{
-		return dataFactory.createWsmlDuration( sign, year, month, day, hour, minute, second );
+//		FIXME gigi: add duration support
+//		return dataFactory.createWsmlDuration( sign, year, month, day, hour, minute, second );
+		return null;
 	}
 	
 	/**
@@ -111,7 +114,7 @@ public class Results
 	 */
 	public static ComplexDataValue datetime(int year, int month, int day, int hour, int minute, double second, int tzHour, int tzMinute)
 	{
-		return dataFactory.createWsmlDateTime( year, month, day, hour, minute, second, tzHour, tzMinute );
+		return dataFactory.createDateTime( year, month, day, hour, minute, (float) second, tzHour, tzMinute ); // TODO gigi: introduced the float cast, check if this makes sense
 	}
 	
 	/**
@@ -120,7 +123,7 @@ public class Results
 	 */
 	public static ComplexDataValue time(int hour, int minute, double second, int tzHour, int tzMinute)
 	{
-		return dataFactory.createWsmlTime( hour, minute, second, tzHour, tzMinute );
+		return dataFactory.createTime( hour, minute, (float) second, tzHour, tzMinute ); // TODO gigi: introduced the float cast, check if this makes sense
 	}
 	
 	/**
@@ -129,42 +132,42 @@ public class Results
 	 */
 	public static ComplexDataValue date(int year, int month, int day, int tzHour, int tzMinute)
 	{
-		return dataFactory.createWsmlDate( year, month, day, tzHour, tzMinute );
+		return dataFactory.createDate( year, month, day, tzHour, tzMinute );
 	}
 	
 	public static Term yearMonth( int year, int month )
 	{
-		return dataFactory.createWsmlGregorianYearMonth( year, month );
+		return dataFactory.createGregorianYearMonth( year, month );
 	}
 
 	public static Term year( int year )
 	{
-		return dataFactory.createWsmlGregorianYear( year );
+		return dataFactory.createGregorianYear( year );
 	}
 
 	public static Term monthDay( int month, int day )
 	{
-		return dataFactory.createWsmlGregorianMonthDay( month, day );
+		return dataFactory.createGregorianMonthDay( month, day );
 	}
 
 	public static Term day( int day )
 	{
-		return dataFactory.createWsmlGregorianDay( day );
+		return dataFactory.createGregorianDay( day );
 	}
 
 	public static Term month( int month )
 	{
-		return dataFactory.createWsmlGregorianMonth( month );
+		return dataFactory.createGregorianMonth( month );
 	}
 
 	public static Term hexBinary( String value )
 	{
-		return dataFactory.creatWsmlHexBinary( value.getBytes() );
+		return dataFactory.creatHexBinary( value.getBytes() );
 	}
 
 	public static Term base64Binary( String value )
 	{
-		return dataFactory.createWsmlBase64Binary( value.getBytes() );
+		return dataFactory.createBase64Binary( value.getBytes() );
 	}
 
 	/**
@@ -232,6 +235,6 @@ public class Results
 	   	wsmoManager = new WSMO4JManager();
 	   	leFactory = wsmoManager.getLogicalExpressionFactory();
 	   	wsmoFactory = wsmoManager.getWSMOFactory();
-	   	dataFactory = wsmoManager.getDataFactory();
+	   	dataFactory = wsmoManager.getWsmlDataFactory();
    }
 }

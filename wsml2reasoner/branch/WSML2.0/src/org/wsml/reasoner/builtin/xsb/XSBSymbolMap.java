@@ -98,7 +98,7 @@ public class XSBSymbolMap {
             System.err.println("TRANSLATE FSYM:" + xsbTerm);
         }
         else if (xsbTerm.isInteger()) {
-            return wsmoManager.getDataFactory().createWsmlInteger(xsbTerm.toString());
+            return wsmoManager.getWsmlDataFactory().createInteger(xsbTerm.toString());
         }
         else if (xsbTerm.isAtom()) {
             String uri = name2uri.get(xsbTerm.toString());

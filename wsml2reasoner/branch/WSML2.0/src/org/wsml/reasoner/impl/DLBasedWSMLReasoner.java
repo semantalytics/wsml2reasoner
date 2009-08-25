@@ -20,13 +20,13 @@ package org.wsml.reasoner.impl;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Axiom;
@@ -62,12 +62,9 @@ import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
-import org.wsmo.validator.ValidationError;
-import org.wsmo.validator.ValidationWarning;
-import org.wsmo.validator.WsmlValidator;
+
 import uk.ac.man.cs.img.owl.validation.ValidatorLogger;
 
 public class DLBasedWSMLReasoner implements DLReasoner {
@@ -102,7 +99,7 @@ public class DLBasedWSMLReasoner implements DLReasoner {
         this.wsmoManager = wsmoManager;
         this.wsmoFactory = this.wsmoManager.getWSMOFactory();
         this.leFactory = this.wsmoManager.getLogicalExpressionFactory();
-        this.dataFactory = this.wsmoManager.getDataFactory();
+        this.dataFactory = this.wsmoManager.getWsmlDataFactory();
         
         builtInFacade = createFacade( builtInType );
     }
@@ -350,7 +347,7 @@ public class DLBasedWSMLReasoner implements DLReasoner {
     }
 
     private void getAllOntologies(Ontology o, Set<Ontology> ontologies) {
-        for (Ontology imported : o.listOntologies()) {
+        for (Ontology imported : o.getImportedOntologies().listOntologies()) {
             if (!ontologies.contains(imported)) {
                 ontologies.add(imported);
                 getAllOntologies(imported, ontologies);
@@ -373,11 +370,11 @@ public class DLBasedWSMLReasoner implements DLReasoner {
     }
 
     private Instance getWSMOInstance(OWLEntity theOWLEntity) throws OWLException {
-        return wsmoFactory.getInstance(getWSMOIRI(theOWLEntity));
+        return wsmoFactory.createInstance(getWSMOIRI(theOWLEntity));
     }
 
     private Concept getWSMOConcept(OWLEntity theOWLEntity) throws OWLException {
-        return wsmoFactory.getConcept(getWSMOIRI(theOWLEntity));
+        return wsmoFactory.createConcept(getWSMOIRI(theOWLEntity));
     }
 
     private IRI getWSMOIRI(OWLEntity theOWLEntity) throws OWLException {
@@ -610,10 +607,10 @@ public class DLBasedWSMLReasoner implements DLReasoner {
             Set<OWLEntity> set = builtInFacade.allInstancesOf(owlDataFactory.getOWLClass(new URI(concept.getIdentifier().toString())));
             for (OWLEntity entity : set) {
                 if (ns == null || !entity.getURI().toString().startsWith(ns)) {
-                    elements.add(wsmoFactory.getInstance(wsmoFactory.createIRI(entity.getURI().toString())));
+                    elements.add(wsmoFactory.createInstance(wsmoFactory.createIRI(entity.getURI().toString())));
                 }
                 else {
-                    elements.add(wsmoFactory.getInstance(wsmoFactory.createIRI(ns + entity.getURI().getFragment())));
+                    elements.add(wsmoFactory.createInstance(wsmoFactory.createIRI(ns + entity.getURI().getFragment())));
                 }
             }
         }
@@ -630,10 +627,10 @@ public class DLBasedWSMLReasoner implements DLReasoner {
             for (Set<OWLEntity> set2 : set) {
                 for (OWLEntity entity : set2) {
                     if (ns == null || !entity.getURI().toString().startsWith(ns)) {
-                        elements.add(wsmoFactory.getConcept(wsmoFactory.createIRI(entity.getURI().toString())));
+                        elements.add(wsmoFactory.createConcept(wsmoFactory.createIRI(entity.getURI().toString())));
                     }
                     else {
-                        elements.add(wsmoFactory.getConcept(wsmoFactory.createIRI(ns + entity.getURI().getFragment())));
+                        elements.add(wsmoFactory.createConcept(wsmoFactory.createIRI(ns + entity.getURI().getFragment())));
                     }
                 }
             }
@@ -651,10 +648,10 @@ public class DLBasedWSMLReasoner implements DLReasoner {
             for (Set<OWLEntity> set2 : set) {
                 for (OWLEntity entity : set2) {
                     if (ns == null || !entity.getURI().toString().startsWith(ns)) {
-                        elements.add(wsmoFactory.getConcept(wsmoFactory.createIRI(entity.getURI().toString())));
+                        elements.add(wsmoFactory.createConcept(wsmoFactory.createIRI(entity.getURI().toString())));
                     }
                     else {
-                        elements.add(wsmoFactory.getConcept(wsmoFactory.createIRI(ns + entity.getURI().getFragment())));
+                        elements.add(wsmoFactory.createConcept(wsmoFactory.createIRI(ns + entity.getURI().getFragment())));
                     }
                 }
             }
@@ -793,10 +790,10 @@ public class DLBasedWSMLReasoner implements DLReasoner {
             Set<OWLEntity> set = builtInFacade.domainsOf(owlDataFactory.getOWLObjectProperty(new URI(attributeId.toString())));
             for (OWLEntity entity : set) {
                 if (ns == null || !entity.getURI().toString().startsWith(ns)) {
-                    elements.add(wsmoFactory.getConcept(wsmoFactory.createIRI(entity.getURI().toString())));
+                    elements.add(wsmoFactory.createConcept(wsmoFactory.createIRI(entity.getURI().toString())));
                 }
                 else {
-                    elements.add(wsmoFactory.getConcept(wsmoFactory.createIRI(ns + entity.getURI().getFragment())));
+                    elements.add(wsmoFactory.createConcept(wsmoFactory.createIRI(ns + entity.getURI().getFragment())));
                 }
             }
         }
@@ -913,10 +910,10 @@ public class DLBasedWSMLReasoner implements DLReasoner {
                     }
                 }
                 if (ns == null || !entry.getKey().getURI().toString().startsWith(ns)) {
-                    elements.put(wsmoFactory.getInstance(wsmoFactory.createIRI(entry.getKey().getURI().toString())), IRISet);
+                    elements.put(wsmoFactory.createInstance(wsmoFactory.createIRI(entry.getKey().getURI().toString())), IRISet);
                 }
                 else {
-                    elements.put(wsmoFactory.getInstance(wsmoFactory.createIRI(ns + entry.getKey().getURI().getFragment())), IRISet);
+                    elements.put(wsmoFactory.createInstance(wsmoFactory.createIRI(ns + entry.getKey().getURI().getFragment())), IRISet);
                 }
             }
         }
@@ -937,10 +934,10 @@ public class DLBasedWSMLReasoner implements DLReasoner {
                     valueSet.add(getDataValue(data.getValue().toString(), data.getURI().getFragment()));
                 }
                 if (ns == null || !entry.getKey().getURI().toString().startsWith(ns)) {
-                    elements.put(wsmoFactory.getInstance(wsmoFactory.createIRI(entry.getKey().getURI().toString())), valueSet);
+                    elements.put(wsmoFactory.createInstance(wsmoFactory.createIRI(entry.getKey().getURI().toString())), valueSet);
                 }
                 else {
-                    elements.put(wsmoFactory.getInstance(wsmoFactory.createIRI(ns + entry.getKey().getURI().getFragment())), valueSet);
+                    elements.put(wsmoFactory.createInstance(wsmoFactory.createIRI(ns + entry.getKey().getURI().getFragment())), valueSet);
                 }
             }
         }
@@ -1003,19 +1000,19 @@ public class DLBasedWSMLReasoner implements DLReasoner {
     private Term getDataValue(String value, String type) {
         Term val = null;
         if (type.equals("string")) {
-            val = dataFactory.createWsmlString(value);
+            val = dataFactory.createString(value);
         }
         if (type.equals("integer")) {
-            val = dataFactory.createWsmlInteger(value);
+            val = dataFactory.createInteger(value);
         }
         if (type.equals("decimal")) {
-            val = dataFactory.createWsmlDecimal(value);
+            val = dataFactory.createDecimal(value);
         }
         if (type.equals("float")) {
-            val = dataFactory.createWsmlFloat(value);
+            val = dataFactory.createFloat(value);
         }
         if (type.equals("double")) {
-            val = dataFactory.createWsmlDouble(value);
+            val = dataFactory.createDouble(value);
         }
         // TODO: check transformation from anyURI, QName, duration, dateTime,
         // time and so on to wsml datavalues!
@@ -1026,7 +1023,7 @@ public class DLBasedWSMLReasoner implements DLReasoner {
             // val = null;
         }
         if (type.equals("boolean")) {
-            val = dataFactory.createWsmlBoolean(value);
+            val = dataFactory.createBoolean(value);
         }
         if (type.equals("duration")) {
             // val = dataFactory.createWsmlDuration(value);
@@ -1041,22 +1038,22 @@ public class DLBasedWSMLReasoner implements DLReasoner {
             int year = Integer.valueOf(value.substring(0, value.indexOf("-"))).intValue();
             int month = Integer.valueOf(value.substring(value.indexOf("-") + 1, value.lastIndexOf("-"))).intValue();
             int day = Integer.valueOf(value.substring(value.lastIndexOf("-") + 1, value.length())).intValue();
-            val = dataFactory.createWsmlDate(new GregorianCalendar(year, month, day));
+            val = dataFactory.createDate(new GregorianCalendar(year, month, day));
         }
         if (type.equals("gYearMonth")) {
             // val = dataFactory.createWsmlGregorianYearMonth(value);
         }
         if (type.equals("gYear")) {
-            val = dataFactory.createWsmlGregorianYear(value);
+            val = dataFactory.createGregorianYear(value);
         }
         if (type.equals("gMonthDay")) {
             // val = dataFactory.createWsmlGregorianMonthDay(value);
         }
         if (type.equals("gDay")) {
-            val = dataFactory.createWsmlGregorianDay(value);
+            val = dataFactory.createGregorianDay(value);
         }
         if (type.equals("gMonth")) {
-            val = dataFactory.createWsmlGregorianMonth(value);
+            val = dataFactory.createGregorianMonth(value);
         }
         if (type.equals("hexBinary")) {
             // val = null;

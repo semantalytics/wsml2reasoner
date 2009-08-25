@@ -26,11 +26,13 @@ import helper.LPHelper;
 import helper.OntologyHelper;
 import helper.Results;
 import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.factory.LogicalExpressionFactory;
+
 import abstractTests.LP;
 
 public abstract class AbstractFlight1Example1 extends TestCase implements LP {

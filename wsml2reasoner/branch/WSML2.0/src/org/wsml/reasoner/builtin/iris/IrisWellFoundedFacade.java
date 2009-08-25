@@ -23,6 +23,7 @@
 package org.wsml.reasoner.builtin.iris;
 
 import java.util.Map;
+
 import org.deri.iris.Configuration;
 import org.wsml.reasoner.impl.WSMO4JManager;
 

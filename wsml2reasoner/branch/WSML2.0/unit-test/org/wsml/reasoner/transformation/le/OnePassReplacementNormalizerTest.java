@@ -26,18 +26,18 @@ package org.wsml.reasoner.transformation.le;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.LogicalExpression;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.AnonymousIdUtils;
 import org.wsml.reasoner.transformation.le.disjunctionpull.DisjunctionPullRules;
-import org.wsml.reasoner.transformation.le.foldecomposition.FOLMoleculeDecompositionRules;
 import org.wsml.reasoner.transformation.le.foldecomposition.FOLMoleculeDecompositionRule;
+import org.wsml.reasoner.transformation.le.foldecomposition.FOLMoleculeDecompositionRules;
 import org.wsml.reasoner.transformation.le.implicationreduction.ImplicationReductionRules;
 import org.wsml.reasoner.transformation.le.moleculedecomposition.MoleculeDecompositionRules;
 import org.wsml.reasoner.transformation.le.negationpush.NegationPushRules;
 import org.wsmo.wsml.ParserException;
-
-import junit.framework.TestCase;
 
 public class OnePassReplacementNormalizerTest extends TestCase {
 

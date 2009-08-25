@@ -26,6 +26,8 @@ package org.wsml.reasoner.transformation;
 import java.util.HashSet;
 import java.util.Set;
 
+import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.wsml.reasoner.impl.WSMO4JManager;
@@ -34,8 +36,6 @@ import org.wsml.reasoner.transformation.le.foldecomposition.FOLMoleculeDecomposi
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
-
-import junit.framework.TestCase;
 
 public class MoleculeNormalizerTest extends TestCase {
 

@@ -23,6 +23,7 @@
 package concreteTests.irisWellFounded;
 
 import org.wsml.reasoner.api.LPReasoner;
+
 import abstractTests.lp.AbstractViolation1AttributeConstrainedToUnknownConcept;
 
 public class Violation1AttributeConstrainedToUnknownConceptTest extends AbstractViolation1AttributeConstrainedToUnknownConcept {

@@ -23,6 +23,7 @@
 package concreteTests.irisWellFounded;
 
 import org.wsml.reasoner.api.WSMLReasoner;
+
 import abstractTests.core.AbstractViolation4CyclicalInheritance;
 
 public class Violation4CyclicalInheritanceTest extends AbstractViolation4CyclicalInheritance {

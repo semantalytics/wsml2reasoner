@@ -33,10 +33,10 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.DLReasoner;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
-import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
@@ -58,14 +58,14 @@ public abstract class AbstractSimpleInference extends TestCase implements DL {
 		super.setUp();
 		WSMO4JManager wsmoManager = new WSMO4JManager();
 		wsmoFactory = wsmoManager.getWSMOFactory();
-		parser = Factory.createParser(null);
+		parser = FactoryImpl.getInstance().createParser(null);
 
 		// wsml2owlExample.wsml
 		InputStream is = this.getClass().getClassLoader().getResourceAsStream(
 				"files/wsml2owlExample.wsml");
 		assertNotNull(is);
 
-		ontology = (Ontology) parser.parse(new InputStreamReader(is))[0];
+		ontology = (Ontology) parser.parse(new InputStreamReader(is), null)[0];
 		ns = ontology.getDefaultNamespace().getIRI().toString();
 
 		wsmlReasoner = this.getDLReasoner();

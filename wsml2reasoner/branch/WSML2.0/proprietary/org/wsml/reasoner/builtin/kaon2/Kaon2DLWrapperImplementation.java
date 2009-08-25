@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import java.util.Map.Entry;
+
 import org.apache.log4j.Logger;
 import org.semanticweb.kaon2.id;
 import org.semanticweb.kaon2.api.DefaultOntologyResolver;

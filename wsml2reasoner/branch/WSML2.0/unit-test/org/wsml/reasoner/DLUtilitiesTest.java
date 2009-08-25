@@ -63,7 +63,7 @@ public class DLUtilitiesTest extends TestCase {
 		super.setUp();
 		wsmoManager = new WSMO4JManager();
 		wsmoFactory = wsmoManager.getWSMOFactory();
-		dataFactory = wsmoManager.getDataFactory();
+		dataFactory = wsmoManager.getWsmlDataFactory();
 		leFactory = wsmoManager.getLogicalExpressionFactory();
 
 		ontology = wsmoFactory
@@ -89,12 +89,12 @@ public class DLUtilitiesTest extends TestCase {
 		Attribute badAttribute = badConcept.createAttribute(wsmoFactory
 				.createIRI(ns + "a"));
 		badAttribute.addType(dataFactory
-				.createWsmlDataType(WsmlDataType.WSML_STRING));
+				.createDataType(WsmlDataType.WSML_STRING));
 
 		Instance i = new InstanceImpl(wsmoFactory.createIRI(ns + "aa"));
 		i.addConcept(badConcept);
 		i.addAttributeValue(wsmoFactory.createIRI(ns + "a"), dataFactory
-				.createWsmlInteger(new BigInteger("3")));
+				.createInteger(new BigInteger("3")));
 
 		ontology.addInstance(i);
 

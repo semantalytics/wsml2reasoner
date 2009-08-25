@@ -24,12 +24,14 @@ import java.util.HashMap;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.FOLReasoner;
 import org.wsml.reasoner.api.FOLReasoner.EntailmentType;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
+import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
@@ -56,23 +58,26 @@ public class TPTPEntailmentTest extends BaseReasonerTest {
     private LogicalExpressionFactory leFactory = null;
     private FOLReasoner wsmlReasoner = null;
     BuiltInReasoner previous;  
-    private Parser parser = null; 
+    private Parser wsmlParser = null;
+	private DataFactory xmlDataFactory;
+	private DataFactory wsmlDataFactory; 
     
     
     protected void setUp() throws Exception {
         super.setUp();
-        WSMO4JManager wsmoManager = new WSMO4JManager();
-        wsmoFactory = wsmoManager.getWSMOFactory();
-        leFactory = wsmoManager.getLogicalExpressionFactory();
+        wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
+        wsmlDataFactory = FactoryImpl.getInstance().createWsmlDataFactory(wsmoFactory);
+        xmlDataFactory = FactoryImpl.getInstance().createXmlDataFactory(wsmoFactory);
+        leFactory = FactoryImpl.getInstance().createLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
         previous = BaseReasonerTest.reasoner;
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createFOLReasoner(new HashMap <String, Object> ());
-        parser = Factory.createParser(null);
+    	wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
     }
     
     public void test() throws Exception{
         InputStream in = getClass().getClassLoader().getResourceAsStream(
                 "files/family.wsml");
-        Ontology ont = (Ontology)parser.parse(new InputStreamReader(in))[0];
+        Ontology ont = (Ontology)wsmlParser.parse(new InputStreamReader(in), null)[0];
         
         wsmlReasoner.registerOntology(ont);
         LogicalExpression conjecture = leFactory.createLogicalExpression(

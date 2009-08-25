@@ -20,6 +20,7 @@ package framework.normalization;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.impl.WSMO4JManager;

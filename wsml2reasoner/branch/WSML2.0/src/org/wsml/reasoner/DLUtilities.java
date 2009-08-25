@@ -55,7 +55,7 @@ public class DLUtilities {
         Set<Concept> concepts = new HashSet<Concept>();
         for (Map<Variable, Term> binding : bindings) {
             IRI conceptID = (IRI) binding.get(leFactory.createVariable("x"));
-            concepts.add(wsmoFactory.getConcept(conceptID));
+            concepts.add(wsmoFactory.createConcept(conceptID));
         }
         return concepts;
     }
@@ -73,7 +73,7 @@ public class DLUtilities {
         Set<Instance> instances = new HashSet<Instance>();
         for (Map<Variable, Term> binding : bindings) {
             IRI instanceID = (IRI) binding.get(leFactory.createVariable("x"));
-            instances.add(wsmoFactory.getInstance(instanceID));
+            instances.add(wsmoFactory.createInstance(instanceID));
         }
 
         return instances;
@@ -92,7 +92,7 @@ public class DLUtilities {
         Set<Concept> concepts = new HashSet<Concept>();
         for (Map<Variable, Term> binding : bindings) {
             IRI subConceptID = (IRI) binding.get(leFactory.createVariable("x"));
-            concepts.add(wsmoFactory.getConcept(subConceptID));
+            concepts.add(wsmoFactory.createConcept(subConceptID));
         }
         if (concepts.contains(concept)) {
             concepts.remove(concept);
@@ -118,7 +118,7 @@ public class DLUtilities {
         Set<Concept> concepts = new HashSet<Concept>();
         for (Map<Variable, Term> binding : bindings) {
             IRI subConceptID = (IRI) binding.get(leFactory.createVariable("x"));
-            concepts.add(wsmoFactory.getConcept(subConceptID));
+            concepts.add(wsmoFactory.createConcept(subConceptID));
         }
         if (concepts.contains(concept)) {
             concepts.remove(concept);
@@ -139,7 +139,7 @@ public class DLUtilities {
         Set<Concept> concepts = new HashSet<Concept>();
         for (Map<Variable, Term> binding : bindings) {
             IRI superConceptID = (IRI) binding.get(leFactory.createVariable("x"));
-            concepts.add(wsmoFactory.getConcept(superConceptID));
+            concepts.add(wsmoFactory.createConcept(superConceptID));
         }
         if (concepts.contains(concept)) {
             concepts.remove(concept);
@@ -166,7 +166,7 @@ public class DLUtilities {
         Set<Concept> concepts = new HashSet<Concept>();
         for (Map<Variable, Term> binding : bindings) {
             IRI subConceptID = (IRI) binding.get(leFactory.createVariable("x"));
-            concepts.add(wsmoFactory.getConcept(subConceptID));
+            concepts.add(wsmoFactory.createConcept(subConceptID));
         }
         if (concepts.contains(concept)) {
             concepts.remove(concept);
@@ -274,7 +274,7 @@ public class DLUtilities {
         for (Map<Variable, Term> binding : bindings) {
             if (binding.get(leFactory.createVariable("x")) instanceof IRI) {
                 IRI instanceID = (IRI) binding.get(leFactory.createVariable("x"));
-                instances.add(wsmoFactory.getInstance(instanceID));
+                instances.add(wsmoFactory.createInstance(instanceID));
             }
         }
 
@@ -288,12 +288,12 @@ public class DLUtilities {
         for (Map<Variable, Term> binding : bindings) {
             IRI instanceID = (IRI) binding.get(leFactory.createVariable("x"));
             if (!instanceID.getNamespace().toString().startsWith("http://www.wsmo.org/wsml/wsml-syntax")) {
-                instances.add(wsmoFactory.getInstance(instanceID));
+                instances.add(wsmoFactory.createInstance(instanceID));
             }
             if (binding.get(leFactory.createVariable("y")) instanceof IRI) {
                 instanceID = (IRI) binding.get(leFactory.createVariable("y"));
                 if (!instanceID.getNamespace().toString().startsWith("http://www.wsmo.org/wsml/wsml-syntax")) {
-                    instances.add(wsmoFactory.getInstance(instanceID));
+                    instances.add(wsmoFactory.createInstance(instanceID));
                 }
             }
         }
@@ -400,7 +400,7 @@ public class DLUtilities {
         Set<Concept> concepts = new HashSet<Concept>();
         for (Map<Variable, Term> binding : bindings) {
             IRI conceptID = (IRI) binding.get(leFactory.createVariable("x"));
-            concepts.add(wsmoFactory.getConcept(conceptID));
+            concepts.add(wsmoFactory.createConcept(conceptID));
         }
         return concepts;
     }
@@ -421,7 +421,7 @@ public class DLUtilities {
         Set<Concept> concepts = new HashSet<Concept>();
         for (Map<Variable, Term> binding : bindings) {
             IRI conceptID = (IRI) binding.get(leFactory.createVariable("z"));
-            concepts.add(wsmoFactory.getConcept(conceptID));
+            concepts.add(wsmoFactory.createConcept(conceptID));
         }
         return concepts;
     }
@@ -546,7 +546,7 @@ public class DLUtilities {
         // extract results:
         Map<Instance, Set<Term>> results = new HashMap<Instance, Set<Term>>();
         for (Map<Variable, Term> binding : bindings) {
-            Instance instance = wsmoFactory.getInstance((IRI) binding.get(leFactory.createVariable("y")));
+            Instance instance = wsmoFactory.createInstance((IRI) binding.get(leFactory.createVariable("y")));
             if (results.containsKey(instance)) {
                 Set<Term> temp = new HashSet<Term>();
                 Term value = binding.get(leFactory.createVariable("x"));
@@ -581,7 +581,7 @@ public class DLUtilities {
         // extract results:
         Map<Instance, Set<Term>> results = new HashMap<Instance, Set<Term>>();
         for (Map<Variable, Term> binding : bindings) {
-            Instance instance = wsmoFactory.getInstance((IRI) binding.get(leFactory.createVariable("y")));
+            Instance instance = wsmoFactory.createInstance((IRI) binding.get(leFactory.createVariable("y")));
             if (results.containsKey(instance)) {
                 Set<Term> temp = new HashSet<Term>();
                 Term value = binding.get(leFactory.createVariable("x"));
@@ -670,7 +670,7 @@ public class DLUtilities {
             if (term instanceof IRI) {
                 IRI conceptID = (IRI) binding.get(variable);
                 if (!conceptID.getNamespace().toString().startsWith("http://www.wsmo.org/wsml/wsml-syntax")) {
-                    concepts.add(wsmoFactory.getConcept(conceptID));
+                    concepts.add(wsmoFactory.createConcept(conceptID));
                 }
             }
         }

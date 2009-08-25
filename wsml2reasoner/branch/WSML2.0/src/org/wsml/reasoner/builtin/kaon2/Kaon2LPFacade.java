@@ -20,6 +20,7 @@ package org.wsml.reasoner.builtin.kaon2;
 import java.lang.reflect.Constructor;
 import java.util.Map;
 import java.util.Set;
+
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.ConjunctiveQuery;
