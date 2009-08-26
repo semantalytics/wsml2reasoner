@@ -12,6 +12,7 @@ import abstractTests.LP;
 public abstract class AbstractRIFBuiltin01Test extends TestCase implements LP {
 
 	protected static final String ONTOLOGY_FILE = "files/BuiltinRIFTest01.wsml";
+//	protected static final String ONTOLOGY_FILE = "files/cycleTestFile.wsml";
 	protected LPReasoner reasoner;
 
 	protected void setUp() throws Exception {
@@ -19,6 +20,12 @@ public abstract class AbstractRIFBuiltin01Test extends TestCase implements LP {
 		reasoner = getLPReasoner();
 
 		LPHelper.outputON();
+	}
+	
+	public void test_file() throws Exception {
+
+		String query = "M(?x)";
+		checkSTD(query);
 	}
 	
 	public void test_isDecimal() throws Exception {
@@ -168,8 +175,8 @@ public abstract class AbstractRIFBuiltin01Test extends TestCase implements LP {
 
 	private void checkSTD(String query) throws Exception {
 		Results r = new Results("x");
-		r.addBinding(Results.iri("http://builtin01#B"));
-		r.addBinding(Results.iri("http://builtin01#A"));
+		r.addBinding(Results.iri("http://example.com/builtin01#B"));
+		r.addBinding(Results.iri("http://example.com/builtin01#A"));
 
 		LPHelper.executeQueryAndCheckResults(OntologyHelper
 				.loadOntology(ONTOLOGY_FILE), query, r.get(), reasoner);

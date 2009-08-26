@@ -1,5 +1,5 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
-namespace { _"http://builtin01#",
+namespace { _"http://example.com/builtin01#",
 	wsml _"http://www.wsmo.org/wsml/wsml-syntax#" }
 
 
@@ -16,60 +16,61 @@ instance B memberOf C2
   bStringValue hasValue _string( "InstanceB" )	
 		
 axiom testRIFBuiltin definedBy
+	   M(?x) :- ?x[?attribute hasValue ?value].
        
-       isDecimalTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isDecimal(_decimal( 123456.78901 )).
-       isStringTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isString(_string("string-value")).
-       isDoubleTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isDouble(_double( "12345.6789" )).
-       isBooleanTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isBoolean(_boolean("true")).
-       isIntegerTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isInteger(_integer(5)).
-       isBase64Binary(?x) :- ?x[?attribute hasValue ?value] and wsml#isBase64Binary(_base64binary( "QmFycnkgQmlzaG9w" )).
-       isDateTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isDate( _date( 1981, 12, 31 )).
-       isDurationTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isDuration( _duration( 1, 2, 3, 4, 5, 6 )).
-       isDateTimeTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isDateTime(_dateTime( 1981, 12, 31, 23, 59, 58 )).
-       isFloatTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isFloat(_float(3.4)).
-       isGDayTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isGDay(_gDay(3)).
-       isGMonthTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isGMonth(_gMonth(3)).
-       isGMonthDayTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isGMonthDay(_gMonthDay(3,4)).
-       isGYearTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isGYear(_gYear(1965)).
-       isGYearMonthTest	:- ?x[?attribute hasValue ?value] and wsml#isGYearMonth(_gYearMonth(1965,6)).
-       isHexBinaryTest	:- ?x[?attribute hasValue ?value] and wsml#isHexBinary(_HexBinary(6ac)).
-       isTimeTest	:- ?x[?attribute hasValue ?value] and wsml#isTime(_time(6.00)).
-       isDayTimeDurationTest :- ?x[?attribute hasValue ?value] and wsml#isDayTimeDuration(_dayTimeDuration(6.00)).
-	   isYearMonthDurationTest :- ?x[?attribute hasValue ?value] and wsml#isYearMonthDuratation(_yearMonthDuration(6.00)).
-	   isIRITest :- ?x[?attribute hasValue ?value] and wsml#isIRI(_iri("http://www.iri.com/THIS_IS_AN_IRI)).
-	   isTextTest :- ?x[?attribute hasValue ?value] and wsml#isText(_text("Text")).
-	   isXMLLiteralTest :- ?x[?attribute hasValue ?value] and wsml#isXMLLiteral(_xmlLiteral("<tag>Text</tag>")).
+       isDecimalTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isDecimal(wsml#decimal( 123456.78901 )).
+       isStringTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isString(wsml#string("string-value")).
+       isDoubleTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isDouble(wsml#double( "12345.6789" )).
+       isBooleanTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isBoolean(wsml#boolean("true")).
+       isIntegerTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isInteger(wsml#integer(5)).
+       isBase64Binary(?x) :- ?x[?attribute hasValue ?value] and wsml#isBase64Binary(wsml#base64binary( "QmFycnkgQmlzaG9w" )).
+       isDateTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isDate( wsml#date( 1981, 12, 31 )).
+       isDurationTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isDuration( wsml#duration( 1, 2, 3, 4, 5, 6 )).
+       isDateTimeTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isDateTime(wsml#dateTime( 1981, 12, 31, 23, 59, 58 )).
+       isFloatTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isFloat(wsml#float(3.4)).
+       isGDayTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isGDay(wsml#gDay(3)).
+       isGMonthTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isGMonth(wsml#gMonth(3)).
+       isGMonthDayTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isGMonthDay(wsml#gMonthDay(3,4)).
+       isGYearTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isGYear(wsml#gYear(1965)).
+       isGYearMonthTest	:- ?x[?attribute hasValue ?value] and wsml#isGYearMonth(wsml#gYearMonth(1965,6)).
+       isHexBinaryTest	:- ?x[?attribute hasValue ?value] and wsml#isHexBinary(wsml#HexBinary(6ac)).
+       isTimeTest	:- ?x[?attribute hasValue ?value] and wsml#isTime(wsml#time(6.00)).
+       isDayTimeDurationTest :- ?x[?attribute hasValue ?value] and wsml#isDayTimeDuration(wsml#dayTimeDuration(6.00)).
+	   isYearMonthDurationTest :- ?x[?attribute hasValue ?value] and wsml#isYearMonthDuratation(wsml#yearMonthDuration(6.00)).
+	   isIRITest :- ?x[?attribute hasValue ?value] and wsml#isIRI(wsml#iri("http://www.iri.com/THIS_IS_AN_IRI)).
+	   isTextTest :- ?x[?attribute hasValue ?value] and wsml#isText(wsml#text("Text")).
+	   isXMLLiteralTest :- ?x[?attribute hasValue ?value] and wsml#isXMLLiteral(wsml#xmlLiteral("<tag>Text</tag>")).
 
 // no tests yet
-	   toDoubleTest :- ?x[?attribute hasValue ?value] and (_double(3.0) = wsml#toDouble(_string("3")) ).
-	   toStringTest :- ?x[?attribute hasValue ?value] and (_string("123") = wsml#toString(_integer(1234)) ).
-	   toDecimalTest :- ?x[?attribute hasValue ?value] and (_decimal(123456.78901) = wsml#toDecimal(_string("123456.78901")) ).
-	   toBooleanTest :- ?x[?attribute hasValue ?value] and (_boolean("true") = wsml#toBoolean(_string("true")) ).
-	   toIntegerTest :- ?x[?attribute hasValue ?value] and (_integer(1) = wsml#toInteger(_string("1")) ).
-	   toBase64BinaryTest :- ?x[?attribute hasValue ?value] and (_base64binary( "QmFycnkgQmlzaG9w" ) = wsml#toBase64Binary(_string("QmFycnkgQmlzaG9w")) ).
-	   toDateTest :- ?x[?attribute hasValue ?value] and ( _date( 1981, 12, 31 ) = wsml#toDate(_string("1981, 12, 31")) ).
-	   toDateTimeTest :- ?x[?attribute hasValue ?value] and ( _dateTime( 1981, 12, 31, 23, 59, 58 ) = wsml#toDateTime(_string("1981, 12, 31, 23, 59, 58 ")) ).
-       toDurationTest :- ?x[?attribute hasValue ?value] and ( _duration( 1, 2, 3, 4, 5, 6 ) = wsml#toDuration(_string(" 1, 2, 3, 4, 5, 6")) ).
-       toFloatTest :- ?x[?attribute hasValue ?value] and ( _float(3.4) = wsml#toFloat(_string("3.4")) ).
-       toGDayTest :- ?x[?attribute hasValue ?value] and ( _gDay(3) = wsml#toGDay(_string("3")) ).
-       toGMonthTest :-  ?x[?attribute hasValue ?value] and ( _gMonth(3) = wsml#toGMonth(_string("3")) ).
-       toGMonthDayTest :-  ?x[?attribute hasValue ?value] and ( _gMonthDay(3, 4) = wsml#toGMonthDay(_string("3, 4")) ).
-       toGYearTest :-  ?x[?attribute hasValue ?value] and ( _gYear(1965) = wsml#toGYear(_string("1965")) ).
-       toGYearMonthTest :-  ?x[?attribute hasValue ?value] and ( _gYearMonth(1965,6) = wsml#toGYearMonth(_string("1965,4")) ).
-       toHexBinaryTest :-  ?x[?attribute hasValue ?value] and ( _HexBinary(6ac) = wsml#toHexBinary(_string("6ac")) ).
-       toTimeText :-  ?x[?attribute hasValue ?value] and ( _time(6.00) = wsml#toTime(_string("6.00")) ).
-       toDayTimeDurationTest :-  ?x[?attribute hasValue ?value] and ( _dayTimeDuration(6.00) = wsml#toDayTimeDuration(_string("6.00")) ).
-       toYearMonthDurationTest :-  ?x[?attribute hasValue ?value] and ( _yearMonthDuration(6.00) = wsml#toYearMonthDuration(_string("6.00")) ).
-       toIRITest :-  ?x[?attribute hasValue ?value] and ( _iri("http://www.iri.com/THIS_IS_AN_IRI)) = wsml#toIRI(_string("http://www.iri.com/THIS_IS_AN_IRI")) ).
-       toTextTest :-   ?x[?attribute hasValue ?value] and ( _text("Text") = wsml#toText(_string("Text")) ).
-       toXMLLiteralTest :-  ?x[?attribute hasValue ?value] and ( _xmlLiteral("<tag>Text</tag>") =  wsml#toXMLLiteral(_string("<tag>Text</tag>")) ).
+	   toDoubleTest :- ?x[?attribute hasValue ?value] and (wsml#double(3.0) = wsml#toDouble(wsml#string("3")) ).
+	   toStringTest :- ?x[?attribute hasValue ?value] and (wsml#string("123") = wsml#toString(wsml#integer(1234)) ).
+	   toDecimalTest :- ?x[?attribute hasValue ?value] and (wsml#decimal(123456.78901) = wsml#toDecimal(wsml#string("123456.78901")) ).
+	   toBooleanTest :- ?x[?attribute hasValue ?value] and (wsml#boolean("true") = wsml#toBoolean(wsml#string("true")) ).
+	   toIntegerTest :- ?x[?attribute hasValue ?value] and (wsml#integer(1) = wsml#toInteger(wsml#string("1")) ).
+	   toBase64BinaryTest :- ?x[?attribute hasValue ?value] and (wsml#base64binary( "QmFycnkgQmlzaG9w" ) = wsml#toBase64Binary(wsml#string("QmFycnkgQmlzaG9w")) ).
+	   toDateTest :- ?x[?attribute hasValue ?value] and ( wsml#date( 1981, 12, 31 ) = wsml#toDate(wsml#string("1981, 12, 31")) ).
+	   toDateTimeTest :- ?x[?attribute hasValue ?value] and ( wsml#dateTime( 1981, 12, 31, 23, 59, 58 ) = wsml#toDateTime(wsml#string("1981, 12, 31, 23, 59, 58 ")) ).
+       toDurationTest :- ?x[?attribute hasValue ?value] and ( wsml#duration( 1, 2, 3, 4, 5, 6 ) = wsml#toDuration(wsml#string(" 1, 2, 3, 4, 5, 6")) ).
+       toFloatTest :- ?x[?attribute hasValue ?value] and ( wsml#float(3.4) = wsml#toFloat(wsml#string("3.4")) ).
+       toGDayTest :- ?x[?attribute hasValue ?value] and ( wsml#gDay(3) = wsml#toGDay(wsml#string("3")) ).
+       toGMonthTest :-  ?x[?attribute hasValue ?value] and ( wsml#gMonth(3) = wsml#toGMonth(wsml#string("3")) ).
+       toGMonthDayTest :-  ?x[?attribute hasValue ?value] and ( wsml#gMonthDay(3, 4) = wsml#toGMonthDay(wsml#string("3, 4")) ).
+       toGYearTest :-  ?x[?attribute hasValue ?value] and ( wsml#gYear(1965) = wsml#toGYear(wsml#string("1965")) ).
+       toGYearMonthTest :-  ?x[?attribute hasValue ?value] and ( wsml#gYearMonth(1965,6) = wsml#toGYearMonth(wsml#string("1965,4")) ).
+       toHexBinaryTest :-  ?x[?attribute hasValue ?value] and ( wsml#HexBinary(6ac) = wsml#toHexBinary(wsml#string("6ac")) ).
+       toTimeText :-  ?x[?attribute hasValue ?value] and ( wsml#time(6.00) = wsml#toTime(wsml#string("6.00")) ).
+       toDayTimeDurationTest :-  ?x[?attribute hasValue ?value] and ( wsml#dayTimeDuration(6.00) = wsml#toDayTimeDuration(wsml#string("6.00")) ).
+       toYearMonthDurationTest :-  ?x[?attribute hasValue ?value] and ( wsml#yearMonthDuration(6.00) = wsml#toYearMonthDuration(wsml#string("6.00")) ).
+       toIRITest :-  ?x[?attribute hasValue ?value] and ( wsml#iri("http://www.iri.com/THI_IS_AN_IRI)) = wsml#toIRI(_string("http://www.iri.com/THIS_IS_AN_IRI")) ).
+       toTextTest :-   ?x[?attribute hasValue ?value] and ( wsml#text("Text") = wsml#toText(wsml#string("Text")) ).
+       toXMLLiteralTest :-  ?x[?attribute hasValue ?value] and ( wsml#xmlLiteral("<tag>Text</tag>") =  wsml#toXMLLiteral(wsml#string("<tag>Text</tag>")) ).
 	   
 	   
 	   stringCompareTest(?x) :-  ?x[?attribute hasValue ?value] and wsml#stringCompare(?value, "InstanceA") = -2.
 	   stringEqualTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEqual(?value, "InstanceA").
-	   stringConcatTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEqual( wsml#stringConcat(_string("con"), _string("cat")), _string("concat")).  
+	   stringConcatTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEqual( wsml#stringConcat(wsml#string("con"), wsml#string("cat")), wsml#string("concat")).  
 	  
-	   gyearEqualTest(?x) :- ?x[?attribute hasValue ?value] and wsml#gyearEqual(_integer("2"),_integer("2")). 
+	   gyearEqualTest(?x) :- ?x[?attribute hasValue ?value] and wsml#gyearEqual(wsml#integer("2"),wsml#integer("2")). 
 	   numericModulusTest(?x) :- ?x[?attribute hasValue ?value] and (wsml#numericModulus( 1, 1) = 0).
 	   
 
