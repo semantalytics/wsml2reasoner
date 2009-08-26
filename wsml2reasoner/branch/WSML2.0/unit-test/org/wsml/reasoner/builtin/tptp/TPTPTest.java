@@ -57,7 +57,7 @@ public class TPTPTest extends TestCase{
 
     public void testVars() throws Exception{
         LogicalExpression le = leF.createLogicalExpression(
-            "forall {?x,?y,?z} \n " +
+            "forall ?x,?y,?z \n " +
             " (subConceptof(?x,?y) and subConceptof(?y,?z) \n" +
             " implies subConceptof(?x,?z)) ",nsContainer);
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();

@@ -76,6 +76,7 @@ import org.wsml.reasoner.transformation.le.moleculedecomposition.MoleculeDecompo
 import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
+import org.wsmo.common.ImportedOntologiesBlock;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
@@ -577,7 +578,10 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         List<Term> params = new LinkedList<Term>();
         LogicalExpressionVariableVisitor varVisitor = new LogicalExpressionVariableVisitor();
         q.accept(varVisitor);
-        params.addAll(varVisitor.getFreeVariables(q));
+        Set<Variable> freeVariables = varVisitor.getFreeVariables(q);
+		if (freeVariables != null) {
+			params.addAll(freeVariables);
+		}
         Atom rHead = leFactory.createAtom(wsmoFactory.createIRI(WSML_RESULT_PREDICATE), params);
 
         LogicalExpressionNormalizer moleculeNormalizer = new OnePassReplacementNormalizer(new MoleculeDecompositionRules(wsmoManager).getRules(), wsmoManager);
@@ -677,7 +681,9 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
     }
 
     private void getAllOntologies(Ontology o, Set<Ontology> ontologies) {
-        for (Ontology imported : o.getImportedOntologies().listOntologies()) {
+        ImportedOntologiesBlock importedOntologies = o.getImportedOntologies();
+        if (importedOntologies != null)
+		for (Ontology imported : importedOntologies.listOntologies()) {
             if (!ontologies.contains(imported)) {
                 ontologies.add(imported);
                 getAllOntologies(imported, ontologies);

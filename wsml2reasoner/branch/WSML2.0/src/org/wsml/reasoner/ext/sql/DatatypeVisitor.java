@@ -145,12 +145,15 @@ public class DatatypeVisitor implements TermVisitor {
     }
 
     /**
-     * Returns the topmost Value/Type Pair. VisitorDatatype in this regard
+     * Returns the topmost Value/Type Pair. DatatypeVisitor in this regard
      * behaves like a FIFO data structure.
      * 
-     * @return a Pair of the term value and the derived java class.
+     * @return a Pair of the term value and the derived java class, or null if there are no derived mappings
      */
     public Entry getMapping() {
+    	if (derivedMappings == null || derivedMappings.isEmpty())
+    		return null;
+    	
         return derivedMappings.remove();
     }
 

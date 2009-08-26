@@ -193,6 +193,9 @@ public class TPTPTermSerializer implements LogicalExpressionVisitor, TermVisitor
      *         vector
      */
     public String getSerializedObject() {
+    	if (stack == null || stack.size() == 0)
+    		return null;
+    		
         return stack.remove(0).toString();
     }
 

@@ -19,7 +19,7 @@ public class VisitorDataTypeTest extends TestCase {
 	private WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
 	private DataFactory df = FactoryImpl.getInstance().createWsmlDataFactory(wsmoFactory );
 	
-	public void testVisitIRI() {		
+	public void testVisitIRI() {
 		IRI testIRI1 = new IRIImpl("http://www.wsmo.org/2004/wsml#someID");
 		testIRI1.accept(visitor);
 		Entry res = visitor.getMapping();

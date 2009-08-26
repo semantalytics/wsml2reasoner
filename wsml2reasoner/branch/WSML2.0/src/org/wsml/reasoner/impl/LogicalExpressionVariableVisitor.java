@@ -286,8 +286,12 @@ public class LogicalExpressionVariableVisitor extends PostfixOrderLogicalExpress
 
         for (Iterator<?> i = arg0.listOperands().iterator(); i.hasNext();) {
             LogicalExpression expr = (LogicalExpression) i.next();
-            fvs.addAll(freeVars.get(expr));
-            bvs.addAll(freeVars.get(expr));
+            Set<Variable> freeVarsOfExpr = freeVars.get(expr);
+            
+            if (freeVarsOfExpr != null) {
+            	fvs.addAll(freeVarsOfExpr);
+                bvs.addAll(freeVarsOfExpr);
+            }
         }
         freeVars.put(arg0, fvs);
         boundVars.put(arg0, bvs);
