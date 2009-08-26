@@ -10,13 +10,13 @@ concept C2
 concept C3 
 
 instance A memberOf C1
-  aStringValue hasValue _string( "InstanceA" )	
+  aStringValue hasValue wsml#string( "InstanceA" )	
 
 instance B memberOf C2
-  bStringValue hasValue _string( "InstanceB" )	
+  bStringValue hasValue wsml#string( "InstanceB" )	
 		
 axiom testRIFBuiltin definedBy
-	   M(?x) :- ?x[?attribute hasValue ?value].
+	   m(?x) :- ?x[?attribute hasValue ?value].
        
        isDecimalTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isDecimal(wsml#decimal( 123456.78901 )).
        isStringTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isString(wsml#string("string-value")).
@@ -41,7 +41,6 @@ axiom testRIFBuiltin definedBy
 	   isTextTest :- ?x[?attribute hasValue ?value] and wsml#isText(wsml#text("Text")).
 	   isXMLLiteralTest :- ?x[?attribute hasValue ?value] and wsml#isXMLLiteral(wsml#xmlLiteral("<tag>Text</tag>")).
 
-// no tests yet
 	   toDoubleTest :- ?x[?attribute hasValue ?value] and (wsml#double(3.0) = wsml#toDouble(wsml#string("3")) ).
 	   toStringTest :- ?x[?attribute hasValue ?value] and (wsml#string("123") = wsml#toString(wsml#integer(1234)) ).
 	   toDecimalTest :- ?x[?attribute hasValue ?value] and (wsml#decimal(123456.78901) = wsml#toDecimal(wsml#string("123456.78901")) ).
@@ -65,12 +64,71 @@ axiom testRIFBuiltin definedBy
        toTextTest :-   ?x[?attribute hasValue ?value] and ( wsml#text("Text") = wsml#toText(wsml#string("Text")) ).
        toXMLLiteralTest :-  ?x[?attribute hasValue ?value] and ( wsml#xmlLiteral("<tag>Text</tag>") =  wsml#toXMLLiteral(wsml#string("<tag>Text</tag>")) ).
 	   
-	   
+	   numericModulusTest(?x) :- ?x[?attribute hasValue ?value] and (wsml#numericModulus( 1, 1) = 0).
 	   stringCompareTest(?x) :-  ?x[?attribute hasValue ?value] and wsml#stringCompare(?value, "InstanceA") = -2.
 	   stringEqualTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEqual(?value, "InstanceA").
 	   stringConcatTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEqual( wsml#stringConcat(wsml#string("con"), wsml#string("cat")), wsml#string("concat")).  
-	  
-	   gyearEqualTest(?x) :- ?x[?attribute hasValue ?value] and wsml#gyearEqual(wsml#integer("2"),wsml#integer("2")). 
-	   numericModulusTest(?x) :- ?x[?attribute hasValue ?value] and (wsml#numericModulus( 1, 1) = 0).
+	   stringJoinTest(?x) :-  ?x[?attribute hasValue ?value] and wsml#stringJoin(wsml#string("a"), wsml#string("b")). //??
+	   stringSubstringTest(?x) :-?x[?attribute hasValue ?value] and wsml#stringSubstring(wsml#string("aaabbb"), wsml#integer(3)). //??
+	   stringSubstringTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#stringSubstring(wsml#string("aaabbb"), wsml#integer(2), wsml#integer(4)). //??
+	   stringLengthTest(?x) :- ?x[?attribute hasValue ?value] and (wsml#stringLength(wsml#string("aaabbb"), wsml#integer(2)) = true). 
+	   stringToUpperTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEqual(wsml#stringToUpper(wsml#string("this is a string")), wsml#string("THIS IS A STRING")).
+	   stringToLowerTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEqual(wsml#stringToLower(wsml#string("THIS IS A STRING")), wsml#string("this is a string")).
+	   
+	   stringUriEncodeTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringUriEncode(wsml#string("")). 
+	   stringIriToUriTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringIriToUri(wsml#string("")). 
+	   stringEscapeHtmlUriTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEscapeHtmlUri(wsml#string("")). 
+	   stringSubstringBeforeTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringSubstringBefore(wsml#string("a long string for testing"), wsml#string("long")). 
+	   stringSubstringBeforeTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#stringSubstringBefore(wsml#string("a long string for testing"), wsml#string("long"), wsml#string("for")). 
+	   stringSubstringAfterTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringSubstringAfter(wsml#string("a long string for testing"), wsml#string("long")). 
+	   stringSubstringAfterTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#stringSubstringAfter(wsml#string("a long string for testing"), wsml#string("long"), wsml#string("for")). 
+	   stringReplaceTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringReplace(wsml#string("a long string for testing"), wsml#string("short")). 
+	   stringReplaceTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#stringReplace(wsml#string("a long string for testing"), wsml#string("long") , wsml#string("short")). 
+	   stringContainsTest(?x) :- ?x[?attribute hasValue ?value] and  wsml#stringContains(wsml#string("a long string for testing"), wsml#string("long")).
+	   stringContainsTest2(?x) :- ?x[?attribute hasValue ?value] and  wsml#stringContains(wsml#string("a long string for testing"), wsml#string("long"), wsml#string("testing")).
+	   stringStartsWithTest(?x) :- ?x[?attribute hasValue ?value] and  wsml#stringStartsWith(wsml#string("a long string for testing"), wsml#string("long")).
+	   stringStartsWithTest2(?x) :- ?x[?attribute hasValue ?value] and  wsml#stringStartsWith(wsml#string("a long string for testing"), wsml#string("long"), wsml#string("testing")).
+	   stringEndsWithTest(?x) :- ?x[?attribute hasValue ?value] and  wsml#stringEndsWith(wsml#string("a long string for testing"), wsml#string("long")).
+	   stringEndsWithTest2(?x) :- ?x[?attribute hasValue ?value] and  wsml#stringEndsWith(wsml#string("a long string for testing"), wsml#string("long"), wsml#string("testing")).
+	   stringMatchesTest(?x) :- ?x[?attribute hasValue ?value] and  wsml#stringMatches(wsml#string("a long string for testing"), wsml#string("long")).
+	   stringMatchesTest2(?x) :- ?x[?attribute hasValue ?value] and  wsml#stringMatches(wsml#string("a long string for testing"), wsml#string("long"), wsml#string("testing")).
+	   
+	   yearPartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#yearPart(wsml#dateTime( 1981, 12, 31, 23, 59, 58 )).
+	   yearPartTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#yearPart(wsml#date(1981, 12, 31)).
+	   yearPartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#yearPart(wsml#duration(1, 2, 3, 4, 5, 6 )).
+	   
+	   monthPartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#monthPart(wsml#dateTime( 1981, 12, 31, 23, 59, 58 )).
+	   monthPartTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#monthPart(wsml#date(1981, 12, 31)).
+	   monthPartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#monthPart(wsml#duration(1, 2, 3, 4, 5, 6 )).
+	   
+	   dayPartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#dayPart(wsml#dateTime( 1981, 12, 31, 23, 59, 58 )).
+	   dayPartTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#dayPart(wsml#date(1981, 12, 31)).
+	   dayPartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#dayPart(wsml#duration(1, 2, 3, 4, 5, 6 )).
+	   
+	   hourPartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#hourPart(wsml#dateTime( 1981, 12, 31, 23, 59, 58 )).
+	   hourPartTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#hourPart(wsml#date(1981, 12, 31)).
+	   hourPartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#hourPart(wsml#duration(1, 2, 3, 4, 5, 6 )).
+	   
+	   minutePartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#minutePart(wsml#dateTime( 1981, 12, 31, 23, 59, 58 )). 
+	   minutePartTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#minutePart(wsml#date(1981, 12, 31)).
+	   minutePartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#minutePart(wsml#duration(1, 2, 3, 4, 5, 6 )). // all part things until here return integer
+	   
+	   secondPartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#secondPart(wsml#dateTime( 1981, 12, 31, 23, 59, 58 )).  // returns decimal
+	   secondPartTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#secondPart(wsml#date(1981, 12, 31)).
+	   secondPartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#secondPart(wsml#duration(1, 2, 3, 4, 5, 6 )).
+	   
+	   timezonePartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#timezonePart(wsml#dateTime( 1981, 12, 31, 23, 59, 58 )). // returns dayTimeDuration
+	   timezonePartTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#timezonePart(wsml#date(1981, 12, 31)).
+	   timezonePartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#timezonePart(wsml#duration(1, 2, 3, 4, 5, 6 )).
+	   
+	   textFromStringLangTest(?x) :- ?x[?attribute hasValue ?value] and wsml#textFromStringLang(wsml#string("some string", "en")).  // returns rdfText  
+	   textFromStringTest(?x) :-  ?x[?attribute hasValue ?value] and wsml#textFromString(wsml#string("abc")).  // returns rdfText 
+	   
+	   stringFromTextTest(?x) :- ?x[?attribute hasValue ?value] and ( wsml#stringFromText(_rdfText("abc")) = wsml#string("abc")).  // returns string 
+	   langFromTextTest(?x) :- ?x[?attribute hasValue ?value] and ( wsml#langFromText(_rdfText("Rdf Text")) = wsml#string("Rdf Text")).
+	   textCompareTest(?x) :- ?x[?attribute hasValue ?value] and ( wsml#textCompare( _rdfText("Rdf Text") , _rdfText("Rdf blabla")) = 1).
+	   textLengthTest(?x) :-  ?x[?attribute hasValue ?value] and ( wsml#textLength( _rdfText("Rdf Text") ) != 1).
+	   
+	   
 	   
 
