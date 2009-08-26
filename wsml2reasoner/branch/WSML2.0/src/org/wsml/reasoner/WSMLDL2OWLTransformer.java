@@ -1427,11 +1427,6 @@ public class WSMLDL2OWLTransformer implements LogicalExpressionVisitor {
                     uri = new URI(xsd + "float");
                 if (value.equals(WsmlDataType.WSML_DOUBLE))
                     uri = new URI(xsd + "double");
-//                TODO gigi: delete if they are gone for good
-//                if (value.equals(WsmlDataType.WSML_IRI))
-//                    uri = new URI(xsd + "anyURI");
-//                if (value.equals(WsmlDataType.WSML_SQNAME))
-//                    uri = new URI(xsd + "QName");
                 if (value.equals(WsmlDataType.WSML_BOOLEAN))
                     uri = new URI(xsd + "boolean");
                 if (value.equals(WsmlDataType.WSML_DURATION))
@@ -1488,11 +1483,6 @@ public class WSMLDL2OWLTransformer implements LogicalExpressionVisitor {
                     uri = new URI(xsd + "float");
                 if (value.getType().toString().equals(WsmlDataType.WSML_DOUBLE))
                     uri = new URI(xsd + "double");
-//                TODO gigi: delete if they are gone for good
-//                if (value.getType().toString().equals(WsmlDataType.WSML_IRI))
-//                    uri = new URI(xsd + "anyURI");
-//                if (value.getType().toString().equals(WsmlDataType.WSML_SQNAME))
-//                    uri = new URI(xsd + "QName");
                 if (value.getType().toString().equals(WsmlDataType.WSML_BOOLEAN))
                     uri = new URI(xsd + "boolean");
                 if (value.getType().toString().equals(WsmlDataType.WSML_DURATION))

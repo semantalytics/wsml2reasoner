@@ -863,11 +863,6 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         				return new IsGYearMonthBuiltin( t0 );
         			else if( type.equals( WsmlDataType.WSML_HEXBINARY ) )
         				return new IsHexBinaryBuiltin( t0 );
-//        			TODO gigi: delete if they are gone for good
-//        			else if( type.equals( WsmlDataType.WSML_IRI ) )
-//        				return new IsIriBuiltin( t0 );
-//        			else if( type.equals( WsmlDataType.WSML_SQNAME ) )
-//        				return new IsSqNameBuiltin( t0 );
         			else if( type.equals( WsmlDataType.WSML_TIME ) )
         				return new IsTimeBuiltin( t0 );
 //        			else if( type.equals( WsmlDataType.WSML_TEXT ) )  // TODO CHECK 
@@ -1023,13 +1018,6 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         else if (t.equals(WsmlDataType.WSML_INTEGER)) {
             return CONCRETE.createInteger(Integer.parseInt(v.toString()));
         }
-//        TODO gigi: delete if they are gone for good
-//        else if (t.equals(WsmlDataType.WSML_IRI)) {
-//            return CONCRETE.createIri(v.getValue().toString());
-//        }
-//        else if (t.equals(WsmlDataType.WSML_SQNAME)) {
-//            return CONCRETE.createSqName(v.getValue().toString());
-//        }
         else if (t.equals(WsmlDataType.WSML_STRING)) {
             return TERM.createString(v.toString());
         }

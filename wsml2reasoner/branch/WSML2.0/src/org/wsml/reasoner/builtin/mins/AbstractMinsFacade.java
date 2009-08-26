@@ -419,8 +419,6 @@ public abstract class AbstractMinsFacade implements DatalogReasonerFacade
         WsmoFactory f = wsmoManager.getWSMOFactory();
         int memberOfNo = symbTransfomer.convertToTool(new Literal(true, WSML2DatalogTransformer.PRED_MEMBER_OF, new Term[2]));
         int integerNo = symbTransfomer.convertToTool(f.createIRI(WsmlDataType.WSML_INTEGER));
-//        TODO gigi: delete if they are gone for good
-//        int iriNo = symbTransfomer.convertToTool(f.createIRI(WsmlDataType.WSML_IRI));
         int stringNo = symbTransfomer.convertToTool(f.createIRI(WsmlDataType.WSML_STRING));
         int decimalNo = symbTransfomer.convertToTool(f.createIRI(WsmlDataType.WSML_DECIMAL));
         int booleanNo = symbTransfomer.convertToTool(f.createIRI(WsmlDataType.WSML_BOOLEAN));
@@ -447,7 +445,7 @@ public abstract class AbstractMinsFacade implements DatalogReasonerFacade
         rs.addRule(new Rule(new Head[] { new Head(memberOfNo, new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(0), new ConstTerm(booleanNo) }) }, new Body[] { new BuiltinBody(6, false, new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(0), new StringTerm("_boolean(\"false\")") }, new Equal()) }));
 
         // ?x memberOf _integer :- isConst(?x)
-//        TODO gigi: remove since IRI is no longer supported
+//        TODO gigi: implement IRI another way, since the WSML datatype IRI is no longer supported
 //        rs.addRule(new Rule(new Head[] { new Head(memberOfNo, new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(0), new ConstTerm(iriNo) }) }, new Body[] { new BuiltinBody(15, false, new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(0) }, new IsConst()) }));
     }
 

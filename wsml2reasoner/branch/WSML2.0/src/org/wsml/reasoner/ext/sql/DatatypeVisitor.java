@@ -111,14 +111,10 @@ public class DatatypeVisitor implements TermVisitor {
         simpleDataTypes.put(WsmlDataType.WSML_DECIMAL, BigDecimal.class);
         simpleDataTypes.put(WsmlDataType.WSML_INTEGER, BigDecimal.class);
         
-//        TODO gigi: delete if they are gone for good
-//        simpleDataTypes.put(WsmlDataType.WSML_IRI, String.class);
 
         complextDataTypes.put(WsmlDataType.WSML_FLOAT, BigDecimal.class);
         complextDataTypes.put(WsmlDataType.WSML_DOUBLE, BigDecimal.class);
         
-//        TODO gigi: delete if they are gone for good
-//        complextDataTypes.put(WsmlDataType.WSML_SQNAME, String.class);
         complextDataTypes.put(WsmlDataType.WSML_BOOLEAN, Boolean.class);
 
         complextDataTypes.put(WsmlDataType.WSML_DURATION, String.class);
@@ -182,13 +178,6 @@ public class DatatypeVisitor implements TermVisitor {
         	Calendar cal = (Calendar)t.getValue();
         	value = new java.sql.Timestamp(cal.getTimeInMillis());
         }
-//        TODO gigi: delete if they are gone for good
-//        else if (complextType.equals(WsmlDataType.WSML_SQNAME)) {
-//            // according to ComplexDataValueImpl SQNames are not supported,
-//            // there seems to be some stale
-//            // code in there.
-//            throw new UnsupportedOperationException("SQNames not supported");
-//        }
         else if (complextType.equals(WsmlDataType.WSML_FLOAT)) {
             Float f = (Float) t.getValue();
             value = new BigDecimal(Float.toString( f ));
@@ -215,11 +204,7 @@ public class DatatypeVisitor implements TermVisitor {
     }
 
     public void visit(IRI t) {
-//    	TODO gigi: delete if they are gone for good
-//        assert t != null;
-//
-//        Class< ? > javaTypeForWSMLType = simpleDataTypes.get(WsmlDataType.WSML_IRI);
-//        derivedMappings.add(new Entry(t.toString(), javaTypeForWSMLType));
+    	throw new UnsupportedOperationException("IRI not supported");
     }
 
     public void visit(NumberedAnonymousID t) {
