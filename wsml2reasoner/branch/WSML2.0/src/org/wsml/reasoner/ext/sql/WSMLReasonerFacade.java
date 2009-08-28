@@ -27,6 +27,7 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 
+import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
@@ -37,39 +38,34 @@ import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsmo.common.TopEntity;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
+import org.wsmo.factory.Factory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
+
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
 
 /**
  * This class encapsulates the reasoner and performs necessary pre-processing.
  */
 public class WSMLReasonerFacade {
 
-    private WsmoFactory wsmoFactory;
-
+	private Factory factory;
+	
     private LPReasoner reasoner;
 
     private Ontology onto;
 
 	private Parser wsmlParser;
 
-	private LogicalExpressionFactory leFactory;
-    
 	/**
      * Constructs a new WSMLReasonerFacade by setting up WSMO4J resources, the
      * parser, the reasoner.
      */
     public WSMLReasonerFacade() {
-        wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-    	wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
+    	factory = FactoryImpl.createNewInstance();
     	
-    	DataFactory xmlDataFactory = FactoryImpl.getInstance().createXmlDataFactory(wsmoFactory);
-		DataFactory wsmlDataFactory = FactoryImpl.getInstance().createWsmlDataFactory(wsmoFactory);
-		leFactory = FactoryImpl.getInstance().createLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
-		
+    	wsmlParser = new ParserImplTyped();
+    	
         reasoner = DefaultWSMLReasonerFactory.getFactory().createFlightReasoner(null);
     }
     
@@ -89,7 +85,7 @@ public class WSMLReasonerFacade {
     		throw new IllegalArgumentException();
     	}
     	
-        LogicalExpression lequery = leFactory.createLogicalExpression(query);
+        LogicalExpression lequery = new LogExprParserTypedImpl(factory).parse(query);
       
         return doQuery(lequery);
     }
@@ -127,7 +123,7 @@ public class WSMLReasonerFacade {
         }
 
         reasoner.registerOntology(onto);
-        LogicalExpression lequery = leFactory.createLogicalExpression(query, onto);
+        LogicalExpression lequery = new LogExprParserTypedImpl(onto, factory).parse(query);
 
         return doQuery(lequery);
     }

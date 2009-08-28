@@ -17,6 +17,8 @@ import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+
 import base.BaseReasonerTest;
 
 /**
@@ -34,8 +36,8 @@ import base.BaseReasonerTest;
  */
 public class RegisterMultipleTimes  extends BaseReasonerTest  {
 	
-	WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-	Parser wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
+	WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+	Parser wsmlParser = new ParserImplTyped();
 //	LogicalExpressionFactory leFactory = Factory.createLogicalExpressionFactory(null);
 	
     LPReasoner reasoner;

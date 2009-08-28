@@ -47,6 +47,8 @@ import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+
 public class LoadReferenceOntology {
 
     public static void main(String[] args) throws FileNotFoundException, IOException, ParserException, InvalidModelException, InconsistencyException {
@@ -67,8 +69,8 @@ public class LoadReferenceOntology {
     public static void test(File... files) throws FileNotFoundException, IOException, ParserException, InvalidModelException, InconsistencyException {
 
         HashMap<String, Object> parserProps = new HashMap<String, Object>();
-		WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-		Parser wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory );
+		WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+		Parser wsmlParser = new ParserImplTyped();
 
         Set<Ontology> ontologies = new HashSet<Ontology>();
         for (File f : files) {
@@ -93,9 +95,9 @@ public class LoadReferenceOntology {
         System.out.println("Ontologies registered in " + register + " ms");
         long query_start = System.currentTimeMillis();
 
-        DataFactory xmlDataFactory = FactoryImpl.getInstance().createXmlDataFactory(wsmoFactory);
-		DataFactory wsmlDataFactory = FactoryImpl.getInstance().createWsmlDataFactory(wsmoFactory);
-		LogicalExpressionFactory leFactory = FactoryImpl.getInstance().createLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
+        DataFactory xmlDataFactory = FactoryImpl.createNewInstance().getXmlDataFactory(wsmoFactory);
+		DataFactory wsmlDataFactory = FactoryImpl.createNewInstance().getWsmlDataFactory(wsmoFactory);
+		LogicalExpressionFactory leFactory = FactoryImpl.createNewInstance().getLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
 		LogicalExpression le = leFactory.createLogicalExpression("?x memberOf ?y");
 
         Ontology ontology = new ArrayList<Ontology>(ontologies).get(0);

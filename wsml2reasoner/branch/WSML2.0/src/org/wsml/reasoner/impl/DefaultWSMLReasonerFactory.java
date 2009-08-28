@@ -64,10 +64,10 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
     private WSMO4JManager extractWsmoManager(Map<String, Object> params) {
         assert params != null;
 
-        WsmoFactory wsmoFactory = params.containsKey(PARAM_WSMO_FACTORY) ? (WsmoFactory) params.get(PARAM_WSMO_FACTORY) : FactoryImpl.getInstance().createWsmoFactory();
-        DataFactory wsmlDataFactory = params.containsKey(PARAM_DATA_FACTORY) ? (DataFactory) params.get(PARAM_DATA_FACTORY) : FactoryImpl.getInstance().createWsmlDataFactory(wsmoFactory);
-        DataFactory xmlDataFactory = FactoryImpl.getInstance().createXmlDataFactory(wsmoFactory); // TODO gigi: Since the Factory stuff changed quite a bit, is there a parameter for the xml data factory? 
-		LogicalExpressionFactory leFactory = params.containsKey(PARAM_LE_FACTORY) ? (LogicalExpressionFactory) params.get(PARAM_LE_FACTORY) : FactoryImpl.getInstance().createLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory );
+        WsmoFactory wsmoFactory = params.containsKey(PARAM_WSMO_FACTORY) ? (WsmoFactory) params.get(PARAM_WSMO_FACTORY) : FactoryImpl.createNewInstance().getWsmoFactory();
+        DataFactory wsmlDataFactory = params.containsKey(PARAM_DATA_FACTORY) ? (DataFactory) params.get(PARAM_DATA_FACTORY) : FactoryImpl.createNewInstance().getWsmlDataFactory(wsmoFactory);
+        DataFactory xmlDataFactory = FactoryImpl.createNewInstance().getXmlDataFactory(wsmoFactory); // TODO gigi: Since the Factory stuff changed quite a bit, is there a parameter for the xml data factory? 
+		LogicalExpressionFactory leFactory = params.containsKey(PARAM_LE_FACTORY) ? (LogicalExpressionFactory) params.get(PARAM_LE_FACTORY) : FactoryImpl.createNewInstance().getLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory );
         
         return new WSMO4JManager(wsmoFactory, leFactory, wsmlDataFactory, xmlDataFactory);
     }

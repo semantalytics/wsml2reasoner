@@ -40,6 +40,8 @@ import org.wsmo.common.IRI;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+
 import abstractTests.DL;
 
 /*
@@ -58,7 +60,7 @@ public abstract class AbstractSimpleInference extends TestCase implements DL {
 		super.setUp();
 		WSMO4JManager wsmoManager = new WSMO4JManager();
 		wsmoFactory = wsmoManager.getWSMOFactory();
-		parser = FactoryImpl.getInstance().createParser(null);
+		parser = new ParserImplTyped();
 
 		// wsml2owlExample.wsml
 		InputStream is = this.getClass().getClassLoader().getResourceAsStream(

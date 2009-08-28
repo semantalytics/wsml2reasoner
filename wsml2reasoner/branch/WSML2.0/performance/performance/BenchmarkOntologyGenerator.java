@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
 import org.deri.wsmo4j.logicalexpression.util.OntologyUtil;
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.AttributeValueMolecule;
@@ -154,7 +155,7 @@ public class BenchmarkOntologyGenerator {
 		wsmoFactory = wsmo4jManager.getWSMOFactory();
 		leFactory = wsmo4jManager.getLogicalExpressionFactory();
 		dataFactory = wsmo4jManager.getWsmlDataFactory();
-		serializer = FactoryImpl.getInstance().createSerializer();
+		serializer = new WSMLSerializerImpl();
 		
 		BenchmarkOntologyGenerator generator = new BenchmarkOntologyGenerator();
 		generator.genSubconceptOntologies();

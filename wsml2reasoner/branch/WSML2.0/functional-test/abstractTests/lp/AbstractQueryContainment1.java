@@ -3,13 +3,11 @@ package abstractTests.lp;
 import helper.OntologyHelper;
 import junit.framework.TestCase;
 
+import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Ontology;
-import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.LPReasoner;
-import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
 
 import abstractTests.LP;
 
@@ -135,15 +133,10 @@ public abstract class AbstractQueryContainment1 extends TestCase implements LP {
         LPReasoner reasoner = getLPReasoner();
         reasoner.registerOntology(ontology);
         
-        WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-        DataFactory xmlDataFactory = FactoryImpl.getInstance().createXmlDataFactory(wsmoFactory);
-		DataFactory wsmlDataFactory = FactoryImpl.getInstance().createXmlDataFactory(wsmoFactory);
-		
-		LogicalExpressionFactory leFactory = FactoryImpl.getInstance().createLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
-
+        LogicalExpressionParser leParser = new LogExprParserTypedImpl(ontology);
 		// build queries
-        LogicalExpression query1 = leFactory.createLogicalExpression(queryString1, ontology);
-        LogicalExpression query2 = leFactory.createLogicalExpression(queryString2, ontology);
+        LogicalExpression query1 = leParser.parse(queryString1);
+        LogicalExpression query2 = leParser.parse(queryString2);
         
         // perform query containment check
         boolean check = reasoner.checkQueryContainment(query1, query2);

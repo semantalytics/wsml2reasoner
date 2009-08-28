@@ -45,10 +45,10 @@ public class IrisFacadeTest extends TestCase {
 	}
 
 	public void testConvertTermFromWsmo4jToIris() {
-		final WsmoFactory WF = FactoryImpl.getInstance().createWsmoFactory();
-		final DataFactory DF = FactoryImpl.getInstance().createWsmlDataFactory(WF);
-		final DataFactory xmlDataFactory = FactoryImpl.getInstance().createXmlDataFactory(WF);
-		final LogicalExpressionFactory LF = FactoryImpl.getInstance().createLogicalExpressionFactory(WF, DF, xmlDataFactory );
+		final WsmoFactory WF = FactoryImpl.createNewInstance().getWsmoFactory();
+		final DataFactory DF = FactoryImpl.createNewInstance().getWsmlDataFactory(WF);
+		final DataFactory xmlDataFactory = FactoryImpl.createNewInstance().getXmlDataFactory(WF);
+		final LogicalExpressionFactory LF = FactoryImpl.createNewInstance().getLogicalExpressionFactory(WF, DF, xmlDataFactory );
 		final ITermFactory TF = org.deri.iris.factory.Factory.TERM;
 		final IConcreteFactory CF = org.deri.iris.factory.Factory.CONCRETE;
 
@@ -77,11 +77,11 @@ public class IrisFacadeTest extends TestCase {
 	}
 
 	public void testConvertTermFromIrisToWsmo4j() {
-		final WsmoFactory WF = FactoryImpl.getInstance().createWsmoFactory();
-		final DataFactory DF = FactoryImpl.getInstance().createWsmlDataFactory(WF);
+		final WsmoFactory WF = FactoryImpl.createNewInstance().getWsmoFactory();
+		final DataFactory DF = FactoryImpl.createNewInstance().getWsmlDataFactory(WF);
 		final ITermFactory TF = org.deri.iris.factory.Factory.TERM;
-		DataFactory xmlDataFactory = FactoryImpl.getInstance().createXmlDataFactory(WF);
-		final LogicalExpressionFactory LF = FactoryImpl.getInstance().createLogicalExpressionFactory(WF, DF, xmlDataFactory );
+		DataFactory xmlDataFactory = FactoryImpl.createNewInstance().getXmlDataFactory(WF);
+		final LogicalExpressionFactory LF = FactoryImpl.createNewInstance().getLogicalExpressionFactory(WF, DF, xmlDataFactory );
 		final IConcreteFactory CF = org.deri.iris.factory.Factory.CONCRETE;
 
 		final IrisStratifiedFacade IF = new IrisStratifiedFacade( new WSMO4JManager(), new HashMap<String, Object>() );
@@ -155,8 +155,8 @@ public class IrisFacadeTest extends TestCase {
 		// there is no sqname in wsmo4j
 	}
 	public void testBuiltinsExtended() {
-		final WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-		final DataFactory DF = FactoryImpl.getInstance().createWsmlDataFactory(wsmoFactory );
+		final WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+		final DataFactory DF = FactoryImpl.createNewInstance().getWsmlDataFactory(wsmoFactory );
 //		final ITermFactory TF = org.deri.iris.factory.Factory.TERM;
 		final IConcreteFactory CF = org.deri.iris.factory.Factory.CONCRETE;
 		final IrisStratifiedFacade IF = new IrisStratifiedFacade( new WSMO4JManager(), new HashMap<String, Object>() );
@@ -165,10 +165,10 @@ public class IrisFacadeTest extends TestCase {
 	}
 
 	public void testLiteral2Atom() {
-		final WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-		final DataFactory DF = FactoryImpl.getInstance().createWsmlDataFactory(wsmoFactory );
-		final DataFactory xmlDataFactory = FactoryImpl.getInstance().createXmlDataFactory(wsmoFactory);
-		final LogicalExpressionFactory LF = FactoryImpl.getInstance().createLogicalExpressionFactory(wsmoFactory, DF, xmlDataFactory);
+		final WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+		final DataFactory DF = FactoryImpl.createNewInstance().getWsmlDataFactory(wsmoFactory );
+		final DataFactory xmlDataFactory = FactoryImpl.createNewInstance().getXmlDataFactory(wsmoFactory);
+		final LogicalExpressionFactory LF = FactoryImpl.createNewInstance().getLogicalExpressionFactory(wsmoFactory, DF, xmlDataFactory);
 		final IBasicFactory BF = org.deri.iris.factory.Factory.BASIC;
 		final ITermFactory TF = org.deri.iris.factory.Factory.TERM;
 
@@ -186,10 +186,10 @@ public class IrisFacadeTest extends TestCase {
 	public void testLiteral2Literal() {
 		final IBasicFactory BF = org.deri.iris.factory.Factory.BASIC;
 		final ITermFactory TF = org.deri.iris.factory.Factory.TERM;
-		final WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-		final DataFactory DF = FactoryImpl.getInstance().createWsmlDataFactory(wsmoFactory );
-		final DataFactory xmlDataFactory = FactoryImpl.getInstance().createXmlDataFactory(wsmoFactory);
-		final LogicalExpressionFactory LF = FactoryImpl.getInstance().createLogicalExpressionFactory(wsmoFactory, DF, xmlDataFactory);
+		final WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+		final DataFactory DF = FactoryImpl.createNewInstance().getWsmlDataFactory(wsmoFactory );
+		final DataFactory xmlDataFactory = FactoryImpl.createNewInstance().getXmlDataFactory(wsmoFactory);
+		final LogicalExpressionFactory LF = FactoryImpl.createNewInstance().getLogicalExpressionFactory(wsmoFactory, DF, xmlDataFactory);
 
 		assertEquals(BF.createLiteral(false, BF.createPredicate("lit", 3), BF
 				.createTuple(TF.createString("a"), TF.createVariable("b"), TF
@@ -206,8 +206,8 @@ public class IrisFacadeTest extends TestCase {
 	}
 
 	public void testConvertWsmo4jDataValueToIrisTerm() {
-		final WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-		final DataFactory DF = FactoryImpl.getInstance().createWsmlDataFactory(wsmoFactory );
+		final WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+		final DataFactory DF = FactoryImpl.createNewInstance().getWsmlDataFactory(wsmoFactory );
 		final ITermFactory TF = org.deri.iris.factory.Factory.TERM;
 		final IConcreteFactory CF = org.deri.iris.factory.Factory.CONCRETE;
 

@@ -44,8 +44,6 @@ import org.wsml.reasoner.transformation.le.NormalizationRule;
 import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
 import org.wsml.reasoner.transformation.le.foldecomposition.FOLMoleculeDecompositionRules;
 import org.wsmo.common.Entity;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
 
 /**
@@ -59,10 +57,6 @@ import org.wsmo.wsml.ParserException;
 public class FOLBasedWSMLReasoner implements FOLReasoner {
 
     protected FOLReasonerFacade builtInFacade = null;
-
-    protected WsmoFactory wsmoFactory;
-
-    protected LogicalExpressionFactory leFactory;
 
     protected WSMO4JManager wsmoManager;
 
@@ -78,8 +72,6 @@ public class FOLBasedWSMLReasoner implements FOLReasoner {
         default:
             throw new UnsupportedOperationException("Reasoning with " + builtInType.toString() + " is not supported in FOL!");
         }
-        wsmoFactory = this.wsmoManager.getWSMOFactory();
-        leFactory = this.wsmoManager.getLogicalExpressionFactory();
     }
 
     /**
@@ -125,7 +117,7 @@ public class FOLBasedWSMLReasoner implements FOLReasoner {
         // should not be a consisteny violation anyway
         LogicalExpression le;
         try {
-            le = leFactory.createLogicalExpression("_\"foo:a\" or naf _\"foo:a\"");
+            le = wsmoManager.getLogicalExpressionParser().parse("_\"foo:a\" or naf _\"foo:a\"");
         }
         catch (ParserException e) {
             throw new RuntimeException("should never happen!");
@@ -227,7 +219,7 @@ public class FOLBasedWSMLReasoner implements FOLReasoner {
         Set<Variable> freeVars = lev.getFreeVariables(le);
         if (freeVars.isEmpty())
             return le;
-        return leFactory.createUniversalQuantification(freeVars, le);
+        return wsmoManager.getLogicalExpressionFactory().createUniversalQuantification(freeVars, le);
     }
 
     public void registerOntologyNoVerification(Ontology ontology) {

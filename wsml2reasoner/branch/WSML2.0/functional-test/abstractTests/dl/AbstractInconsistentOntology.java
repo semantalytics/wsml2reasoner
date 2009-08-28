@@ -34,6 +34,8 @@ import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+
 import abstractTests.DL;
 
 /*
@@ -51,7 +53,7 @@ public abstract class AbstractInconsistentOntology extends TestCase implements D
      	super.setUp();
         WSMO4JManager wsmoManager = new WSMO4JManager();
 		wsmoFactory = wsmoManager.getWSMOFactory();
-        parser = FactoryImpl.getInstance().createParser(wsmoFactory);
+        parser = new ParserImplTyped();
         
         // inconsistentWsml2owlExample.wsml
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/inconsistentWsml2owlExample.wsml");

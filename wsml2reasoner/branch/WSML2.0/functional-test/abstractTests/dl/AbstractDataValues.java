@@ -59,7 +59,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
 
 	 protected void setUp() throws Exception {
 	     	super.setUp();
-	        WSMO4JManager wsmoManager = new WSMO4JManager();
+	        wsmoManager = new WSMO4JManager();
 			wsmoFactory = wsmoManager.getWSMOFactory();
 			leFactory = wsmoManager.getLogicalExpressionFactory();
 			ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ontologyTestValues"));
@@ -299,7 +299,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
 		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiomTestValues_" + (in.trim())));
 	    ontology.addAxiom(axiom);
 		
-		LogicalExpression le = leFactory.createLogicalExpression(in, ontology);
+		LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(in);
         axiom.addDefinition(le);
         
         DLBasedWSMLReasoner reasoner = (DLBasedWSMLReasoner) this.getDLReasoner();

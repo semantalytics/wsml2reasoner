@@ -26,6 +26,8 @@ import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+
 public class TestPerformance1 {
 
 	/** How often to repeat the query to get a good average. */
@@ -271,8 +273,8 @@ public class TestPerformance1 {
     }
     
     private Ontology loadOntology(String file) {
-    	WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-    	Parser wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
+    	WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+    	Parser wsmlParser = new ParserImplTyped();
 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);
         try {

@@ -42,6 +42,8 @@ import org.wsmo.common.IRI;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+
 import base.BaseReasonerTest;
 
 /**
@@ -71,7 +73,7 @@ public class DLSimpleInferenceTests extends TestCase {
         wsmoFactory = wsmoManager.getWSMOFactory();
         previous = BaseReasonerTest.reasoner;
         wsmlReasoner = null;
-		parser = FactoryImpl.getInstance().createParser(wsmoFactory);
+		parser = new ParserImplTyped();
 		params = new HashMap<String, Object>();
 	}
 	

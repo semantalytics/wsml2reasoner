@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.deri.wsmo4j.io.serializer.wsml.SerializeWSMLTermsVisitor;
+import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
@@ -25,6 +26,8 @@ import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 import org.wsmo.wsml.Serializer;
+
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
 
 /**
  * This is a test class which runs a few queries to be used with the
@@ -171,8 +174,8 @@ public class NobelTest {
 	private void setUpFactories() {
 		wsmoManager = new WSMO4JManager();
 		leFactory = wsmoManager.getLogicalExpressionFactory();
-		wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-    	wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
+		wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+    	wsmlParser = new ParserImplTyped();
 	}
 
 	/**
@@ -212,7 +215,7 @@ public class NobelTest {
 	 */
 	private void printOntology(Ontology o) {
 		// Set up serializer
-		Serializer ontologySerializer = FactoryImpl.getInstance().createSerializer();
+		Serializer ontologySerializer = new WSMLSerializerImpl();
 		System.out.println("WSML Ontology:\n");
 		StringWriter sw = new StringWriter();
 		try {

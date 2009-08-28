@@ -39,6 +39,8 @@ import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+
 /**
  * Usage Example for the wsml2Reasoner Framework
  * 
@@ -48,8 +50,8 @@ public class LotsOfImports {
 
     WSMO4JManager wsmoManager = new WSMO4JManager();
 
-    WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-	Parser wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
+    WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+	Parser wsmlParser = new ParserImplTyped();
 
     /**
      * @param args

@@ -28,14 +28,13 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
-import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.wsml.ParserException;
 
 /**
@@ -70,7 +69,7 @@ public class LPHelper
     {
         reasoner.registerOntologies(ontologies);
 
-        LogicalExpression qExpression = leFactory.createLogicalExpression( query, ontologies.iterator().next());
+        LogicalExpression qExpression = new LogExprParserTypedImpl(ontologies.iterator().next()).parse( query );
 
 //		System.out.println("Executing query string '" + query + "'");
 //		System.out.println("Executing query LE: '" + OntologyHelper.toString( ontology, qExpression ) + "'");
@@ -120,5 +119,4 @@ public class LPHelper
         return contains;
     }
 
-    private static final LogicalExpressionFactory leFactory = new WSMO4JManager().getLogicalExpressionFactory();
 }

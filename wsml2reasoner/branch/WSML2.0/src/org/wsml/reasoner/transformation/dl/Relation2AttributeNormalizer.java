@@ -31,15 +31,12 @@ import org.omwg.ontology.Relation;
 import org.omwg.ontology.RelationInstance;
 import org.omwg.ontology.Type;
 import org.omwg.ontology.Value;
-import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.AnonymousIdTranslator;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsmo.common.Entity;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
 
@@ -57,24 +54,19 @@ import org.wsmo.wsml.ParserException;
  */
 public class Relation2AttributeNormalizer implements OntologyNormalizer {
 
-    protected WsmoFactory wsmoFactory;
+    private WsmoFactory wsmoFactory;
 
-    protected LogicalExpressionFactory leFactory;
+    private AnonymousIdTranslator anonymousIdTranslator;
 
-    protected DataFactory dataFactory;
-
-    protected AnonymousIdTranslator anonymousIdTranslator;
-
-	private DataFactory xmlDataFactory;
-
-	private DataFactory wsmlDataFactory;
+	private WSMO4JManager wsmoManager;
 
     public Relation2AttributeNormalizer(WSMO4JManager wsmoManager) {
-        wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-        wsmlDataFactory = FactoryImpl.getInstance().createWsmlDataFactory(wsmoFactory);
-        xmlDataFactory = FactoryImpl.getInstance().createXmlDataFactory(wsmoFactory);
-		leFactory = FactoryImpl.getInstance().createLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
-        anonymousIdTranslator = new AnonymousIdTranslator(wsmoFactory);
+    	
+    	this.wsmoManager = wsmoManager;
+    	
+    	wsmoFactory = wsmoManager.getWSMOFactory();
+    	
+        anonymousIdTranslator = new AnonymousIdTranslator(wsmoManager.getWSMOFactory());
     }
 
     public Set<Axiom> normalizeAxioms(Collection<Axiom> theAxioms) {
@@ -151,7 +143,7 @@ public class Relation2AttributeNormalizer implements OntologyNormalizer {
         for (Relation sr : superRelations){
             String le = "?x[_\"" + relation.getIdentifier() + "\" hasValue ?y] implies " + "?x[_\"" + sr.getIdentifier() + "\" hasValue ?y].";
             try {
-                result.addDefinition(leFactory.createLogicalExpression(le));
+                result.addDefinition(wsmoManager.getLogicalExpressionParser().parse(le));
             }
             catch (ParserException e) {
                 e.printStackTrace();

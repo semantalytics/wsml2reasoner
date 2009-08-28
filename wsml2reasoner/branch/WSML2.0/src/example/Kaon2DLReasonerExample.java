@@ -39,6 +39,8 @@ import org.wsmo.common.TopEntity;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+
 /**
  * Usage example for the wsml2reasoner framework with a wsml dl ontology.
  * 
@@ -130,8 +132,8 @@ public class Kaon2DLReasonerExample {
      * @return object model of ontology at file location
      */
     private Ontology loadOntology(String file) {
-    	WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-    	Parser wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
+    	WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+    	Parser wsmlParser = new ParserImplTyped();
 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);
         try {

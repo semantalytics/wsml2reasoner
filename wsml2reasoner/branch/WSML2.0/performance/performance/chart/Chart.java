@@ -35,6 +35,8 @@ import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+
 import performance.BenchmarkOntologyGenerator;
 
 public class Chart {
@@ -102,14 +104,14 @@ public class Chart {
 	final static String ENDCONTENT="<!--enddata--->";
 	final static String STARTCONTENT="<!--data--->";
 	
-	WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
+	WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
 	String firstNfpAsString(Entity e,String key){
 		IRI i = wsmoFactory.createIRI(key);
 		Set<Term> list = e.listAnnotationValues(i);
 		return list.iterator().next().toString();
 	}
 	
-	Parser p = FactoryImpl.getInstance().createParser(wsmoFactory);
+	Parser p = new ParserImplTyped();
 	TestInfo getTestInfo(File dir) throws FileNotFoundException, IOException, ParserException, InvalidModelException{
 		TestInfo ret = new TestInfo();
 		File[] files = dir.listFiles(wsmlfilter);

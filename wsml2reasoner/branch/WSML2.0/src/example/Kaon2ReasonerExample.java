@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
 import org.deri.wsmo4j.io.serializer.wsml.SerializeWSMLTermsVisitor;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
@@ -38,6 +39,8 @@ import org.wsmo.common.TopEntity;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
+
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
 
 /**
  * Usage Example for the wsml2Reasoner Framework
@@ -68,11 +71,10 @@ public class Kaon2ReasonerExample {
         Ontology exampleOntology = loadOntology("example/simpleOntology.wsml");
         if (exampleOntology == null)
             return;
-        LogicalExpressionFactory leFactory = new WSMO4JManager().getLogicalExpressionFactory();
 
         String queryString = "?x memberOf ?y";
 
-        LogicalExpression query = leFactory.createLogicalExpression(queryString, exampleOntology);
+        LogicalExpression query = new LogExprParserTypedImpl(exampleOntology).parse(queryString);
 
         // get A reasoner
         Map<String, Object> params = new HashMap<String, Object>();
@@ -105,8 +107,8 @@ public class Kaon2ReasonerExample {
      * @return object model of ontology at file location
      */
     private Ontology loadOntology(String file) {
-    	WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-    	Parser wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
+    	WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+    	Parser wsmlParser = new ParserImplTyped();
 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);
         try {

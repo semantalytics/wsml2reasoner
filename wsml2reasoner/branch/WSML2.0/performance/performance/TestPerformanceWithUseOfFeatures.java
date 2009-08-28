@@ -37,6 +37,8 @@ import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+
 import performance.chart.IndexEntry;
 
 public class TestPerformanceWithUseOfFeatures {
@@ -461,8 +463,8 @@ public class TestPerformanceWithUseOfFeatures {
         return reasoner;
     }
 
-    WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-	Parser wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
+    WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+	Parser wsmlParser = new ParserImplTyped();
 
     private Ontology loadOntology(String file) {
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);

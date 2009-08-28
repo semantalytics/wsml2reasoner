@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.deri.wsmo4j.io.serializer.wsml.SerializeWSMLTermsVisitor;
+import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
@@ -51,7 +52,7 @@ public class QueryUtil {
     }
 
     public static String toString(Ontology ont) {
-        Serializer wsmlSerializer = FactoryImpl.getInstance().createSerializer();
+        Serializer wsmlSerializer = new WSMLSerializerImpl();
 
         StringBuffer str = new StringBuffer();
         wsmlSerializer.serialize(new TopEntity[] { ont }, str);

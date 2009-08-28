@@ -30,6 +30,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.SimpleDataType;
@@ -52,6 +53,8 @@ import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 import org.wsmo.wsml.Serializer;
 
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+
 import abstractTests.LP;
 
 public abstract class AbstractViolation9GetAllViolations extends TestCase implements LP {
@@ -65,14 +68,14 @@ public abstract class AbstractViolation9GetAllViolations extends TestCase implem
 	}
 
 	private void getViolations() throws InvalidModelException, IOException, ParserException {
-		WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-		Parser parser = FactoryImpl.getInstance().createParser(wsmoFactory);
+		WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+		Parser parser = new ParserImplTyped();
 		InputStream is = this.getClass().getClassLoader().getResourceAsStream(ONTOLOGY_FILE);
 		assertNotNull(is);
 		try {
 			Ontology ontology = (Ontology) parser.parse(new InputStreamReader(is), null)[0];
 			StringWriter sw = new StringWriter();
-			Serializer ontologySerializer = FactoryImpl.getInstance().createSerializer();
+			Serializer ontologySerializer = new WSMLSerializerImpl();
 			ontologySerializer.serialize(new TopEntity[] { ontology }, sw);
 			// Reasoner
 			(this.getLPReasoner()).registerOntology(ontology);

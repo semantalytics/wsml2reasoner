@@ -29,10 +29,10 @@ public class SpassTest extends TestCase{
     private SpassFacade tptp;
 
     protected void setUp() throws Exception {
-    	WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-		DataFactory wsmlDataFactory = FactoryImpl.getInstance().createWsmlDataFactory(wsmoFactory);
-		DataFactory xmlDataFactory = FactoryImpl.getInstance().createXmlDataFactory(wsmoFactory);
-		leF = FactoryImpl.getInstance().createLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
+    	WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+		DataFactory wsmlDataFactory = FactoryImpl.createNewInstance().getWsmlDataFactory(wsmoFactory);
+		DataFactory xmlDataFactory = FactoryImpl.createNewInstance().getXmlDataFactory(wsmoFactory);
+		leF = FactoryImpl.createNewInstance().getLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
         
 
         tptp = new SpassFacade(new WSMO4JManager(),"urn:foo");

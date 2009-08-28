@@ -38,6 +38,8 @@ import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+
 import base.BaseReasonerTest;
 
 /**
@@ -69,16 +71,16 @@ public class SpassEntailmentTest extends BaseReasonerTest {
 
     protected void setUp() throws Exception {
         super.setUp();
-        wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-        wsmlDataFactory = FactoryImpl.getInstance().createWsmlDataFactory(wsmoFactory);
-        xmlDataFactory = FactoryImpl.getInstance().createXmlDataFactory(wsmoFactory);
-        leFactory = FactoryImpl.getInstance().createLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
+        wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+        wsmlDataFactory = FactoryImpl.createNewInstance().getWsmlDataFactory(wsmoFactory);
+        xmlDataFactory = FactoryImpl.createNewInstance().getXmlDataFactory(wsmoFactory);
+        leFactory = FactoryImpl.createNewInstance().getLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
         previous = BaseReasonerTest.reasoner;
         Map<String, Object> m = new HashMap<String, Object>();
         m.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, WSMLReasonerFactory.BuiltInReasoner.SPASS);
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createFOLReasoner(m);
         
-    	wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
+    	wsmlParser = new ParserImplTyped();
     }
 
     public void test() throws Exception {

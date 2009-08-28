@@ -33,10 +33,10 @@ import org.wsmo.wsml.ParserException;
 public class LETestHelper {
 
     public static LogicalExpression buildLE(String theString) throws ParserException{
-    	WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-		DataFactory wsmlDataFactory = FactoryImpl.getInstance().createWsmlDataFactory(wsmoFactory);
-		DataFactory xmlDataFactory = FactoryImpl.getInstance().createXmlDataFactory(wsmoFactory);
-		LogicalExpressionFactory leF = FactoryImpl.getInstance().createLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
+    	WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+		DataFactory wsmlDataFactory = FactoryImpl.createNewInstance().getWsmlDataFactory(wsmoFactory);
+		DataFactory xmlDataFactory = FactoryImpl.createNewInstance().getXmlDataFactory(wsmoFactory);
+		LogicalExpressionFactory leF = FactoryImpl.createNewInstance().getLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
 		return leF.createLogicalExpression(theString);		
     }
 }

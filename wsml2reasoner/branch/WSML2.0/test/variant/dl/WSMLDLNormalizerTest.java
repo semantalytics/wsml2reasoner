@@ -45,6 +45,8 @@ import org.wsmo.validator.ValidationError;
 import org.wsmo.validator.ValidationWarning;
 import org.wsmo.wsml.Parser;
 
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+
 public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
 
     protected Relation2AttributeNormalizer relTransformer;
@@ -73,8 +75,8 @@ public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
         // read test file and parse it
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/wsml2owlNormExample.wsml");
         assertNotNull(is);
-        WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-    	Parser wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
+        WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+    	Parser wsmlParser = new ParserImplTyped();
         // assuming first topentity in file is an ontology
         ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is), null)[0];
 
@@ -134,8 +136,8 @@ public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
         // read test file and parse it
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/anonIds.wsml");
         assertNotNull(is);
-        WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-    	Parser wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
+        WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+    	Parser wsmlParser = new ParserImplTyped();
         // assuming first topentity in file is an ontology
         ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is), null)[0];
 
@@ -169,8 +171,8 @@ public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
         // read test file and parse it
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/relation2attribute.wsml");
         assertNotNull(is);
-        WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-    	Parser wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
+        WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+    	Parser wsmlParser = new ParserImplTyped();
         // assuming first topentity in file is an ontology
         ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is), null)[0];
 
@@ -204,8 +206,8 @@ public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
         // read test file and parse it
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/decomposition.wsml");
         assertNotNull(is);
-        WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-    	Parser wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
+        WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+    	Parser wsmlParser = new ParserImplTyped();
         // assuming first topentity in file is an ontology
         ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is), null)[0];
 

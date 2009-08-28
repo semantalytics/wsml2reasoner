@@ -33,6 +33,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
+import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Instance;
@@ -54,6 +55,8 @@ import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 import org.wsmo.wsml.Serializer;
+
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
 
 public class BaseReasonerTest extends TestCase {
 
@@ -88,7 +91,7 @@ public class BaseReasonerTest extends TestCase {
 
     protected static WSMO4JManager wsmoManager = null;
     
-    protected static Parser wsmlparserimpl = FactoryImpl.getInstance().createParser(wsmoFactory);
+    protected static Parser wsmlparserimpl = new ParserImplTyped();
 
     /**
      * Instantiates a new reasoner with a default configuration
@@ -156,7 +159,7 @@ public class BaseReasonerTest extends TestCase {
         wsmoFactory = wsmoManager.getWSMOFactory();
 
         dataFactory = wsmoManager.getWsmlDataFactory();
-    	
+        
     }
 
     /**
@@ -191,7 +194,7 @@ public class BaseReasonerTest extends TestCase {
 
         // Set up serializer
 
-        Serializer ontologySerializer = FactoryImpl.getInstance().createSerializer();
+        Serializer ontologySerializer = new WSMLSerializerImpl();
 
         // Read simple ontology from file
         final Reader ontoReader = getReaderForFile(ontologyFile);
@@ -216,8 +219,8 @@ public class BaseReasonerTest extends TestCase {
             throws Exception {
         System.out.println("\n\nStarting reasoner with query '" + query + "'");
         System.out.println("\n\nExpecting " + expected.size() + " result(s)...");
-        LogicalExpression qExpression = leFactory.createLogicalExpression(
-                query, o);
+        LogicalExpression qExpression = wsmoManager.getLogicalExpressionParser(o).parse(
+                query);
         System.out.println("WSML Query LE:");
         System.out.println(logExprSerializer.serialize(qExpression));
         System.out.println("--------------\n\n");

@@ -29,8 +29,12 @@ public class DLUtilities {
     private final LogicalExpressionFactory leFactory;
 
     private final LPReasoner mReasoner;
+
+	private WSMO4JManager wsmoManager;
     
     public DLUtilities(LPReasoner reasoner, WSMO4JManager wsmoManager) {
+    	this.wsmoManager = wsmoManager;
+    	
         this.wsmoFactory = wsmoManager.getWSMOFactory();
         this.leFactory = wsmoManager.getLogicalExpressionFactory();
         this.mReasoner = reasoner;
@@ -106,7 +110,7 @@ public class DLUtilities {
         LogicalExpression query = null;
         Set<Map<Variable, Term>> bindings;
         try {
-            query = leFactory.createLogicalExpression("_\"" + org.wsml.reasoner.WSML2DatalogTransformer.PRED_DIRECT_SUBCONCEPT + "\"(?x, _\"" + conceptID.toString() + "\")");
+            query = wsmoManager.getLogicalExpressionParser().parse("_\"" + org.wsml.reasoner.WSML2DatalogTransformer.PRED_DIRECT_SUBCONCEPT + "\"(?x, _\"" + conceptID.toString() + "\")");
             // submit query to reasoner:
             bindings = mReasoner.executeQuery(query);
         }
@@ -153,7 +157,7 @@ public class DLUtilities {
         LogicalExpression query = null;
         Set<Map<Variable, Term>> bindings;
         try {
-            query = leFactory.createLogicalExpression("_\"" + org.wsml.reasoner.WSML2DatalogTransformer.PRED_DIRECT_SUBCONCEPT + "\"(_\"" + conceptID.toString() + "\", ?x)");
+            query = wsmoManager.getLogicalExpressionParser().parse("_\"" + org.wsml.reasoner.WSML2DatalogTransformer.PRED_DIRECT_SUBCONCEPT + "\"(_\"" + conceptID.toString() + "\", ?x)");
 
             // submit query to reasoner:
             bindings = mReasoner.executeQuery(query);
@@ -388,7 +392,7 @@ public class DLUtilities {
         LogicalExpression query = null;
         Set<Map<Variable, Term>> bindings;
         try {
-            query = leFactory.createLogicalExpression("_\"" + org.wsml.reasoner.WSML2DatalogTransformer.PRED_DIRECT_CONCEPT + "\"(_\"" + instanceID.toString() + "\", ?x)");
+            query = wsmoManager.getLogicalExpressionParser().parse("_\"" + org.wsml.reasoner.WSML2DatalogTransformer.PRED_DIRECT_CONCEPT + "\"(_\"" + instanceID.toString() + "\", ?x)");
             // submit query to reasoner:
             bindings = mReasoner.executeQuery(query);
         }

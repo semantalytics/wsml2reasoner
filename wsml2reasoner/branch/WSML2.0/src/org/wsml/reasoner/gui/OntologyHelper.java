@@ -37,6 +37,7 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
+import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Instance;
@@ -49,6 +50,8 @@ import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 import org.wsmo.wsml.Serializer;
+
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
 
 /**
  * Helper to make loading, parsing and serialising ontologies and their components simpler.
@@ -82,7 +85,7 @@ public class OntologyHelper
      */
     public static String toString( Ontology ontology )
     {
-        Serializer ontologySerializer = FactoryImpl.getInstance().createSerializer();
+        Serializer ontologySerializer = new WSMLSerializerImpl();
 
 		StringWriter sw = new StringWriter();
 		try
@@ -139,8 +142,8 @@ public class OntologyHelper
     
     private static Ontology parseThis(Reader ontoReader) throws IOException, ParserException, InvalidModelException{
       	 
-    	WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-    	Parser wsmlParser = FactoryImpl.getInstance().createParser(wsmoFactory);
+    	WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+    	Parser wsmlParser = new ParserImplTyped();
     	
     	final TopEntity[] identifiable = wsmlParser.parse(ontoReader, null);
     	

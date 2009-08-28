@@ -38,6 +38,8 @@ import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+
 import abstractTests.DL;
 
 public abstract class AbstractOntologyWithCycles extends TestCase implements DL {
@@ -54,7 +56,7 @@ public abstract class AbstractOntologyWithCycles extends TestCase implements DL 
 
         // assuming first topentity in file is an ontology  
 		
-        Parser parser = FactoryImpl.getInstance().createParser(null);
+        Parser parser = new ParserImplTyped();
 
     	Ontology ontology = (Ontology)parser.parse(new InputStreamReader(is), null)[0]; 
         final String ns = ontology.getDefaultNamespace().getIRI().toString();

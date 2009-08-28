@@ -27,11 +27,11 @@ import helper.OntologyHelper;
 import helper.Results;
 import junit.framework.TestCase;
 
+import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.LPReasoner;
-import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.factory.LogicalExpressionFactory;
 
 import abstractTests.LP;
 
@@ -39,13 +39,16 @@ public abstract class AbstractFlight2Example2 extends TestCase implements LP {
 
 	private static final String ONTOLOGY_FILE = "files/flight2_example2_simpsons.wsml";
 
-    private static final LogicalExpressionFactory leFactory = new WSMO4JManager().getLogicalExpressionFactory();
+    private LogicalExpressionParser leParser;
 
     private Ontology ontology;
 	private LPReasoner reasoner;
 	
     protected void setUp() throws Exception	{
 		ontology = OntologyHelper.loadOntology( ONTOLOGY_FILE );
+		
+		leParser = new LogExprParserTypedImpl(ontology);
+		
 		reasoner = getLPReasoner();
 		reasoner.registerOntology( ontology );
     }
@@ -56,7 +59,7 @@ public abstract class AbstractFlight2Example2 extends TestCase implements LP {
 		if( positive )
 			result.addBinding();
 		
-        LogicalExpression qExpression = leFactory.createLogicalExpression( query, ontology);
+        LogicalExpression qExpression = leParser.parse( query );
 		LPHelper.checkResults( reasoner.executeQuery(qExpression), result.get() );
 	}
 

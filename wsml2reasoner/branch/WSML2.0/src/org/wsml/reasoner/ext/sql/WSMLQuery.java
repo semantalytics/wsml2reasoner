@@ -162,10 +162,10 @@ public class WSMLQuery {
     private Set<Map<Variable, Term>> convertSQLResult(ResultSet sqlResult) throws SQLException {
         assert sqlResult != null;
 
-        WsmoFactory wsmoFactory = FactoryImpl.getInstance().createWsmoFactory();
-		DataFactory wsmlDataFactory = FactoryImpl.getInstance().createWsmlDataFactory(wsmoFactory);
-		DataFactory xmlDataFactory = FactoryImpl.getInstance().createXmlDataFactory(wsmoFactory);
-        LogicalExpressionFactory l = FactoryImpl.getInstance().createLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
+        WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+		DataFactory wsmlDataFactory = FactoryImpl.createNewInstance().getWsmlDataFactory(wsmoFactory);
+		DataFactory xmlDataFactory = FactoryImpl.createNewInstance().getXmlDataFactory(wsmoFactory);
+        LogicalExpressionFactory l = FactoryImpl.createNewInstance().getLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
         ResultSetMetaData m = sqlResult.getMetaData();
         int columns = m.getColumnCount();
 

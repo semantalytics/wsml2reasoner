@@ -293,7 +293,7 @@ public class DemoW
 	        		String strResults;
 	        		if( true ) {
 	        			LogicalExpressionFactory leFactory = wsmoManager.getLogicalExpressionFactory();
-	        	        LogicalExpression qExpression = leFactory.createLogicalExpression( mQuery, ontology );
+	        	        LogicalExpression qExpression = wsmoManager.getLogicalExpressionParser(ontology).parse( mQuery );
 
 		        		Set<Map<Variable, Term>> results = reasoner.executeQuery( qExpression );
 		        		strResults = OntologyHelper.toString( results );

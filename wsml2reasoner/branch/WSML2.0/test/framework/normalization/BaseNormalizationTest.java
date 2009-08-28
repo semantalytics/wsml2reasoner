@@ -22,8 +22,9 @@ import java.io.Reader;
 
 import junit.framework.TestCase;
 
+import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Ontology;
-import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsmo.common.TopEntity;
@@ -33,6 +34,8 @@ import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.Serializer;
 
 import base.BaseReasonerTest;
+
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
 
 /**
  * 
@@ -45,6 +48,7 @@ public abstract class BaseNormalizationTest extends TestCase
     protected OntologyNormalizer normalizer;
     protected WsmoFactory wsmoFactory;
     protected LogicalExpressionFactory leFactory;
+	protected LogicalExpressionParser leParser;
 
     @Override
     protected void setUp() throws Exception
@@ -53,6 +57,7 @@ public abstract class BaseNormalizationTest extends TestCase
         WSMO4JManager wmsoManager = new WSMO4JManager();
         wsmoFactory = wmsoManager.getWSMOFactory();
         leFactory = wmsoManager.getLogicalExpressionFactory();
+        leParser = wmsoManager.getLogicalExpressionParser();
     }
 
     @Override
@@ -80,7 +85,7 @@ public abstract class BaseNormalizationTest extends TestCase
     
     protected Ontology parseOntology(String fileName) throws Exception
     {
-        Parser parser = FactoryImpl.getInstance().createParser(wsmoFactory);
+        Parser parser = new ParserImplTyped();
         Reader input = BaseReasonerTest.getReaderForFile(fileName);
         return (Ontology)parser.parse(input, null)[0];
     }
@@ -88,7 +93,7 @@ public abstract class BaseNormalizationTest extends TestCase
     public static String serializeOntology(Ontology ontology)
     {
         StringBuffer buf = new StringBuffer();
-        Serializer serializer = FactoryImpl.getInstance().createSerializer();
+        Serializer serializer = new WSMLSerializerImpl();
         serializer.serialize(new TopEntity[] { ontology }, buf);
         return buf.toString();
     }
