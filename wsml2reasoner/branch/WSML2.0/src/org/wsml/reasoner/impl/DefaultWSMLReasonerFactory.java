@@ -25,7 +25,6 @@ import java.util.Map;
 
 import org.deri.wsmo4j.validator.WsmlValidatorTypedImpl;
 import org.omwg.ontology.Ontology;
-import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.DLReasoner;
 import org.wsml.reasoner.api.FOLReasoner;
 import org.wsml.reasoner.api.LPReasoner;
@@ -33,9 +32,6 @@ import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.builtin.tptp.TPTPFacade;
 import org.wsmo.common.WSML;
-import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
 import org.wsmo.validator.ValidationError;
 import org.wsmo.validator.ValidationWarning;
 import org.wsmo.validator.WsmlValidator;
@@ -61,17 +57,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         return aFactory;
     }
 
-    private WSMO4JManager extractWsmoManager(Map<String, Object> params) {
-        assert params != null;
-
-        WsmoFactory wsmoFactory = params.containsKey(PARAM_WSMO_FACTORY) ? (WsmoFactory) params.get(PARAM_WSMO_FACTORY) : FactoryImpl.createNewInstance().getWsmoFactory();
-        DataFactory wsmlDataFactory = params.containsKey(PARAM_DATA_FACTORY) ? (DataFactory) params.get(PARAM_DATA_FACTORY) : FactoryImpl.createNewInstance().getWsmlDataFactory(wsmoFactory);
-        DataFactory xmlDataFactory = FactoryImpl.createNewInstance().getXmlDataFactory(wsmoFactory); // TODO gigi: Since the Factory stuff changed quite a bit, is there a parameter for the xml data factory? 
-		LogicalExpressionFactory leFactory = params.containsKey(PARAM_LE_FACTORY) ? (LogicalExpressionFactory) params.get(PARAM_LE_FACTORY) : FactoryImpl.createNewInstance().getLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory );
-        
-        return new WSMO4JManager(wsmoFactory, leFactory, wsmlDataFactory, xmlDataFactory);
-    }
-
+    
     private String determineVariant(Ontology ontology) {
         assert ontology != null;
 
@@ -144,7 +130,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         if (params == null){
             params = new HashMap<String, Object>();
         }
-        DLBasedWSMLReasoner reasoner = new DLBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.PELLET), extractWsmoManager(params));
+        DLBasedWSMLReasoner reasoner = new DLBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.PELLET), new WSMO4JManager());
         setAllowImportsFlag(reasoner, params);
         return reasoner;
     }
@@ -153,7 +139,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         if (params == null){
             params = new HashMap<String, Object>();
         }
-        DatalogBasedWSMLReasoner reasoner = new DatalogBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.IRIS_STRATIFIED), extractWsmoManager(params), params);
+        DatalogBasedWSMLReasoner reasoner = new DatalogBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.IRIS_STRATIFIED), new WSMO4JManager(), params);
         setAllowImportsFlag(reasoner, params);
         return reasoner;
     }
@@ -162,7 +148,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         if (params == null){
             params = new HashMap<String, Object>();
         }
-        DatalogBasedWSMLReasoner reasoner = new DatalogBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.IRIS_WELL_FOUNDED), extractWsmoManager(params), params);
+        DatalogBasedWSMLReasoner reasoner = new DatalogBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.IRIS_WELL_FOUNDED), new WSMO4JManager(), params);
         setAllowImportsFlag(reasoner, params);
         return reasoner;
     }
@@ -189,6 +175,6 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
                 throw new RuntimeException("need to specify URI");
             }
         }
-        return new org.wsml.reasoner.impl.FOLBasedWSMLReasoner(reasoner, extractWsmoManager(params), uri);
+        return new org.wsml.reasoner.impl.FOLBasedWSMLReasoner(reasoner, new WSMO4JManager(), uri);
     }
 }

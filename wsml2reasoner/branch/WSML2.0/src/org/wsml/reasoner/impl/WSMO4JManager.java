@@ -17,10 +17,6 @@ public class WSMO4JManager {
     	this.factory = FactoryImpl.createNewInstance();
     }
     
-    public WSMO4JManager(WsmoFactory wsmoFactory, LogicalExpressionFactory leFactory, DataFactory wsmlDataFactory, DataFactory xmlDataFactory) {
-        throw new UnsupportedOperationException("Constructor not supported, use WSMO4JManager() instead");
-    }
-
     public WsmoFactory getWSMOFactory() {
         return factory.getWsmoFactory();
     }
