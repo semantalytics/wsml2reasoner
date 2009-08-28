@@ -374,7 +374,7 @@ public class TestPerformanceWithUseOfFeatures {
             return performanceresult;
         }
 
-        LogicalExpression query = new WSMO4JManager().getLogicalExpressionFactory().createLogicalExpression(theQuery, theOntology);
+        LogicalExpression query = new WSMO4JManager().getLogicalExpressionParser(theOntology).parse(theQuery);
 
         log.print("Registering Ontology (in total) ");
         RegistrationThread registrationThread = new RegistrationThread(theOntology, reasoner, performanceresult, log);

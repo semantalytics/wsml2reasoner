@@ -81,12 +81,12 @@ public class ConstructReductionNormalizerTest extends BaseNormalizationTest
         ontology.setDefaultNamespace(iri);
         Axiom a = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
         ontology.addAxiom(a);
-        a.addDefinition(leFactory.createLogicalExpression(
+        a.addDefinition(wsmoManager.getLogicalExpressionParser(ontology).parse(
                 "a[r1 hasValue v1, r2 hasValue v2] " +
                 "or b[r1 hasValue v2] " +
-                "or c[r2 hasValue v2, r1 hasValue v1].", ontology));
-        a.addDefinition(leFactory.createLogicalExpression(
-                "A[r1 ofType v1, r2 impliesType v2].", ontology));
+                "or c[r2 hasValue v2, r1 hasValue v1]."));
+        a.addDefinition(wsmoManager.getLogicalExpressionParser(ontology).parse(
+                "A[r1 ofType v1, r2 impliesType v2]."));
         
         Set <Axiom> axioms = new HashSet <Axiom>();
         axioms.addAll(ontology.listAxioms());

@@ -74,8 +74,8 @@ public class RegisterMultipleTimes  extends BaseReasonerTest  {
     	InputStream is1 = this.getClass().getClassLoader().getResourceAsStream(file2);
     	assertNotNull(is1);
     	Ontology ont1 =(Ontology)wsmlParser.parse(new InputStreamReader(is1), null)[0]; 
-        LogicalExpression query = leFactory.createLogicalExpression(
-                "?x memberOf ?y", ont0);
+        LogicalExpression query = wsmoManager.getLogicalExpressionParser(ont0).parse(
+                "?x memberOf ?y");
 
         Set<Map<Variable, Term>> result = null;
         for (int i = 0; i < 50; i++) {
@@ -111,8 +111,8 @@ public class RegisterMultipleTimes  extends BaseReasonerTest  {
 
         Ontology o = (Ontology) wsmlParser.parse(new StringBuffer(test), null)[0];
 
-        LogicalExpression query = leFactory.createLogicalExpression(
-                "?x memberOf ?y", o);
+        LogicalExpression query = wsmoManager.getLogicalExpressionParser(o).parse(
+                "?x memberOf ?y");
         Instance instance = o.findInstance(wsmoFactory.createIRI(ns+"i1"));
 
 

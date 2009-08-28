@@ -222,7 +222,7 @@ public class TestPerformance1 {
         PerformanceResult performanceresult = new PerformanceResult(reasoner);
         
         if (reasoner != null){
-            LogicalExpression query = new WSMO4JManager().getLogicalExpressionFactory().createLogicalExpression(theQuery, theOntology);
+            LogicalExpression query = new WSMO4JManager().getLogicalExpressionParser(theOntology).parse(theQuery);
             
             System.out.print("Registering Ontology ");
             long t1_start = System.currentTimeMillis();

@@ -48,14 +48,15 @@ public abstract class BaseDLReasonerTest extends TestCase
     protected OntologyNormalizer normalizer;
     protected WsmoFactory wsmoFactory;
     protected LogicalExpressionFactory leFactory;
+	protected WSMO4JManager wsmoManager;
 
     @Override
     protected void setUp() throws Exception
     {
         super.setUp();
-        WSMO4JManager wmsoManager = new WSMO4JManager();
-        wsmoFactory = wmsoManager.getWSMOFactory();
-        leFactory = wmsoManager.getLogicalExpressionFactory();
+        wsmoManager = new WSMO4JManager();
+        wsmoFactory = wsmoManager.getWSMOFactory();
+        leFactory = wsmoManager.getLogicalExpressionFactory();
     }
 
     @Override

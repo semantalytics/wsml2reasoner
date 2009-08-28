@@ -77,8 +77,7 @@ public class PreserveTypeTests extends BaseReasonerTest {
     //This test ensures that decimal equations result in decimals
     public void preserveTypeAfterOperationWithConcepts() throws Exception {
         String query = "?x[value hasValue ?y] memberOf Miles";
-        LogicalExpression qExpression = leFactory.createLogicalExpression(
-                query, o);
+        LogicalExpression qExpression = wsmoManager.getLogicalExpressionParser(o).parse(query);
         logExprSerializer.serialize(qExpression);
         
         Set<Map<Variable, Term>> result = ((LPReasoner) wsmlReasoner).executeQuery(qExpression);

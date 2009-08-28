@@ -49,15 +49,16 @@ public abstract class BaseNormalizationTest extends TestCase
     protected WsmoFactory wsmoFactory;
     protected LogicalExpressionFactory leFactory;
 	protected LogicalExpressionParser leParser;
+	protected WSMO4JManager wsmoManager;
 
     @Override
     protected void setUp() throws Exception
     {
         super.setUp();
-        WSMO4JManager wmsoManager = new WSMO4JManager();
-        wsmoFactory = wmsoManager.getWSMOFactory();
-        leFactory = wmsoManager.getLogicalExpressionFactory();
-        leParser = wmsoManager.getLogicalExpressionParser();
+        wsmoManager = new WSMO4JManager();
+        wsmoFactory = wsmoManager.getWSMOFactory();
+        leFactory = wsmoManager.getLogicalExpressionFactory();
+        leParser = wsmoManager.getLogicalExpressionParser();
     }
 
     @Override

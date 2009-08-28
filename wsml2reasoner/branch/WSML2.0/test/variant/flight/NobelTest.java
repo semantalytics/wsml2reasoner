@@ -256,8 +256,7 @@ public class NobelTest {
 	 */
 	private Set<Map<Variable, Term>> performQuery(LPReasoner reasoner,
 			Ontology o, String queryString) throws Exception {
-		LogicalExpression query = this.leFactory.createLogicalExpression(
-				queryString, o);
+		LogicalExpression query = wsmoManager.getLogicalExpressionParser(o).parse(queryString);
 		// Executes query request
 		Set<Map<Variable, Term>> result = reasoner.executeQuery(query);
 

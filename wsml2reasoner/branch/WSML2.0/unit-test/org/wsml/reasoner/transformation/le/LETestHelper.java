@@ -22,21 +22,14 @@
  */
 package org.wsml.reasoner.transformation.le;
 
+import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
 import org.omwg.logicalexpression.LogicalExpression;
-import org.sti2.wsmo4j.factory.FactoryImpl;
-import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
 
 
 public class LETestHelper {
 
     public static LogicalExpression buildLE(String theString) throws ParserException{
-    	WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
-		DataFactory wsmlDataFactory = FactoryImpl.createNewInstance().getWsmlDataFactory(wsmoFactory);
-		DataFactory xmlDataFactory = FactoryImpl.createNewInstance().getXmlDataFactory(wsmoFactory);
-		LogicalExpressionFactory leF = FactoryImpl.createNewInstance().getLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
-		return leF.createLogicalExpression(theString);		
+    	return new LogExprParserTypedImpl().parse(theString);
     }
 }

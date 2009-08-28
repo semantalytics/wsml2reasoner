@@ -24,27 +24,23 @@ import org.wsmo.factory.WsmoFactory;
  */
 public class SpassTest extends TestCase{
     
-    private LogicalExpressionFactory leF;
     private Ontology nsContainer;
     private SpassFacade tptp;
+	protected WSMO4JManager wsmoManager;
 
     protected void setUp() throws Exception {
-    	WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
-		DataFactory wsmlDataFactory = FactoryImpl.createNewInstance().getWsmlDataFactory(wsmoFactory);
-		DataFactory xmlDataFactory = FactoryImpl.createNewInstance().getXmlDataFactory(wsmoFactory);
-		leF = FactoryImpl.createNewInstance().getLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
-        
+    	wsmoManager = new WSMO4JManager();
 
         tptp = new SpassFacade(new WSMO4JManager(),"urn:foo");
 
-        IRI i = wsmoFactory.createIRI("foo:bar#");
-        nsContainer = wsmoFactory.createOntology(i);
+        IRI i = wsmoManager.getWSMOFactory().createIRI("foo:bar#");
+        nsContainer = wsmoManager.getWSMOFactory().createOntology(i);
         nsContainer.setDefaultNamespace(i);
      }
 
     public void testConjunctionDisjunction() throws Exception{
-        LogicalExpression le = leF.createLogicalExpression(
-            "a and b or c ",nsContainer);
+        LogicalExpression le = wsmoManager.getLogicalExpressionParser(nsContainer).parse(
+            "a and b or c ");
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
         tptp.register(set);
@@ -65,8 +61,8 @@ public class SpassTest extends TestCase{
     }
     
     private void check(String wsml, String fol) throws Exception{
-        LogicalExpression le = leF.createLogicalExpression(
-                wsml,nsContainer);
+        LogicalExpression le = wsmoManager.getLogicalExpressionParser(nsContainer).parse(
+                wsml);
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
         tptp.register(set);

@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
 import org.deri.wsmo4j.io.serializer.wsml.SerializeWSMLTermsVisitor;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
@@ -110,11 +111,10 @@ public class LotsOfImports {
 
         if (exampleOntology == null)
             return;
-        LogicalExpressionFactory leFactory = new WSMO4JManager().getLogicalExpressionFactory();
 
         String queryString = "?x memberOf Time#DateTimeDescription";
 
-        LogicalExpression query = leFactory.createLogicalExpression(queryString, exampleOntology);
+        LogicalExpression query = new LogExprParserTypedImpl(exampleOntology).parse(queryString);
 
         // get A reasoner
         Map<String, Object> params = new HashMap<String, Object>();

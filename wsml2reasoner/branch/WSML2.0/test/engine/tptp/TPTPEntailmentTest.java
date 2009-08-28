@@ -57,20 +57,16 @@ import base.BaseReasonerTest;
 public class TPTPEntailmentTest extends BaseReasonerTest {
 
     private WsmoFactory wsmoFactory = null;
-    private LogicalExpressionFactory leFactory = null;
     private FOLReasoner wsmlReasoner = null;
     BuiltInReasoner previous;  
     private Parser wsmlParser = null;
-	private DataFactory xmlDataFactory;
-	private DataFactory wsmlDataFactory; 
+	protected WSMO4JManager wsmoManager;
     
     
     protected void setUp() throws Exception {
         super.setUp();
-        wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
-        wsmlDataFactory = FactoryImpl.createNewInstance().getWsmlDataFactory(wsmoFactory);
-        xmlDataFactory = FactoryImpl.createNewInstance().getXmlDataFactory(wsmoFactory);
-        leFactory = FactoryImpl.createNewInstance().getLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
+        wsmoManager = new WSMO4JManager();
+        wsmoFactory = wsmoManager.getWSMOFactory();
         previous = BaseReasonerTest.reasoner;
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createFOLReasoner(new HashMap <String, Object> ());
     	wsmlParser = new ParserImplTyped();
@@ -82,21 +78,21 @@ public class TPTPEntailmentTest extends BaseReasonerTest {
         Ontology ont = (Ontology)wsmlParser.parse(new InputStreamReader(in), null)[0];
         
         wsmlReasoner.registerOntology(ont);
-        LogicalExpression conjecture = leFactory.createLogicalExpression(
-                "Lisa[hasAncestor hasValue GrandPa]",ont);
+        LogicalExpression conjecture = wsmoManager.getLogicalExpressionParser().parse(
+                "Lisa[hasAncestor hasValue GrandPa]");
         EntailmentType result = wsmlReasoner.checkEntailment(
                 conjecture);
         assertEquals(EntailmentType.entailed, result);
         
         
-        conjecture = leFactory.createLogicalExpression(
-                "exists ?x (?x[hasChild hasValue someChild])",ont);
+        conjecture = wsmoManager.getLogicalExpressionParser().parse(
+                "exists ?x (?x[hasChild hasValue someChild])");
         result = wsmlReasoner.checkEntailment(
                 conjecture);
         assertEquals(EntailmentType.entailed, result);
         
-        conjecture = leFactory.createLogicalExpression(
-                "exists ?x (March[hasChild hasValue ?x])",ont);
+        conjecture = wsmoManager.getLogicalExpressionParser().parse(
+                "exists ?x (March[hasChild hasValue ?x])");
         result = wsmlReasoner.checkEntailment(
                 conjecture);
         assertEquals(EntailmentType.entailed, result);
@@ -107,8 +103,8 @@ public class TPTPEntailmentTest extends BaseReasonerTest {
         IRI iri = wsmoFactory.createIRI("urn://foobar");
         Ontology ont = wsmoFactory.createOntology(iri);
         ont.setDefaultNamespace(iri);
-        LogicalExpression le = leFactory.createLogicalExpression(
-            "a[b hasValue c]",ont);
+        LogicalExpression le = wsmoManager.getLogicalExpressionParser().parse(
+            "a[b hasValue c]");
         Axiom a = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
         a.addDefinition(le);
         ont.addAxiom(a);
