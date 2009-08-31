@@ -48,11 +48,11 @@ public class LiteralTestHelper {
 
 	
 	protected static final WsmoFactory WF = FactoryImpl.createNewInstance().getWsmoFactory();
-	protected static final DataFactory DF = FactoryImpl.createNewInstance().getWsmlDataFactory(WF);
+	protected static final DataFactory DF = FactoryImpl.createNewInstance().getWsmlDataFactory();
 	protected static final IBasicFactory BF = org.deri.iris.factory.Factory.BASIC;
 	protected static final ITermFactory TF = org.deri.iris.factory.Factory.TERM;
-	protected static final DataFactory XF = FactoryImpl.createNewInstance().getXmlDataFactory(WF);
-	protected static final LogicalExpressionFactory LF = FactoryImpl.createNewInstance().getLogicalExpressionFactory(WF, DF, XF);
+	protected static final DataFactory XF = FactoryImpl.createNewInstance().getXmlDataFactory();
+	protected static final LogicalExpressionFactory LF = FactoryImpl.createNewInstance().getLogicalExpressionFactory();
 
 	public static Literal createSimplePosLiteral(String name) {
 		return createLiteral(true, name, new String[0]);

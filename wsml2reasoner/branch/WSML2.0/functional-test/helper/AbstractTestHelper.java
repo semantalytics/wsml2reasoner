@@ -21,9 +21,9 @@ public class AbstractTestHelper {
 	
 	// TODO gigi: probably won't work as expected since the factories changed and are now stateful
 	protected static WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
-	protected static DataFactory wsmlDataFactory = FactoryImpl.createNewInstance().getWsmlDataFactory(wsmoFactory);
-	protected static DataFactory xmlDataFactory = FactoryImpl.createNewInstance().getXmlDataFactory(wsmoFactory);
-	protected static final LogicalExpressionFactory LF = FactoryImpl.createNewInstance().getLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
+	protected static DataFactory wsmlDataFactory = FactoryImpl.createNewInstance().getWsmlDataFactory();
+	protected static DataFactory xmlDataFactory = FactoryImpl.createNewInstance().getXmlDataFactory();
+	protected static final LogicalExpressionFactory LF = FactoryImpl.createNewInstance().getLogicalExpressionFactory();
 
 
 	public static Term createIRI(String iriName) {

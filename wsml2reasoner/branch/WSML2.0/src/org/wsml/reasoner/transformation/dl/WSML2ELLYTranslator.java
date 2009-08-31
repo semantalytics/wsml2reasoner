@@ -46,7 +46,6 @@ import org.sti2.elly.api.terms.IIndividual;
 import org.sti2.elly.api.terms.IVariable;
 import org.sti2.elly.basics.BasicFactory;
 import org.sti2.elly.terms.TermFactory;
-import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.IdentifiableEntity;
 import org.wsmo.common.NFPEntry;
@@ -494,8 +493,10 @@ public class WSML2ELLYTranslator implements WsmlObjectVisitor {
 		
 	}
 
+	/* *******************************************
+	 * Helpers 
+	 * *******************************************/
 	
-	// Helpers
 	private String asString(IdentifiableEntity entity) {
 		return entity.getIdentifier().toString();
 	}
@@ -513,6 +514,17 @@ public class WSML2ELLYTranslator implements WsmlObjectVisitor {
 		
 		return eConcept;
 	}
+
+	
+//	private IAtomicRole getOrCreateRole(Role role) {
+//		IAtomicRole eRole = (IAtomicRole) wsml2EllyCache.get(role);
+//		if (eRole == null) {
+//			eRole = BASIC.createAtomicRole(role);
+//			wsml2EllyCache.put(role, eRole);
+//		}
+//		
+//		return eRole;
+//	}
 
 	private IIndividual getOrCreateIndividual(Term term) {
 		IIndividual eIndividual = (IIndividual) wsml2EllyCache.get(term);

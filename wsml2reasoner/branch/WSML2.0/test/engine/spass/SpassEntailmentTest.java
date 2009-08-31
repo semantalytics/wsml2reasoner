@@ -72,9 +72,9 @@ public class SpassEntailmentTest extends BaseReasonerTest {
     protected void setUp() throws Exception {
         super.setUp();
         wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
-        wsmlDataFactory = FactoryImpl.createNewInstance().getWsmlDataFactory(wsmoFactory);
-        xmlDataFactory = FactoryImpl.createNewInstance().getXmlDataFactory(wsmoFactory);
-        leFactory = FactoryImpl.createNewInstance().getLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
+        wsmlDataFactory = FactoryImpl.createNewInstance().getWsmlDataFactory();
+        xmlDataFactory = FactoryImpl.createNewInstance().getXmlDataFactory();
+        leFactory = FactoryImpl.createNewInstance().getLogicalExpressionFactory();
         previous = BaseReasonerTest.reasoner;
         Map<String, Object> m = new HashMap<String, Object>();
         m.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, WSMLReasonerFactory.BuiltInReasoner.SPASS);

@@ -22,15 +22,15 @@ public class WSMO4JManager {
     }
 
     public LogicalExpressionFactory getLogicalExpressionFactory() {
-        return factory.getLogicalExpressionFactory(null, null, null);
+        return factory.getLogicalExpressionFactory();
     }
 
 	public DataFactory getXmlDataFactory() {
-		return factory.getXmlDataFactory(null);
+		return factory.getXmlDataFactory();
 	}
 
 	public DataFactory getWsmlDataFactory() {
-		return factory.getWsmlDataFactory(null);
+		return factory.getWsmlDataFactory();
 	}
 
 	public LogicalExpressionParser getLogicalExpressionParser() {

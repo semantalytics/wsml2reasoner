@@ -163,9 +163,9 @@ public class WSMLQuery {
         assert sqlResult != null;
 
         WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
-		DataFactory wsmlDataFactory = FactoryImpl.createNewInstance().getWsmlDataFactory(wsmoFactory);
-		DataFactory xmlDataFactory = FactoryImpl.createNewInstance().getXmlDataFactory(wsmoFactory);
-        LogicalExpressionFactory l = FactoryImpl.createNewInstance().getLogicalExpressionFactory(wsmoFactory, wsmlDataFactory, xmlDataFactory);
+		DataFactory wsmlDataFactory = FactoryImpl.createNewInstance().getWsmlDataFactory();
+		DataFactory xmlDataFactory = FactoryImpl.createNewInstance().getXmlDataFactory();
+        LogicalExpressionFactory l = FactoryImpl.createNewInstance().getLogicalExpressionFactory();
         ResultSetMetaData m = sqlResult.getMetaData();
         int columns = m.getColumnCount();
 
