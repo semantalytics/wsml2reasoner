@@ -14,7 +14,7 @@ public class WSMO4JManager {
 	private Factory factory;
 
     public WSMO4JManager() {
-    	this.factory = FactoryImpl.createNewInstance();
+    	this.factory = new FactoryImpl();
     }
     
     public WsmoFactory getWSMOFactory() {

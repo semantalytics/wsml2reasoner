@@ -42,7 +42,7 @@ public class FunctionalQueryTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+		WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
 		parser = new ParserImplTyped();
 		ontologyIRI1 = lotrOntology.toURI().toURL();
 		ontologyIRI2 = simpsonsOntology.toURI().toURL();

@@ -45,8 +45,8 @@ import org.omwg.ontology.Variable;
 import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsmo.factory.DataFactory;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
 
 /**
  * The main entry point to process a WSML-Flight-A query. Only this class needs
@@ -162,10 +162,9 @@ public class WSMLQuery {
     private Set<Map<Variable, Term>> convertSQLResult(ResultSet sqlResult) throws SQLException {
         assert sqlResult != null;
 
-        WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
-		DataFactory wsmlDataFactory = FactoryImpl.createNewInstance().getWsmlDataFactory();
-		DataFactory xmlDataFactory = FactoryImpl.createNewInstance().getXmlDataFactory();
-        LogicalExpressionFactory l = FactoryImpl.createNewInstance().getLogicalExpressionFactory();
+        Factory factory = new FactoryImpl();
+		DataFactory wsmlDataFactory = factory.getWsmlDataFactory();
+        LogicalExpressionFactory l = factory.getLogicalExpressionFactory();
         ResultSetMetaData m = sqlResult.getMetaData();
         int columns = m.getColumnCount();
 

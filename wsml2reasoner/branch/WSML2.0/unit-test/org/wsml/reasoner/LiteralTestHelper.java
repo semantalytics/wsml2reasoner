@@ -41,18 +41,19 @@ import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.Variable;
 import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsmo.factory.DataFactory;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
 public class LiteralTestHelper {
 
-	
-	protected static final WsmoFactory WF = FactoryImpl.createNewInstance().getWsmoFactory();
-	protected static final DataFactory DF = FactoryImpl.createNewInstance().getWsmlDataFactory();
+	protected static final Factory FACTORY = new FactoryImpl();
+	protected static final WsmoFactory WF = FACTORY.getWsmoFactory();
+	protected static final DataFactory DF = FACTORY.getWsmlDataFactory();
 	protected static final IBasicFactory BF = org.deri.iris.factory.Factory.BASIC;
 	protected static final ITermFactory TF = org.deri.iris.factory.Factory.TERM;
-	protected static final DataFactory XF = FactoryImpl.createNewInstance().getXmlDataFactory();
-	protected static final LogicalExpressionFactory LF = FactoryImpl.createNewInstance().getLogicalExpressionFactory();
+	protected static final DataFactory XF = FACTORY.getXmlDataFactory();
+	protected static final LogicalExpressionFactory LF = FACTORY.getLogicalExpressionFactory();
 
 	public static Literal createSimplePosLiteral(String name) {
 		return createLiteral(true, name, new String[0]);

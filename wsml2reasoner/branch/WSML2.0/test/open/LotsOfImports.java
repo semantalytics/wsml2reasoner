@@ -51,7 +51,7 @@ public class LotsOfImports {
 
     WSMO4JManager wsmoManager = new WSMO4JManager();
 
-    WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+    WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
 	Parser wsmlParser = new ParserImplTyped();
 
     /**

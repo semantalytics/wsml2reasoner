@@ -174,7 +174,7 @@ public class NobelTest {
 	private void setUpFactories() {
 		wsmoManager = new WSMO4JManager();
 		leFactory = wsmoManager.getLogicalExpressionFactory();
-		wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+		wsmoFactory = new FactoryImpl().getWsmoFactory();
     	wsmlParser = new ParserImplTyped();
 	}
 

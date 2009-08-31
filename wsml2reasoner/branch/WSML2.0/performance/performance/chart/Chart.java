@@ -104,7 +104,7 @@ public class Chart {
 	final static String ENDCONTENT="<!--enddata--->";
 	final static String STARTCONTENT="<!--data--->";
 	
-	WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+	WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
 	String firstNfpAsString(Entity e,String key){
 		IRI i = wsmoFactory.createIRI(key);
 		Set<Term> list = e.listAnnotationValues(i);

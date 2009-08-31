@@ -42,8 +42,6 @@ import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsmo.common.TopEntity;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
@@ -70,7 +68,7 @@ public class LoadReferenceOntology {
     public static void test(File... files) throws FileNotFoundException, IOException, ParserException, InvalidModelException, InconsistencyException {
 
         HashMap<String, Object> parserProps = new HashMap<String, Object>();
-		WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+		WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
 		Parser wsmlParser = new ParserImplTyped();
 
         Set<Ontology> ontologies = new HashSet<Ontology>();

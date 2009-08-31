@@ -273,7 +273,7 @@ public class TestPerformance1 {
     }
     
     private Ontology loadOntology(String file) {
-    	WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+    	WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
     	Parser wsmlParser = new ParserImplTyped();
 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);

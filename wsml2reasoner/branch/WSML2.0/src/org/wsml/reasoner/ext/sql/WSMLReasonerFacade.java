@@ -62,7 +62,7 @@ public class WSMLReasonerFacade {
      * parser, the reasoner.
      */
     public WSMLReasonerFacade() {
-    	factory = FactoryImpl.createNewInstance();
+    	factory = new FactoryImpl();
     	
     	wsmlParser = new ParserImplTyped();
     	

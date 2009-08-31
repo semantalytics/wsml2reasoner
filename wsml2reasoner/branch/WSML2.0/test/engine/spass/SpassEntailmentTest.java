@@ -34,13 +34,14 @@ import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsmo.common.IRI;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.DataFactory;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
-
 import base.BaseReasonerTest;
+
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
 
 /**
  * Interface or class description
@@ -71,10 +72,11 @@ public class SpassEntailmentTest extends BaseReasonerTest {
 
     protected void setUp() throws Exception {
         super.setUp();
-        wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
-        wsmlDataFactory = FactoryImpl.createNewInstance().getWsmlDataFactory();
-        xmlDataFactory = FactoryImpl.createNewInstance().getXmlDataFactory();
-        leFactory = FactoryImpl.createNewInstance().getLogicalExpressionFactory();
+        Factory factory = new FactoryImpl();
+        wsmoFactory = factory.getWsmoFactory();
+        wsmlDataFactory = factory.getWsmlDataFactory();
+        xmlDataFactory = factory.getXmlDataFactory();
+        leFactory = factory.getLogicalExpressionFactory();
         previous = BaseReasonerTest.reasoner;
         Map<String, Object> m = new HashMap<String, Object>();
         m.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, WSMLReasonerFactory.BuiltInReasoner.SPASS);

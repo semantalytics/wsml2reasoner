@@ -8,13 +8,21 @@ import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.SimpleDataValue;
 import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsmo.factory.DataFactory;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 
 public class VisitorDataTypeTest extends TestCase {
 
 	private DatatypeVisitor visitor = new DatatypeVisitor();
-	private WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
-	private DataFactory df = FactoryImpl.createNewInstance().getWsmlDataFactory( );
+	private Factory factory = new FactoryImpl();
+	private WsmoFactory wsmoFactory = factory.getWsmoFactory();
+	private DataFactory df = factory.getWsmlDataFactory( );
+	
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		factory.reset();
+	}
 	
 	public void testVisitIRI() {
 		// TODO gigi: since _iri and _sqname have been removed, this test needs to be rewritten

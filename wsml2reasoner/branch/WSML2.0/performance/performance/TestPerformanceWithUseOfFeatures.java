@@ -463,7 +463,7 @@ public class TestPerformanceWithUseOfFeatures {
         return reasoner;
     }
 
-    WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+    WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
 	Parser wsmlParser = new ParserImplTyped();
 
     private Ontology loadOntology(String file) {

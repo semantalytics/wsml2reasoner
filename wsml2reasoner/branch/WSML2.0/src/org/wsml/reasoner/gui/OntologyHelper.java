@@ -142,7 +142,7 @@ public class OntologyHelper
     
     private static Ontology parseThis(Reader ontoReader) throws IOException, ParserException, InvalidModelException{
       	 
-    	WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+    	WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
     	Parser wsmlParser = new ParserImplTyped();
     	
     	final TopEntity[] identifiable = wsmlParser.parse(ontoReader);

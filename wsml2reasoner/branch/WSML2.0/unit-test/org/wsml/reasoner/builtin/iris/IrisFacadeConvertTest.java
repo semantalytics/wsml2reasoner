@@ -35,7 +35,7 @@ public class IrisFacadeConvertTest extends TestCase {
 
 	public void testConvertTermFromWsmo4jToIris() {
 
-		final WsmoFactory WF = FactoryImpl.createNewInstance().getWsmoFactory();
+		final WsmoFactory WF = new FactoryImpl().getWsmoFactory();
 
 		// [ 1997166 ] Anonymous IDs cause exception when using IRIS.
 		// Anonymous IDs cause exception when using IRIS.

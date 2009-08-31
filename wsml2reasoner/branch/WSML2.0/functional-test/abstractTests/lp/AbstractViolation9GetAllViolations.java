@@ -68,7 +68,7 @@ public abstract class AbstractViolation9GetAllViolations extends TestCase implem
 	}
 
 	private void getViolations() throws InvalidModelException, IOException, ParserException {
-		WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+		WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
 		Parser parser = new ParserImplTyped();
 		InputStream is = this.getClass().getClassLoader().getResourceAsStream(ONTOLOGY_FILE);
 		assertNotNull(is);

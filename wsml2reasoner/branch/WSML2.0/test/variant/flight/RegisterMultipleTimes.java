@@ -36,7 +36,7 @@ import base.BaseReasonerTest;
  */
 public class RegisterMultipleTimes  extends BaseReasonerTest  {
 	
-	WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+	WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
 	Parser wsmlParser = new ParserImplTyped();
 //	LogicalExpressionFactory leFactory = Factory.createLogicalExpressionFactory(null);
 	

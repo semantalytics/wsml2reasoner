@@ -132,7 +132,7 @@ public class Kaon2DLReasonerExample {
      * @return object model of ontology at file location
      */
     private Ontology loadOntology(String file) {
-    	WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+    	WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
     	Parser wsmlParser = new ParserImplTyped();
 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);

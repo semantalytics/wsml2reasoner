@@ -58,7 +58,7 @@ import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
 public class OntologyHelper
 {
 	// TODO gigi: probably won't work as expected since the factories changed and are now stateful
-	private static WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
+	private static WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
 	private static Parser wsmlparserimpl = new ParserImplTyped();
 
 	/**
