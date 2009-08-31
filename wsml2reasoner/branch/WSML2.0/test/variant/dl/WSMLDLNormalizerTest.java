@@ -78,7 +78,7 @@ public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
         WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
     	Parser wsmlParser = new ParserImplTyped();
         // assuming first topentity in file is an ontology
-        ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is), null)[0];
+        ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is))[0];
 
         System.out.println(serializeOntology(ontology) + "\n\n\n-------------\n\n\n");
 
@@ -139,7 +139,7 @@ public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
         WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
     	Parser wsmlParser = new ParserImplTyped();
         // assuming first topentity in file is an ontology
-        ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is), null)[0];
+        ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is))[0];
 
         System.out.println(serializeOntology(ontology) + "\n\n\n-------------\n\n\n");
 
@@ -174,7 +174,7 @@ public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
         WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
     	Parser wsmlParser = new ParserImplTyped();
         // assuming first topentity in file is an ontology
-        ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is), null)[0];
+        ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is))[0];
 
         System.out.println(serializeOntology(ontology) + "\n\n\n-------------\n\n\n");
 
@@ -209,7 +209,7 @@ public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
         WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
     	Parser wsmlParser = new ParserImplTyped();
         // assuming first topentity in file is an ontology
-        ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is), null)[0];
+        ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is))[0];
 
         System.out.println(serializeOntology(ontology) + "\n\n\n-------------\n\n\n");
 

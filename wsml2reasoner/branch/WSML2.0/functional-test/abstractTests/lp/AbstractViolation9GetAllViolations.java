@@ -73,7 +73,7 @@ public abstract class AbstractViolation9GetAllViolations extends TestCase implem
 		InputStream is = this.getClass().getClassLoader().getResourceAsStream(ONTOLOGY_FILE);
 		assertNotNull(is);
 		try {
-			Ontology ontology = (Ontology) parser.parse(new InputStreamReader(is), null)[0];
+			Ontology ontology = (Ontology) parser.parse(new InputStreamReader(is))[0];
 			StringWriter sw = new StringWriter();
 			Serializer ontologySerializer = new WSMLSerializerImpl();
 			ontologySerializer.serialize(new TopEntity[] { ontology }, sw);

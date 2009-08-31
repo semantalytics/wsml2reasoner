@@ -58,7 +58,7 @@ public abstract class AbstractOntologyWithCycles extends TestCase implements DL 
 		
         Parser parser = new ParserImplTyped();
 
-    	Ontology ontology = (Ontology)parser.parse(new InputStreamReader(is), null)[0]; 
+    	Ontology ontology = (Ontology)parser.parse(new InputStreamReader(is))[0]; 
         final String ns = ontology.getDefaultNamespace().getIRI().toString();
 
         DLReasoner reasoner = getDLReasoner();

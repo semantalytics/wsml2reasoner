@@ -76,7 +76,7 @@ public class LoadReferenceOntology {
         Set<Ontology> ontologies = new HashSet<Ontology>();
         for (File f : files) {
             long parse_start = System.currentTimeMillis();
-            TopEntity[] tes = wsmlParser.parse(new BufferedReader(new FileReader(f)), null);
+            TopEntity[] tes = wsmlParser.parse(new BufferedReader(new FileReader(f)));
             long parse_end = System.currentTimeMillis();
             long parse = parse_end - parse_start;
             System.out.println("Read " + f.getName() + " in " + parse + " ms");

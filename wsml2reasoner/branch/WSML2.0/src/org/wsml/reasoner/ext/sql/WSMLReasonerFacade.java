@@ -165,7 +165,7 @@ public class WSMLReasonerFacade {
         Ontology ontology = null;
         url = new URL(ontologyIri);
         InputStream is = url.openStream();
-        TopEntity[] identifiable = wsmlParser.parse(new InputStreamReader(is), null);
+        TopEntity[] identifiable = wsmlParser.parse(new InputStreamReader(is));
         if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {
             ontology = ((Ontology) identifiable[0]);
         }

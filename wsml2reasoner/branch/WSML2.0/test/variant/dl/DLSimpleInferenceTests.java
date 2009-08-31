@@ -101,7 +101,7 @@ public class DLSimpleInferenceTests extends TestCase {
                 "files/wsml2owlExample.wsml");
         assertNotNull(is);
         // assuming first topentity in file is an ontology  
-        ontology = (Ontology)parser.parse(new InputStreamReader(is), null)[0]; 
+        ontology = (Ontology)parser.parse(new InputStreamReader(is))[0]; 
         ns = ontology.getDefaultNamespace().getIRI().toString();
         // Pellet
         base.BaseReasonerTest.resetReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET);
@@ -124,7 +124,7 @@ public class DLSimpleInferenceTests extends TestCase {
                 "files/inconsistentWsml2owlExample.wsml");
         assertNotNull(is);
         // assuming first topentity in file is an ontology  
-        ontology = (Ontology)parser.parse(new InputStreamReader(is), null)[0]; 
+        ontology = (Ontology)parser.parse(new InputStreamReader(is))[0]; 
         // Pellet
         params.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, BuiltInReasoner.PELLET);
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createDLReasoner(params);

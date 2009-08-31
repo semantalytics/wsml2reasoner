@@ -335,7 +335,7 @@ public class BaseReasonerTest extends TestCase {
     }
     
     public static void parseThis(Reader ontoReader) throws IOException, ParserException, InvalidModelException{
-    	 final TopEntity[] identifiable = wsmlparserimpl.parse(ontoReader, null);
+    	 final TopEntity[] identifiable = wsmlparserimpl.parse(ontoReader);
          if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {
              o = (Ontology) identifiable[0];
          } else {

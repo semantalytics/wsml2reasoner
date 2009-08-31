@@ -192,7 +192,7 @@ public class NobelTest {
 				ontologyFile);
 		try {
 			final TopEntity[] identifiable = wsmlParser
-					.parse(new InputStreamReader(is), null);
+					.parse(new InputStreamReader(is));
 			if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {
 				System.out.println("Ontology parsed");
 				return (Ontology) identifiable[0];

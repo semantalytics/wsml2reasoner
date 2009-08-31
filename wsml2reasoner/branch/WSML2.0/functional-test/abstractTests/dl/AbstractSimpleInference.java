@@ -67,7 +67,7 @@ public abstract class AbstractSimpleInference extends TestCase implements DL {
 				"files/wsml2owlExample.wsml");
 		assertNotNull(is);
 
-		ontology = (Ontology) parser.parse(new InputStreamReader(is), null)[0];
+		ontology = (Ontology) parser.parse(new InputStreamReader(is))[0];
 		ns = ontology.getDefaultNamespace().getIRI().toString();
 
 		wsmlReasoner = this.getDLReasoner();

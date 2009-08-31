@@ -134,7 +134,7 @@ public class OntologyHelper
     }
     
     private static Ontology parseThis(Reader ontoReader) throws IOException, ParserException, InvalidModelException{
-      	 final TopEntity[] identifiable = wsmlparserimpl.parse(ontoReader, null);
+      	 final TopEntity[] identifiable = wsmlparserimpl.parse(ontoReader);
       	 for( TopEntity entity : identifiable )
       	 {
       		 if (entity instanceof Ontology)

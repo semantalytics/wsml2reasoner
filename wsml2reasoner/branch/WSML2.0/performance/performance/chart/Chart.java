@@ -116,7 +116,7 @@ public class Chart {
 		TestInfo ret = new TestInfo();
 		File[] files = dir.listFiles(wsmlfilter);
 		for (File file:files){
-			Ontology o = (Ontology) p.parse(new FileReader(file), null)[0];
+			Ontology o = (Ontology) p.parse(new FileReader(file))[0];
 			if (ret.id==null){
 				ret.id = o.getIdentifier().toString();
 				ret.title=firstNfpAsString(o, BenchmarkOntologyGenerator.DC_TITLE);

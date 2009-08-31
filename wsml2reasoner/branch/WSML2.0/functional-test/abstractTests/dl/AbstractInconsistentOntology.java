@@ -59,7 +59,7 @@ public abstract class AbstractInconsistentOntology extends TestCase implements D
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/inconsistentWsml2owlExample.wsml");
         assertNotNull(is);
         
-        ontology = (Ontology)parser.parse(new InputStreamReader(is), null)[0]; 
+        ontology = (Ontology)parser.parse(new InputStreamReader(is))[0]; 
         ns = ontology.getDefaultNamespace().getIRI().toString();
 	}
 	

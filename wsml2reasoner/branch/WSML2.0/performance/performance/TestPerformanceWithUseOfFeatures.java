@@ -110,7 +110,7 @@ public class TestPerformanceWithUseOfFeatures {
         if (files != null){
 	        for (File f : files) {
 	            try {
-	                Ontology ont = (Ontology) wsmlParser.parse(new FileReader(f), null)[0];
+	                Ontology ont = (Ontology) wsmlParser.parse(new FileReader(f))[0];
 	                onts.put(f.getName(), ont);
 	            }
 	            catch (Exception e) {
@@ -469,7 +469,7 @@ public class TestPerformanceWithUseOfFeatures {
     private Ontology loadOntology(String file) {
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);
         try {
-            final TopEntity[] identifiable = wsmlParser.parse(new InputStreamReader(is), null);
+            final TopEntity[] identifiable = wsmlParser.parse(new InputStreamReader(is));
             if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {
                 return (Ontology) identifiable[0];
             }

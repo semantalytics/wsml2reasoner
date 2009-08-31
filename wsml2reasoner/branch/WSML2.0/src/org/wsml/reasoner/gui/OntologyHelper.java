@@ -145,7 +145,7 @@ public class OntologyHelper
     	WsmoFactory wsmoFactory = FactoryImpl.createNewInstance().getWsmoFactory();
     	Parser wsmlParser = new ParserImplTyped();
     	
-    	final TopEntity[] identifiable = wsmlParser.parse(ontoReader, null);
+    	final TopEntity[] identifiable = wsmlParser.parse(ontoReader);
     	
 	  	for( TopEntity entity : identifiable ) {
 	  		 if (entity instanceof Ontology)

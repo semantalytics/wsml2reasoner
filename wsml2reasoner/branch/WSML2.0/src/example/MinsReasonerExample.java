@@ -113,7 +113,7 @@ public class MinsReasonerExample {
 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);
         try {
-            final TopEntity[] identifiable = wsmlParser.parse(new InputStreamReader(is), null);
+            final TopEntity[] identifiable = wsmlParser.parse(new InputStreamReader(is));
             if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {
                 return (Ontology) identifiable[0];
             }

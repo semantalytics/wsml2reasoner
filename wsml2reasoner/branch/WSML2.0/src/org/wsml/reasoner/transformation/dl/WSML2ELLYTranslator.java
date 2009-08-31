@@ -257,7 +257,6 @@ public class WSML2ELLYTranslator implements WsmlObjectVisitor {
 		intrface.getOrchestration().accept(this);
 //		intrface.getUsedMediators().listMediators()
 		
-		intrface.isLocatedById();
 	}
 
 	@Override

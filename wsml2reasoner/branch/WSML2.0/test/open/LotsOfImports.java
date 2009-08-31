@@ -191,7 +191,7 @@ public class LotsOfImports {
      */
     private Ontology loadOntology(String file) {
         try {
-            final TopEntity[] identifiable = wsmlParser.parse(new FileReader(file), null);
+            final TopEntity[] identifiable = wsmlParser.parse(new FileReader(file));
             if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {
                 return (Ontology) identifiable[0];
             }

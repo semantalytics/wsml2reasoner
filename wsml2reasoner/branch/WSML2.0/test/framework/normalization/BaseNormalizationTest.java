@@ -88,7 +88,7 @@ public abstract class BaseNormalizationTest extends TestCase
     {
         Parser parser = new ParserImplTyped();
         Reader input = BaseReasonerTest.getReaderForFile(fileName);
-        return (Ontology)parser.parse(input, null)[0];
+        return (Ontology)parser.parse(input)[0];
     }
     
     public static String serializeOntology(Ontology ontology)

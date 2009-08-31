@@ -85,7 +85,7 @@ public class SpassEntailmentTest extends BaseReasonerTest {
 
     public void test() throws Exception {
         InputStream in = getClass().getClassLoader().getResourceAsStream("files/family.wsml");
-        Ontology ont = (Ontology) wsmlParser.parse(new InputStreamReader(in), null)[0];
+        Ontology ont = (Ontology) wsmlParser.parse(new InputStreamReader(in))[0];
 
         wsmlReasoner.registerOntology(ont);
         LogicalExpression conjecture = wsmoManager.getLogicalExpressionParser(ont).parse("Lisa[hasAncestor hasValue GrandPa]");

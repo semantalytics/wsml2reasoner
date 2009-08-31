@@ -180,7 +180,7 @@ public class FunctionalQueryTest extends TestCase
 		TopEntity[] identifiable;
 		try {
 			InputStream is = location.openStream();
-			identifiable = parser.parse(new InputStreamReader(is), null);
+			identifiable = parser.parse(new InputStreamReader(is));
 			if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {
 		    	ontology = ((Ontology) identifiable[0]);
 		    }
