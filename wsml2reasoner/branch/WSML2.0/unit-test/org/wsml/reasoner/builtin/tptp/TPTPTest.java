@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
-import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Ontology;
@@ -35,7 +35,7 @@ public class TPTPTest extends TestCase{
         IRI i = wsmoManager.getWsmoFactory().createIRI("foo:bar#");
         nsContainer = wsmoManager.getWsmoFactory().createOntology(i);
         nsContainer.setDefaultNamespace(i);
-        leParser = new LogExprParserTypedImpl();
+        leParser = new LogicalExpressionParserImpl();
     }
 
     public void testatom() throws Exception{

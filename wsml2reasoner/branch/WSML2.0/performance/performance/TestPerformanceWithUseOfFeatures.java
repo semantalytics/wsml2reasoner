@@ -17,7 +17,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
-import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.logicalexpression.terms.Term;
@@ -374,7 +374,7 @@ public class TestPerformanceWithUseOfFeatures {
             return performanceresult;
         }
 
-        LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+        LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
         LogicalExpression query = leParser.parse(theQuery);
 
         log.print("Registering Ontology (in total) ");

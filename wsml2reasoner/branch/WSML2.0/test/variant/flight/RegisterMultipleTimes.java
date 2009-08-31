@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.logicalexpression.terms.Term;
@@ -76,7 +76,7 @@ public class RegisterMultipleTimes  extends BaseReasonerTest  {
     	InputStream is1 = this.getClass().getClassLoader().getResourceAsStream(file2);
     	assertNotNull(is1);
     	Ontology ont1 =(Ontology)wsmlParser.parse(new InputStreamReader(is1))[0];
-    	LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+    	LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
         LogicalExpression query = leParser.parse("?x memberOf ?y");
 
         Set<Map<Variable, Term>> result = null;
@@ -113,7 +113,7 @@ public class RegisterMultipleTimes  extends BaseReasonerTest  {
 
         Ontology o = (Ontology) wsmlParser.parse(new StringBuffer(test))[0];
 
-        LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+        LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
         LogicalExpression query = leParser.parse("?x memberOf ?y");
         Instance instance = o.findInstance(wsmoFactory.createIRI(ns+"i1"));
 

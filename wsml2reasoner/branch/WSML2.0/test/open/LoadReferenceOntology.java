@@ -29,7 +29,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
 import org.deri.wsmo4j.io.serializer.wsml.SerializeWSMLTermsVisitor;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
@@ -94,7 +94,7 @@ public class LoadReferenceOntology {
         System.out.println("Ontologies registered in " + register + " ms");
         long query_start = System.currentTimeMillis();
 
-		LogicalExpression le = new LogExprParserTypedImpl().parse("?x memberOf ?y");
+		LogicalExpression le = new LogicalExpressionParserImpl().parse("?x memberOf ?y");
 
         Ontology ontology = new ArrayList<Ontology>(ontologies).get(0);
         Set<Map<Variable, Term>> result = reasoner.executeQuery(le);

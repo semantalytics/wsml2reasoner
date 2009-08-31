@@ -22,7 +22,7 @@
  */
 package helper;
 
-import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Ontology;
@@ -38,7 +38,7 @@ public class DLHelper
 	public static boolean isEntailed( Ontology ontology, String expression, DLReasoner reasoner ) throws InconsistencyException, org.wsmo.wsml.ParserException {
     	
     	reasoner.registerOntology( ontology );
-    	LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+    	LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
         LogicalExpression le = leParser.parse( expression );
 
     	return reasoner.isConceptSatisfiable( le );

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
 import org.deri.wsmo4j.io.serializer.wsml.SerializeWSMLTermsVisitor;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
@@ -221,7 +221,7 @@ public class TestPerformance1 {
         PerformanceResult performanceresult = new PerformanceResult(reasoner);
         
         if (reasoner != null){
-        	LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+        	LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
             LogicalExpression query = leParser.parse(theQuery);
             
             System.out.print("Registering Ontology ");

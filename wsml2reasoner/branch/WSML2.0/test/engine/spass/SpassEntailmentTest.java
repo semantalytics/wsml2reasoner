@@ -22,7 +22,7 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Axiom;
@@ -76,7 +76,7 @@ public class SpassEntailmentTest extends BaseReasonerTest {
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createFOLReasoner(m);
         
     	wsmlParser = new ParserImplTyped();
-    	leParser = new LogExprParserTypedImpl();
+    	leParser = new LogicalExpressionParserImpl();
     }
 
     public void test() throws Exception {

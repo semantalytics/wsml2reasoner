@@ -40,7 +40,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.logicalexpression.terms.Term;
@@ -295,7 +295,7 @@ public class DemoW
 	        		
 	        		String strResults;
 	        		if( true ) {
-	        			LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+	        			LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
 	        	        LogicalExpression qExpression = leParser.parse( mQuery );
 
 		        		Set<Map<Variable, Term>> results = reasoner.executeQuery( qExpression );

@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.logicalexpression.terms.Term;
@@ -79,7 +79,7 @@ public class PreserveTypeTests extends BaseReasonerTest {
     //This test ensures that decimal equations result in decimals
     public void preserveTypeAfterOperationWithConcepts() throws Exception {
         String query = "?x[value hasValue ?y] memberOf Miles";
-        LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+        LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
         LogicalExpression qExpression = leParser.parse(query);
         logExprSerializer.serialize(qExpression);
         

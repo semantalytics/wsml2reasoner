@@ -28,7 +28,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Axiom;
@@ -302,7 +302,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
 		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiomTestValues_" + (in.trim())));
 	    ontology.addAxiom(axiom);
 		
-	    LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+	    LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
 		LogicalExpression le = leParser.parse(in);
         axiom.addDefinition(le);
         

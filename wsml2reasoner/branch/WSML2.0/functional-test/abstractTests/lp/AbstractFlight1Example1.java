@@ -27,7 +27,7 @@ import helper.OntologyHelper;
 import helper.Results;
 import junit.framework.TestCase;
 
-import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Ontology;
@@ -49,7 +49,7 @@ public abstract class AbstractFlight1Example1 extends TestCase implements LP {
     protected void setUp() throws Exception	{
 		ontology = OntologyHelper.loadOntology( ONTOLOGY_FILE );
 		
-		leParser = new LogExprParserTypedImpl(ontology);
+		leParser = new LogicalExpressionParserImpl(ontology);
 		
 		reasoner = getLPReasoner();
 		reasoner.registerOntology( ontology );

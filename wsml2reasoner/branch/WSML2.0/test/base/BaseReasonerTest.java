@@ -32,7 +32,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
 import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
 import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
 import org.omwg.logicalexpression.LogicalExpression;
@@ -221,7 +221,7 @@ public class BaseReasonerTest extends TestCase {
             throws Exception {
         System.out.println("\n\nStarting reasoner with query '" + query + "'");
         System.out.println("\n\nExpecting " + expected.size() + " result(s)...");
-        LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+        LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
 		LogicalExpression qExpression = leParser.parse(query);
         System.out.println("WSML Query LE:");
         System.out.println(logExprSerializer.serialize(qExpression));

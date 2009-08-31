@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
 import org.deri.wsmo4j.io.serializer.wsml.SerializeWSMLTermsVisitor;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
@@ -74,7 +74,7 @@ public class IrisReasonerExample {
 //        String queryString = "?x = ?y";
         String queryString = "?x = ?y :- ?x[name hasValue ?n1] and ?y[name hasValue ?n2] and ?n1=?n2.";
 
-        LogicalExpression query = new LogExprParserTypedImpl(exampleOntology).parse(queryString);
+        LogicalExpression query = new LogicalExpressionParserImpl(exampleOntology).parse(queryString);
 
         // get A reasoner
         Map<String, Object> params = new HashMap<String, Object>();

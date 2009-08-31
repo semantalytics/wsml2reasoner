@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Axiom;
@@ -119,7 +119,7 @@ public class FOLBasedWSMLReasoner implements FOLReasoner {
         // not sure actually... TODO: CHECK ME!
         // should not be a consisteny violation anyway
         LogicalExpression le;
-        LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+        LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
         try {
             le = leParser.parse("_\"foo:a\" or naf _\"foo:a\"");
         }

@@ -22,7 +22,7 @@ import java.io.Reader;
 
 import junit.framework.TestCase;
 
-import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
 import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Ontology;
@@ -60,7 +60,7 @@ public abstract class BaseNormalizationTest extends TestCase
         factory = new FactoryImpl();
         wsmoFactory = factory.getWsmoFactory();
         leFactory = factory.getLogicalExpressionFactory();
-        leParser = new LogExprParserTypedImpl();
+        leParser = new LogicalExpressionParserImpl();
     }
 
     @Override

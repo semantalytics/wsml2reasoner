@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
-import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Axiom;
@@ -77,7 +77,7 @@ public class TPTPEntailmentTest extends BaseReasonerTest {
         Ontology ont = (Ontology)wsmlParser.parse(new InputStreamReader(in))[0];
         
         wsmlReasoner.registerOntology(ont);
-        LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+        LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
         LogicalExpression conjecture = leParser.parse("Lisa[hasAncestor hasValue GrandPa]");
         EntailmentType result = wsmlReasoner.checkEntailment(
                 conjecture);
@@ -100,7 +100,7 @@ public class TPTPEntailmentTest extends BaseReasonerTest {
         IRI iri = wsmoFactory.createIRI("urn://foobar");
         Ontology ont = wsmoFactory.createOntology(iri);
         ont.setDefaultNamespace(iri);
-        LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+        LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
 		LogicalExpression le = leParser .parse("a[b hasValue c]");
         Axiom a = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
         a.addDefinition(le);

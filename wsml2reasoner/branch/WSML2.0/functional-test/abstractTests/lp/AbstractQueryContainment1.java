@@ -3,7 +3,7 @@ package abstractTests.lp;
 import helper.OntologyHelper;
 import junit.framework.TestCase;
 
-import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Ontology;
@@ -133,7 +133,7 @@ public abstract class AbstractQueryContainment1 extends TestCase implements LP {
         LPReasoner reasoner = getLPReasoner();
         reasoner.registerOntology(ontology);
         
-        LogicalExpressionParser leParser = new LogExprParserTypedImpl(ontology);
+        LogicalExpressionParser leParser = new LogicalExpressionParserImpl(ontology);
 		// build queries
         LogicalExpression query1 = leParser.parse(queryString1);
         LogicalExpression query2 = leParser.parse(queryString2);

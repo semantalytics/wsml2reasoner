@@ -27,7 +27,7 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
@@ -85,7 +85,7 @@ public class WSMLReasonerFacade {
     		throw new IllegalArgumentException();
     	}
     	
-        LogicalExpression lequery = new LogExprParserTypedImpl(factory).parse(query);
+        LogicalExpression lequery = new LogicalExpressionParserImpl(factory).parse(query);
       
         return doQuery(lequery);
     }
@@ -123,7 +123,7 @@ public class WSMLReasonerFacade {
         }
 
         reasoner.registerOntology(onto);
-        LogicalExpression lequery = new LogExprParserTypedImpl(onto, factory).parse(query);
+        LogicalExpression lequery = new LogicalExpressionParserImpl(onto, factory).parse(query);
 
         return doQuery(lequery);
     }

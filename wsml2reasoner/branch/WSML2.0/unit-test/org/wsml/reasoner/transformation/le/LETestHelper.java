@@ -22,7 +22,7 @@
  */
 package org.wsml.reasoner.transformation.le;
 
-import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.wsmo.wsml.ParserException;
 
@@ -30,6 +30,6 @@ import org.wsmo.wsml.ParserException;
 public class LETestHelper {
 
     public static LogicalExpression buildLE(String theString) throws ParserException{
-    	return new LogExprParserTypedImpl().parse(theString);
+    	return new LogicalExpressionParserImpl().parse(theString);
     }
 }

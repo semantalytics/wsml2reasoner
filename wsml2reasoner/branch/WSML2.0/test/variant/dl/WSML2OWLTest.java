@@ -23,7 +23,7 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.util.HashMap;
 
-import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Axiom;
@@ -81,7 +81,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         prefs = new HashMap<String, String>();
         prefs.put(OWLSerializer.OWL_SERIALIZER, OWLSerializer.OWL_ABSTRACT);
         
-        leParser = new LogExprParserTypedImpl();
+        leParser = new LogicalExpressionParserImpl();
     }
 
     protected void tearDown() throws Exception {

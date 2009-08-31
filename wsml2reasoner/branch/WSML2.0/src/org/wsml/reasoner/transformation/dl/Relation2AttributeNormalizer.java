@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Axiom;
@@ -139,7 +139,7 @@ public class Relation2AttributeNormalizer implements OntologyNormalizer {
         Axiom result = wsmoFactory.createAxiom((Identifier) anonymousIdTranslator.translate(wsmoFactory.createAnonymousID()));
         for (Relation sr : superRelations){
             String le = "?x[_\"" + relation.getIdentifier() + "\" hasValue ?y] implies " + "?x[_\"" + sr.getIdentifier() + "\" hasValue ?y].";
-            LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+            LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
             try {
                 result.addDefinition(leParser.parse(le));
             }

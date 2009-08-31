@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
-import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Ontology;
@@ -37,7 +37,7 @@ public class SpassTest extends TestCase{
      }
 
     public void testConjunctionDisjunction() throws Exception{
-    	LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+    	LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
         LogicalExpression le = leParser.parse(
             "a and b or c ");
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
@@ -60,7 +60,7 @@ public class SpassTest extends TestCase{
     }
     
     private void check(String wsml, String fol) throws Exception{
-        LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+        LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
         LogicalExpression le = leParser.parse(wsml);
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);

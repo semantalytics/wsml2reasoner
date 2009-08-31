@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
 import org.deri.wsmo4j.io.serializer.wsml.SerializeWSMLTermsVisitor;
 import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
 import org.omwg.logicalexpression.LogicalExpression;
@@ -173,7 +173,7 @@ public class NobelTest {
 	private void setUpFactories() {
 		wsmoManager = new FactoryImpl();
     	wsmlParser = new ParserImplTyped();
-    	leParser = new LogExprParserTypedImpl();
+    	leParser = new LogicalExpressionParserImpl();
 	}
 
 	/**
