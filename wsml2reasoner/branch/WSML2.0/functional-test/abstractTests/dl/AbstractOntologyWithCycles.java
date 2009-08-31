@@ -33,14 +33,13 @@ import org.omwg.ontology.Concept;
 import org.omwg.ontology.Ontology;
 import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.DLReasoner;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
-
 import abstractTests.DL;
+
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
 
 public abstract class AbstractOntologyWithCycles extends TestCase implements DL {
 
@@ -66,8 +65,8 @@ public abstract class AbstractOntologyWithCycles extends TestCase implements DL 
         // register ontology at the wsml reasoner
 		reasoner.registerOntology(ontology);
         
-		WSMO4JManager wsmoManager = new WSMO4JManager();
-        WsmoFactory wsmoFactory = wsmoManager.getWSMOFactory();
+		Factory factory = new FactoryImpl();
+        WsmoFactory wsmoFactory = factory.getWsmoFactory();
         
         // test getSubConcepts
 		Set<Concept> set = new HashSet<Concept>();

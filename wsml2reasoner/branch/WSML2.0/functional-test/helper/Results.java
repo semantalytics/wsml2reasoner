@@ -35,9 +35,10 @@ import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.DataFactory;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -228,13 +229,13 @@ public class Results
     private static final WsmoFactory wsmoFactory;
     private static final LogicalExpressionFactory leFactory;
     private static final DataFactory dataFactory;
-    private static final WSMO4JManager wsmoManager;
+    private static final Factory wsmoManager;
     
     static{
     	// 	 Set up factories for creating WSML elements
-	   	wsmoManager = new WSMO4JManager();
+	   	wsmoManager = new FactoryImpl();
 	   	leFactory = wsmoManager.getLogicalExpressionFactory();
-	   	wsmoFactory = wsmoManager.getWSMOFactory();
+	   	wsmoFactory = wsmoManager.getWsmoFactory();
 	   	dataFactory = wsmoManager.getWsmlDataFactory();
    }
 }

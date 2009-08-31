@@ -48,9 +48,9 @@ import org.omwg.logicalexpression.TruthValue;
 import org.omwg.logicalexpression.UniversalQuantification;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsml.reasoner.transformation.InfixOrderLogicalExpressionVisitor;
 import org.wsml.reasoner.transformation.ConstructedTermVisitor;
+import org.wsml.reasoner.transformation.InfixOrderLogicalExpressionVisitor;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 /**
@@ -102,12 +102,12 @@ public class WSML2DatalogTransformer {
 
     public final static String PRED_KNOWN_CONCEPT = "http://temp/knownConcept";
 
-    WSMO4JManager wsmoManager;
+    Factory wsmoManager;
 
     /**
      * Generates a WSML2Datalog converter.
      */
-    public WSML2DatalogTransformer(WSMO4JManager wsmoManager) {
+    public WSML2DatalogTransformer(Factory wsmoManager) {
         this.wsmoManager = wsmoManager;
     }
 

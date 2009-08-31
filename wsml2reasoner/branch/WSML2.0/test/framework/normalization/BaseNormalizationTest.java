@@ -22,12 +22,14 @@ import java.io.Reader;
 
 import junit.framework.TestCase;
 
+import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
 import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Ontology;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsmo.common.TopEntity;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
@@ -49,16 +51,16 @@ public abstract class BaseNormalizationTest extends TestCase
     protected WsmoFactory wsmoFactory;
     protected LogicalExpressionFactory leFactory;
 	protected LogicalExpressionParser leParser;
-	protected WSMO4JManager wsmoManager;
+	protected Factory factory;
 
     @Override
     protected void setUp() throws Exception
     {
         super.setUp();
-        wsmoManager = new WSMO4JManager();
-        wsmoFactory = wsmoManager.getWSMOFactory();
-        leFactory = wsmoManager.getLogicalExpressionFactory();
-        leParser = wsmoManager.getLogicalExpressionParser();
+        factory = new FactoryImpl();
+        wsmoFactory = factory.getWsmoFactory();
+        leFactory = factory.getLogicalExpressionFactory();
+        leParser = new LogExprParserTypedImpl();
     }
 
     @Override

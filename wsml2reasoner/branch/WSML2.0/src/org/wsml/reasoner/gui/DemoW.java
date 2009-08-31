@@ -40,15 +40,18 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.DLUtilities;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 import com.ontotext.wsmo4j.common.IRIImpl;
@@ -281,7 +284,7 @@ public class DemoW
 	        public void run()
 	        {
 	        	try {
-	        		WSMO4JManager wsmoManager = new WSMO4JManager();
+	        		Factory factory = new FactoryImpl();
 	        		LPReasoner reasoner = ReasonerHelper.getLPReasoner( BuiltInReasoner.IRIS_WELL_FOUNDED );
 
 	        		Ontology ontology = OntologyHelper.parseOntology( mOntology );
@@ -292,14 +295,14 @@ public class DemoW
 	        		
 	        		String strResults;
 	        		if( true ) {
-	        			LogicalExpressionFactory leFactory = wsmoManager.getLogicalExpressionFactory();
-	        	        LogicalExpression qExpression = wsmoManager.getLogicalExpressionParser(ontology).parse( mQuery );
+	        			LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+	        	        LogicalExpression qExpression = leParser.parse( mQuery );
 
 		        		Set<Map<Variable, Term>> results = reasoner.executeQuery( qExpression );
 		        		strResults = OntologyHelper.toString( results );
 	        		}
 	        		else {
-	        			DLUtilities dlUtils = new DLUtilities( reasoner, wsmoManager );
+	        			DLUtilities dlUtils = new DLUtilities( reasoner, factory );
 	        			Set<Instance> instances = dlUtils.getAllInstances();
 	        			strResults = OntologyHelper.toStringInstances( instances );
 	        		}

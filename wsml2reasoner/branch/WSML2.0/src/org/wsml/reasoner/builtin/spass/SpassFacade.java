@@ -32,7 +32,7 @@ import org.wsml.reasoner.FOLAbstractFacade;
 import org.wsml.reasoner.PredicateAndFSymbolCollector;
 import org.wsml.reasoner.api.FOLReasoner.EntailmentType;
 import org.wsml.reasoner.builtin.tptp.TPTPSymbolMap;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.factory.Factory;
 
 /**
  * <p>
@@ -51,7 +51,7 @@ public class SpassFacade extends FOLAbstractFacade {
 
     private PredicateAndFSymbolCollector collector = new PredicateAndFSymbolCollector();
 
-    public SpassFacade(WSMO4JManager manager, String endpoint) {
+    public SpassFacade(Factory manager, String endpoint) {
         super(manager, endpoint);
     }
 

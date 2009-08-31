@@ -39,11 +39,13 @@ import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.semanticweb.owl.model.OWLException;
 import org.semanticweb.owl.model.OWLOntology;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
@@ -51,7 +53,6 @@ import org.wsmo.wsml.ParserException;
 public class DLBasedWSMLReasonerTest extends TestCase {
 
 	protected DLBasedWSMLReasoner reasoner;
-	protected WSMO4JManager wsmoManager;
 	protected String ns = "http://ex.org#";
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
@@ -70,9 +71,9 @@ public class DLBasedWSMLReasonerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		WSMO4JManager wsmoManager = new WSMO4JManager();
-		wsmoFactory = wsmoManager.getWSMOFactory();
-		leFactory = wsmoManager.getLogicalExpressionFactory();
+		Factory factory = new FactoryImpl();
+		wsmoFactory = factory.getWsmoFactory();
+		leFactory = factory.getLogicalExpressionFactory();
 
 		// build up standard ontology
 		ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns

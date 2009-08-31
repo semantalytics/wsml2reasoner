@@ -37,18 +37,19 @@ import org.semanticweb.owl.model.OWLOntology;
 import org.semanticweb.owl.model.change.ChangeVisitor;
 import org.semanticweb.owl.util.OWLConnection;
 import org.semanticweb.owl.util.OWLManager;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DLBasedWSMLReasoner;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
 
 public class WSMLDL2OWLTransformerTest extends TestCase {
 
 	protected WSMLDL2OWLTransformer transformer;
-	protected WSMO4JManager wsmoManager;
+	protected Factory wsmoManager;
 	protected String ns = "http://ex.org#";
 	protected DLBasedWSMLReasoner dlReasoner;
 	protected WsmoFactory wsmoFactory;
@@ -66,8 +67,8 @@ public class WSMLDL2OWLTransformerTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		WSMO4JManager wsmoManager = new WSMO4JManager();
-		wsmoFactory = wsmoManager.getWSMOFactory();
+		Factory wsmoManager = new FactoryImpl();
+		wsmoFactory = wsmoManager.getWsmoFactory();
 		
 		dlReasoner = new DLBasedWSMLReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET, wsmoManager);
 

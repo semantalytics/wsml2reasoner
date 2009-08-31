@@ -32,10 +32,11 @@ import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.DLReasoner;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasoner;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -145,14 +146,14 @@ public class CoreHelper
     private static final WsmoFactory wsmoFactory;
     private static final LogicalExpressionFactory leFactory;
 //    private static final DataFactory dataFactory;
-    private static final WSMO4JManager wsmoManager;
+    private static final Factory factory;
     
     static{
 //  	 Set up factories for creating WSML elements
-	   	wsmoManager = new WSMO4JManager();
+	   	factory = new FactoryImpl();
 	
-	   	leFactory = wsmoManager.getLogicalExpressionFactory();
-	   	wsmoFactory = wsmoManager.getWSMOFactory();
+	   	leFactory = factory.getLogicalExpressionFactory();
+	   	wsmoFactory = factory.getWsmoFactory();
 //	   	dataFactory = wsmoManager.getDataFactory();
     }
 

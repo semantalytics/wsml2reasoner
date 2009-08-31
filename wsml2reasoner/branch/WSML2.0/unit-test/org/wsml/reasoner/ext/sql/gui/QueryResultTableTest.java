@@ -32,8 +32,9 @@ import junit.framework.TestCase;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsmo.factory.DataFactory;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
@@ -54,8 +55,8 @@ public class QueryResultTableTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		WSMO4JManager wsmoManager = new WSMO4JManager(); 
-		wsmoFactory = wsmoManager.getWSMOFactory();
+		Factory wsmoManager = new FactoryImpl();
+		wsmoFactory = wsmoManager.getWsmoFactory();
         leFactory = wsmoManager.getLogicalExpressionFactory();
         dataFactory = wsmoManager.getWsmlDataFactory();
         

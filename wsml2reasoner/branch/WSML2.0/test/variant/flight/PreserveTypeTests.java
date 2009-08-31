@@ -23,7 +23,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 import org.omwg.ontology.WsmlDataType;
@@ -77,7 +79,8 @@ public class PreserveTypeTests extends BaseReasonerTest {
     //This test ensures that decimal equations result in decimals
     public void preserveTypeAfterOperationWithConcepts() throws Exception {
         String query = "?x[value hasValue ?y] memberOf Miles";
-        LogicalExpression qExpression = wsmoManager.getLogicalExpressionParser(o).parse(query);
+        LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+        LogicalExpression qExpression = leParser.parse(query);
         logExprSerializer.serialize(qExpression);
         
         Set<Map<Variable, Term>> result = ((LPReasoner) wsmlReasoner).executeQuery(qExpression);

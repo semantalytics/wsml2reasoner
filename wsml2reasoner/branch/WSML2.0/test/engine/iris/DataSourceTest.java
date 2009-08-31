@@ -24,14 +24,16 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.api.data.ExternalDataSource;
 import org.wsml.reasoner.builtin.iris.IrisStratifiedFacade;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.WsmoFactory;
 
@@ -90,7 +92,8 @@ public class DataSourceTest extends BaseReasonerTest {
 
 	public void testInstanceRetrieval() throws Exception {
 		String query = "Anne memberOf CatOwner";
-		LogicalExpression qExpression = wsmoManager.getLogicalExpressionParser(o).parse(
+		LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+		LogicalExpression qExpression = leParser.parse(
 				query);
 		assertTrue(((LPReasoner) wsmlReasoner).ask(qExpression));
 	}
@@ -112,7 +115,7 @@ public class DataSourceTest extends BaseReasonerTest {
 		private final Set<MemberOf> memberOf = new HashSet<MemberOf>();
 
 		public DogSource() {
-			WSMO_FACTORY = (new WSMO4JManager()).getWSMOFactory();
+			WSMO_FACTORY = (new FactoryImpl()).getWsmoFactory();
 			
 			// creating the has-value set
 			// wsml-has-value(urn:dogsworld#Arthur, urn:dogsworld#barksAt, urn:dogsworld#Anne).

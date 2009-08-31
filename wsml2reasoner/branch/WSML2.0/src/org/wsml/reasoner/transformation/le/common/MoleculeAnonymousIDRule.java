@@ -27,9 +27,9 @@ import org.omwg.logicalexpression.MembershipMolecule;
 import org.omwg.logicalexpression.Molecule;
 import org.omwg.logicalexpression.SubConceptMolecule;
 import org.omwg.logicalexpression.terms.Term;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.AnonymousIdTranslator;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 
@@ -38,8 +38,8 @@ public class MoleculeAnonymousIDRule implements NormalizationRule {
     private LogicalExpressionFactory leFactory;
     private AnonymousIdTranslator anonymousIDTranslator;
     
-    public MoleculeAnonymousIDRule(WSMO4JManager wsmoManager, AnonymousIdTranslator anonymousIDTranslator){
-        this.leFactory = wsmoManager.getLogicalExpressionFactory();
+    public MoleculeAnonymousIDRule(Factory factory, AnonymousIdTranslator anonymousIDTranslator){
+        this.leFactory = factory.getLogicalExpressionFactory();
         this.anonymousIDTranslator = anonymousIDTranslator;
     }
     

@@ -25,10 +25,10 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.semanticweb.owl.model.OWLOntology;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.impl.DLBasedWSMLReasoner;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.serializer.owl.OWLSerializer;
 import org.wsml.reasoner.serializer.owl.OWLSerializerImpl;
 
@@ -67,7 +67,7 @@ public class DataValuesTest extends BaseNormalizationTest {
         axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom" + System.currentTimeMillis()));
         ontology.addAxiom(axiom);
         previous = BaseReasonerTest.reasoner;
-        dlReasoner = new DLBasedWSMLReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET, new WSMO4JManager());
+        dlReasoner = new DLBasedWSMLReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET, new FactoryImpl());
         serializer = new OWLSerializerImpl();
         writer = new StringWriter();
         prefs = new HashMap<String, String>();
@@ -87,7 +87,7 @@ public class DataValuesTest extends BaseNormalizationTest {
      */
     public void testString() throws Exception {
         String s = "Mary[hasName hasValue _string(\"Mary Jones\")].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -103,7 +103,7 @@ public class DataValuesTest extends BaseNormalizationTest {
      */
     public void testDecimal() throws Exception {
         String s = "A[hasDecimal hasValue _decimal(-1.5)].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -119,7 +119,7 @@ public class DataValuesTest extends BaseNormalizationTest {
      */
     public void testInteger() throws Exception {
         String s = "Mary[hasAge hasValue _integer(31)].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -135,7 +135,7 @@ public class DataValuesTest extends BaseNormalizationTest {
      */
     public void testFloat() throws Exception {
         String s = "A[hasFloat hasValue _float(\"-60.5e-3\")].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -151,7 +151,7 @@ public class DataValuesTest extends BaseNormalizationTest {
      */
     public void testDouble() throws Exception {
         String s = "A[hasDouble hasValue _double(\"58.5E-5\")].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -167,7 +167,7 @@ public class DataValuesTest extends BaseNormalizationTest {
      */
     public void testIRI() throws Exception {
         String s = "Mary[hasLocation hasValue _iri(_\"http://www.example.com/tests#testOntology\")].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -184,7 +184,7 @@ public class DataValuesTest extends BaseNormalizationTest {
     public void testSqname() throws Exception {
         ontology.addNamespace(wsmoFactory.createNamespace("b", wsmoFactory.createIRI("http://www.example.com/tests#")));
         String s = "A[hasSQName hasValue _sqname(\"b\", \"testOntology\")].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -200,7 +200,7 @@ public class DataValuesTest extends BaseNormalizationTest {
      */
     public void testBoolean() throws Exception {
         String s = "Mary[isWoman hasValue _boolean(\"true\")].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -216,7 +216,7 @@ public class DataValuesTest extends BaseNormalizationTest {
      */
     public void testDuration() throws Exception {
         String s = "A[hasDuration hasValue _duration(66, 2, 3, 10, 20, 10)].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -232,7 +232,7 @@ public class DataValuesTest extends BaseNormalizationTest {
      */
     public void testDateTime() throws Exception {
         String s = "Mary[hasBirthday hasValue _dateTime(1977, 02, 07, 10, 20, 10.0, 12, 30)].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -248,7 +248,7 @@ public class DataValuesTest extends BaseNormalizationTest {
      */
     public void testDateTimeShort() throws Exception {
         String s = "Mary[hasBirthday hasValue _dateTime(1977, 02, 07, 10, 20, 10)].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -264,7 +264,7 @@ public class DataValuesTest extends BaseNormalizationTest {
      */
     public void testTime() throws Exception {
         String s = "Mary[hasName hasValue _time(10, 20, 10.0, 12, 30)].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -280,7 +280,7 @@ public class DataValuesTest extends BaseNormalizationTest {
      */
     public void testTimeShort() throws Exception {
         String s = "Mary[hasName hasValue _time(10, 20, 10.0)].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -296,7 +296,7 @@ public class DataValuesTest extends BaseNormalizationTest {
      */
     public void testDate() throws Exception {
         String s = "Mary[hasBirthday hasValue _date(1967, 08, 16, 12, 30)].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -312,7 +312,7 @@ public class DataValuesTest extends BaseNormalizationTest {
      */
     public void testDateShort() throws Exception {
         String s = "Mary[hasBirthday hasValue _date(1967, 08, 16)].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -328,7 +328,7 @@ public class DataValuesTest extends BaseNormalizationTest {
      */
     public void testGyearmonth() throws Exception {
         String s = "Mary[hasName hasValue _gyearmonth(1977, 02)].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -344,7 +344,7 @@ public class DataValuesTest extends BaseNormalizationTest {
      */
     public void testGyear() throws Exception {
         String s = "Mary[hasName hasValue _gyear(1977)].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -360,7 +360,7 @@ public class DataValuesTest extends BaseNormalizationTest {
      */
     public void testGmonthday() throws Exception {
         String s = "Mary[hasName hasValue _gmonthday(02, 07)].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -376,7 +376,7 @@ public class DataValuesTest extends BaseNormalizationTest {
      */
     public void testGday() throws Exception {
         String s = "Mary[hasName hasValue _gday(07)].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -392,7 +392,7 @@ public class DataValuesTest extends BaseNormalizationTest {
      */
     public void testGmonth() throws Exception {
         String s = "Mary[hasName hasValue _gmonth(02)].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -408,7 +408,7 @@ public class DataValuesTest extends BaseNormalizationTest {
      */
     public void testHexbinary() throws Exception {
         String s = "Mary[hasName hasValue _hexbinary(\"0FB7\")].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -424,7 +424,7 @@ public class DataValuesTest extends BaseNormalizationTest {
      */
     public void testBase64binary() throws Exception {
         String s = "Mary[hasName hasValue _base64binary(\"R01G0DdhNgAPAPAAAAACTYyPq\")].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology

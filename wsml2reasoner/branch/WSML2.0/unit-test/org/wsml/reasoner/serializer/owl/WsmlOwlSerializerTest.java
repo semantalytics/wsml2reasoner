@@ -30,12 +30,13 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.semanticweb.owl.model.OWLOntology;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DLBasedWSMLReasoner;
 import org.wsml.reasoner.impl.FOLBasedWSMLReasoner;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.common.TopEntity;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
@@ -47,7 +48,7 @@ public class WsmlOwlSerializerTest extends TestCase {
 	protected HashMap<String, String> prefs;
 	protected DLBasedWSMLReasoner dlReasoner;
 	protected FOLBasedWSMLReasoner reasoner;
-	protected WSMO4JManager wsmoManager;
+	protected Factory wsmoManager;
 	protected String ns = "http://ex.org#";
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
@@ -62,8 +63,8 @@ public class WsmlOwlSerializerTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		serializer = new WsmlOwlSerializer();
-		WSMO4JManager wsmoManager = new WSMO4JManager();
-		wsmoFactory = wsmoManager.getWSMOFactory();
+		Factory wsmoManager = new FactoryImpl();
+		wsmoFactory = wsmoManager.getWsmoFactory();
 		leFactory = wsmoManager.getLogicalExpressionFactory();
 		dlReasoner = new DLBasedWSMLReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET, wsmoManager);
 		ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns+ "ontology01"));

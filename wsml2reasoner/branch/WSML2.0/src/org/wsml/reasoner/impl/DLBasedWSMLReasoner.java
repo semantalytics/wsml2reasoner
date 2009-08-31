@@ -62,6 +62,7 @@ import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.factory.DataFactory;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -77,7 +78,7 @@ public class DLBasedWSMLReasoner implements DLReasoner {
 
     protected DataFactory dataFactory = null;
 
-    protected WSMO4JManager wsmoManager = null;
+    protected Factory factory = null;
 
     protected OWLConnection owlConnection = null;
 
@@ -95,11 +96,11 @@ public class DLBasedWSMLReasoner implements DLReasoner {
 
     private boolean disableConsitencyCheck = false;
 
-    public DLBasedWSMLReasoner(BuiltInReasoner builtInType, WSMO4JManager wsmoManager) throws InternalReasonerException {
-        this.wsmoManager = wsmoManager;
-        this.wsmoFactory = this.wsmoManager.getWSMOFactory();
-        this.leFactory = this.wsmoManager.getLogicalExpressionFactory();
-        this.dataFactory = this.wsmoManager.getWsmlDataFactory();
+    public DLBasedWSMLReasoner(BuiltInReasoner builtInType, Factory factory) throws InternalReasonerException {
+        this.factory = factory;
+        this.wsmoFactory = this.factory.getWsmoFactory();
+        this.leFactory = this.factory.getLogicalExpressionFactory();
+        this.dataFactory = this.factory.getWsmlDataFactory();
         
         builtInFacade = createFacade( builtInType );
     }
@@ -180,11 +181,11 @@ public class DLBasedWSMLReasoner implements DLReasoner {
      */
     protected Set<Axiom> convertEntities(Set<Entity> theEntities) {
         // Replace relations, subRelations and relationinstances
-        OntologyNormalizer normalizer = new Relation2AttributeNormalizer(wsmoManager);
+        OntologyNormalizer normalizer = new Relation2AttributeNormalizer(factory);
         theEntities = normalizer.normalizeEntities(theEntities);
 
         // Convert conceptual syntax to logical expressions
-        normalizer = new AxiomatizationNormalizer(wsmoManager);
+        normalizer = new AxiomatizationNormalizer(factory);
         theEntities = normalizer.normalizeEntities(theEntities);
 
         Set<Axiom> axioms = new HashSet<Axiom>();
@@ -196,7 +197,7 @@ public class DLBasedWSMLReasoner implements DLReasoner {
 
         // Replace unnumbered anonymous identifiers and convert logical
         // expressions
-        normalizer = new WSMLDLLogExprNormalizer(wsmoManager);
+        normalizer = new WSMLDLLogExprNormalizer(factory);
         axioms = normalizer.normalizeAxioms(axioms);
 
         return axioms;

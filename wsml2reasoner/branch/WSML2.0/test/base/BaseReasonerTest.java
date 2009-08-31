@@ -32,9 +32,11 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
 import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
 import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
@@ -46,10 +48,10 @@ import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.TopEntity;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.DataFactory;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
@@ -89,7 +91,7 @@ public class BaseReasonerTest extends TestCase {
 
     protected static DataFactory dataFactory = null;
 
-    protected static WSMO4JManager wsmoManager = null;
+    protected static Factory factory = null;
     
     protected static Parser wsmlparserimpl = new ParserImplTyped();
 
@@ -152,13 +154,13 @@ public class BaseReasonerTest extends TestCase {
     
     protected static void setUpFactories(){
 //    	 Set up factories for creating WSML elements
-    	wsmoManager = new WSMO4JManager();
+    	factory = new FactoryImpl();
 
-        leFactory = wsmoManager.getLogicalExpressionFactory();
+        leFactory = factory.getLogicalExpressionFactory();
 
-        wsmoFactory = wsmoManager.getWSMOFactory();
+        wsmoFactory = factory.getWsmoFactory();
 
-        dataFactory = wsmoManager.getWsmlDataFactory();
+        dataFactory = factory.getWsmlDataFactory();
         
     }
 
@@ -219,8 +221,8 @@ public class BaseReasonerTest extends TestCase {
             throws Exception {
         System.out.println("\n\nStarting reasoner with query '" + query + "'");
         System.out.println("\n\nExpecting " + expected.size() + " result(s)...");
-        LogicalExpression qExpression = wsmoManager.getLogicalExpressionParser(o).parse(
-                query);
+        LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+		LogicalExpression qExpression = leParser.parse(query);
         System.out.println("WSML Query LE:");
         System.out.println(logExprSerializer.serialize(qExpression));
         System.out.println("--------------\n\n");

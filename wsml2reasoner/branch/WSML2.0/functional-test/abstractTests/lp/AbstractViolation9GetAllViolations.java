@@ -53,9 +53,9 @@ import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 import org.wsmo.wsml.Serializer;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
-
 import abstractTests.LP;
+
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
 
 public abstract class AbstractViolation9GetAllViolations extends TestCase implements LP {
 	private Set<ConsistencyViolation> errors;

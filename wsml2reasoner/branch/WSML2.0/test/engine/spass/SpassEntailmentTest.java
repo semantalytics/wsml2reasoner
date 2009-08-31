@@ -22,7 +22,9 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.sti2.wsmo4j.factory.FactoryImpl;
@@ -33,9 +35,7 @@ import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsmo.common.IRI;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.Factory;
-import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
@@ -57,25 +57,18 @@ import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
  */
 public class SpassEntailmentTest extends BaseReasonerTest {
 
-    private LogicalExpressionFactory leFactory = null;
-
     private FOLReasoner wsmlReasoner = null;
 
     BuiltInReasoner previous;
 
-	private DataFactory xmlDataFactory;
-
-	private DataFactory wsmlDataFactory;
-
 	private Parser wsmlParser;
 
+	private LogicalExpressionParser leParser;
 
     protected void setUp() throws Exception {
         super.setUp();
         Factory factory = new FactoryImpl();
         wsmoFactory = factory.getWsmoFactory();
-        wsmlDataFactory = factory.getWsmlDataFactory();
-        xmlDataFactory = factory.getXmlDataFactory();
         leFactory = factory.getLogicalExpressionFactory();
         previous = BaseReasonerTest.reasoner;
         Map<String, Object> m = new HashMap<String, Object>();
@@ -83,6 +76,7 @@ public class SpassEntailmentTest extends BaseReasonerTest {
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createFOLReasoner(m);
         
     	wsmlParser = new ParserImplTyped();
+    	leParser = new LogExprParserTypedImpl();
     }
 
     public void test() throws Exception {
@@ -90,15 +84,15 @@ public class SpassEntailmentTest extends BaseReasonerTest {
         Ontology ont = (Ontology) wsmlParser.parse(new InputStreamReader(in))[0];
 
         wsmlReasoner.registerOntology(ont);
-        LogicalExpression conjecture = wsmoManager.getLogicalExpressionParser(ont).parse("Lisa[hasAncestor hasValue GrandPa]");
+        LogicalExpression conjecture = leParser.parse("Lisa[hasAncestor hasValue GrandPa]");
         EntailmentType result = wsmlReasoner.checkEntailment(conjecture);
         assertEquals(EntailmentType.entailed, result);
 
-        conjecture = wsmoManager.getLogicalExpressionParser(ont).parse("exists ?x (?x[hasChild hasValue someChild])");
+        conjecture = leParser.parse("exists ?x (?x[hasChild hasValue someChild])");
         result = wsmlReasoner.checkEntailment(conjecture);
         assertEquals(EntailmentType.entailed, result);
 
-        conjecture = wsmoManager.getLogicalExpressionParser(ont).parse("exists ?x (March[hasChild hasValue ?x])");
+        conjecture = leParser.parse("exists ?x (March[hasChild hasValue ?x])");
         result = wsmlReasoner.checkEntailment(conjecture);
         assertEquals(EntailmentType.entailed, result);
     }
@@ -107,17 +101,17 @@ public class SpassEntailmentTest extends BaseReasonerTest {
         IRI iri = wsmoFactory.createIRI("urn://foobar");
         Ontology ont = wsmoFactory.createOntology(iri);
         ont.setDefaultNamespace(iri);
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ont).parse("a[b hasValue c]");
+        LogicalExpression le = leParser.parse("a[b hasValue c]");
         Axiom a = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
         a.addDefinition(le);
         ont.addAxiom(a);
         wsmlReasoner.registerOntology(ont);
-        LogicalExpression conjecture = wsmoManager.getLogicalExpressionParser(ont).parse("exists ?x (?x[b hasValue c]).");
+        LogicalExpression conjecture = leParser.parse("exists ?x (?x[b hasValue c]).");
         EntailmentType t;
         t = wsmlReasoner.checkEntailment(conjecture);
         assertEquals(EntailmentType.entailed, t);
 
-        conjecture = wsmoManager.getLogicalExpressionParser(ont).parse("f[b hasValue d]");
+        conjecture = leParser.parse("f[b hasValue d]");
         t = wsmlReasoner.checkEntailment(conjecture);
         assertEquals(EntailmentType.notEntailed, t);
     }
@@ -132,7 +126,7 @@ public class SpassEntailmentTest extends BaseReasonerTest {
     }
 
     private void addExpression(Ontology ont, String str) throws ParserException, InvalidModelException {
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ont).parse(str);
+        LogicalExpression le = leParser.parse(str);
         Axiom a = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
         a.addDefinition(le);
         ont.addAxiom(a);
@@ -146,11 +140,11 @@ public class SpassEntailmentTest extends BaseReasonerTest {
         LogicalExpression conjecture;
         EntailmentType t;
 
-        conjecture = wsmoManager.getLogicalExpressionParser(ont).parse("22 > 2");
+        conjecture = leParser.parse("22 > 2");
         t = wsmlReasoner.checkEntailment(conjecture);
         assertEquals(EntailmentType.entailed, t);
 
-        conjecture = wsmoManager.getLogicalExpressionParser(ont).parse("hv(i,(6+6)).");
+        conjecture = leParser.parse("hv(i,(6+6)).");
         t = wsmlReasoner.checkEntailment(conjecture);
         assertEquals(EntailmentType.entailed, t);
 
@@ -162,7 +156,6 @@ public class SpassEntailmentTest extends BaseReasonerTest {
 
     @Override
     protected void tearDown() throws Exception {
-        // TODO Auto-generated method stub
         super.tearDown();
         BaseReasonerTest.reasoner = previous;
         // System.gc();

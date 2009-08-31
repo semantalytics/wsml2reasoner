@@ -40,6 +40,7 @@ import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.omwg.ontology.WsmlDataType;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.ConjunctiveQuery;
 import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
@@ -47,6 +48,7 @@ import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.common.Entity;
 import org.wsmo.factory.DataFactory;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
@@ -56,7 +58,6 @@ import com.ontotext.wsmo4j.ontology.InstanceImpl;
 public class DatalogBasedWSMLReasonerTest extends TestCase {
 	
 	protected DatalogBasedWSMLReasoner reasoner;
-	protected WSMO4JManager wsmoManager;
 	protected String ns = "http://ex.org#";
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
@@ -69,10 +70,10 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		WSMO4JManager wsmoManager = new WSMO4JManager(); 
-		wsmoFactory = wsmoManager.getWSMOFactory();
-		dataFactory = wsmoManager.getWsmlDataFactory();
-        leFactory = wsmoManager.getLogicalExpressionFactory();
+		Factory factory = new FactoryImpl(); 
+		wsmoFactory = factory.getWsmoFactory();
+		dataFactory = factory.getWsmlDataFactory();
+        leFactory = factory.getLogicalExpressionFactory();
         
         ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ont"));
         ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));

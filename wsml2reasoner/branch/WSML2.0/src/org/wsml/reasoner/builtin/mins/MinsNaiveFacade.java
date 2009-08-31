@@ -2,11 +2,11 @@ package org.wsml.reasoner.builtin.mins;
 
 import java.util.Map;
 
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.factory.Factory;
 
 public class MinsNaiveFacade extends AbstractMinsFacade
 {
-	public MinsNaiveFacade(WSMO4JManager wsmoManager, final Map<String, Object> config) {
+	public MinsNaiveFacade(Factory wsmoManager, final Map<String, Object> config) {
 		super( wsmoManager, config );
 	}
     

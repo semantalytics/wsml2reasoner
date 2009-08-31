@@ -29,11 +29,12 @@ import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsmo.common.Entity;
+import org.wsmo.factory.Factory;
 
 public class AnonymousIDReplacementTest extends BaseNormalizationTest
 {
@@ -43,9 +44,9 @@ public class AnonymousIDReplacementTest extends BaseNormalizationTest
     protected void setUp() throws Exception
     {
         super.setUp();
-        WSMO4JManager wmsoManager = new WSMO4JManager();
-        axiomatizationNormalizer = new AxiomatizationNormalizer(wmsoManager);
-        reductionNormalizer = new ConstructReductionNormalizer(wmsoManager);
+        Factory factory = new FactoryImpl();
+        axiomatizationNormalizer = new AxiomatizationNormalizer(factory);
+        reductionNormalizer = new ConstructReductionNormalizer(factory);
     }
 
     @Override

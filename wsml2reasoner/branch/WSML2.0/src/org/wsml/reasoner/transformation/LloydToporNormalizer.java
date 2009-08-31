@@ -25,11 +25,11 @@ import java.util.Set;
 
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.LogicalExpressionTransformer;
 import org.wsml.reasoner.transformation.le.TopDownLESplitter;
 import org.wsml.reasoner.transformation.le.lloydtopor.LloydToporRules;
 import org.wsmo.common.Entity;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 
 public class LloydToporNormalizer implements OntologyNormalizer {
@@ -37,10 +37,10 @@ public class LloydToporNormalizer implements OntologyNormalizer {
 
     protected WsmoFactory wsmoFactory;
 
-    public LloydToporNormalizer(WSMO4JManager wsmoManager) {
+    public LloydToporNormalizer(Factory wsmoManager) {
         LloydToporRules lloydToporRules = new LloydToporRules(wsmoManager);
         leTransformer = new TopDownLESplitter(lloydToporRules.getRules());
-        wsmoFactory = wsmoManager.getWSMOFactory();
+        wsmoFactory = wsmoManager.getWsmoFactory();
     }
 
     public Set<Entity> normalizeEntities(Collection<Entity> theEntities) {

@@ -18,9 +18,9 @@
  */
 package org.wsml.reasoner.transformation.le.negationpush;
 
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
 import org.wsml.reasoner.transformation.le.Rules;
+import org.wsmo.factory.Factory;
 
 /**
  * This singleton class represents a set of normalization rules for pushing
@@ -32,9 +32,9 @@ import org.wsml.reasoner.transformation.le.Rules;
  */
 public class NegationPushRules extends Rules <NormalizationRule>{
 
-    public NegationPushRules(WSMO4JManager wsmoManager) {
+    public NegationPushRules(Factory factory) {
         addRule(new DoubleNegationRule());
-        addRule(new NegateConjunctionRule(wsmoManager));
-        addRule(new NegateDisjunctionRule(wsmoManager));
+        addRule(new NegateConjunctionRule(factory));
+        addRule(new NegateDisjunctionRule(factory));
     }
 }

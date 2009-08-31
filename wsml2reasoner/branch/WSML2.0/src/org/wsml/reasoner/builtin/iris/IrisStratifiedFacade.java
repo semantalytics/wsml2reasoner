@@ -25,7 +25,7 @@ package org.wsml.reasoner.builtin.iris;
 import java.util.Map;
 
 import org.deri.iris.Configuration;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.factory.Factory;
 
 /**
  * <p>
@@ -35,8 +35,8 @@ import org.wsml.reasoner.impl.WSMO4JManager;
  */
 public class IrisStratifiedFacade extends AbstractIrisFacade {
 
-    public IrisStratifiedFacade(final WSMO4JManager m, final Map<String, Object> config) {
-    	super( m, config );
+    public IrisStratifiedFacade(final Factory factory, final Map<String, Object> config) {
+    	super( factory, config );
     }
 
 //    public IrisFacade() {

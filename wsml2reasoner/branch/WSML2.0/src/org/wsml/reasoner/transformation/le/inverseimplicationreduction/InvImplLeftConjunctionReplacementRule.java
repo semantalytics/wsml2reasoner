@@ -21,16 +21,16 @@ package org.wsml.reasoner.transformation.le.inverseimplicationreduction;
 import org.omwg.logicalexpression.Conjunction;
 import org.omwg.logicalexpression.InverseImplication;
 import org.omwg.logicalexpression.LogicalExpression;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 public class InvImplLeftConjunctionReplacementRule extends ReplacementRule implements NormalizationRule {
     
     private LogicalExpressionFactory leFactory;
     
-    public InvImplLeftConjunctionReplacementRule(WSMO4JManager wsmoManager){
-        this.leFactory = wsmoManager.getLogicalExpressionFactory();
+    public InvImplLeftConjunctionReplacementRule(Factory factory){
+        this.leFactory = factory.getLogicalExpressionFactory();
     }
     
     public LogicalExpression apply(LogicalExpression expression) {

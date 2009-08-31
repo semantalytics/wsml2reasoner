@@ -33,10 +33,10 @@ import org.omwg.logicalexpression.MembershipMolecule;
 import org.omwg.logicalexpression.Molecule;
 import org.omwg.logicalexpression.SubConceptMolecule;
 import org.omwg.logicalexpression.terms.Term;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.LEUtil;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
 import org.wsmo.common.Identifier;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -52,9 +52,9 @@ public class FOLMoleculeDecompositionRule implements NormalizationRule {
     private LogicalExpressionFactory leFactory;
     private WsmoFactory wsmoFactory;
     
-    public FOLMoleculeDecompositionRule(WSMO4JManager wsmoManager){
-        this.leFactory = wsmoManager.getLogicalExpressionFactory();
-        this.wsmoFactory = wsmoManager.getWSMOFactory();
+    public FOLMoleculeDecompositionRule(Factory factory){
+        this.leFactory = factory.getLogicalExpressionFactory();
+        this.wsmoFactory = factory.getWsmoFactory();
     }
     
     public LogicalExpression apply(LogicalExpression expression) {

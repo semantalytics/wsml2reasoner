@@ -34,7 +34,6 @@ import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
@@ -71,7 +70,7 @@ public class MinsReasonerExample {
         Ontology exampleOntology = loadOntology("example/simpleOntology.wsml");
         if (exampleOntology == null)
             return;
-        LogicalExpressionFactory leFactory = new WSMO4JManager().getLogicalExpressionFactory();
+        LogicalExpressionFactory leFactory = new FactoryImpl().getLogicalExpressionFactory();
 
         String queryString = "?x memberOf ?y";
 

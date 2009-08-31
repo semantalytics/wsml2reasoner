@@ -7,15 +7,13 @@ import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
+import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Ontology;
 import org.sti2.wsmo4j.factory.FactoryImpl;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
-import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.Factory;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
 
 
 /**
@@ -26,20 +24,21 @@ public class SpassTest extends TestCase{
     
     private Ontology nsContainer;
     private SpassFacade tptp;
-	protected WSMO4JManager wsmoManager;
+	protected Factory wsmoManager;
 
     protected void setUp() throws Exception {
-    	wsmoManager = new WSMO4JManager();
+    	wsmoManager = new FactoryImpl();
 
-        tptp = new SpassFacade(new WSMO4JManager(),"urn:foo");
+        tptp = new SpassFacade(new FactoryImpl(),"urn:foo");
 
-        IRI i = wsmoManager.getWSMOFactory().createIRI("foo:bar#");
-        nsContainer = wsmoManager.getWSMOFactory().createOntology(i);
+        IRI i = wsmoManager.getWsmoFactory().createIRI("foo:bar#");
+        nsContainer = wsmoManager.getWsmoFactory().createOntology(i);
         nsContainer.setDefaultNamespace(i);
      }
 
     public void testConjunctionDisjunction() throws Exception{
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(nsContainer).parse(
+    	LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+        LogicalExpression le = leParser.parse(
             "a and b or c ");
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
@@ -61,8 +60,8 @@ public class SpassTest extends TestCase{
     }
     
     private void check(String wsml, String fol) throws Exception{
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(nsContainer).parse(
-                wsml);
+        LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+        LogicalExpression le = leParser.parse(wsml);
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
         tptp.register(set);

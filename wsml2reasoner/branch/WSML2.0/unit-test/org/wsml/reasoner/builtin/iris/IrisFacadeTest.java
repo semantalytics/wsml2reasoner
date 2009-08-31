@@ -19,7 +19,6 @@ import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
 import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.Literal;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -94,7 +93,7 @@ public class IrisFacadeTest extends TestCase {
 		final LogicalExpressionFactory LF = FACTORY.getLogicalExpressionFactory( );
 		final IConcreteFactory CF = org.deri.iris.factory.Factory.CONCRETE;
 
-		final IrisStratifiedFacade IF = new IrisStratifiedFacade( new WSMO4JManager(), new HashMap<String, Object>() );
+		final IrisStratifiedFacade IF = new IrisStratifiedFacade( new FactoryImpl(), new HashMap<String, Object>() );
 
 		// test constructed
 		final ConstructedTerm wc = LF.createConstructedTerm(WF
@@ -169,7 +168,7 @@ public class IrisFacadeTest extends TestCase {
 		final DataFactory DF = FACTORY.getWsmlDataFactory( );
 //		final ITermFactory TF = org.deri.iris.factory.Factory.TERM;
 		final IConcreteFactory CF = org.deri.iris.factory.Factory.CONCRETE;
-		final IrisStratifiedFacade IF = new IrisStratifiedFacade( new WSMO4JManager(), new HashMap<String, Object>() );
+		final IrisStratifiedFacade IF = new IrisStratifiedFacade( new FactoryImpl(), new HashMap<String, Object>() );
 		
 		assertEquals(DF.createGregorianDay(1), IF.convertTermFromIrisToWsmo4j(CF.createGDay(1)));
 	}

@@ -8,9 +8,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
 import org.deri.wsmo4j.io.serializer.wsml.SerializeWSMLTermsVisitor;
 import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
@@ -18,7 +20,6 @@ import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.TopEntity;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -38,13 +39,11 @@ import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
  */
 public class NobelTest {
 	
-	private LogicalExpressionFactory leFactory = null;
-
-	private WSMO4JManager wsmoManager = null;
+	private FactoryImpl wsmoManager = null;
 
 	private Parser wsmlParser = null;
 
-	private WsmoFactory wsmoFactory;
+	private LogicalExpressionParser leParser;
 
 	// Location of ontolgy
 	static String ontLoc = null;
@@ -172,10 +171,9 @@ public class NobelTest {
 	 * Sets up factories for creating WSML elements
 	 */
 	private void setUpFactories() {
-		wsmoManager = new WSMO4JManager();
-		leFactory = wsmoManager.getLogicalExpressionFactory();
-		wsmoFactory = new FactoryImpl().getWsmoFactory();
+		wsmoManager = new FactoryImpl();
     	wsmlParser = new ParserImplTyped();
+    	leParser = new LogExprParserTypedImpl();
 	}
 
 	/**
@@ -256,7 +254,7 @@ public class NobelTest {
 	 */
 	private Set<Map<Variable, Term>> performQuery(LPReasoner reasoner,
 			Ontology o, String queryString) throws Exception {
-		LogicalExpression query = wsmoManager.getLogicalExpressionParser(o).parse(queryString);
+		LogicalExpression query = leParser.parse(queryString);
 		// Executes query request
 		Set<Map<Variable, Term>> result = reasoner.executeQuery(query);
 

@@ -7,14 +7,13 @@ import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
+import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Ontology;
 import org.sti2.wsmo4j.factory.FactoryImpl;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
-import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
+import org.wsmo.factory.Factory;
 
 
 /**
@@ -23,23 +22,24 @@ import org.wsmo.factory.WsmoFactory;
  */
 public class TPTPTest extends TestCase{
     
-    private WSMO4JManager wsmoManager;
+    private Factory wsmoManager;
     private Ontology nsContainer;
     private TPTPFacade tptp;
+	private LogicalExpressionParser leParser;
     
     protected void setUp() throws Exception {
-    	wsmoManager = new WSMO4JManager();
+    	wsmoManager = new FactoryImpl();
         
-        tptp = new TPTPFacade(new WSMO4JManager(),"urn:foo");
+        tptp = new TPTPFacade(new FactoryImpl(),"urn:foo");
 
-        IRI i = wsmoManager.getWSMOFactory().createIRI("foo:bar#");
-        nsContainer = wsmoManager.getWSMOFactory().createOntology(i);
+        IRI i = wsmoManager.getWsmoFactory().createIRI("foo:bar#");
+        nsContainer = wsmoManager.getWsmoFactory().createOntology(i);
         nsContainer.setDefaultNamespace(i);
+        leParser = new LogExprParserTypedImpl();
     }
 
     public void testatom() throws Exception{
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(nsContainer).parse(
-            "subConceptof(_\"urn:/Foo\",  Animal)");
+		LogicalExpression le = leParser.parse("subConceptof(_\"urn:/Foo\",  Animal)");
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
         tptp.register(set);
@@ -53,7 +53,7 @@ public class TPTPTest extends TestCase{
     }
 
     public void testVars() throws Exception{
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(nsContainer).parse(
+        LogicalExpression le = leParser.parse(
             "forall ?x,?y,?z \n " +
             " (subConceptof(?x,?y) and subConceptof(?y,?z) \n" +
             " implies subConceptof(?x,?z)) ");
@@ -71,7 +71,7 @@ public class TPTPTest extends TestCase{
     }
     
     public void testConjunctionDisjunction() throws Exception{
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(nsContainer).parse(
+        LogicalExpression le = leParser.parse(
             "a and b or c ");
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
@@ -86,7 +86,7 @@ public class TPTPTest extends TestCase{
     }
     
     public void testNegation() throws Exception{
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(nsContainer).parse(
+        LogicalExpression le = leParser.parse(
             "a or neg a");
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
@@ -102,7 +102,7 @@ public class TPTPTest extends TestCase{
     }
 
     public void testFsymbols() throws Exception{
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(nsContainer).parse(
+        LogicalExpression le = leParser.parse(
             "a(f(b(c,d,e)))");
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);

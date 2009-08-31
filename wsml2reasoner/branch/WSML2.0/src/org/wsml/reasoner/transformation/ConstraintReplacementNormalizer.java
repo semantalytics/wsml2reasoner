@@ -19,10 +19,10 @@ import org.omwg.logicalexpression.NegationAsFailure;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -53,9 +53,9 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
     private WsmoFactory wsmoFactory;
     private LogicalExpressionFactory leFactory;
 
-    public ConstraintReplacementNormalizer(WSMO4JManager wsmoManager) {
-        leFactory = wsmoManager.getLogicalExpressionFactory();
-        wsmoFactory = wsmoManager.getWSMOFactory();
+    public ConstraintReplacementNormalizer(Factory factory) {
+        leFactory = factory.getLogicalExpressionFactory();
+        wsmoFactory = factory.getWsmoFactory();
         attributeOfTypePredicateID = wsmoFactory.createIRI(ATTR_OFTYPE_IRI);
         minCardinalityPredicateID = wsmoFactory.createIRI(MIN_CARD_IRI);
         maxCardinalityPredicateID = wsmoFactory.createIRI(MAX_CARD_IRI);

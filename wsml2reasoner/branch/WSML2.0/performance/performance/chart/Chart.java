@@ -35,9 +35,9 @@ import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
-
 import performance.BenchmarkOntologyGenerator;
+
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
 
 public class Chart {
 	

@@ -56,7 +56,6 @@ import org.deri.iris.api.terms.concrete.IDateTerm;
 import org.deri.iris.api.terms.concrete.IDateTime;
 import org.deri.iris.api.terms.concrete.IDecimalTerm;
 import org.deri.iris.api.terms.concrete.IDoubleTerm;
-import org.deri.iris.api.terms.concrete.IDuration;
 import org.deri.iris.api.terms.concrete.IFloatTerm;
 import org.deri.iris.api.terms.concrete.IGDay;
 import org.deri.iris.api.terms.concrete.IGMonth;
@@ -83,8 +82,6 @@ import org.deri.iris.builtins.datatype.IsGYearBuiltin;
 import org.deri.iris.builtins.datatype.IsGYearMonthBuiltin;
 import org.deri.iris.builtins.datatype.IsHexBinaryBuiltin;
 import org.deri.iris.builtins.datatype.IsIntegerBuiltin;
-import org.deri.iris.builtins.datatype.IsIriBuiltin;
-import org.deri.iris.builtins.datatype.IsSqNameBuiltin;
 import org.deri.iris.builtins.datatype.IsStringBuiltin;
 import org.deri.iris.builtins.datatype.IsTimeBuiltin;
 import org.deri.iris.facts.IDataSource;
@@ -109,12 +106,12 @@ import org.wsml.reasoner.api.data.ExternalDataSource;
 import org.wsml.reasoner.api.data.ExternalDataSource.HasValue;
 import org.wsml.reasoner.api.data.ExternalDataSource.MemberOf;
 import org.wsml.reasoner.api.exception.InternalReasonerException;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.NumberedAnonymousID;
 import org.wsmo.common.UnnumberedAnonymousID;
 import org.wsmo.factory.DataFactory;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -279,10 +276,10 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 	final static String TEXT_COMPARE = Constants.WSML_NAMESPACE + "textCompare";						// RIF : func:text-compare
 	final static String TEXT_LENGTH = Constants.WSML_NAMESPACE + "textLength";							// RIF : func:text-length
     
-	public AbstractIrisFacade(final WSMO4JManager m, final Map<String, Object> config) {
-        DATA_FACTORY = m.getWsmlDataFactory();
-        WSMO_FACTORY = m.getWSMOFactory();
-        LOGIC_FACTORY = m.getLogicalExpressionFactory();
+	public AbstractIrisFacade(final Factory factory, final Map<String, Object> config) {
+        DATA_FACTORY = factory.getWsmlDataFactory();
+        WSMO_FACTORY = factory.getWsmoFactory();
+        LOGIC_FACTORY = factory.getLogicalExpressionFactory();
 
         // retrieving the data source
         final Object ds = (config != null) ? config.get(EXTERNAL_DATA_SOURCE) : null;

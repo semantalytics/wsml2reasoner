@@ -22,6 +22,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
@@ -31,12 +33,12 @@ import org.omwg.ontology.Relation;
 import org.omwg.ontology.RelationInstance;
 import org.omwg.ontology.Type;
 import org.omwg.ontology.Value;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.AnonymousIdTranslator;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsmo.common.Entity;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
 
@@ -58,15 +60,10 @@ public class Relation2AttributeNormalizer implements OntologyNormalizer {
 
     private AnonymousIdTranslator anonymousIdTranslator;
 
-	private WSMO4JManager wsmoManager;
-
-    public Relation2AttributeNormalizer(WSMO4JManager wsmoManager) {
+    public Relation2AttributeNormalizer(Factory factory) {
     	
-    	this.wsmoManager = wsmoManager;
-    	
-    	wsmoFactory = wsmoManager.getWSMOFactory();
-    	
-        anonymousIdTranslator = new AnonymousIdTranslator(wsmoManager.getWSMOFactory());
+    	wsmoFactory = factory.getWsmoFactory();
+        anonymousIdTranslator = new AnonymousIdTranslator(factory.getWsmoFactory());
     }
 
     public Set<Axiom> normalizeAxioms(Collection<Axiom> theAxioms) {
@@ -142,8 +139,9 @@ public class Relation2AttributeNormalizer implements OntologyNormalizer {
         Axiom result = wsmoFactory.createAxiom((Identifier) anonymousIdTranslator.translate(wsmoFactory.createAnonymousID()));
         for (Relation sr : superRelations){
             String le = "?x[_\"" + relation.getIdentifier() + "\" hasValue ?y] implies " + "?x[_\"" + sr.getIdentifier() + "\" hasValue ?y].";
+            LogicalExpressionParser leParser = new LogExprParserTypedImpl();
             try {
-                result.addDefinition(wsmoManager.getLogicalExpressionParser().parse(le));
+                result.addDefinition(leParser.parse(le));
             }
             catch (ParserException e) {
                 e.printStackTrace();

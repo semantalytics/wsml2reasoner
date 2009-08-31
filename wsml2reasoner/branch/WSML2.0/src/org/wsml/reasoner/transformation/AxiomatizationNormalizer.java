@@ -49,12 +49,12 @@ import org.omwg.ontology.SimpleDataType;
 import org.omwg.ontology.Type;
 import org.omwg.ontology.Value;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.LEUtil;
 import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.UnnumberedAnonymousID;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -92,9 +92,9 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
     private Map<LogicalExpression, String> axiomIDs;
 
-    public AxiomatizationNormalizer(WSMO4JManager wsmoManager) {
-        this.leFactory = wsmoManager.getLogicalExpressionFactory();
-        this.wsmoFactory = wsmoManager.getWSMOFactory();
+    public AxiomatizationNormalizer(Factory factory) {
+        this.leFactory = factory.getLogicalExpressionFactory();
+        this.wsmoFactory = factory.getWsmoFactory();
         this.axiomIDs = new HashMap<LogicalExpression, String>();
     }
 
@@ -200,10 +200,10 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 typeID = ((Concept) type).getIdentifier();
             }
             else if (type instanceof SimpleDataType) {
-                typeID = ((SimpleDataType) type).getIRI();
+                typeID = ((SimpleDataType) type).getIdentifier();
             }
             else {
-                typeID = ((ComplexDataType) type).getIRI();
+                typeID = ((ComplexDataType) type).getIdentifier();
             }
 
             // create an appropriate molecule per range type:
@@ -429,10 +429,10 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                     typeID = ((Concept) type).getIdentifier();
                 }
                 else if (type instanceof SimpleDataType) {
-                    typeID = ((SimpleDataType) type).getIRI();
+                    typeID = ((SimpleDataType) type).getIdentifier();
                 }
                 else {
-                    typeID = ((ComplexDataType) type).getIRI();
+                    typeID = ((ComplexDataType) type).getIdentifier();
                 }
                 typeMemberships.add(leFactory.createMemberShipMolecule(terms.get(paramIndex), typeID));
             }

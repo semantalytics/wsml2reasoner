@@ -28,9 +28,7 @@ import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsmo.common.TopEntity;
-import org.wsmo.factory.Factory;
 import org.wsmo.wsml.Serializer;
 
 /**

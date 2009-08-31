@@ -78,6 +78,7 @@ import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.ImportedOntologiesBlock;
 import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -101,7 +102,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
 
     protected WsmoFactory wsmoFactory;
     protected LogicalExpressionFactory leFactory;
-    protected WSMO4JManager wsmoManager;
+    protected Factory factory;
 
     private int allowImports = 0;
     private boolean disableConsitencyCheck = false;
@@ -117,8 +118,8 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
      * 
      * @param builtInType
      *            the underlying reasoner to use
-     * @param wsmoManager
-     *            the wsmo4j manager to use
+     * @param factory
+     *            the wsmo4j factory to use
      * @param config
      *            additional configuration for the facade
      * @throws IllegalArgumentException
@@ -126,49 +127,49 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
      * @throws IllegalArgumentException
      *             if the wsml4j manager is <code>null</code>
      */
-    public DatalogBasedWSMLReasoner(final BuiltInReasoner builtInType, final WSMO4JManager wsmoManager, final Map<String, Object> config) {
+    public DatalogBasedWSMLReasoner(final BuiltInReasoner builtInType, final Factory factory, final Map<String, Object> config) {
         if (builtInType == null) {
             throw new IllegalArgumentException("The facade type must not be null");
         }
-        if (wsmoManager == null) {
+        if (factory == null) {
             throw new IllegalArgumentException("The WSMO4JManager must not be null");
         }
 
-        this.builtInFacade = createFacade(builtInType, wsmoManager, config);
-        this.wsmoManager = wsmoManager;
-        this.wsmoFactory = wsmoManager.getWSMOFactory();
-        this.leFactory = wsmoManager.getLogicalExpressionFactory();
+        this.builtInFacade = createFacade(builtInType, factory, config);
+        this.factory = factory;
+        this.wsmoFactory = factory.getWsmoFactory();
+        this.leFactory = factory.getLogicalExpressionFactory();
     }
 
     /**
      * Instantiates a new facade using reflection. The facade must have a
      * constructor taking a <code>WSMO4JManager<code>.
      * @param className the class of the facade
-     * @param wsmoManager the manager to pass to the constructor
+     * @param factory the wsmo4j factory to pass to the constructor
      * @param config the additional configuration for the facade
      * @return the newly instantiated facade
      * @throws InternalReasonerException if something went wrong while 
      * instantiating the reasoner
      */
-    private DatalogReasonerFacade createFacade(BuiltInReasoner builtInType, WSMO4JManager wsmoManager, Map<String, Object> config) throws InternalReasonerException {
-        assert wsmoManager != null : "The manager must not be null";
+    private DatalogReasonerFacade createFacade(BuiltInReasoner builtInType, Factory factory, Map<String, Object> config) throws InternalReasonerException {
+        assert factory != null : "The manager must not be null";
 
         switch( builtInType )
         {
         case KAON2:
-        	return new Kaon2LPFacade( wsmoManager, config );
+        	return new Kaon2LPFacade( factory, config );
         case MINS:
-        	return new MinsWellFoundedFacade( wsmoManager, config );
+        	return new MinsWellFoundedFacade( factory, config );
 //      case MINS_NAIVE:
 //        	return new MinsWellNaive( wsmoManager, config );
         case XSB:
-        	return new XSBFacade( wsmoManager, config );
+        	return new XSBFacade( factory, config );
         case IRIS_STRATIFIED:
-        	return new IrisStratifiedFacade( wsmoManager, config );
+        	return new IrisStratifiedFacade( factory, config );
         case IRIS_WELL_FOUNDED:
-        	return new IrisWellFoundedFacade( wsmoManager, config );
+        	return new IrisWellFoundedFacade( factory, config );
         case IRIS_SLDNF:
-        	return new IrisSLDNFFacade( wsmoManager, config );
+        	return new IrisSLDNFFacade( factory, config );
         }
         
         throw new InternalReasonerException( "An built-in reasoner could not be instantiated. " +
@@ -205,7 +206,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         Set<Entity> entities = theEntities;
 
         // Convert conceptual syntax to logical expressions
-        OntologyNormalizer normalizer = new AxiomatizationNormalizer(wsmoManager);
+        OntologyNormalizer normalizer = new AxiomatizationNormalizer(factory);
         entities = normalizer.normalizeEntities(entities);
 
         Set<Axiom> axioms = new HashSet<Axiom>();
@@ -216,22 +217,22 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         }
 
         // Convert constraints to support debugging
-        normalizer = new ConstraintReplacementNormalizer(wsmoManager);
+        normalizer = new ConstraintReplacementNormalizer(factory);
         axioms = normalizer.normalizeAxioms(axioms);
 
         // Simplify axioms
-        normalizer = new ConstructReductionNormalizer(wsmoManager);
+        normalizer = new ConstructReductionNormalizer(factory);
         axioms = normalizer.normalizeAxioms(axioms);
         
         // Apply InverseImplicationTransformation (wsml-rule)
-        normalizer = new InverseImplicationNormalizer(wsmoManager);
+        normalizer = new InverseImplicationNormalizer(factory);
         axioms = normalizer.normalizeAxioms(axioms);
         
         // Apply Lloyd-Topor rules to get Datalog-compatible LEs
-        normalizer = new LloydToporNormalizer(wsmoManager);
+        normalizer = new LloydToporNormalizer(factory);
         axioms = normalizer.normalizeAxioms(axioms);
         
-        org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(wsmoManager);
+        org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(factory);
         Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
         for (Axiom a : axioms) {
             lExprs.addAll(a.listDefinitions());
@@ -440,7 +441,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
             Type type;
             IRI typeId = (IRI) violation.get(t);
             if (WsmlDataType.WSML_STRING.equals(typeId.toString()) || WsmlDataType.WSML_INTEGER.equals(typeId.toString()) || WsmlDataType.WSML_DECIMAL.equals(typeId.toString()) || WsmlDataType.WSML_BOOLEAN.equals(typeId.toString())){
-                type = wsmoManager.getWsmlDataFactory().createDataType(typeId);
+                type = factory.getWsmlDataFactory().createDataType(typeId);
             }
             else{
                 type = wsmoFactory.createConcept(typeId);
@@ -573,7 +574,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
     }
 
     protected Set<org.wsml.reasoner.ConjunctiveQuery> convertQuery(org.omwg.logicalexpression.LogicalExpression q) {
-        org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(wsmoManager);
+        org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(factory);
 
         List<Term> params = new LinkedList<Term>();
         LogicalExpressionVariableVisitor varVisitor = new LogicalExpressionVariableVisitor();
@@ -584,12 +585,12 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
 		}
         Atom rHead = leFactory.createAtom(wsmoFactory.createIRI(WSML_RESULT_PREDICATE), params);
 
-        LogicalExpressionNormalizer moleculeNormalizer = new OnePassReplacementNormalizer(new MoleculeDecompositionRules(wsmoManager).getRules(), wsmoManager);
+        LogicalExpressionNormalizer moleculeNormalizer = new OnePassReplacementNormalizer(new MoleculeDecompositionRules(factory).getRules(), factory);
         q = moleculeNormalizer.normalize(q);
 
         org.omwg.logicalexpression.LogicalExpression resultDefRule = leFactory.createInverseImplication(rHead, q);
 
-        LloydToporRules lloydToporRules = new LloydToporRules(wsmoManager);
+        LloydToporRules lloydToporRules = new LloydToporRules(factory);
         LogicalExpressionTransformer lloydToporNormalizer = new TopDownLESplitter(lloydToporRules.getRules());
         Set<LogicalExpression> conjunctiveQueries = lloydToporNormalizer.transform(resultDefRule);
 

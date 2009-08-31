@@ -36,9 +36,10 @@ import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Parameter;
 import org.omwg.ontology.Relation;
 import org.omwg.ontology.RelationInstance;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsmo.common.Entity;
 import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
@@ -57,9 +58,9 @@ public class Relation2AttributeNormalizerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		WSMO4JManager wsmoManager = new WSMO4JManager();
+		Factory wsmoManager = new FactoryImpl();
 		normalizer = new Relation2AttributeNormalizer(wsmoManager);
-		wsmoFactory = wsmoManager.getWSMOFactory();
+		wsmoFactory = wsmoManager.getWsmoFactory();
 	    leFactory = wsmoManager.getLogicalExpressionFactory();
 	    
 	

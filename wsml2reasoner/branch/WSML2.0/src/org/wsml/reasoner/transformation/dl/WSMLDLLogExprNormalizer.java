@@ -13,7 +13,6 @@ import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Type;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.AnonymousIdTranslator;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsml.reasoner.transformation.le.LogicalExpressionNormalizer;
@@ -27,6 +26,7 @@ import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.UnnumberedAnonymousID;
 import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -53,7 +53,7 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
     protected LogicalExpressionFactory leFactory;
     protected AnonymousIdTranslator anonymousIdTranslator;
 
-    public WSMLDLLogExprNormalizer(WSMO4JManager wsmoManager) {
+    public WSMLDLLogExprNormalizer(Factory wsmoManager) {
         List<NormalizationRule> preOrderRules = new ArrayList<NormalizationRule>();
         preOrderRules.addAll(new ImplicationReductionRules(wsmoManager).getRules());
         preOrderRules.addAll(new InverseImplicationReductionRules(wsmoManager).getRules());
@@ -62,7 +62,7 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
         postOrderRules.addAll(new MoleculeDecompositionRules(wsmoManager).getRules());
 
         leNormalizer = new OnePassReplacementNormalizer(preOrderRules, postOrderRules, wsmoManager);
-        wsmoFactory = wsmoManager.getWSMOFactory();
+        wsmoFactory = wsmoManager.getWsmoFactory();
         leFactory = wsmoManager.getLogicalExpressionFactory();
         anonymousIdTranslator = new AnonymousIdTranslator(wsmoFactory);
     }

@@ -22,12 +22,12 @@
  */
 package helper;
 
+import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.DLReasoner;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
-import org.wsml.reasoner.impl.WSMO4JManager;
 
 
 /**
@@ -38,8 +38,8 @@ public class DLHelper
 	public static boolean isEntailed( Ontology ontology, String expression, DLReasoner reasoner ) throws InconsistencyException, org.wsmo.wsml.ParserException {
     	
     	reasoner.registerOntology( ontology );
-    	LogicalExpressionParser leParser = new WSMO4JManager().getLogicalExpressionParser(ontology);
-        LogicalExpression le = leParser.parse( expression);
+    	LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+        LogicalExpression le = leParser.parse( expression );
 
     	return reasoner.isConceptSatisfiable( le );
 	}

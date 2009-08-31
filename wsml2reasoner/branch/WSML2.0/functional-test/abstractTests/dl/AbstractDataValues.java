@@ -28,16 +28,19 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.semanticweb.owl.io.RendererException;
 import org.semanticweb.owl.model.OWLOntology;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.impl.DLBasedWSMLReasoner;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.serializer.owl.OWLSerializer;
 import org.wsml.reasoner.serializer.owl.OWLSerializerImpl;
 import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
@@ -47,7 +50,7 @@ import abstractTests.DL;
 
 public abstract class AbstractDataValues extends TestCase implements DL {
 	
-	protected WSMO4JManager wsmoManager;
+	protected Factory factory;
 	protected String ns = "http://ex.org#";
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
@@ -59,9 +62,9 @@ public abstract class AbstractDataValues extends TestCase implements DL {
 
 	 protected void setUp() throws Exception {
 	     	super.setUp();
-	        wsmoManager = new WSMO4JManager();
-			wsmoFactory = wsmoManager.getWSMOFactory();
-			leFactory = wsmoManager.getLogicalExpressionFactory();
+	        factory = new FactoryImpl();
+			wsmoFactory = factory.getWsmoFactory();
+			leFactory = factory.getLogicalExpressionFactory();
 			ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ontologyTestValues"));
 	        ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));
 	        axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiomTestValues"));
@@ -299,7 +302,8 @@ public abstract class AbstractDataValues extends TestCase implements DL {
 		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiomTestValues_" + (in.trim())));
 	    ontology.addAxiom(axiom);
 		
-		LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(in);
+	    LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+		LogicalExpression le = leParser.parse(in);
         axiom.addDefinition(le);
         
         DLBasedWSMLReasoner reasoner = (DLBasedWSMLReasoner) this.getDLReasoner();

@@ -22,9 +22,10 @@
  */
 package org.wsml.reasoner.transformation.le.implicationreduction;
 
-import junit.framework.TestCase;
+import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.wsmo.factory.Factory;
 
-import org.wsml.reasoner.impl.WSMO4JManager;
+import junit.framework.TestCase;
 
 
 public class ImplicationReductionRulesTest extends TestCase {
@@ -37,7 +38,7 @@ public class ImplicationReductionRulesTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		WSMO4JManager wsmoManager = new WSMO4JManager();
+		Factory wsmoManager = new FactoryImpl();
 		rules = new ImplicationReductionRules(wsmoManager);
 	}
 	

@@ -21,7 +21,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
+import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.sti2.wsmo4j.factory.FactoryImpl;
@@ -29,17 +31,14 @@ import org.wsml.reasoner.api.FOLReasoner;
 import org.wsml.reasoner.api.FOLReasoner.EntailmentType;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
-import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.Factory;
-import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
-
 import base.BaseReasonerTest;
+
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
 
 /**
  * Interface or class description
@@ -60,13 +59,13 @@ public class TPTPEntailmentTest extends BaseReasonerTest {
     private FOLReasoner wsmlReasoner = null;
     BuiltInReasoner previous;  
     private Parser wsmlParser = null;
-	protected WSMO4JManager wsmoManager;
+	protected Factory wsmoManager;
     
     
     protected void setUp() throws Exception {
         super.setUp();
-        wsmoManager = new WSMO4JManager();
-        wsmoFactory = wsmoManager.getWSMOFactory();
+        wsmoManager = new FactoryImpl();
+        wsmoFactory = wsmoManager.getWsmoFactory();
         previous = BaseReasonerTest.reasoner;
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createFOLReasoner(new HashMap <String, Object> ());
     	wsmlParser = new ParserImplTyped();
@@ -78,21 +77,19 @@ public class TPTPEntailmentTest extends BaseReasonerTest {
         Ontology ont = (Ontology)wsmlParser.parse(new InputStreamReader(in))[0];
         
         wsmlReasoner.registerOntology(ont);
-        LogicalExpression conjecture = wsmoManager.getLogicalExpressionParser().parse(
-                "Lisa[hasAncestor hasValue GrandPa]");
+        LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+        LogicalExpression conjecture = leParser.parse("Lisa[hasAncestor hasValue GrandPa]");
         EntailmentType result = wsmlReasoner.checkEntailment(
                 conjecture);
         assertEquals(EntailmentType.entailed, result);
         
         
-        conjecture = wsmoManager.getLogicalExpressionParser().parse(
-                "exists ?x (?x[hasChild hasValue someChild])");
+        conjecture = leParser.parse("exists ?x (?x[hasChild hasValue someChild])");
         result = wsmlReasoner.checkEntailment(
                 conjecture);
         assertEquals(EntailmentType.entailed, result);
         
-        conjecture = wsmoManager.getLogicalExpressionParser().parse(
-                "exists ?x (March[hasChild hasValue ?x])");
+        conjecture = leParser.parse("exists ?x (March[hasChild hasValue ?x])");
         result = wsmlReasoner.checkEntailment(
                 conjecture);
         assertEquals(EntailmentType.entailed, result);
@@ -103,8 +100,8 @@ public class TPTPEntailmentTest extends BaseReasonerTest {
         IRI iri = wsmoFactory.createIRI("urn://foobar");
         Ontology ont = wsmoFactory.createOntology(iri);
         ont.setDefaultNamespace(iri);
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser().parse(
-            "a[b hasValue c]");
+        LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+		LogicalExpression le = leParser .parse("a[b hasValue c]");
         Axiom a = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
         a.addDefinition(le);
         ont.addAxiom(a);

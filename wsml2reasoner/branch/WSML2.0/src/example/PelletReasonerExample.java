@@ -36,7 +36,6 @@ import org.wsml.reasoner.api.DLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.builtin.pellet.PelletFacade;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.WsmoFactory;
@@ -78,7 +77,7 @@ public class PelletReasonerExample {
      */
 
     public void doTestRun() throws Exception {
-        WsmoFactory wsmoFactory = new WSMO4JManager().getWSMOFactory();
+        WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
 
         String ns = "http://www.example.org/ontologies/example#";
 

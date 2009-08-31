@@ -26,8 +26,8 @@ import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.DataValue;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
+import org.wsmo.factory.Factory;
 
 import com.declarativa.interprolog.TermModel;
 
@@ -39,9 +39,9 @@ import com.declarativa.interprolog.TermModel;
 
 public class XSBSymbolMap {
 
-    protected WSMO4JManager wsmoManager;
+    protected Factory wsmoManager;
 
-    public XSBSymbolMap(WSMO4JManager wsmoManager) {
+    public XSBSymbolMap(Factory wsmoManager) {
         this.wsmoManager = wsmoManager;
     }
 
@@ -102,7 +102,7 @@ public class XSBSymbolMap {
         }
         else if (xsbTerm.isAtom()) {
             String uri = name2uri.get(xsbTerm.toString());
-            return wsmoManager.getWSMOFactory().createIRI(uri);
+            return wsmoManager.getWsmoFactory().createIRI(uri);
         }
         else {
             System.err.println("unkown interprolog term:" + xsbTerm);

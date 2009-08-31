@@ -93,7 +93,7 @@ import org.semanticweb.owl.model.change.OntologyChange;
 import org.semanticweb.owl.model.change.RemoveClassAxiom;
 import org.semanticweb.owl.model.change.SetSymmetric;
 import org.semanticweb.owl.model.change.SetTransitive;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsmo.common.Identifier;
 import org.wsmo.factory.LogicalExpressionFactory;
 
@@ -134,7 +134,7 @@ public class WSMLDL2OWLTransformer implements LogicalExpressionVisitor {
     private TransformationHelper helper = new TransformationHelper();
 
     // FIXME should be configured
-    private LogicalExpressionFactory leFactory = new WSMO4JManager().getLogicalExpressionFactory();
+    private LogicalExpressionFactory leFactory = new FactoryImpl().getLogicalExpressionFactory();
 
     public WSMLDL2OWLTransformer(OWLOntology owlOntology, OWLDataFactory owlDataFactory, ChangeVisitor changeVisitor) {
         this.owlOntology = owlOntology;
@@ -369,9 +369,9 @@ public class WSMLDL2OWLTransformer implements LogicalExpressionVisitor {
         // if the left expression is a conjunction, the expression can be
         // splitted in 2
         if (expr.getLeftOperand() instanceof Conjunction) {
-            InverseImplication inv = new WSMO4JManager().getLogicalExpressionFactory().createInverseImplication(((Conjunction) expr.getLeftOperand()).getLeftOperand(), expr.getRightOperand());
+            InverseImplication inv = new FactoryImpl().getLogicalExpressionFactory().createInverseImplication(((Conjunction) expr.getLeftOperand()).getLeftOperand(), expr.getRightOperand());
             inv.accept(this);
-            inv = new WSMO4JManager().getLogicalExpressionFactory().createInverseImplication(((Conjunction) expr.getLeftOperand()).getRightOperand(), expr.getRightOperand());
+            inv = new FactoryImpl().getLogicalExpressionFactory().createInverseImplication(((Conjunction) expr.getLeftOperand()).getRightOperand(), expr.getRightOperand());
             inv.accept(this);
             return;
         }
@@ -379,9 +379,9 @@ public class WSMLDL2OWLTransformer implements LogicalExpressionVisitor {
         // if the right expression is a disunction, the expression can be
         // splitted in 2
         if (expr.getRightOperand() instanceof Disjunction) {
-            InverseImplication inv = new WSMO4JManager().getLogicalExpressionFactory().createInverseImplication(expr.getLeftOperand(), ((Disjunction) expr.getRightOperand()).getLeftOperand());
+            InverseImplication inv = new FactoryImpl().getLogicalExpressionFactory().createInverseImplication(expr.getLeftOperand(), ((Disjunction) expr.getRightOperand()).getLeftOperand());
             inv.accept(this);
-            inv = new WSMO4JManager().getLogicalExpressionFactory().createInverseImplication(expr.getLeftOperand(), ((Disjunction) expr.getRightOperand()).getRightOperand());
+            inv = new FactoryImpl().getLogicalExpressionFactory().createInverseImplication(expr.getLeftOperand(), ((Disjunction) expr.getRightOperand()).getRightOperand());
             inv.accept(this);
             return;
         }

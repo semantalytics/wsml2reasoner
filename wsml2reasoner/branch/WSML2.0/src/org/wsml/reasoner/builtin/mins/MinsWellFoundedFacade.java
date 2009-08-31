@@ -20,7 +20,7 @@ package org.wsml.reasoner.builtin.mins;
 
 import java.util.Map;
 
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.factory.Factory;
 
 /**
  * Package: package org.wsml.reasoner.datalog.wrapper.mins;
@@ -30,8 +30,8 @@ import org.wsml.reasoner.impl.WSMO4JManager;
  */
 public class MinsWellFoundedFacade extends AbstractMinsFacade {
 	
-	public MinsWellFoundedFacade(WSMO4JManager wsmoManager, final Map<String, Object> config) {
-		super( wsmoManager, config );
+	public MinsWellFoundedFacade(Factory factory, final Map<String, Object> config) {
+		super( factory, config );
 	}
     
 	protected int getEvaluationMethod()

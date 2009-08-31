@@ -23,12 +23,15 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsmo.common.IRI;
+import org.wsmo.factory.Factory;
 
 public class ConstructReductionNormalizerTest extends BaseNormalizationTest
 {
@@ -38,8 +41,8 @@ public class ConstructReductionNormalizerTest extends BaseNormalizationTest
     protected void setUp() throws Exception
     {
         super.setUp();
-        WSMO4JManager wmsoManager = new WSMO4JManager();
-        normalizer = new ConstructReductionNormalizer(wmsoManager);
+        Factory factory = new FactoryImpl();
+        normalizer = new ConstructReductionNormalizer(factory);
     }
 
     @Override
@@ -81,11 +84,12 @@ public class ConstructReductionNormalizerTest extends BaseNormalizationTest
         ontology.setDefaultNamespace(iri);
         Axiom a = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
         ontology.addAxiom(a);
-        a.addDefinition(wsmoManager.getLogicalExpressionParser(ontology).parse(
+        LogicalExpressionParser leParser = new LogExprParserTypedImpl();
+        a.addDefinition(leParser.parse(
                 "a[r1 hasValue v1, r2 hasValue v2] " +
                 "or b[r1 hasValue v2] " +
                 "or c[r2 hasValue v2, r1 hasValue v1]."));
-        a.addDefinition(wsmoManager.getLogicalExpressionParser(ontology).parse(
+        a.addDefinition(leParser.parse(
                 "A[r1 ofType v1, r2 impliesType v2]."));
         
         Set <Axiom> axioms = new HashSet <Axiom>();

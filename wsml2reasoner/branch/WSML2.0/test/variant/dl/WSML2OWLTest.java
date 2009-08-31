@@ -23,7 +23,9 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.util.HashMap;
 
+import org.deri.wsmo4j.io.parser.wsml.LogExprParserTypedImpl;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.semanticweb.owl.model.OWLOntology;
@@ -31,15 +33,13 @@ import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.impl.DLBasedWSMLReasoner;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.serializer.owl.OWLSerializer;
 import org.wsml.reasoner.serializer.owl.OWLSerializerImpl;
-import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
-
 import base.BaseReasonerTest;
+
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
 
 /**
  * 
@@ -66,6 +66,8 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
 
     protected String ns = "http://ex.org#";
 
+	private LogicalExpressionParser leParser;
+
     protected void setUp() throws Exception {
         super.setUp();
         ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ont" + System.currentTimeMillis()));
@@ -73,11 +75,13 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom" + System.currentTimeMillis()));
         ontology.addAxiom(axiom);
         previous = BaseReasonerTest.reasoner;
-        dlReasoner = new DLBasedWSMLReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET, new WSMO4JManager());
+        dlReasoner = new DLBasedWSMLReasoner(WSMLReasonerFactory.BuiltInReasoner.PELLET, new FactoryImpl());
         serializer = new OWLSerializerImpl();
         writer = new StringWriter();
         prefs = new HashMap<String, String>();
         prefs.put(OWLSerializer.OWL_SERIALIZER, OWLSerializer.OWL_ABSTRACT);
+        
+        leParser = new LogExprParserTypedImpl();
     }
 
     protected void tearDown() throws Exception {
@@ -92,7 +96,6 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         // read test file and parse it
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/wsml2owlTransExample.wsml");
         assertNotNull(is);
-        WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
     	Parser wsmlParser = new ParserImplTyped();
         // assuming first topentity in file is an ontology
         ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is))[0];
@@ -133,7 +136,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
      */
     public void testSubClassOf() throws Exception {
         String s = "Man subConceptOf Human.";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -151,7 +154,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
      */
     public void testDatatypeProperty() throws Exception {
         String s = "Human[hasBirthday ofType _date].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -169,7 +172,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
      */
     public void testObjectProperty() throws Exception {
         String s = "Human[hasChild impliesType Child].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -187,7 +190,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
      */
     public void testMemberOf() throws Exception {
         String s = "Mary memberOf Human.";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -205,7 +208,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
      */
     public void testIndividualDatatypeValue() throws Exception {
         String s = "Mary[ageOfHuman hasValue 31].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -223,7 +226,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
      */
     public void testIndividualObjectValue() throws Exception {
         String s = "Mary[hasChild hasValue Bob].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -241,7 +244,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
      */
     public void testSubPropertyOf() throws Exception {
         String s = "?x[hasParent hasValue ?y] impliedBy ?x[hasMother hasValue ?y].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -259,7 +262,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
      */
     public void testTransitiveProperty() throws Exception {
         String s = "?x[isRelatedTo hasValue ?y] and ?y[isRelatedTo hasValue ?z] " + "implies ?x[isRelatedTo hasValue ?z].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -277,7 +280,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
      */
     public void testSymmetricProperty() throws Exception {
         String s = "?x[isMarriedTo hasValue ?y] impliedBy ?y[isMarriedTo hasValue ?x].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -295,7 +298,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
      */
     public void testInverseProperty() throws Exception {
         String s = "?x[hasHolder hasValue ?y] implies ?y[hasPet hasValue ?x].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -313,7 +316,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
      */
     public void testObjectPropertyDomain() throws Exception {
         String s = "?x memberOf Human impliedBy ?x[isMarriedTo hasValue ?y].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -331,7 +334,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
      */
     public void testObjectPropertyRange() throws Exception {
         String s = "?y memberOf Human impliedBy ?x[isMarriedTo hasValue ?y].";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -370,7 +373,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
      */
     public void testImplicationWithRightDisjunction() throws Exception {
         String s = "?x memberOf Woman impliedBy ?x[isMotherOf hasValue ?y] or " + "neg(?x memberOf Man).";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -388,7 +391,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
      */
     public void testSubClassOf2() throws Exception {
         String s = "?x memberOf Human equivalent ?x memberOf Person.";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -407,7 +410,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
      */
     public void testSubClassOf3() throws Exception {
         String s = "?x memberOf Girl equivalent ?x memberOf Child and ?x memberOf Woman.";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -425,7 +428,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
      */
     public void testSubClassOf4() throws Exception {
         String s = "?x memberOf NiceAnimal and ?x memberOf DomesticAnimal impliedBy " + "?x memberOf Pet.";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -443,7 +446,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
      */
     public void testIntersectionOf() throws Exception {
         String s = "?x memberOf NiceAnimal impliedBy ?x memberOf Pet and " + "?x memberOf DomesticAnimal.";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -461,7 +464,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
      */
     public void testUnionOf() throws Exception {
         String s = "?x memberOf Pet or ?x memberOf DomesticAnimal impliedBy " + "?x memberOf NotWildAnimal.";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -479,7 +482,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
      */
     public void testComplementOf() throws Exception {
         String s = "neg(?x memberOf Human) impliedBy ?x memberOf Machine.";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -497,7 +500,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
      */
     public void testAllValuesFrom() throws Exception {
         String s = "?x memberOf SmallDogOwner implies ?x memberOf Human and forall " + "?y(?x[hasDog hasValue ?y] implies ?y memberOf SmallDog).";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -515,7 +518,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
      */
     public void testAllAndSomeValuesFrom() throws Exception {
         String s = "?x memberOf Human implies exists ?y(?x[father hasValue ?y] " + "and ?y memberOf Human) and forall ?y(?x[father hasValue ?y] " + "implies ?y memberOf Human).";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology
@@ -533,7 +536,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
      */
     public void testSomeValuesFrom() throws Exception {
         String s = "?x memberOf Human implies exists ?y(?x[father hasValue ?y] " + "and ?y memberOf Man).";
-        LogicalExpression le = wsmoManager.getLogicalExpressionParser(ontology).parse(s);
+        LogicalExpression le = leParser.parse(s);
         axiom.addDefinition(le);
 
         // transform ontology to OWL ontology

@@ -22,7 +22,6 @@ import org.deri.mins.api.DBInterface;
 import org.deri.mins.builtins.BuiltinBody;
 import org.deri.mins.builtins.BuiltinConfig;
 import org.deri.mins.builtins.Equal;
-import org.deri.mins.builtins.IsConst;
 import org.deri.mins.builtins.IsInteger;
 import org.deri.mins.builtins.IsNum;
 import org.deri.mins.builtins.IsString;
@@ -45,8 +44,8 @@ import org.wsml.reasoner.Literal;
 import org.wsml.reasoner.UnsupportedFeatureException;
 import org.wsml.reasoner.WSML2DatalogTransformer;
 import org.wsml.reasoner.api.exception.InternalReasonerException;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 
 public abstract class AbstractMinsFacade implements DatalogReasonerFacade
@@ -100,7 +99,7 @@ public abstract class AbstractMinsFacade implements DatalogReasonerFacade
      */
     private RuleSet minsEngine;
 
-    private WSMO4JManager wsmoManager;
+    private Factory factory;
 
     private MinsSymbolMap symbTransfomer;
 
@@ -108,10 +107,10 @@ public abstract class AbstractMinsFacade implements DatalogReasonerFacade
      * Creates a facade object that allows to invoke the MINS rule system for
      * performing query evaluation tasks.
      */
-    public AbstractMinsFacade(WSMO4JManager wsmoManager, final Map<String, Object> config) {
+    public AbstractMinsFacade(Factory factory, final Map<String, Object> config) {
         super();
-        this.wsmoManager = wsmoManager;
-        this.symbTransfomer = new MinsSymbolMap(wsmoManager);
+        this.factory = factory;
+        this.symbTransfomer = new MinsSymbolMap(factory);
         logger.setLevel(Level.OFF);
     }
 
@@ -416,7 +415,7 @@ public abstract class AbstractMinsFacade implements DatalogReasonerFacade
     }
 
     private void addDataTypeMemberShipRules(RuleSet rs) {
-        WsmoFactory f = wsmoManager.getWSMOFactory();
+        WsmoFactory f = factory.getWsmoFactory();
         int memberOfNo = symbTransfomer.convertToTool(new Literal(true, WSML2DatalogTransformer.PRED_MEMBER_OF, new Term[2]));
         int integerNo = symbTransfomer.convertToTool(f.createIRI(WsmlDataType.WSML_INTEGER));
         int stringNo = symbTransfomer.convertToTool(f.createIRI(WsmlDataType.WSML_STRING));

@@ -33,7 +33,6 @@ import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.DLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.WsmoFactory;
@@ -73,7 +72,7 @@ public class Kaon2DLReasonerExample {
      * loads an Ontology and performs sample query
      */
     public void doTestRun() throws Exception {
-        WsmoFactory wsmoFactory = new WSMO4JManager().getWSMOFactory();
+        WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
 
         String ns = "http://www.example.org/ontologies/example#";
 

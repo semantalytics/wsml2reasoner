@@ -28,8 +28,9 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.omwg.logicalexpression.LogicalExpression;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.transformation.le.lloydtopor.LloydToporRules;
+import org.wsmo.factory.Factory;
 import org.wsmo.wsml.ParserException;
 
 public class TopDownLESplitterTest extends TestCase {
@@ -42,7 +43,7 @@ public class TopDownLESplitterTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		WSMO4JManager wsmoManager = new WSMO4JManager();
+		Factory wsmoManager = new FactoryImpl();
 		LloydToporRules lloydToporRules = new LloydToporRules(wsmoManager);
 		splitter = new TopDownLESplitter(lloydToporRules.getRules());
 	}

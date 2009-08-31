@@ -37,14 +37,14 @@ import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
-
 import base.BaseReasonerTest;
+
+import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
 
 /**
  * 
@@ -69,8 +69,8 @@ public class DLSimpleInferenceTests extends TestCase {
     
 	protected void setUp() throws Exception {
 		super.setUp();
-		WSMO4JManager wsmoManager = new WSMO4JManager();
-        wsmoFactory = wsmoManager.getWSMOFactory();
+		Factory factory = new FactoryImpl();
+        wsmoFactory = factory.getWsmoFactory();
         previous = BaseReasonerTest.reasoner;
         wsmlReasoner = null;
 		parser = new ParserImplTyped();

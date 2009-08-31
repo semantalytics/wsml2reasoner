@@ -32,8 +32,9 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.transformation.le.LETestHelper;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
@@ -46,7 +47,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
 	protected Axiom axiom;
-	protected WSMO4JManager wsmoManager;
+	protected Factory wsmoManager;
 	
 
 	public WSML2DatalogTransformerTest() {
@@ -55,11 +56,11 @@ public class WSML2DatalogTransformerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		wsmoManager = new WSMO4JManager();
+		wsmoManager = new FactoryImpl();
 
 		transformer = new WSML2DatalogTransformer(wsmoManager);
 
-		wsmoFactory = wsmoManager.getWSMOFactory();
+		wsmoFactory = wsmoManager.getWsmoFactory();
 		leFactory = wsmoManager.getLogicalExpressionFactory();
 
 		ontology = wsmoFactory

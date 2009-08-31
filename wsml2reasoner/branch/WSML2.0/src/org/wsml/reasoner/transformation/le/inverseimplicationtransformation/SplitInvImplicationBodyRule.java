@@ -29,9 +29,9 @@ import java.util.Set;
 import org.omwg.logicalexpression.InverseImplication;
 import org.omwg.logicalexpression.LogicProgrammingRule;
 import org.omwg.logicalexpression.LogicalExpression;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.TransformationRule;
 import org.wsml.reasoner.transformation.le.inverseimplicationreduction.ReplacementRule;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 public class SplitInvImplicationBodyRule extends ReplacementRule implements
@@ -39,7 +39,7 @@ public class SplitInvImplicationBodyRule extends ReplacementRule implements
 
 	private LogicalExpressionFactory leFactory;
 
-	public SplitInvImplicationBodyRule(WSMO4JManager wsmoManager) {
+	public SplitInvImplicationBodyRule(Factory wsmoManager) {
 		this.leFactory = wsmoManager.getLogicalExpressionFactory();
 	}
 

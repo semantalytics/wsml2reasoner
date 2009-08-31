@@ -30,7 +30,8 @@ import junit.framework.TestCase;
 import org.omwg.logicalexpression.Conjunction;
 import org.omwg.logicalexpression.Disjunction;
 import org.omwg.logicalexpression.LogicalExpression;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.wsml.ParserException;
 
@@ -47,7 +48,7 @@ public class LEUtilTest extends TestCase {
 
 	public void testBuildNary() throws ParserException {
 
-		WSMO4JManager wsmoManager = new WSMO4JManager();
+		Factory wsmoManager = new FactoryImpl();
 		LogicalExpressionFactory leFactory = wsmoManager
 				.getLogicalExpressionFactory();
 		LogicalExpression in1 = LETestHelper

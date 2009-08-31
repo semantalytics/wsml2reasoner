@@ -42,8 +42,8 @@ import org.omwg.ontology.Variable;
 import org.wsml.reasoner.ConjunctiveQuery;
 import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.UnsupportedFeatureException;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
+import org.wsmo.factory.Factory;
 
 /**
  * Package: package org.wsml.reasoner.datalog.wrapper.mins;
@@ -86,10 +86,10 @@ public class MinsSymbolMap {
 
     protected Map<String, Integer> minsBuiltIn2No = new HashMap<String, Integer>();
 
-    protected WSMO4JManager wsmoManager;
+    protected Factory factory;
 
-    public MinsSymbolMap(WSMO4JManager wsmoManager) {
-        this.wsmoManager = wsmoManager;
+    public MinsSymbolMap(Factory factory) {
+        this.factory = factory;
         minsBuiltinFunc.put(Constants.LESS_THAN, new Less());
         minsBuiltIn2No.put(Constants.LESS_THAN, 0);
 
@@ -220,7 +220,7 @@ public class MinsSymbolMap {
             for (int i = 0; i < term.pars.length; i++) {
                 termList.add(convertToWSML(term.pars[i]));
             }
-            return wsmoManager.getLogicalExpressionFactory().createConstructedTerm((IRI) id, termList);
+            return factory.getLogicalExpressionFactory().createConstructedTerm((IRI) id, termList);
 
         }
         else if (term.isStringTerm()) {
@@ -229,33 +229,33 @@ public class MinsSymbolMap {
             // BooleanTerms
             if (term.toString().contains("boolean")) {
                 if (term.toString().contains("true")) {
-                    return wsmoManager.getWsmlDataFactory().createBoolean(true);
+                    return factory.getWsmlDataFactory().createBoolean(true);
                 }
                 else {
-                    return wsmoManager.getWsmlDataFactory().createBoolean(false);
+                    return factory.getWsmlDataFactory().createBoolean(false);
                 }
             }
-            return wsmoManager.getWsmlDataFactory().createString(((StringTerm) term).s);
+            return factory.getWsmlDataFactory().createString(((StringTerm) term).s);
         }
         else if (term.isNumTerm()) {
             if (term instanceof IntegerTerm) {
-                return wsmoManager.getWsmlDataFactory().createInteger(((IntegerTerm) term).zahl + "");
+                return factory.getWsmlDataFactory().createInteger(((IntegerTerm) term).zahl + "");
             }
             if (term instanceof DateTerm) {
                 DateTerm date = (DateTerm) term;
-                return wsmoManager.getWsmlDataFactory().createDate(date.cal);
+                return factory.getWsmlDataFactory().createDate(date.cal);
             }
             // org.deri.mins.terms.NumTerm numTerm =
             // (org.deri.mins.terms.NumTerm)term;
-            return wsmoManager.getWsmlDataFactory().createDecimal(term.toString());
+            return factory.getWsmlDataFactory().createDecimal(term.toString());
         }
         else if (term instanceof BooleanTerm) {
             boolean value = ((BooleanTerm) term).getValue();
-            return wsmoManager.getWsmlDataFactory().createBoolean(value);
+            return factory.getWsmlDataFactory().createBoolean(value);
         }
         else
             System.err.println("ERROR - UNKNOWN MINS TERM: " + term + " " + term.getClass());
-        return wsmoManager.getWsmlDataFactory().createString("unknown");
+        return factory.getWsmlDataFactory().createString("unknown");
         // throw new RuntimeException("Unknown Term Symbol:"+term);
     }
 }
