@@ -30,7 +30,7 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
@@ -105,7 +105,7 @@ public class Kaon2ReasonerExample {
      * @return object model of ontology at file location
      */
     private Ontology loadOntology(String file) {
-    	WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
+    	WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
     	Parser wsmlParser = new WsmlParser();
 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);

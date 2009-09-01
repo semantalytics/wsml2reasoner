@@ -29,7 +29,7 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.api.data.ExternalDataSource;
@@ -115,7 +115,7 @@ public class DataSourceTest extends BaseReasonerTest {
 		private final Set<MemberOf> memberOf = new HashSet<MemberOf>();
 
 		public DogSource() {
-			WSMO_FACTORY = (new FactoryImpl()).getWsmoFactory();
+			WSMO_FACTORY = (new WsmlFactoryContainer()).getWsmoFactory();
 			
 			// creating the has-value set
 			// wsml-has-value(urn:dogsworld#Arthur, urn:dogsworld#barksAt, urn:dogsworld#Anne).

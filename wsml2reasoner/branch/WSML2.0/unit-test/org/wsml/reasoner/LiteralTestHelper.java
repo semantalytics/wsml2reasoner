@@ -39,7 +39,7 @@ import org.deri.iris.api.terms.IVariable;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.Variable;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -47,7 +47,7 @@ import org.wsmo.factory.WsmoFactory;
 
 public class LiteralTestHelper {
 
-	protected static final FactoryContainer FACTORY = new FactoryImpl();
+	protected static final FactoryContainer FACTORY = new WsmlFactoryContainer();
 	protected static final WsmoFactory WF = FACTORY.getWsmoFactory();
 	protected static final DataFactory DF = FACTORY.getWsmlDataFactory();
 	protected static final IBasicFactory BF = org.deri.iris.factory.Factory.BASIC;

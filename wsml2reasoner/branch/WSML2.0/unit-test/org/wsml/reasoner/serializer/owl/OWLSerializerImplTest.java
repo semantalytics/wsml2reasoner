@@ -31,7 +31,7 @@ import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.semanticweb.owl.io.RendererException;
 import org.semanticweb.owl.model.OWLOntology;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DLBasedWSMLReasoner;
 import org.wsml.reasoner.impl.FOLBasedWSMLReasoner;
@@ -63,7 +63,7 @@ public class OWLSerializerImplTest extends TestCase {
 		super.setUp();
 
 		owlImpl = new OWLSerializerImpl();
-		FactoryContainer wsmoManager = new FactoryImpl();
+		FactoryContainer wsmoManager = new WsmlFactoryContainer();
 		wsmoFactory = wsmoManager.getWsmoFactory();
 		leFactory = wsmoManager.getLogicalExpressionFactory();
 		dlReasoner = new DLBasedWSMLReasoner(

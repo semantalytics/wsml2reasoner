@@ -25,7 +25,7 @@ package org.wsml.reasoner.transformation.le.disjunctionpull;
 import junit.framework.TestCase;
 
 import org.omwg.logicalexpression.LogicalExpression;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.wsml.ParserException;
 
@@ -40,7 +40,7 @@ public class ConjunctionPushRuleTest extends TestCase {
     
     protected void setUp() throws Exception {
         super.setUp();
-        this.rule = new ConjunctionPushRule(new FactoryImpl());
+        this.rule = new ConjunctionPushRule(new WsmlFactoryContainer());
     }
     
     protected void tearDown() throws Exception {

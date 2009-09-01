@@ -32,7 +32,7 @@ import junit.framework.TestCase;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -55,7 +55,7 @@ public class QueryResultTableTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		FactoryContainer wsmoManager = new FactoryImpl();
+		FactoryContainer wsmoManager = new WsmlFactoryContainer();
 		wsmoFactory = wsmoManager.getWsmoFactory();
         leFactory = wsmoManager.getLogicalExpressionFactory();
         dataFactory = wsmoManager.getWsmlDataFactory();

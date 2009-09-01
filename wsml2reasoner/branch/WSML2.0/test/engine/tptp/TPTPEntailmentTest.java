@@ -26,7 +26,7 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.FOLReasoner;
 import org.wsml.reasoner.api.FOLReasoner.EntailmentType;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
@@ -64,7 +64,7 @@ public class TPTPEntailmentTest extends BaseReasonerTest {
     
     protected void setUp() throws Exception {
         super.setUp();
-        wsmoManager = new FactoryImpl();
+        wsmoManager = new WsmlFactoryContainer();
         wsmoFactory = wsmoManager.getWsmoFactory();
         previous = BaseReasonerTest.reasoner;
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createFOLReasoner(new HashMap <String, Object> ());

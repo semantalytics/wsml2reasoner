@@ -26,7 +26,7 @@ import junit.framework.TestCase;
 
 import org.deri.iris.api.basics.IAtom;
 import org.omwg.logicalexpression.Constants;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.Literal;
 import org.wsml.reasoner.LiteralTestHelper;
 import org.wsmo.factory.WsmoFactory;
@@ -35,7 +35,7 @@ public class IrisFacadeConvertTest extends TestCase {
 
 	public void testConvertTermFromWsmo4jToIris() {
 
-		final WsmoFactory WF = new FactoryImpl().getWsmoFactory();
+		final WsmoFactory WF = new WsmlFactoryContainer().getWsmoFactory();
 
 		// [ 1997166 ] Anonymous IDs cause exception when using IRIS.
 		// Anonymous IDs cause exception when using IRIS.

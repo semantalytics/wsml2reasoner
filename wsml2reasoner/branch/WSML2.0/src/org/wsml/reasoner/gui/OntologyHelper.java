@@ -43,7 +43,7 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsmo.common.TopEntity;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.WsmoFactory;
@@ -142,7 +142,7 @@ public class OntologyHelper
     
     private static Ontology parseThis(Reader ontoReader) throws IOException, ParserException, InvalidModelException{
       	 
-    	WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
+    	WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
     	Parser wsmlParser = new WsmlParser();
     	
     	final TopEntity[] identifiable = wsmlParser.parse(ontoReader);

@@ -29,7 +29,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.omwg.logicalexpression.LogicalExpression;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.transformation.AnonymousIdUtils;
 import org.wsml.reasoner.transformation.le.disjunctionpull.DisjunctionPullRules;
 import org.wsml.reasoner.transformation.le.foldecomposition.FOLMoleculeDecompositionRule;
@@ -50,7 +50,7 @@ public class OnePassReplacementNormalizerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		FactoryContainer wsmoManager = new FactoryImpl();
+		FactoryContainer wsmoManager = new WsmlFactoryContainer();
 		List<NormalizationRule> preOrderRules = new ArrayList<NormalizationRule>();
 		preOrderRules.addAll(new ImplicationReductionRules(wsmoManager)
 				.getRules());
@@ -67,7 +67,7 @@ public class OnePassReplacementNormalizerTest extends TestCase {
 	}
 
 	public void testNormalize() throws ParserException {
-		FactoryContainer wsmoManager = new FactoryImpl();
+		FactoryContainer wsmoManager = new WsmlFactoryContainer();
 		List<NormalizationRule> postOrderRules = new ArrayList<NormalizationRule>();
 		postOrderRules.addAll(new FOLMoleculeDecompositionRules(wsmoManager)
 				.getRules());

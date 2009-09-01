@@ -45,7 +45,7 @@ import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Relation;
 import org.omwg.ontology.RelationInstance;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Namespace;
 import org.wsmo.common.TopEntity;
@@ -150,7 +150,7 @@ public class BenchmarkOntologyGenerator {
 	
 	
 	public static void main(String[] args) throws Exception{
-		FactoryContainer factory = new FactoryImpl();
+		FactoryContainer factory = new WsmlFactoryContainer();
 		wsmoFactory = factory.getWsmoFactory();
 		leFactory = factory.getLogicalExpressionFactory();
 		dataFactory = factory.getWsmlDataFactory();

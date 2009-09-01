@@ -27,7 +27,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.RelationInstance;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.exception.InvalidModelException;
@@ -104,7 +104,7 @@ public class Chart {
 	final static String ENDCONTENT="<!--enddata--->";
 	final static String STARTCONTENT="<!--data--->";
 	
-	WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
+	WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
 	String firstNfpAsString(Entity e,String key){
 		IRI i = wsmoFactory.createIRI(key);
 		Set<Term> list = e.listAnnotationValues(i);

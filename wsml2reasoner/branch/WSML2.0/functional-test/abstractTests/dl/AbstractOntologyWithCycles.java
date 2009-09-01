@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Ontology;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.DLReasoner;
 import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.WsmoFactory;
@@ -65,7 +65,7 @@ public abstract class AbstractOntologyWithCycles extends TestCase implements DL 
         // register ontology at the wsml reasoner
 		reasoner.registerOntology(ontology);
         
-		FactoryContainer factory = new FactoryImpl();
+		FactoryContainer factory = new WsmlFactoryContainer();
         WsmoFactory wsmoFactory = factory.getWsmoFactory();
         
         // test getSubConcepts

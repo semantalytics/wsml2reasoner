@@ -25,7 +25,7 @@ import java.util.Map;
 
 import org.deri.wsmo4j.validator.WsmlValidatorTypedImpl;
 import org.omwg.ontology.Ontology;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.DLReasoner;
 import org.wsml.reasoner.api.FOLReasoner;
 import org.wsml.reasoner.api.LPReasoner;
@@ -131,7 +131,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         if (params == null){
             params = new HashMap<String, Object>();
         }
-        DLBasedWSMLReasoner reasoner = new DLBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.PELLET), new FactoryImpl());
+        DLBasedWSMLReasoner reasoner = new DLBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.PELLET), new WsmlFactoryContainer());
         setAllowImportsFlag(reasoner, params);
         return reasoner;
     }
@@ -140,7 +140,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         if (params == null){
             params = new HashMap<String, Object>();
         }
-        DatalogBasedWSMLReasoner reasoner = new DatalogBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.IRIS_STRATIFIED), new FactoryImpl(), params);
+        DatalogBasedWSMLReasoner reasoner = new DatalogBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.IRIS_STRATIFIED), new WsmlFactoryContainer(), params);
         setAllowImportsFlag(reasoner, params);
         return reasoner;
     }
@@ -149,7 +149,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         if (params == null){
             params = new HashMap<String, Object>();
         }
-        DatalogBasedWSMLReasoner reasoner = new DatalogBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.IRIS_WELL_FOUNDED), new FactoryImpl(), params);
+        DatalogBasedWSMLReasoner reasoner = new DatalogBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.IRIS_WELL_FOUNDED), new WsmlFactoryContainer(), params);
         setAllowImportsFlag(reasoner, params);
         return reasoner;
     }
@@ -176,6 +176,6 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
                 throw new RuntimeException("need to specify URI");
             }
         }
-        return new org.wsml.reasoner.impl.FOLBasedWSMLReasoner(reasoner, new FactoryImpl(), uri);
+        return new org.wsml.reasoner.impl.FOLBasedWSMLReasoner(reasoner, new WsmlFactoryContainer(), uri);
     }
 }

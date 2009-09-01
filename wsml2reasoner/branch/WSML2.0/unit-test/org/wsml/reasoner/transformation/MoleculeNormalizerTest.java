@@ -30,7 +30,7 @@ import junit.framework.TestCase;
 
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsml.reasoner.transformation.le.foldecomposition.FOLMoleculeDecompositionRule;
 import org.wsmo.factory.FactoryContainer;
@@ -51,7 +51,7 @@ public class MoleculeNormalizerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		FactoryContainer wsmoManager = new FactoryImpl();
+		FactoryContainer wsmoManager = new WsmlFactoryContainer();
 		normalizer = new MoleculeNormalizer(wsmoManager);
 
 		wsmoFactory = wsmoManager.getWsmoFactory();

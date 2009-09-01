@@ -24,7 +24,7 @@ package org.wsml.reasoner.transformation.le.negationpush;
 
 import junit.framework.TestCase;
 
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsmo.wsml.ParserException;
 
 
@@ -38,7 +38,7 @@ public class NegationPushRulesTest extends TestCase {
     
     protected void setUp() throws Exception {
         super.setUp();
-        this.rules = new NegationPushRules(new FactoryImpl());
+        this.rules = new NegationPushRules(new WsmlFactoryContainer());
     }
     
     

@@ -22,7 +22,7 @@
  */
 package org.wsml.reasoner.transformation.le.inverseimplicationreduction;
 
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsmo.factory.FactoryContainer;
 
 import junit.framework.TestCase;
@@ -37,7 +37,7 @@ public class InverseImplicationReductionRulesTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		FactoryContainer wsmoManager = new FactoryImpl();
+		FactoryContainer wsmoManager = new WsmlFactoryContainer();
 		rules = new InverseImplicationReductionRules(wsmoManager);
 	}
 	

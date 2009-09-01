@@ -27,7 +27,7 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.FOLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.FOLReasoner.EntailmentType;
@@ -67,7 +67,7 @@ public class SpassEntailmentTest extends BaseReasonerTest {
 
     protected void setUp() throws Exception {
         super.setUp();
-        FactoryContainer factory = new FactoryImpl();
+        FactoryContainer factory = new WsmlFactoryContainer();
         wsmoFactory = factory.getWsmoFactory();
         leFactory = factory.getLogicalExpressionFactory();
         previous = BaseReasonerTest.reasoner;

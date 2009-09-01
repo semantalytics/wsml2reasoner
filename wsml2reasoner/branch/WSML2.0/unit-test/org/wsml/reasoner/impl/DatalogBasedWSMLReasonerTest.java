@@ -40,7 +40,7 @@ import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.omwg.ontology.WsmlDataType;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.ConjunctiveQuery;
 import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
@@ -70,7 +70,7 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		FactoryContainer factory = new FactoryImpl(); 
+		FactoryContainer factory = new WsmlFactoryContainer(); 
 		wsmoFactory = factory.getWsmoFactory();
 		dataFactory = factory.getWsmlDataFactory();
         leFactory = factory.getLogicalExpressionFactory();

@@ -47,7 +47,7 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.DLUtilities;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
@@ -284,7 +284,7 @@ public class DemoW
 	        public void run()
 	        {
 	        	try {
-	        		FactoryContainer factory = new FactoryImpl();
+	        		FactoryContainer factory = new WsmlFactoryContainer();
 	        		LPReasoner reasoner = ReasonerHelper.getLPReasoner( BuiltInReasoner.IRIS_WELL_FOUNDED );
 
 	        		Ontology ontology = OntologyHelper.parseOntology( mOntology );

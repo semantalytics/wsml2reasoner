@@ -42,7 +42,7 @@ import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.Variable;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.FactoryContainer;
@@ -162,7 +162,7 @@ public class WSMLQuery {
     private Set<Map<Variable, Term>> convertSQLResult(ResultSet sqlResult) throws SQLException {
         assert sqlResult != null;
 
-        FactoryContainer factory = new FactoryImpl();
+        FactoryContainer factory = new WsmlFactoryContainer();
 		DataFactory wsmlDataFactory = factory.getWsmlDataFactory();
         LogicalExpressionFactory l = factory.getLogicalExpressionFactory();
         ResultSetMetaData m = sqlResult.getMetaData();

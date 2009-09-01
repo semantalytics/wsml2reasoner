@@ -34,7 +34,7 @@ import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.WsmlDataType;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DatalogBasedWSMLReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
@@ -62,7 +62,7 @@ public class DLUtilitiesTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		factory = new FactoryImpl();
+		factory = new WsmlFactoryContainer();
 		wsmoFactory = factory.getWsmoFactory();
 		dataFactory = factory.getWsmlDataFactory();
 		leFactory = factory.getLogicalExpressionFactory();

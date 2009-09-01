@@ -25,7 +25,7 @@ package org.wsml.reasoner.transformation.le.negationpush;
 import junit.framework.TestCase;
 
 import org.omwg.logicalexpression.LogicalExpression;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.wsml.ParserException;
 
@@ -40,7 +40,7 @@ public class NegateConjunctionRuleTest extends TestCase {
     
     protected void setUp() throws Exception {
         super.setUp();
-        this.rule = new NegateConjunctionRule(new FactoryImpl());
+        this.rule = new NegateConjunctionRule(new WsmlFactoryContainer());
     }
   
     

@@ -27,7 +27,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.omwg.logicalexpression.LogicalExpression;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.wsml.ParserException;
 
@@ -43,7 +43,7 @@ public class SplitConstraintTest extends TestCase {
     
     protected void setUp() throws Exception {
         super.setUp();
-        this.rule = new SplitConstraint(new FactoryImpl());
+        this.rule = new SplitConstraint(new WsmlFactoryContainer());
     }
     
     public void testIsApplicable() throws ParserException {

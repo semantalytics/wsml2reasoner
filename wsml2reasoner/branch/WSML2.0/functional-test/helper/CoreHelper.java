@@ -32,7 +32,7 @@ import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.DLReasoner;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasoner;
@@ -150,7 +150,7 @@ public class CoreHelper
     
     static{
 //  	 Set up factories for creating WSML elements
-	   	factory = new FactoryImpl();
+	   	factory = new WsmlFactoryContainer();
 	
 	   	leFactory = factory.getLogicalExpressionFactory();
 	   	wsmoFactory = factory.getWsmoFactory();

@@ -27,7 +27,7 @@ import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsmo.common.IRI;
@@ -41,7 +41,7 @@ public class ConstructReductionNormalizerTest extends BaseNormalizationTest
     protected void setUp() throws Exception
     {
         super.setUp();
-        FactoryContainer factory = new FactoryImpl();
+        FactoryContainer factory = new WsmlFactoryContainer();
         normalizer = new ConstructReductionNormalizer(factory);
     }
 

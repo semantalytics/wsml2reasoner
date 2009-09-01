@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.ConstraintReplacementNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
@@ -23,7 +23,7 @@ public class DebugTransformationsTest extends BaseNormalizationTest
     protected void setUp() throws Exception
     {
         super.setUp();
-        FactoryContainer factory = new FactoryImpl();
+        FactoryContainer factory = new WsmlFactoryContainer();
         axiomatizationNormalizer = new AxiomatizationNormalizer(factory);
         debuggingNormalizer = new ConstraintReplacementNormalizer(factory);
 

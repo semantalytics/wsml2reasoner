@@ -29,7 +29,7 @@ import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
@@ -44,7 +44,7 @@ public class AnonymousIDReplacementTest extends BaseNormalizationTest
     protected void setUp() throws Exception
     {
         super.setUp();
-        FactoryContainer factory = new FactoryImpl();
+        FactoryContainer factory = new WsmlFactoryContainer();
         axiomatizationNormalizer = new AxiomatizationNormalizer(factory);
         reductionNormalizer = new ConstructReductionNormalizer(factory);
     }

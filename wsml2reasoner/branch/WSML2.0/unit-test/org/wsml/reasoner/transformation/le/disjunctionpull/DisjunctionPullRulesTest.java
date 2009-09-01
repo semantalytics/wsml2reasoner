@@ -24,7 +24,7 @@ package org.wsml.reasoner.transformation.le.disjunctionpull;
 
 import junit.framework.TestCase;
 
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsmo.wsml.ParserException;
 
 
@@ -38,7 +38,7 @@ public class DisjunctionPullRulesTest extends TestCase {
     
     protected void setUp() throws Exception {
         super.setUp();
-        this.rules = new DisjunctionPullRules(new FactoryImpl());
+        this.rules = new DisjunctionPullRules(new WsmlFactoryContainer());
     }
     
     protected void tearDown() throws Exception {

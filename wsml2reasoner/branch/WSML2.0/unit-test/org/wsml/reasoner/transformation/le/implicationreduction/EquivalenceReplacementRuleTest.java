@@ -25,7 +25,7 @@ package org.wsml.reasoner.transformation.le.implicationreduction;
 import junit.framework.TestCase;
 
 import org.omwg.logicalexpression.LogicalExpression;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.wsml.ParserException;
 
@@ -40,7 +40,7 @@ public class EquivalenceReplacementRuleTest extends TestCase {
     
     protected void setUp() throws Exception {
         super.setUp();
-        this.rule = new EquivalenceReplacementRule(new FactoryImpl());
+        this.rule = new EquivalenceReplacementRule(new WsmlFactoryContainer());
     }
     
     

@@ -16,7 +16,7 @@ import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
@@ -39,7 +39,7 @@ import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
  */
 public class NobelTest {
 	
-	private FactoryImpl wsmoManager = null;
+	private WsmlFactoryContainer wsmoManager = null;
 
 	private Parser wsmlParser = null;
 
@@ -171,7 +171,7 @@ public class NobelTest {
 	 * Sets up factories for creating WSML elements
 	 */
 	private void setUpFactories() {
-		wsmoManager = new FactoryImpl();
+		wsmoManager = new WsmlFactoryContainer();
     	wsmlParser = new WsmlParser();
     	leParser = new WsmlLogicalExpressionParser();
 	}

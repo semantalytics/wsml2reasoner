@@ -35,7 +35,7 @@ import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Relation;
 import org.omwg.ontology.RelationInstance;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.common.Entity;
 import org.wsmo.common.exception.InvalidModelException;
@@ -57,7 +57,7 @@ public class AxiomatizationNormalizerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		FactoryContainer wsmoManager = new FactoryImpl(); 
+		FactoryContainer wsmoManager = new WsmlFactoryContainer(); 
 		normalizer = new AxiomatizationNormalizer(wsmoManager);
 		
         wsmoFactory = wsmoManager.getWsmoFactory();

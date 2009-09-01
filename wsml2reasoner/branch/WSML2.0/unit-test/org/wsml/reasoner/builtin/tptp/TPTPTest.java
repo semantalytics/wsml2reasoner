@@ -11,7 +11,7 @@ import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Ontology;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.FactoryContainer;
 
@@ -28,9 +28,9 @@ public class TPTPTest extends TestCase{
 	private LogicalExpressionParser leParser;
     
     protected void setUp() throws Exception {
-    	wsmoManager = new FactoryImpl();
+    	wsmoManager = new WsmlFactoryContainer();
         
-        tptp = new TPTPFacade(new FactoryImpl(),"urn:foo");
+        tptp = new TPTPFacade(new WsmlFactoryContainer(),"urn:foo");
 
         IRI i = wsmoManager.getWsmoFactory().createIRI("foo:bar#");
         nsContainer = wsmoManager.getWsmoFactory().createOntology(i);

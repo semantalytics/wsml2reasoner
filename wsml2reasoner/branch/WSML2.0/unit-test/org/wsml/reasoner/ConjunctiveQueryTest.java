@@ -29,7 +29,7 @@ import junit.framework.TestCase;
 
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.wsml.ParserException;
@@ -66,7 +66,7 @@ public class ConjunctiveQueryTest extends TestCase {
 		query = null;
 		ArrayList <Literal> list = new ArrayList<Literal>();
 		
-		FactoryContainer factory = new FactoryImpl();
+		FactoryContainer factory = new WsmlFactoryContainer();
 		LogicalExpressionFactory f = factory.getLogicalExpressionFactory();
 		
 		Variable test1 = f.createVariable("Variable01");

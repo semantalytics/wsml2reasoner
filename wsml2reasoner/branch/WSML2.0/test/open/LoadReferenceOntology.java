@@ -35,7 +35,7 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
@@ -68,7 +68,7 @@ public class LoadReferenceOntology {
     public static void test(File... files) throws FileNotFoundException, IOException, ParserException, InvalidModelException, InconsistencyException {
 
         HashMap<String, Object> parserProps = new HashMap<String, Object>();
-		WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
+		WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
 		Parser wsmlParser = new WsmlParser();
 
         Set<Ontology> ontologies = new HashSet<Ontology>();

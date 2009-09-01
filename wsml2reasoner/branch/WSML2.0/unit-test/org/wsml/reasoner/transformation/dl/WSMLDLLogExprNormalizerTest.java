@@ -34,7 +34,7 @@ import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Relation;
 import org.omwg.ontology.RelationInstance;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsmo.common.Entity;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.FactoryContainer;
@@ -55,7 +55,7 @@ public class WSMLDLLogExprNormalizerTest extends TestCase {
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		FactoryContainer wsmoManager = new FactoryImpl();
+		FactoryContainer wsmoManager = new WsmlFactoryContainer();
 		normalizer = new WSMLDLLogExprNormalizer(wsmoManager);
         wsmoFactory = wsmoManager.getWsmoFactory();
         leFactory = wsmoManager.getLogicalExpressionFactory();

@@ -12,7 +12,7 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
@@ -38,7 +38,7 @@ import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
  */
 public class RegisterMultipleTimes  extends BaseReasonerTest  {
 	
-	WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
+	WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
 	Parser wsmlParser = new WsmlParser();
 //	LogicalExpressionFactory leFactory = Factory.createLogicalExpressionFactory(null);
 	

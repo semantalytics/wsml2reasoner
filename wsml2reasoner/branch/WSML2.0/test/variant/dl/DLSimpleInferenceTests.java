@@ -31,7 +31,7 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.DLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
@@ -69,7 +69,7 @@ public class DLSimpleInferenceTests extends TestCase {
     
 	protected void setUp() throws Exception {
 		super.setUp();
-		FactoryContainer factory = new FactoryImpl();
+		FactoryContainer factory = new WsmlFactoryContainer();
         wsmoFactory = factory.getWsmoFactory();
         previous = BaseReasonerTest.reasoner;
         wsmlReasoner = null;

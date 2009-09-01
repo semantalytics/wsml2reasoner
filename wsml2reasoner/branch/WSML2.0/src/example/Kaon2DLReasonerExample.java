@@ -29,7 +29,7 @@ import java.util.Map.Entry;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.DLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
@@ -72,7 +72,7 @@ public class Kaon2DLReasonerExample {
      * loads an Ontology and performs sample query
      */
     public void doTestRun() throws Exception {
-        WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
+        WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
 
         String ns = "http://www.example.org/ontologies/example#";
 
@@ -131,7 +131,7 @@ public class Kaon2DLReasonerExample {
      * @return object model of ontology at file location
      */
     private Ontology loadOntology(String file) {
-    	WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
+    	WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
     	Parser wsmlParser = new WsmlParser();
 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);

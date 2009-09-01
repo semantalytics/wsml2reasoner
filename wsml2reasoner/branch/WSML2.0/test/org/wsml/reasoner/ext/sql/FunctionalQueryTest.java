@@ -14,7 +14,7 @@ import junit.framework.TestCase;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsmo.common.TopEntity;
@@ -42,7 +42,7 @@ public class FunctionalQueryTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
+		WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
 		parser = new WsmlParser();
 		ontologyIRI1 = lotrOntology.toURI().toURL();
 		ontologyIRI2 = simpsonsOntology.toURI().toURL();

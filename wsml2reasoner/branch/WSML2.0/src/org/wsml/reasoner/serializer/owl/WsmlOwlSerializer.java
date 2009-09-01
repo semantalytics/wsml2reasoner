@@ -29,7 +29,7 @@ import org.deri.wsmo4j.validator.WsmlValidatorTypedImpl;
 import org.omwg.ontology.Ontology;
 import org.semanticweb.owl.io.RendererException;
 import org.semanticweb.owl.model.OWLOntology;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.impl.DLBasedWSMLReasoner;
 import org.wsmo.common.TopEntity;
@@ -149,7 +149,7 @@ public class WsmlOwlSerializer implements Serializer {
         if (!new WsmlValidatorTypedImpl().isValid(te[0], "http://www.wsmo.org/wsml/wsml-syntax/wsml-dl", new ArrayList<ValidationError>(), new ArrayList<ValidationWarning>())) {
             throw new RuntimeException("The given WSML-DL ontology is not " + "valid!");
         }
-        return new DLBasedWSMLReasoner(BuiltInReasoner.PELLET, new FactoryImpl()).createOWLOntology((Ontology) te[0]);
+        return new DLBasedWSMLReasoner(BuiltInReasoner.PELLET, new WsmlFactoryContainer()).createOWLOntology((Ontology) te[0]);
     }
 
 }

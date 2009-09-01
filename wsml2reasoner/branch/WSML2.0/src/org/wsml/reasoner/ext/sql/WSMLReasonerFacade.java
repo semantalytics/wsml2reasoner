@@ -32,7 +32,7 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
@@ -62,7 +62,7 @@ public class WSMLReasonerFacade {
      * parser, the reasoner.
      */
     public WSMLReasonerFacade() {
-    	factory = new FactoryImpl();
+    	factory = new WsmlFactoryContainer();
     	
     	wsmlParser = new WsmlParser();
     	

@@ -11,7 +11,7 @@ import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Ontology;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.FactoryContainer;
 
@@ -27,9 +27,9 @@ public class SpassTest extends TestCase{
 	protected FactoryContainer wsmoManager;
 
     protected void setUp() throws Exception {
-    	wsmoManager = new FactoryImpl();
+    	wsmoManager = new WsmlFactoryContainer();
 
-        tptp = new SpassFacade(new FactoryImpl(),"urn:foo");
+        tptp = new SpassFacade(new WsmlFactoryContainer(),"urn:foo");
 
         IRI i = wsmoManager.getWsmoFactory().createIRI("foo:bar#");
         nsContainer = wsmoManager.getWsmoFactory().createOntology(i);

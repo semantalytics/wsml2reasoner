@@ -32,7 +32,7 @@ import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Relation;
 import org.omwg.ontology.RelationInstance;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.dl.Relation2AttributeNormalizer;
 import org.wsml.reasoner.transformation.dl.WSMLDLLogExprNormalizer;
@@ -58,9 +58,9 @@ public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
     protected void setUp() throws Exception {
         super.setUp();
         // in order to keep track of cyclic imports
-        relTransformer = new Relation2AttributeNormalizer(new FactoryImpl());
-        axiomTransformer = new AxiomatizationNormalizer(new FactoryImpl());
-        logExprTransformer = new WSMLDLLogExprNormalizer(new FactoryImpl());
+        relTransformer = new Relation2AttributeNormalizer(new WsmlFactoryContainer());
+        axiomTransformer = new AxiomatizationNormalizer(new WsmlFactoryContainer());
+        logExprTransformer = new WSMLDLLogExprNormalizer(new WsmlFactoryContainer());
     }
 
     protected void tearDown() throws Exception {
@@ -73,7 +73,7 @@ public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
         // read test file and parse it
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/wsml2owlNormExample.wsml");
         assertNotNull(is);
-        WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
+        WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
     	Parser wsmlParser = new WsmlParser();
         // assuming first topentity in file is an ontology
         ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is))[0];
@@ -134,7 +134,7 @@ public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
         // read test file and parse it
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/anonIds.wsml");
         assertNotNull(is);
-        WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
+        WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
     	Parser wsmlParser = new WsmlParser();
         // assuming first topentity in file is an ontology
         ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is))[0];
@@ -169,7 +169,7 @@ public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
         // read test file and parse it
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/relation2attribute.wsml");
         assertNotNull(is);
-        WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
+        WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
     	Parser wsmlParser = new WsmlParser();
         // assuming first topentity in file is an ontology
         ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is))[0];
@@ -204,7 +204,7 @@ public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
         // read test file and parse it
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/decomposition.wsml");
         assertNotNull(is);
-        WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
+        WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
     	Parser wsmlParser = new WsmlParser();
         // assuming first topentity in file is an ontology
         ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is))[0];

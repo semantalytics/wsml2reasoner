@@ -35,7 +35,7 @@ import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.semanticweb.owl.io.RendererException;
 import org.semanticweb.owl.model.OWLOntology;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.impl.DLBasedWSMLReasoner;
 import org.wsml.reasoner.serializer.owl.OWLSerializer;
 import org.wsml.reasoner.serializer.owl.OWLSerializerImpl;
@@ -62,7 +62,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
 
 	 protected void setUp() throws Exception {
 	     	super.setUp();
-	        factory = new FactoryImpl();
+	        factory = new WsmlFactoryContainer();
 			wsmoFactory = factory.getWsmoFactory();
 			leFactory = factory.getLogicalExpressionFactory();
 			ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ontologyTestValues"));

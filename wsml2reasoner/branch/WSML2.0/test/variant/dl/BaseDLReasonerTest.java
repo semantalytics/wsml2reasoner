@@ -24,7 +24,7 @@ import junit.framework.TestCase;
 
 import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
 import org.omwg.ontology.Ontology;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.FactoryContainer;
@@ -54,7 +54,7 @@ public abstract class BaseDLReasonerTest extends TestCase
     protected void setUp() throws Exception
     {
         super.setUp();
-        factory = new FactoryImpl();
+        factory = new WsmlFactoryContainer();
         wsmoFactory = factory.getWsmoFactory();
         leFactory = factory.getLogicalExpressionFactory();
     }

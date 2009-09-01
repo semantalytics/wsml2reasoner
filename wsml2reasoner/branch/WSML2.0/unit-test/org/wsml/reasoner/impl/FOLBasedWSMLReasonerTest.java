@@ -30,7 +30,7 @@ import junit.framework.TestCase;
 
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Ontology;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.FOLReasoner.EntailmentType;
 import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
@@ -56,7 +56,7 @@ public class FOLBasedWSMLReasonerTest extends TestCase {
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		FactoryContainer factory = new FactoryImpl(); 
+		FactoryContainer factory = new WsmlFactoryContainer(); 
 		wsmoFactory = factory.getWsmoFactory();
         leFactory = factory.getLogicalExpressionFactory();
         

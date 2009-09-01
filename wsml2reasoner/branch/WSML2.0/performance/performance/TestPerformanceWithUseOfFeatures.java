@@ -24,7 +24,7 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.RelationInstance;
 import org.omwg.ontology.Variable;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
@@ -464,7 +464,7 @@ public class TestPerformanceWithUseOfFeatures {
         return reasoner;
     }
 
-    WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
+    WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
 	Parser wsmlParser = new WsmlParser();
 
     private Ontology loadOntology(String file) {

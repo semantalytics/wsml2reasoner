@@ -36,7 +36,7 @@ import org.omwg.ontology.Ontology;
 import org.omwg.ontology.SimpleDataType;
 import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.WsmlDataType;
-import org.sti2.wsmo4j.factory.FactoryImpl;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.inconsistency.AttributeTypeViolation;
 import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
@@ -68,7 +68,7 @@ public abstract class AbstractViolation9GetAllViolations extends TestCase implem
 	}
 
 	private void getViolations() throws InvalidModelException, IOException, ParserException {
-		WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
+		WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
 		Parser parser = new WsmlParser();
 		InputStream is = this.getClass().getClassLoader().getResourceAsStream(ONTOLOGY_FILE);
 		assertNotNull(is);
