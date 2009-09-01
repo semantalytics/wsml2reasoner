@@ -9,13 +9,11 @@ import org.omwg.ontology.SimpleDataValue;
 import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.Factory;
-import org.wsmo.factory.WsmoFactory;
 
 public class VisitorDataTypeTest extends TestCase {
 
 	private DatatypeVisitor visitor = new DatatypeVisitor();
 	private Factory factory = new FactoryImpl();
-	private WsmoFactory wsmoFactory = factory.getWsmoFactory();
 	private DataFactory df = factory.getWsmlDataFactory( );
 	
 	@Override
