@@ -43,7 +43,7 @@ import org.wsml.reasoner.ConjunctiveQuery;
 import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.UnsupportedFeatureException;
 import org.wsmo.common.IRI;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 
 /**
  * Package: package org.wsml.reasoner.datalog.wrapper.mins;
@@ -86,9 +86,9 @@ public class MinsSymbolMap {
 
     protected Map<String, Integer> minsBuiltIn2No = new HashMap<String, Integer>();
 
-    protected Factory factory;
+    protected FactoryContainer factory;
 
-    public MinsSymbolMap(Factory factory) {
+    public MinsSymbolMap(FactoryContainer factory) {
         this.factory = factory;
         minsBuiltinFunc.put(Constants.LESS_THAN, new Less());
         minsBuiltIn2No.put(Constants.LESS_THAN, 0);

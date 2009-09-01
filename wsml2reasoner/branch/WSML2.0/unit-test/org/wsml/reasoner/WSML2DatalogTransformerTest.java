@@ -34,7 +34,7 @@ import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.transformation.le.LETestHelper;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
@@ -47,7 +47,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
 	protected Axiom axiom;
-	protected Factory wsmoManager;
+	protected FactoryContainer wsmoManager;
 	
 
 	public WSML2DatalogTransformerTest() {

@@ -36,7 +36,7 @@ import org.omwg.logicalexpression.terms.Term;
 import org.wsml.reasoner.transformation.le.LEUtil;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
 import org.wsmo.common.Identifier;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -52,7 +52,7 @@ public class FOLMoleculeDecompositionRule implements NormalizationRule {
     private LogicalExpressionFactory leFactory;
     private WsmoFactory wsmoFactory;
     
-    public FOLMoleculeDecompositionRule(Factory factory){
+    public FOLMoleculeDecompositionRule(FactoryContainer factory){
         this.leFactory = factory.getLogicalExpressionFactory();
         this.wsmoFactory = factory.getWsmoFactory();
     }

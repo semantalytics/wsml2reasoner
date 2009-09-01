@@ -23,7 +23,7 @@ import org.wsml.reasoner.transformation.le.NormalizationRule;
 import org.wsml.reasoner.transformation.le.Rules;
 import org.wsml.reasoner.transformation.le.common.AtomAnonymousIDRule;
 import org.wsml.reasoner.transformation.le.common.MoleculeAnonymousIDRule;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 
 /**
  * This singleton class represents a set of normalization rules for replacing
@@ -33,7 +33,7 @@ import org.wsmo.factory.Factory;
  */
 public class MoleculeDecompositionRules extends Rules <NormalizationRule>{
 
-    public MoleculeDecompositionRules(Factory factory) {
+    public MoleculeDecompositionRules(FactoryContainer factory) {
         AnonymousIdTranslator anonymousIDTranslator = new AnonymousIdTranslator(factory.getWsmoFactory());
         
         addRule(new MoleculeDecompositionRule(factory));

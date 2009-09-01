@@ -20,7 +20,7 @@ package org.wsml.reasoner.transformation.le.lloydtopor;
 
 import org.wsml.reasoner.transformation.le.Rules;
 import org.wsml.reasoner.transformation.le.TransformationRule;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 
 /**
  * This singleton class represents a set of transformation rules for splitting
@@ -31,7 +31,7 @@ import org.wsmo.factory.Factory;
  */
 public class LloydToporRules extends Rules <TransformationRule>{
     
-    public LloydToporRules(Factory wsmoManager) {
+    public LloydToporRules(FactoryContainer wsmoManager) {
         addRule(new SplitDisjunctiveBody(wsmoManager));
         addRule(new SplitConstraint(wsmoManager));
         addRule(new SplitConjunctiveHead(wsmoManager));

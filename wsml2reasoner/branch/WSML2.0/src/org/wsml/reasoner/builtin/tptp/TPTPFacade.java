@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.wsml.reasoner.ExternalToolException;
 import org.wsml.reasoner.FOLAbstractFacade;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 
 /**
  * <p>
@@ -41,7 +41,7 @@ public class TPTPFacade extends FOLAbstractFacade {
 
     Logger log = Logger.getLogger(TPTPFacade.class);
 
-    public TPTPFacade(Factory factory, String syntax) {
+    public TPTPFacade(FactoryContainer factory, String syntax) {
         super(factory, syntax);
     }
 

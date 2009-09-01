@@ -11,7 +11,7 @@ import org.wsml.reasoner.transformation.ConstraintReplacementNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsmo.common.Entity;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 
 import framework.normalization.BaseNormalizationTest;
 
@@ -23,7 +23,7 @@ public class DebugTransformationsTest extends BaseNormalizationTest
     protected void setUp() throws Exception
     {
         super.setUp();
-        Factory factory = new FactoryImpl();
+        FactoryContainer factory = new FactoryImpl();
         axiomatizationNormalizer = new AxiomatizationNormalizer(factory);
         debuggingNormalizer = new ConstraintReplacementNormalizer(factory);
 

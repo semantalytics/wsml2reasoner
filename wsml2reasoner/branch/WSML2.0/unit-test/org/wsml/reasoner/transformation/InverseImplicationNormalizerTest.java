@@ -27,7 +27,7 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.transformation.le.LETestHelper;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
@@ -45,7 +45,7 @@ public class InverseImplicationNormalizerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		Factory wsmoManager = new FactoryImpl();
+		FactoryContainer wsmoManager = new FactoryImpl();
 		normalizer = new InverseImplicationNormalizer(wsmoManager);
 		wsmoFactory = wsmoManager.getWsmoFactory();
 		leFactory = wsmoManager.getLogicalExpressionFactory();

@@ -33,13 +33,13 @@ import org.omwg.ontology.Concept;
 import org.omwg.ontology.Ontology;
 import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.DLReasoner;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
 import abstractTests.DL;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 public abstract class AbstractOntologyWithCycles extends TestCase implements DL {
 
@@ -55,7 +55,7 @@ public abstract class AbstractOntologyWithCycles extends TestCase implements DL 
 
         // assuming first topentity in file is an ontology  
 		
-        Parser parser = new ParserImplTyped();
+        Parser parser = new WsmlParser();
 
     	Ontology ontology = (Ontology)parser.parse(new InputStreamReader(is))[0]; 
         final String ns = ontology.getDefaultNamespace().getIRI().toString();
@@ -65,7 +65,7 @@ public abstract class AbstractOntologyWithCycles extends TestCase implements DL 
         // register ontology at the wsml reasoner
 		reasoner.registerOntology(ontology);
         
-		Factory factory = new FactoryImpl();
+		FactoryContainer factory = new FactoryImpl();
         WsmoFactory wsmoFactory = factory.getWsmoFactory();
         
         // test getSubConcepts

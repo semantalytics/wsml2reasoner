@@ -27,7 +27,7 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.DataValue;
 import org.omwg.ontology.Variable;
 import org.wsmo.common.IRI;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 
 import com.declarativa.interprolog.TermModel;
 
@@ -39,9 +39,9 @@ import com.declarativa.interprolog.TermModel;
 
 public class XSBSymbolMap {
 
-    protected Factory wsmoManager;
+    protected FactoryContainer wsmoManager;
 
-    public XSBSymbolMap(Factory wsmoManager) {
+    public XSBSymbolMap(FactoryContainer wsmoManager) {
         this.wsmoManager = wsmoManager;
     }
 

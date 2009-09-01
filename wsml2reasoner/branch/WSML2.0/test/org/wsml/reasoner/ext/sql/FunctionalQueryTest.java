@@ -23,7 +23,7 @@ import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 public class FunctionalQueryTest extends TestCase
 {
@@ -43,7 +43,7 @@ public class FunctionalQueryTest extends TestCase
 	{
 		super.setUp();
 		WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
-		parser = new ParserImplTyped();
+		parser = new WsmlParser();
 		ontologyIRI1 = lotrOntology.toURI().toURL();
 		ontologyIRI2 = simpsonsOntology.toURI().toURL();
 		

@@ -36,20 +36,20 @@ import org.omwg.ontology.Ontology;
 import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.DLReasoner;
 import org.wsmo.common.IRI;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
 import abstractTests.DL;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 /*
  * needs:  files/wsml2owlExample.wsml
  */
 public abstract class AbstractSimpleInference extends TestCase implements DL {
 
-	protected Factory factory;
+	protected FactoryContainer factory;
 	protected WsmoFactory wsmoFactory;
 	protected Ontology ontology;
 	protected Parser parser;
@@ -58,9 +58,9 @@ public abstract class AbstractSimpleInference extends TestCase implements DL {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		Factory factory = new FactoryImpl();
+		FactoryContainer factory = new FactoryImpl();
 		wsmoFactory = factory.getWsmoFactory();
-		parser = new ParserImplTyped();
+		parser = new WsmlParser();
 
 		// wsml2owlExample.wsml
 		InputStream is = this.getClass().getClassLoader().getResourceAsStream(

@@ -20,7 +20,7 @@ package org.wsml.reasoner.builtin.mins;
 
 import java.util.Map;
 
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 
 /**
  * Package: package org.wsml.reasoner.datalog.wrapper.mins;
@@ -30,7 +30,7 @@ import org.wsmo.factory.Factory;
  */
 public class MinsWellFoundedFacade extends AbstractMinsFacade {
 	
-	public MinsWellFoundedFacade(Factory factory, final Map<String, Object> config) {
+	public MinsWellFoundedFacade(FactoryContainer factory, final Map<String, Object> config) {
 		super( factory, config );
 	}
     

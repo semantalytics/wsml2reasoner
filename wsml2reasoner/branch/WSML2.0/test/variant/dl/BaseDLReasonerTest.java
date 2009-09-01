@@ -27,7 +27,7 @@ import org.omwg.ontology.Ontology;
 import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsmo.common.TopEntity;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
@@ -35,7 +35,7 @@ import org.wsmo.wsml.Serializer;
 
 import base.BaseReasonerTest;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 /**
  * 
@@ -48,7 +48,7 @@ public abstract class BaseDLReasonerTest extends TestCase
     protected OntologyNormalizer normalizer;
     protected WsmoFactory wsmoFactory;
     protected LogicalExpressionFactory leFactory;
-	protected Factory factory;
+	protected FactoryContainer factory;
 
     @Override
     protected void setUp() throws Exception
@@ -80,7 +80,7 @@ public abstract class BaseDLReasonerTest extends TestCase
     
     protected Ontology parseOntology(String fileName) throws Exception
     {
-        Parser parser = new ParserImplTyped();
+        Parser parser = new WsmlParser();
         Reader input = BaseReasonerTest.getReaderForFile(fileName);
         return (Ontology)parser.parse(input)[0];
     }

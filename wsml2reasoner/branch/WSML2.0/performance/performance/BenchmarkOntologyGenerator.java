@@ -52,7 +52,7 @@ import org.wsmo.common.TopEntity;
 import org.wsmo.common.WSML;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
@@ -150,7 +150,7 @@ public class BenchmarkOntologyGenerator {
 	
 	
 	public static void main(String[] args) throws Exception{
-		Factory factory = new FactoryImpl();
+		FactoryContainer factory = new FactoryImpl();
 		wsmoFactory = factory.getWsmoFactory();
 		leFactory = factory.getLogicalExpressionFactory();
 		dataFactory = factory.getWsmlDataFactory();

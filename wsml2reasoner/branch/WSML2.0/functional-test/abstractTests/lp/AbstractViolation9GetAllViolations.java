@@ -55,7 +55,7 @@ import org.wsmo.wsml.Serializer;
 
 import abstractTests.LP;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 public abstract class AbstractViolation9GetAllViolations extends TestCase implements LP {
 	private Set<ConsistencyViolation> errors;
@@ -69,7 +69,7 @@ public abstract class AbstractViolation9GetAllViolations extends TestCase implem
 
 	private void getViolations() throws InvalidModelException, IOException, ParserException {
 		WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
-		Parser parser = new ParserImplTyped();
+		Parser parser = new WsmlParser();
 		InputStream is = this.getClass().getClassLoader().getResourceAsStream(ONTOLOGY_FILE);
 		assertNotNull(is);
 		try {

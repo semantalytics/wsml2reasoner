@@ -27,7 +27,7 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
@@ -38,18 +38,18 @@ import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsmo.common.TopEntity;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 /**
  * This class encapsulates the reasoner and performs necessary pre-processing.
  */
 public class WSMLReasonerFacade {
 
-	private Factory factory;
+	private FactoryContainer factory;
 	
     private LPReasoner reasoner;
 
@@ -64,7 +64,7 @@ public class WSMLReasonerFacade {
     public WSMLReasonerFacade() {
     	factory = new FactoryImpl();
     	
-    	wsmlParser = new ParserImplTyped();
+    	wsmlParser = new WsmlParser();
     	
         reasoner = DefaultWSMLReasonerFactory.getFactory().createFlightReasoner(null);
     }
@@ -85,7 +85,7 @@ public class WSMLReasonerFacade {
     		throw new IllegalArgumentException();
     	}
     	
-        LogicalExpression lequery = new LogicalExpressionParserImpl(factory).parse(query);
+        LogicalExpression lequery = new WsmlLogicalExpressionParser(factory).parse(query);
       
         return doQuery(lequery);
     }
@@ -123,7 +123,7 @@ public class WSMLReasonerFacade {
         }
 
         reasoner.registerOntology(onto);
-        LogicalExpression lequery = new LogicalExpressionParserImpl(onto, factory).parse(query);
+        LogicalExpression lequery = new WsmlLogicalExpressionParser(onto, factory).parse(query);
 
         return doQuery(lequery);
     }

@@ -32,7 +32,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
 import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
 import org.omwg.logicalexpression.LogicalExpression;
@@ -51,14 +51,14 @@ import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsmo.common.TopEntity;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 import org.wsmo.wsml.Serializer;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 public class BaseReasonerTest extends TestCase {
 
@@ -91,9 +91,9 @@ public class BaseReasonerTest extends TestCase {
 
     protected static DataFactory dataFactory = null;
 
-    protected static Factory factory = null;
+    protected static FactoryContainer factory = null;
     
-    protected static Parser wsmlparserimpl = new ParserImplTyped();
+    protected static Parser wsmlparserimpl = new WsmlParser();
 
     /**
      * Instantiates a new reasoner with a default configuration
@@ -221,7 +221,7 @@ public class BaseReasonerTest extends TestCase {
             throws Exception {
         System.out.println("\n\nStarting reasoner with query '" + query + "'");
         System.out.println("\n\nExpecting " + expected.size() + " result(s)...");
-        LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
+        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
 		LogicalExpression qExpression = leParser.parse(query);
         System.out.println("WSML Query LE:");
         System.out.println(logExprSerializer.serialize(qExpression));

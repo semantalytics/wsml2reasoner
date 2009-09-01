@@ -27,7 +27,7 @@ import org.omwg.logicalexpression.Disjunction;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.wsml.reasoner.transformation.le.LEUtil;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 
@@ -35,7 +35,7 @@ public class ConjunctionPushRule implements NormalizationRule {
     
     private LogicalExpressionFactory leFactory;
     
-    public ConjunctionPushRule(Factory factory){
+    public ConjunctionPushRule(FactoryContainer factory){
         this.leFactory = factory.getLogicalExpressionFactory();
     }
     

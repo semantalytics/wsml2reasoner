@@ -25,7 +25,7 @@ import org.omwg.logicalexpression.Conjunction;
 import org.omwg.logicalexpression.LogicProgrammingRule;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.wsml.reasoner.transformation.le.TransformationRule;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 
@@ -33,7 +33,7 @@ public class SplitConjunctiveHead implements TransformationRule {
     
     private LogicalExpressionFactory leFactory;
     
-    public SplitConjunctiveHead(Factory wsmoManager){
+    public SplitConjunctiveHead(FactoryContainer wsmoManager){
         this.leFactory = wsmoManager.getLogicalExpressionFactory();
     }
     

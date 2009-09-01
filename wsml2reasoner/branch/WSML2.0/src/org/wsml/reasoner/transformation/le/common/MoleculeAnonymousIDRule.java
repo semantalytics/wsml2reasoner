@@ -29,7 +29,7 @@ import org.omwg.logicalexpression.SubConceptMolecule;
 import org.omwg.logicalexpression.terms.Term;
 import org.wsml.reasoner.transformation.AnonymousIdTranslator;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 
@@ -38,7 +38,7 @@ public class MoleculeAnonymousIDRule implements NormalizationRule {
     private LogicalExpressionFactory leFactory;
     private AnonymousIdTranslator anonymousIDTranslator;
     
-    public MoleculeAnonymousIDRule(Factory factory, AnonymousIdTranslator anonymousIDTranslator){
+    public MoleculeAnonymousIDRule(FactoryContainer factory, AnonymousIdTranslator anonymousIDTranslator){
         this.leFactory = factory.getLogicalExpressionFactory();
         this.anonymousIDTranslator = anonymousIDTranslator;
     }

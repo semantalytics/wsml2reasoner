@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.logicalexpression.terms.Term;
@@ -92,7 +92,7 @@ public class DataSourceTest extends BaseReasonerTest {
 
 	public void testInstanceRetrieval() throws Exception {
 		String query = "Anne memberOf CatOwner";
-		LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
+		LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
 		LogicalExpression qExpression = leParser.parse(
 				query);
 		assertTrue(((LPReasoner) wsmlReasoner).ask(qExpression));

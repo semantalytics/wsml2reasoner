@@ -20,7 +20,7 @@ import org.omwg.logicalexpression.terms.Term;
 import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.Literal;
 import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -31,7 +31,7 @@ import org.wsmo.factory.WsmoFactory;
  */
 public class IrisFacadeTest extends TestCase {
 	
-	Factory FACTORY;
+	FactoryContainer FACTORY;
 
 	
 	public void testGetTZData() {

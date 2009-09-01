@@ -49,7 +49,7 @@ import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
 import org.wsmo.common.Entity;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
@@ -64,7 +64,7 @@ public class TransformationNormalizationTest extends TestCase {
 	protected AxiomatizationNormalizer ax_normalizer;
 
 	protected DatalogBasedWSMLReasoner reasoner;
-	protected Factory wsmoManager;
+	protected FactoryContainer wsmoManager;
 	protected String ns = "http://ex.org#";
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
@@ -81,7 +81,7 @@ public class TransformationNormalizationTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		Factory wsmoManager = new FactoryImpl();
+		FactoryContainer wsmoManager = new FactoryImpl();
 		wsmoFactory = wsmoManager.getWsmoFactory();
 
 		Map<String, Object> params = new HashMap<String, Object>();

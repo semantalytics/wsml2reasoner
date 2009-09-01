@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
@@ -19,7 +19,7 @@ import org.wsml.reasoner.api.exception.InternalReasonerException;
 import org.wsml.reasoner.transformation.ConstraintReplacementNormalizer;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
@@ -32,7 +32,7 @@ public class DLUtilities {
 
     private final LPReasoner mReasoner;
 
-    public DLUtilities(LPReasoner reasoner, Factory factory) {
+    public DLUtilities(LPReasoner reasoner, FactoryContainer factory) {
     	
         this.wsmoFactory = factory.getWsmoFactory();
         this.leFactory = factory.getLogicalExpressionFactory();
@@ -108,7 +108,7 @@ public class DLUtilities {
         Term conceptID = concept.getIdentifier();
         LogicalExpression query = null;
         Set<Map<Variable, Term>> bindings;
-        LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
+        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
         try {
             query = leParser.parse("_\"" + org.wsml.reasoner.WSML2DatalogTransformer.PRED_DIRECT_SUBCONCEPT + "\"(?x, _\"" + conceptID.toString() + "\")");
             // submit query to reasoner:
@@ -156,7 +156,7 @@ public class DLUtilities {
         Term conceptID = concept.getIdentifier();
         LogicalExpression query = null;
         Set<Map<Variable, Term>> bindings;
-        LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
+        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
         try {
             query = leParser.parse("_\"" + org.wsml.reasoner.WSML2DatalogTransformer.PRED_DIRECT_SUBCONCEPT + "\"(_\"" + conceptID.toString() + "\", ?x)");
 
@@ -392,7 +392,7 @@ public class DLUtilities {
         Term instanceID = instance.getIdentifier();
         LogicalExpression query = null;
         Set<Map<Variable, Term>> bindings;
-        LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
+        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
         try {
             query = leParser.parse("_\"" + org.wsml.reasoner.WSML2DatalogTransformer.PRED_DIRECT_CONCEPT + "\"(_\"" + instanceID.toString() + "\", ?x)");
             // submit query to reasoner:

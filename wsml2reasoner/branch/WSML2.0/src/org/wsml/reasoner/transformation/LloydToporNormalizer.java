@@ -29,7 +29,7 @@ import org.wsml.reasoner.transformation.le.LogicalExpressionTransformer;
 import org.wsml.reasoner.transformation.le.TopDownLESplitter;
 import org.wsml.reasoner.transformation.le.lloydtopor.LloydToporRules;
 import org.wsmo.common.Entity;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.WsmoFactory;
 
 public class LloydToporNormalizer implements OntologyNormalizer {
@@ -37,7 +37,7 @@ public class LloydToporNormalizer implements OntologyNormalizer {
 
     protected WsmoFactory wsmoFactory;
 
-    public LloydToporNormalizer(Factory wsmoManager) {
+    public LloydToporNormalizer(FactoryContainer wsmoManager) {
         LloydToporRules lloydToporRules = new LloydToporRules(wsmoManager);
         leTransformer = new TopDownLESplitter(lloydToporRules.getRules());
         wsmoFactory = wsmoManager.getWsmoFactory();

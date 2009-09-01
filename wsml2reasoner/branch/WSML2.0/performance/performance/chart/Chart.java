@@ -37,7 +37,7 @@ import org.wsmo.wsml.ParserException;
 
 import performance.BenchmarkOntologyGenerator;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 public class Chart {
 	
@@ -111,7 +111,7 @@ public class Chart {
 		return list.iterator().next().toString();
 	}
 	
-	Parser p = new ParserImplTyped();
+	Parser p = new WsmlParser();
 	TestInfo getTestInfo(File dir) throws FileNotFoundException, IOException, ParserException, InvalidModelException{
 		TestInfo ret = new TestInfo();
 		File[] files = dir.listFiles(wsmlfilter);

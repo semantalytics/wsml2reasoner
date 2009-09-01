@@ -7,13 +7,13 @@ import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
-import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Ontology;
 import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsmo.common.IRI;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 
 
 /**
@@ -24,7 +24,7 @@ public class SpassTest extends TestCase{
     
     private Ontology nsContainer;
     private SpassFacade tptp;
-	protected Factory wsmoManager;
+	protected FactoryContainer wsmoManager;
 
     protected void setUp() throws Exception {
     	wsmoManager = new FactoryImpl();
@@ -37,7 +37,7 @@ public class SpassTest extends TestCase{
      }
 
     public void testConjunctionDisjunction() throws Exception{
-    	LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
+    	LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
         LogicalExpression le = leParser.parse(
             "a and b or c ");
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
@@ -60,7 +60,7 @@ public class SpassTest extends TestCase{
     }
     
     private void check(String wsml, String fol) throws Exception{
-        LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
+        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
         LogicalExpression le = leParser.parse(wsml);
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);

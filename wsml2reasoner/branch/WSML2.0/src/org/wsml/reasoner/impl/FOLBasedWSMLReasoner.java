@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Axiom;
@@ -46,7 +46,7 @@ import org.wsml.reasoner.transformation.le.NormalizationRule;
 import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
 import org.wsml.reasoner.transformation.le.foldecomposition.FOLMoleculeDecompositionRules;
 import org.wsmo.common.Entity;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.wsml.ParserException;
 
 /**
@@ -61,9 +61,9 @@ public class FOLBasedWSMLReasoner implements FOLReasoner {
 
     protected FOLReasonerFacade builtInFacade = null;
 
-    protected Factory factory;
+    protected FactoryContainer factory;
 
-    public FOLBasedWSMLReasoner(WSMLReasonerFactory.BuiltInReasoner builtInType, Factory factory, String uri) {
+    public FOLBasedWSMLReasoner(WSMLReasonerFactory.BuiltInReasoner builtInType, FactoryContainer factory, String uri) {
         this.factory = factory;
         switch (builtInType) {
         case TPTP:
@@ -119,7 +119,7 @@ public class FOLBasedWSMLReasoner implements FOLReasoner {
         // not sure actually... TODO: CHECK ME!
         // should not be a consisteny violation anyway
         LogicalExpression le;
-        LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
+        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
         try {
             le = leParser.parse("_\"foo:a\" or naf _\"foo:a\"");
         }

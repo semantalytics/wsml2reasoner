@@ -34,7 +34,7 @@ import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsmo.common.Entity;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 
 public class AnonymousIDReplacementTest extends BaseNormalizationTest
 {
@@ -44,7 +44,7 @@ public class AnonymousIDReplacementTest extends BaseNormalizationTest
     protected void setUp() throws Exception
     {
         super.setUp();
-        Factory factory = new FactoryImpl();
+        FactoryContainer factory = new FactoryImpl();
         axiomatizationNormalizer = new AxiomatizationNormalizer(factory);
         reductionNormalizer = new ConstructReductionNormalizer(factory);
     }

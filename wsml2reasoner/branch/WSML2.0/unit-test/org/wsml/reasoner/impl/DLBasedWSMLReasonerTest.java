@@ -45,7 +45,7 @@ import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
@@ -71,7 +71,7 @@ public class DLBasedWSMLReasonerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		Factory factory = new FactoryImpl();
+		FactoryContainer factory = new FactoryImpl();
 		wsmoFactory = factory.getWsmoFactory();
 		leFactory = factory.getLogicalExpressionFactory();
 

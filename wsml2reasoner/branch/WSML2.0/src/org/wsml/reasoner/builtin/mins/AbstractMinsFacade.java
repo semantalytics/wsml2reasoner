@@ -45,7 +45,7 @@ import org.wsml.reasoner.UnsupportedFeatureException;
 import org.wsml.reasoner.WSML2DatalogTransformer;
 import org.wsml.reasoner.api.exception.InternalReasonerException;
 import org.wsmo.common.IRI;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.WsmoFactory;
 
 public abstract class AbstractMinsFacade implements DatalogReasonerFacade
@@ -99,7 +99,7 @@ public abstract class AbstractMinsFacade implements DatalogReasonerFacade
      */
     private RuleSet minsEngine;
 
-    private Factory factory;
+    private FactoryContainer factory;
 
     private MinsSymbolMap symbTransfomer;
 
@@ -107,7 +107,7 @@ public abstract class AbstractMinsFacade implements DatalogReasonerFacade
      * Creates a facade object that allows to invoke the MINS rule system for
      * performing query evaluation tasks.
      */
-    public AbstractMinsFacade(Factory factory, final Map<String, Object> config) {
+    public AbstractMinsFacade(FactoryContainer factory, final Map<String, Object> config) {
         super();
         this.factory = factory;
         this.symbTransfomer = new MinsSymbolMap(factory);

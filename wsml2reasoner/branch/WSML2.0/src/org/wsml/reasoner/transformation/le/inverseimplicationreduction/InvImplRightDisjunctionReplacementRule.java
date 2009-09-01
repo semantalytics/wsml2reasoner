@@ -22,14 +22,14 @@ import org.omwg.logicalexpression.Disjunction;
 import org.omwg.logicalexpression.InverseImplication;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 public class InvImplRightDisjunctionReplacementRule extends ReplacementRule implements NormalizationRule {
     
     private LogicalExpressionFactory leFactory;
     
-    public InvImplRightDisjunctionReplacementRule(Factory wsmoManager){
+    public InvImplRightDisjunctionReplacementRule(FactoryContainer wsmoManager){
         this.leFactory = wsmoManager.getLogicalExpressionFactory();
     }
     

@@ -36,7 +36,7 @@ import org.omwg.logicalexpression.Molecule;
 import org.omwg.logicalexpression.Negation;
 import org.omwg.logicalexpression.NegationAsFailure;
 import org.omwg.logicalexpression.UniversalQuantification;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 /**
@@ -64,7 +64,7 @@ public class OnePassReplacementNormalizer implements LogicalExpressionNormalizer
      * @param preorderRules
      * @param postorderRules
      */
-    public OnePassReplacementNormalizer(List<NormalizationRule> preorderRules, List<NormalizationRule> postorderRules, Factory factory) {
+    public OnePassReplacementNormalizer(List<NormalizationRule> preorderRules, List<NormalizationRule> postorderRules, FactoryContainer factory) {
         this.preOrderRules = preorderRules;
         this.postOrderRules = postorderRules;
         this.leFactory = factory.getLogicalExpressionFactory();
@@ -76,7 +76,7 @@ public class OnePassReplacementNormalizer implements LogicalExpressionNormalizer
      * 
      * @param rules
      */
-    public OnePassReplacementNormalizer(List<NormalizationRule> rules, Factory factory) {
+    public OnePassReplacementNormalizer(List<NormalizationRule> rules, FactoryContainer factory) {
         this(rules, new ArrayList<NormalizationRule>(0), factory);
     }
 

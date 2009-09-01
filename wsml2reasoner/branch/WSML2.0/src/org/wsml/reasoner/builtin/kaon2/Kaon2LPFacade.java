@@ -28,7 +28,7 @@ import org.wsml.reasoner.DatalogReasonerFacade;
 import org.wsml.reasoner.ExternalToolException;
 import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.api.exception.InternalReasonerException;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 
 /**
  * Integrates the Kaon2 system into the WSML Core/Flight Reasoner framework for
@@ -41,13 +41,13 @@ import org.wsmo.factory.Factory;
  */
 public class Kaon2LPFacade implements DatalogReasonerFacade
 {
-	public Kaon2LPFacade( Factory factory, final Map<String, Object> config )
+	public Kaon2LPFacade( FactoryContainer factory, final Map<String, Object> config )
 	{
         assert factory != null : "The manager must not be null";
 
         try {
             final Class< ? > facade = Class.forName(WRAPPER_IMPLEMENTATION_CLASS);
-            final Constructor< ? > constructor = facade.getConstructor(Factory.class, Map.class);
+            final Constructor< ? > constructor = facade.getConstructor(FactoryContainer.class, Map.class);
             mKaon2Wrapper = (DatalogReasonerFacade) constructor.newInstance(factory, config);
         }
         catch (Exception e) {

@@ -20,7 +20,7 @@ package org.wsml.reasoner.transformation.le.inverseimplicationreduction;
 
 import org.wsml.reasoner.transformation.le.NormalizationRule;
 import org.wsml.reasoner.transformation.le.Rules;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 
 /**
  * This singleton class represents a set of normalization rules for replacing
@@ -38,7 +38,7 @@ import org.wsmo.factory.Factory;
  */
 public class InverseImplicationReductionRules extends Rules <NormalizationRule>{
 
-    public InverseImplicationReductionRules(Factory wsmoManager) {
+    public InverseImplicationReductionRules(FactoryContainer wsmoManager) {
         addRule(new InvImplLeftConjunctionReplacementRule(wsmoManager));
         addRule(new InvImplRightDisjunctionReplacementRule(wsmoManager));
     }

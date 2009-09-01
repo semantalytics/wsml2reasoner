@@ -27,7 +27,7 @@ import junit.framework.TestCase;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.transformation.le.LETestHelper;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.wsml.ParserException;
 
 public class FOLMoleculeDecompositionRuleTest extends TestCase {
@@ -41,7 +41,7 @@ public class FOLMoleculeDecompositionRuleTest extends TestCase {
     
     protected void setUp() throws Exception {
         super.setUp();
-        Factory factory = new FactoryImpl();
+        FactoryContainer factory = new FactoryImpl();
         this.rule = new FOLMoleculeDecompositionRule(factory);
     }
     

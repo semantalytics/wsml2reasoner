@@ -43,7 +43,7 @@ import org.wsmo.validator.ValidationError;
 import org.wsmo.validator.ValidationWarning;
 import org.wsmo.wsml.Parser;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
 
@@ -74,7 +74,7 @@ public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/wsml2owlNormExample.wsml");
         assertNotNull(is);
         WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
-    	Parser wsmlParser = new ParserImplTyped();
+    	Parser wsmlParser = new WsmlParser();
         // assuming first topentity in file is an ontology
         ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is))[0];
 
@@ -135,7 +135,7 @@ public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/anonIds.wsml");
         assertNotNull(is);
         WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
-    	Parser wsmlParser = new ParserImplTyped();
+    	Parser wsmlParser = new WsmlParser();
         // assuming first topentity in file is an ontology
         ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is))[0];
 
@@ -170,7 +170,7 @@ public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/relation2attribute.wsml");
         assertNotNull(is);
         WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
-    	Parser wsmlParser = new ParserImplTyped();
+    	Parser wsmlParser = new WsmlParser();
         // assuming first topentity in file is an ontology
         ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is))[0];
 
@@ -205,7 +205,7 @@ public class WSMLDLNormalizerTest extends BaseDLReasonerTest {
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/decomposition.wsml");
         assertNotNull(is);
         WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
-    	Parser wsmlParser = new ParserImplTyped();
+    	Parser wsmlParser = new WsmlParser();
         // assuming first topentity in file is an ontology
         ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is))[0];
 

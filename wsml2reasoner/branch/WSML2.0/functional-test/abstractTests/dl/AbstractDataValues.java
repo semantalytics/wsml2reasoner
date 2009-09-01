@@ -28,7 +28,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Axiom;
@@ -40,7 +40,7 @@ import org.wsml.reasoner.impl.DLBasedWSMLReasoner;
 import org.wsml.reasoner.serializer.owl.OWLSerializer;
 import org.wsml.reasoner.serializer.owl.OWLSerializerImpl;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
@@ -50,7 +50,7 @@ import abstractTests.DL;
 
 public abstract class AbstractDataValues extends TestCase implements DL {
 	
-	protected Factory factory;
+	protected FactoryContainer factory;
 	protected String ns = "http://ex.org#";
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
@@ -302,7 +302,7 @@ public abstract class AbstractDataValues extends TestCase implements DL {
 		axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiomTestValues_" + (in.trim())));
 	    ontology.addAxiom(axiom);
 		
-	    LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
+	    LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
 		LogicalExpression le = leParser.parse(in);
         axiom.addDefinition(le);
         

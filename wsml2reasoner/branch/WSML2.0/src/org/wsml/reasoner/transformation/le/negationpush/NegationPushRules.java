@@ -20,7 +20,7 @@ package org.wsml.reasoner.transformation.le.negationpush;
 
 import org.wsml.reasoner.transformation.le.NormalizationRule;
 import org.wsml.reasoner.transformation.le.Rules;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 
 /**
  * This singleton class represents a set of normalization rules for pushing
@@ -32,7 +32,7 @@ import org.wsmo.factory.Factory;
  */
 public class NegationPushRules extends Rules <NormalizationRule>{
 
-    public NegationPushRules(Factory factory) {
+    public NegationPushRules(FactoryContainer factory) {
         addRule(new DoubleNegationRule());
         addRule(new NegateConjunctionRule(factory));
         addRule(new NegateDisjunctionRule(factory));

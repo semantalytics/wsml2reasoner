@@ -51,7 +51,7 @@ import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 import org.wsmo.wsml.Serializer;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 /**
  * Helper to make loading, parsing and serialising ontologies and their components simpler.
@@ -143,7 +143,7 @@ public class OntologyHelper
     private static Ontology parseThis(Reader ontoReader) throws IOException, ParserException, InvalidModelException{
       	 
     	WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
-    	Parser wsmlParser = new ParserImplTyped();
+    	Parser wsmlParser = new WsmlParser();
     	
     	final TopEntity[] identifiable = wsmlParser.parse(ontoReader);
     	

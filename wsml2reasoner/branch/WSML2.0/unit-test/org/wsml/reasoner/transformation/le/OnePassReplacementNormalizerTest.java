@@ -37,7 +37,7 @@ import org.wsml.reasoner.transformation.le.foldecomposition.FOLMoleculeDecomposi
 import org.wsml.reasoner.transformation.le.implicationreduction.ImplicationReductionRules;
 import org.wsml.reasoner.transformation.le.moleculedecomposition.MoleculeDecompositionRules;
 import org.wsml.reasoner.transformation.le.negationpush.NegationPushRules;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.wsml.ParserException;
 
 public class OnePassReplacementNormalizerTest extends TestCase {
@@ -50,7 +50,7 @@ public class OnePassReplacementNormalizerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		Factory wsmoManager = new FactoryImpl();
+		FactoryContainer wsmoManager = new FactoryImpl();
 		List<NormalizationRule> preOrderRules = new ArrayList<NormalizationRule>();
 		preOrderRules.addAll(new ImplicationReductionRules(wsmoManager)
 				.getRules());
@@ -67,7 +67,7 @@ public class OnePassReplacementNormalizerTest extends TestCase {
 	}
 
 	public void testNormalize() throws ParserException {
-		Factory wsmoManager = new FactoryImpl();
+		FactoryContainer wsmoManager = new FactoryImpl();
 		List<NormalizationRule> postOrderRules = new ArrayList<NormalizationRule>();
 		postOrderRules.addAll(new FOLMoleculeDecompositionRules(wsmoManager)
 				.getRules());

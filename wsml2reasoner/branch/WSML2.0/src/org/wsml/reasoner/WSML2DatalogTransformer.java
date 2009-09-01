@@ -50,7 +50,7 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.transformation.ConstructedTermVisitor;
 import org.wsml.reasoner.transformation.InfixOrderLogicalExpressionVisitor;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 /**
@@ -102,12 +102,12 @@ public class WSML2DatalogTransformer {
 
     public final static String PRED_KNOWN_CONCEPT = "http://temp/knownConcept";
 
-    Factory wsmoManager;
+    FactoryContainer wsmoManager;
 
     /**
      * Generates a WSML2Datalog converter.
      */
-    public WSML2DatalogTransformer(Factory wsmoManager) {
+    public WSML2DatalogTransformer(FactoryContainer wsmoManager) {
         this.wsmoManager = wsmoManager;
     }
 

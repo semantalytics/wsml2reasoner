@@ -78,7 +78,7 @@ import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.ImportedOntologiesBlock;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -102,7 +102,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
 
     protected WsmoFactory wsmoFactory;
     protected LogicalExpressionFactory leFactory;
-    protected Factory factory;
+    protected FactoryContainer factory;
 
     private int allowImports = 0;
     private boolean disableConsitencyCheck = false;
@@ -127,7 +127,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
      * @throws IllegalArgumentException
      *             if the wsml4j manager is <code>null</code>
      */
-    public DatalogBasedWSMLReasoner(final BuiltInReasoner builtInType, final Factory factory, final Map<String, Object> config) {
+    public DatalogBasedWSMLReasoner(final BuiltInReasoner builtInType, final FactoryContainer factory, final Map<String, Object> config) {
         if (builtInType == null) {
             throw new IllegalArgumentException("The facade type must not be null");
         }
@@ -151,7 +151,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
      * @throws InternalReasonerException if something went wrong while 
      * instantiating the reasoner
      */
-    private DatalogReasonerFacade createFacade(BuiltInReasoner builtInType, Factory factory, Map<String, Object> config) throws InternalReasonerException {
+    private DatalogReasonerFacade createFacade(BuiltInReasoner builtInType, FactoryContainer factory, Map<String, Object> config) throws InternalReasonerException {
         assert factory != null : "The manager must not be null";
 
         switch( builtInType )

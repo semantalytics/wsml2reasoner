@@ -8,12 +8,12 @@ import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.SimpleDataValue;
 import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 
 public class VisitorDataTypeTest extends TestCase {
 
 	private DatatypeVisitor visitor = new DatatypeVisitor();
-	private Factory factory = new FactoryImpl();
+	private FactoryContainer factory = new FactoryImpl();
 	private DataFactory df = factory.getWsmlDataFactory( );
 	
 	@Override

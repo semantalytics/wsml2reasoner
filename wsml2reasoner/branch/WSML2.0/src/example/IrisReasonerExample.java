@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.deri.wsmo4j.io.serializer.wsml.SerializeWSMLTermsVisitor;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
@@ -38,7 +38,7 @@ import org.wsmo.common.TopEntity;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 /**
  * Usage Example for the wsml2Reasoner Framework
@@ -74,7 +74,7 @@ public class IrisReasonerExample {
 //        String queryString = "?x = ?y";
         String queryString = "?x = ?y :- ?x[name hasValue ?n1] and ?y[name hasValue ?n2] and ?n1=?n2.";
 
-        LogicalExpression query = new LogicalExpressionParserImpl(exampleOntology).parse(queryString);
+        LogicalExpression query = new WsmlLogicalExpressionParser(exampleOntology).parse(queryString);
 
         // get A reasoner
         Map<String, Object> params = new HashMap<String, Object>();
@@ -108,7 +108,7 @@ public class IrisReasonerExample {
      */
     private Ontology loadOntology(String file) {
         WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
-		Parser wsmlParser = new ParserImplTyped();
+		Parser wsmlParser = new WsmlParser();
 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);
         try {

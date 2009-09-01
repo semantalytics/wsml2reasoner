@@ -62,7 +62,7 @@ import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -78,7 +78,7 @@ public class DLBasedWSMLReasoner implements DLReasoner {
 
     protected DataFactory dataFactory = null;
 
-    protected Factory factory = null;
+    protected FactoryContainer factory = null;
 
     protected OWLConnection owlConnection = null;
 
@@ -96,7 +96,7 @@ public class DLBasedWSMLReasoner implements DLReasoner {
 
     private boolean disableConsitencyCheck = false;
 
-    public DLBasedWSMLReasoner(BuiltInReasoner builtInType, Factory factory) throws InternalReasonerException {
+    public DLBasedWSMLReasoner(BuiltInReasoner builtInType, FactoryContainer factory) throws InternalReasonerException {
         this.factory = factory;
         this.wsmoFactory = this.factory.getWsmoFactory();
         this.leFactory = this.factory.getLogicalExpressionFactory();

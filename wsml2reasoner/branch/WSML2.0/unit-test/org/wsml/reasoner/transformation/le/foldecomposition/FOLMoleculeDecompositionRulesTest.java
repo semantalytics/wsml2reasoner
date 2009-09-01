@@ -23,7 +23,7 @@
 package org.wsml.reasoner.transformation.le.foldecomposition;
 
 import org.sti2.wsmo4j.factory.FactoryImpl;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 
 import junit.framework.TestCase;
 
@@ -37,7 +37,7 @@ public class FOLMoleculeDecompositionRulesTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		Factory wsmoManager = new FactoryImpl();
+		FactoryContainer wsmoManager = new FactoryImpl();
 		this.rules = new FOLMoleculeDecompositionRules(wsmoManager);
 	}
 

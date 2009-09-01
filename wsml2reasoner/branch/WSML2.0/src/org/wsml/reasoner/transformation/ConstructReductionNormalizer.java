@@ -34,7 +34,7 @@ import org.wsml.reasoner.transformation.le.implicationreduction.ImplicationReduc
 import org.wsml.reasoner.transformation.le.moleculedecomposition.MoleculeDecompositionRules;
 import org.wsml.reasoner.transformation.le.negationpush.NegationPushRules;
 import org.wsmo.common.Entity;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.WsmoFactory;
 
 public class ConstructReductionNormalizer implements OntologyNormalizer {
@@ -44,7 +44,7 @@ public class ConstructReductionNormalizer implements OntologyNormalizer {
 
     protected AnonymousIdTranslator anonymousIdTranslator;
 
-    public ConstructReductionNormalizer(Factory factory) {
+    public ConstructReductionNormalizer(FactoryContainer factory) {
         List<NormalizationRule> preOrderRules = new ArrayList<NormalizationRule>();
         preOrderRules.addAll(new ImplicationReductionRules(factory).getRules());
         preOrderRules.addAll(new NegationPushRules(factory).getRules());

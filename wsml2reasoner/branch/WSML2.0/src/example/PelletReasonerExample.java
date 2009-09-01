@@ -41,7 +41,7 @@ import org.wsmo.common.TopEntity;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 /**
  * Usage example for the wsml2reasoner framework with a wsml dl ontology.
@@ -163,7 +163,7 @@ public class PelletReasonerExample {
      */
     private Ontology loadOntology(String file) {
     	WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
-    	Parser wsmlParser = new ParserImplTyped();
+    	Parser wsmlParser = new WsmlParser();
 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);
         try {

@@ -26,7 +26,7 @@ import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.UnnumberedAnonymousID;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -53,7 +53,7 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
     protected LogicalExpressionFactory leFactory;
     protected AnonymousIdTranslator anonymousIdTranslator;
 
-    public WSMLDLLogExprNormalizer(Factory wsmoManager) {
+    public WSMLDLLogExprNormalizer(FactoryContainer wsmoManager) {
         List<NormalizationRule> preOrderRules = new ArrayList<NormalizationRule>();
         preOrderRules.addAll(new ImplicationReductionRules(wsmoManager).getRules());
         preOrderRules.addAll(new InverseImplicationReductionRules(wsmoManager).getRules());

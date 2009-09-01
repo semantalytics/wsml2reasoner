@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
@@ -31,7 +31,7 @@ import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsmo.common.IRI;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 
 public class ConstructReductionNormalizerTest extends BaseNormalizationTest
 {
@@ -41,7 +41,7 @@ public class ConstructReductionNormalizerTest extends BaseNormalizationTest
     protected void setUp() throws Exception
     {
         super.setUp();
-        Factory factory = new FactoryImpl();
+        FactoryContainer factory = new FactoryImpl();
         normalizer = new ConstructReductionNormalizer(factory);
     }
 
@@ -84,7 +84,7 @@ public class ConstructReductionNormalizerTest extends BaseNormalizationTest
         ontology.setDefaultNamespace(iri);
         Axiom a = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
         ontology.addAxiom(a);
-        LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
+        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
         a.addDefinition(leParser.parse(
                 "a[r1 hasValue v1, r2 hasValue v2] " +
                 "or b[r1 hasValue v2] " +

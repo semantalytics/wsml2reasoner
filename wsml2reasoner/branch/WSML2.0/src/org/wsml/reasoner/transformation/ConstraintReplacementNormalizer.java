@@ -22,7 +22,7 @@ import org.omwg.ontology.Variable;
 import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -53,7 +53,7 @@ public class ConstraintReplacementNormalizer implements OntologyNormalizer {
     private WsmoFactory wsmoFactory;
     private LogicalExpressionFactory leFactory;
 
-    public ConstraintReplacementNormalizer(Factory factory) {
+    public ConstraintReplacementNormalizer(FactoryContainer factory) {
         leFactory = factory.getLogicalExpressionFactory();
         wsmoFactory = factory.getWsmoFactory();
         attributeOfTypePredicateID = wsmoFactory.createIRI(ATTR_OFTYPE_IRI);

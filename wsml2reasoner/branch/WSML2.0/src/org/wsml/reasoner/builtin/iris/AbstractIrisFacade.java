@@ -111,7 +111,7 @@ import org.wsmo.common.Identifier;
 import org.wsmo.common.NumberedAnonymousID;
 import org.wsmo.common.UnnumberedAnonymousID;
 import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -276,7 +276,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 	final static String TEXT_COMPARE = Constants.WSML_NAMESPACE + "textCompare";						// RIF : func:text-compare
 	final static String TEXT_LENGTH = Constants.WSML_NAMESPACE + "textLength";							// RIF : func:text-length
     
-	public AbstractIrisFacade(final Factory factory, final Map<String, Object> config) {
+	public AbstractIrisFacade(final FactoryContainer factory, final Map<String, Object> config) {
         DATA_FACTORY = factory.getWsmlDataFactory();
         WSMO_FACTORY = factory.getWsmoFactory();
         LOGIC_FACTORY = factory.getLogicalExpressionFactory();

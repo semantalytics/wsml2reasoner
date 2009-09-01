@@ -48,7 +48,7 @@ import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.common.Entity;
 import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
@@ -70,7 +70,7 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		Factory factory = new FactoryImpl(); 
+		FactoryContainer factory = new FactoryImpl(); 
 		wsmoFactory = factory.getWsmoFactory();
 		dataFactory = factory.getWsmlDataFactory();
         leFactory = factory.getLogicalExpressionFactory();

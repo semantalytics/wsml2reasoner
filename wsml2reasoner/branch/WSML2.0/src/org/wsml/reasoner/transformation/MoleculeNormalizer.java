@@ -31,7 +31,7 @@ import org.wsml.reasoner.transformation.le.NormalizationRule;
 import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
 import org.wsml.reasoner.transformation.le.foldecomposition.FOLMoleculeDecompositionRules;
 import org.wsmo.common.Entity;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.WsmoFactory;
 
 public class MoleculeNormalizer implements OntologyNormalizer {
@@ -41,7 +41,7 @@ public class MoleculeNormalizer implements OntologyNormalizer {
 
     protected AnonymousIdTranslator anonymousIdTranslator;
 
-    public MoleculeNormalizer(Factory wsmoManager) {
+    public MoleculeNormalizer(FactoryContainer wsmoManager) {
         List<NormalizationRule> postOrderRules = new ArrayList<NormalizationRule>();
         postOrderRules.addAll(new FOLMoleculeDecompositionRules(wsmoManager).getRules());
         leNormalizer = new OnePassReplacementNormalizer(postOrderRules, wsmoManager);

@@ -25,7 +25,7 @@ import org.omwg.logicalexpression.Constraint;
 import org.omwg.logicalexpression.Disjunction;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.wsml.reasoner.transformation.le.TransformationRule;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 
@@ -33,7 +33,7 @@ public class SplitConstraint implements TransformationRule {
     
     private LogicalExpressionFactory leFactory;
     
-    public SplitConstraint(Factory wsmoManager){
+    public SplitConstraint(FactoryContainer wsmoManager){
         this.leFactory = wsmoManager.getLogicalExpressionFactory();
     }
     

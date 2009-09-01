@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.deri.wsmo4j.io.serializer.wsml.SerializeWSMLTermsVisitor;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
@@ -38,7 +38,7 @@ import org.wsmo.common.TopEntity;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 /**
  * Usage Example for the wsml2Reasoner Framework
@@ -50,7 +50,7 @@ public class LotsOfImports {
     FactoryImpl wsmoManager = new FactoryImpl();
 
     WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
-	Parser wsmlParser = new ParserImplTyped();
+	Parser wsmlParser = new WsmlParser();
 
     /**
      * @param args
@@ -112,7 +112,7 @@ public class LotsOfImports {
 
         String queryString = "?x memberOf Time#DateTimeDescription";
 
-        LogicalExpression query = new LogicalExpressionParserImpl(exampleOntology).parse(queryString);
+        LogicalExpression query = new WsmlLogicalExpressionParser(exampleOntology).parse(queryString);
 
         // get A reasoner
         Map<String, Object> params = new HashMap<String, Object>();

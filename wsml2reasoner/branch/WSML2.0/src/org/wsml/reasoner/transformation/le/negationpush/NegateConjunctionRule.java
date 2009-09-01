@@ -22,7 +22,7 @@ import org.omwg.logicalexpression.Conjunction;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.NegationAsFailure;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 
@@ -30,7 +30,7 @@ public class NegateConjunctionRule implements NormalizationRule {
     
     private LogicalExpressionFactory leFactory;
     
-    public NegateConjunctionRule(Factory factory){
+    public NegateConjunctionRule(FactoryContainer factory){
         this.leFactory = factory.getLogicalExpressionFactory();
     }
     

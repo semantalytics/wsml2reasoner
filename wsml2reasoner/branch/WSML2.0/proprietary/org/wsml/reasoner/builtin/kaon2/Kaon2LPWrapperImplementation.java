@@ -42,7 +42,7 @@ import org.wsml.reasoner.UnsupportedFeatureException;
 import org.wsml.reasoner.WSML2DatalogTransformer;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -66,7 +66,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 
 	private String ontologyUri;
 
-	public Kaon2LPWrapperImplementation( Factory wsmoManager, final Map<String, Object> config )
+	public Kaon2LPWrapperImplementation( FactoryContainer wsmoManager, final Map<String, Object> config )
 	{
 		df = wsmoManager.getWsmlDataFactory();
 		wf = wsmoManager.getWsmoFactory();

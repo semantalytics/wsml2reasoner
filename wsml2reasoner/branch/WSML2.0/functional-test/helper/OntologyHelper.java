@@ -50,7 +50,7 @@ import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 import org.wsmo.wsml.Serializer;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 /**
  * Helper to make loading, parsing and serialising ontologies and their components simpler.
@@ -59,7 +59,7 @@ public class OntologyHelper
 {
 	// TODO gigi: probably won't work as expected since the factories changed and are now stateful
 	private static WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
-	private static Parser wsmlparserimpl = new ParserImplTyped();
+	private static Parser wsmlparserimpl = new WsmlParser();
 
 	/**
 	 * Load an ontology from a wsml file.

@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Axiom;
@@ -38,7 +38,7 @@ import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsmo.common.Entity;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
 
@@ -60,7 +60,7 @@ public class Relation2AttributeNormalizer implements OntologyNormalizer {
 
     private AnonymousIdTranslator anonymousIdTranslator;
 
-    public Relation2AttributeNormalizer(Factory factory) {
+    public Relation2AttributeNormalizer(FactoryContainer factory) {
     	
     	wsmoFactory = factory.getWsmoFactory();
         anonymousIdTranslator = new AnonymousIdTranslator(factory.getWsmoFactory());
@@ -139,7 +139,7 @@ public class Relation2AttributeNormalizer implements OntologyNormalizer {
         Axiom result = wsmoFactory.createAxiom((Identifier) anonymousIdTranslator.translate(wsmoFactory.createAnonymousID()));
         for (Relation sr : superRelations){
             String le = "?x[_\"" + relation.getIdentifier() + "\" hasValue ?y] implies " + "?x[_\"" + sr.getIdentifier() + "\" hasValue ?y].";
-            LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
+            LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
             try {
                 result.addDefinition(leParser.parse(le));
             }

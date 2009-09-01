@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.logicalexpression.terms.Term;
@@ -21,7 +21,7 @@ import org.wsmo.wsml.Parser;
 
 import base.BaseReasonerTest;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 /**
  * Interface or class description
@@ -39,7 +39,7 @@ import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
 public class RegisterMultipleTimes  extends BaseReasonerTest  {
 	
 	WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
-	Parser wsmlParser = new ParserImplTyped();
+	Parser wsmlParser = new WsmlParser();
 //	LogicalExpressionFactory leFactory = Factory.createLogicalExpressionFactory(null);
 	
     LPReasoner reasoner;
@@ -76,7 +76,7 @@ public class RegisterMultipleTimes  extends BaseReasonerTest  {
     	InputStream is1 = this.getClass().getClassLoader().getResourceAsStream(file2);
     	assertNotNull(is1);
     	Ontology ont1 =(Ontology)wsmlParser.parse(new InputStreamReader(is1))[0];
-    	LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
+    	LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
         LogicalExpression query = leParser.parse("?x memberOf ?y");
 
         Set<Map<Variable, Term>> result = null;
@@ -113,7 +113,7 @@ public class RegisterMultipleTimes  extends BaseReasonerTest  {
 
         Ontology o = (Ontology) wsmlParser.parse(new StringBuffer(test))[0];
 
-        LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
+        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
         LogicalExpression query = leParser.parse("?x memberOf ?y");
         Instance instance = o.findInstance(wsmoFactory.createIRI(ns+"i1"));
 

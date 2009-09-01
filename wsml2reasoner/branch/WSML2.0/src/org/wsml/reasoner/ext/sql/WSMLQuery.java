@@ -45,7 +45,7 @@ import org.omwg.ontology.Variable;
 import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 /**
@@ -162,7 +162,7 @@ public class WSMLQuery {
     private Set<Map<Variable, Term>> convertSQLResult(ResultSet sqlResult) throws SQLException {
         assert sqlResult != null;
 
-        Factory factory = new FactoryImpl();
+        FactoryContainer factory = new FactoryImpl();
 		DataFactory wsmlDataFactory = factory.getWsmlDataFactory();
         LogicalExpressionFactory l = factory.getLogicalExpressionFactory();
         ResultSetMetaData m = sqlResult.getMetaData();

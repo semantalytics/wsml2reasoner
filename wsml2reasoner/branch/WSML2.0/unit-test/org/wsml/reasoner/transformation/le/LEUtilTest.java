@@ -31,7 +31,7 @@ import org.omwg.logicalexpression.Conjunction;
 import org.omwg.logicalexpression.Disjunction;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.sti2.wsmo4j.factory.FactoryImpl;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.wsml.ParserException;
 
@@ -48,7 +48,7 @@ public class LEUtilTest extends TestCase {
 
 	public void testBuildNary() throws ParserException {
 
-		Factory wsmoManager = new FactoryImpl();
+		FactoryContainer wsmoManager = new FactoryImpl();
 		LogicalExpressionFactory leFactory = wsmoManager
 				.getLogicalExpressionFactory();
 		LogicalExpression in1 = LETestHelper

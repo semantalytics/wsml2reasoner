@@ -20,7 +20,7 @@ package org.wsml.reasoner.transformation.le.inverseimplicationtransformation;
 
 import org.wsml.reasoner.transformation.le.Rules;
 import org.wsml.reasoner.transformation.le.TransformationRule;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 
 /**
  *
@@ -29,7 +29,7 @@ import org.wsmo.factory.Factory;
 public class InverseImplicationTransformationRules extends
 		Rules<TransformationRule> {
 
-	public InverseImplicationTransformationRules(Factory wsmoManager) {
+	public InverseImplicationTransformationRules(FactoryContainer wsmoManager) {
 		addRule(new SplitInvImplicationBodyRule(wsmoManager));
 	}
 

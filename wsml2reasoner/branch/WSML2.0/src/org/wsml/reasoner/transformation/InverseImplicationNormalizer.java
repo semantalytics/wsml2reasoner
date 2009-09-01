@@ -29,7 +29,7 @@ import org.wsml.reasoner.transformation.le.LogicalExpressionTransformer;
 import org.wsml.reasoner.transformation.le.TopDownLESplitter;
 import org.wsml.reasoner.transformation.le.inverseimplicationtransformation.InverseImplicationTransformationRules;
 import org.wsmo.common.Entity;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.WsmoFactory;
 
 public class InverseImplicationNormalizer implements OntologyNormalizer {
@@ -37,7 +37,7 @@ public class InverseImplicationNormalizer implements OntologyNormalizer {
 
 	protected WsmoFactory wsmoFactory;
 
-	public InverseImplicationNormalizer(Factory wsmoManager) {
+	public InverseImplicationNormalizer(FactoryContainer wsmoManager) {
 	    InverseImplicationTransformationRules inverseImplicationTransformerRules = new InverseImplicationTransformationRules(wsmoManager);
 		leTransformer = new TopDownLESplitter(inverseImplicationTransformerRules.getRules());
 		wsmoFactory = wsmoManager.getWsmoFactory();

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.deri.wsmo4j.io.serializer.wsml.SerializeWSMLTermsVisitor;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
@@ -25,7 +25,7 @@ import org.wsmo.common.TopEntity;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 public class TestPerformance1 {
 
@@ -221,7 +221,7 @@ public class TestPerformance1 {
         PerformanceResult performanceresult = new PerformanceResult(reasoner);
         
         if (reasoner != null){
-        	LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
+        	LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
             LogicalExpression query = leParser.parse(theQuery);
             
             System.out.print("Registering Ontology ");
@@ -273,7 +273,7 @@ public class TestPerformance1 {
     }
     
     private Ontology loadOntology(String file) {
-    	Parser wsmlParser = new ParserImplTyped();
+    	Parser wsmlParser = new WsmlParser();
 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);
         try {

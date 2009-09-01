@@ -38,7 +38,7 @@ import org.omwg.ontology.Variable;
 import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -229,7 +229,7 @@ public class Results
     private static final WsmoFactory wsmoFactory;
     private static final LogicalExpressionFactory leFactory;
     private static final DataFactory dataFactory;
-    private static final Factory wsmoManager;
+    private static final FactoryContainer wsmoManager;
     
     static{
     	// 	 Set up factories for creating WSML elements

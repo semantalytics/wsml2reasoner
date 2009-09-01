@@ -26,7 +26,7 @@ import java.util.Map;
 
 import org.deri.iris.Configuration;
 import org.deri.iris.evaluation.topdown.sldnf.SLDNFEvaluationStrategyFactory;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 
 /**
  * <p>
@@ -36,7 +36,7 @@ import org.wsmo.factory.Factory;
  */
 public class IrisSLDNFFacade extends IrisStratifiedFacade
 {
-    public IrisSLDNFFacade(final Factory factory, final Map<String, Object> config) {
+    public IrisSLDNFFacade(final FactoryContainer factory, final Map<String, Object> config) {
     	super( factory, config );
     }
 

@@ -17,7 +17,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
-import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.logicalexpression.terms.Term;
@@ -39,7 +39,7 @@ import org.wsmo.wsml.ParserException;
 
 import performance.chart.IndexEntry;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 public class TestPerformanceWithUseOfFeatures {
     // how often to repeat each query!
@@ -374,7 +374,7 @@ public class TestPerformanceWithUseOfFeatures {
             return performanceresult;
         }
 
-        LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
+        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
         LogicalExpression query = leParser.parse(theQuery);
 
         log.print("Registering Ontology (in total) ");
@@ -465,7 +465,7 @@ public class TestPerformanceWithUseOfFeatures {
     }
 
     WsmoFactory wsmoFactory = new FactoryImpl().getWsmoFactory();
-	Parser wsmlParser = new ParserImplTyped();
+	Parser wsmlParser = new WsmlParser();
 
     private Ontology loadOntology(String file) {
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);

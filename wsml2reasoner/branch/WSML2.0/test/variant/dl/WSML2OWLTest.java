@@ -23,7 +23,7 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.util.HashMap;
 
-import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Axiom;
@@ -39,7 +39,7 @@ import org.wsmo.wsml.Parser;
 
 import base.BaseReasonerTest;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 /**
  * 
@@ -81,7 +81,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         prefs = new HashMap<String, String>();
         prefs.put(OWLSerializer.OWL_SERIALIZER, OWLSerializer.OWL_ABSTRACT);
         
-        leParser = new LogicalExpressionParserImpl();
+        leParser = new WsmlLogicalExpressionParser();
     }
 
     protected void tearDown() throws Exception {
@@ -96,7 +96,7 @@ public class WSML2OWLTest extends BaseDLReasonerTest {
         // read test file and parse it
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/wsml2owlTransExample.wsml");
         assertNotNull(is);
-    	Parser wsmlParser = new ParserImplTyped();
+    	Parser wsmlParser = new WsmlParser();
         // assuming first topentity in file is an ontology
         ontology = (Ontology) wsmlParser.parse(new InputStreamReader(is))[0];
 

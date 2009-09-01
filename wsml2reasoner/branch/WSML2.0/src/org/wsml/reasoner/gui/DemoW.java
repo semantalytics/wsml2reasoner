@@ -40,7 +40,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.logicalexpression.terms.Term;
@@ -51,7 +51,7 @@ import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.DLUtilities;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 import com.ontotext.wsmo4j.common.IRIImpl;
@@ -284,7 +284,7 @@ public class DemoW
 	        public void run()
 	        {
 	        	try {
-	        		Factory factory = new FactoryImpl();
+	        		FactoryContainer factory = new FactoryImpl();
 	        		LPReasoner reasoner = ReasonerHelper.getLPReasoner( BuiltInReasoner.IRIS_WELL_FOUNDED );
 
 	        		Ontology ontology = OntologyHelper.parseOntology( mOntology );
@@ -295,7 +295,7 @@ public class DemoW
 	        		
 	        		String strResults;
 	        		if( true ) {
-	        			LogicalExpressionParser leParser = new LogicalExpressionParserImpl();
+	        			LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
 	        	        LogicalExpression qExpression = leParser.parse( mQuery );
 
 		        		Set<Map<Variable, Term>> results = reasoner.executeQuery( qExpression );

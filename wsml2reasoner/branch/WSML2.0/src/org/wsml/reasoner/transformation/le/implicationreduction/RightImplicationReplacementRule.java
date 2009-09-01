@@ -21,7 +21,7 @@ package org.wsml.reasoner.transformation.le.implicationreduction;
 import org.omwg.logicalexpression.Implication;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 
@@ -29,7 +29,7 @@ public class RightImplicationReplacementRule implements NormalizationRule {
     
     private LogicalExpressionFactory leFactory;
     
-    public RightImplicationReplacementRule(Factory factory){
+    public RightImplicationReplacementRule(FactoryContainer factory){
         this.leFactory = factory.getLogicalExpressionFactory();
     }
     

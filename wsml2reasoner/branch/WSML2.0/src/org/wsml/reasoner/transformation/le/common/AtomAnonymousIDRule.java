@@ -27,7 +27,7 @@ import org.omwg.logicalexpression.terms.Term;
 import org.wsml.reasoner.transformation.AnonymousIdTranslator;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
 import org.wsmo.common.Identifier;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 
@@ -36,7 +36,7 @@ public class AtomAnonymousIDRule implements NormalizationRule {
     private LogicalExpressionFactory leFactory;
     private AnonymousIdTranslator anonymousIDTranslator;
     
-    public AtomAnonymousIDRule(Factory wsmoManager, AnonymousIdTranslator anonymousIDTranslator){
+    public AtomAnonymousIDRule(FactoryContainer wsmoManager, AnonymousIdTranslator anonymousIDTranslator){
         this.leFactory = wsmoManager.getLogicalExpressionFactory();
         this.anonymousIDTranslator = anonymousIDTranslator;
     }

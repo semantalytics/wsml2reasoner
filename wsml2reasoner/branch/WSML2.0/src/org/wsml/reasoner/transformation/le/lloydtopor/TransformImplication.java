@@ -24,14 +24,14 @@ import java.util.Set;
 import org.omwg.logicalexpression.InverseImplication;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.wsml.reasoner.transformation.le.TransformationRule;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 public class TransformImplication implements TransformationRule {
     
     private LogicalExpressionFactory leFactory;
     
-    public TransformImplication(Factory wsmoManager){
+    public TransformImplication(FactoryContainer wsmoManager){
         this.leFactory = wsmoManager.getLogicalExpressionFactory();
     }
     

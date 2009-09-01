@@ -27,7 +27,7 @@ import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.transformation.LloydToporNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsml.reasoner.transformation.le.lloydtopor.LloydToporRules;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 
 public class LloydToporNormalizerTest extends BaseNormalizationTest
 {
@@ -37,7 +37,7 @@ public class LloydToporNormalizerTest extends BaseNormalizationTest
     protected void setUp() throws Exception
     {
         super.setUp();
-        Factory wsmoManager = new FactoryImpl();
+        FactoryContainer wsmoManager = new FactoryImpl();
         normalizer = new LloydToporNormalizer(wsmoManager);
     }
 

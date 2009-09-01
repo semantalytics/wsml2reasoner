@@ -32,7 +32,7 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.sti2.wsmo4j.factory.FactoryImpl;
 import org.wsml.reasoner.transformation.le.LETestHelper;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.WsmoFactory;
 
 public class ConstructReductionNormalizerTest extends TestCase {
@@ -49,7 +49,7 @@ public class ConstructReductionNormalizerTest extends TestCase {
 	private WsmoFactory wsmoFactory;
 
 	protected void setUp() throws Exception {
-		Factory wsmoManager = new FactoryImpl();
+		FactoryContainer wsmoManager = new FactoryImpl();
 		normalizer = new ConstructReductionNormalizer(wsmoManager);
 		wsmoFactory = wsmoManager.getWsmoFactory();
 	}

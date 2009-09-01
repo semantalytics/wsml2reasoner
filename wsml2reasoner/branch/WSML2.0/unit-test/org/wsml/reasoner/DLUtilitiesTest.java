@@ -40,7 +40,7 @@ import org.wsml.reasoner.impl.DatalogBasedWSMLReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -52,7 +52,7 @@ public class DLUtilitiesTest extends TestCase {
 	protected DatalogBasedWSMLReasoner reasoner;
 	protected String ns = "http://ex.org#";
 	protected Ontology ontology;
-	protected Factory factory;
+	protected FactoryContainer factory;
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
 	protected DataFactory dataFactory;

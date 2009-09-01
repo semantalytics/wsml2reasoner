@@ -26,14 +26,14 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.Molecule;
 import org.wsml.reasoner.transformation.le.LEUtil;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 public class MoleculeDecompositionRule implements NormalizationRule {
     
     private LogicalExpressionFactory leFactory;
     
-    public MoleculeDecompositionRule(Factory factory){
+    public MoleculeDecompositionRule(FactoryContainer factory){
         this.leFactory = factory.getLogicalExpressionFactory();
     }
     

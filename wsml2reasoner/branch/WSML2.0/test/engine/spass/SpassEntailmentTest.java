@@ -22,7 +22,7 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Axiom;
@@ -35,13 +35,13 @@ import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsmo.common.IRI;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
 import base.BaseReasonerTest;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImplTyped;
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 /**
  * Interface or class description
@@ -67,7 +67,7 @@ public class SpassEntailmentTest extends BaseReasonerTest {
 
     protected void setUp() throws Exception {
         super.setUp();
-        Factory factory = new FactoryImpl();
+        FactoryContainer factory = new FactoryImpl();
         wsmoFactory = factory.getWsmoFactory();
         leFactory = factory.getLogicalExpressionFactory();
         previous = BaseReasonerTest.reasoner;
@@ -75,8 +75,8 @@ public class SpassEntailmentTest extends BaseReasonerTest {
         m.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, WSMLReasonerFactory.BuiltInReasoner.SPASS);
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createFOLReasoner(m);
         
-    	wsmlParser = new ParserImplTyped();
-    	leParser = new LogicalExpressionParserImpl();
+    	wsmlParser = new WsmlParser();
+    	leParser = new WsmlLogicalExpressionParser();
     }
 
     public void test() throws Exception {

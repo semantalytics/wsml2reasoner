@@ -36,7 +36,7 @@ import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DLBasedWSMLReasoner;
 import org.wsml.reasoner.impl.FOLBasedWSMLReasoner;
 import org.wsml.reasoner.transformation.le.LETestHelper;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
@@ -47,7 +47,7 @@ public class OWLSerializerImplTest extends TestCase {
 	protected HashMap<String, String> prefs;
 	protected DLBasedWSMLReasoner dlReasoner;
 	protected FOLBasedWSMLReasoner reasoner;
-	protected Factory wsmoManager;
+	protected FactoryContainer wsmoManager;
 	protected String ns = "http://ex.org#";
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
@@ -63,7 +63,7 @@ public class OWLSerializerImplTest extends TestCase {
 		super.setUp();
 
 		owlImpl = new OWLSerializerImpl();
-		Factory wsmoManager = new FactoryImpl();
+		FactoryContainer wsmoManager = new FactoryImpl();
 		wsmoFactory = wsmoManager.getWsmoFactory();
 		leFactory = wsmoManager.getLogicalExpressionFactory();
 		dlReasoner = new DLBasedWSMLReasoner(

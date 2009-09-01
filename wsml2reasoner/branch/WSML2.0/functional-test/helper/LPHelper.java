@@ -28,7 +28,7 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
-import org.deri.wsmo4j.io.parser.wsml.LogicalExpressionParserImpl;
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
@@ -71,7 +71,7 @@ public class LPHelper
     {
         reasoner.registerOntologies(ontologies);
 
-        LogicalExpression qExpression = new LogicalExpressionParserImpl(ontologies.iterator().next()).parse( query );
+        LogicalExpression qExpression = new WsmlLogicalExpressionParser(ontologies.iterator().next()).parse( query );
 
         if(output){
         	System.out.println("Executing query string '" + query + "'");

@@ -54,7 +54,7 @@ import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.UnnumberedAnonymousID;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -92,7 +92,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
     private Map<LogicalExpression, String> axiomIDs;
 
-    public AxiomatizationNormalizer(Factory factory) {
+    public AxiomatizationNormalizer(FactoryContainer factory) {
         this.leFactory = factory.getLogicalExpressionFactory();
         this.wsmoFactory = factory.getWsmoFactory();
         this.axiomIDs = new HashMap<LogicalExpression, String>();
