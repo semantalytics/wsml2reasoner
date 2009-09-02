@@ -1,0 +1,37 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://example.com/datatypes10#",
+	wsml _"http://www.wsmo.org/wsml/wsml-syntax#", 
+	xs   _"http://www.w3.org/2001/XMLSchema#",
+	rdf  _"http://www.w3.org/1999/02/22-rdf-syntax-ns#"}
+
+ontology DatatypesTestOntology10
+
+// See SOA4All D3.1.4 Defining the features of the WSML-Rule v2.0 language
+// new datatypes rdf:XMLLiteral, rdf:Text, xs:yearMonthDuration, xs:dayTimeDuration
+
+
+concept anEntity
+	// wsml Datatypes; not new but to test
+	aDuration ofType wsml#duration
+	// RDF Datatypes
+	aRDFText ofType rdf#rdfText
+	aRDF_XMLLiteral ofType rdf#XMLLiteral
+	// XML Schema Datatypes
+	aYearMonthDuration ofType xs:yearMonthDuration
+	aDayTimeDuration ofType xs:dayTimeDuration
+	
+instance anInstance memberOf anEntity
+	aDuration hasValue wsml#duration(1,2,3,4,5,6)
+	aRDFText hasValue rdf#rdfText("This should be a RDF Text")
+	aRDF_XMLLiteral hasValue rdf#XMLLiteral("<tag>xml literal</tag>")
+	aYearMonthDuration hasValue xs:yearMonthDuration(2009,9)
+	aDayTimeDuration hasValue xs:dayTimeDuration(1,10,31,15.5)
+	
+instance anotherInstance memberOf anEntity
+	aDuration hasValue wsml#duration("1","2","3","4","5","6")
+	aRDFText hasValue rdf#rdfText("This should be a RDF Text")
+	aRDF_XMLLiteral hasValue rdf#XMLLiteral("<tag>xml literal</tag>")
+	aYearMonthDuration hasValue xs:yearMonthDuration("2009","9")
+	aDayTimeDuration hasValue xs:dayTimeDuration("1","10","31", "15.5")
+
+
