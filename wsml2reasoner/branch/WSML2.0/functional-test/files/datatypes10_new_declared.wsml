@@ -17,21 +17,21 @@ concept anEntity
 	aRDFText ofType rdf#rdfText
 	aRDF_XMLLiteral ofType rdf#XMLLiteral
 	// XML Schema Datatypes
-	aYearMonthDuration ofType xs:yearMonthDuration
-	aDayTimeDuration ofType xs:dayTimeDuration
+	aYearMonthDuration ofType xs#yearMonthDuration
+	aDayTimeDuration ofType xs#dayTimeDuration
 	
 instance anInstance memberOf anEntity
 	aDuration hasValue wsml#duration(1,2,3,4,5,6)
 	aRDFText hasValue rdf#rdfText("This should be a RDF Text")
 	aRDF_XMLLiteral hasValue rdf#XMLLiteral("<tag>xml literal</tag>")
-	aYearMonthDuration hasValue xs:yearMonthDuration(2009,9)
-	aDayTimeDuration hasValue xs:dayTimeDuration(1,10,31,15.5)
+	aYearMonthDuration hasValue xs#yearMonthDuration(2009,9)
+	aDayTimeDuration hasValue xs#dayTimeDuration(1,10,31,15.5)
 	
 instance anotherInstance memberOf anEntity
 	aDuration hasValue wsml#duration("1","2","3","4","5","6")
 	aRDFText hasValue rdf#rdfText("This should be a RDF Text")
 	aRDF_XMLLiteral hasValue rdf#XMLLiteral("<tag>xml literal</tag>")
-	aYearMonthDuration hasValue xs:yearMonthDuration("2009","9")
-	aDayTimeDuration hasValue xs:dayTimeDuration("1","10","31", "15.5")
+	aYearMonthDuration hasValue xs#yearMonthDuration("2009","9")
+	aDayTimeDuration hasValue xs#dayTimeDuration("1","10","31", "15.5")
 
 
