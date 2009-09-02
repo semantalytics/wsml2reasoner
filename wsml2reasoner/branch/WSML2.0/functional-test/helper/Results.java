@@ -163,7 +163,7 @@ public class Results
 
 	public static Term hexBinary( String value )
 	{
-		return dataFactory.creatHexBinary( value.getBytes() );
+		return dataFactory.createHexBinary( value.getBytes() );
 	}
 
 	public static Term base64Binary( String value )

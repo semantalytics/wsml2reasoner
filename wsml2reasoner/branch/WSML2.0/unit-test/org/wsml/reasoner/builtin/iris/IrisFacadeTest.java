@@ -152,7 +152,7 @@ public class IrisFacadeTest extends TestCase {
 		assertEquals(DF.createGregorianYearMonth(2010, 5), IF
 				.convertTermFromIrisToWsmo4j(CF.createGYearMonth(2010, 5)));
 		// test hexbinary
-		assertEquals(DF.creatHexBinary("15AB".getBytes()), IF
+		assertEquals(DF.createHexBinary("15AB".getBytes()), IF
 				.convertTermFromIrisToWsmo4j(CF.createHexBinary("15AB")));
 		// test integer
 		assertEquals(DF.createInteger("15"), IF.convertTermFromIrisToWsmo4j(CF
@@ -264,7 +264,7 @@ public class IrisFacadeTest extends TestCase {
 				.convertWsmo4jDataValueToIrisTerm(DF.createGregorianYearMonth(2007, 10)));
 		// test base64binary
 		assertEquals(CF.createHexBinary("12AF"), IrisStratifiedFacade
-				.convertWsmo4jDataValueToIrisTerm(DF.creatHexBinary("12AF".getBytes())));
+				.convertWsmo4jDataValueToIrisTerm(DF.createHexBinary("12AF".getBytes())));
 		// test int
 		assertEquals(CF.createInteger(23), IrisStratifiedFacade.convertWsmo4jDataValueToIrisTerm(DF
 				.createInteger("23")));

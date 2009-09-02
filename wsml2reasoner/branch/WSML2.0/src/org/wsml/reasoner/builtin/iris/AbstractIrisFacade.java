@@ -887,8 +887,8 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         if (t == null) {
             throw new NullPointerException("The term must not be null");
         }
-        // TODO remove
-        System.out.println("\n** TERM : " + t);
+        // TODO matthias: remove
+       // System.out.println("\n** TERM : " + t);
         if (t instanceof BuiltInConstructedTerm) {
 //        	  System.out.println("BUILTIN CONSTRUCTED TERM: " + t);
 //        	  final BuiltInConstructedTerm ct = (BuiltInConstructedTerm) t;
@@ -1087,7 +1087,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
             return DATA_FACTORY.createBase64Binary(((IBase64Binary) t).getValue().getBytes());
         }
         else if (t instanceof IHexBinary) {
-            return DATA_FACTORY.creatHexBinary(((IHexBinary) t).getValue().getBytes());
+            return DATA_FACTORY.createHexBinary(((IHexBinary) t).getValue().getBytes());
         }
         else if (t instanceof IIri) {
             return WSMO_FACTORY.createIRI(((IIri) t).getValue());
