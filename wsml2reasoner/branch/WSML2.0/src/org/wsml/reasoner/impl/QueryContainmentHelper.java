@@ -65,7 +65,7 @@ public class QueryContainmentHelper extends AbstractVisitor {
         }
     }
 
-    public void visitAttributeContraintMolecule(AttributeConstraintMolecule expr) {
+    public void visitAttributeConstraintMolecule(AttributeConstraintMolecule expr) {
         // TODO Auto-generated method stub
 
     }
@@ -94,13 +94,6 @@ public class QueryContainmentHelper extends AbstractVisitor {
         // TODO Auto-generated method stub
 
     }
-
-	@Override
-	public void visitAttributeConstraintMolecule(
-			AttributeConstraintMolecule expr) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public void visitTruthValue(TruthValue expr) {

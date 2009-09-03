@@ -147,7 +147,7 @@ public abstract class FOLAbstractSerializeVisitor implements LogicalExpressionVi
         throw new RuntimeException("should not be here anymore!");
     }
 
-    public void visitAttributeContraintMolecule(AttributeConstraintMolecule expr) {
+    public void visitAttributeConstraintMolecule(AttributeConstraintMolecule expr) {
         throw new RuntimeException("should not be here anymore!");
     }
 

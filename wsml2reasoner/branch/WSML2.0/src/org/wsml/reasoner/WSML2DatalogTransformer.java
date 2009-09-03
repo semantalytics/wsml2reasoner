@@ -44,7 +44,6 @@ import org.omwg.logicalexpression.Molecule;
 import org.omwg.logicalexpression.Negation;
 import org.omwg.logicalexpression.NegationAsFailure;
 import org.omwg.logicalexpression.SubConceptMolecule;
-import org.omwg.logicalexpression.TruthValue;
 import org.omwg.logicalexpression.UniversalQuantification;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
@@ -783,22 +782,9 @@ public class WSML2DatalogTransformer {
 
 		@Override
 		public void handleEquivalence(Equivalence arg0) {
-			System.out.println("Handle: " + arg0);
+			//System.out.println("Handle: " + arg0);
 			inHeadOfRule = false;
 			inBodyOfRule = true;
-		}
-
-		@Override
-		public void visitAttributeConstraintMolecule(
-				AttributeConstraintMolecule expr) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void visitTruthValue(TruthValue expr) {
-			// TODO Auto-generated method stub
-			
 		}
 	}
 

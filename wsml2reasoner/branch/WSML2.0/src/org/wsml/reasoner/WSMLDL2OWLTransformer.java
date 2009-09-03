@@ -262,7 +262,7 @@ public class WSMLDL2OWLTransformer implements LogicalExpressionVisitor {
         }
     }
 
-    public void visitAttributeContraintMolecule(AttributeConstraintMolecule expr) {
+    public void visitAttributeConstraintMolecule(AttributeConstraintMolecule expr) {
         Identifier conceptId = (Identifier) expr.getLeftParameter();
         Identifier attrId = (Identifier) expr.getAttribute();
         Term data = expr.getRightParameter();
@@ -1589,13 +1589,6 @@ public class WSMLDL2OWLTransformer implements LogicalExpressionVisitor {
             return dataValue;
         }
     }
-
-	@Override
-	public void visitAttributeConstraintMolecule(
-			AttributeConstraintMolecule expr) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public void visitTruthValue(TruthValue expr) {

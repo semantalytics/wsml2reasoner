@@ -103,7 +103,7 @@ public abstract class PostfixOrderLogicalExpressionVisitor implements LogicalExp
 
     }
 
-    public void visitAttributeContraintMolecule(AttributeConstraintMolecule arg0) {
+    public void visitAttributeConstraintMolecule(AttributeConstraintMolecule arg0) {
         enterAttributeConstraintMolecule(arg0);
         handleAttributeConstraintMolecule(arg0);
         leaveAttributeConstraintMolecule(arg0);

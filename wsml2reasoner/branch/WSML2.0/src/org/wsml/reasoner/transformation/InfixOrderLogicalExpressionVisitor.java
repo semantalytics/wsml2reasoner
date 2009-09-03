@@ -41,6 +41,7 @@ import org.omwg.logicalexpression.MembershipMolecule;
 import org.omwg.logicalexpression.Negation;
 import org.omwg.logicalexpression.NegationAsFailure;
 import org.omwg.logicalexpression.SubConceptMolecule;
+import org.omwg.logicalexpression.TruthValue;
 import org.omwg.logicalexpression.UniversalQuantification;
 
 /**
@@ -69,12 +70,14 @@ import org.omwg.logicalexpression.UniversalQuantification;
  */
 public abstract class InfixOrderLogicalExpressionVisitor implements LogicalExpressionVisitor {
 
+	@Override
     public void visitAtom(Atom arg0) {
         enterAtom(arg0);
         handleAtom(arg0);
         leaveAtom(arg0);
     }
 
+	@Override
     public void visitCompoundMolecule(CompoundMolecule arg0) {
         enterCompoundMolecule(arg0);
         visitOperands(arg0);
@@ -82,6 +85,7 @@ public abstract class InfixOrderLogicalExpressionVisitor implements LogicalExpre
         leaveCompoundMolecule(arg0);
     }
 
+	@Override
     public void visitSubConceptMolecule(SubConceptMolecule arg0) {
         enterSubConceptMolecule(arg0);
         handleSubConceptMolecule(arg0);
@@ -89,6 +93,7 @@ public abstract class InfixOrderLogicalExpressionVisitor implements LogicalExpre
 
     }
 
+	@Override
     public void visitMemberShipMolecule(MembershipMolecule arg0) {
         enterMemberShipMolecule(arg0);
         handleMemberShipMolecule(arg0);
@@ -96,6 +101,7 @@ public abstract class InfixOrderLogicalExpressionVisitor implements LogicalExpre
 
     }
 
+	@Override
     public void visitAttributeValueMolecule(AttributeValueMolecule arg0) {
         enterAttributeValueMolecule(arg0);
         handleAttributeValueMolecule(arg0);
@@ -103,20 +109,30 @@ public abstract class InfixOrderLogicalExpressionVisitor implements LogicalExpre
 
     }
 
-    public void visitAttributeContraintMolecule(AttributeConstraintMolecule arg0) {
+	@Override
+    public void visitAttributeConstraintMolecule(AttributeConstraintMolecule arg0) {
         enterAttributeConstraintMolecule(arg0);
         handleAttributeConstraintMolecule(arg0);
         leaveAttributeConstraintMolecule(arg0);
 
     }
 
+	@Override
     public void visitAttributeInferenceMolecule(AttributeInferenceMolecule arg0) {
         enterAttributeInferenceMolecule(arg0);
         handleAttributeInferenceMolecule(arg0);
         leaveAttributeInferenceMolecule(arg0);
 
     }
+    
+	@Override
+	public void visitTruthValue(TruthValue arg0) {
+		enterTruthValue(arg0);
+        handleTruthValue(arg0);
+        leaveTruthValue(arg0);
+	}
 
+	@Override
     public void visitNegation(Negation arg0) {
         enterNegation(arg0);
         arg0.getOperand().accept(this);
@@ -125,6 +141,7 @@ public abstract class InfixOrderLogicalExpressionVisitor implements LogicalExpre
 
     }
 
+	@Override
     public void visitNegationAsFailure(NegationAsFailure arg0) {
         enterNegationAsFailure(arg0);
         arg0.getOperand().accept(this);
@@ -133,6 +150,7 @@ public abstract class InfixOrderLogicalExpressionVisitor implements LogicalExpre
 
     }
 
+	@Override
     public void visitConstraint(Constraint arg0) {
         enterConstraint(arg0);
         arg0.getOperand().accept(this);
@@ -141,6 +159,7 @@ public abstract class InfixOrderLogicalExpressionVisitor implements LogicalExpre
 
     }
 
+	@Override
     public void visitConjunction(Conjunction arg0) {
         enterConjunction(arg0);
         arg0.getLeftOperand().accept(this);
@@ -149,6 +168,7 @@ public abstract class InfixOrderLogicalExpressionVisitor implements LogicalExpre
         leaveConjunction(arg0);
     }
 
+	@Override
     public void visitDisjunction(Disjunction arg0) {
         enterDisjunction(arg0);
         arg0.getLeftOperand().accept(this);
@@ -158,6 +178,7 @@ public abstract class InfixOrderLogicalExpressionVisitor implements LogicalExpre
 
     }
 
+	@Override
     public void visitInverseImplication(InverseImplication arg0) {
         enterInverseImplication(arg0);
         arg0.getLeftOperand().accept(this);
@@ -167,6 +188,7 @@ public abstract class InfixOrderLogicalExpressionVisitor implements LogicalExpre
 
     }
 
+	@Override
     public void visitImplication(Implication arg0) {
         enterImplication(arg0);
         arg0.getLeftOperand().accept(this);
@@ -176,6 +198,7 @@ public abstract class InfixOrderLogicalExpressionVisitor implements LogicalExpre
 
     }
 
+	@Override
     public void visitEquivalence(Equivalence arg0) {
         enterEquivalence(arg0);
         arg0.getLeftOperand().accept(this);
@@ -185,6 +208,7 @@ public abstract class InfixOrderLogicalExpressionVisitor implements LogicalExpre
 
     }
 
+	@Override
     public void visitLogicProgrammingRule(LogicProgrammingRule arg0) {
         enterLogicProgrammingRule(arg0);
         arg0.getLeftOperand().accept(this);
@@ -194,6 +218,7 @@ public abstract class InfixOrderLogicalExpressionVisitor implements LogicalExpre
 
     }
 
+	@Override
     public void visitUniversalQuantification(UniversalQuantification arg0) {
         enterUniversalQuantification(arg0);
         arg0.getOperand().accept(this);
@@ -202,6 +227,7 @@ public abstract class InfixOrderLogicalExpressionVisitor implements LogicalExpre
 
     }
 
+	@Override
     public void visitExistentialQuantification(ExistentialQuantification arg0) {
         enterExistentialQuantification(arg0);
         arg0.getOperand().accept(this);
@@ -228,7 +254,16 @@ public abstract class InfixOrderLogicalExpressionVisitor implements LogicalExpre
     public void leaveAtom(Atom arg0) {
     }
 
-    public void enterSubConceptMolecule(SubConceptMolecule arg0) {
+    public void leaveTruthValue(TruthValue arg0) {
+	}
+
+    public void handleTruthValue(TruthValue arg0) {
+	}
+
+    public void enterTruthValue(TruthValue arg0) {
+	}
+
+	public void enterSubConceptMolecule(SubConceptMolecule arg0) {
     }
 
     public void handleSubConceptMolecule(SubConceptMolecule arg0) {
