@@ -36,7 +36,6 @@ import org.omwg.logicalexpression.terms.TermVisitor;
 import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.Variable;
-import org.sti2.elly.api.DataType;
 import org.sti2.elly.api.Vocabulary;
 import org.sti2.elly.api.basics.IAtom;
 import org.sti2.elly.api.basics.IAtomicConcept;
@@ -53,7 +52,6 @@ import org.sti2.elly.basics.BasicFactory;
 import org.sti2.elly.terms.TermFactory;
 import org.sti2.elly.transformation.factory.AbstractFactory;
 import org.wsmo.common.IRI;
-import org.wsmo.common.IdentifiableEntity;
 import org.wsmo.common.NumberedAnonymousID;
 import org.wsmo.common.UnnumberedAnonymousID;
 
@@ -105,6 +103,8 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 	
 	private Type expectedType;
 	
+	private boolean inRule;
+	
 	public Wsml2EllyTranslator(List<IRule> rules) {
 		if (rules == null)
 			throw new IllegalArgumentException("rules must not be null");
@@ -115,6 +115,8 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		atomStack = new Stack<IAtom>();
 		
 		wsml2EllyCache = new HashMap<Object, Object>();
+		
+		inRule = false;
 	}
 	
 	/* *******************************
@@ -219,8 +221,10 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 			break;
 
 		case DATA_TYPE:
-			IDescription dataType = DataType.asDataType(t.toString()).asConcept();
-			pushDescription(dataType);
+			pushDescription(getOrCreateConcept(t));
+			// FIXME dw: change that later, handle wsml datatypes 
+//			IDescription dataType = DataType.asDataType(t.toString()).asConcept();
+//			pushDescription(dataType);
 			break;
 
 		default:
@@ -235,6 +239,7 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 
 	@Override
 	public void visitAtom(Atom expr) {
+		// TODO built-ins?
 		throw new UnsupportedOperationException("Atoms are not supported by ELP");
 	}
 
@@ -248,6 +253,8 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 	 */
 	@Override
 	public void visitAttributeConstraintMolecule(AttributeConstraintMolecule expr) {
+		setInRule();
+		
 		expectedType = Type.ROLE;
 		expr.getAttribute().accept(this);
 		IDescription id2 = popDescription();
@@ -267,6 +274,8 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		head.add(BASIC.createAtom(dt, tupleY));
 		
 		rules.add(BASIC.createRule(head, body));
+		
+		clearInRule();
 	}
 
 	/**
@@ -279,6 +288,8 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 	 */
 	@Override
 	public void visitAttributeInferenceMolecule(AttributeInferenceMolecule expr) {
+		setInRule();
+		
 		expectedType = Type.ROLE;
 		expr.getAttribute().accept(this);
 		IDescription id2 = popDescription();
@@ -298,6 +309,8 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		head.add(BASIC.createAtom(id3, tupleY));
 		
 		rules.add(BASIC.createRule(head, body));
+		
+		clearInRule();
 	}
 
 	/**
@@ -324,14 +337,16 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		ITerm x2 = popTerm();
 
 		
+		IAtom atom = null;
 		if (x1.equals(x2)) { // Self Restriction
 			ITuple tuple = BASIC.createTuple(x1);
-			pushAtom(BASIC.createAtom(BASIC.createSelfRestriction(id2), tuple));
+			atom = BASIC.createAtom(BASIC.createSelfRestriction(id2), tuple);
 		} else {
 			ITuple tuple = BASIC.createTuple(x1, x2);
-			pushAtom(BASIC.createAtom(id2, tuple));
+			atom = BASIC.createAtom(id2, tuple);
 		}
 		
+		handleAtom(atom);
 	}
 
 	/**
@@ -362,31 +377,13 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 	@Override
 	public void visitConjunction(Conjunction expr) {
 		expr.getLeftOperand().accept(this);
-		IAtom atom1 = popAtom();
-		
 		expr.getRightOperand().accept(this);
-		IAtom atom2 = popAtom();
-
-		if (!(atom1.getTuple().equals(atom2.getTuple())))
-			throw new RuntimeException("Tuples of conjunction " + expr + " must be equal!");
-		
-		if (atom1.getDescription() instanceof IConceptDescription) {
-			if (atom2.getDescription() instanceof IConceptDescription) {
-				pushAtom(BASIC.createAtom(BASIC.createIntersectionConcept((IConceptDescription) atom1.getDescription(), (IConceptDescription) atom2.getDescription()), atom1.getTuple()));
-			} else {
-				throw new RuntimeException("Descriptions of conjunction " + expr + " must be equal!");
-			}
-		} else if (atom1.getDescription() instanceof IRoleDescription) {
-			if (atom2.getDescription() instanceof IRoleDescription) {
-				pushAtom(BASIC.createAtom(BASIC.createIntersectionRole((IRoleDescription) atom1.getDescription(), (IRoleDescription) atom2.getDescription()), atom1.getTuple()));
-			} else {
-				throw new RuntimeException("Descriptions of conjunction " + expr + " must be equal!");
-			}
-		}
 	}
 
 	@Override
 	public void visitConstraint(Constraint expr) {
+		setInRule();
+		
 		assert atomStack.isEmpty();
 		
 		expr.getOperand().accept(this);
@@ -395,6 +392,8 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		
 		rules.add(BASIC.createIntegrityConstraint(new ArrayList<IAtom>(atomStack)));
 		atomStack.clear();
+		
+		clearInRule();
 	}
 
 	@Override
@@ -434,7 +433,7 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		IConceptDescription existential = BASIC.createExistentialConcept(role, concept);
 		ITuple tuple = BASIC.createTuple(roleAtom.getTuple().get(0));
 		
-		pushAtom(BASIC.createAtom(existential, tuple));
+		handleAtom(BASIC.createAtom(existential, tuple));
 	}
 
 	@Override
@@ -453,6 +452,8 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 	}
 
 	private void visitImplication(LogicalExpression headExpression, LogicalExpression bodyExpression) {
+		setInRule();
+		
 		assert atomStack.isEmpty();
 		
 		headExpression.accept(this);
@@ -469,6 +470,8 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		assert body.size() > 0;
 		
 		rules.add(BASIC.createRule(head, body));
+		
+		clearInRule();
 	}
 
 	/**
@@ -490,7 +493,7 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		expr.getRightParameter().accept(this);
 		IDescription id2 = popDescription();
 		
-		pushAtom(BASIC.createAtom(id2, BASIC.createTuple(x1)));
+		handleAtom(BASIC.createAtom(id2, BASIC.createTuple(x1)));
 	}
 
 	@Override
@@ -512,6 +515,8 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 	 */
 	@Override
 	public void visitSubConceptMolecule(SubConceptMolecule expr) {
+		setInRule();
+		
 		expectedType = Type.CONCEPT;
 		expr.getLeftParameter().accept(this);
 		IDescription id1_subConcept = popDescription();
@@ -524,14 +529,16 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		List<IAtom> body = Collections.singletonList(BASIC.createAtom(id1_subConcept, tupleX));
 		
 		rules.add(BASIC.createRule(head, body));
+		
+		clearInRule();
 	}
 
 	@Override
 	public void visitTruthValue(TruthValue expr) { // FIXME is x as variable ok? 
 		if (expr.getValue())
-			pushAtom(BASIC.createAtom(Vocabulary.topConcept, tupleX));
+			handleAtom(BASIC.createAtom(Vocabulary.topConcept, tupleX));
 		else
-			pushAtom(BASIC.createAtom(Vocabulary.bottomConcept, tupleX));
+			handleAtom(BASIC.createAtom(Vocabulary.bottomConcept, tupleX));
 	}
 
 	@Override
@@ -592,20 +599,12 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		return termStack.push(term);
 	}
 
-	private ITerm peekTerm() {
-		return termStack.peek();
-	}
-
 	private ITerm popTerm() {
 		return termStack.pop();
 	}
 
 	private IDescription pushDescription(IDescription description) {
 		return descriptionStack.push(description);
-	}
-
-	private IDescription peekDescription() {
-		return descriptionStack.peek();
 	}
 
 	private IDescription popDescription() {
@@ -616,15 +615,33 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		return atomStack.push(atom);
 	}
 
-	private IAtom peekAtom() {
-		return atomStack.peek();
-	}
-
 	private IAtom popAtom() {
 		return atomStack.pop();
 	}
 
 	
+	private void setInRule() {
+		inRule = true;
+	}
+
+	private void clearInRule() {
+		inRule = false;
+	}
+	
+	private boolean isInRule() {
+		return inRule;
+	}
+
+	private void handleAtom(IAtom atom) {
+		assert atom != null;
+		
+		if (isInRule()) {
+			pushAtom(atom);
+		} else {
+			rules.add(BASIC.createFact(atom));
+		}
+	}
+
 	private static class NameFactory extends AbstractFactory {
 		private static final String anonymousNamePrefix = ellyPrefix + "__anonymous__";
 
@@ -639,257 +656,3 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		}
 	}
 }
-
-
-
-
-//@Override
-//public void visit(NFPEntry nfpEntry) {
-//	// skip nfps
-//}
-//
-//@Override
-//public void visit(Attribute attribute) {
-//	IAtomicRole eRole = BASIC.createAtomicRole(asString(attribute));
-//	
-//	attribute.listTypes();
-//	attribute.isConstraining();
-//	attribute.isReflexive();
-//	attribute.isSymmetric();
-//	attribute.isTransitive();
-//	attribute.getConcept();
-//	attribute.getInverseOf(); // supported?
-//	attribute.getMaxCardinality();
-//	attribute.getMinCardinality();
-//	attribute.getSubAttributeOf(); // can't go super-direction
-//	
-//}
-//
-//@Override
-//public void visit(Assumption assumption) {
-//	for (LogicalExpression logicalExpression: assumption.listDefinitions()) {
-//		logicalExpression.accept(this);
-//	}
-//}
-//
-//@Override
-//public void visit(Effect effect) {
-//	for (LogicalExpression logicalExpression: effect.listDefinitions()) {
-//		logicalExpression.accept(this);
-//	}
-//}
-//
-//@Override
-//public void visit(Postcondition postcondition) {
-//	for (LogicalExpression logicalExpression: postcondition.listDefinitions()) {
-//		logicalExpression.accept(this);
-//	}
-//}
-//
-//@Override
-//public void visit(Precondition precondition) {
-//	for (LogicalExpression logicalExpression: precondition.listDefinitions()) {
-//		logicalExpression.accept(this);
-//	}
-//}
-//
-//@Override
-//public void visit(RulesContainer rulesContainer) {
-//	for (Rule rule : rulesContainer.listRules()) {
-////		rule.accept(this);
-//	}
-//}
-//
-//@Override
-//public void visit(StateSignature stateSignature) {
-//	// TODO Auto-generated method stub
-//	
-//}
-//
-//@Override
-//public void visit(Choreography choreography) {
-//	choreography.getRules().accept(this);
-//	choreography.getStateSignature().accept(this);
-//	
-////	for (IRI mediator : choreography.getUsedMediators().listMediators()) {
-////		
-////	}
-//	
-//}
-//
-//@Override
-//public void visit(Orchestration orchestration) {
-//	// nothing to do ...
-//}
-//
-//@Override
-//public void visit(Axiom axiom) {
-//	for (LogicalExpression logicalExpression: axiom.listDefinitions()) {
-//		logicalExpression.accept(this);
-//	}
-//}
-//
-//@Override
-//public void visit(Concept concept) {
-//	IAtomicConcept eConcept = getOrCreateConcept(concept);
-//	
-//	for (Attribute attribute : concept.listAttributes()) {
-//		// create C(x) and r(x,y) and ...
-//	}
-//	
-//	for (Instance instance : concept.listInstances()) {
-//		// create C(a).
-//		instance.accept(this);
-//		IIndividual individual = (IIndividual) tempStack.pop();
-//		
-//		// TODO add rule
-//	}
-//	
-//	for (Concept superConcept : concept.listSuperConcepts()) {
-//		// create SC :- C.
-//		IAtomicConcept eSuperConcept = getOrCreateConcept(superConcept);
-//		
-//		// TODO add rule
-//	}
-//	
-//	// concept.listSubConcepts(); do not render since one direction is enough
-//	// wsml also has just superconcepts in syntax
-//	
-//}
-//
-//@Override
-//public void visit(Instance instance) {
-//	IIndividual eIndividual = (IIndividual) wsml2EllyCache.get(instance);
-//	if (eIndividual == null) {
-//		eIndividual = TERM.createIndividual(asString(instance));
-//		wsml2EllyCache.put(instance, eIndividual);
-//	}
-//	
-//	// push it on Temporary Stack
-//	pushTerm(eIndividual);
-//}
-//
-//@Override
-//public void visit(Relation relation) {
-//	IAtomicRole eRole = BASIC.createAtomicRole(asString(relation));
-//	
-//	relation.listParameters();
-//	relation.listRelationInstances();
-//	relation.listSuperRelations();
-//	// TODO Auto-generated method stub
-//	
-//}
-//
-//@Override
-//public void visit(RelationInstance relationInstance) {
-//	IAtomicRole eRole = BASIC.createAtomicRole(asString(relationInstance));
-//	
-//	relationInstance.listParameterValues();
-//
-//	// r(a,b).
-//}
-//
-//@Override
-//public void visit(Capability capability) {
-////	capability.getUsedMediators().listMediators();
-////	capability.getImportedOntologies().listOntologies() 
-//	
-//	for (Assumption assumption : capability.listAssumptions()) {
-//		assumption.accept(this);
-//	}
-//	
-//	for (Effect effect : capability.listEffects()) {
-//		effect.accept(this);
-//	}
-//	
-//	for (Postcondition postcondition : capability.listPostconditions()) {
-//		postcondition.accept(this);
-//	}
-//	
-//	for (Precondition precondition : capability.listPreconditions()) {
-//		precondition.accept(this);
-//	}
-//	
-//	for (Variable sharedVariable : capability.listSharedVariables()) {
-//		sharedVariable.accept(this);
-//		// TODO what to do with them?
-//	}
-//	
-//}
-//
-//@Override
-//public void visit(Interface intrface) {
-//	intrface.getOrchestration().accept(this);
-////	intrface.getUsedMediators().listMediators()
-//	
-//}
-//
-//@Override
-//public void visit(Ontology ontology) {
-////	ontology.getUsedMediators().listMediators()
-//	for (Axiom axiom : ontology.listAxioms()) {
-//		axiom.accept(this);
-//	}
-//	
-//	for (Concept concept : ontology.listConcepts()) {
-//		concept.accept(this);
-//	}
-//	
-//	for (Instance instance : ontology.listInstances()) {
-//		instance.accept(this);
-//	}
-//	
-//	for (Relation relation : ontology.listRelations()) {
-//		relation.accept(this);
-//	}
-//	
-//	for (RelationInstance relationInstance : ontology.listRelationInstances()) {
-//		relationInstance.accept(this);
-//	}
-//	
-////	ontology.isLocatedById()
-//	
-//}
-//
-//@Override
-//public void visit(OOMediator ooMediator) {
-//	// TODO Auto-generated method stub
-//	
-//}
-//
-//@Override
-//public void visit(WGMediator wgMediator) {
-//	// TODO Auto-generated method stub
-//	
-//}
-//
-//@Override
-//public void visit(GGMediator ggMediator) {
-//	// TODO Auto-generated method stub
-//	
-//}
-//
-//@Override
-//public void visit(WWMediator wwMediator) {
-//	// TODO Auto-generated method stub
-//	
-//}
-//
-//@Override
-//public void visit(Goal goal) {
-//	//		goal.isLocatedById()
-//	
-//	for (Interface intrface : goal.listInterfaces()) {
-//		intrface.accept(this);
-//	}
-//}
-//
-//@Override
-//public void visit(WebService webService) {
-////	webService.isLocatedById()
-//	
-//	for (Interface intrface : webService.listInterfaces()) {
-//		intrface.accept(this);
-//	}
-//}
-

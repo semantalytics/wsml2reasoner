@@ -7,6 +7,7 @@ import org.deri.iris.api.terms.ITerm;
 import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.DataValue;
 import org.omwg.ontology.WsmlDataType;
+import org.omwg.ontology.XmlSchemaDataType;
 
 /**
  * Helper Class to convert data values to terms, copied from Wsml2Datalog translation.
@@ -93,7 +94,7 @@ public class Wsml2EllyDataValueTranslator {
         else if (t.equals(WsmlDataType.WSML_INTEGER)) {
             return CONCRETE.createInteger(Integer.parseInt(v.toString()));
         }
-        else if (t.equals(WsmlDataType.WSML_STRING)) {
+        else if (t.equals(WsmlDataType.WSML_STRING) || t.equals(XmlSchemaDataType.XSD_STRING)) {
             return TERM.createString(v.toString());
         }
         throw new IllegalArgumentException("Can't convert a value of type " + t);
