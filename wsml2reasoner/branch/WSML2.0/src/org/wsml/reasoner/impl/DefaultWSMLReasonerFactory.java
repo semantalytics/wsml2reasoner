@@ -33,6 +33,7 @@ import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.builtin.tptp.TPTPFacade;
 import org.wsmo.common.WSML;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.validator.ValidationError;
 import org.wsmo.validator.ValidationWarning;
 import org.wsmo.validator.WsmlValidator;
@@ -113,6 +114,10 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         else if (wsmlVariant.equals(WSML.WSML_DL)){
             return createDLReasoner(params);
         }
+        else if (wsmlVariant.equals(WSML.WSML_DL2)){
+        	// FIXME temporary, apply this behaviour to all reasoners
+            return createDL2Reasoner(new WsmlFactoryContainer());
+        }
         else if (wsmlVariant.equals(WSML.WSML_FLIGHT)){
             return createFlightReasoner(params);
         }
@@ -178,4 +183,19 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         }
         return new org.wsml.reasoner.impl.FOLBasedWSMLReasoner(reasoner, new WsmlFactoryContainer(), uri);
     }
+
+
+	@Override
+	public DLReasoner createDL2Reasoner(FactoryContainer container) {
+		if (container == null) {
+			container = new WsmlFactoryContainer();
+		}
+		
+		ELPBasedWSMLReasoner reasoner = new ELPBasedWSMLReasoner(BuiltInReasoner.ELLY, container);
+		
+		// FIXME temporary solution
+		reasoner.setAllowImports(-1);
+		
+		return reasoner;
+	}
 }
