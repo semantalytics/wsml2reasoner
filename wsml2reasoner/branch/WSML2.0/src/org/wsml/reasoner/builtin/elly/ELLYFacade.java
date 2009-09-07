@@ -11,6 +11,7 @@ import org.sti2.elly.api.basics.IDescription;
 import org.sti2.elly.api.basics.IRoleDescription;
 import org.sti2.elly.api.basics.IRuleBase;
 import org.sti2.elly.api.reasoning.IReasoner;
+import org.sti2.elly.api.reasoning.ReasoningException;
 import org.sti2.elly.api.terms.IIndividual;
 import org.sti2.elly.reasoning.iris.IrisReasoner;
 import org.wsml.reasoner.ELPReasonerFacade;
@@ -222,7 +223,11 @@ public class ELLYFacade implements ELPReasonerFacade {
 	public void register(IRuleBase ruleBase) throws ExternalToolException {
 		System.out.println("Registering rule base:\n" + ruleBase);
 		
-		reasoner.register(ruleBase);
+		try {
+			reasoner.register(ruleBase);
+		} catch (ReasoningException e) {
+			throw new ExternalToolException("Could not register rule base", e);
+		}
 	}
 
 	@Override
