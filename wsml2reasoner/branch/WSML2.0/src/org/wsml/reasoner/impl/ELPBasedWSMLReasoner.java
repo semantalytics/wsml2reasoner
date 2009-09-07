@@ -25,7 +25,6 @@ import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.builtin.elly.ELLYFacade;
 import org.wsml.reasoner.builtin.elly.Wsml2EllyTranslator;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
-import org.wsml.reasoner.transformation.ConstraintReplacementNormalizer;
 import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
 import org.wsml.reasoner.transformation.InverseImplicationNormalizer;
 import org.wsml.reasoner.transformation.LloydToporNormalizer;

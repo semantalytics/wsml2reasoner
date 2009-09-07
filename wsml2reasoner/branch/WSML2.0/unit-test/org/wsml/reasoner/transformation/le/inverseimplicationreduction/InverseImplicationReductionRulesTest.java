@@ -22,10 +22,10 @@
  */
 package org.wsml.reasoner.transformation.le.inverseimplicationreduction;
 
+import junit.framework.TestCase;
+
 import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsmo.factory.FactoryContainer;
-
-import junit.framework.TestCase;
 
 public class InverseImplicationReductionRulesTest extends TestCase {
 	

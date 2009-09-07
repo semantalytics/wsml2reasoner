@@ -22,10 +22,10 @@
  */
 package org.wsml.reasoner.transformation.le.foldecomposition;
 
+import junit.framework.TestCase;
+
 import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsmo.factory.FactoryContainer;
-
-import junit.framework.TestCase;
 
 public class FOLMoleculeDecompositionRulesTest extends TestCase {
 

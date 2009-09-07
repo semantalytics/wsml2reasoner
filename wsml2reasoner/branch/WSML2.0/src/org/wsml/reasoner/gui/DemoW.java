@@ -52,7 +52,6 @@ import org.wsml.reasoner.DLUtilities;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsmo.factory.FactoryContainer;
-import org.wsmo.factory.LogicalExpressionFactory;
 
 import com.ontotext.wsmo4j.common.IRIImpl;
 
