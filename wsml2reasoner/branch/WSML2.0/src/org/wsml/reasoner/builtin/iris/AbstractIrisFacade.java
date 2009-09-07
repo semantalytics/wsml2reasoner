@@ -54,8 +54,10 @@ import org.deri.iris.api.terms.concrete.IBase64Binary;
 import org.deri.iris.api.terms.concrete.IBooleanTerm;
 import org.deri.iris.api.terms.concrete.IDateTerm;
 import org.deri.iris.api.terms.concrete.IDateTime;
+import org.deri.iris.api.terms.concrete.IDayTimeDuration;
 import org.deri.iris.api.terms.concrete.IDecimalTerm;
 import org.deri.iris.api.terms.concrete.IDoubleTerm;
+import org.deri.iris.api.terms.concrete.IDuration;
 import org.deri.iris.api.terms.concrete.IFloatTerm;
 import org.deri.iris.api.terms.concrete.IGDay;
 import org.deri.iris.api.terms.concrete.IGMonth;
@@ -67,6 +69,7 @@ import org.deri.iris.api.terms.concrete.IIntegerTerm;
 import org.deri.iris.api.terms.concrete.IIri;
 import org.deri.iris.api.terms.concrete.ISqName;
 import org.deri.iris.api.terms.concrete.ITime;
+import org.deri.iris.api.terms.concrete.IYearMonthDuration;
 import org.deri.iris.builtins.datatype.IsBase64BinaryBuiltin;
 import org.deri.iris.builtins.datatype.IsBooleanBuiltin;
 import org.deri.iris.builtins.datatype.IsDateBuiltin;
@@ -1016,6 +1019,15 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         else if (t.equals(WsmlDataType.WSML_INTEGER) || t.equals(XmlSchemaDataType.XSD_INTEGER)) {
             return CONCRETE.createInteger(Integer.parseInt(v.toString()));
         }
+        else if (t.equals(XmlSchemaDataType.XSD_DAYTIMEDURATION)) {
+        	 final ComplexDataValue cv = (ComplexDataValue) v;
+             return CONCRETE.createDayTimeDuration(true, getIntFromValue(cv, 0), getIntFromValue(cv, 1), getIntFromValue(cv, 2),
+            				getIntFromValue(cv, 3));
+        }
+        else if (t.equals(XmlSchemaDataType.XSD_YEARMONTHDURATION)) {
+       	 	final ComplexDataValue cv = (ComplexDataValue) v;
+            return CONCRETE.createYearMonthDuration(true, getIntFromValue(cv, 0), getIntFromValue(cv, 1));
+        }
         else if (t.equals(WsmlDataType.WSML_STRING) || t.equals(XmlSchemaDataType.XSD_STRING)) {
             return TERM.createString(v.toString());
         }
@@ -1134,10 +1146,10 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
             return DATA_FACTORY.createDouble(((IDoubleTerm) t).getValue());
         }
 //        FIXME gigi: add duration support 
-//        else if (t instanceof IDuration) {
-//            final IDuration dt = (IDuration) t;
-//            return DATA_FACTORY.createWsmlDuration(dt.getValue().getSign() > 0, dt.getYear(), dt.getMonth(), dt.getDay(), dt.getHour(), dt.getMinute(), dt.getDecimalSecond());
-//        }
+        else if (t instanceof IDuration) {
+            final IDuration dt = (IDuration) t;
+            return DATA_FACTORY.createDuration( dt.getYear(), dt.getMonth(), dt.getDay(), dt.getHour(), dt.getMinute(), dt.getDecimalSecond());
+        }
         else if (t instanceof IFloatTerm) {
             return DATA_FACTORY.createFloat(((IFloatTerm) t).getValue());
         }
@@ -1160,6 +1172,12 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         }
         else if (t instanceof IIntegerTerm) {
             return DATA_FACTORY.createInteger(new BigInteger(t.getValue().toString()));
+        }
+        else if (t instanceof IYearMonthDuration) {
+        	return DATA_FACTORY.createYearMonthDuration( ((IYearMonthDuration) t).getYear(), ((IYearMonthDuration) t).getMonth());
+        }
+        else if (t instanceof IDayTimeDuration) {
+       	 	return DATA_FACTORY.createDayTimeDuration(((IDayTimeDuration) t).getDay(), ((IDayTimeDuration) t).getHour(), ((IDayTimeDuration) t).getMinute(), ((IDayTimeDuration) t).getSecond());
         }
         else if (t instanceof ISqName) {
             // couldn't find this type in wsmo4j
