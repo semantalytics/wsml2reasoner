@@ -287,7 +287,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 
         // retrieving the data source
         final Object ds = (config != null) ? config.get(EXTERNAL_DATA_SOURCE) : null;
-        if ((ds != null) && (ds instanceof Collection)) {
+        if ((ds != null) && (ds instanceof Collection<?>)) {
             sources = (Collection<ExternalDataSource>) ds;
         }
         else {

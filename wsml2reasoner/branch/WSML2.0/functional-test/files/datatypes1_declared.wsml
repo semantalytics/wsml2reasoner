@@ -1,48 +1,64 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
 namespace { _"http://example.com/datatypes1#",
-	wsml _"http://www.wsmo.org/wsml/wsml-syntax#" }
-
-ontology DatatypesTestOntology1
-
+	wsml _"http://www.wsmo.org/wsml/wsml-syntax#",
+	xsd   _"http://www.w3.org/2001/XMLSchema#",
+	rdf  _"http://www.w3.org/1999/02/22-rdf-syntax-ns#"}
+	
 // See http://www.wsmo.org/TR/d16/d16.1/v1.0/#sec:wsml-builtin-datatypes
 // for a complete list of all data-types.
 // SQName and IRI are not tested here.
 
-concept anEntity
-	aString       ofType _string
-	aDecimal      ofType _decimal
-	aInteger      ofType _integer
-	aFloat        ofType _float
-	aDouble       ofType _double
-	aBoolean      ofType _boolean
-	aDuration     ofType _duration
-	aDateTime     ofType _dateTime
-	aTime         ofType _time
-	aDate         ofType _date
-	aGYearMonth   ofType _gyearmonth
-	aGYear        ofType _gyear
-	aGMonthDay    ofType _gmonthday
-	aGDay         ofType _gday
-	aGMonth       ofType _gmonth
-	aHexBinary    ofType _hexbinary
-	aBase64Binary ofType _base64binary
+ontology DatatypesTestOntology1
 
+concept anEntity
+	aString       ofType wsml#string
+	//aXSD_String    ofType xsd#string
+	//a_String     ofType _string
+	aDecimal 	 ofType wsml#decimal
+	//a_Decimal 	 ofType _decimal
+	//aXSD_Decimal 	 ofType _decimal
+	aInteger      ofType wsml#integer
+	a_Integer      ofType _integer
+	aXSD_Integer      ofType xsd_integer
+	aFloat        ofType wsml#float
+	aDouble       ofType wsml#double
+	aBoolean      ofType wsml#boolean
+	aDuration     ofType wsml#duration
+	aDateTime     ofType wsml#dateTime
+	aTime         ofType wsml#time
+	aDate         ofType wsml#date
+	aGYearMonth   ofType wsml#gyearmonth
+	aGYear        ofType wsml#gyear
+	aGMonthDay    ofType wsml#gmonthday
+	aGDay         ofType wsml#gday
+	aGMonth       ofType wsml#gmonth
+	aHexBinary    ofType wsml#hexbinary
+	aBase64Binary ofType wsml#base64binary
+	
 instance anInstance memberOf anEntity
-	aString       hasValue _string( "string-value" )
-	aDecimal      hasValue _decimal( 123456.78901 )
-	aInteger      hasValue _integer( 12345 )
-	aFloat        hasValue _float( "123.456" )
-	aDouble       hasValue _double( "12345.6789" )
-	aBoolean      hasValue _boolean( "true" )
-	aDuration     hasValue _duration( 1, 2, 3, 4, 5, 6 )
-	aDateTime     hasValue _dateTime( 1981, 12, 31, 23, 59, 58 )
-	aTime         hasValue _time( 23, 59, 58 )
-	aDate         hasValue _date( 1981, 12, 31 )
-	aGYearMonth   hasValue _gyearmonth( 2008, 12 )
-	aGYear        hasValue _gyear( 1999 )
-	aGMonthDay    hasValue _gmonthday( 12, 31 )
-	aGDay         hasValue _gday( 28 )
-	aGMonth       hasValue _gmonth( 2 )
-	aHexBinary    hasValue _hexbinary( "0FB7abcd" ) 
-	aBase64Binary hasValue _base64binary( "QmFycnkgQmlzaG9w" )
+	aString       hasValue wsml#string( "string-value" )
+	//aXSD_String     hasValue xsd#string( "string-value_xsd" )
+	//a_String     hasValue _string( "string-value_" )
+	aDecimal 	 hasValue wsml#decimal( 123456.78901 )
+	//aXSD_Decimal hasValue xsd#decimal(123456.78901)
+	//a_Decimal 	 hasValue _decimal( 987654,32101 )
+	aInteger      hasValue wsml#integer( 12345 )
+	//a_Integer      hasValue _integer( 12345 )
+	//aXSD_Integer hasValue xsd#integer(12345)
+	aFloat        hasValue wsml#float( "123.456" )
+	aDouble       hasValue wsml#double( "12345.6789" )
+	aBoolean      hasValue wsml#boolean( "true" )
+	aDuration     hasValue wsml#duration( 1, 2, 3, 4, 5, 6 )
+	aDateTime     hasValue wsml#dateTime( 1981, 12, 31, 23, 59, 58 )
+	aTime         hasValue wsml#time( 23, 59, 58 )
+	aDate         hasValue wsml#date( 1981, 12, 31 )
+	aGYearMonth   hasValue wsml#gyearmonth( 2008, 12 )
+	aGYear        hasValue wsml#gyear( 1999 )
+	aGMonthDay    hasValue wsml#gmonthday( 12, 31 )
+	aGDay         hasValue wsml#gday( 28 )
+	aGMonth       hasValue wsml#gmonth( 2 )
+	aHexBinary    hasValue wsml#hexbinary( "0FB7abcd" ) 
+	aBase64Binary hasValue wsml#base64binary( "QmFycnkgQmlzaG9w" )
+
+
 

@@ -1,7 +1,7 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
 namespace { _"http://example.com/datatypes10#",
 	wsml _"http://www.wsmo.org/wsml/wsml-syntax#", 
-	xs   _"http://www.w3.org/2001/XMLSchema#",
+	xsd   _"http://www.w3.org/2001/XMLSchema#",
 	rdf  _"http://www.w3.org/1999/02/22-rdf-syntax-ns#"}
 
 ontology DatatypesTestOntology10
@@ -24,14 +24,14 @@ instance anInstance memberOf anEntity
 	//aDuration hasValue wsml#duration(1,2,3,4,5,6)
 	aRDFText hasValue rdf#rdfText("This should be a RDF Text")
 	aRDF_XMLLiteral hasValue rdf#XMLLiteral("<tag>xml literal</tag>")
-	aYearMonthDuration hasValue xs#yearMonthDuration(2009,9)
-	aDayTimeDuration hasValue xs#dayTimeDuration(1,10,31,15.5)
+	aYearMonthDuration hasValue xsd#yearMonthDuration(2009,9)
+	aDayTimeDuration hasValue xsd#dayTimeDuration(1,10,31,15.5)
 	
 instance anotherInstance memberOf anEntity
 	//aDuration hasValue wsml#duration("1","2","3","4","5","6")
 	aRDFText hasValue rdf#rdfText("This should be a RDF Text")
 	aRDF_XMLLiteral hasValue rdf#XMLLiteral("<tag>xml literal</tag>")
-	aYearMonthDuration hasValue xs#yearMonthDuration("2009","9")
-	aDayTimeDuration hasValue xs#dayTimeDuration("1","10","31", "15.5")
+	aYearMonthDuration hasValue xsd#yearMonthDuration("2009","9")
+	aDayTimeDuration hasValue xsd#dayTimeDuration("1","10","31", "15.5")
 
 

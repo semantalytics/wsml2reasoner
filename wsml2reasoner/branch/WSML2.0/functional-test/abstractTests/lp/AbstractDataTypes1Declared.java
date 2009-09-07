@@ -56,7 +56,7 @@ public abstract class AbstractDataTypes1Declared extends TestCase implements LP 
     	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aHexBinary" ), Results.hexBinary( "0FB7ABCD" ) );
     	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aBase64Binary" ), Results.base64Binary( "QmFycnkgQmlzaG9w" ) );
     	
-//    	System.out.println( OntologyHelper.toString( LPHelper.executeQuery( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, getLPReasoner() ) ) );
+    	LPHelper.outputON();
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );
     }
 }
