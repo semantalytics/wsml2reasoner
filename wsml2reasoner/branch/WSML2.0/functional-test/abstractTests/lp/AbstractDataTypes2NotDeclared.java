@@ -38,23 +38,23 @@ public abstract class AbstractDataTypes2NotDeclared extends TestCase implements 
     	String query = "?instance[?attribute hasValue ?value]";
     	
     	Results r = new Results( "instance", "attribute", "value" );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aString" ), Results.string( "string-value" ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDecimal" ), Results.decimal( 123456.78901 ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aString" ), Results._string( "string-value" ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDecimal" ), Results._decimal( 123456.78901 ) );
     	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aInteger" ), Results._integer( 12345 ) );
     	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aFloat" ), Results._float( 123.456f ) );
     	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDouble" ), Results._double( 12345.6789 ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aBoolean" ), Results.bool( true ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDuration" ), Results.duration( true, 1, 2, 3, 4, 5, 6 ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDateTime" ), Results.datetime( 1981, 12, 31, 23, 59, 58, 0, 0 ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aTime" ), Results.time( 23,59,58,0,0 ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDate" ), Results.date( 1981, 12, 31,0,0 ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aGYearMonth" ), Results.yearMonth( 2008, 12 ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aGYear" ), Results.year( 1999 ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aGMonthDay" ), Results.monthDay( 12, 31 ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aGDay" ), Results.day( 28 ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aGMonth" ), Results.month( 2 ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aHexBinary" ), Results.hexBinary( "0FB7ABCD" ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aBase64Binary" ), Results.base64Binary( "QmFycnkgQmlzaG9w" ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aBoolean" ), Results._bool( true ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDuration" ), Results._duration(1, 2, 3, 4, 5, 6.0 ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDateTime" ), Results._datetime( 1981, 12, 31, 23, 59, 58, 0, 0 ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aTime" ), Results._time( 23,59,58,0,0 ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDate" ), Results._date( 1981, 12, 31,0,0 ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aGYearMonth" ), Results._yearMonth( 2008, 12 ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aGYear" ), Results._year( 1999 ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aGMonthDay" ), Results._monthDay( 12, 31 ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aGDay" ), Results._day( 28 ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aGMonth" ), Results._month( 2 ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aHexBinary" ), Results._hexBinary( "0FB7ABCD" ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aBase64Binary" ), Results._base64Binary( "QmFycnkgQmlzaG9w" ) );
     	
 //    	System.out.println( OntologyHelper.toString( LPHelper.executeQuery( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, getLPReasoner() ) ) );
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );

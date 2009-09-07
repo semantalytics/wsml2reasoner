@@ -15,10 +15,10 @@ public abstract class AbstractRelations6WsmlDataTypes extends TestCase implement
 		String queryString = "RelationOfPrimitives(?x,?y,?z)";
     	Results r = new Results( "x", "y", "z" );
     	
-    	String NS = "http://example.com/relations6#";
+//    	String NS = "http://example.com/relations6#";
 
-    	r.addBinding( Results._integer( 1 ), Results.string( "one" ), Results.yearMonth( 2008, 12 ) );
-    	r.addBinding( Results._integer( 2 ), Results.string( "two" ), Results.yearMonth( 2009, 12 ) );
+    	r.addBinding( Results._integer( 1 ), Results._string( "one" ), Results._yearMonth( 2008, 12 ) );
+    	r.addBinding( Results._integer( 2 ), Results._string( "two" ), Results._yearMonth( 2009, 12 ) );
 
 		LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), queryString, r.get(), getLPReasoner() );
 	}

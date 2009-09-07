@@ -63,12 +63,12 @@ public class Results
 			mVariables[ v ] = leFactory.createVariable( variableNames[ v ] );
 	}
 
-	public static Term string( String value )
+	public static Term _string( String value )
 	{
 		return dataFactory.createString( value );
 	}
 	
-	public static Term decimal( double value )
+	public static Term _decimal( double value )
 	{
 		return dataFactory.createDecimal( new BigDecimal( Double.toString( value ) ) );
 	}
@@ -93,7 +93,7 @@ public class Results
 	 * @param b The value of the term.
 	 * @return The wsml boolean term object.
 	 */
-	public static Term bool( boolean b )
+	public static Term _bool( boolean b )
 	{
 		return dataFactory.createBoolean( b );
 	}
@@ -102,18 +102,17 @@ public class Results
 	 * Create a duration.
 	 * @return The new wsml object.
 	 */
-	public static ComplexDataValue duration(boolean sign, int year, int month, int day, int hour, int minute, double second)
+	public static ComplexDataValue _duration( int year, int month, int day, int hour, int minute, double second)
 	{
 //		FIXME gigi: add duration support
-//		return dataFactory.createWsmlDuration( sign, year, month, day, hour, minute, second );
-		return null;
+		return dataFactory.createDuration(year, month, day, hour, minute, second );
 	}
 	
 	/**
 	 * Create a datetime.
 	 * @return The new wsml object.
 	 */
-	public static ComplexDataValue datetime(int year, int month, int day, int hour, int minute, double second, int tzHour, int tzMinute)
+	public static ComplexDataValue _datetime(int year, int month, int day, int hour, int minute, double second, int tzHour, int tzMinute)
 	{
 		return dataFactory.createDateTime( year, month, day, hour, minute, (float) second, tzHour, tzMinute ); // TODO gigi: introduced the float cast, check if this makes sense
 	}
@@ -122,7 +121,7 @@ public class Results
 	 * Create a time.
 	 * @return The new wsml object.
 	 */
-	public static ComplexDataValue time(int hour, int minute, double second, int tzHour, int tzMinute)
+	public static ComplexDataValue _time(int hour, int minute, double second, int tzHour, int tzMinute)
 	{
 		return dataFactory.createTime( hour, minute, (float) second, tzHour, tzMinute ); // TODO gigi: introduced the float cast, check if this makes sense
 	}
@@ -131,42 +130,42 @@ public class Results
 	 * Create a date.
 	 * @return The new wsml object.
 	 */
-	public static ComplexDataValue date(int year, int month, int day, int tzHour, int tzMinute)
+	public static ComplexDataValue _date(int year, int month, int day, int tzHour, int tzMinute)
 	{
 		return dataFactory.createDate( year, month, day, tzHour, tzMinute );
 	}
 	
-	public static Term yearMonth( int year, int month )
+	public static Term _yearMonth( int year, int month )
 	{
 		return dataFactory.createGregorianYearMonth( year, month );
 	}
 
-	public static Term year( int year )
+	public static Term _year( int year )
 	{
 		return dataFactory.createGregorianYear( year );
 	}
 
-	public static Term monthDay( int month, int day )
+	public static Term _monthDay( int month, int day )
 	{
 		return dataFactory.createGregorianMonthDay( month, day );
 	}
 
-	public static Term day( int day )
+	public static Term _day( int day )
 	{
 		return dataFactory.createGregorianDay( day );
 	}
 
-	public static Term month( int month )
+	public static Term _month( int month )
 	{
 		return dataFactory.createGregorianMonth( month );
 	}
 
-	public static Term hexBinary( String value )
+	public static Term _hexBinary( String value )
 	{
 		return dataFactory.createHexBinary( value.getBytes() );
 	}
 
-	public static Term base64Binary( String value )
+	public static Term _base64Binary( String value )
 	{
 		return dataFactory.createBase64Binary( value.getBytes() );
 	}

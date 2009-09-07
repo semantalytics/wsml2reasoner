@@ -101,32 +101,32 @@ public abstract class AbstractFlight1Example1 extends TestCase implements LP {
     
     public void testNamedAragorn() throws Exception {
 		Results r = new Results("x", "v");
-		r.addBinding(Results.iri(NS + "Aragorn"), Results.string( "Aragorn" ));
+		r.addBinding(Results.iri(NS + "Aragorn"), Results._string( "Aragorn" ));
 		query( "?x[hasName hasValue ?v] and ?v = \"Aragorn\"", r );
     }
     
     public void testNamedArwen() throws Exception {
 		Results r = new Results("x", "v");
-		r.addBinding(Results.iri(NS + "Arwen"), Results.string( "Arwen" ));
+		r.addBinding(Results.iri(NS + "Arwen"), Results._string( "Arwen" ));
 		query( "?x[hasName hasValue ?v] and ?v = \"Arwen\"", r );
     }
     
     public void testHigherThan7Feet() throws Exception {
 		Results r = new Results("x", "v");
-		r.addBinding(Results.iri(NS + "Aragorn"), Results.decimal( 7.5 ));
+		r.addBinding(Results.iri(NS + "Aragorn"), Results._decimal( 7.5 ));
 		query( "?x[heightInFeet hasValue ?v] and ?v > 7.0", r );
     }
     
     public void testLowerThan7Feet() throws Exception {
 		Results r = new Results("x", "v");
-		r.addBinding(Results.iri(NS + "Arwen"), Results.decimal( 6.0 ));
+		r.addBinding(Results.iri(NS + "Arwen"), Results._decimal( 6.0 ));
 		query( "?x[heightInFeet hasValue ?v] and ?v < 7.0", r );
     }
     
     public void testLowerEqualThan7AndHalfFeet() throws Exception {
 		Results r = new Results("x", "v");
-		r.addBinding(Results.iri(NS + "Aragorn"), Results.decimal( 7.5 ));
-		r.addBinding(Results.iri(NS + "Arwen"), Results.decimal( 6.0 ));
+		r.addBinding(Results.iri(NS + "Aragorn"), Results._decimal( 7.5 ));
+		r.addBinding(Results.iri(NS + "Arwen"), Results._decimal( 6.0 ));
 		query( "?x[heightInFeet hasValue ?v] and ?v =< 7.5", r );
     }
     
@@ -138,7 +138,7 @@ public abstract class AbstractFlight1Example1 extends TestCase implements LP {
     
     public void testHigherThan6Feet() throws Exception {
 		Results r = new Results("x", "v");
-		r.addBinding(Results.iri(NS + "Aragorn"), Results.decimal( 7.5 ));
+		r.addBinding(Results.iri(NS + "Aragorn"), Results._decimal( 7.5 ));
 		query( "?x[heightInFeet hasValue ?v] and ?v > 6.0", r );
     }
         
@@ -149,8 +149,8 @@ public abstract class AbstractFlight1Example1 extends TestCase implements LP {
      */
     public void testHigherEqualThan6Feet() throws Exception {
 		Results r = new Results("x", "v");
-		r.addBinding(Results.iri(NS + "Aragorn"), Results.decimal( 7.5 ));
-		r.addBinding(Results.iri(NS + "Arwen"), Results.decimal( 6.0 ));
+		r.addBinding(Results.iri(NS + "Aragorn"), Results._decimal( 7.5 ));
+		r.addBinding(Results.iri(NS + "Arwen"), Results._decimal( 6.0 ));
 		query( "?x[heightInFeet hasValue ?v] and ?v >= 6.0", r );
     }
         

@@ -30,7 +30,7 @@ import abstractTests.LP;
 
 public abstract class AbstractDataTypes9MemberOfDatatype extends TestCase implements LP {
 
-    private static final String NS = "http://example.com/datatypes1#";
+//    private static final String NS = "http://example.com/datatypes1#";
 
     private static final String ONTOLOGY_FILE = "files/datatypes9_memberofdatatype.wsml";
 
@@ -38,7 +38,7 @@ public abstract class AbstractDataTypes9MemberOfDatatype extends TestCase implem
     	String query = "?x memberOf _string";
     	
     	Results r = new Results( "x" );
-    	r.addBinding( Results.string( "a" ) );
+    	r.addBinding( Results._string( "a" ) );
     	
     	System.out.println( OntologyHelper.toString( LPHelper.executeQuery( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, getLPReasoner() ) ) );
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );

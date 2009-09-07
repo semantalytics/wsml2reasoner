@@ -38,10 +38,10 @@ public abstract class AbstractDataTypes3DateTimeDurationTypes extends TestCase i
     	String query = "?x[aTime hasValue ?t]";
     	
     	Results r = new Results( "x", "t" );
-    	r.addBinding( Results.iri( NS + "integerSeconds" ), Results.time( 23,59,58,0,0 ) );
-    	r.addBinding( Results.iri( NS + "decimalSeconds" ), Results.time( 23,59,58.98765,0,0 ) );
-    	r.addBinding( Results.iri( NS + "integerSecondsWithTimeZones" ), Results.time( 23,59,58,13,30 ) );
-    	r.addBinding( Results.iri( NS + "decimalSecondsWithTimeZones" ), Results.time( 23,59,58.98765,13,30 ) );
+    	r.addBinding( Results.iri( NS + "integerSeconds" ), Results._time( 23,59,58,0,0 ) );
+    	r.addBinding( Results.iri( NS + "decimalSeconds" ), Results._time( 23,59,58.98765,0,0 ) );
+    	r.addBinding( Results.iri( NS + "integerSecondsWithTimeZones" ), Results._time( 23,59,58,13,30 ) );
+    	r.addBinding( Results.iri( NS + "decimalSecondsWithTimeZones" ), Results._time( 23,59,58.98765,13,30 ) );
     	
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );
     }
@@ -50,10 +50,10 @@ public abstract class AbstractDataTypes3DateTimeDurationTypes extends TestCase i
     	String query = "?x[aDate hasValue ?t]";
 
     	Results r = new Results( "x", "t" );
-    	r.addBinding( Results.iri( NS + "integerSeconds" ), Results.date( 1981, 12, 31, 0, 0 ) );
-    	r.addBinding( Results.iri( NS + "decimalSeconds" ), Results.date( 1981, 12, 31,0,0 ) );
-    	r.addBinding( Results.iri( NS + "integerSecondsWithTimeZones" ), Results.date( 1981, 12, 31,13,30 ) );
-    	r.addBinding( Results.iri( NS + "decimalSecondsWithTimeZones" ), Results.date( 1981, 12, 31,13,30 ) );
+    	r.addBinding( Results.iri( NS + "integerSeconds" ), Results._date( 1981, 12, 31, 0, 0 ) );
+    	r.addBinding( Results.iri( NS + "decimalSeconds" ), Results._date( 1981, 12, 31,0,0 ) );
+    	r.addBinding( Results.iri( NS + "integerSecondsWithTimeZones" ), Results._date( 1981, 12, 31,13,30 ) );
+    	r.addBinding( Results.iri( NS + "decimalSecondsWithTimeZones" ), Results._date( 1981, 12, 31,13,30 ) );
     	
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );
     }
@@ -62,10 +62,10 @@ public abstract class AbstractDataTypes3DateTimeDurationTypes extends TestCase i
     	String query = "?x[aDateTime hasValue ?t]";
 
     	Results r = new Results( "x", "t" );
-    	r.addBinding( Results.iri( NS + "integerSeconds" ), Results.datetime( 1981, 12, 31, 23, 59, 58, 0, 0 ) );
-    	r.addBinding( Results.iri( NS + "decimalSeconds" ), Results.datetime( 1981, 12, 31, 23, 59, 58.98765, 0, 0 ) );
-    	r.addBinding( Results.iri( NS + "integerSecondsWithTimeZones" ), Results.datetime( 1981, 12, 31, 23, 59, 58, 13, 30 ) );
-    	r.addBinding( Results.iri( NS + "decimalSecondsWithTimeZones" ), Results.datetime( 1981, 12, 31, 23, 59, 58.98765, 13, 30 ) );
+    	r.addBinding( Results.iri( NS + "integerSeconds" ), Results._datetime( 1981, 12, 31, 23, 59, 58, 0, 0 ) );
+    	r.addBinding( Results.iri( NS + "decimalSeconds" ), Results._datetime( 1981, 12, 31, 23, 59, 58.98765, 0, 0 ) );
+    	r.addBinding( Results.iri( NS + "integerSecondsWithTimeZones" ), Results._datetime( 1981, 12, 31, 23, 59, 58, 13, 30 ) );
+    	r.addBinding( Results.iri( NS + "decimalSecondsWithTimeZones" ), Results._datetime( 1981, 12, 31, 23, 59, 58.98765, 13, 30 ) );
 
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );
     }
@@ -74,10 +74,10 @@ public abstract class AbstractDataTypes3DateTimeDurationTypes extends TestCase i
     	String query = "?x[aDuration hasValue ?t]";
 
     	Results r = new Results( "x", "t" );
-    	r.addBinding( Results.iri( NS + "integerSeconds" ), Results.duration( true, 1, 2, 3, 4, 5, 6 ) );
-    	r.addBinding( Results.iri( NS + "decimalSeconds" ), Results.duration( true, 1, 2, 3, 4, 5, 6.98765 ) );
-    	r.addBinding( Results.iri( NS + "integerSecondsWithTimeZones" ), Results.duration( true, 1, 2, 3, 4, 5, 6 ) );
-    	r.addBinding( Results.iri( NS + "decimalSecondsWithTimeZones" ), Results.duration( true, 1, 2, 3, 4, 5, 6.98765 ) );
+    	r.addBinding( Results.iri( NS + "integerSeconds" ), Results._duration( 1, 2, 3, 4, 5, 6 ) );
+    	r.addBinding( Results.iri( NS + "decimalSeconds" ), Results._duration( 1, 2, 3, 4, 5, 6.98765 ) );
+    	r.addBinding( Results.iri( NS + "integerSecondsWithTimeZones" ), Results._duration(  1, 2, 3, 4, 5, 6 ) );
+    	r.addBinding( Results.iri( NS + "decimalSecondsWithTimeZones" ), Results._duration( 1, 2, 3, 4, 5, 6.98765 ) );
 
 //    	System.out.println( OntologyHelper.toString( LPHelper.executeQuery( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, getLPReasoner() ) ) );
 

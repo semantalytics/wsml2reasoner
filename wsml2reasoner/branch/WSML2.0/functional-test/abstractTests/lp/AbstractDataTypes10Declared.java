@@ -38,11 +38,11 @@ public abstract class AbstractDataTypes10Declared extends TestCase implements LP
     	String query = "?instance[?attribute hasValue ?value]";
     	
     	Results r = new Results( "instance", "attribute", "value" );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDuration" ), Results.duration( true, 1, 2, 3, 4, 5, 6 ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aRDFText" ), Results.string( "This should be a RDF Text" ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aRDF_XMLLiteral" ), Results.string("<tag>xml literal</tag>" ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aYearMonthDuration" ), Results.string( "2009,9" ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDayTimeDuration" ), Results.string( "1,10,31,15.5" ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDuration" ), Results._duration( 1, 2, 3, 4, 5, 6.0 ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aRDFText" ), Results._string( "This should be a RDF Text" ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aRDF_XMLLiteral" ), Results._string("<tag>xml literal</tag>" ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aYearMonthDuration" ), Results._string( "2009,9" ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDayTimeDuration" ), Results._string( "1,10,31,15.5" ) );
 
     	LPHelper.outputON();
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );

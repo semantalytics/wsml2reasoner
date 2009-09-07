@@ -51,7 +51,7 @@ public abstract class AbstractDataTypes8DateComparison extends TestCase implemen
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );
 
     	query = "?x[birthday hasValue ?y] and ?y < _date(1957, 02, 21, 12, 30)";
-    	r.addBinding( Results.iri( NS + "Peter" ), Results.date( 1957, 02, 20, 12, 30 ) );
+    	r.addBinding( Results.iri( NS + "Peter" ), Results._date( 1957, 02, 20, 12, 30 ) );
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );
     }
 
@@ -62,7 +62,7 @@ public abstract class AbstractDataTypes8DateComparison extends TestCase implemen
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );
 
     	query = "?x[birthday hasValue ?y] and ?y > _date(2001, 09, 14, 12, 30)";
-    	r.addBinding( Results.iri( NS + "Chris" ), Results.date( 2001, 9, 15, 12, 30 ) );
+    	r.addBinding( Results.iri( NS + "Chris" ), Results._date( 2001, 9, 15, 12, 30 ) );
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );
     }
 
@@ -70,8 +70,8 @@ public abstract class AbstractDataTypes8DateComparison extends TestCase implemen
     	Results r = new Results( "x", "y" );
     	
     	String query = "?x[birthday hasValue ?y] and ?y =< _date(1976, 8, 16, 12, 30)";
-    	r.addBinding( Results.iri( NS + "Carla" ), Results.date( 1976, 8, 16, 12, 30 ) );
-    	r.addBinding( Results.iri( NS + "Peter" ), Results.date( 1957, 2, 20, 12, 30 ) );
+    	r.addBinding( Results.iri( NS + "Carla" ), Results._date( 1976, 8, 16, 12, 30 ) );
+    	r.addBinding( Results.iri( NS + "Peter" ), Results._date( 1957, 2, 20, 12, 30 ) );
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );
     }
 
@@ -79,8 +79,8 @@ public abstract class AbstractDataTypes8DateComparison extends TestCase implemen
     	Results r = new Results( "x", "y" );
     	
     	String query = "?x[birthday hasValue ?y] and ?y >= _date(1996, 05, 23, 12, 30)";
-    	r.addBinding( Results.iri( NS + "Anna" ), Results.date( 1996, 05, 23, 12, 30 ) );
-    	r.addBinding( Results.iri( NS + "Chris" ), Results.date( 2001, 9, 15, 12, 30 ) );
+    	r.addBinding( Results.iri( NS + "Anna" ), Results._date( 1996, 05, 23, 12, 30 ) );
+    	r.addBinding( Results.iri( NS + "Chris" ), Results._date( 2001, 9, 15, 12, 30 ) );
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );
     }
 
@@ -88,7 +88,7 @@ public abstract class AbstractDataTypes8DateComparison extends TestCase implemen
     	Results r = new Results( "x", "y" );
     	
     	String query = "?x[birthday hasValue ?y] and ?y = _date(1996, 05, 23, 12, 30)";
-    	r.addBinding( Results.iri( NS + "Anna" ), Results.date( 1996, 05, 23, 12, 30 ) );
+    	r.addBinding( Results.iri( NS + "Anna" ), Results._date( 1996, 05, 23, 12, 30 ) );
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );
     }
 
@@ -96,9 +96,9 @@ public abstract class AbstractDataTypes8DateComparison extends TestCase implemen
     	Results r = new Results( "x", "y" );
     	
     	String query = "?x[birthday hasValue ?y] and ?y != _date(1996, 05, 23, 12, 30)";
-    	r.addBinding( Results.iri( NS + "Chris" ), Results.date( 2001, 9, 15, 12, 30 ) );
-    	r.addBinding( Results.iri( NS + "Carla" ), Results.date( 1976, 8, 16, 12, 30 ) );
-    	r.addBinding( Results.iri( NS + "Peter" ), Results.date( 1957, 2, 20, 12, 30 ) );
+    	r.addBinding( Results.iri( NS + "Chris" ), Results._date( 2001, 9, 15, 12, 30 ) );
+    	r.addBinding( Results.iri( NS + "Carla" ), Results._date( 1976, 8, 16, 12, 30 ) );
+    	r.addBinding( Results.iri( NS + "Peter" ), Results._date( 1957, 2, 20, 12, 30 ) );
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );
     }
 }

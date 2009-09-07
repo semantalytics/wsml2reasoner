@@ -38,26 +38,22 @@ public abstract class AbstractDataTypes4DateTimeSubtraction extends TestCase imp
     	String query = "?x[age hasValue ?t]";
 
     	Results r = new Results( "x", "a" );
-    	r.addBinding( Results.iri( NS + "allFields" ), Results.duration( true, 1, 2, 3, 4, 5, 6.7 ) );
-    	r.addBinding( Results.iri( NS + "smallPositive" ), Results.duration( true, 0, 0, 0, 0, 0, 0.1 ) );
-    	r.addBinding( Results.iri( NS + "smallNegative" ), Results.duration( false, 0, 0, 0, 0, 0, 0.1 ) );
+    	r.addBinding( Results.iri( NS + "allFields" ), Results._duration(  1, 2, 3, 4, 5, 6.7 ) );
+    	r.addBinding( Results.iri( NS + "smallPositive" ), Results._duration(  0, 0, 0, 0, 0, 0.1 ) );
+    	r.addBinding( Results.iri( NS + "smallNegative" ), Results._duration(  0, 0, 0, 0, 0, 0.1 ) );
 
-    	r.addBinding( Results.iri( NS + "oneMicro" ), Results.duration( true, 0, 0, 0, 0, 0, 0.000001 ) );
-    	r.addBinding( Results.iri( NS + "oneMilli" ), Results.duration( true, 0, 0, 0, 0, 0, 0.001 ) );
+    	r.addBinding( Results.iri( NS + "oneMicro" ), Results._duration(  0, 0, 0, 0, 0, 0.000001 ) );
+    	r.addBinding( Results.iri( NS + "oneMilli" ), Results._duration(  0, 0, 0, 0, 0, 0.001 ) );
     	
-    	r.addBinding( Results.iri( NS + "oneSecond" ), Results.duration( true, 0, 0, 0, 0, 0, 1 ) );
-    	r.addBinding( Results.iri( NS + "oneMinute" ), Results.duration( true, 0, 0, 0, 0, 1, 0 ) );
-    	r.addBinding( Results.iri( NS + "oneHour" ), Results.duration( true, 0, 0, 0, 1, 0, 0 ) );
+    	r.addBinding( Results.iri( NS + "oneSecond" ), Results._duration( 0, 0, 0, 0, 0, 1 ) );
+    	r.addBinding( Results.iri( NS + "oneMinute" ), Results._duration(  0, 0, 0, 0, 1, 0 ) );
+    	r.addBinding( Results.iri( NS + "oneHour" ), Results._duration(  0, 0, 0, 1, 0, 0 ) );
     	
-    	r.addBinding( Results.iri( NS + "oneDay" ), Results.duration( true, 0, 0, 1, 0, 0, 0 ) );
-    	r.addBinding( Results.iri( NS + "oneMonth" ), Results.duration( true, 0, 1, 0, 0, 0, 0 ) );
-    	r.addBinding( Results.iri( NS + "oneYear" ), Results.duration( true, 1, 0, 0, 0, 0, 0 ) );
+    	r.addBinding( Results.iri( NS + "oneDay" ), Results._duration(  0, 0, 1, 0, 0, 0 ) );
+    	r.addBinding( Results.iri( NS + "oneMonth" ), Results._duration(  0, 1, 0, 0, 0, 0 ) );
+    	r.addBinding( Results.iri( NS + "oneYear" ), Results._duration(  1, 0, 0, 0, 0, 0 ) );
     	
-    	query = "?x[age hasValue ?a]";
-    	
-    	System.out.println( "Query: " + query );
-
-//    	System.out.println( OntologyHelper.toString( LPHelper.executeQuery( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, getLPReasoner() ) ) );
+    	// LPHelper.outputON();
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );
     }
 }

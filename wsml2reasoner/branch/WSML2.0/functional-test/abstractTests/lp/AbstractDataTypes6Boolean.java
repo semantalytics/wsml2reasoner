@@ -68,12 +68,12 @@ public abstract class AbstractDataTypes6Boolean extends TestCase implements LP{
         Ontology ontology = OntologyHelper.parseOntology( test );
         
     	Results r = new Results( "y" );
-    	r.addBinding( Results.bool( false ) );
+    	r.addBinding( Results._bool( false ) );
     	
         LPHelper.executeQueryAndCheckResults( ontology, "a[f hasValue ?y]", r.get(), getLPReasoner() );
 
     	r = new Results( "y" );
-    	r.addBinding( Results.bool( true ) );
+    	r.addBinding( Results._bool( true ) );
     	
         LPHelper.executeQueryAndCheckResults( ontology, "a[t hasValue ?y]", r.get(), getLPReasoner() );
 

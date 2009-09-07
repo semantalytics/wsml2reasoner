@@ -25,10 +25,10 @@ public abstract class AbstractRuleHead10EqualityTest extends TestCase implements
 		String query = "?instance[?attribute hasValue ?value]";
 
 		Results r = new Results("instance", "attribute", "value");
-		r.addBinding(Results.iri("http://simple10#A"), Results.iri("http://simple10#aString"), Results.string("string-value") );
-		r.addBinding(Results.iri("http://simple10#A"), Results.iri("http://simple10#anotherString"), Results.string("another string-value"));
-		r.addBinding(Results.iri("http://simple10#B"), Results.iri("http://simple10#anotherString"),  Results.string("another string-value"));
-		r.addBinding(Results.iri("http://simple10#B"), Results.iri("http://simple10#aString"), Results.string("string-value") );
+		r.addBinding(Results.iri("http://simple10#A"), Results.iri("http://simple10#aString"), Results._string("string-value") );
+		r.addBinding(Results.iri("http://simple10#A"), Results.iri("http://simple10#anotherString"), Results._string("another string-value"));
+		r.addBinding(Results.iri("http://simple10#B"), Results.iri("http://simple10#anotherString"),  Results._string("another string-value"));
+		r.addBinding(Results.iri("http://simple10#B"), Results.iri("http://simple10#aString"), Results._string("string-value") );
 		
 //		LPHelper.outputON();
 		LPHelper.executeQueryAndCheckResults(OntologyHelper
