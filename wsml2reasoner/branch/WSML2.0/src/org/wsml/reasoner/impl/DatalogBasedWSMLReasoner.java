@@ -38,6 +38,7 @@ import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Type;
 import org.omwg.ontology.Variable;
 import org.omwg.ontology.WsmlDataType;
+import org.omwg.ontology.XmlSchemaDataType;
 import org.wsml.reasoner.ConjunctiveQuery;
 import org.wsml.reasoner.DatalogException;
 import org.wsml.reasoner.DatalogReasonerFacade;
@@ -250,58 +251,58 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
      * Helper method for handleAttributeInheritance()
      * See the note before that method.
      */
-    private void inheritAttributesToSubConcepts( Concept concept )
-    {
-        Set<Attribute> attributes = concept.listAttributes();
-        
-        for (Concept subConcept : concept.listSubConcepts()) {
-            for (Attribute a : attributes) {
-                try {
-                	Attribute attribute = subConcept.createAttribute(a.getIdentifier());
-                    // process range types:
-                    for (Type type : a.listTypes()) {
-                        attribute.addType(type);
-                        // create an appropriate molecule per range
-                        // type:
-                        if (a.isConstraining()) {
-                            attribute.setConstraining(true);
-                        }
-                    }
-
-                    // process attribute properties:
-                    if (a.isReflexive()) {
-                        attribute.setReflexive(true);
-                    }
-                    if (a.isSymmetric()) {
-                        attribute.setSymmetric(true);
-                    }
-                    if (a.isTransitive()) {
-                        attribute.setTransitive(true);
-                    }
-                    Identifier inverseAttribute = a.getInverseOf();
-                    if (inverseAttribute != null) {
-                        attribute.setInverseOf(inverseAttribute);
-                    }
-
-                    // process cardinality constraints:
-                    if (a.getMinCardinality() > 0) {
-                        attribute.setMinCardinality(a.getMinCardinality());
-                    }
-                    if (a.getMaxCardinality() < Integer.MAX_VALUE) {
-                        attribute.setMaxCardinality(a.getMaxCardinality());
-                    }
-                }
-                catch (InvalidModelException ex) {
-                    throw new RuntimeException( "An error occurred while propogating attributes to sub-concepts", ex );
-                }
-            }
-        }
-
-        // Now recurse all the way down to concepts that don't have any sub-concepts
-        for (Concept subConcept : concept.listSubConcepts()) {
-        	inheritAttributesToSubConcepts( subConcept );
-        }
-    }
+//    private void inheritAttributesToSubConcepts( Concept concept )
+//    {
+//        Set<Attribute> attributes = concept.listAttributes();
+//        
+//        for (Concept subConcept : concept.listSubConcepts()) {
+//            for (Attribute a : attributes) {
+//                try {
+//                	Attribute attribute = subConcept.createAttribute(a.getIdentifier());
+//                    // process range types:
+//                    for (Type type : a.listTypes()) {
+//                        attribute.addType(type);
+//                        // create an appropriate molecule per range
+//                        // type:
+//                        if (a.isConstraining()) {
+//                            attribute.setConstraining(true);
+//                        }
+//                    }
+//
+//                    // process attribute properties:
+//                    if (a.isReflexive()) {
+//                        attribute.setReflexive(true);
+//                    }
+//                    if (a.isSymmetric()) {
+//                        attribute.setSymmetric(true);
+//                    }
+//                    if (a.isTransitive()) {
+//                        attribute.setTransitive(true);
+//                    }
+//                    Identifier inverseAttribute = a.getInverseOf();
+//                    if (inverseAttribute != null) {
+//                        attribute.setInverseOf(inverseAttribute);
+//                    }
+//
+//                    // process cardinality constraints:
+//                    if (a.getMinCardinality() > 0) {
+//                        attribute.setMinCardinality(a.getMinCardinality());
+//                    }
+//                    if (a.getMaxCardinality() < Integer.MAX_VALUE) {
+//                        attribute.setMaxCardinality(a.getMaxCardinality());
+//                    }
+//                }
+//                catch (InvalidModelException ex) {
+//                    throw new RuntimeException( "An error occurred while propogating attributes to sub-concepts", ex );
+//                }
+//            }
+//        }
+//
+//        // Now recurse all the way down to concepts that don't have any sub-concepts
+//        for (Concept subConcept : concept.listSubConcepts()) {
+//        	inheritAttributesToSubConcepts( subConcept );
+//        }
+//    }
     /*
      * Add all attributes of superconcepts to the subconcepts
      * This is a BAD way to do it! 
@@ -309,20 +310,20 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
      * but in case these new rules cause some problems this code will be left
      * for a little while.
      */
-    private Set<Entity> handleAttributeInheritance(Set<Entity> theEntities) {
-        Set<Entity> result = new HashSet<Entity>();
-
-        for (Entity e : theEntities) {
-            if (e instanceof Concept) {
-                Concept concept = (Concept) e;
-                // If this is a base concept, then push attributes
-                if( concept.listSuperConcepts().size() == 0 )
-                	inheritAttributesToSubConcepts( concept );
-            }
-            result.add(e);
-        }
-        return result;
-    }
+//    private Set<Entity> handleAttributeInheritance(Set<Entity> theEntities) {
+//        Set<Entity> result = new HashSet<Entity>();
+//
+//        for (Entity e : theEntities) {
+//            if (e instanceof Concept) {
+//                Concept concept = (Concept) e;
+//                // If this is a base concept, then push attributes
+//                if( concept.listSuperConcepts().size() == 0 )
+//                	inheritAttributesToSubConcepts( concept );
+//            }
+//            result.add(e);
+//        }
+//        return result;
+//    }
 
     public void deRegister() {
         try {
@@ -441,12 +442,15 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
             Type type;
             IRI typeId = (IRI) violation.get(t);
             if (WsmlDataType.WSML_STRING.equals(typeId.toString()) || WsmlDataType.WSML_INTEGER.equals(typeId.toString()) || WsmlDataType.WSML_DECIMAL.equals(typeId.toString()) || WsmlDataType.WSML_BOOLEAN.equals(typeId.toString())){
-                type = factory.getWsmlDataFactory().createDataType(typeId);
+            	type = factory.getWsmlDataFactory().createDataType(typeId);
+            }
+            else if (XmlSchemaDataType.XSD_STRING.equals(typeId.toString()) || XmlSchemaDataType.XSD_INTEGER.equals(typeId.toString()) || XmlSchemaDataType.XSD_DECIMAL.equals(typeId.toString()) || XmlSchemaDataType.XSD_BOOLEAN.equals(typeId.toString())){
+            	type = factory.getXmlDataFactory().createDataType(typeId);
             }
             else{
                 type = wsmoFactory.createConcept(typeId);
             }
-
+            // TODO mp: inconsistency error when trying to add an shortcut (_string) datatype or an XS_Datatype ? 
             if (violation.get(i) instanceof Identifier) {
                 errors.add(new AttributeTypeViolation(wsmoFactory.createInstance((IRI) violation.get(i)), rawValue, attribute, type));
             }

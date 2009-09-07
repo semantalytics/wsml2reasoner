@@ -12,8 +12,8 @@ ontology DatatypesTestOntology1
 
 concept anEntity
 	//aString       ofType wsml#string
-	//aXSD_String    ofType xsd#string
-	a_String     ofType _string
+	aXSD_String    ofType xsd#string
+	//a_String     ofType _string
 	aDecimal 	 ofType wsml#decimal
 	//a_Decimal 	 ofType _decimal
 	//aXSD_Decimal 	 ofType _decimal
@@ -37,8 +37,8 @@ concept anEntity
 	
 instance anInstance memberOf anEntity
 	//aString       hasValue wsml#string( "string-value" )
-	//aXSD_String     hasValue xsd#string( "string-value_xsd" )
-	a_String     hasValue _string( "string-value_" )
+	aXSD_String     hasValue xsd#string( "string-value_xsd" )
+	//a_String     hasValue _string( "string-value_" )
 	aDecimal 	 hasValue wsml#decimal( 123456.78901 )
 	//aXSD_Decimal hasValue xsd#decimal(123456.78901)
 	//a_Decimal 	 hasValue _decimal( 987654,32101 )
