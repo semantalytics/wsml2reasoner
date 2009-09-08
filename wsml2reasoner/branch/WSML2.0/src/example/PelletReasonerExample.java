@@ -162,7 +162,6 @@ public class PelletReasonerExample {
      * @return object model of ontology at file location
      */
     private Ontology loadOntology(String file) {
-    	WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
     	Parser wsmlParser = new WsmlParser();
 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);

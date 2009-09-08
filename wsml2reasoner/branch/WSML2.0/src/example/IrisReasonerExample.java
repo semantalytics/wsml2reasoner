@@ -30,12 +30,10 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsmo.common.TopEntity;
-import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
 import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
@@ -107,7 +105,6 @@ public class IrisReasonerExample {
      * @return object model of ontology at file location
      */
     private Ontology loadOntology(String file) {
-        WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
 		Parser wsmlParser = new WsmlParser();
 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);
