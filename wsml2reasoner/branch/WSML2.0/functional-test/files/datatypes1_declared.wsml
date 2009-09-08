@@ -11,55 +11,171 @@ namespace { _"http://example.com/datatypes1#",
 ontology DatatypesTestOntology1
 
 concept anEntity
-	//aString       ofType wsml#string
+	// XSD, WSML
+	aString       ofType wsml#string
+	a_String     ofType _string
 	aXSD_String    ofType xsd#string
-	//a_String     ofType _string
+	//
 	aDecimal 	 ofType wsml#decimal
-	//a_Decimal 	 ofType _decimal
-	//aXSD_Decimal 	 ofType _decimal
+	a_Decimal 	 ofType _decimal
+	aXSD_Decimal 	 ofType xsd#decimal
+	//
 	aInteger      ofType wsml#integer
 	a_Integer      ofType _integer
-	aXSD_Integer      ofType xsd_integer
+	aXSD_Integer      ofType xsd#integer
+	//
 	aFloat        ofType wsml#float
+	a_Float	  	  ofType _float
+	aXSD_Float    ofType xsd#float
+	//
 	aDouble       ofType wsml#double
+	a_Double       ofType _double
+	aXSD_Double       ofType xsd#double
+	//
 	aBoolean      ofType wsml#boolean
-	//aDuration     ofType wsml#duration
+	a_Boolean      ofType _boolean
+	aXSD_Boolean   ofType xsd#boolean
+	//
+	aDuration     ofType wsml#duration
+	a_Duration     ofType _duration
+	aXSD_Duration     ofType xsd#duration
+	//
 	aDateTime     ofType wsml#dateTime
+	a_DateTime     ofType _dateTime
+	aXSD_DateTime     ofType xsd#dateTime
+	//
 	aTime         ofType wsml#time
+	a_Time         ofType _time
+	aXSD_Time         ofType xsd#time
+	//
 	aDate         ofType wsml#date
+	a_Date         ofType _date
+	aXSD_Date         ofType xsd#date
+	//
 	aGYearMonth   ofType wsml#gyearmonth
+	a_GYearMonth   ofType _gyearmonth
+	aXSD_GYearMonth   ofType xsd#gyearmonth
+	//
 	aGYear        ofType wsml#gyear
+	a_GYear        ofType _gyear
+	aXSD_GYear        ofType xsd#gyear
+	//
 	aGMonthDay    ofType wsml#gmonthday
+	a_GMonthDay    ofType _gmonthday
+	aXSD_GMonthDay    ofType xsd#gmonthday
+	//
 	aGDay         ofType wsml#gday
+	a_GDay         ofType _gday
+	aXSD_GDay         ofType xsd#gday
+	//
 	aGMonth       ofType wsml#gmonth
+	a_GMonth       ofType _gmonth
+	aXSD_GMonth       ofType xsd#gmonth
+	//
 	aHexBinary    ofType wsml#hexbinary
+	a_HexBinary    ofType _hexbinary
+	aXSD_HexBinary    ofType xsd#hexbinary
+	//
 	aBase64Binary ofType wsml#base64binary
+	a_Base64Binary ofType _base64binary
+	aXSD_Base64Binary ofType xsd#base64binary
+	//
+	// RDF Datatypes
+	aRDFText ofType rdf#rdfText
+	a_RDFText ofType _rdfText
+	//
+	aRDF_XMLLiteral ofType rdf#XMLLiteral
+	a_RDF_XMLLiteral ofType _XMLLiteral
+	//
+	// new XSD Datatypes
+	aYearMonthDuration ofType xs#yearMonthDuration
+	a_YearMonthDuration ofType _yearMonthDuration
+	//
+	aDayTimeDuration ofType xs#dayTimeDuration
+	a_DayTimeDuration ofType _dayTimeDuration 
 	
 instance anInstance memberOf anEntity
-	//aString       hasValue wsml#string( "string-value" )
+	aString       hasValue wsml#string( "string-value" )
+	a_String     hasValue _string( "string-value_" )
 	aXSD_String     hasValue xsd#string( "string-value_xsd" )
-	//a_String     hasValue _string( "string-value_" )
+	//
 	aDecimal 	 hasValue wsml#decimal( 123456.78901 )
-	//aXSD_Decimal hasValue xsd#decimal(123456.78901)
-	//a_Decimal 	 hasValue _decimal( 987654,32101 )
+	a_Decimal 	 hasValue _decimal( 987654,32101 )
+	aXSD_Decimal hasValue xsd#decimal(123456.78901)
+	//
 	aInteger      hasValue wsml#integer( 12345 )
-	//a_Integer      hasValue _integer( 12345 )
-	//aXSD_Integer hasValue xsd#integer(12345)
+	a_Integer      hasValue _integer( 12345 )
+	aXSD_Integer hasValue xsd#integer(12345)
+	//
 	aFloat        hasValue wsml#float( "123.456" )
+	a_Float        hasValue _float( "123.456" )
+	aXSD_Float        hasValue xsd#float( "123.456" )
+	//
 	aDouble       hasValue wsml#double( "12345.6789" )
+	a_Double       hasValue _double( "12345.6789" )
+	aXSD_Double       hasValue xsd#double( "12345.6789" )
+	//
 	aBoolean      hasValue wsml#boolean( "true" )
-	//aDuration     hasValue wsml#duration( 1, 2, 3, 4, 5, 6.0 )
-	//aDuration     hasValue wsml#duration( 1, 2, 3, 4, 5, 6.0 )
+	a_Boolean      hasValue _boolean( "true" )
+	aXSD_Boolean      hasValue xsd#boolean( "true" )
+	//
+	aDuration     hasValue wsml#duration( 1, 2, 3, 4, 5, 6.0 )
+	a_Duration     hasValue _duration( 1, 2, 3, 4, 5, 6.0 )
+	aXSD_Duration     hasValue xsd#duration( 1, 2, 3, 4, 5, 6.0 )
+	//
 	aDateTime     hasValue wsml#dateTime( 1981, 12, 31, 23, 59, 58.0 )
+	a_DateTime     hasValue _dateTime( 1981, 12, 31, 23, 59, 58.0 )
+	aXSD_DateTime     hasValue xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )
+	//
 	aTime         hasValue wsml#time( 23, 59, 58.0 )
+	a_Time         hasValue _time( 23, 59, 58.0 )
+	aXSD_Time         hasValue xsd#time( 23, 59, 58.0 )
+	//
 	aDate         hasValue wsml#date( 1981, 12, 31 )
+	a_Date         hasValue _date( 1981, 12, 31 )
+	aXSD_Date         hasValue xsd#date( 1981, 12, 31 )
+	//
 	aGYearMonth   hasValue wsml#gyearmonth( 2008, 12 )
+	a_GYearMonth   hasValue _gyearmonth( 2008, 12 )
+	aXSD_GYearMonth   hasValue xsd#gyearmonth( 2008, 12 )
+	//
 	aGYear        hasValue wsml#gyear( 1999 )
+	a_GYear        hasValue _gyear( 1999 )
+	aXSD_GYear        hasValue xsd#gyear( 1999 )
+	//
 	aGMonthDay    hasValue wsml#gmonthday( 12, 31 )
+	a_GMonthDay    hasValue _gmonthday( 12, 31 )
+	aXSD_GMonthDay    hasValue xsd#gmonthday( 12, 31 )
+	//
 	aGDay         hasValue wsml#gday( 28 )
+	a_GDay         hasValue _gday( 28 )
+	aXSD_GDay         hasValue xsd#gday( 28 )
+	//
 	aGMonth       hasValue wsml#gmonth( 2 )
-	aHexBinary    hasValue wsml#hexbinary( "0FB7abcd" ) 
+	a_GMonth       hasValue _gmonth( 2 )
+	aXSD_GMonth       hasValue xsd#gmonth( 2 )
+	//
+	aHexBinary    hasValue wsml#hexbinary( "0FB7abcd" )
+	a_HexBinary    hasValue _hexbinary( "0FB7abcd" )
+	aXSD_HexBinary    hasValue xsd#hexbinary( "0FB7abcd" )
+	// 
 	aBase64Binary hasValue wsml#base64binary( "QmFycnkgQmlzaG9w" )
+	a_Base64Binary hasValue _base64binary( "QmFycnkgQmlzaG9w" )
+	aXSD_Base64Binary hasValue xsd#base64binary( "QmFycnkgQmlzaG9w" )
+	//
+	// RDF Datatypes
+	aRDFText hasValue rdf#rdfText("RDF Text")
+	a_RDFText hasValue _rdfText("RDF Text")
+	//
+	aRDF_XMLLiteral hasValue rdf#XMLLiteral("<tag>XML Literal</tag>")
+	a_RDF_XMLLiteral hasValue _XMLLiteral("<tag>XML Literal</tag>")
+	//
+	// new XSD Datatypes
+	aYearMonthDuration hasValue xs#yearMonthDuration(2008, 10)
+	a_YearMonthDuration hasValue _yearMonthDuration(2008, 10)
+	//
+	aDayTimeDuration hasValue xs#dayTimeDuration(1, 10, 31, 15.5)
+	a_DayTimeDuration hasValue _dayTimeDuration(1, 10, 31, 15.5)
 
 
 
