@@ -11,6 +11,7 @@ namespace { _"http://example.com/datatypes1#",
 ontology DatatypesTestOntology1
 
 concept anEntity
+
 	// XSD, WSML
 	aString       ofType wsml#string
 	a_String     ofType _string
@@ -92,14 +93,19 @@ concept anEntity
 	a_YearMonthDuration ofType _yearMonthDuration
 	//
 	aDayTimeDuration ofType xsd#dayTimeDuration
-	a_DayTimeDuration ofType _dayTimeDuration 
+	a_DayTimeDuration ofType _dayTimeDuration
+	
 	
 instance anInstance memberOf anEntity
-	aString       hasValue wsml#string( "string-value" )
-	//a_String     hasValue _string( "string-value_" )
-	//aXSD_String     hasValue xsd#string("string-value_xsd")
-	//
+	aString       hasValue _string( "string-value" )
+	
+	//a_YearMonthDuration hasValue _yearMonthDuration(2008, 10)
+	//aYearMonthDuration hasValue xsd#yearMonthDuration(2008, 10)
+	
 	/*
+	a_String     hasValue _string( "string-value_" )
+	aXSD_String     hasValue xsd#string("string-value_xsd")
+	//
 	aDecimal 	 hasValue wsml#decimal( 123456.78901 )
 	a_Decimal 	 hasValue _decimal( 987654,32101 )
 	aXSD_Decimal hasValue xsd#decimal(123456.78901)
@@ -172,10 +178,10 @@ instance anInstance memberOf anEntity
 	a_RDF_XMLLiteral hasValue _XMLLiteral("<tag>XML Literal</tag>")
 	//
 	// new XSD Datatypes
-	aYearMonthDuration hasValue xs#yearMonthDuration(2008, 10)
+	aYearMonthDuration hasValue xsd#yearMonthDuration(2008, 10)
 	a_YearMonthDuration hasValue _yearMonthDuration(2008, 10)
 	//
-	aDayTimeDuration hasValue xs#dayTimeDuration(1, 10, 31, 15.5)
+	aDayTimeDuration hasValue xsd#dayTimeDuration(1, 10, 31, 15.5)
 	a_DayTimeDuration hasValue _dayTimeDuration(1, 10, 31, 15.5)
 	*/
 
