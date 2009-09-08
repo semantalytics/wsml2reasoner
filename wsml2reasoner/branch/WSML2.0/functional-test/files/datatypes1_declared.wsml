@@ -88,17 +88,18 @@ concept anEntity
 	a_RDF_XMLLiteral ofType _XMLLiteral
 	//
 	// new XSD Datatypes
-	aYearMonthDuration ofType xs#yearMonthDuration
+	aYearMonthDuration ofType xsd#yearMonthDuration
 	a_YearMonthDuration ofType _yearMonthDuration
 	//
-	aDayTimeDuration ofType xs#dayTimeDuration
+	aDayTimeDuration ofType xsd#dayTimeDuration
 	a_DayTimeDuration ofType _dayTimeDuration 
 	
 instance anInstance memberOf anEntity
 	aString       hasValue wsml#string( "string-value" )
-	a_String     hasValue _string( "string-value_" )
-	aXSD_String     hasValue xsd#string( "string-value_xsd" )
+	//a_String     hasValue _string( "string-value_" )
+	//aXSD_String     hasValue xsd#string("string-value_xsd")
 	//
+	/*
 	aDecimal 	 hasValue wsml#decimal( 123456.78901 )
 	a_Decimal 	 hasValue _decimal( 987654,32101 )
 	aXSD_Decimal hasValue xsd#decimal(123456.78901)
@@ -119,9 +120,9 @@ instance anInstance memberOf anEntity
 	a_Boolean      hasValue _boolean( "true" )
 	aXSD_Boolean      hasValue xsd#boolean( "true" )
 	//
-	aDuration     hasValue wsml#duration( 1, 2, 3, 4, 5, 6.0 )
-	a_Duration     hasValue _duration( 1, 2, 3, 4, 5, 6.0 )
-	aXSD_Duration     hasValue xsd#duration( 1, 2, 3, 4, 5, 6.0 )
+	//aDuration     hasValue wsml#duration( 1, 2, 3, 4, 5, 6.6)
+	//a_Duration     hasValue _duration( 1, 2, 3, 4, 5, 6.6 )
+	//aXSD_Duration     hasValue xsd#duration( 1, 2, 3, 4, 5, 6.0)
 	//
 	aDateTime     hasValue wsml#dateTime( 1981, 12, 31, 23, 59, 58.0 )
 	a_DateTime     hasValue _dateTime( 1981, 12, 31, 23, 59, 58.0 )
@@ -176,6 +177,7 @@ instance anInstance memberOf anEntity
 	//
 	aDayTimeDuration hasValue xs#dayTimeDuration(1, 10, 31, 15.5)
 	a_DayTimeDuration hasValue _dayTimeDuration(1, 10, 31, 15.5)
+	*/
 
 
 

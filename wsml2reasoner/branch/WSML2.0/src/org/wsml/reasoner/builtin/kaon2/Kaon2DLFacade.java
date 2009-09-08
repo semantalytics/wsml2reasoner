@@ -89,7 +89,7 @@ public class Kaon2DLFacade implements DLReasonerFacade
 		return mKaon2Wrapper.allProperties();
     }
 	
-	public Set<Set> allTypesOf( OWLIndividual individual ) throws OWLException, URISyntaxException
+	public Set<Set<?>> allTypesOf( OWLIndividual individual ) throws OWLException, URISyntaxException
     {
 		return mKaon2Wrapper.allTypesOf( individual );
     }
@@ -98,7 +98,7 @@ public class Kaon2DLFacade implements DLReasonerFacade
     {
 		return mKaon2Wrapper.ancestorClassesOf( clazz );
     }
-	public Set<Set> ancestorPropertiesOf( OWLProperty property ) throws OWLException, URISyntaxException
+	public Set<Set<?>> ancestorPropertiesOf( OWLProperty property ) throws OWLException, URISyntaxException
     {
 		return mKaon2Wrapper.ancestorPropertiesOf( property );
     }
@@ -108,12 +108,12 @@ public class Kaon2DLFacade implements DLReasonerFacade
 		mKaon2Wrapper.deRegister();
     }
 	
-	public Set<Set> descendantClassesOf( OWLDescription clazz ) throws OWLException, URISyntaxException
+	public Set<Set<?>> descendantClassesOf( OWLDescription clazz ) throws OWLException, URISyntaxException
     {
 		return mKaon2Wrapper.descendantClassesOf( clazz );
     }
 	
-	public Set<Set> descendantPropertiesOf( OWLProperty property ) throws OWLException, URISyntaxException
+	public Set<Set<?>> descendantPropertiesOf( OWLProperty property ) throws OWLException, URISyntaxException
     {
 		return mKaon2Wrapper.descendantPropertiesOf( property );
     }
@@ -240,17 +240,17 @@ public class Kaon2DLFacade implements DLReasonerFacade
 		mKaon2Wrapper.register( owlOntology );
     }
 
-	public Set<Set> subClassesOf( OWLDescription clazz ) throws OWLException, URISyntaxException
+	public Set<Set<?>> subClassesOf( OWLDescription clazz ) throws OWLException, URISyntaxException
     {
 		return mKaon2Wrapper.subClassesOf( clazz );
     }
 	
-	public Set<Set> subPropertiesOf( OWLProperty property ) throws OWLException, URISyntaxException
+	public Set<Set<?>> subPropertiesOf( OWLProperty property ) throws OWLException, URISyntaxException
     {
 		return mKaon2Wrapper.subPropertiesOf( property );
     }
 	
-	public Set<Set> superClassesOf( OWLDescription clazz ) throws OWLException, URISyntaxException
+	public Set<Set<?>> superClassesOf( OWLDescription clazz ) throws OWLException, URISyntaxException
     {
 		return mKaon2Wrapper.superClassesOf( clazz );
     }
@@ -260,7 +260,7 @@ public class Kaon2DLFacade implements DLReasonerFacade
 		return mKaon2Wrapper.superPropertiesOf( property );
     }
 	
-	public Set<Set> typesOf( OWLIndividual individual ) throws OWLException, URISyntaxException
+	public Set<Set<?>> typesOf( OWLIndividual individual ) throws OWLException, URISyntaxException
     {
 		return mKaon2Wrapper.typesOf( individual );
     }

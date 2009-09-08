@@ -500,10 +500,10 @@ public class DLBasedWSMLReasoner implements DLReasoner {
     public Set<Concept> getSubConcepts(Concept concept) {
         Set<Concept> elements = new HashSet<Concept>();
         try {
-            Set<Set> set = builtInFacade.descendantClassesOf(owlDataFactory.getOWLClass(new URI(concept.getIdentifier().toString())));
-            for (Set<OWLEntity> set2 : set) {
-                for (OWLEntity entity : set2) {
-                    elements.add(getWSMOConcept(entity));
+            Set<Set<?>> set = builtInFacade.descendantClassesOf(owlDataFactory.getOWLClass(new URI(concept.getIdentifier().toString())));
+            for (Set<?> set2 : set) {
+                for (Object entity : set2) {
+                    elements.add(getWSMOConcept((OWLEntity)entity));
                 }
             }
         }
@@ -516,10 +516,10 @@ public class DLBasedWSMLReasoner implements DLReasoner {
     public Set<Concept> getDirectSubConcepts(Concept concept) {
         Set<Concept> elements = new HashSet<Concept>();
         try {
-            Set<Set> set = builtInFacade.subClassesOf(owlDataFactory.getOWLClass(new URI(concept.getIdentifier().toString())));
-            for (Set<OWLEntity> set2 : set) {
-                for (OWLEntity entity : set2) {
-                    elements.add(getWSMOConcept(entity));
+            Set<Set<?>> set = builtInFacade.subClassesOf(owlDataFactory.getOWLClass(new URI(concept.getIdentifier().toString())));
+            for (Set<?> set2 : set) {
+                for (Object entity : set2) {
+                    elements.add(getWSMOConcept((OWLEntity)entity));
                 }
             }
         }
@@ -548,10 +548,10 @@ public class DLBasedWSMLReasoner implements DLReasoner {
     public Set<Concept> getDirectSuperConcepts(Concept concept) {
         Set<Concept> elements = new HashSet<Concept>();
         try {
-            Set<Set> set = builtInFacade.superClassesOf(owlDataFactory.getOWLClass(new URI(concept.getIdentifier().toString())));
-            for (Set<OWLEntity> set2 : set) {
-                for (OWLEntity entity : set2) {
-                    elements.add(getWSMOConcept(entity));
+            Set<Set<?>> set = builtInFacade.superClassesOf(owlDataFactory.getOWLClass(new URI(concept.getIdentifier().toString())));
+            for (Set<?> set2 : set) {
+                for (Object entity : set2) {
+                    elements.add(getWSMOConcept((OWLEntity) entity));
                 }
             }
         }
@@ -624,14 +624,14 @@ public class DLBasedWSMLReasoner implements DLReasoner {
     public Set<Concept> getDirectConcepts(Instance instance) {
         Set<Concept> elements = new HashSet<Concept>();
         try {
-            Set<Set> set = builtInFacade.typesOf(owlDataFactory.getOWLIndividual(new URI(instance.getIdentifier().toString())));
-            for (Set<OWLEntity> set2 : set) {
-                for (OWLEntity entity : set2) {
-                    if (ns == null || !entity.getURI().toString().startsWith(ns)) {
-                        elements.add(wsmoFactory.createConcept(wsmoFactory.createIRI(entity.getURI().toString())));
+            Set<Set<?>> set = builtInFacade.typesOf(owlDataFactory.getOWLIndividual(new URI(instance.getIdentifier().toString())));
+            for (Set<?> set2 : set) {
+                for (Object entity : set2) {
+                    if (ns == null || !((OWLEntity)entity).getURI().toString().startsWith(ns)) {
+                        elements.add(wsmoFactory.createConcept(wsmoFactory.createIRI(((OWLEntity)entity).getURI().toString())));
                     }
                     else {
-                        elements.add(wsmoFactory.createConcept(wsmoFactory.createIRI(ns + entity.getURI().getFragment())));
+                        elements.add(wsmoFactory.createConcept(wsmoFactory.createIRI(ns + ((OWLEntity)entity).getURI().getFragment())));
                     }
                 }
             }
@@ -645,14 +645,14 @@ public class DLBasedWSMLReasoner implements DLReasoner {
     public Set<Concept> getConcepts(Instance instance) {
         Set<Concept> elements = new HashSet<Concept>();
         try {
-            Set<Set> set = builtInFacade.allTypesOf(owlDataFactory.getOWLIndividual(new URI(instance.getIdentifier().toString())));
-            for (Set<OWLEntity> set2 : set) {
-                for (OWLEntity entity : set2) {
-                    if (ns == null || !entity.getURI().toString().startsWith(ns)) {
-                        elements.add(wsmoFactory.createConcept(wsmoFactory.createIRI(entity.getURI().toString())));
+            Set<Set<?>> set = builtInFacade.allTypesOf(owlDataFactory.getOWLIndividual(new URI(instance.getIdentifier().toString())));
+            for (Set<?> set2 : set) {
+                for (Object entity : set2) {
+                    if (ns == null || !((OWLEntity)entity).getURI().toString().startsWith(ns)) {
+                        elements.add(wsmoFactory.createConcept(wsmoFactory.createIRI(((OWLEntity)entity).getURI().toString())));
                     }
                     else {
-                        elements.add(wsmoFactory.createConcept(wsmoFactory.createIRI(ns + entity.getURI().getFragment())));
+                        elements.add(wsmoFactory.createConcept(wsmoFactory.createIRI(ns + ((OWLEntity)entity).getURI().getFragment())));
                     }
                 }
             }
@@ -666,14 +666,14 @@ public class DLBasedWSMLReasoner implements DLReasoner {
     public Set<IRI> getSubRelations(Identifier attributeId) {
         Set<IRI> elements = new HashSet<IRI>();
         try {
-            Set<Set> set = builtInFacade.descendantPropertiesOf(owlDataFactory.getOWLObjectProperty(new URI(attributeId.toString())));
-            for (Set<OWLEntity> set2 : set) {
-                for (OWLEntity entity : set2) {
-                    if (ns == null || !entity.getURI().toString().startsWith(ns)) {
-                        elements.add(wsmoFactory.createIRI(entity.getURI().toString()));
+            Set<Set<?>> set = builtInFacade.descendantPropertiesOf(owlDataFactory.getOWLObjectProperty(new URI(attributeId.toString())));
+            for (Set<?> set2 : set) {
+                for (Object entity : set2) {
+                    if (ns == null || !((OWLEntity)entity).getURI().toString().startsWith(ns)) {
+                        elements.add(wsmoFactory.createIRI(((OWLEntity)entity).getURI().toString()));
                     }
                     else {
-                        elements.add(wsmoFactory.createIRI(ns + entity.getURI().getFragment()));
+                        elements.add(wsmoFactory.createIRI(ns + ((OWLEntity)entity).getURI().getFragment()));
                     }
                 }
             }
@@ -687,14 +687,14 @@ public class DLBasedWSMLReasoner implements DLReasoner {
     public Set<IRI> getDirectSubRelations(Identifier attributeId) {
         Set<IRI> elements = new HashSet<IRI>();
         try {
-            Set<Set> set = builtInFacade.subPropertiesOf(owlDataFactory.getOWLObjectProperty(new URI(attributeId.toString())));
-            for (Set<OWLEntity> set2 : set) {
-                for (OWLEntity entity : set2) {
-                    if (ns == null || !entity.getURI().toString().startsWith(ns)) {
-                        elements.add(wsmoFactory.createIRI(entity.getURI().toString()));
+            Set<Set<?>> set = builtInFacade.subPropertiesOf(owlDataFactory.getOWLObjectProperty(new URI(attributeId.toString())));
+            for (Set<?> set2 : set) {
+                for (Object entity : set2) {
+                    if (ns == null || !((OWLEntity)entity).getURI().toString().startsWith(ns)) {
+                        elements.add(wsmoFactory.createIRI(((OWLEntity)entity).getURI().toString()));
                     }
                     else {
-                        elements.add(wsmoFactory.createIRI(ns + entity.getURI().getFragment()));
+                        elements.add(wsmoFactory.createIRI(ns + ((OWLEntity)entity).getURI().getFragment()));
                     }
                 }
             }
@@ -708,14 +708,14 @@ public class DLBasedWSMLReasoner implements DLReasoner {
     public Set<IRI> getSuperRelations(Identifier attributeId) {
         Set<IRI> elements = new HashSet<IRI>();
         try {
-            Set<Set> set = builtInFacade.ancestorPropertiesOf(owlDataFactory.getOWLObjectProperty(new URI(attributeId.toString())));
-            for (Set<OWLEntity> set2 : set) {
-                for (OWLEntity entity : set2) {
-                    if (ns == null || !entity.getURI().toString().startsWith(ns)) {
-                        elements.add(wsmoFactory.createIRI(entity.getURI().toString()));
+            Set<Set<?>> set = builtInFacade.ancestorPropertiesOf(owlDataFactory.getOWLObjectProperty(new URI(attributeId.toString())));
+            for (Set<?> set2 : set) {
+                for (Object entity : set2) {
+                    if (ns == null || !((OWLEntity)entity).getURI().toString().startsWith(ns)) {
+                        elements.add(wsmoFactory.createIRI(((OWLEntity)entity).getURI().toString()));
                     }
                     else {
-                        elements.add(wsmoFactory.createIRI(ns + entity.getURI().getFragment()));
+                        elements.add(wsmoFactory.createIRI(ns + ((OWLEntity)entity).getURI().getFragment()));
                     }
                 }
             }

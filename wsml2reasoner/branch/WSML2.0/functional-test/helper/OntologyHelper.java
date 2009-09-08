@@ -42,10 +42,8 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
-import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsmo.common.TopEntity;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 import org.wsmo.wsml.Serializer;
@@ -58,7 +56,7 @@ import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 public class OntologyHelper
 {
 	// TODO gigi: probably won't work as expected since the factories changed and are now stateful
-	private static WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
+	//private static WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
 	private static Parser wsmlparserimpl = new WsmlParser();
 
 	/**

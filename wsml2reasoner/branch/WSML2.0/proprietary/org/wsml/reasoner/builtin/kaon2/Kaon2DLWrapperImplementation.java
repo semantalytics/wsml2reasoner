@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -358,12 +359,12 @@ public class Kaon2DLWrapperImplementation implements DLReasonerFacade
 	/* (non-Javadoc)
      * @see org.wsml.reasoner.builtin.kaon2.Kaon2DLWrapper#descendantClassesOf(org.semanticweb.owl.model.OWLDescription)
      */
-	public Set<Set> descendantClassesOf( OWLDescription clazz ) throws OWLException, URISyntaxException
+	public Set<Set<?>> descendantClassesOf( OWLDescription clazz ) throws OWLException, URISyntaxException
 	{
 		try
 		{
 
-			Set<Set> resultSet = new HashSet<Set>();
+			Set<Set<?>> resultSet = new HashSet<Set<?>>();
 			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
 
 			SubsumptionHierarchy hierarchy = reasoner.getSubsumptionHierarchy();
@@ -397,12 +398,12 @@ public class Kaon2DLWrapperImplementation implements DLReasonerFacade
 	/* (non-Javadoc)
      * @see org.wsml.reasoner.builtin.kaon2.Kaon2DLWrapper#subClassesOf(org.semanticweb.owl.model.OWLDescription)
      */
-	public Set<Set> subClassesOf( OWLDescription clazz ) throws OWLException, URISyntaxException
+	public Set<Set<?>> subClassesOf( OWLDescription clazz ) throws OWLException, URISyntaxException
 	{
 		try
 		{
 
-			Set<Set> resultSet = new HashSet<Set>();
+			Set<Set<?>> resultSet = new HashSet<Set<?>>();
 			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
 			SubsumptionHierarchy hierarchy = reasoner.getSubsumptionHierarchy();
 			OWLClass owlClass = KAON2Manager.factory().owlClass(
@@ -474,12 +475,12 @@ public class Kaon2DLWrapperImplementation implements DLReasonerFacade
 	/* (non-Javadoc)
      * @see org.wsml.reasoner.builtin.kaon2.Kaon2DLWrapper#superClassesOf(org.semanticweb.owl.model.OWLDescription)
      */
-	public Set<Set> superClassesOf( OWLDescription clazz ) throws OWLException, URISyntaxException
+	public Set<Set<?>> superClassesOf( OWLDescription clazz ) throws OWLException, URISyntaxException
 	{
 		try
 		{
 
-			Set<Set> resultSet = new HashSet<Set>();
+			Set<Set<?>> resultSet = new HashSet<Set<?>>();
 			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
 
 			SubsumptionHierarchy hierarchy = reasoner.getSubsumptionHierarchy();
@@ -654,12 +655,12 @@ public class Kaon2DLWrapperImplementation implements DLReasonerFacade
 	/* (non-Javadoc)
      * @see org.wsml.reasoner.builtin.kaon2.Kaon2DLWrapper#typesOf(org.semanticweb.owl.model.OWLIndividual)
      */
-	public Set<Set> typesOf( OWLIndividual individual ) throws OWLException, URISyntaxException
+	public Set<Set<?>> typesOf( OWLIndividual individual ) throws OWLException, URISyntaxException
 	{
 		try
 		{
 
-			Set<Set> resultSet = new HashSet<Set>();
+			Set<Set<?>> resultSet = new HashSet<Set<?>>();
 			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
 			Request<ClassMember> memberOfRequest = ontology.createAxiomRequest( ClassMember.class );
 			Individual owlIndividual = KAON2Manager.factory().individual(
@@ -673,12 +674,12 @@ public class Kaon2DLWrapperImplementation implements DLReasonerFacade
 			}
 			// check for direct concepts that are equivalent to indirect
 			// concepts
-			Set<Set> allConcepts = allTypesOf( individual );
-			for( Set<OWLEntity> allEntities : allConcepts )
+			Set<Set<?>> allConcepts = allTypesOf( individual );
+			for( Set<?> allEntities : allConcepts )
 			{
 				Set<OWLEntity> toBeRemoved = new HashSet<OWLEntity>();
 				allEntities.removeAll( entitySet );
-				for( OWLEntity entity : allEntities )
+				for( Object entity : allEntities )
 				{
 					for( OWLEntity ent : entitySet )
 					{
@@ -704,12 +705,12 @@ public class Kaon2DLWrapperImplementation implements DLReasonerFacade
 	/* (non-Javadoc)
      * @see org.wsml.reasoner.builtin.kaon2.Kaon2DLWrapper#allTypesOf(org.semanticweb.owl.model.OWLIndividual)
      */
-	public Set<Set> allTypesOf( OWLIndividual individual ) throws OWLException, URISyntaxException
+	public Set<Set<?>> allTypesOf( OWLIndividual individual ) throws OWLException, URISyntaxException
 	{
 		try
 		{
 
-			Set<Set> resultSet = new HashSet<Set>();
+			Set<Set<?>> resultSet = new HashSet<Set<?>>();
 			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
 			Request<ClassMember> memberOfRequest = ontology.createAxiomRequest( ClassMember.class );
 			Individual owlIndividual = KAON2Manager.factory().individual(
@@ -735,12 +736,12 @@ public class Kaon2DLWrapperImplementation implements DLReasonerFacade
 	/* (non-Javadoc)
      * @see org.wsml.reasoner.builtin.kaon2.Kaon2DLWrapper#descendantPropertiesOf(org.semanticweb.owl.model.OWLProperty)
      */
-	public Set<Set> descendantPropertiesOf( OWLProperty property ) throws OWLException, URISyntaxException
+	public Set<Set<?>> descendantPropertiesOf( OWLProperty property ) throws OWLException, URISyntaxException
 	{
 		try
 		{
 
-			Set<Set> resultSet = new HashSet<Set>();
+			Set<Set<?>> resultSet = new HashSet<Set<?>>();
 			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
 			Set<OWLEntity> equivSet = new HashSet<OWLEntity>();
 
@@ -827,12 +828,12 @@ public class Kaon2DLWrapperImplementation implements DLReasonerFacade
 	/* (non-Javadoc)
      * @see org.wsml.reasoner.builtin.kaon2.Kaon2DLWrapper#subPropertiesOf(org.semanticweb.owl.model.OWLProperty)
      */
-	public Set<Set> subPropertiesOf( OWLProperty property ) throws OWLException, URISyntaxException
+	public Set<Set<?>> subPropertiesOf( OWLProperty property ) throws OWLException, URISyntaxException
 	{
 		try
 		{
 
-			Set<Set> resultSet = new HashSet<Set>();
+			Set<Set<?>> resultSet = new HashSet<Set<?>>();
 			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
 			Set<OWLEntity> equivSet = new HashSet<OWLEntity>();
 
@@ -910,12 +911,12 @@ public class Kaon2DLWrapperImplementation implements DLReasonerFacade
 	/* (non-Javadoc)
      * @see org.wsml.reasoner.builtin.kaon2.Kaon2DLWrapper#ancestorPropertiesOf(org.semanticweb.owl.model.OWLProperty)
      */
-	public Set<Set> ancestorPropertiesOf( OWLProperty property ) throws OWLException, URISyntaxException
+	public Set<Set<?>> ancestorPropertiesOf( OWLProperty property ) throws OWLException, URISyntaxException
 	{
 		try
 		{
 
-			Set<Set> resultSet = new HashSet<Set>();
+			Set<Set<?>> resultSet = new HashSet<Set<?>>();
 			Set<OWLEntity> entitySet = new HashSet<OWLEntity>();
 			Set<OWLEntity> equivSet = new HashSet<OWLEntity>();
 
@@ -1139,18 +1140,18 @@ public class Kaon2DLWrapperImplementation implements DLReasonerFacade
 				entitySet.clear();
 			}
 
-			Set<Set> set = descendantPropertiesOf( property );
-			for( Set<OWLEntity> set2 : set )
+			Set<Set<?>> set = descendantPropertiesOf( property );
+			for( Set<?> set2 : set )
 			{
-				for( OWLEntity entity : set2 )
+				for( Object entity : set2 )
 				{
-					Set<Set> set3 = descendantPropertiesOf( owlDataFactory.getOWLObjectProperty( new URI( entity
+					Set<Set<?>> set3 = descendantPropertiesOf( owlDataFactory.getOWLObjectProperty( new URI( entity
 					                .toString().substring( entity.toString().indexOf( "]" ) + 2 ) ) ) );
-					for( Set<OWLEntity> set4 : set3 )
+					for( Set<?> set4 : set3 )
 					{
 						if( set4.contains( property ) )
 						{
-							resultSet.add( entity );
+							resultSet.add( (OWLEntity) entity );
 						}
 					}
 				}
@@ -1623,13 +1624,13 @@ public class Kaon2DLWrapperImplementation implements DLReasonerFacade
 
 	private void addSuperConcepts( OWLEntity entity, Set<OWLEntity> entitySet ) throws OWLException, URISyntaxException
 	{
-		Set<Set> set = superClassesOf( (org.semanticweb.owl.model.OWLClass) entity );
-		Set<OWLEntity> set2 = set.iterator().next();
+		Set<Set<?>> set = superClassesOf( (org.semanticweb.owl.model.OWLClass) entity );
+		Set<OWLEntity> set2 = (Set<OWLEntity>) set.iterator().next();
 		for( OWLEntity ent : set2 )
 		{
 			if( !entitySet.contains( ent ) )
 			{
-				entitySet.addAll( set.iterator().next() );
+				entitySet.addAll( (Collection<? extends OWLEntity>) set.iterator().next() );
 				addSuperConcepts( ent, entitySet );
 			}
 		}
@@ -1638,13 +1639,13 @@ public class Kaon2DLWrapperImplementation implements DLReasonerFacade
 	private void addSubProperties( OWLEntity entity, Set<OWLEntity> entitySet ) throws OWLException,
 	                URISyntaxException, KAON2Exception
 	{
-		Set<Set> set = subPropertiesOf( (org.semanticweb.owl.model.OWLProperty) entity );
-		Set<OWLEntity> set2 = set.iterator().next();
+		Set<Set<?>> set = subPropertiesOf( (org.semanticweb.owl.model.OWLProperty) entity );
+		Set<OWLEntity> set2 = (Set<OWLEntity>) set.iterator().next();
 		for( OWLEntity ent : set2 )
 		{
 			if( !entitySet.contains( ent ) )
 			{
-				entitySet.addAll( set.iterator().next() );
+				entitySet.addAll( (Collection<? extends OWLEntity>) set.iterator().next() );
 				addSubProperties( ent, entitySet );
 			}
 		}
