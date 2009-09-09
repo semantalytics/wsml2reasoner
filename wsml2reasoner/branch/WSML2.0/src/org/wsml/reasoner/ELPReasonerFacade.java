@@ -66,9 +66,9 @@ public interface ELPReasonerFacade {
 	public boolean isConsistent(IDescription description) throws ExternalToolException;
 
 	/**
-	 * @return a set containing all classes from the loaded rule base
+	 * @return a set containing all concepts from the loaded rule base
 	 */
-	public Set<IAtomicConcept> allClasses() throws ExternalToolException;
+	public Set<IAtomicConcept> allConcepts() throws ExternalToolException;
 
 	/**
 	 * @return a set containing all individuals from the loaded rule base
@@ -78,172 +78,172 @@ public interface ELPReasonerFacade {
 	/**
 	 * @return a set containing all properties from the loaded rule base
 	 */
-	public Set<IAtomicRole> allProperties() throws ExternalToolException;
+	public Set<IAtomicRole> allRoles() throws ExternalToolException;
 
 	/**
 	 * @return a set containing all data properties from the loaded rule base
 	 */
-	public Set<IAtomicRole> allDataProperties() throws ExternalToolException;
+	public Set<IAtomicRole> allDataRoles() throws ExternalToolException;
 
 	/**
 	 * @return a set containing all object properties from the loaded rule base
 	 */
-	public Set<IAtomicRole> allObjectProperties() throws ExternalToolException;
+	public Set<IAtomicRole> allObjectRoles() throws ExternalToolException;
 
 	/**
-	 * @return a set containing all subclasses of a given class
+	 * @return a set containing all subconcepts of a given class
 	 */
-	public Set<IAtomicConcept> descendantClassesOf(IConceptDescription clazz) throws ExternalToolException;
+	public Set<IAtomicConcept> subConceptsOf(IConceptDescription concept) throws ExternalToolException;
 
 	/**
-	 * @return a set containing all direct subclasses of a given class
+	 * @return a set containing all direct subconcepts of a given class
 	 */
-	public Set<IAtomicConcept> subClassesOf(IConceptDescription clazz) throws ExternalToolException;
+	public Set<IAtomicConcept> directSubConceptsOf(IConceptDescription concept) throws ExternalToolException;
 
 	/**
-	 * @return a set containing all superclasses of a given class
+	 * @return a set containing all superconcepts of a given class
 	 */
-	public Set<IAtomicConcept> ancestorClassesOf(IConceptDescription concept) throws ExternalToolException;
+	public Set<IAtomicConcept> superConceptsOf(IConceptDescription concept) throws ExternalToolException;
 
 	/**
-	 * @return a set containing all direct superclasses of a given class
+	 * @return a set containing all direct superconcepts of a given class
 	 */
-	public Set<IAtomicConcept> superClassesOf(IConceptDescription concept) throws ExternalToolException;
+	public Set<IAtomicConcept> directSuperConceptsOf(IConceptDescription concept) throws ExternalToolException;
 
 	/**
-	 * @return a set containing all classes equivalent to the given class
+	 * @return a set containing all concepts equivalent to the given class
 	 */
-	public Set<IAtomicConcept> equivalentClassesOf(IConceptDescription concept) throws ExternalToolException;
+	public Set<IAtomicConcept> equivalentConceptsOf(IConceptDescription concept) throws ExternalToolException;
 
 	/**
-	 * @return true if the two given OWL descriptions are equivalent
+	 * @return true if the two given descriptions are equivalent
 	 */
-	public boolean isEquivalentClass(IConceptDescription concept1, IConceptDescription concept2)
+	public boolean isEquivalentConcept(IConceptDescription concept1, IConceptDescription concept2)
 			throws ExternalToolException;
 
 	/**
-	 * @return true if the given clazz2 is a subClass of clazz1
+	 * @return true if the given concept2 is a subConcept of concept1
 	 */
-	public boolean isSubClassOf(IConceptDescription concept1, IConceptDescription concept2)
+	public boolean isSubConceptOf(IConceptDescription concept1, IConceptDescription concept2)
 			throws ExternalToolException;
 
 	/**
-	 * @return true if the given individual is an instance of clazz
+	 * @return true if the given individual is an instance of concept
 	 */
 	public boolean isInstanceOf(IIndividual individual, IConceptDescription concept) throws ExternalToolException;
 
 	/**
-	 * @return a set all instances of a given OWL class
+	 * @return a set all instances of a given class
 	 */
-	public Set<IIndividual> allInstancesOf(IConceptDescription clazz) throws ExternalToolException;
+	public Set<IIndividual> allInstancesOf(IConceptDescription concept) throws ExternalToolException;
 
 	/**
-	 * @return a set with all direct concepts of a given OWL individual
+	 * @return a set with all direct concepts of a given individual
+	 */
+	public Set<IAtomicConcept> directTypesOf(IIndividual individual) throws ExternalToolException;
+
+	/**
+	 * @return a set with all (also indirect) concepts of a given individual
 	 */
 	public Set<IAtomicConcept> typesOf(IIndividual individual) throws ExternalToolException;
 
 	/**
-	 * @return a set with all (also indirect) concepts of a given OWL individual
+	 * @return a set containing all subproperties of a given role
 	 */
-	public Set<IAtomicConcept> allTypesOf(IIndividual individual) throws ExternalToolException;
+	public Set<IAtomicRole> subRolesOf(IRoleDescription role) throws ExternalToolException;
 
 	/**
-	 * @return a set containing all subproperties of a given OWL property
+	 * @return a set containing all direct subproperties of a given role
 	 */
-	public Set<IAtomicConcept> descendantPropertiesOf(IRoleDescription property) throws ExternalToolException;
+	public Set<IAtomicRole> directSubRolesOf(IRoleDescription role) throws ExternalToolException;
 
 	/**
-	 * @return a set containing all direct subproperties of a given OWL property
+	 * @return a set containing all superproperties of a given role
 	 */
-	public Set<IRoleDescription> subPropertiesOf(IRoleDescription property) throws ExternalToolException;
+	public Set<IAtomicRole> superRolesOf(IRoleDescription role) throws ExternalToolException;
 
 	/**
-	 * @return a set containing all superproperties of a given OWL property
+	 * @return a set containing all direct superproperties of a given role
 	 */
-	public Set<IRoleDescription> ancestorPropertiesOf(IRoleDescription property) throws ExternalToolException;
+	public Set<IAtomicRole> directSuperRolesOf(IRoleDescription role) throws ExternalToolException;
 
 	/**
-	 * @return a set containing all direct superproperties of a given OWL property
+	 * @return a set containing all properties equivalent to the given role
 	 */
-	public Set<IRoleDescription> superPropertiesOf(IRoleDescription property) throws ExternalToolException;
+	public Set<IAtomicRole> equivalentRolesOf(IRoleDescription role) throws ExternalToolException;
 
 	/**
-	 * @return a set containing all properties equivalent to the given property
+	 * @return a set containing all properties inverse to the given role
 	 */
-	public Set<IRoleDescription> equivalentPropertiesOf(IRoleDescription property) throws ExternalToolException;
+	public Set<IAtomicRole> inverseRolesOf(IRoleDescription role) throws ExternalToolException;
 
 	/**
-	 * @return a set containing all properties inverse to the given property
+	 * @return a set containing the domains of the given role
 	 */
-	public Set<IRoleDescription> inversePropertiesOf(IRoleDescription property) throws ExternalToolException;
+	public Set<IConceptDescription> domainsOf(IRoleDescription role) throws ExternalToolException;
 
 	/**
-	 * @return a set containing the domains of the given property
+	 * @return a set containing the ranges of the given role
 	 */
-	public Set<IConceptDescription> domainsOf(IRoleDescription property) throws ExternalToolException;
-
-	/**
-	 * @return a set containing the ranges of the given property
-	 */
-	public Set<IConceptDescription> rangesOf(IRoleDescription property) throws ExternalToolException;
+	public Set<IConceptDescription> rangesOf(IRoleDescription role) throws ExternalToolException;
 
 	/**
 	 * @return a map containing all data properties and for each a set containing all its values
 	 */
-	public Map<IRoleDescription, Set<ITerm>> getDataPropertyValues(IIndividual individual) throws ExternalToolException;
+	public Map<IAtomicRole, Set<ITerm>> getDataRoleValues(IIndividual subject) throws ExternalToolException;
 
 	/**
 	 * @return a map containing all object properties and for each a set containing all its values
 	 */
-	public Map<IRoleDescription, Set<ITerm>> getObjectPropertyValues(IIndividual individual)
+	public Map<IAtomicRole, Set<ITerm>> getObjectRoleValues(IIndividual subject)
 			throws ExternalToolException;
 
 	/**
-	 * @return a map containing all individuals who have values for a specified object property and for each a set
+	 * @return a map containing all individuals who have values for a specified object role and for each a set
 	 *         containing all its values
 	 */
-	public Map<IRoleDescription, Set<ITerm>> getPropertyValues(IRoleDescription property) throws ExternalToolException;
+	public Map<IIndividual, Set<ITerm>> getRoleValues(IRoleDescription role) throws ExternalToolException;
 
 	/**
-	 * @return true if the given subject individual has the given object property with the given object individual as
+	 * @return true if the given subject individual has the given object role with the given object individual as
 	 *         value
 	 * @throws ExternalToolException
 	 */
-	public boolean hasPropertyValue(IIndividual subject, IRoleDescription property, IIndividual object)
+	public boolean hasRoleValue(IIndividual subject, IRoleDescription role, IIndividual object)
 			throws ExternalToolException;
 
 	/**
-	 * @return true if the given subject individual has the given data property with the given data value as value
+	 * @return true if the given subject individual has the given data role with the given data value as value
 	 * @throws ExternalToolException
 	 */
-	public boolean hasPropertyValue(IIndividual subject, IRoleDescription property, ITerm object)
+	public boolean hasRoleValue(IIndividual subject, IRoleDescription role, ITerm object)
 			throws ExternalToolException;
 
 	/**
-	 * @return individual value of the given individual and object property
+	 * @return individual value of the given individual and object role
 	 * @throws ExternalToolException
 	 */
-	public IIndividual getObjectPropertyValue(IIndividual subject, IRoleDescription property)
+	public IIndividual getObjectRoleValue(IIndividual subject, IRoleDescription role)
 			throws ExternalToolException;
 
 	/**
-	 * @return data value of the given individual and data property
+	 * @return data value of the given individual and data role
 	 * @throws ExternalToolException
 	 */
-	public ITerm getDataPropertyValue(IIndividual subject, IRoleDescription property) throws ExternalToolException;
+	public ITerm getDataRoleValue(IIndividual subject, IRoleDescription role) throws ExternalToolException;
 
 	/**
-	 * @return set containing individual values of the given individual and object property
+	 * @return set containing individual values of the given individual and object role
 	 * @throws ExternalToolException
 	 */
-	public Set<ITerm> getObjectPropertyValues(IIndividual subject, IRoleDescription property)
+	public Set<ITerm> getObjectRoleValues(IIndividual subject, IRoleDescription role)
 			throws ExternalToolException;
 
 	/**
-	 * @return set containing data values of the given individual and data property
+	 * @return set containing data values of the given individual and data role
 	 * @throws ExternalToolException
 	 */
-	public Set<ITerm> getDataPropertyValues(IIndividual subject, IRoleDescription property)
+	public Set<ITerm> getDataRoleValues(IIndividual subject, IRoleDescription role)
 			throws ExternalToolException;
 
 }
