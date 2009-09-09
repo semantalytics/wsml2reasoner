@@ -378,6 +378,42 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 	public void visitConjunction(Conjunction expr) {
 		expr.getLeftOperand().accept(this);
 		expr.getRightOperand().accept(this);
+
+		// Check if this is a Concept or Role Intersection 
+		IAtom atom1 = popAtom();
+		IAtom atom2 = popAtom();
+
+		// If they are not equal it is not, therefore push again
+		if (!(atom1.getTuple().equals(atom2.getTuple()))) {
+			pushAtom(atom1);
+			pushAtom(atom2);
+		} else {
+			if (atom1.getDescription() instanceof IConceptDescription) {
+				if (atom2.getDescription() instanceof IConceptDescription) {
+					// Create Concept Intersection
+					IDescription conceptIntersection = BASIC.createIntersectionConcept(
+							(IConceptDescription) atom1.getDescription(),
+							(IConceptDescription) atom2.getDescription()
+							);
+					
+					pushAtom(BASIC.createAtom(conceptIntersection, atom1.getTuple()));
+				} else {
+					throw new RuntimeException("Descriptions of conjunction " + expr + " must be equal!");
+				}
+			} else if (atom1.getDescription() instanceof IRoleDescription) {
+				if (atom2.getDescription() instanceof IRoleDescription) {
+					// Create Concept Intersection
+					IDescription roleIntersection = BASIC.createIntersectionRole(
+							(IRoleDescription) atom1.getDescription(),
+							(IRoleDescription) atom2.getDescription()
+							);
+					
+					pushAtom(BASIC.createAtom(roleIntersection, atom1.getTuple()));
+				} else {
+					throw new RuntimeException("Descriptions of conjunction " + expr + " must be equal!");
+				}
+			}
+		}
 	}
 
 	@Override
