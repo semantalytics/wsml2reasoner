@@ -68,7 +68,9 @@ import org.deri.iris.api.terms.concrete.IHexBinary;
 import org.deri.iris.api.terms.concrete.IIntegerTerm;
 import org.deri.iris.api.terms.concrete.IIri;
 import org.deri.iris.api.terms.concrete.ISqName;
+import org.deri.iris.api.terms.concrete.IText;
 import org.deri.iris.api.terms.concrete.ITime;
+import org.deri.iris.api.terms.concrete.IXMLLiteral;
 import org.deri.iris.api.terms.concrete.IYearMonthDuration;
 import org.deri.iris.builtins.datatype.IsBase64BinaryBuiltin;
 import org.deri.iris.builtins.datatype.IsBooleanBuiltin;
@@ -97,6 +99,7 @@ import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.DataValue;
+import org.omwg.ontology.RDFDataType;
 import org.omwg.ontology.Variable;
 import org.omwg.ontology.WsmlDataType;
 import org.omwg.ontology.XmlSchemaDataType;
@@ -280,6 +283,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 	final static String TEXT_COMPARE = Constants.WSML_NAMESPACE + "textCompare";						// RIF : func:text-compare
 	final static String TEXT_LENGTH = Constants.WSML_NAMESPACE + "textLength";							// RIF : func:text-length
     
+	@SuppressWarnings("unchecked")
 	public AbstractIrisFacade(final FactoryContainer factory, final Map<String, Object> config) {
         DATA_FACTORY = factory.getWsmlDataFactory();
         WSMO_FACTORY = factory.getWsmoFactory();
@@ -1022,7 +1026,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         else if (t.equals(XmlSchemaDataType.XSD_DAYTIMEDURATION)) {
         	 final ComplexDataValue cv = (ComplexDataValue) v;
              return CONCRETE.createDayTimeDuration(true, getIntFromValue(cv, 0), getIntFromValue(cv, 1), getIntFromValue(cv, 2),
-            				getIntFromValue(cv, 3));
+            				getDoubleFromValue(cv, 3));
         }
         else if (t.equals(XmlSchemaDataType.XSD_YEARMONTHDURATION)) {
        	 	final ComplexDataValue cv = (ComplexDataValue) v;
@@ -1030,6 +1034,15 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         }
         else if (t.equals(WsmlDataType.WSML_STRING) || t.equals(XmlSchemaDataType.XSD_STRING)) {
             return TERM.createString(v.toString());
+        }
+        // RDF Datatypes
+        else if (t.equals(RDFDataType.RDF_TEXT)) {
+        	final ComplexDataValue cv = (ComplexDataValue) v;
+            return CONCRETE.createText(getStringFromValue(cv, 0), getStringFromValue(cv, 1));
+        }
+        else if (t.equals(RDFDataType.RDF_XMLLITERAL)) {
+        	final ComplexDataValue cv = (ComplexDataValue) v;
+            return CONCRETE.createText(getStringFromValue(cv, 0), getStringFromValue(cv, 1));
         }
         throw new IllegalArgumentException("Can't convert a value of type " + t);
     }
@@ -1046,6 +1059,20 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         assert pos >= 0;
 
         return Integer.parseInt(getFieldValue(value, pos));
+    }
+    
+    /**
+     * Returns the String value of a ComplexDataValue at a given position.
+     * 
+     * @param value the complex data value from where to get the String
+     * @param pos the index of the String
+     * @return the extracted and converted String
+     */
+    private static String getStringFromValue(final ComplexDataValue value, int pos) {
+        assert value != null;
+        assert pos >= 0;
+
+        return new String(getFieldValue(value, pos).toString());
     }
 
     /**
@@ -1178,6 +1205,27 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         }
         else if (t instanceof IDayTimeDuration) {
        	 	return DATA_FACTORY.createDayTimeDuration(((IDayTimeDuration) t).getDay(), ((IDayTimeDuration) t).getHour(), ((IDayTimeDuration) t).getMinute(), ((IDayTimeDuration) t).getSecond());
+        }
+        else if (t instanceof IXMLLiteral) {
+        	// checks if there is a language string
+			String lang;
+			if (((IXMLLiteral) t).getLang() == null) {
+				lang = "";
+			} else {
+				lang = ((IXMLLiteral) t).getLang();
+			}
+			return DATA_FACTORY.createXMLLiteral(((IXMLLiteral) t).getString(),
+					lang);
+        }
+        else if (t instanceof IText) {
+        	// checks if there is a language string
+        	String lang;
+			if (((IText) t).getLang() == null) {
+				lang = "";
+			} else {
+				lang = ((IText) t).getLang();
+			}
+        	return DATA_FACTORY.createText(((IText) t).getString(),lang);
         }
         else if (t instanceof ISqName) {
             // couldn't find this type in wsmo4j
