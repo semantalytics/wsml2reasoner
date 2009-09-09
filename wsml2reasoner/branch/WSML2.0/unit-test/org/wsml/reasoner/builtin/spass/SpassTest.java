@@ -37,7 +37,7 @@ public class SpassTest extends TestCase{
      }
 
     public void testConjunctionDisjunction() throws Exception{
-    	LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
+    	LogicalExpressionParser leParser = new WsmlLogicalExpressionParser(nsContainer);
         LogicalExpression le = leParser.parse(
             "a and b or c ");
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
@@ -60,7 +60,7 @@ public class SpassTest extends TestCase{
     }
     
     private void check(String wsml, String fol) throws Exception{
-        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
+        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser(nsContainer);
         LogicalExpression le = leParser.parse(wsml);
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);

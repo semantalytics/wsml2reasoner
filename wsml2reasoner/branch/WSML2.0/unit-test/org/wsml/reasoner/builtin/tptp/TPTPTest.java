@@ -35,7 +35,7 @@ public class TPTPTest extends TestCase{
         IRI i = wsmoManager.getWsmoFactory().createIRI("foo:bar#");
         nsContainer = wsmoManager.getWsmoFactory().createOntology(i);
         nsContainer.setDefaultNamespace(i);
-        leParser = new WsmlLogicalExpressionParser();
+        leParser = new WsmlLogicalExpressionParser(nsContainer);
     }
 
     public void testatom() throws Exception{
