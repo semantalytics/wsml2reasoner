@@ -65,6 +65,10 @@ ontology _"http://www.example.org/example/location"
                         dc#description hasValue "Extension of the city in square kilometers"
                   endAnnotations
             zipcodes ofType wsml#string
+            
+      concept bigCity subConceptOf city
+      
+      concept capital subConceptOf bigCity
 
       concept state //subConceptOf geo#state
             annotations

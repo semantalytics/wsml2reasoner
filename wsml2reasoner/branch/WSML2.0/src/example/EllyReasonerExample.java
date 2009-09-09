@@ -20,11 +20,15 @@ package example;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Set;
 
+import org.omwg.ontology.Concept;
+import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.DLReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
+import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.FactoryContainer;
 import org.wsmo.wsml.Parser;
@@ -73,6 +77,18 @@ public class EllyReasonerExample {
         /* **********
          * Query
          * **********/
+        
+        IRI identifier = container.getWsmoFactory().createIRI("http://www.example.org/example/country");
+        Set<Instance> instances = reasoner.getInstances(container.getWsmoFactory().createConcept(identifier));
+        
+        System.out.println("Instances of country:");
+        System.out.println(instances);
+        
+        identifier = container.getWsmoFactory().createIRI("http://www.example.org/example/city");
+        Set<Concept> subConcepts = reasoner.getSubConcepts(container.getWsmoFactory().createConcept(identifier));
+        
+        System.out.println("SubConcepts of country:");
+        System.out.println(subConcepts);
         
 //      String queryString = "?x memberOf ?y";
 //      String queryString = "?x = ?y";
