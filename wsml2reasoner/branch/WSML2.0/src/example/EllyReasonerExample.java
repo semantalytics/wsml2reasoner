@@ -49,7 +49,8 @@ public class EllyReasonerExample {
     public static void main(String[] args) {
         EllyReasonerExample ex = new EllyReasonerExample();
         try {
-            ex.doTestRun();
+        	ex.doTestRun();
+        	ex.doHumanTestRun();
             System.exit(0);
         }
         catch (Throwable e) {
@@ -90,30 +91,52 @@ public class EllyReasonerExample {
         System.out.println("SubConcepts of country:");
         System.out.println(subConcepts);
         
-//      String queryString = "?x memberOf ?y";
-//      String queryString = "?x = ?y";
-//      String queryString = "?x = ?y :- ?x[name hasValue ?n1] and ?y[name hasValue ?n2] and ?n1=?n2.";
-//
-//      LogicalExpression query = new WsmlLogicalExpressionParser(exampleOntology, container).parse(queryString);
-
-//        // Execute query request
-//        Set<Map<Variable, Term>> result = reasoner.executeQuery(query);
-//
-//        // print out the results:
-//        System.out.println("The query '" + query + "' has the following results:");
-//        for (Map<Variable, Term> vBinding : result) {
-//            for (Variable var : vBinding.keySet()) {
-//                System.out.print(var + ": " + termToString(vBinding.get(var), exampleOntology) + "\t ");
-//            }
-//            System.out.println();
-//        }
     }
 
+    
+    void doHumanTestRun() throws Exception {
+
+    	FactoryContainer container = new WsmlFactoryContainer();
+    	
+        Ontology exampleOntology = loadOntology("example/human.wsml");
+        if (exampleOntology == null)
+            return;
+
+        // get A reasoner
+        DLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().createDL2Reasoner(container);
+        
+        // Register ontology
+        reasoner.registerOntology(exampleOntology);
+        // reasoner.registerOntologyNoVerification(exampleOntology);
+
+        /* **********
+         * Query
+         * **********/
+        
+        IRI identifier = container.getWsmoFactory().createIRI("http://www.example.org/example/Human");
+        Set<Instance> instances = reasoner.getInstances(container.getWsmoFactory().createConcept(identifier));
+        
+        System.out.println("Instances of Human:");
+        System.out.println(instances);
+        
+        identifier = container.getWsmoFactory().createIRI("http://www.example.org/example/Human");
+        Set<Concept> subConcepts = reasoner.getSubConcepts(container.getWsmoFactory().createConcept(identifier));
+        
+        System.out.println("SubConcepts of Human:");
+        System.out.println(subConcepts);
+        
+        identifier = container.getWsmoFactory().createIRI("http://www.example.org/example/hasName");
+        System.out.println("Concepts of hasName: " + reasoner.getConceptsOf(identifier));
+        System.out.println("RangesOfConstraintAttribute of hasName: " + reasoner.getRangesOfConstraintAttribute(identifier));
+        System.out.println("RangesOfInferingAttribute of hasName: " + reasoner.getRangesOfInferingAttribute(identifier));
+        System.out.println("ConstraintAttributeInstances of hasName: " + reasoner.getConstraintAttributeInstances(identifier));
+    }
+    
     /**
      * Utility Method to get the object model of a wsml ontology
      * 
      * @param file
-     *            location of source file (It will be attemted to be loaded from
+     *            location of source file (It will be attempted to be loaded from
      *            current class path)
      * @return object model of ontology at file location
      */
