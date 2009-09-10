@@ -192,30 +192,43 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
         Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
 
-        // process range types:
-        for (Type type : attribute.listTypes()) {
-            // determine Id of range type:
-            Identifier typeID;
-            if (type instanceof Concept) {
-                typeID = ((Concept) type).getIdentifier();
-            }
-            else if (type instanceof SimpleDataType) {
-                typeID = ((SimpleDataType) type).getIdentifier();
-            }
-            else {
-                typeID = ((ComplexDataType) type).getIdentifier();
-            }
+		// process range types:
+		if (attribute.isConstraining()) {
+			for (Type type : attribute.listConstrainingTypes()) {
+				// determine Id of range type:
+				Identifier typeID;
+				if (type instanceof Concept) {
+					typeID = ((Concept) type).getIdentifier();
+				} else if (type instanceof SimpleDataType) {
+					typeID = ((SimpleDataType) type).getIdentifier();
+				} else {
+					typeID = ((ComplexDataType) type).getIdentifier();
+				}
 
-            // create an appropriate molecule per range type:
-            if (attribute.isConstraining()) {
-                LogicalExpression ofTypeConstraint = leFactory.createAttributeConstraint(conceptID, attributeID, typeID);
-                resultExpressions.add(ofTypeConstraint);
-                proclaimAxiomID(ofTypeConstraint, AnonymousIdUtils.getNewOfTypeIri());
-            }
-            else {
-                resultExpressions.add(leFactory.createAttributeInference(conceptID, attributeID, typeID));
-            }
-        }
+				// create an appropriate molecule per range type:
+				LogicalExpression ofTypeConstraint = leFactory
+						.createAttributeConstraint(conceptID, attributeID, typeID);
+				resultExpressions.add(ofTypeConstraint);
+				proclaimAxiomID(ofTypeConstraint, AnonymousIdUtils.getNewOfTypeIri());
+			}
+		}
+
+		if (attribute.isInferring()) {
+			for (Type type : attribute.listInferringTypes()) {
+				// determine Id of range type:
+				Identifier typeID;
+				if (type instanceof Concept) {
+					typeID = ((Concept) type).getIdentifier();
+				} else if (type instanceof SimpleDataType) {
+					typeID = ((SimpleDataType) type).getIdentifier();
+				} else {
+					typeID = ((ComplexDataType) type).getIdentifier();
+				}
+
+				// create an appropriate molecule per range type:
+				resultExpressions.add(leFactory.createAttributeInference(conceptID, attributeID, typeID));
+			}
+		}
 
         // process attribute properties:
         if (attribute.isReflexive()) {

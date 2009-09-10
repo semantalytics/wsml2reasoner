@@ -89,8 +89,7 @@ public class DLUtilitiesTest extends TestCase {
 
 		Attribute badAttribute = badConcept.createAttribute(wsmoFactory
 				.createIRI(ns + "a"));
-		badAttribute.addType(dataFactory
-				.createDataType(WsmlDataType.WSML_STRING));
+		badAttribute.addInferringType(dataFactory.createDataType(WsmlDataType.WSML_STRING));
 
 		Instance i = new InstanceImpl(wsmoFactory.createIRI(ns + "aa"));
 		i.addConcept(badConcept);

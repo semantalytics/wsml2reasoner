@@ -85,17 +85,17 @@ public class DLBasedWSMLReasonerTest extends TestCase {
 		hasRelativeAttr = humanConcept.createAttribute(wsmoFactory.createIRI(ns
 				+ "urn://hasRelative"));
 
-		hasRelativeAttr.addType(humanConcept);
+		hasRelativeAttr.addInferringType(humanConcept);
 		locationConcept = wsmoFactory.createConcept(wsmoFactory.createIRI(ns
 				+ "urn://Location"));
 
 		hasParentAttr = humanConcept.createAttribute(wsmoFactory.createIRI(ns
 				+ "urn://hasParent"));
-		hasParentAttr.addType(humanConcept);
+		hasParentAttr.addInferringType(humanConcept);
 
 		livesAtAttr = humanConcept.createAttribute(wsmoFactory.createIRI(ns
 				+ "urn://livesAt"));
-		livesAtAttr.addType(locationConcept);
+		livesAtAttr.addInferringType(locationConcept);
 
 		person1 = wsmoFactory.createInstance(wsmoFactory
 				.createIRI("urn://Person1"), humanConcept);
@@ -227,7 +227,7 @@ public class DLBasedWSMLReasonerTest extends TestCase {
 
 		Attribute attr01 = concept01.createAttribute(wsmoFactory.createIRI(ns
 				+ "urn://anAttribute"));
-		attr01.addType(concept01);
+		attr01.addInferringType(concept01);
 		ontology1.addConcept(concept01);
 
 		reasoner.registerOntology(ontology1);
@@ -247,7 +247,7 @@ public class DLBasedWSMLReasonerTest extends TestCase {
 
 		Attribute attr01 = concept01.createAttribute(wsmoFactory.createIRI(ns
 				+ "urn://anAttribute03"));
-		attr01.addType(concept01);
+		attr01.addInferringType(concept01);
 		ontology1.addConcept(concept01);
 
 		OWLOntology owlonto = reasoner.createOWLOntology(ontology1);

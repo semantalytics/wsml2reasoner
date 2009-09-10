@@ -83,7 +83,7 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
         ontology.addConcept(badConcept);
         
         Attribute badAttribute = badConcept.createAttribute(wsmoFactory.createIRI(ns + "a"));
-		badAttribute.addType(dataFactory.createDataType(WsmlDataType.WSML_STRING));
+		badAttribute.addInferringType(dataFactory.createDataType(WsmlDataType.WSML_STRING));
 
 
 		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom01"));

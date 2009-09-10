@@ -115,9 +115,12 @@ public class Relation2AttributeNormalizer implements OntologyNormalizer {
 
                 Attribute attribute = newConcept.createAttribute(relation.getIdentifier());
                 for (Type type : p2.listTypes()) {
-                    attribute.addType(type);
                     if (p2.isConstraining()) {
                         attribute.setConstraining(true);
+                        attribute.addConstrainingType(type);
+                    } else {
+                        attribute.setInferring(true);
+                        attribute.addInferringType(type);
                     }
                 }
             }

@@ -754,7 +754,7 @@ public class BenchmarkOntologyGenerator {
 			Attribute attribute;
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept1.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
-				attribute.addType(concept2);
+				attribute.addConstrainingType(concept2);
 				attribute.setConstraining(true);
 				instance1.addAttributeValue(attribute.getIdentifier(), instance2);
 			}
@@ -869,7 +869,7 @@ public class BenchmarkOntologyGenerator {
 			Attribute attribute;
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept1.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
-				attribute.addType(concept1);
+				attribute.addConstrainingType(concept1);
 				attribute.setConstraining(true);
 				instance1.addAttributeValue(attribute.getIdentifier(), instance2);
 			}
@@ -982,7 +982,7 @@ public class BenchmarkOntologyGenerator {
 			Attribute attribute = null;
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
-				attribute.addType(concept);
+				attribute.addInferringType(concept);
 				attribute.setMinCardinality(0);
 				attribute.setMaxCardinality(1);
 				instance1.addAttributeValue(attribute.getIdentifier(), instance2);
@@ -1091,7 +1091,7 @@ public class BenchmarkOntologyGenerator {
 			Attribute attribute = null;
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
-				attribute.addType(concept);
+				attribute.addInferringType(concept);
 				attribute.setMinCardinality(0);
 				attribute.setMaxCardinality(10);
 				instance1.addAttributeValue(attribute.getIdentifier(), instance2);
@@ -1200,7 +1200,7 @@ public class BenchmarkOntologyGenerator {
 			Attribute attribute = null;
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
-				attribute.addType(wsmoFactory.createConcept(wsmoFactory.createIRI(ns, "c2")));
+				attribute.addInferringType(wsmoFactory.createConcept(wsmoFactory.createIRI(ns, "c2")));
 				attribute.setMinCardinality(1);
 				attribute.setMaxCardinality(Integer.MAX_VALUE);
 				instance1.addAttributeValue(attribute.getIdentifier(), instance2);
@@ -1300,7 +1300,7 @@ public class BenchmarkOntologyGenerator {
 			ontology.addConcept(concept1);
 			ontology.addConcept(concept2);
 			Attribute attribute1 = concept2.createAttribute(wsmoFactory.createIRI(ns, "a0"));
-			attribute1.addType(concept1);
+			attribute1.addInferringType(concept1);
 			
 			// add instances
 			Instance instance1 = wsmoFactory.createInstance(
@@ -1316,7 +1316,7 @@ public class BenchmarkOntologyGenerator {
 			Attribute attribute = null;
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept1.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
-				attribute.addType(concept2);
+				attribute.addInferringType(concept2);
 				attribute.setInverseOf(attribute1.getIdentifier());
 				instance2.addAttributeValue(attribute1.getIdentifier(), instance1);
 			}
@@ -1413,7 +1413,7 @@ public class BenchmarkOntologyGenerator {
 			Concept concept = wsmoFactory.createConcept(wsmoFactory.createIRI(ns, "c1"));
 			ontology.addConcept(concept);
 			Attribute attribute1 = concept.createAttribute(wsmoFactory.createIRI(ns, "a0"));
-			attribute1.addType(concept);
+			attribute1.addInferringType(concept);
 			attribute1.setTransitive(true);
 			
 			// add instances
@@ -1436,7 +1436,7 @@ public class BenchmarkOntologyGenerator {
 			Attribute attribute = null;
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
-				attribute.addType(concept);
+				attribute.addInferringType(concept);
 				attribute.setTransitive(true);
 				instance1.addAttributeValue(attribute.getIdentifier(), instance2);
 				instance2.addAttributeValue(attribute.getIdentifier(), instance3);
@@ -1534,7 +1534,7 @@ public class BenchmarkOntologyGenerator {
 			Concept concept = wsmoFactory.createConcept(wsmoFactory.createIRI(ns, "c1"));
 			ontology.addConcept(concept);
 			Attribute attribute1 = concept.createAttribute(wsmoFactory.createIRI(ns, "a0"));
-			attribute1.addType(concept);
+			attribute1.addInferringType(concept);
 			attribute1.setSymmetric(true);
 			
 			// add instances
@@ -1552,7 +1552,7 @@ public class BenchmarkOntologyGenerator {
 			Attribute attribute = null;
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
-				attribute.addType(concept);
+				attribute.addInferringType(concept);
 				attribute.setSymmetric(true);
 				instance1.addAttributeValue(attribute.getIdentifier(), instance2);
 			}
@@ -1656,7 +1656,7 @@ public class BenchmarkOntologyGenerator {
 			Attribute attribute = null;
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
-				attribute.addType(concept);
+				attribute.addInferringType(concept);
 				attribute.setReflexive(true);
 			}
 

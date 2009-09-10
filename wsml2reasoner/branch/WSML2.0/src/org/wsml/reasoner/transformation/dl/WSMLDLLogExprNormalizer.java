@@ -149,10 +149,11 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
             if (concept.listAttributes().size() > 0) {
                 for (Attribute attribute : concept.listAttributes()){
                     Attribute newAttribute = newConcept.createAttribute(attribute.getIdentifier());
-                    if (attribute.listTypes().size() > 0) {
-                        for (Type type : attribute.listTypes()){
-                            newAttribute.addType(type);
-                        }
+                    for (Type type : attribute.listConstrainingTypes()){
+                        newAttribute.addConstrainingType(type);
+                    }
+                    for (Type type : attribute.listInferringTypes()){
+                        newAttribute.addInferringType(type);
                     }
                 }
             }

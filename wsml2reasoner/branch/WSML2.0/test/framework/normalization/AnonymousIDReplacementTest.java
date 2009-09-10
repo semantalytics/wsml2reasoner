@@ -62,9 +62,9 @@ public class AnonymousIDReplacementTest extends BaseNormalizationTest
         Concept manConcept = wsmoFactory.createConcept(wsmoFactory.createIRI("urn://Man"));
         Concept locationConcept = wsmoFactory.createConcept(wsmoFactory.createIRI("urn://Location"));
         Attribute hasParentAttr = manConcept.createAttribute(wsmoFactory.createIRI("urn://hasParent"));
-        hasParentAttr.addType(manConcept);
+        hasParentAttr.addInferringType(manConcept);
         Attribute livesAtAttr = manConcept.createAttribute(wsmoFactory.createIRI("urn://livesAt"));
-        livesAtAttr.addType(locationConcept);
+        livesAtAttr.addInferringType(locationConcept);
         Instance aragorn = wsmoFactory.createInstance(wsmoFactory.createIRI("urn://Aragorn"), manConcept);
         Instance arathorn = wsmoFactory.createInstance(wsmoFactory.createIRI("urn://Arathorn"), manConcept);
         Instance elendil = wsmoFactory.createInstance(wsmoFactory.createIRI("urn://Elendil"), manConcept);

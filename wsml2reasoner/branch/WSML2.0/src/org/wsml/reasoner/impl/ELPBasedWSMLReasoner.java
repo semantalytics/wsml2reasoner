@@ -222,7 +222,7 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 		for (Ontology ontology : registeredOntologies) {
 			for (Concept concept : ontology.listConcepts()) {
 				for (Attribute attribute : concept.listAttributes()) {
-					if (!attribute.isConstraining()) { // if not constraining => is inferring
+					if (attribute.isInferring()) { 
 						inferringAttributes.add(attribute);
 					}
 				}
@@ -636,7 +636,7 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 		for (Ontology ontology : registeredOntologies) {
 			for (Concept concept : ontology.listConcepts()) {
 				for (Attribute attribute : concept.listAttributes()) {
-					if (attribute.isConstraining() && attribute.getIdentifier().equals(attributeId)) {
+					if (attribute.isConstraining() && attribute.getIdentifier().equals(attributeId)) { // TODO why constrainging?
 						Identifier inverseId = attribute.getInverseOf();
 						if (inverseId instanceof IRI) {
 							inverseAttributeIRIs.add((IRI) inverseId);
@@ -658,7 +658,7 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 			for (Concept concept : ontology.listConcepts()) {
 				for (Attribute attribute : concept.listAttributes()) {
 					if (attribute.isConstraining() && attribute.getIdentifier().equals(attributeId)) {
-						ranges.addAll(attribute.listTypes());
+						ranges.addAll(attribute.listConstrainingTypes());
 					}
 				}
 			}
@@ -682,8 +682,8 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 		for (Ontology ontology : registeredOntologies) {
 			for (Concept concept : ontology.listConcepts()) {
 				for (Attribute attribute : concept.listAttributes()) {
-					if ((!attribute.isConstraining()) && attribute.getIdentifier().equals(attributeId)) {
-						ranges.addAll(attribute.listTypes());
+					if (attribute.isInferring() && attribute.getIdentifier().equals(attributeId)) {
+						ranges.addAll(attribute.listInferringTypes());
 					}
 				}
 			}
