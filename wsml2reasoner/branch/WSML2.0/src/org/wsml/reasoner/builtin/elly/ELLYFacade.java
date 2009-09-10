@@ -128,8 +128,7 @@ public class ELLYFacade implements ELPReasonerFacade {
 
 	@Override
 	public Set<IConceptDescription> domainsOf(IRoleDescription role) throws ExternalToolException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new ExternalToolException("domainsOf(" + role.toString() + ") not supported!");
 	}
 
 	@Override
@@ -364,13 +363,12 @@ public class ELLYFacade implements ELPReasonerFacade {
 
 	@Override
 	public Set<IConceptDescription> rangesOf(IRoleDescription role) throws ExternalToolException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new ExternalToolException("rangesOf(" + role.toString() + ") not supported!");
 	}
 
 	@Override
 	public void register(IRuleBase ruleBase) throws ExternalToolException {
-		System.out.println("Registering rule base:\n" + ruleBase);
+//		System.out.println("Registering rule base:\n" + ruleBase);
 
 		try {
 			reasoner.register(ruleBase);
