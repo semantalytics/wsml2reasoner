@@ -348,6 +348,7 @@ public class DLBasedWSMLReasoner implements DLReasoner {
     }
 
     private void getAllOntologies(Ontology o, Set<Ontology> ontologies) {
+    	if (o.getImportedOntologies() != null)
         for (Ontology imported : o.getImportedOntologies().listOntologies()) {
             if (!ontologies.contains(imported)) {
                 ontologies.add(imported);
