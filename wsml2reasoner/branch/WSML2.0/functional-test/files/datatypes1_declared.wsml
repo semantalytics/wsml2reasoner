@@ -44,7 +44,7 @@ concept anEntity
 	aXSD_Duration ofType xsd#duration
 	
 	aDateTime    ofType wsml#dateTime
-	a_DateTime   ofType _dateTime
+	a_DateTime   ofType _datetime
 	aXSD_DateTime ofType xsd#dateTime
 	
 	aTime        ofType wsml#time
@@ -85,10 +85,10 @@ concept anEntity
 	
 	// RDF Datatypes
 	aRDFText     ofType rdf#Text
-	a_RDFText    ofType _rdfText
+	a_RDFText    ofType _rdftext
 	
 	aRDF_XMLLiteral ofType rdf#XMLLiteral
-	a_RDF_XMLLiteral ofType _xmlLiteral
+	a_RDF_XMLLiteral ofType _xmlliteral
 	
 	// new XSD Datatypes
 	aYearMonthDuration ofType xsd#yearMonthDuration
@@ -129,7 +129,7 @@ instance anInstance memberOf anEntity
 	
 	
 	aDateTime    hasValue wsml#dateTime( 1981, 12, 31, 23, 59, 58.0 )
-	a_DateTime   hasValue _dateTime( 1981, 12, 31, 23, 59, 58.0 )           // specification ?
+	a_DateTime   hasValue _datetime( 1981, 12, 31, 23, 59, 58.0 )           // not like in the specification - to be consistent
 	aXSD_DateTime hasValue xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )
 	
 	aTime        hasValue wsml#time( 23, 59, 58.0 )
