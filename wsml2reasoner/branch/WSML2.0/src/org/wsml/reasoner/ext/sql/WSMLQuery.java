@@ -163,7 +163,7 @@ public class WSMLQuery {
         assert sqlResult != null;
 
         FactoryContainer factory = new WsmlFactoryContainer();
-		DataFactory wsmlDataFactory = factory.getWsmlDataFactory();
+		DataFactory wsmlDataFactory = factory.getXmlDataFactory();
         LogicalExpressionFactory l = factory.getLogicalExpressionFactory();
         ResultSetMetaData m = sqlResult.getMetaData();
         int columns = m.getColumnCount();

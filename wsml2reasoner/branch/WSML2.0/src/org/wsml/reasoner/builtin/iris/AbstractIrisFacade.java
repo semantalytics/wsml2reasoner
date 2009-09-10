@@ -285,7 +285,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
     
 	@SuppressWarnings("unchecked")
 	public AbstractIrisFacade(final FactoryContainer factory, final Map<String, Object> config) {
-        DATA_FACTORY = factory.getWsmlDataFactory();
+        DATA_FACTORY = factory.getXmlDataFactory();
         WSMO_FACTORY = factory.getWsmoFactory();
         LOGIC_FACTORY = factory.getLogicalExpressionFactory();
 

@@ -229,33 +229,33 @@ public class MinsSymbolMap {
             // BooleanTerms
             if (term.toString().contains("boolean")) {
                 if (term.toString().contains("true")) {
-                    return factory.getWsmlDataFactory().createBoolean(true);
+                    return factory.getXmlDataFactory().createBoolean(true);
                 }
                 else {
-                    return factory.getWsmlDataFactory().createBoolean(false);
+                    return factory.getXmlDataFactory().createBoolean(false);
                 }
             }
-            return factory.getWsmlDataFactory().createString(((StringTerm) term).s);
+            return factory.getXmlDataFactory().createString(((StringTerm) term).s);
         }
         else if (term.isNumTerm()) {
             if (term instanceof IntegerTerm) {
-                return factory.getWsmlDataFactory().createInteger(((IntegerTerm) term).zahl + "");
+                return factory.getXmlDataFactory().createInteger(((IntegerTerm) term).zahl + "");
             }
             if (term instanceof DateTerm) {
                 DateTerm date = (DateTerm) term;
-                return factory.getWsmlDataFactory().createDate(date.cal);
+                return factory.getXmlDataFactory().createDate(date.cal);
             }
             // org.deri.mins.terms.NumTerm numTerm =
             // (org.deri.mins.terms.NumTerm)term;
-            return factory.getWsmlDataFactory().createDecimal(term.toString());
+            return factory.getXmlDataFactory().createDecimal(term.toString());
         }
         else if (term instanceof BooleanTerm) {
             boolean value = ((BooleanTerm) term).getValue();
-            return factory.getWsmlDataFactory().createBoolean(value);
+            return factory.getXmlDataFactory().createBoolean(value);
         }
         else
             System.err.println("ERROR - UNKNOWN MINS TERM: " + term + " " + term.getClass());
-        return factory.getWsmlDataFactory().createString("unknown");
+        return factory.getXmlDataFactory().createString("unknown");
         // throw new RuntimeException("Unknown Term Symbol:"+term);
     }
 }

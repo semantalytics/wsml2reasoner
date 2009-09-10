@@ -72,7 +72,7 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 		super.setUp();
 		FactoryContainer factory = new WsmlFactoryContainer(); 
 		wsmoFactory = factory.getWsmoFactory();
-		dataFactory = factory.getWsmlDataFactory();
+		dataFactory = factory.getXmlDataFactory();
         leFactory = factory.getLogicalExpressionFactory();
         
         ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ont"));

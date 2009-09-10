@@ -235,6 +235,6 @@ public class Results
 	   	wsmoManager = new WsmlFactoryContainer();
 	   	leFactory = wsmoManager.getLogicalExpressionFactory();
 	   	wsmoFactory = wsmoManager.getWsmoFactory();
-	   	dataFactory = wsmoManager.getWsmlDataFactory();
+	   	dataFactory = wsmoManager.getXmlDataFactory();
    }
 }

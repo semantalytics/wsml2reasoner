@@ -100,7 +100,7 @@ public class DLBasedWSMLReasoner implements DLReasoner {
         this.factory = factory;
         this.wsmoFactory = this.factory.getWsmoFactory();
         this.leFactory = this.factory.getLogicalExpressionFactory();
-        this.dataFactory = this.factory.getWsmlDataFactory();
+        this.dataFactory = this.factory.getXmlDataFactory();
         
         builtInFacade = createFacade( builtInType );
     }

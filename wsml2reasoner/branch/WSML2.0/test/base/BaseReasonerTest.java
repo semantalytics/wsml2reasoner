@@ -160,7 +160,7 @@ public class BaseReasonerTest extends TestCase {
 
         wsmoFactory = factory.getWsmoFactory();
 
-        dataFactory = factory.getWsmlDataFactory();
+        dataFactory = factory.getXmlDataFactory();
         
     }
 

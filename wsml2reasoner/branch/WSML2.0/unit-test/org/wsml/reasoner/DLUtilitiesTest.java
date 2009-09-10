@@ -64,7 +64,7 @@ public class DLUtilitiesTest extends TestCase {
 		super.setUp();
 		factory = new WsmlFactoryContainer();
 		wsmoFactory = factory.getWsmoFactory();
-		dataFactory = factory.getWsmlDataFactory();
+		dataFactory = factory.getXmlDataFactory();
 		leFactory = factory.getLogicalExpressionFactory();
 
 		ontology = wsmoFactory

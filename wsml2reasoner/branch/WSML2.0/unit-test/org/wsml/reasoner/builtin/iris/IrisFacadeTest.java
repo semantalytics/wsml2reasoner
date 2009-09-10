@@ -55,7 +55,7 @@ public class IrisFacadeTest extends TestCase {
 
 	public void testConvertTermFromWsmo4jToIris() {
 		final WsmoFactory WF = FACTORY.getWsmoFactory();
-		final DataFactory DF = FACTORY.getWsmlDataFactory();
+		final DataFactory DF = FACTORY.getXmlDataFactory();
 		final DataFactory xmlDataFactory = FACTORY.getXmlDataFactory();
 		final LogicalExpressionFactory LF = FACTORY.getLogicalExpressionFactory( );
 		final ITermFactory TF = org.deri.iris.factory.Factory.TERM;
@@ -87,7 +87,7 @@ public class IrisFacadeTest extends TestCase {
 
 	public void testConvertTermFromIrisToWsmo4j() {
 		final WsmoFactory WF = FACTORY.getWsmoFactory();
-		final DataFactory DF = FACTORY.getWsmlDataFactory();
+		final DataFactory DF = FACTORY.getXmlDataFactory();
 		final ITermFactory TF = org.deri.iris.factory.Factory.TERM;
 		DataFactory xmlDataFactory = FACTORY.getXmlDataFactory();
 		final LogicalExpressionFactory LF = FACTORY.getLogicalExpressionFactory( );
@@ -165,7 +165,7 @@ public class IrisFacadeTest extends TestCase {
 	}
 	public void testBuiltinsExtended() {
 		final WsmoFactory wsmoFactory = FACTORY.getWsmoFactory();
-		final DataFactory DF = FACTORY.getWsmlDataFactory( );
+		final DataFactory DF = FACTORY.getXmlDataFactory( );
 //		final ITermFactory TF = org.deri.iris.factory.Factory.TERM;
 		final IConcreteFactory CF = org.deri.iris.factory.Factory.CONCRETE;
 		final IrisStratifiedFacade IF = new IrisStratifiedFacade( new WsmlFactoryContainer(), new HashMap<String, Object>() );
@@ -175,7 +175,7 @@ public class IrisFacadeTest extends TestCase {
 
 	public void testLiteral2Atom() {
 		final WsmoFactory wsmoFactory = FACTORY.getWsmoFactory();
-		final DataFactory DF = FACTORY.getWsmlDataFactory( );
+		final DataFactory DF = FACTORY.getXmlDataFactory( );
 		final DataFactory xmlDataFactory = FACTORY.getXmlDataFactory();
 		final LogicalExpressionFactory LF = FACTORY.getLogicalExpressionFactory();
 		final IBasicFactory BF = org.deri.iris.factory.Factory.BASIC;
@@ -196,7 +196,7 @@ public class IrisFacadeTest extends TestCase {
 		final IBasicFactory BF = org.deri.iris.factory.Factory.BASIC;
 		final ITermFactory TF = org.deri.iris.factory.Factory.TERM;
 		final WsmoFactory wsmoFactory = FACTORY.getWsmoFactory();
-		final DataFactory DF = FACTORY.getWsmlDataFactory( );
+		final DataFactory DF = FACTORY.getXmlDataFactory( );
 		final DataFactory xmlDataFactory = FACTORY.getXmlDataFactory();
 		final LogicalExpressionFactory LF = FACTORY.getLogicalExpressionFactory();
 
@@ -216,7 +216,7 @@ public class IrisFacadeTest extends TestCase {
 
 	public void testConvertWsmo4jDataValueToIrisTerm() {
 		final WsmoFactory wsmoFactory = FACTORY.getWsmoFactory();
-		final DataFactory DF = FACTORY.getWsmlDataFactory( );
+		final DataFactory DF = FACTORY.getXmlDataFactory( );
 		final ITermFactory TF = org.deri.iris.factory.Factory.TERM;
 		final IConcreteFactory CF = org.deri.iris.factory.Factory.CONCRETE;
 

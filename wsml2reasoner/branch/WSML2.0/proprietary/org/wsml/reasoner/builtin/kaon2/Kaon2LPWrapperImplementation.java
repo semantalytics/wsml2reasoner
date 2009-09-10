@@ -68,7 +68,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 
 	public Kaon2LPWrapperImplementation( FactoryContainer wsmoManager, final Map<String, Object> config )
 	{
-		df = wsmoManager.getWsmlDataFactory();
+		df = wsmoManager.getXmlDataFactory();
 		wf = wsmoManager.getWsmoFactory();
 		lef = wsmoManager.getLogicalExpressionFactory();
 	}

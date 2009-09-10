@@ -153,7 +153,7 @@ public class BenchmarkOntologyGenerator {
 		FactoryContainer factory = new WsmlFactoryContainer();
 		wsmoFactory = factory.getWsmoFactory();
 		leFactory = factory.getLogicalExpressionFactory();
-		dataFactory = factory.getWsmlDataFactory();
+		dataFactory = factory.getXmlDataFactory();
 		serializer = new WSMLSerializerImpl();
 		
 		BenchmarkOntologyGenerator generator = new BenchmarkOntologyGenerator();

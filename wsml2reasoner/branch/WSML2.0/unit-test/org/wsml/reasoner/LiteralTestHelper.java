@@ -49,7 +49,7 @@ public class LiteralTestHelper {
 
 	protected static final FactoryContainer FACTORY = new WsmlFactoryContainer();
 	protected static final WsmoFactory WF = FACTORY.getWsmoFactory();
-	protected static final DataFactory DF = FACTORY.getWsmlDataFactory();
+	protected static final DataFactory DF = FACTORY.getXmlDataFactory();
 	protected static final IBasicFactory BF = org.deri.iris.factory.Factory.BASIC;
 	protected static final ITermFactory TF = org.deri.iris.factory.Factory.TERM;
 	protected static final DataFactory XF = FACTORY.getXmlDataFactory();

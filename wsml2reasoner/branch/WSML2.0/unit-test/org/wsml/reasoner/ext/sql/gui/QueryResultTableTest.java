@@ -58,7 +58,7 @@ public class QueryResultTableTest extends TestCase {
 		FactoryContainer wsmoManager = new WsmlFactoryContainer();
 		wsmoFactory = wsmoManager.getWsmoFactory();
         leFactory = wsmoManager.getLogicalExpressionFactory();
-        dataFactory = wsmoManager.getWsmlDataFactory();
+        dataFactory = wsmoManager.getXmlDataFactory();
         
         ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ont"));
         ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));	

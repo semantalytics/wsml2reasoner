@@ -442,7 +442,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
             Type type;
             IRI typeId = (IRI) violation.get(t);
             if (WsmlDataType.WSML_STRING.equals(typeId.toString()) || WsmlDataType.WSML_INTEGER.equals(typeId.toString()) || WsmlDataType.WSML_DECIMAL.equals(typeId.toString()) || WsmlDataType.WSML_BOOLEAN.equals(typeId.toString())){
-            	type = factory.getWsmlDataFactory().createDataType(typeId);
+            	type = factory.getXmlDataFactory().createDataType(typeId);
             }
             else if (XmlSchemaDataType.XSD_STRING.equals(typeId.toString()) || XmlSchemaDataType.XSD_INTEGER.equals(typeId.toString()) || XmlSchemaDataType.XSD_DECIMAL.equals(typeId.toString()) || XmlSchemaDataType.XSD_BOOLEAN.equals(typeId.toString())){
             	type = factory.getXmlDataFactory().createDataType(typeId);

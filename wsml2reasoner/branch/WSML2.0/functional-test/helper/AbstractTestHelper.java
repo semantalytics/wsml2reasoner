@@ -24,7 +24,7 @@ public class AbstractTestHelper {
 	
 	// TODO gigi: probably won't work as expected since the factories changed and are now stateful
 	protected static WsmoFactory wsmoFactory = FACTORY.getWsmoFactory();
-	protected static DataFactory wsmlDataFactory = FACTORY.getWsmlDataFactory();
+	protected static DataFactory wsmlDataFactory = FACTORY.getXmlDataFactory();
 	protected static DataFactory xmlDataFactory = FACTORY.getXmlDataFactory();
 	protected static final LogicalExpressionFactory LF = FACTORY.getLogicalExpressionFactory();
 

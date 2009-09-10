@@ -14,7 +14,7 @@ public class VisitorDataTypeTest extends TestCase {
 
 	private DatatypeVisitor visitor = new DatatypeVisitor();
 	private FactoryContainer factory = new WsmlFactoryContainer();
-	private DataFactory df = factory.getWsmlDataFactory( );
+	private DataFactory df = factory.getXmlDataFactory( );
 	
 	@Override
 	protected void setUp() throws Exception {
