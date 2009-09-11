@@ -90,15 +90,6 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         }
     }
 
-    private void setAllowImportsFlag(DLBasedWSMLReasoner reasoner, Map<String, Object> params) {
-        assert params != null;
-
-        Object o = params.get(PARAM_ALLOW_IMPORTS);
-        if (o != null && o instanceof Integer) {
-            reasoner.setAllowImports((Integer) o);
-        }
-    }
-
     public WSMLReasoner createWSMLReasoner(Map<String, Object> params, Ontology ontology) {
         if (ontology == null){
             throw new IllegalArgumentException("The ontology paramter may not be null");
@@ -133,12 +124,8 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
     }
 
     public DLReasoner createDLReasoner(Map<String, Object> params) {
-        if (params == null){
-            params = new HashMap<String, Object>();
-        }
-        DLBasedWSMLReasoner reasoner = new DLBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.PELLET), new WsmlFactoryContainer());
-        setAllowImportsFlag(reasoner, params);
-        return reasoner;
+    	// Keep the createDLReasoner method but tell the callee that it is not supported for now /Gigi
+        throw new UnsupportedOperationException("DL based reasoning is not supported in this version.");
     }
 
     public LPReasoner createFlightReasoner(Map<String, Object> params) {
