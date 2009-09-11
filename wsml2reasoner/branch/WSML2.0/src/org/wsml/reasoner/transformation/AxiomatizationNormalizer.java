@@ -196,18 +196,10 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 		if (attribute.isConstraining()) {
 			for (Type type : attribute.listConstrainingTypes()) {
 				// determine Id of range type:
-				Identifier typeID;
-				if (type instanceof Concept) {
-					typeID = ((Concept) type).getIdentifier();
-				} else if (type instanceof SimpleDataType) {
-					typeID = ((SimpleDataType) type).getIdentifier();
-				} else {
-					typeID = ((ComplexDataType) type).getIdentifier();
-				}
-
+				Identifier typeID = type.getIdentifier();
+				
 				// create an appropriate molecule per range type:
-				LogicalExpression ofTypeConstraint = leFactory
-						.createAttributeConstraint(conceptID, attributeID, typeID);
+				LogicalExpression ofTypeConstraint = leFactory.createAttributeConstraint(conceptID, attributeID, typeID);
 				resultExpressions.add(ofTypeConstraint);
 				proclaimAxiomID(ofTypeConstraint, AnonymousIdUtils.getNewOfTypeIri());
 			}
@@ -216,14 +208,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 		if (attribute.isInferring()) {
 			for (Type type : attribute.listInferringTypes()) {
 				// determine Id of range type:
-				Identifier typeID;
-				if (type instanceof Concept) {
-					typeID = ((Concept) type).getIdentifier();
-				} else if (type instanceof SimpleDataType) {
-					typeID = ((SimpleDataType) type).getIdentifier();
-				} else {
-					typeID = ((ComplexDataType) type).getIdentifier();
-				}
+				Identifier typeID = type.getIdentifier();
 
 				// create an appropriate molecule per range type:
 				resultExpressions.add(leFactory.createAttributeInference(conceptID, attributeID, typeID));
@@ -250,6 +235,12 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         }
         if (attribute.getMaxCardinality() < Integer.MAX_VALUE) {
             resultExpressions.add(createMaxCardinalityConstraint(conceptID, attributeID, attribute.getMaxCardinality()));
+        }
+        
+        // process attribute hierarchy:
+        Identifier superAttributeID = attribute.getSubAttributeOf();
+        if (superAttributeID != null) {
+        	resultExpressions.add(createSubAttributeConstraints(conceptID, attributeID, superAttributeID));
         }
 
         return resultExpressions;
@@ -323,6 +314,20 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         return inverseConstraints;
     }
 
+    protected LogicalExpression createSubAttributeConstraints(Identifier conceptID, Identifier subAttributeID, Identifier superAttributeID) {
+        // build required LE elements:
+        Variable xVariable = leFactory.createVariable("x");
+        Variable yVariable = leFactory.createVariable("y");
+        LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable, conceptID);
+        LogicalExpression valSubXY = leFactory.createAttributeValue(xVariable, subAttributeID, yVariable);
+        LogicalExpression valSuperXY = leFactory.createAttributeValue(xVariable, superAttributeID, yVariable);
+
+        // build implication : "..."
+        LogicalExpression subConjunction = leFactory.createConjunction(moX, valSubXY);
+
+        return leFactory.createImplication(subConjunction, valSuperXY);
+    }
+    	
     protected Collection<LogicalExpression> createMinCardinalityConstraints(Identifier conceptID, Identifier attributeID, int cardinality) {
         Collection<LogicalExpression> minCardConstraints = new ArrayList<LogicalExpression>(2);
 
