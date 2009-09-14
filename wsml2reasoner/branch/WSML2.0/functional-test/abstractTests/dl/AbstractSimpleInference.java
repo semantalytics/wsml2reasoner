@@ -31,8 +31,11 @@ import junit.framework.TestCase;
 
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Concept;
+import org.omwg.ontology.DataType;
+import org.omwg.ontology.DataValue;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
+import org.omwg.ontology.Type;
 import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.DLReasoner;
 import org.wsmo.common.IRI;
@@ -223,13 +226,13 @@ public abstract class AbstractSimpleInference extends TestCase implements DL {
 	}
 
 	public void testGetRangesOfInferingAttribute() {
-		Set<IRI> set = wsmlReasoner.getRangesOfInferingAttribute(wsmoFactory
+		Set<Type> set = wsmlReasoner.getRangesOfInferingAttribute(wsmoFactory
 				.createIRI(ns + "isFatherOf"));
 		assertEquals(1, set.size());
 	}
 
 	public void testGetRangesOfConstraintAttribute() {
-		Set<IRI> set = wsmlReasoner.getRangesOfConstraintAttribute(wsmoFactory
+		Set<DataType> set = wsmlReasoner.getRangesOfConstraintAttribute(wsmoFactory
 				.createIRI(ns + "hasWeight"));
 		assertEquals(2, set.size());
 	}
@@ -243,7 +246,7 @@ public abstract class AbstractSimpleInference extends TestCase implements DL {
 	}
 
 	public void testGetValuesOfConstraintAttributeOfASpecifiedInstance() {
-		Set<Entry<IRI, Set<Term>>> entrySetTerm = wsmlReasoner
+		Set<Entry<IRI, Set<DataValue>>> entrySetTerm = wsmlReasoner
 				.getConstraintAttributeValues(
 						wsmoFactory.createInstance(wsmoFactory.createIRI(ns
 								+ "Mary"))).entrySet();
@@ -260,7 +263,7 @@ public abstract class AbstractSimpleInference extends TestCase implements DL {
 	}
 
 	public void testGetInstancesAndValuesOfASpecifiedConstraintAttribute() {
-		Set<Entry<Instance, Set<Term>>> entrySetTerm = wsmlReasoner
+		Set<Entry<Instance,Set<DataValue>>> entrySetTerm = wsmlReasoner
 				.getConstraintAttributeInstances(
 						wsmoFactory.createIRI(ns + "ageOfHuman")).entrySet();
 		assertEquals(3, entrySetTerm.size());
@@ -293,7 +296,7 @@ public abstract class AbstractSimpleInference extends TestCase implements DL {
 	}
 
 	public void testGetInferingAttributeValues() {
-		Set<IRI> set = wsmlReasoner.getInferingAttributeValues(wsmoFactory
+		Set<Term> set = wsmlReasoner.getInferingAttributeValues(wsmoFactory
 				.createInstance(wsmoFactory.createIRI(ns + "Clare")),
 				wsmoFactory.createIRI(ns + "hasChild"));
 
@@ -301,7 +304,7 @@ public abstract class AbstractSimpleInference extends TestCase implements DL {
 	}
 
 	public void testGetConstraintAttributeValues() {
-		Set<String> set = wsmlReasoner.getConstraintAttributeValues(wsmoFactory
+		Set<DataValue> set = wsmlReasoner.getConstraintAttributeValues(wsmoFactory
 				.createInstance(wsmoFactory.createIRI(ns + "Mary")),
 				wsmoFactory.createIRI(ns + "hasWeight"));
 

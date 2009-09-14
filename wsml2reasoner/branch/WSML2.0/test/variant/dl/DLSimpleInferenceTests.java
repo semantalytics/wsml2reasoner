@@ -29,8 +29,11 @@ import junit.framework.TestCase;
 
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Concept;
+import org.omwg.ontology.DataType;
+import org.omwg.ontology.DataValue;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
+import org.omwg.ontology.Type;
 import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.DLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
@@ -308,19 +311,19 @@ public class DLSimpleInferenceTests extends TestCase {
 		
 		// test getRangesOfInferingAttribute
 		set3.clear();
-		set3 = wsmlReasoner.getRangesOfInferingAttribute( 
+		Set<Type> set4 = wsmlReasoner.getRangesOfInferingAttribute( 
 				wsmoFactory.createIRI(ns + "isFatherOf"));
 //		for (Identifier rangeId : set3)
 //			System.out.println(rangeId.toString());
-		assertTrue(set3.size() == 1);
+		assertTrue(set4.size() == 1);
 		
 		// test getRangesOfConstraintAttribute
-		set3.clear();
-		set3 = wsmlReasoner.getRangesOfConstraintAttribute( 
+		set4.clear();
+		Set<DataType> set5 = wsmlReasoner.getRangesOfConstraintAttribute( 
 				wsmoFactory.createIRI(ns + "hasWeight"));
 //		for (Identifier rangeId : set3)
 //			System.out.println(rangeId.toString());
-		assertTrue(set3.size() == 2);
+		assertTrue(set5.size() == 2);
 		
 		// test getValuesOfInferingAttribute of a specified instance
 		Set<Entry<IRI, Set<Term>>> entrySet = wsmlReasoner.getInferingAttributeValues(
@@ -335,7 +338,7 @@ public class DLSimpleInferenceTests extends TestCase {
 		assertTrue(entrySet.size() == 2);
 		
 		// test getValuesOfConstraintAttribute of a specified instance
-        Set <Entry<IRI, Set<Term>>> entrySetTerm = 
+        Set<Entry<IRI, Set<DataValue>>> entrySetTerm = 
 				wsmlReasoner.getConstraintAttributeValues( 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Mary"))).entrySet();
 //		for (Entry<IRI, Set<Term>> entry : entrySetTerm) {
@@ -359,7 +362,7 @@ public class DLSimpleInferenceTests extends TestCase {
 		assertTrue(entrySet2.size() == 3);
 		
 		// test get instances and values of a specified constraint attribute
-        Set<Entry<Instance, Set<Term>>> entrySetTerm2 = wsmlReasoner.getConstraintAttributeInstances(
+        Set<Entry<Instance,Set<DataValue>>> entrySetTerm2 = wsmlReasoner.getConstraintAttributeInstances(
 				 
 				wsmoFactory.createIRI(ns + "ageOfHuman")).entrySet();
 //		for (Entry<Instance, Set<Term>> entry : entrySetTerm2) {
@@ -397,22 +400,22 @@ public class DLSimpleInferenceTests extends TestCase {
 				wsmoFactory.createIRI(ns + "ageOfHuman")).contains("40"));
 		
 		// test getInferingAttributeValues
-		Set<?> set4 = wsmlReasoner.getInferingAttributeValues(
+		Set<Term> set6 = wsmlReasoner.getInferingAttributeValues(
 				 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Clare")),
 				wsmoFactory.createIRI(ns + "hasChild"));
 //		for(Object iri : set4)
 //			System.out.println(((IRI) iri).getLocalName().toString());
-		assertTrue(set4.size() == 2);
+		assertTrue(set6.size() == 2);
 
 		// test getConstraintAttributeValues
-		set4 = wsmlReasoner.getConstraintAttributeValues(
+		Set<DataValue> set7 = wsmlReasoner.getConstraintAttributeValues(
 				 
 				wsmoFactory.createInstance(wsmoFactory.createIRI(ns + "Mary")),
 				wsmoFactory.createIRI(ns + "hasWeight"));
 //		for(Object dataValue : set4)
 //			System.out.println(dataValue);
-		assertTrue(set4.size() == 1);
+		assertTrue(set7.size() == 1);
 		
 		wsmlReasoner.deRegister();
 	}
