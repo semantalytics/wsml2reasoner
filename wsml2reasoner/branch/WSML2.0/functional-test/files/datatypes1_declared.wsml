@@ -101,10 +101,10 @@ concept anEntity
 instance anInstance memberOf anEntity
 	aString      hasValue wsml#string( "string-value" )
 	a_String     hasValue _string( "string-value_" )
-	aXSD_String  hasValue xsd#string("string-value_xsd")
+	aXSD_String  hasValue xsd#string("string-value-xsd")
 	
 	aDecimal 	 hasValue wsml#decimal( 123456.78901 )
-	a_Decimal 	 hasValue _decimal( 987654,32101 )
+	a_Decimal 	 hasValue _decimal( 987654.32101 )
 	aXSD_Decimal hasValue xsd#decimal(123456.78901)
 	
 	aInteger     hasValue wsml#integer( 12345 )
@@ -123,42 +123,41 @@ instance anInstance memberOf anEntity
 	a_Boolean    hasValue _boolean( "true" )
 	aXSD_Boolean hasValue xsd#boolean( "true" )
 	
-	aDuration    hasValue wsml#duration( 1, 2, 3, 4, 5, 6.6)
-	a_Duration   hasValue _duration( 1, 2, 3, 4, 5, 6.6 )
-	aXSD_Duration hasValue xsd#duration( 1, 2, 3, 4, 5, 6.0)
-	
+	aDuration    hasValue wsml#duration( 1, 2, 3, 4, 5, 6.0)
+	a_Duration   hasValue _duration( 1, 2, 3, 4, 5, 6.1 )
+	aXSD_Duration hasValue xsd#duration( 1, 2, 3, 4, 5, 6.2)
 	
 	aDateTime    hasValue wsml#dateTime( 1981, 12, 31, 23, 59, 58.0 )
-	a_DateTime   hasValue _datetime( 1981, 12, 31, 23, 59, 58.0 )           // not like in the specification - to be consistent
-	aXSD_DateTime hasValue xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )
+	a_DateTime   hasValue _datetime( 1981, 12, 31, 23, 59, 58.1 )           // not like in the specification, to be consistent! 
+	aXSD_DateTime hasValue xsd#dateTime( 1981, 12, 31, 23, 59, 58.2 )
 	
 	aTime        hasValue wsml#time( 23, 59, 58.0 )
-	a_Time       hasValue _time( 23, 59, 58.0 )
-	aXSD_Time    hasValue xsd#time( 23, 59, 58.0 )
+	a_Time       hasValue _time( 23, 59, 58.1 )
+	aXSD_Time    hasValue xsd#time( 23, 59, 58.2 )
 	
-	aDate        hasValue wsml#date( 1981, 12, 31 )
-	a_Date       hasValue _date( 1981, 12, 31 )
+	aDate        hasValue wsml#date( 1981, 12, 29 )
+	a_Date       hasValue _date( 1981, 12, 30 )
 	aXSD_Date    hasValue xsd#date( 1981, 12, 31 )
 	
-	aGYearMonth  hasValue wsml#gYearMonth( 2008, 12 )
-	a_GYearMonth hasValue _gyearmonth( 2008, 12 )
+	aGYearMonth  hasValue wsml#gYearMonth( 2008, 10 )
+	a_GYearMonth hasValue _gyearmonth( 2008, 11 )
 	aXSD_GYearMonth hasValue xsd#gYearMonth( 2008, 12 )
 	
 	aGYear       hasValue wsml#gYear( 1999 )
-	a_GYear      hasValue _gyear( 1999 )
-	aXSD_GYear   hasValue xsd#gYear( 1999 )
+	a_GYear      hasValue _gyear( 2000 )
+	aXSD_GYear   hasValue xsd#gYear( 2001 )
 	
-	aGMonthDay   hasValue wsml#gMonthDay( 12, 31 )
-	a_GMonthDay  hasValue _gmonthday( 12, 31 )
+	aGMonthDay   hasValue wsml#gMonthDay( 10, 31 )
+	a_GMonthDay  hasValue _gmonthday( 11, 31 )
 	aXSD_GMonthDay hasValue xsd#gMonthDay( 12, 31 )
 	
 	aGDay        hasValue wsml#gDay( 28 )
-	a_GDay       hasValue _gday( 28 )
-	aXSD_GDay    hasValue xsd#gDay( 28 )
+	a_GDay       hasValue _gday( 29 )
+	aXSD_GDay    hasValue xsd#gDay( 30 )
 	
 	aGMonth      hasValue wsml#gMonth( 2 )
-	a_GMonth     hasValue _gmonth( 2 )
-	aXSD_GMonth  hasValue xsd#gMonth( 2 )
+	a_GMonth     hasValue _gmonth( 3 )
+	aXSD_GMonth  hasValue xsd#gMonth( 4 )
 	
 	aHexBinary   hasValue wsml#hexBinary( "0FB7abcd" )
 	a_HexBinary  hasValue _hexbinary( "0FB7abcd" )
@@ -177,8 +176,7 @@ instance anInstance memberOf anEntity
 	
 	// new XSD Datatypes
 	aYearMonthDuration hasValue xsd#yearMonthDuration(2008, 10)
-	a_YearMonthDuration hasValue _yearmonthduration(2008, 10)    // specification : _yearMonthDuration ??? 
+	a_YearMonthDuration hasValue _yearmonthduration(2008, 11)    // specification : _yearMonthDuration ??? 
 	
 	aDayTimeDuration hasValue xsd#dayTimeDuration(1, 10, 31, 15.5)
-	a_DayTimeDuration hasValue _daytimeduration(1, 10, 31, 15.5)
-	
+	a_DayTimeDuration hasValue _daytimeduration(1, 10, 31, 15.6)
