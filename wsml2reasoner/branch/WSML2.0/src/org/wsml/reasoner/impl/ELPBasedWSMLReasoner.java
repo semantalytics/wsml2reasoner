@@ -8,16 +8,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.deri.iris.api.terms.ITerm;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
+import org.omwg.ontology.DataType;
+import org.omwg.ontology.DataValue;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Relation;
 import org.omwg.ontology.Type;
-import org.omwg.ontology.Value;
 import org.sti2.elly.api.basics.IAtom;
 import org.sti2.elly.api.basics.IAtomicConcept;
 import org.sti2.elly.api.basics.IAtomicRole;
@@ -299,95 +301,157 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 	}
 
 	@Override
-	public Map<Instance, Set<Term>> getConstraintAttributeInstances(Identifier attributeId) {
-		Map<Instance, Set<Term>> instanceMap = new HashMap<Instance, Set<Term>>();
+	public Map<Instance, Set<DataValue>> getConstraintAttributeInstances(Identifier attributeId) {
+		Map<Instance, Set<DataValue>> instanceMap = new HashMap<Instance, Set<DataValue>>();
 		
+		// Confirm that it is inferring
 		if (!isConstrainingAttribute(attributeId)) {
-			throw new IllegalArgumentException("Attribute " + attributeId + " is not constraining!");
+			throw new IllegalArgumentException("Attribute " + attributeId + " is not constraining");
 		}
 		
-		// filter direct concepts
-		for (Ontology ontology : registeredOntologies) {
-			for (Instance instance : ontology.listInstances()) {
-				Map<Identifier, Set<Value>> attributeValues = instance.listAttributeValues();
-				for (Identifier attributeIdentifier : attributeValues.keySet()) {
-					if (attributeIdentifier.equals(attributeId)) {
-						Set<Term> termSet = instanceMap.get(instance);
-						if (termSet == null) {
-							termSet = new HashSet<Term>();
-							instanceMap.put(instance, termSet);
-						}
-						
-						for (Value value : attributeValues.get(attributeIdentifier)) {
-							if (value instanceof Term) {
-								termSet.add((Term) value);
-							}
-						}
-					}
+		// Now retrieve all Values
+		try {
+			Map<IIndividual, Set<ITerm>> roleValues = builtInFacade.getRoleValues(Wsml2EllyOntologyEntityTranslator.createRole(attributeId));
+			
+			for (IIndividual individual : roleValues.keySet()) {
+				Instance instance = elly2wsml.createInstance(individual);
+				Set<DataValue> datavalueSet = new HashSet<DataValue>();
+				
+				for (ITerm term : roleValues.get(individual)) {
+					// DL just allows for datavalues when constraining
+					datavalueSet.add(elly2wsml.createDataValue(term));
 				}
+				
+				instanceMap.put(instance, datavalueSet);
 			}
+		} catch (ExternalToolException e) {
+			throw new IllegalArgumentException(e);
 		}
+
+//		Map<Instance, Set<DataValue>> instanceMap = new HashMap<Instance, Set<DataValue>>();
+//		
+//		if (!isConstrainingAttribute(attributeId)) {
+//			throw new IllegalArgumentException("Attribute " + attributeId + " is not constraining!");
+//		}
+//		
+//		Set<IRI> allAttributes = getSubRelations(attributeId);
+//		
+//		for (Ontology ontology : registeredOntologies) {
+//			for (Instance instance : ontology.listInstances()) {
+//				Map<Identifier, Set<Value>> attributeValues = instance.listAttributeValues();
+//				for (Identifier attributeIdentifier : attributeValues.keySet()) {
+//					if (allAttributes.contains(attributeIdentifier)) {
+//						Set<DataValue> datavalueSet = instanceMap.get(instance);
+//						if (datavalueSet == null) {
+//							datavalueSet = new HashSet<DataValue>();
+//							instanceMap.put(instance, datavalueSet);
+//						}
+//						
+//						for (Value value : attributeValues.get(attributeIdentifier)) {
+//							if (value instanceof DataValue) {
+//								datavalueSet.add((DataValue) value);
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
 
 		return instanceMap;
 	}
 
 	@Override
-	public Map<IRI, Set<Term>> getConstraintAttributeValues(Instance instance) {
-		Map<IRI, Set<Term>> attributeMap = new HashMap<IRI, Set<Term>>();
+	public Map<IRI, Set<DataValue>> getConstraintAttributeValues(Instance instance) {
+		Map<IRI, Set<DataValue>> attributeMap = new HashMap<IRI, Set<DataValue>>();
 		
-		// filter direct concepts
-		for (Ontology ontology : registeredOntologies) {
-			for (Instance ontologyInstance : ontology.listInstances()) {
-				if (ontologyInstance.equals(instance)) {
-					Map<Identifier, Set<Value>> attributeValues = ontologyInstance.listAttributeValues();
-					for (Identifier attributeIdentifier : attributeValues.keySet()) {
-						if (attributeIdentifier instanceof IRI && isConstrainingAttribute(attributeIdentifier)) {
-							IRI attributeIRI = (IRI) attributeIdentifier;
-							
-							Set<Term> termSet = attributeMap.get(attributeIRI);
-							if (termSet == null) {
-								termSet = new HashSet<Term>();
-								attributeMap.put(attributeIRI, termSet);
-							}
-							
-							for (Value value : attributeValues.get(attributeIRI)) {
-								if (value instanceof Term) {
-									termSet.add((Term) value);
-								}
-							}
-						}
+		try {
+			Map<IAtomicRole, Set<ITerm>> roleValues = builtInFacade
+					.getObjectRoleValues(Wsml2EllyOntologyEntityTranslator.createIndividual(instance));
+
+			for (IAtomicRole role : roleValues.keySet()) {
+				IRI roleIRI = elly2wsml.createIRI(role);
+
+				if (isConstrainingAttribute(roleIRI)) {
+					Set<DataValue> datavalueSet = new HashSet<DataValue>();
+
+					for (ITerm term : roleValues.get(role)) {
+						datavalueSet.add(elly2wsml.createDataValue(term));
 					}
+
+					attributeMap.put(roleIRI, datavalueSet);
 				}
-				
 			}
+		} catch (ExternalToolException e) {
+			throw new IllegalArgumentException(e);
 		}
+		
+
+//		for (Ontology ontology : registeredOntologies) {
+//			for (Instance ontologyInstance : ontology.listInstances()) {
+//				if (ontologyInstance.equals(instance)) {
+//					Map<Identifier, Set<Value>> attributeValues = ontologyInstance.listAttributeValues();
+//					for (Identifier attributeIdentifier : attributeValues.keySet()) {
+//						if (attributeIdentifier instanceof IRI && isConstrainingAttribute(attributeIdentifier)) {
+//							IRI attributeIRI = (IRI) attributeIdentifier;
+//							
+//							Set<DataValue> datavalueSet = attributeMap.get(attributeIRI);
+//							if (datavalueSet == null) {
+//								datavalueSet = new HashSet<DataValue>();
+//								attributeMap.put(attributeIRI, datavalueSet);
+//							}
+//							
+//							for (Value value : attributeValues.get(attributeIRI)) {
+//								if (value instanceof DataValue) {
+//									datavalueSet.add((DataValue) value);
+//								}
+//							}
+//						}
+//					}
+//				}
+//				
+//			}
+//		}
 		
 		return attributeMap;
 	}
 
 	@Override
-	public Set<String> getConstraintAttributeValues(Instance subject, Identifier attributeId) {
-		Set<String> valueStringSet = new HashSet<String>();
-		Set<Value> valueSet = new HashSet<Value>();
+	public Set<DataValue> getConstraintAttributeValues(Instance subject, Identifier attributeId) {
+		Set<DataValue> valueSet = new HashSet<DataValue>();
 		
-		if (!isConstrainingAttribute(attributeId)) {
-			throw new IllegalArgumentException("Attribute " + attributeId + " is not constraining!");
+		if (!isInferringAttribute(attributeId)) {
+			throw new IllegalArgumentException("Attribute " + attributeId + "is not inferring");
 		}
 		
-		// filter direct concepts
-		for (Ontology ontology : registeredOntologies) {
-			for (Instance instance : ontology.listInstances()) {
-				if (instance.equals(subject)) {
-					valueSet.addAll(instance.listAttributeValues(attributeId));
-				}
+		try {
+			IIndividual individual = Wsml2EllyOntologyEntityTranslator.createIndividual(subject);
+			IAtomicRole role = Wsml2EllyOntologyEntityTranslator.createRole(attributeId);
+			Set<ITerm> roleValues = builtInFacade.getObjectRoleValues(individual, role);
+			
+			for (ITerm term : roleValues) {
+				valueSet.add(elly2wsml.createDataValue(term));
 			}
+		} catch (ExternalToolException e) {
+			throw new IllegalArgumentException(e);
 		}
+
+//		if (!isConstrainingAttribute(attributeId)) {
+//			throw new IllegalArgumentException("Attribute " + attributeId + " is not constraining!");
+//		}
+//
+//		for (Ontology ontology : registeredOntologies) {
+//			for (Instance instance : ontology.listInstances()) {
+//				if (instance.equals(subject)) {
+//					for (Value value : instance.listAttributeValues(attributeId)) {
+//						// since this is a DL reasoner only data values are allowed
+//						valueSet.add((DataValue) value);
+//					}
+//				}
+//			}
+//		}
+
 		
-		for (Value value : valueSet) {
-			valueStringSet.add(value.toString());
-		}
-		
-		return valueStringSet;
+		return valueSet;
 	}
 
 	@Override
@@ -519,31 +583,54 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 	public Map<Instance, Set<Term>> getInferingAttributeInstances(Identifier attributeId) {
 		Map<Instance, Set<Term>> instanceMap = new HashMap<Instance, Set<Term>>();
 		
+		// Confirm that it is inferring
 		if (!isInferringAttribute(attributeId)) {
-			throw new IllegalArgumentException("Attribute " + attributeId + "is not inferring");
+			throw new IllegalArgumentException("Attribute " + attributeId + " is not inferring");
 		}
 		
-		// filter direct concepts
-		for (Ontology ontology : registeredOntologies) {
-			for (Instance instance : ontology.listInstances()) {
-				Map<Identifier, Set<Value>> attributeValues = instance.listAttributeValues();
-				for (Identifier attributeIdentifier : attributeValues.keySet()) {
-					if (attributeIdentifier.equals(attributeId)) {
-						Set<Term> termSet = instanceMap.get(instance);
-						if (termSet == null) {
-							termSet = new HashSet<Term>();
-							instanceMap.put(instance, termSet);
-						}
-						
-						for (Value value : attributeValues.get(attributeIdentifier)) {
-							if (value instanceof Term) {
-								termSet.add((Term) value);
-							}
-						}
-					}
+		// Now retrieve all Values
+		try {
+			Map<IIndividual, Set<ITerm>> roleValues = builtInFacade.getRoleValues(Wsml2EllyOntologyEntityTranslator.createRole(attributeId));
+			
+			for (IIndividual individual : roleValues.keySet()) {
+				Instance instance = elly2wsml.createInstance(individual);
+				Set<Term> termSet = new HashSet<Term>();
+				
+				for (ITerm term : roleValues.get(individual)) {
+					termSet.add(elly2wsml.createTerm(term));
 				}
+				
+				instanceMap.put(instance, termSet);
 			}
+		} catch (ExternalToolException e) {
+			throw new IllegalArgumentException(e);
 		}
+//		Set<IRI> allAttributes = getSubRelations(attributeId);
+//		
+//		for (Ontology ontology : registeredOntologies) {
+//			for (Instance instance : ontology.listInstances()) {
+//				Map<Identifier, Set<Value>> attributeValues = instance.listAttributeValues();
+//				for (Identifier attributeIdentifier : attributeValues.keySet()) {
+//					if (allAttributes.contains(attributeIdentifier)) {
+//						Set<Term> termSet = instanceMap.get(instance);
+//						if (termSet == null) {
+//							termSet = new HashSet<Term>();
+//							instanceMap.put(instance, termSet);
+//						}
+//						
+//						for (Value value : attributeValues.get(attributeIdentifier)) {
+//							if (value instanceof Instance) {
+//								termSet.add(((Instance) value).getIdentifier());
+//							} else if (value instanceof DataValue) {
+//								termSet.add((DataValue) value);
+//							} else {
+//								throw new RuntimeException("Can't handle type of value " + value);
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
 
 		return instanceMap;
 	}
@@ -552,64 +639,98 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 	public Map<IRI, Set<Term>> getInferingAttributeValues(Instance instance) {
 		Map<IRI, Set<Term>> attributeMap = new HashMap<IRI, Set<Term>>();
 		
-		// filter direct concepts
-		for (Ontology ontology : registeredOntologies) {
-			for (Instance ontologyInstance : ontology.listInstances()) {
-				if (ontologyInstance.equals(instance)) {
-					Map<Identifier, Set<Value>> attributeValues = ontologyInstance.listAttributeValues();
-					for (Identifier attributeIdentifier : attributeValues.keySet()) {
-						if (attributeIdentifier instanceof IRI && isInferringAttribute(attributeIdentifier)) {
-							IRI attributeIRI = (IRI) attributeIdentifier;
-							
-							Set<Term> termSet = attributeMap.get(attributeIRI);
-							if (termSet == null) {
-								termSet = new HashSet<Term>();
-								attributeMap.put(attributeIRI, termSet);
-							}
-							
-							for (Value value : attributeValues.get(attributeIRI)) {
-								if (value instanceof Term) {
-									termSet.add((Term) value);
-								}
-							}
-						}
+		try {
+			Map<IAtomicRole, Set<ITerm>> roleValues = builtInFacade
+					.getObjectRoleValues(Wsml2EllyOntologyEntityTranslator.createIndividual(instance));
+
+			for (IAtomicRole role : roleValues.keySet()) {
+				IRI roleIRI = elly2wsml.createIRI(role);
+
+				if (isInferringAttribute(roleIRI)) {
+					Set<Term> termSet = new HashSet<Term>();
+
+					for (ITerm term : roleValues.get(role)) {
+						termSet.add(elly2wsml.createTerm(term));
 					}
+
+					attributeMap.put(roleIRI, termSet);
 				}
-				
 			}
+		} catch (ExternalToolException e) {
+			throw new IllegalArgumentException(e);
 		}
+		
+//		for (Ontology ontology : registeredOntologies) {
+//			for (Instance ontologyInstance : ontology.listInstances()) {
+//				if (ontologyInstance.equals(instance)) {
+//					Map<Identifier, Set<Value>> attributeValues = ontologyInstance.listAttributeValues();
+//					for (Identifier attributeIdentifier : attributeValues.keySet()) {
+//						if (attributeIdentifier instanceof IRI && isInferringAttribute(attributeIdentifier)) {
+//							IRI attributeIRI = (IRI) attributeIdentifier;
+//							
+//							Set<Term> termSet = attributeMap.get(attributeIRI);
+//							if (termSet == null) {
+//								termSet = new HashSet<Term>();
+//								attributeMap.put(attributeIRI, termSet);
+//							}
+//							
+//							for (Value value : attributeValues.get(attributeIRI)) {
+//								if (value instanceof Instance) {
+//									termSet.add(((Instance) value).getIdentifier());
+//								} else if (value instanceof DataValue) {
+//									termSet.add((DataValue) value);
+//								} else {
+//									throw new RuntimeException("Can't handle type of value " + value);
+//								}
+//							}
+//						}
+//					}
+//				}
+//				
+//			}
+//		}
 		
 		return attributeMap;
 	}
 
 	@Override
-	public Set<IRI> getInferingAttributeValues(Instance subject, Identifier attributeId) {
-		Set<IRI> instanceSet = new HashSet<IRI>();
-		Set<Value> valueSet = new HashSet<Value>();
+	public Set<Term> getInferingAttributeValues(Instance subject, Identifier attributeId) {
+		Set<Term> termSet = new HashSet<Term>();
 
 		if (!isInferringAttribute(attributeId)) {
 			throw new IllegalArgumentException("Attribute " + attributeId + "is not inferring");
 		}
 		
-		// filter direct concepts
-		for (Ontology ontology : registeredOntologies) {
-			for (Instance instance : ontology.listInstances()) {
-				if (instance.equals(subject)) {
-					valueSet.addAll(instance.listAttributeValues(attributeId));
-				}
+		try {
+			IIndividual individual = Wsml2EllyOntologyEntityTranslator.createIndividual(subject);
+			IAtomicRole role = Wsml2EllyOntologyEntityTranslator.createRole(attributeId);
+			Set<ITerm> roleValues = builtInFacade.getObjectRoleValues(individual, role);
+			
+			for (ITerm term : roleValues) {
+				termSet.add(elly2wsml.createTerm(term));
 			}
+		} catch (ExternalToolException e) {
+			throw new IllegalArgumentException(e);
 		}
+		
+//		for (Ontology ontology : registeredOntologies) {
+//			for (Instance instance : ontology.listInstances()) {
+//				if (instance.equals(subject)) {
+//					valueSet.addAll(instance.listAttributeValues(attributeId));
+//				}
+//			}
+//		}
+//
+//		for (Value value : valueSet) {
+//			if (value instanceof Instance) {
+//				Identifier instanceIdentifier = ((Instance) value).getIdentifier();
+//				if (instanceIdentifier instanceof IRI) {
+//					instanceSet.add((IRI) instanceIdentifier);
+//				}
+//			}
+//		}
 
-		for (Value value : valueSet) {
-			if (value instanceof Instance) {
-				Identifier instanceIdentifier = ((Instance) value).getIdentifier();
-				if (instanceIdentifier instanceof IRI) {
-					instanceSet.add((IRI) instanceIdentifier);
-				}
-			}
-		}
-
-		return instanceSet;
+		return termSet;
 	}
 
 	@Override
@@ -650,60 +771,71 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 	}
 
 	@Override
-	public Set<IRI> getRangesOfConstraintAttribute(Identifier attributeId) {
-		Set<IRI> rangeIRIs = new HashSet<IRI>();
-		Set<Type> ranges = new HashSet<Type>();
+	public Set<DataType> getRangesOfConstraintAttribute(Identifier attributeId) {
+		Set<DataType> ranges = new HashSet<DataType>();
 		
+		if (!isConstrainingAttribute(attributeId)) {
+			throw new IllegalArgumentException("Attribute " + attributeId + " is not constraining!");
+		}
+		
+		// get super attributes
+		Set<IRI> allAttributes = getSuperRelations(attributeId);
+
+		// get ranges for all attributes
 		for (Ontology ontology : registeredOntologies) {
 			for (Concept concept : ontology.listConcepts()) {
 				for (Attribute attribute : concept.listAttributes()) {
-					if (attribute.isConstraining() && attribute.getIdentifier().equals(attributeId)) {
-						ranges.addAll(attribute.listConstrainingTypes());
+					if (allAttributes.contains(attribute.getIdentifier())) {
+						for (Type type : attribute.listConstrainingTypes()) {
+							// since this is a DL reasoner only DataTypes are allowed as types
+							ranges.add((DataType) type);
+						}
 					}
 				}
 			}
 		}
 		
-		for (Type type : ranges) {
-			Identifier identifier = type.getIdentifier();
-			if (identifier instanceof IRI) {
-				rangeIRIs.add((IRI) identifier);
-			}
-		}
-		
-		return rangeIRIs;
+		return ranges;
 	}
 
 	@Override
-	public Set<IRI> getRangesOfInferingAttribute(Identifier attributeId) {
-		Set<IRI> rangeIRIs = new HashSet<IRI>();
+	public Set<Type> getRangesOfInferingAttribute(Identifier attributeId) {
 		Set<Type> ranges = new HashSet<Type>();
 		
+		if (!isInferringAttribute(attributeId)) {
+			throw new IllegalArgumentException("Attribute " + attributeId + " is not inferring!");
+		}
+		
+		// get super attributes
+		Set<IRI> allAttributes = getSuperRelations(attributeId);
+
+		// get ranges for all attributes
 		for (Ontology ontology : registeredOntologies) {
 			for (Concept concept : ontology.listConcepts()) {
 				for (Attribute attribute : concept.listAttributes()) {
-					if (attribute.isInferring() && attribute.getIdentifier().equals(attributeId)) {
+					if (allAttributes.contains(attribute.getIdentifier())) {
 						ranges.addAll(attribute.listInferringTypes());
 					}
 				}
 			}
 		}
 		
-		for (Type type : ranges) {
-			Identifier identifier = type.getIdentifier();
-			if (identifier instanceof IRI) {
-				rangeIRIs.add((IRI) identifier);
+		Set<Type> allRanges = new HashSet<Type>(ranges);
+		for (Type directRange : ranges) {
+			if (directRange instanceof Concept) {
+				Concept rangeConcept = (Concept) directRange;
+				allRanges.addAll(getSuperConcepts(rangeConcept));
 			}
 		}
 		
-		return rangeIRIs;
+		return allRanges;
 	}
 
 	@Override
 	public Set<Concept> getSubConcepts(Concept concept) {
 		try {
 			IAtomicConcept ellyConcept = Wsml2EllyOntologyEntityTranslator.createConcept(concept);
-			Set<IAtomicConcept> ellySubConcepts = builtInFacade.directSubConceptsOf(ellyConcept);
+			Set<IAtomicConcept> ellySubConcepts = builtInFacade.subConceptsOf(ellyConcept);
 
 			Set<Concept> wsmlConcepts = new HashSet<Concept>();
 			for (IAtomicConcept ellySubConcept : ellySubConcepts) {
@@ -720,7 +852,7 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 	public Set<IRI> getSubRelations(Identifier attributeId) {
 		try {
 			IAtomicRole ellyRole = Wsml2EllyOntologyEntityTranslator.createRole(attributeId);
-			Set<IAtomicRole> ellySubRoles = builtInFacade.directSubRolesOf(ellyRole);
+			Set<IAtomicRole> ellySubRoles = builtInFacade.subRolesOf(ellyRole);
 
 			Set<IRI> wsmlRoles = new HashSet<IRI>();
 			for (IAtomicRole ellySubRole : ellySubRoles) {
@@ -737,7 +869,7 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 	public Set<Concept> getSuperConcepts(Concept concept) {
 		try {
 			IAtomicConcept ellyConcept = Wsml2EllyOntologyEntityTranslator.createConcept(concept);
-			Set<IAtomicConcept> ellySuperConcepts = builtInFacade.directSuperConceptsOf(ellyConcept);
+			Set<IAtomicConcept> ellySuperConcepts = builtInFacade.superConceptsOf(ellyConcept);
 
 			Set<Concept> wsmlConcepts = new HashSet<Concept>();
 			for (IAtomicConcept ellySuperConcept : ellySuperConcepts) {
@@ -754,7 +886,7 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 	public Set<IRI> getSuperRelations(Identifier attributeId) {
 		try {
 			IAtomicRole ellyRole = Wsml2EllyOntologyEntityTranslator.createRole(attributeId);
-			Set<IAtomicRole> ellySuperRoles = builtInFacade.directSuperRolesOf(ellyRole);
+			Set<IAtomicRole> ellySuperRoles = builtInFacade.superRolesOf(ellyRole);
 
 			Set<IRI> wsmlRoles = new HashSet<IRI>();
 			for (IAtomicRole ellySuperRole : ellySuperRoles) {

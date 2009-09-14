@@ -36,6 +36,7 @@ import org.omwg.logicalexpression.terms.TermVisitor;
 import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.Variable;
+import org.sti2.elly.api.DataType;
 import org.sti2.elly.api.Vocabulary;
 import org.sti2.elly.api.basics.IAtom;
 import org.sti2.elly.api.basics.IAtomicConcept;
@@ -221,10 +222,12 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 			break;
 
 		case DATA_TYPE:
-			pushDescription(getOrCreateConcept(t));
-			// FIXME dw: change that later, handle wsml datatypes 
-//			IDescription dataType = DataType.asDataType(t.toString()).asConcept();
-//			pushDescription(dataType);
+			DataType dataType = DataType.asDataType(t.toString());
+			if (dataType == null) {
+				throw new RuntimeException("DataType " + t.toString() + " not supported");
+			}
+			IDescription dataTypeConcept = dataType.asConcept();
+			pushDescription(dataTypeConcept);
 			break;
 
 		default:
@@ -239,8 +242,25 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 
 	@Override
 	public void visitAtom(Atom expr) {
-		// TODO built-ins?
-		throw new UnsupportedOperationException("Atoms are not supported by ELP");
+		// check for Roles => atom with arity 2
+		if (expr.getArity() == 2) { // ROLE
+			// TODO handle wsml built-in => map directly to IRIS built-in?
+			expectedType = Type.ROLE;
+			expr.getIdentifier().accept(this);
+			IDescription role = popDescription();
+
+			List<ITerm> termList = new ArrayList<ITerm>();
+			for (Term term : expr.listParameters()) {
+				expectedType = Type.TERM;
+				term.accept(this);
+				termList.add(popTerm());
+			}
+
+			pushAtom(BASIC.createAtom(role, BASIC.createTuple(termList)));
+		} else {
+			// TODO built-ins?
+			throw new UnsupportedOperationException("Atoms are not supported by ELP");
+		}
 	}
 
 	/**

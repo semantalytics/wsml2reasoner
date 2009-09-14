@@ -90,7 +90,7 @@ public class ELLYFacade implements ELPReasonerFacade {
 		try {
 			return reasoner.superConceptOf(concept);
 		} catch (ReasoningException e) {
-			throw new ExternalToolException("ancestorConceptsOf(" + concept.toString() + ")", e);
+			throw new ExternalToolException("superConceptsOf(" + concept.toString() + ")", e);
 		}
 	}
 
@@ -99,7 +99,7 @@ public class ELLYFacade implements ELPReasonerFacade {
 		try {
 			return reasoner.superRoleOf(role);
 		} catch (ReasoningException e) {
-			throw new ExternalToolException("ancestorRolesOf(" + role.toString() + ")", e);
+			throw new ExternalToolException("superRolesOf(" + role.toString() + ")", e);
 		}
 	}
 
@@ -113,7 +113,7 @@ public class ELLYFacade implements ELPReasonerFacade {
 		try {
 			return reasoner.subConceptOf(concept);
 		} catch (ReasoningException e) {
-			throw new ExternalToolException("descendantConceptsOf(" + concept.toString() + ")", e);
+			throw new ExternalToolException("subConceptsOf(" + concept.toString() + ")", e);
 		}
 	}
 
@@ -122,7 +122,7 @@ public class ELLYFacade implements ELPReasonerFacade {
 		try {
 			return reasoner.subRoleOf(role);
 		} catch (ReasoningException e) {
-			throw new ExternalToolException("descendantRolesOf(" + role.toString() + ")", e);
+			throw new ExternalToolException("subRolesOf(" + role.toString() + ")", e);
 		}
 	}
 
@@ -379,49 +379,27 @@ public class ELLYFacade implements ELPReasonerFacade {
 
 	@Override
 	public Set<IAtomicConcept> directSubConceptsOf(IConceptDescription concept) throws ExternalToolException {
-		try {
-			return reasoner.subConceptOf(concept);
-		} catch (ReasoningException e) {
-			throw new ExternalToolException("subConceptsOf(" + concept.toString() + ")", e);
-		}
+		throw new UnsupportedOperationException("directSubConceptsOf not supported");
 	}
 
 	@Override
 	public Set<IAtomicRole> directSubRolesOf(IRoleDescription role) throws ExternalToolException {
-		try {
-			return reasoner.subRoleOf(role);
-		} catch (ReasoningException e) {
-			throw new ExternalToolException("subRolesOf(" + role.toString() + ")", e);
-		}
+		throw new UnsupportedOperationException("directSubRolesOf not supported");
 	}
 
 	@Override
 	public Set<IAtomicConcept> directSuperConceptsOf(IConceptDescription concept) throws ExternalToolException {
-		try {
-			return reasoner.superConceptOf(concept);
-		} catch (ReasoningException e) {
-			throw new ExternalToolException("superConceptsOf(" + concept.toString() + ")", e);
-		}
+		throw new UnsupportedOperationException("directSuperConceptsOf not supported");
 	}
 
 	@Override
 	public Set<IAtomicRole> directSuperRolesOf(IRoleDescription role) throws ExternalToolException {
-		try {
-			return reasoner.superRoleOf(role);
-		} catch (ReasoningException e) {
-			throw new ExternalToolException("superRolesOf(" + role.toString() + ")", e);
-		}
+		throw new UnsupportedOperationException("directSuperRolesOf not supported");
 	}
 
 	@Override
 	public Set<IAtomicConcept> directTypesOf(IIndividual individual) throws ExternalToolException {
-		try {
-			ITuple tuple = BASIC.createTuple(individual);
-			return reasoner.conceptsOf(tuple);
-		} catch (ReasoningException e) {
-			throw new ExternalToolException("typesOf(" + individual.toString() + ")", e);
-		}
-
+		throw new UnsupportedOperationException("directTypesOf not supported");
 	}
 
 }
