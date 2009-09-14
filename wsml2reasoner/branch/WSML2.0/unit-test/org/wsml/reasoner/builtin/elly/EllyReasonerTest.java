@@ -25,8 +25,10 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.omwg.ontology.Concept;
+import org.omwg.ontology.DataType;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
+import org.omwg.ontology.Type;
 import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.DLReasoner;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
@@ -185,9 +187,9 @@ public class EllyReasonerTest extends TestCase {
 
 	}
 
-	public void testNominal() throws InconsistencyException {
-		fail("Nominals are not supported in WSMO4J yet");
-	}
+//	public void testNominal() throws InconsistencyException {
+//		fail("Nominals are not supported in WSMO4J yet");
+//	}
 
 	public void testOfType() throws InconsistencyException {
 		ontology = loadOntology(prefix + "Human_of_type.wsml");
@@ -200,49 +202,57 @@ public class EllyReasonerTest extends TestCase {
 		 * Query
 		 * **********/
 
-		IRI identifier = container.getWsmoFactory().createIRI("http://www.example.org/example/Human");
-		Set<Instance> instances = reasoner.getInstances(container.getWsmoFactory().createConcept(identifier));
+		IRI mother = container.getWsmoFactory().createIRI("http://www.example.org/example/hasMother");
+		Set<DataType> ranges = reasoner.getRangesOfConstraintAttribute(mother);
 
-		System.out.println("Instances of Human:");
-		System.out.println(instances);
+		System.out.println("Constraining Ranges of hasMother:");
+		System.out.println(ranges);
 		
-		assertEquals(4, instances.size());
+		assertEquals(4, ranges.size());
 
-		identifier = container.getWsmoFactory().createIRI("http://www.example.org/example/Boy");
-		instances = reasoner.getInstances(container.getWsmoFactory().createConcept(identifier));
+		Set<IRI> superAtts = reasoner.getSuperRelations(mother);
+		IRI parent = container.getWsmoFactory().createIRI("http://www.example.org/example/hasParent");
+		IRI ancestor = container.getWsmoFactory().createIRI("http://www.example.org/example/hasAncestor");
+		IRI relative = container.getWsmoFactory().createIRI("http://www.example.org/example/hasRelative");
 
-		System.out.println("Instances of Boy:");
-		System.out.println(instances);
+		System.out.println("SuperAtts of hasMother:");
+		System.out.println(superAtts);
 
-		assertEquals(1, instances.size());
+		assertTrue(superAtts.contains(parent));
+		assertTrue(superAtts.contains(ancestor));
+		assertTrue(superAtts.contains(relative));
+	}
 
+	public void testImpliesType() throws InconsistencyException {
+		ontology = loadOntology(prefix + "Human_implies_type.wsml");
+		if (ontology == null)
+			fail();
+		
+		reasoner.registerOntology(ontology);
 
-		identifier = container.getWsmoFactory().createIRI("http://www.example.org/example/Man");
-		instances = reasoner.getInstances(container.getWsmoFactory().createConcept(identifier));
+		/* **********
+		 * Query
+		 * **********/
 
-		System.out.println("Instances of Man:");
-		System.out.println(instances);
+		IRI mother = container.getWsmoFactory().createIRI("http://www.example.org/example/hasMother");
+		Set<Type> ranges = reasoner.getRangesOfInferingAttribute(mother);
 
-		assertEquals(2, instances.size());
+		System.out.println("Inferring Ranges of hasMother:");
+		System.out.println(ranges);
+		
+		assertEquals(4, ranges.size());
 
-		identifier = container.getWsmoFactory().createIRI("http://www.example.org/example/Parent");
-		instances = reasoner.getInstances(container.getWsmoFactory().createConcept(identifier));
+		Set<IRI> superAtts = reasoner.getSuperRelations(mother);
+		IRI parent = container.getWsmoFactory().createIRI("http://www.example.org/example/hasParent");
+		IRI ancestor = container.getWsmoFactory().createIRI("http://www.example.org/example/hasAncestor");
+		IRI relative = container.getWsmoFactory().createIRI("http://www.example.org/example/hasRelative");
 
-		System.out.println("Instances of Parent:");
-		System.out.println(instances);
+		System.out.println("SuperAtts of hasMother:");
+		System.out.println(superAtts);
 
-		assertEquals(2, instances.size());
-
-
-		identifier = container.getWsmoFactory().createIRI("http://www.example.org/example/Child");
-		instances = reasoner.getInstances(container.getWsmoFactory().createConcept(identifier));
-
-		System.out.println("Instances of Child:");
-		System.out.println(instances);
-
-		assertEquals(1, instances.size());
-
-
+		assertTrue(superAtts.contains(parent));
+		assertTrue(superAtts.contains(ancestor));
+		assertTrue(superAtts.contains(relative));
 	}
 
 	/**

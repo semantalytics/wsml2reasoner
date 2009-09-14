@@ -42,13 +42,21 @@ ontology _"http://www.example.org/ontologies/example"
 			definedBy
 				?x[hasAncestor hasValue ?y] implies ?x[hasRelative hasValue ?y].
 
-
-      concept FemaleHuman
+      concept FemaleHuman subConceptOf {Woman, Human}
       concept Mother subConceptOf FemaleHuman
       concept SingleWoman subConceptOf FemaleHuman
       concept HappyMother subConceptOf Mother
 
 
+      concept Man subConceptOf Human
+            annotations
+                  dc#relation hasValue ManDisjointWoman
+            endAnnotations
+
+      concept Woman subConceptOf Human
+            annotations
+                  dc#relation hasValue ManDisjointWoman
+            endAnnotations
       concept Man subConceptOf Human
             annotations
                   dc#relation hasValue ManDisjointWoman
