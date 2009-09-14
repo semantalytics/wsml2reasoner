@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.deri.wsmo4j.validator.WsmlValidatorTypedImpl;
+import org.deri.wsmo4j.validator.WsmlValidatorImpl;
 import org.omwg.ontology.Ontology;
 import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.DLReasoner;
@@ -63,7 +63,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
     private String determineVariant(Ontology ontology) {
         assert ontology != null;
 
-        WsmlValidator validator = new WsmlValidatorTypedImpl();
+        WsmlValidator validator = new WsmlValidatorImpl();
         String variant = validator.determineVariant(ontology, new ArrayList<ValidationError>(), new ArrayList<ValidationWarning>());
         if (variant == null) {
             throw new RuntimeException("Unable to determine WSML variant from given ontology: " + ontology.getIdentifier());
