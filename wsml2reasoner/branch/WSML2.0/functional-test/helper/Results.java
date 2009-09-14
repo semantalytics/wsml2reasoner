@@ -169,6 +169,27 @@ public class Results
 	{
 		return dataFactory.createBase64Binary( value.getBytes() );
 	}
+	
+	public static Term _text( String value, String lang )
+	{
+		return dataFactory.createText(value, lang);
+	}
+	
+	public static Term _xmlliteral( String tag, String lang )
+	{
+		return dataFactory.createXMLLiteral(tag, lang);
+	}
+	
+	public static Term _yearmonthduration(int year, int month)
+	{
+		return dataFactory.createYearMonthDuration(year, month);
+	}
+	
+	public static Term _daytimeduration(int day, int hour, int minute, double second)
+	{
+		return dataFactory.createDayTimeDuration(day, hour, minute, second);
+	}
+
 
 	/**
 	 * Create an IRI.
