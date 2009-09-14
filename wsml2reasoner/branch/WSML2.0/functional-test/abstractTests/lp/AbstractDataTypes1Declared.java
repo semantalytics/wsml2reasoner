@@ -94,7 +94,7 @@ public abstract class AbstractDataTypes1Declared extends TestCase implements LP 
     	// RDF data types
     	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aRDFText" ), Results._text("Family Guy", "en" ) );
     	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_RDFText" ), Results._text("Padre de Familia", "es") );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aRDF_XMLLiteral" ), Results._xmlliteral("<tag>XML Literal</tag>", ""));
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aRDF_XMLLiteral" ), Results._xmlliteral("<tag>XML Things</tag>", ""));
     	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_RDF_XMLLiteral" ), Results._xmlliteral("<tag>XML Literal</tag>", ""));
     	
     	// new XSD Datatypes
