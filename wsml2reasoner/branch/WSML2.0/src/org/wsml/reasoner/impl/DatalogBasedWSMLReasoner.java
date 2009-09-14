@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.deri.wsmo4j.logicalexpression.ConstantTransformer;
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
@@ -37,8 +38,6 @@ import org.omwg.ontology.Concept;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Type;
 import org.omwg.ontology.Variable;
-import org.omwg.ontology.WsmlDataType;
-import org.omwg.ontology.XmlSchemaDataType;
 import org.wsml.reasoner.ConjunctiveQuery;
 import org.wsml.reasoner.DatalogException;
 import org.wsml.reasoner.DatalogReasonerFacade;
@@ -415,8 +414,8 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         }
     }
 
-    private void addAttributeOfTypeViolations(Set<ConsistencyViolation> errors) throws InvalidModelException {
-        // ATTR_OFTYPE(instance,value,concept, attribute,violated_type)
+	private void addAttributeOfTypeViolations(Set<ConsistencyViolation> errors) throws InvalidModelException {
+        // ATTR_OFTYPE(instance, value, concept, attribute, violated_type)
         Variable i = leFactory.createVariable("i");
         Variable v = leFactory.createVariable("v");
         Variable c = leFactory.createVariable("c");
@@ -441,21 +440,19 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
             Attribute attribute = findAttributeForError((IRI) violation.get(a), concept);
             Type type;
             IRI typeId = (IRI) violation.get(t);
-            if (WsmlDataType.WSML_STRING.equals(typeId.toString()) || WsmlDataType.WSML_INTEGER.equals(typeId.toString()) || WsmlDataType.WSML_DECIMAL.equals(typeId.toString()) || WsmlDataType.WSML_BOOLEAN.equals(typeId.toString())){
-            	type = factory.getXmlDataFactory().createDataType(typeId);
-            }
-            else if (XmlSchemaDataType.XSD_STRING.equals(typeId.toString()) || XmlSchemaDataType.XSD_INTEGER.equals(typeId.toString()) || XmlSchemaDataType.XSD_DECIMAL.equals(typeId.toString()) || XmlSchemaDataType.XSD_BOOLEAN.equals(typeId.toString())){
+            ConstantTransformer constTransformer = ConstantTransformer.getInstance();
+            if (constTransformer.isDataType(typeId.toString())) {
             	type = factory.getXmlDataFactory().createDataType(typeId);
             }
             else{
                 type = wsmoFactory.createConcept(typeId);
+            }    
+            Term instanceTerm = violation.get(i);
+			if (instanceTerm instanceof Identifier) {
+                errors.add(new AttributeTypeViolation(wsmoFactory.createInstance((IRI) instanceTerm), rawValue, attribute, type));
             }
-            // TODO mp: inconsistency error when trying to add an shortcut (_string) datatype or an XS_Datatype ? 
-            if (violation.get(i) instanceof Identifier) {
-                errors.add(new AttributeTypeViolation(wsmoFactory.createInstance((IRI) violation.get(i)), rawValue, attribute, type));
-            }
-            if (violation.get(i) instanceof ConstructedTerm) {
-                errors.add(new AttributeTypeViolation((ConstructedTerm) violation.get(i), rawValue, attribute, type));
+            if (instanceTerm instanceof ConstructedTerm) {
+                errors.add(new AttributeTypeViolation((ConstructedTerm) instanceTerm, rawValue, attribute, type));
             }
         }
 

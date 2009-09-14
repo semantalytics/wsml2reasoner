@@ -76,6 +76,7 @@ import org.deri.iris.builtins.datatype.IsBase64BinaryBuiltin;
 import org.deri.iris.builtins.datatype.IsBooleanBuiltin;
 import org.deri.iris.builtins.datatype.IsDateBuiltin;
 import org.deri.iris.builtins.datatype.IsDateTimeBuiltin;
+import org.deri.iris.builtins.datatype.IsDayTimeDurationBuiltin;
 import org.deri.iris.builtins.datatype.IsDecimalBuiltin;
 import org.deri.iris.builtins.datatype.IsDoubleBuiltin;
 import org.deri.iris.builtins.datatype.IsDurationBuiltin;
@@ -88,7 +89,10 @@ import org.deri.iris.builtins.datatype.IsGYearMonthBuiltin;
 import org.deri.iris.builtins.datatype.IsHexBinaryBuiltin;
 import org.deri.iris.builtins.datatype.IsIntegerBuiltin;
 import org.deri.iris.builtins.datatype.IsStringBuiltin;
+import org.deri.iris.builtins.datatype.IsTextBuiltin;
 import org.deri.iris.builtins.datatype.IsTimeBuiltin;
+import org.deri.iris.builtins.datatype.IsXMLLiteralBuiltin;
+import org.deri.iris.builtins.datatype.IsYearMonthDurationBuiltin;
 import org.deri.iris.facts.IDataSource;
 import org.deri.iris.querycontainment.QueryContainment;
 import org.deri.iris.storage.IRelation;
@@ -838,43 +842,51 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
            		if( t1 instanceof IIri ) {
         			IIri iri = (IIri) t1;
         			String type = iri.getValue();
-        			if( type.equals( WsmlDataType.WSML_STRING ) )
+        			if( type.equals( WsmlDataType.WSML_STRING ) || type.equals( XmlSchemaDataType.XSD_STRING ) )
         				return new IsStringBuiltin( t0 );
-        			else if( type.equals( WsmlDataType.WSML_DECIMAL ) )
+        			else if( type.equals( WsmlDataType.WSML_DECIMAL ) || type.equals( XmlSchemaDataType.XSD_DECIMAL ) )
         				return new IsDecimalBuiltin( t0 );
-        			else if( type.equals( WsmlDataType.WSML_DOUBLE ) )
+        			else if( type.equals( WsmlDataType.WSML_DOUBLE ) || type.equals( XmlSchemaDataType.XSD_DOUBLE ) )
         				return new IsDoubleBuiltin( t0 );
-        			else if( type.equals( WsmlDataType.WSML_BOOLEAN ) )
+        			else if( type.equals( WsmlDataType.WSML_BOOLEAN ) || type.equals( XmlSchemaDataType.XSD_BOOLEAN ) )
         				return new IsBooleanBuiltin( t0 );
-        			else if( type.equals( WsmlDataType.WSML_INTEGER ) )
+        			else if( type.equals( WsmlDataType.WSML_INTEGER ) || type.equals( XmlSchemaDataType.XSD_INTEGER ) )
         				return new IsIntegerBuiltin( t0 );
-        			else if( type.equals( WsmlDataType.WSML_BASE64BINARY ) )
+        			else if( type.equals( WsmlDataType.WSML_BASE64BINARY ) || type.equals( XmlSchemaDataType.XSD_BASE64BINARY ) )
         				return new IsBase64BinaryBuiltin( t0 );
-        			else if( type.equals( WsmlDataType.WSML_DATE ) )
+        			else if( type.equals( WsmlDataType.WSML_DATE ) || type.equals( XmlSchemaDataType.XSD_DATE ) )
         				return new IsDateBuiltin( t0 );
-        			else if( type.equals( WsmlDataType.WSML_DATETIME ) )
+        			else if( type.equals( WsmlDataType.WSML_DATETIME ) || type.equals( XmlSchemaDataType.XSD_DATETIME ) )
         				return new IsDateTimeBuiltin( t0 );
-        			else if( type.equals( WsmlDataType.WSML_DURATION ) )
+        			else if( type.equals( WsmlDataType.WSML_DURATION ) || type.equals( XmlSchemaDataType.XSD_DURATION ) )
         				return new IsDurationBuiltin( t0 );
-        			else if( type.equals( WsmlDataType.WSML_FLOAT ) )
+        			else if( type.equals( WsmlDataType.WSML_FLOAT ) || type.equals( XmlSchemaDataType.XSD_FLOAT ) )
         				return new IsFloatBuiltin( t0 );
-        			else if( type.equals( WsmlDataType.WSML_GDAY ) )
+        			else if( type.equals( WsmlDataType.WSML_GDAY ) || type.equals( XmlSchemaDataType.XSD_GDAY ) )
         				return new IsGDayBuiltin( t0 );
-        			else if( type.equals( WsmlDataType.WSML_GMONTH ) )
+        			else if( type.equals( WsmlDataType.WSML_GMONTH ) || type.equals( XmlSchemaDataType.XSD_GMONTH ) )
         				return new IsGMonthBuiltin( t0 );
-        			else if( type.equals( WsmlDataType.WSML_GMONTHDAY ) )
+        			else if( type.equals( WsmlDataType.WSML_GMONTHDAY ) || type.equals( XmlSchemaDataType.XSD_GMONTHDAY ) )
         				return new IsGMonthDayBuiltin( t0 );
-        			else if( type.equals( WsmlDataType.WSML_GYEAR ) )
+        			else if( type.equals( WsmlDataType.WSML_GYEAR ) || type.equals( XmlSchemaDataType.XSD_GYEAR ) )
         				return new IsGYearBuiltin( t0 );
-        			else if( type.equals( WsmlDataType.WSML_GYEARMONTH ) )
+        			else if( type.equals( WsmlDataType.WSML_GYEARMONTH ) || type.equals( XmlSchemaDataType.XSD_GYEARMONTH ) )
         				return new IsGYearMonthBuiltin( t0 );
-        			else if( type.equals( WsmlDataType.WSML_HEXBINARY ) )
+        			else if( type.equals( WsmlDataType.WSML_HEXBINARY ) || type.equals( XmlSchemaDataType.XSD_HEXBINARY ) )
         				return new IsHexBinaryBuiltin( t0 );
-        			else if( type.equals( WsmlDataType.WSML_TIME ) )
+        			else if( type.equals( WsmlDataType.WSML_TIME ) || type.equals( XmlSchemaDataType.XSD_TIME ) )
         				return new IsTimeBuiltin( t0 );
-//        			else if( type.equals( WsmlDataType.WSML_TEXT ) )  // TODO CHECK 
-//        				return new IsTimeBuiltin( t0 );
-//        			
+        			// new XSDs
+        			else if( type.equals( XmlSchemaDataType.XSD_YEARMONTHDURATION ) )  
+        				return new IsYearMonthDurationBuiltin( t0 );
+        			else if( type.equals( XmlSchemaDataType.XSD_DAYTIMEDURATION ) )  
+        				return new IsDayTimeDurationBuiltin( t0 );
+        			// RDF 
+        			else if( type.equals( RDFDataType.RDF_TEXT ) )  
+        				return new IsTextBuiltin( t0 );
+        			else if( type.equals( RDFDataType.RDF_XMLLITERAL ) )  
+        				return new IsXMLLiteralBuiltin( t0 );
+        			
         		}
         	}
         	// If none of these then drop through to normal atom processing.

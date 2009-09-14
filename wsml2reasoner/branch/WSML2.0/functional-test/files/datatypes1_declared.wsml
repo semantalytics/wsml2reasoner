@@ -180,3 +180,4 @@ instance anInstance memberOf anEntity
 	
 	aDayTimeDuration hasValue xsd#dayTimeDuration(1, 10, 31, 15.5)
 	a_DayTimeDuration hasValue _daytimeduration(1, 10, 31, 15.6)
+	
