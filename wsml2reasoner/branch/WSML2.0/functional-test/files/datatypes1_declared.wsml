@@ -84,7 +84,7 @@ concept anEntity
 	aXSD_Base64Binary ofType xsd#base64Binary
 	
 	// RDF Datatypes
-	aRDFText     ofType rdf#Text
+	aRDFText     ofType rdf#text
 	a_RDFText    ofType _rdftext
 	
 	aRDF_XMLLiteral ofType rdf#XMLLiteral
@@ -171,7 +171,7 @@ instance anInstance memberOf anEntity
 	aRDFText hasValue rdf#text("Family Guy", "en")
 	a_RDFText hasValue _rdftext("Padre de Familia", "es")
 	
-	aRDF_XMLLiteral hasValue rdf#XMLLiteral("<tag>XML Literal</tag>", "")
+	aRDF_XMLLiteral hasValue rdf#XMLLiteral("<tag>XML Things</tag>", "")
 	a_RDF_XMLLiteral hasValue _xmlliteral("<tag>XML Literal</tag>", "")
 	
 	// new XSD Datatypes
