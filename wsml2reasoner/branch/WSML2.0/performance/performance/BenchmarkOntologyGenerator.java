@@ -46,6 +46,7 @@ import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Relation;
 import org.omwg.ontology.RelationInstance;
 import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
+import org.wsmo.common.BuiltIn;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Namespace;
 import org.wsmo.common.TopEntity;
@@ -2030,21 +2031,21 @@ public class BenchmarkOntologyGenerator {
 				terms2.add(leFactory.createVariable("?y"));
 				terms2.add(dataFactory.createInteger("2"));
 				builtIn2 = leFactory.createConstructedTerm(
-						wsmoFactory.createIRI(Constants.NUMERIC_MUL), terms2);
+						wsmoFactory.createIRI(BuiltIn.NUMERIC_MULTIPLY.getFullName()), terms2);
 				terms3.clear();
 				terms3.add(builtIn2);
 				terms3.add(dataFactory.createInteger("4"));
 				builtIn3 = leFactory.createConstructedTerm(
-						wsmoFactory.createIRI(Constants.NUMERIC_DIV), terms3);
+						wsmoFactory.createIRI(BuiltIn.NUMERIC_DIVIDE.getFullName()), terms3);
 				terms4.clear();
 				terms4.add(builtIn3);
 				terms4.add(dataFactory.createInteger("1"));
 				builtIn4 = leFactory.createConstructedTerm(
-						wsmoFactory.createIRI(Constants.NUMERIC_ADD), terms4);
+						wsmoFactory.createIRI(BuiltIn.NUMERIC_ADD.getFullName()), terms4);
 				terms1.clear();
 				terms1.add(builtIn4);
 				terms1.add(dataFactory.createInteger("16"));
-				builtIn1 = leFactory.createAtom(wsmoFactory.createIRI(Constants.LESS_THAN), 
+				builtIn1 = leFactory.createAtom(wsmoFactory.createIRI(BuiltIn.LESS_THAN.getFullName()), 
 						terms1);
 				memberMol = leFactory.createMemberShipMolecule(leFactory.createVariable("?x"),
 						wsmoFactory.createIRI(ns, "c2"));

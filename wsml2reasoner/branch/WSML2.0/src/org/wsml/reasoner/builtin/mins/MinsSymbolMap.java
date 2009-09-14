@@ -42,6 +42,7 @@ import org.omwg.ontology.Variable;
 import org.wsml.reasoner.ConjunctiveQuery;
 import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.UnsupportedFeatureException;
+import org.wsmo.common.BuiltIn;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.FactoryContainer;
 
@@ -90,47 +91,47 @@ public class MinsSymbolMap {
 
     public MinsSymbolMap(FactoryContainer factory) {
         this.factory = factory;
-        minsBuiltinFunc.put(Constants.LESS_THAN, new Less());
-        minsBuiltIn2No.put(Constants.LESS_THAN, 0);
+        minsBuiltinFunc.put(BuiltIn.LESS_THAN.getFullName(), new Less());
+        minsBuiltIn2No.put(BuiltIn.LESS_THAN.getFullName(), 0);
 
-        minsBuiltinFunc.put(Constants.LESS_EQUAL, new Lessorequal());
-        minsBuiltIn2No.put(Constants.LESS_EQUAL, 1);
+        minsBuiltinFunc.put(BuiltIn.LESS_EQUAL.getFullName(), new Lessorequal());
+        minsBuiltIn2No.put(BuiltIn.LESS_EQUAL.getFullName(), 1);
 
-        minsBuiltinFunc.put(Constants.GREATER_THAN, new Greater());
-        minsBuiltIn2No.put(Constants.GREATER_THAN, 2);
+        minsBuiltinFunc.put(BuiltIn.GREATER_THAN.getFullName(), new Greater());
+        minsBuiltIn2No.put(BuiltIn.GREATER_THAN.getFullName(), 2);
 
-        minsBuiltinFunc.put(Constants.GREATER_EQUAL, new Greaterorequal());
-        minsBuiltIn2No.put(Constants.GREATER_EQUAL, 3);
+        minsBuiltinFunc.put(BuiltIn.GREATER_EQUAL.getFullName(), new Greaterorequal());
+        minsBuiltIn2No.put(BuiltIn.GREATER_EQUAL.getFullName(), 3);
 
-        minsBuiltinFunc.put(Constants.NUMERIC_ADD, new NumericAdd());
-        minsBuiltIn2No.put(Constants.NUMERIC_ADD, 4);
+        minsBuiltinFunc.put(BuiltIn.NUMERIC_ADD.getFullName(), new NumericAdd());
+        minsBuiltIn2No.put(BuiltIn.NUMERIC_ADD.getFullName(), 4);
 
-        minsBuiltinFunc.put(Constants.NUMERIC_SUB, new NumericAdd());
-        minsBuiltIn2No.put(Constants.NUMERIC_SUB, 4);
+        minsBuiltinFunc.put(BuiltIn.NUMERIC_SUBTRACT.getFullName(), new NumericAdd());
+        minsBuiltIn2No.put(BuiltIn.NUMERIC_SUBTRACT.getFullName(), 4);
 
-        minsBuiltinFunc.put(Constants.NUMERIC_MUL, new NumericMult());
-        minsBuiltIn2No.put(Constants.NUMERIC_MUL, 5);
+        minsBuiltinFunc.put(BuiltIn.NUMERIC_MULTIPLY.getFullName(), new NumericMult());
+        minsBuiltIn2No.put(BuiltIn.NUMERIC_MULTIPLY.getFullName(), 5);
 
-        minsBuiltinFunc.put(Constants.NUMERIC_DIV, new NumericMult());
-        minsBuiltIn2No.put(Constants.NUMERIC_DIV, 5);
+        minsBuiltinFunc.put(BuiltIn.NUMERIC_DIVIDE.getFullName(), new NumericMult());
+        minsBuiltIn2No.put(BuiltIn.NUMERIC_DIVIDE.getFullName(), 5);
 
-        minsBuiltinFunc.put(Constants.EQUAL, new Equal());
-        minsBuiltIn2No.put(Constants.EQUAL, 6);
+        minsBuiltinFunc.put(BuiltIn.EQUAL.getFullName(), new Equal());
+        minsBuiltIn2No.put(BuiltIn.EQUAL.getFullName(), 6);
 
-        minsBuiltinFunc.put(Constants.INEQUAL, new Equal());
-        minsBuiltIn2No.put(Constants.INEQUAL, 6);
+        minsBuiltinFunc.put(BuiltIn.INEQUAL.getFullName(), new Equal());
+        minsBuiltIn2No.put(BuiltIn.INEQUAL.getFullName(), 6);
 
-        minsBuiltinFunc.put(Constants.NUMERIC_EQUAL, new Equal());
-        minsBuiltIn2No.put(Constants.NUMERIC_EQUAL, 6);
+        minsBuiltinFunc.put(BuiltIn.NUMERIC_EQUAL.getFullName(), new Equal());
+        minsBuiltIn2No.put(BuiltIn.NUMERIC_EQUAL.getFullName(), 6);
 
-        minsBuiltinFunc.put(Constants.NUMERIC_INEQUAL, new Equal());
-        minsBuiltIn2No.put(Constants.NUMERIC_INEQUAL, 6);
+        minsBuiltinFunc.put(BuiltIn.NUMERIC_INEQUAL.getFullName(), new Equal());
+        minsBuiltIn2No.put(BuiltIn.NUMERIC_INEQUAL.getFullName(), 6);
 
-        minsBuiltinFunc.put(Constants.STRING_EQUAL, new Equal());
-        minsBuiltIn2No.put(Constants.STRING_EQUAL, 6);
+        minsBuiltinFunc.put(BuiltIn.STRING_EQUAL.getFullName(), new Equal());
+        minsBuiltIn2No.put(BuiltIn.STRING_EQUAL.getFullName(), 6);
 
-        minsBuiltinFunc.put(Constants.STRING_INEQUAL, new Equal());
-        minsBuiltIn2No.put(Constants.STRING_INEQUAL, 6);
+        minsBuiltinFunc.put(BuiltIn.STRING_INEQUAL.getFullName(), new Equal());
+        minsBuiltIn2No.put(BuiltIn.STRING_INEQUAL.getFullName(), 6);
     }
 
     public int convertToTool(org.wsml.reasoner.Literal literal) {

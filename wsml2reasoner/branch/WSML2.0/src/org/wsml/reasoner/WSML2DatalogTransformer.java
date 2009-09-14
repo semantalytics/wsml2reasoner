@@ -49,6 +49,7 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.transformation.ConstructedTermVisitor;
 import org.wsml.reasoner.transformation.InfixOrderLogicalExpressionVisitor;
+import org.wsmo.common.BuiltIn;
 import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 
@@ -418,8 +419,8 @@ public class WSML2DatalogTransformer {
         head = new Literal(true, PRED_INDIRECT_SUBCONCEPT, vConcept, vConcept2);
         body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept3));
         body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept3, vConcept2));
-        body.add(new Literal(true, Constants.INEQUAL, vConcept, vConcept3));
-        body.add(new Literal(true, Constants.INEQUAL, vConcept3, vConcept2));
+        body.add(new Literal(true, BuiltIn.INEQUAL.getFullName(), vConcept, vConcept3));
+        body.add(new Literal(true, BuiltIn.INEQUAL.getFullName(), vConcept3, vConcept2));
         result.add(new Rule(head, body));
         // Direct concepts: direct(?x,?y) :- ?x subConceptOf ?y and
         // naf(indirect(?x,?y)).
@@ -435,7 +436,7 @@ public class WSML2DatalogTransformer {
         body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept));
         body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept2));
         body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept2, vConcept));
-        body.add(new Literal(true, Constants.INEQUAL, vConcept2, vConcept));
+        body.add(new Literal(true, BuiltIn.INEQUAL.getFullName(), vConcept2, vConcept));
         result.add(new Rule(head, body));
         // Direct concepts of: directOf(?x,?y) :- ?x memberOf ?y and
         // naf(indirectOf(?x,?y)).

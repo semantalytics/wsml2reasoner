@@ -50,6 +50,7 @@ import org.omwg.ontology.Type;
 import org.omwg.ontology.Value;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.transformation.le.LEUtil;
+import org.wsmo.common.BuiltIn;
 import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
@@ -348,7 +349,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 List<Term> args = new ArrayList<Term>(2);
                 args.add(yVariable[i]);
                 args.add(yVariable[j]);
-                inEqualities.add(leFactory.createAtom(wsmoFactory.createIRI(Constants.INEQUAL), args));
+                inEqualities.add(leFactory.createAtom(wsmoFactory.createIRI(BuiltIn.INEQUAL.getFullName()), args));
             }
         }
 
@@ -396,7 +397,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 List<Term> args = new ArrayList<Term>(2);
                 args.add(yVariable[i]);
                 args.add(yVariable[j]);
-                inEqualities.add(leFactory.createAtom(wsmoFactory.createIRI(Constants.INEQUAL), args));
+                inEqualities.add(leFactory.createAtom(wsmoFactory.createIRI(BuiltIn.INEQUAL.getFullName()), args));
             }
         }
 

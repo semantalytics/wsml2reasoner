@@ -29,6 +29,7 @@ import org.omwg.logicalexpression.Constants;
 import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.Literal;
 import org.wsml.reasoner.LiteralTestHelper;
+import org.wsmo.common.BuiltIn;
 import org.wsmo.factory.WsmoFactory;
 
 public class IrisFacadeConvertTest extends TestCase {
@@ -57,7 +58,7 @@ public class IrisFacadeConvertTest extends TestCase {
 
 	public void testLiteral2AtomHead() {
 
-		Literal wsmlLiteral = new Literal(true, Constants.EQUAL,
+		Literal wsmlLiteral = new Literal(true, BuiltIn.EQUAL.getFullName(),
 				LiteralTestHelper.createVariable("x"), LiteralTestHelper
 						.createVariable("y"));
 

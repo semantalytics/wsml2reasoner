@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.omwg.logicalexpression.Constants;
+import org.wsmo.common.BuiltIn;
 
 /**
  * Interface or class description
@@ -44,14 +45,14 @@ public class TPTPSymbolMap {
     private Map<String, String> buildinmapping = new HashMap<String, String>();
 
     public TPTPSymbolMap() {
-        buildinmapping.put(Constants.NUMERIC_ADD, "plus");
-        buildinmapping.put(Constants.NUMERIC_SUB, "minus");
-        buildinmapping.put(Constants.NUMERIC_MUL, "times");
-        buildinmapping.put(Constants.GREATER_THAN, "greater");
-        buildinmapping.put(Constants.GREATER_EQUAL, "greatereq");
-        buildinmapping.put(Constants.LESS_THAN, "less");
-        buildinmapping.put(Constants.LESS_EQUAL, "lesseq");
-        buildinmapping.put(Constants.NUMERIC_EQUAL, "equiv");
+        buildinmapping.put(BuiltIn.NUMERIC_ADD.getFullName(), "plus");
+        buildinmapping.put(BuiltIn.NUMERIC_SUBTRACT.getFullName(), "minus");
+        buildinmapping.put(BuiltIn.NUMERIC_MULTIPLY.getFullName(), "times");
+        buildinmapping.put(BuiltIn.GREATER_THAN.getFullName(), "greater");
+        buildinmapping.put(BuiltIn.GREATER_EQUAL.getFullName(), "greatereq");
+        buildinmapping.put(BuiltIn.LESS_THAN.getFullName(), "less");
+        buildinmapping.put(BuiltIn.LESS_EQUAL.getFullName(), "lesseq");
+        buildinmapping.put(BuiltIn.NUMERIC_EQUAL.getFullName(), "equiv");
     }
 
     public String getTPTPTerm(String wsmlTerm) {

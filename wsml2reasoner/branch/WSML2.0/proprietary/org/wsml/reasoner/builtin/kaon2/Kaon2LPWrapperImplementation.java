@@ -40,6 +40,7 @@ import org.wsml.reasoner.DatalogReasonerFacade;
 import org.wsml.reasoner.ExternalToolException;
 import org.wsml.reasoner.UnsupportedFeatureException;
 import org.wsml.reasoner.WSML2DatalogTransformer;
+import org.wsmo.common.BuiltIn;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.FactoryContainer;
@@ -268,18 +269,18 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 			String p = l.getPredicateUri();
 			Predicate pred = null;
 			List<Term> terms = new ArrayList<Term>();
-			if( p.equals( Constants.EQUAL ) )
+			if( p.equals( BuiltIn.EQUAL.getFullName() ) )
 			{
 				pred = f.equal();
 				translateTerms( l, terms );
 			}
-			else if( p.equals( Constants.INEQUAL ) )
+			else if( p.equals( BuiltIn.INEQUAL.getFullName() ) )
 			{
 				pred = f.equal();
 				isPositive = false;
 				translateTerms( l, terms );
 			}
-			else if( p.equals( Constants.LESS_THAN ) )
+			else if( p.equals( BuiltIn.LESS_THAN.getFullName() ) )
 			{
 				if( l.getTerms().length == 2 )
 				{
@@ -292,7 +293,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 					throw new ExternalToolException( "wsml#lessThan should have exactly two arguments!" );
 				}
 			}
-			else if( p.equals( Constants.LESS_EQUAL ) )
+			else if( p.equals( BuiltIn.LESS_EQUAL.getFullName() ) )
 			{
 				if( l.getTerms().length == 2 )
 				{
@@ -305,7 +306,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 					throw new ExternalToolException( "wsml#lessEqual should have exactly two arguments!" );
 				}
 			}
-			else if( p.equals( Constants.GREATER_THAN ) )
+			else if( p.equals( BuiltIn.GREATER_THAN.getFullName() ) )
 			{
 				if( l.getTerms().length == 2 )
 				{
@@ -318,7 +319,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 					throw new ExternalToolException( "wsml#greaterThan should have exactly two arguments!" );
 				}
 			}
-			else if( p.equals( Constants.GREATER_EQUAL ) )
+			else if( p.equals( BuiltIn.GREATER_EQUAL.getFullName() ) )
 			{
 				if( l.getTerms().length == 2 )
 				{
@@ -331,7 +332,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 					throw new ExternalToolException( "wsml#greaterEqual should have exactly two arguments!" );
 				}
 			}
-			else if( p.equals( Constants.NUMERIC_EQUAL ) )
+			else if( p.equals( BuiltIn.NUMERIC_EQUAL.getFullName() ) )
 			{
 				if( l.getTerms().length == 2 )
 				{
@@ -344,7 +345,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 					throw new ExternalToolException( "wsml#numericEqual should have exactly two arguments!" );
 				}
 			}
-			else if( p.equals( Constants.NUMERIC_INEQUAL ) )
+			else if( p.equals( BuiltIn.NUMERIC_INEQUAL.getFullName() ) )
 			{
 				if( l.getTerms().length == 2 )
 				{
@@ -357,7 +358,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 					throw new ExternalToolException( "wsml#numericInEqual should have exactly two arguments!" );
 				}
 			}
-			else if( p.equals( Constants.STRING_EQUAL ) )
+			else if( p.equals( BuiltIn.STRING_EQUAL.getFullName() ) )
 			{
 				if( l.getTerms().length == 2 )
 				{
@@ -370,7 +371,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 					throw new ExternalToolException( "wsml#stringEqual should have exactly two arguments!" );
 				}
 			}
-			else if( p.equals( Constants.STRING_INEQUAL ) )
+			else if( p.equals( BuiltIn.STRING_INEQUAL.getFullName() ) )
 			{
 				if( l.getTerms().length == 2 )
 				{
@@ -383,7 +384,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 					throw new ExternalToolException( "wsml#lessThan should have exactly two arguments!" );
 				}
 			}
-			else if( p.equals( Constants.NUMERIC_ADD ) )
+			else if( p.equals( BuiltIn.NUMERIC_ADD.getFullName() ) )
 			{
 				if( l.getTerms().length == 3 )
 				{
@@ -399,7 +400,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 					throw new ExternalToolException( "wsml#numericAdd should have exactly three arguments!" );
 				}
 			}
-			else if( p.equals( Constants.NUMERIC_SUB ) )
+			else if( p.equals( BuiltIn.NUMERIC_SUBTRACT.getFullName() ) )
 			{
 				if( l.getTerms().length == 3 )
 				{
@@ -415,7 +416,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 					throw new ExternalToolException( "wsml#numericSubtract should have exactly three arguments!" );
 				}
 			}
-			else if( p.equals( Constants.NUMERIC_MUL ) )
+			else if( p.equals( BuiltIn.NUMERIC_MULTIPLY.getFullName() ) )
 			{
 				if( l.getTerms().length == 3 )
 				{
@@ -431,7 +432,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 					throw new ExternalToolException( "wsml#numericAdd should have exactly three arguments!" );
 				}
 			}
-			else if( p.equals( Constants.NUMERIC_DIV ) )
+			else if( p.equals( BuiltIn.NUMERIC_DIVIDE.getFullName() ) )
 			{
 				if( l.getTerms().length == 3 )
 				{

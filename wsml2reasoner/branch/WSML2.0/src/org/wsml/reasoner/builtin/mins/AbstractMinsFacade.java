@@ -44,6 +44,7 @@ import org.wsml.reasoner.Literal;
 import org.wsml.reasoner.UnsupportedFeatureException;
 import org.wsml.reasoner.WSML2DatalogTransformer;
 import org.wsml.reasoner.api.exception.InternalReasonerException;
+import org.wsmo.common.BuiltIn;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.WsmoFactory;
@@ -294,13 +295,13 @@ public abstract class AbstractMinsFacade implements DatalogReasonerFacade
         boolean positive = !lit.isPositive();
 
         if (no == -1) {
-            if (predSym.equals(org.omwg.logicalexpression.Constants.NUMERIC_ADD) || predSym.equals(org.omwg.logicalexpression.Constants.NUMERIC_MUL)) {
+            if (predSym.equals(BuiltIn.NUMERIC_ADD.getFullName()) || predSym.equals(BuiltIn.NUMERIC_MULTIPLY.getFullName())) {
                 terms = new org.deri.mins.terms.Term[] { terms[1], terms[2], terms[0] };
             }
-            if (predSym.equals(org.omwg.logicalexpression.Constants.NUMERIC_SUB) || predSym.equals(org.omwg.logicalexpression.Constants.NUMERIC_DIV)) {
+            if (predSym.equals(BuiltIn.NUMERIC_SUBTRACT.getFullName()) || predSym.equals(BuiltIn.NUMERIC_DIVIDE.getFullName())) {
                 terms = new org.deri.mins.terms.Term[] { terms[0], terms[2], terms[1] };
             }
-            if (predSym.equals(org.omwg.logicalexpression.Constants.STRING_INEQUAL) || predSym.equals(org.omwg.logicalexpression.Constants.NUMERIC_INEQUAL) || predSym.equals(org.omwg.logicalexpression.Constants.INEQUAL)) {
+            if (predSym.equals(BuiltIn.STRING_INEQUAL.getFullName()) || predSym.equals(BuiltIn.NUMERIC_INEQUAL.getFullName()) || predSym.equals(BuiltIn.INEQUAL.getFullName())) {
                 positive = !positive;
             }
             // int num = symbTransfomer.minsBuiltIn2No.get(predSym);

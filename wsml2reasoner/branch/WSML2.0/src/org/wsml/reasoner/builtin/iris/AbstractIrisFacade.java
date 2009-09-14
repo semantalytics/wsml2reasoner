@@ -113,10 +113,12 @@ import org.wsml.reasoner.api.data.ExternalDataSource;
 import org.wsml.reasoner.api.data.ExternalDataSource.HasValue;
 import org.wsml.reasoner.api.data.ExternalDataSource.MemberOf;
 import org.wsml.reasoner.api.exception.InternalReasonerException;
+import org.wsmo.common.BuiltIn;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.NumberedAnonymousID;
 import org.wsmo.common.UnnumberedAnonymousID;
+import org.wsmo.common.WSML;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -159,47 +161,47 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
     /**
      * These are constants for additional WSML builtin predicates not covered in org.omwg.logicalexpression.Constants in WSMO4j
      */
-    final static String DATE_EQUAL = Constants.WSML_NAMESPACE  + "dateEqual";
-    final static String DATE_INEQUAL = Constants.WSML_NAMESPACE  + "dateInequal";
-    final static String DATE_GREATER_THAN = Constants.WSML_NAMESPACE + "dateGreaterThan";
-    final static String DATE_LESS_THAN = Constants.WSML_NAMESPACE + "dateLessThan";
+    final static String DATE_EQUAL = WSML.WSML_NAMESPACE  + "dateEqual";
+    final static String DATE_INEQUAL = WSML.WSML_NAMESPACE  + "dateInequal";
+    final static String DATE_GREATER_THAN = WSML.WSML_NAMESPACE + "dateGreaterThan";
+    final static String DATE_LESS_THAN = WSML.WSML_NAMESPACE + "dateLessThan";
     
-    final static String TIME_EQUAL = Constants.WSML_NAMESPACE + "timeEqual";
-    final static String TIME_INEQUAL = Constants.WSML_NAMESPACE + "timeInequal";
-    final static String TIME_GREATER_THAN = Constants.WSML_NAMESPACE + "timeGreaterThan";
-    final static String TIME_LESS_THAN = Constants.WSML_NAMESPACE + "timeLessThan";
+    final static String TIME_EQUAL = WSML.WSML_NAMESPACE + "timeEqual";
+    final static String TIME_INEQUAL = WSML.WSML_NAMESPACE + "timeInequal";
+    final static String TIME_GREATER_THAN = WSML.WSML_NAMESPACE + "timeGreaterThan";
+    final static String TIME_LESS_THAN = WSML.WSML_NAMESPACE + "timeLessThan";
     
-    final static String DATETIME_EQUAL = Constants.WSML_NAMESPACE + "dateTimeEqual";
-    final static String DATETIME_INEQUAL = Constants.WSML_NAMESPACE + "dateTimeInequal";
-    final static String DATETIME_GREATER_THAN = Constants.WSML_NAMESPACE + "dateTimeGreaterThan";
-    final static String DATETIME_LESS_THAN = Constants.WSML_NAMESPACE + "dateTimeLessThan";
+    final static String DATETIME_EQUAL = WSML.WSML_NAMESPACE + "dateTimeEqual";
+    final static String DATETIME_INEQUAL = WSML.WSML_NAMESPACE + "dateTimeInequal";
+    final static String DATETIME_GREATER_THAN = WSML.WSML_NAMESPACE + "dateTimeGreaterThan";
+    final static String DATETIME_LESS_THAN = WSML.WSML_NAMESPACE + "dateTimeLessThan";
     
-    final static String GYEARMONTH_EQUAL = Constants.WSML_NAMESPACE + "gyearmonthEqual";
-    final static String GYEAR_EQUAL = Constants.WSML_NAMESPACE + "gyearEqual";
-    final static String GMONTHDAY_EQUAL = Constants.WSML_NAMESPACE + "gmonthdayEqual";
-    final static String GMONTH_EQUAL = Constants.WSML_NAMESPACE + "gmonthEqual";
-    final static String GDAY_EQUAL = Constants.WSML_NAMESPACE + "gdayEqual";
-    final static String DURATION_EQUAL = Constants.WSML_NAMESPACE + "durationEqual";
-    final static String DAYTIMEDURATION_GREATER_THAN = Constants.WSML_NAMESPACE + "dayTimeDurationGreaterThan";
-    final static String DAYTIMEDURATION_LESS_THAN = Constants.WSML_NAMESPACE + "dayTimeDurationLessThan";
-    final static String YEARMONTHDURATION_GREATER_THAN = Constants.WSML_NAMESPACE + "yearMonthDurationGreaterThan";
-    final static String YEARMONTHDURATION_LESS_THAN = Constants.WSML_NAMESPACE + "yearMonthDurationLessThan";
+    final static String GYEARMONTH_EQUAL = WSML.WSML_NAMESPACE + "gyearmonthEqual";
+    final static String GYEAR_EQUAL = WSML.WSML_NAMESPACE + "gyearEqual";
+    final static String GMONTHDAY_EQUAL = WSML.WSML_NAMESPACE + "gmonthdayEqual";
+    final static String GMONTH_EQUAL = WSML.WSML_NAMESPACE + "gmonthEqual";
+    final static String GDAY_EQUAL = WSML.WSML_NAMESPACE + "gdayEqual";
+    final static String DURATION_EQUAL = WSML.WSML_NAMESPACE + "durationEqual";
+    final static String DAYTIMEDURATION_GREATER_THAN = WSML.WSML_NAMESPACE + "dayTimeDurationGreaterThan";
+    final static String DAYTIMEDURATION_LESS_THAN = WSML.WSML_NAMESPACE + "dayTimeDurationLessThan";
+    final static String YEARMONTHDURATION_GREATER_THAN = WSML.WSML_NAMESPACE + "yearMonthDurationGreaterThan";
+    final static String YEARMONTHDURATION_LESS_THAN = WSML.WSML_NAMESPACE + "yearMonthDurationLessThan";
     
-    final static String TRUE = Constants.WSML_NAMESPACE + "true";
-    final static String FALSE = Constants.WSML_NAMESPACE + "false";
+    final static String TRUE = WSML.WSML_NAMESPACE + "true";
+    final static String FALSE = WSML.WSML_NAMESPACE + "false";
     
     /**
      *  New Datatypes from  D3.1.4 Defining the features of the WSML-Rule v2.0 language
 	 *
      */
-    final static String XMLLiteral = Constants.WSML_NAMESPACE + "xmlLiteral";
+    final static String XMLLiteral = WSML.WSML_NAMESPACE + "xmlLiteral";
     
     /**
      *  New WSML builtin predicates from  D3.1.4 Defining the features of the WSML-Rule v2.0 language
 	 *
      */
 	 // wsml#to<Datatype>
-	private final static String TO_DATATYPE = Constants.WSML_NAMESPACE + "to"; // + DATATYPE					// RIF : xs:<datatype>
+	private final static String TO_DATATYPE = WSML.WSML_NAMESPACE + "to"; // + DATATYPE					// RIF : xs:<datatype>
 	final static String TO_DOUBLE = TO_DATATYPE + "Double";												// RIF : xs:double
 	final static String TO_STRING = TO_DATATYPE + "String";												// RIF : xs:string
 	final static String TO_DECIMAL = TO_DATATYPE + "Decimal";											// RIF : xs:decimal
@@ -223,7 +225,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 	final static String TO_TEXT = TO_DATATYPE + "Text";													// RIF : rdf:text
 	final static String TO_XML_LITERAL = TO_DATATYPE + "XMLLiteral";									// RIF : rdf:xmlliteral 
 
-	private final static String IS_PREFIX = Constants.WSML_NAMESPACE + "is"; // + DATATYPE				// RIF : pred:isLiteralOfType
+	private final static String IS_PREFIX = WSML.WSML_NAMESPACE + "is"; // + DATATYPE				// RIF : pred:isLiteralOfType
 	final static String IS_DOUBLE = IS_PREFIX + "Double";
 	final static String IS_STRING = IS_PREFIX + "String";
 	final static String IS_DECIMAL = IS_PREFIX + "Decimal";
@@ -248,40 +250,40 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 	final static String IS_XML_LITERAL = IS_PREFIX + "XMLLiteral";
 
 	
-	final static String IS_DATATYPE = Constants.WSML_NAMESPACE + "isDatatype";							// RIF : pred:isLiteralOfType	
-	final static String IS_NOT_DATATYPE = Constants.WSML_NAMESPACE + "isNotDatatype";					// RIF : pred:isLiteralNotOfType
-//	final static String HAS_DATATYPE = Constants.WSML_NAMESPACE + "hasDatatype";						// RIF : pred:hasDatatype  // TODO check
-	final static String NUMERIC_MODULUS = Constants.WSML_NAMESPACE + "numericModulus";					// RIF : func:numeric-mod
-	final static String STRING_COMPARE = Constants.WSML_NAMESPACE + "stringCompare";					// RIF : func:compare
-	final static String STRING_CONCAT = Constants.WSML_NAMESPACE + "stringConcat";						// RIF : func:concat
-	final static String STRING_JOIN = Constants.WSML_NAMESPACE + "stringJoin";							// RIF : func:string-join<N>
-	final static String STRING_SUBSTRING = Constants.WSML_NAMESPACE + "stringSubstring";				// RIF : func:substring1 , func:substring1
-	final static String STRING_LENGTH = Constants.WSML_NAMESPACE + "stringLength";						// RIF : func:string-length
-	final static String STRING_TO_UPPER = Constants.WSML_NAMESPACE + "stringToUpper";					// RIF : func:upper-case
-	final static String STRING_TO_LOWER = Constants.WSML_NAMESPACE + "stringToLower";					// RIF : func:lower-case
-	final static String STRING_URI_ENCODE = Constants.WSML_NAMESPACE + "stringUriEncode";				// RIF : func:encode-for-uri
-	final static String STRING_IRI_TO_URI = Constants.WSML_NAMESPACE + "stringIriToUri";				// RIF : func:iri-to-uri
-	final static String STRING_ESCAPE_HTML_URI = Constants.WSML_NAMESPACE + "stringEscapeHtmlUri";		// RIF : func:escape-html-uri
-	final static String STRING_SUBSTRING_BEFORE = Constants.WSML_NAMESPACE + "stringSubstringBefore";	// RIF : func:substring-before1 , func:substring-before2
-	final static String STRING_SUBSTRING_AFTER = Constants.WSML_NAMESPACE + "stringSubstringAfter";		// RIF : func:substring-after1 , func:substring-after2
-	final static String STRING_REPLACE = Constants.WSML_NAMESPACE + "stringReplace";					// RIF : func:substring-replace1 , func:substring-replace2
-	final static String STRING_CONTAINS = Constants.WSML_NAMESPACE + "stringContains";					// RIF : pred:contains1 , pred:contains2
-	final static String STRING_STARTS_WITH = Constants.WSML_NAMESPACE + "stringStartsWith";				// RIF : pred:starts-with1 , pred:starts-with2
-	final static String STRING_ENDS_WITH = Constants.WSML_NAMESPACE + "stringEndsWith";					// RIF : pres:ends-with1 , pred:ends-with2
-	final static String STRING_MATCHES = Constants.WSML_NAMESPACE + "stringMatches";					// RIF : pres:matches1 , pred:matches2
-	final static String YEAR_PART = Constants.WSML_NAMESPACE + "yearPart";								// RIF : func:year-from-dateTime , func:year-from-date , func:years-from-duration
-	final static String MONTH_PART = Constants.WSML_NAMESPACE + "monthPart";							// RIF : func:month-from-dateTime , func:month-from-date , func:month-from-duration
-	final static String DAY_PART = Constants.WSML_NAMESPACE + "dayPart";								// RIF : func:day-from-dateTime , func:day-from-date , func:day-from-duration
-	final static String HOUR_PART = Constants.WSML_NAMESPACE + "hourPart";								// RIF : func:hour-from-dateTime , func:hour-from-date , func:hour-from-duration
-	final static String MINUTE_PART = Constants.WSML_NAMESPACE + "minutePart";							// RIF : func:minute-from-dateTime , func:minute-from-date , func:minute-from-duration
-	final static String SECOND_PART = Constants.WSML_NAMESPACE + "secondPart";							// RIF : func:second-from-dateTime , func:second-from-date , func:second-from-duration
-	final static String TIMEZONE_PART = Constants.WSML_NAMESPACE + "timezonePart";						// RIF : func:timezone-from-dateTime , func:timezone-from-date , func:timezone-from-duration
-	final static String TEXT_FROM_STRING_LANG = Constants.WSML_NAMESPACE + "textFromStringLang";		// RIF : func:text-from-string-lang
-	final static String TEXT_FROM_STRING = Constants.WSML_NAMESPACE + "textFromString";					// RIF : func:text-from-string
-	final static String STRING_FROM_TEXT = Constants.WSML_NAMESPACE + "stringFromText";					// RIF : func:string-from-text
-	final static String LANG_FROM_TEXT = Constants.WSML_NAMESPACE + "langFromText";						// RIF : func:lang-from-text
-	final static String TEXT_COMPARE = Constants.WSML_NAMESPACE + "textCompare";						// RIF : func:text-compare
-	final static String TEXT_LENGTH = Constants.WSML_NAMESPACE + "textLength";							// RIF : func:text-length
+	final static String IS_DATATYPE = WSML.WSML_NAMESPACE + "isDatatype";							// RIF : pred:isLiteralOfType	
+	final static String IS_NOT_DATATYPE = WSML.WSML_NAMESPACE + "isNotDatatype";					// RIF : pred:isLiteralNotOfType
+//	final static String HAS_DATATYPE = WSML.WSML_NAMESPACE + "hasDatatype";						// RIF : pred:hasDatatype  // TODO check
+	final static String NUMERIC_MODULUS = WSML.WSML_NAMESPACE + "numericModulus";					// RIF : func:numeric-mod
+	final static String STRING_COMPARE = WSML.WSML_NAMESPACE + "stringCompare";					// RIF : func:compare
+	final static String STRING_CONCAT = WSML.WSML_NAMESPACE + "stringConcat";						// RIF : func:concat
+	final static String STRING_JOIN = WSML.WSML_NAMESPACE + "stringJoin";							// RIF : func:string-join<N>
+	final static String STRING_SUBSTRING = WSML.WSML_NAMESPACE + "stringSubstring";				// RIF : func:substring1 , func:substring1
+	final static String STRING_LENGTH = WSML.WSML_NAMESPACE + "stringLength";						// RIF : func:string-length
+	final static String STRING_TO_UPPER = WSML.WSML_NAMESPACE + "stringToUpper";					// RIF : func:upper-case
+	final static String STRING_TO_LOWER = WSML.WSML_NAMESPACE + "stringToLower";					// RIF : func:lower-case
+	final static String STRING_URI_ENCODE = WSML.WSML_NAMESPACE + "stringUriEncode";				// RIF : func:encode-for-uri
+	final static String STRING_IRI_TO_URI = WSML.WSML_NAMESPACE + "stringIriToUri";				// RIF : func:iri-to-uri
+	final static String STRING_ESCAPE_HTML_URI = WSML.WSML_NAMESPACE + "stringEscapeHtmlUri";		// RIF : func:escape-html-uri
+	final static String STRING_SUBSTRING_BEFORE = WSML.WSML_NAMESPACE + "stringSubstringBefore";	// RIF : func:substring-before1 , func:substring-before2
+	final static String STRING_SUBSTRING_AFTER = WSML.WSML_NAMESPACE + "stringSubstringAfter";		// RIF : func:substring-after1 , func:substring-after2
+	final static String STRING_REPLACE = WSML.WSML_NAMESPACE + "stringReplace";					// RIF : func:substring-replace1 , func:substring-replace2
+	final static String STRING_CONTAINS = WSML.WSML_NAMESPACE + "stringContains";					// RIF : pred:contains1 , pred:contains2
+	final static String STRING_STARTS_WITH = WSML.WSML_NAMESPACE + "stringStartsWith";				// RIF : pred:starts-with1 , pred:starts-with2
+	final static String STRING_ENDS_WITH = WSML.WSML_NAMESPACE + "stringEndsWith";					// RIF : pres:ends-with1 , pred:ends-with2
+	final static String STRING_MATCHES = WSML.WSML_NAMESPACE + "stringMatches";					// RIF : pres:matches1 , pred:matches2
+	final static String YEAR_PART = WSML.WSML_NAMESPACE + "yearPart";								// RIF : func:year-from-dateTime , func:year-from-date , func:years-from-duration
+	final static String MONTH_PART = WSML.WSML_NAMESPACE + "monthPart";							// RIF : func:month-from-dateTime , func:month-from-date , func:month-from-duration
+	final static String DAY_PART = WSML.WSML_NAMESPACE + "dayPart";								// RIF : func:day-from-dateTime , func:day-from-date , func:day-from-duration
+	final static String HOUR_PART = WSML.WSML_NAMESPACE + "hourPart";								// RIF : func:hour-from-dateTime , func:hour-from-date , func:hour-from-duration
+	final static String MINUTE_PART = WSML.WSML_NAMESPACE + "minutePart";							// RIF : func:minute-from-dateTime , func:minute-from-date , func:minute-from-duration
+	final static String SECOND_PART = WSML.WSML_NAMESPACE + "secondPart";							// RIF : func:second-from-dateTime , func:second-from-date , func:second-from-duration
+	final static String TIMEZONE_PART = WSML.WSML_NAMESPACE + "timezonePart";						// RIF : func:timezone-from-dateTime , func:timezone-from-date , func:timezone-from-duration
+	final static String TEXT_FROM_STRING_LANG = WSML.WSML_NAMESPACE + "textFromStringLang";		// RIF : func:text-from-string-lang
+	final static String TEXT_FROM_STRING = WSML.WSML_NAMESPACE + "textFromString";					// RIF : func:text-from-string
+	final static String STRING_FROM_TEXT = WSML.WSML_NAMESPACE + "stringFromText";					// RIF : func:string-from-text
+	final static String LANG_FROM_TEXT = WSML.WSML_NAMESPACE + "langFromText";						// RIF : func:lang-from-text
+	final static String TEXT_COMPARE = WSML.WSML_NAMESPACE + "textCompare";						// RIF : func:text-compare
+	final static String TEXT_LENGTH = WSML.WSML_NAMESPACE + "textLength";							// RIF : func:text-length
     
 	@SuppressWarnings("unchecked")
 	public AbstractIrisFacade(final FactoryContainer factory, final Map<String, Object> config) {
@@ -537,45 +539,45 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
     
     private static IAtom checkBuiltin(boolean headLiteral, String sym, List<ITerm> terms) {
         // check whether the predicate is a builtin
-        if (sym.equals(Constants.EQUAL) || sym.equals(Constants.NUMERIC_EQUAL) || sym.equals(Constants.STRING_EQUAL) 
+        if (sym.equals(BuiltIn.EQUAL.getFullName()) || sym.equals(BuiltIn.NUMERIC_EQUAL.getFullName()) || sym.equals(BuiltIn.STRING_EQUAL.getFullName()) 
         		|| sym.equals(Constants.STRONG_EQUAL) || sym.equals(DATE_EQUAL) || sym.equals(TIME_EQUAL) 
         		|| sym.equals(DATETIME_EQUAL) || sym.equals(GYEAR_EQUAL) || sym.equals(GYEARMONTH_EQUAL)
         		|| sym.equals(GMONTHDAY_EQUAL) || sym.equals(GDAY_EQUAL) || sym.equals(GMONTH_EQUAL)
         		|| sym.equals(DURATION_EQUAL) ) {
         	return BUILTIN.createEqual(terms.get(0), terms.get(1));
         }
-        else if (sym.equals(Constants.INEQUAL) || sym.equals(Constants.NUMERIC_INEQUAL) || sym.equals(Constants.STRING_INEQUAL)
+        else if (sym.equals(BuiltIn.INEQUAL.getFullName()) || sym.equals(BuiltIn.NUMERIC_INEQUAL.getFullName()) || sym.equals(BuiltIn.STRING_INEQUAL.getFullName())
         		|| sym.equals(DATE_INEQUAL) || sym.equals(TIME_INEQUAL) || sym.equals(DATETIME_INEQUAL)) {
             return BUILTIN.createUnequal(terms.get(0), terms.get(1));
         }
-        else if (sym.equals(Constants.LESS_THAN) || sym.equals(DATE_LESS_THAN) || sym.equals(TIME_LESS_THAN)
+        else if (sym.equals(BuiltIn.LESS_THAN.getFullName()) || sym.equals(DATE_LESS_THAN) || sym.equals(TIME_LESS_THAN)
         		|| sym.equals(DATETIME_LESS_THAN) || sym.equals(DAYTIMEDURATION_LESS_THAN) || sym.endsWith(YEARMONTHDURATION_LESS_THAN)) {
             return BUILTIN.createLess(terms.get(0), terms.get(1));
         }
-        else if (sym.equals(Constants.LESS_EQUAL)) {
+        else if (sym.equals(BuiltIn.LESS_EQUAL.getFullName())) {
             return BUILTIN.createLessEqual(terms.get(0), terms.get(1));
         }
-        else if (sym.equals(Constants.GREATER_THAN) || sym.equals(DATE_GREATER_THAN) || sym.equals(TIME_GREATER_THAN)
+        else if (sym.equals(BuiltIn.GREATER_THAN.getFullName()) || sym.equals(DATE_GREATER_THAN) || sym.equals(TIME_GREATER_THAN)
         		|| sym.equals(DATETIME_GREATER_THAN) || sym.equals(DAYTIMEDURATION_GREATER_THAN) || sym.equals(YEARMONTHDURATION_GREATER_THAN)) {
             return BUILTIN.createGreater(terms.get(0), terms.get(1));
         }
-        else if (sym.equals(Constants.GREATER_EQUAL)) {
+        else if (sym.equals(BuiltIn.GREATER_EQUAL.getFullName())) {
             return BUILTIN.createGreaterEqual(terms.get(0), terms.get(1));
 
         }
-        else if (sym.equals(Constants.NUMERIC_ADD)) {
+        else if (sym.equals(BuiltIn.NUMERIC_ADD.getFullName())) {
             return BUILTIN.createAddBuiltin(terms.get(1), terms.get(2), terms.get(0));
 
         }
-        else if (sym.equals(Constants.NUMERIC_SUB)) {
+        else if (sym.equals(BuiltIn.NUMERIC_SUBTRACT.getFullName())) {
             return BUILTIN.createSubtractBuiltin(terms.get(1), terms.get(2), terms.get(0));
 
         }
-        else if (sym.equals(Constants.NUMERIC_MUL)) {
+        else if (sym.equals(BuiltIn.NUMERIC_MULTIPLY.getFullName())) {
             return BUILTIN.createMultiplyBuiltin(terms.get(1), terms.get(2), terms.get(0));
 
         }
-        else if (sym.equals(Constants.NUMERIC_DIV)) {
+        else if (sym.equals(BuiltIn.NUMERIC_DIVIDE.getFullName())) {
             return BUILTIN.createDivideBuiltin(terms.get(1), terms.get(2), terms.get(0));
         }
         else if (sym.equals(IS_DATATYPE)) {
