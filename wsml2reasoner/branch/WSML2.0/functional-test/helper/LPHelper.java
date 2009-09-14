@@ -112,11 +112,22 @@ public class LPHelper
     private static boolean contains(Set<Map<Variable, Term>> result,
             Map<Variable, Term> expectedBinding) {
         boolean contains = false;
+       
         for (Map<Variable, Term> vBinding : result) {
-            boolean containsAll = true;
+        	boolean containsAll = true;  
             for (Variable var : expectedBinding.keySet()) {
+            	Term expected = expectedBinding.get(var);
+            	Term actual = vBinding.get(var);
+            	if(actual == null ) {
+            		System.out.println("\nError: Actual Binding has value null: " + vBinding  +" !");
+            		return false;
+            	}
+            	if(expected == null ) {
+            		System.out.println("\nError: Expected Binding has value null: " + expectedBinding  +" !");
+            		return false;
+            	}
                 containsAll = containsAll
-                        && expectedBinding.get(var).equals(vBinding.get(var));
+                        && expected.equals(actual);
             }
             if (containsAll) {
                 contains = true;
