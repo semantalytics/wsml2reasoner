@@ -882,8 +882,9 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         			else if( type.equals( XmlSchemaDataType.XSD_DAYTIMEDURATION ) )  
         				return new IsDayTimeDurationBuiltin( t0 );
         			// RDF 
-        			else if( type.equals( RDFDataType.RDF_TEXT ) )  
+        			else if( type.equals( RDFDataType.RDF_TEXT ) )  {
         				return new IsTextBuiltin( t0 );
+        			}
         			else if( type.equals( RDFDataType.RDF_XMLLITERAL ) )  
         				return new IsXMLLiteralBuiltin( t0 );
         			
@@ -1056,7 +1057,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         }
         else if (t.equals(RDFDataType.RDF_XMLLITERAL)) {
         	final ComplexDataValue cv = (ComplexDataValue) v;
-            return CONCRETE.createText(getStringFromValue(cv, 0), getStringFromValue(cv, 1));
+            return CONCRETE.createXMLLiteral(getStringFromValue(cv, 0), getStringFromValue(cv, 1));
         }
         throw new IllegalArgumentException("Can't convert a value of type " + t);
     }
