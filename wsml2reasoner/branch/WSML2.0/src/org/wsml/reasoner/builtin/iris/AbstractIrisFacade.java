@@ -1186,7 +1186,6 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         else if (t instanceof IDoubleTerm) {
             return DATA_FACTORY.createDouble(((IDoubleTerm) t).getValue());
         }
-//        FIXME gigi: add duration support 
         else if (t instanceof IDuration) {
             final IDuration dt = (IDuration) t;
             return DATA_FACTORY.createDuration( dt.getYear(), dt.getMonth(), dt.getDay(), dt.getHour(), dt.getMinute(), dt.getDecimalSecond());
