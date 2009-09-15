@@ -3,7 +3,6 @@ package org.wsml.reasoner.builtin.elly;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -402,11 +401,11 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 			
 			
 			Set<DataValue> terms = instanceMapID.get(container.getWsmoFactory().createIRI(defaultNS + "Mary"));
-			assertTrue(terms.contains(container.getXmlDataFactory().createDate(new GregorianCalendar(1949, 8, 12))));
+			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1949, 8, 12, 0, 0)));
 			
 			terms = instanceMapID.get(container.getWsmoFactory().createIRI(defaultNS + "Paul2"));
-			assertTrue(terms.contains(container.getXmlDataFactory().createDate(new GregorianCalendar(1976, 7, 16))));
-			assertTrue(terms.contains(container.getXmlDataFactory().createDate(new GregorianCalendar(1967, 7, 16))));
+			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1976, 7, 16, 0, 0)));
+			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1967, 7, 16, 0, 0)));
 		}
 		
 	}
@@ -440,8 +439,8 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "hasBirthdate")));
 			
 			Set<DataValue> terms = valueMap.get(container.getWsmoFactory().createIRI(defaultNS + "hasBirthdate"));
-			assertTrue(terms.contains(container.getXmlDataFactory().createDate(new GregorianCalendar(1976, 7, 16))));
-			assertTrue(terms.contains(container.getXmlDataFactory().createDate(new GregorianCalendar(1967, 7, 16))));
+			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1976, 7, 16, 0, 0)));
+			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1976, 7, 16, 0, 0)));
 		}
 
 		{
@@ -473,7 +472,7 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "dateOfDeath")));
 			
 			Set<DataValue> terms = valueMap.get(container.getWsmoFactory().createIRI(defaultNS + "hasBirthdate"));
-			assertTrue(terms.contains(container.getXmlDataFactory().createDate(new GregorianCalendar(1949, 8, 12))));
+			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1949, 8, 12, 0, 0)));
 
 			terms = valueMap.get(container.getWsmoFactory().createIRI(defaultNS + "isAlive"));
 			assertTrue(terms.contains(container.getXmlDataFactory().createBoolean(true)));
@@ -482,7 +481,7 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 			assertTrue(terms.contains(container.getXmlDataFactory().createDecimal("60.3")));
 
 			terms = valueMap.get(container.getWsmoFactory().createIRI(defaultNS + "dateOfDeath"));
-			assertTrue(terms.contains(container.getXmlDataFactory().createDate(new GregorianCalendar(2049, 8, 12))));
+			assertTrue(terms.contains(container.getXmlDataFactory().createDate(2049, 8, 12, 0, 0)));
 
 		}
 	}
@@ -513,8 +512,8 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 			System.out.println(valueSet);
 			
 			assertEquals(2, valueSet.size());
-			assertTrue(valueSet.contains(container.getXmlDataFactory().createDate(new GregorianCalendar(1976, 7, 16)).toString()));
-			assertTrue(valueSet.contains(container.getXmlDataFactory().createDate(new GregorianCalendar(1967, 7, 16)).toString()));
+			assertTrue(valueSet.contains(container.getXmlDataFactory().createDate(1976, 7, 16, 0, 0)));
+			assertTrue(valueSet.contains(container.getXmlDataFactory().createDate(1967, 7, 16, 0, 0)));
 		}
 
 		{

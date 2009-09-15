@@ -19,6 +19,7 @@
 package org.wsml.reasoner.builtin.mins;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,7 +38,6 @@ import org.deri.mins.terms.Term;
 import org.deri.mins.terms.concrete.BooleanTerm;
 import org.deri.mins.terms.concrete.DateTerm;
 import org.deri.mins.terms.concrete.IntegerTerm;
-import org.omwg.logicalexpression.Constants;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.ConjunctiveQuery;
 import org.wsml.reasoner.Rule;
@@ -244,7 +244,8 @@ public class MinsSymbolMap {
             }
             if (term instanceof DateTerm) {
                 DateTerm date = (DateTerm) term;
-                return factory.getXmlDataFactory().createDate(date.cal);
+                Calendar cal = date.cal;
+                return factory.getXmlDataFactory().createDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0 ,0 );
             }
             // org.deri.mins.terms.NumTerm numTerm =
             // (org.deri.mins.terms.NumTerm)term;

@@ -26,7 +26,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -194,11 +193,7 @@ public class WSMLQuery {
                 //it is here where additional type information could be needed.
                 else if(className.equals(java.sql.Timestamp.class.getCanonicalName()))
                 {
-                	java.sql.Timestamp time = (java.sql.Timestamp) entry;
-                	Calendar cal = Calendar.getInstance();
-                	cal.clear();
-                	cal.setTimeInMillis(time.getTime());
-                	ComplexDataValue dv = wsmlDataFactory.createDateTime(cal);
+                	ComplexDataValue dv = wsmlDataFactory.createDateTime(2009,9,15,13,22,10.2f,0,0);
                 	row.put(v, dv);               	
                 }
                 // this is mainly needed because COUNT returns integers
