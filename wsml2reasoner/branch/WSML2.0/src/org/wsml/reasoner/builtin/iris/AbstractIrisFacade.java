@@ -97,7 +97,6 @@ import org.deri.iris.facts.IDataSource;
 import org.deri.iris.querycontainment.QueryContainment;
 import org.deri.iris.storage.IRelation;
 import org.deri.iris.storage.simple.SimpleRelationFactory;
-import org.omwg.logicalexpression.Constants;
 import org.omwg.logicalexpression.terms.BuiltInConstructedTerm;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
@@ -544,7 +543,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
     private static IAtom checkBuiltin(boolean headLiteral, String sym, List<ITerm> terms) {
         // check whether the predicate is a builtin
         if (sym.equals(BuiltIn.EQUAL.getFullName()) || sym.equals(BuiltIn.NUMERIC_EQUAL.getFullName()) || sym.equals(BuiltIn.STRING_EQUAL.getFullName()) 
-        		|| sym.equals(Constants.STRONG_EQUAL) || sym.equals(DATE_EQUAL) || sym.equals(TIME_EQUAL) 
+        		|| sym.equals(DATE_EQUAL) || sym.equals(TIME_EQUAL) 
         		|| sym.equals(DATETIME_EQUAL) || sym.equals(GYEAR_EQUAL) || sym.equals(GYEARMONTH_EQUAL)
         		|| sym.equals(GMONTHDAY_EQUAL) || sym.equals(GDAY_EQUAL) || sym.equals(GMONTH_EQUAL)
         		|| sym.equals(DURATION_EQUAL) ) {
