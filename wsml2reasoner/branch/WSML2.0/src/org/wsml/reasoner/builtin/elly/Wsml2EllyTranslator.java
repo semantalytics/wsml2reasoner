@@ -405,8 +405,9 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 
 		// If they are not equal it is not, therefore push again
 		if (!(atom1.getTuple().equals(atom2.getTuple()))) {
-			pushAtom(atom1);
+			// push in different order
 			pushAtom(atom2);
+			pushAtom(atom1);
 		} else {
 			if (atom1.getDescription() instanceof IConceptDescription) {
 				if (atom2.getDescription() instanceof IConceptDescription) {
