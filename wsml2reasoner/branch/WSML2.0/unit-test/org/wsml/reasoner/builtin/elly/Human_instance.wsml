@@ -7,69 +7,16 @@ namespace {_"http://www.example.org/example/",
     foaf _"http://www.example.org/foaf#"}
 
 ontology _"http://www.example.org/ontologies/example"
-      annotations
-            dc#title hasValue "WSML example ontology"
-            dc#subject hasValue "family"
-            dc#description hasValue "fragments of a family ontology to provide WSML examples"
-            dc#contributor hasValue { _"http://uibk.ac.at/~c703240/foaf.rdf",
-                  _"http://uibk.ac.at/~c703239/foaf.rdf",
-                  _"http://uibk.ac.at/~c703319/various/foaf.rdf" }
-            dc#date hasValue xsd#date(2004,11,22)
-            dc#format hasValue "text/html"
-            dc#language hasValue "en-US"
-            dc#rights hasValue _"http://www.deri.org/privacy.html"
-            wsml#version hasValue "$Revision: 1.17 $"
-      endAnnotations
-
-      /*
-       * This Concept illustrates the use of different styles of
-       * attributes.
-       */
       concept Human
-            annotations
-                  dc#description hasValue "concept of a human being"
-            endAnnotations
-
+      		hasMother impliesType Mother
+      		
       concept Man subConceptOf Human
-            annotations
-                  dc#relation hasValue ManDisjointWoman
-            endAnnotations
-
       concept Woman subConceptOf Human
-            annotations
-                  dc#relation hasValue ManDisjointWoman
-            endAnnotations
-
-      /*
-       * Refining a concept and restricting an existing attribute
-       */
       concept Parent subConceptOf Human
-            annotations
-                  dc#description hasValue "Human with at least one child"
-            endAnnotations
             hasChild impliesType Human
-
-      /*
-       * Using an axiom to define class membership and an additional
-       * axiom as constraint
-       */
       concept Child subConceptOf Human
-            annotations
-                  dc#relation hasValue { ChildDef, ValidChild }
-            endAnnotations
-
-      /*
-       * Defining complete subclasses by use of axioms
-       */
       concept Girl subConceptOf {Woman, Child}
-            annotations
-                  dc#relation hasValue CompletenessOfChildren
-            endAnnotations
-
       concept Boy subConceptOf {Man, Child}
-            annotations
-                  dc#relation hasValue {ABoy,CompletenessOfChildren}
-            endAnnotations
 
 
 	/*
@@ -79,6 +26,7 @@ ontology _"http://www.example.org/ontologies/example"
 		instance Mary memberOf {Parent, Woman}
 		
 		instance Paul memberOf {Parent, Man}
+			hasMother hasValue Mary
 		
 		instance Susan memberOf Woman
 		

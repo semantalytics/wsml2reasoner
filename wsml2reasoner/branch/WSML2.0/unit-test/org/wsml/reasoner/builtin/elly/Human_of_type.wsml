@@ -34,6 +34,14 @@ ontology _"http://www.example.org/ontologies/example"
 			definedBy
 				?x[hasMother hasValue ?y] implies ?x[hasParent hasValue ?y].
 
+		axiom MotherSubMum
+			definedBy
+				?x[hasMother hasValue ?y] implies ?x[hasMum hasValue ?y].
+
+		axiom MumSubMother
+			definedBy
+				?x[hasMum hasValue ?y] implies ?x[hasMother hasValue ?y].
+
 		axiom ParentSubAncestor
 			definedBy
 				?x[hasParent hasValue ?y] implies ?x[hasAncestor hasValue ?y].
@@ -42,6 +50,17 @@ ontology _"http://www.example.org/ontologies/example"
 			definedBy
 				?x[hasAncestor hasValue ?y] implies ?x[hasRelative hasValue ?y].
 
+		axiom MarriedSubRelative
+			definedBy
+				?x[isMarriedTo hasValue ?y] implies ?x[hasRelative hasValue ?y].
+
+		axiom ChildSubRelative
+			definedBy
+				?x[hasChild hasValue ?y] implies ?x[hasRelative hasValue ?y].
+
+		axiom ChildTransitive
+			definedBy
+				?x[hasChild hasValue ?y] and ?y[hasChild hasValue ?z]  implies ?x[hasRelative hasValue ?z].
 
       concept FemaleHuman
       concept Mother subConceptOf FemaleHuman

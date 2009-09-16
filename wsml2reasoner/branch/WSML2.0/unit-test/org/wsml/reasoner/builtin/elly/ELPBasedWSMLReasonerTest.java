@@ -11,6 +11,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.omwg.logicalexpression.MembershipMolecule;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.DataType;
@@ -18,10 +19,13 @@ import org.omwg.ontology.DataValue;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Type;
+import org.omwg.ontology.XmlSchemaDataType;
 import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.DLReasoner;
+import org.wsml.reasoner.api.exception.InternalReasonerException;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
+import org.wsml.reasoner.impl.ELPBasedWSMLReasoner;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.TopEntity;
@@ -43,36 +47,64 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 		reasoner = DefaultWSMLReasonerFactory.getFactory().createDL2Reasoner(container);
 	}
 	
-	public void testSetDisableConsitencyCheck() {
-		fail("Not yet implemented");
+	public void testSetDisableConsitencyCheck() throws InconsistencyException {
+		ontology = loadOntology(prefix + "Human_unsatisfiable.wsml");
+		if (ontology == null)
+			fail();
+		
+		((ELPBasedWSMLReasoner)reasoner).setDisableConsitencyCheck(true);
+		reasoner.registerOntology(ontology);
 	}
 
-	public void testSetAllowImports() {
-		fail("Not yet implemented");
+	public void testRegisterOntology() throws InconsistencyException {
+		List<Ontology> ontologies = loadOntologies(prefix + "Human.wsml");
+		if (ontologies.isEmpty())
+			fail();
+		
+		reasoner.registerOntology(ontologies.get(0));
+		reasoner.registerOntology(ontologies.get(1));
 	}
 
-	public void testRegisterOntology() {
-		fail("Not yet implemented");
+	public void testRegisterOntologies() throws InconsistencyException {
+		List<Ontology> ontologies = loadOntologies(prefix + "Human.wsml");
+		if (ontologies.isEmpty())
+			fail();
+		
+		reasoner.registerOntologies(new HashSet<Ontology>(ontologies));
 	}
 
-	public void testRegisterOntologies() {
-		fail("Not yet implemented");
-	}
+	public void testDeRegister() throws InconsistencyException {
+		List<Ontology> ontologies = loadOntologies(prefix + "Human.wsml");
+		if (ontologies.isEmpty())
+			fail();
+		
+		reasoner.registerOntologies(new HashSet<Ontology>(ontologies));
+		assertFalse(reasoner.getAllAttributes().size() == 0);
 
-	public void testRegisterEntities() {
-		fail("Not yet implemented");
-	}
-
-	public void testDeRegister() {
-		fail("Not yet implemented");
-	}
-
-	public void testRegisterEntitiesNoVerification() {
-		fail("Not yet implemented");
+		try {
+			reasoner.deRegister();
+			reasoner.getAllAttributes().size();
+			fail();
+		} catch (InternalReasonerException e) {
+			// fine
+		}
 	}
 
 	public void testRegisterOntologyNoVerification() {
-		fail("Not yet implemented");
+		ontology = loadOntology(prefix + "Human_unsatisfiable.wsml");
+		if (ontology == null)
+			fail();
+		
+		// would throw exception otherwise
+		reasoner.registerOntologyNoVerification(ontology);
+		reasoner.deRegister();
+		
+		try {
+			reasoner.registerOntology(ontology);
+			fail();
+		} catch (InconsistencyException e) {
+			// fine
+		}
 	}
 
 	public void testGetAllAttributes() throws InconsistencyException {
@@ -91,7 +123,6 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 		System.out.println("All Attributes:");
 		System.out.println(attributes);
 		
-		assertEquals(22, attributes.size());
 		assertTrue(attributes.contains(container.getWsmoFactory().createIRI("http://www.example.org/example/hasName")));
 		assertTrue(attributes.contains(container.getWsmoFactory().createIRI("http://www.example.org/example/hasRelative")));
 		assertTrue(attributes.contains(container.getWsmoFactory().createIRI("http://www.example.org/example/hasAncestor")));
@@ -114,6 +145,7 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 		assertTrue(attributes.contains(container.getWsmoFactory().createIRI("http://www.example.org/example/hasChild2")));
 		assertTrue(attributes.contains(container.getWsmoFactory().createIRI("http://www.example.org/example/hasWeightInKG2")));
 		assertTrue(attributes.contains(container.getWsmoFactory().createIRI("http://www.example.org/example/hasBirthdate2")));
+		assertEquals(22, attributes.size());
 	}
 
 	public void testGetAllConcepts() throws InconsistencyException {
@@ -242,7 +274,7 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 		System.out.println("All Instances:");
 		System.out.println(instances);
 		
-		assertEquals(8, instances.size());
+		assertEquals(11, instances.size());
 		assertTrue(instanceIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Mary"))); // memberOf {Parent, Woman}
 		assertTrue(instanceIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Paul"))); // memberOf { Parent, Man }
 		assertTrue(instanceIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Susan"))); // memberOf Woman
@@ -251,6 +283,9 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 		assertTrue(instanceIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "George2"))); // memberOf Man
 		assertTrue(instanceIDs.contains(container.getWsmoFactory().createIRI("http://www.example.org/oo#de"))); 
 		assertTrue(instanceIDs.contains(container.getWsmoFactory().createIRI("http://www.example.org/oo#en"))); 
+		assertTrue(instanceIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Innsbruck"))); 
+		assertTrue(instanceIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Frank"))); 
+		assertTrue(instanceIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Paula"))); 
 	}
 
 	public void testGetConcepts() throws InconsistencyException {
@@ -280,10 +315,13 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 				conceptIDs.add(concept.getIdentifier());
 			}
 			
-			assertEquals(3, conceptsOfInstance.size());
 			assertTrue(conceptIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Parent")));
 			assertTrue(conceptIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Woman")));
 			assertTrue(conceptIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Human")));
+			assertTrue(conceptIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Mother2")));
+			assertTrue(conceptIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "FemaleHuman")));
+			assertTrue(conceptIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Mother")));
+			assertEquals(6, conceptsOfInstance.size());
 		}
 		
 		{
@@ -299,11 +337,11 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 				conceptIDs.add(concept.getIdentifier());
 			}
 			
-			assertEquals(4, conceptsOfInstance.size());
 			assertTrue(conceptIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Parent")));
 			assertTrue(conceptIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Human")));
 			assertTrue(conceptIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Man2")));
 			assertTrue(conceptIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Human2")));
+			assertEquals(4, conceptsOfInstance.size());
 		}
 	}
 
@@ -333,9 +371,10 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 				conceptIDs.add(concept.getIdentifier());
 			}
 			
-			assertEquals(9, conceptsOfAttribute.size());
 			assertTrue(conceptIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Human")));
 			assertTrue(conceptIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Man")));
+			assertTrue(conceptIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Daddy")));
+			assertTrue(conceptIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Father")));
 			assertTrue(conceptIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Woman")));
 			assertTrue(conceptIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Parent")));
 			assertTrue(conceptIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Child")));
@@ -343,6 +382,7 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 			assertTrue(conceptIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Boy")));
 			assertTrue(conceptIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Woman2")));
 			assertTrue(conceptIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Girl2")));
+			assertEquals(11, conceptsOfAttribute.size());
 		}
 		
 		{
@@ -357,8 +397,10 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 				conceptIDs.add(concept.getIdentifier());
 			}
 			
-			assertEquals(1, conceptsOfAttribute.size());
 			assertTrue(conceptIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Parent")));
+			assertTrue(conceptIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Daddy")));
+			assertTrue(conceptIDs.contains(container.getWsmoFactory().createIRI(defaultNS + "Father")));
+			assertEquals(3, conceptsOfAttribute.size());
 		}
 	}
 
@@ -392,20 +434,20 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 				instanceMapID.put(instanceID, instanceMap.get(instance));
 			}
 			
-			assertEquals(5, instanceMap.keySet().size());
 			assertTrue(instanceMapID.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "Mary")));
 			assertTrue(instanceMapID.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "Paul")));
 			assertTrue(instanceMapID.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "Susan")));
 			assertTrue(instanceMapID.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "George")));
 			assertTrue(instanceMapID.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "Paul2")));
+			assertEquals(5, instanceMap.keySet().size());
 			
 			
 			Set<DataValue> terms = instanceMapID.get(container.getWsmoFactory().createIRI(defaultNS + "Mary"));
-			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1949, 8, 12, 0, 0)));
+			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1949, 9, 12, 0, 0)));
 			
 			terms = instanceMapID.get(container.getWsmoFactory().createIRI(defaultNS + "Paul2"));
-			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1976, 7, 16, 0, 0)));
-			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1967, 7, 16, 0, 0)));
+			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1976, 8, 16, 0, 0)));
+			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1967, 8, 16, 0, 0)));
 		}
 		
 	}
@@ -435,12 +477,22 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 			System.out.println("All Constraint AttributeValues for Instance " + instanceID + ":");
 			System.out.println(valueMap);
 			
-			assertEquals(1, valueMap.keySet().size());
+			/*
+		      instance Paul2 memberOf { Parent, Man2 }
+		            hasName hasValue "Paul Smith"
+		            hasBirthdate hasValue xsd#date(1976,08,16)
+		            hasBirthdate hasValue xsd#date(1967,08,16)
+		            hasCitizenship hasValue oo#en
+		            hasMother2 hasValue Mary
+			 */
+			
 			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "hasBirthdate")));
+			assertEquals(1, valueMap.keySet().size());
 			
 			Set<DataValue> terms = valueMap.get(container.getWsmoFactory().createIRI(defaultNS + "hasBirthdate"));
-			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1976, 7, 16, 0, 0)));
-			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1976, 7, 16, 0, 0)));
+			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1976, 8, 16, 0, 0)));
+			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1967, 8, 16, 0, 0)));
+			assertEquals(2, terms.size());
 		}
 
 		{
@@ -465,14 +517,14 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 			System.out.println("All Constraint AttributeValues for Instance " + instanceID + ":");
 			System.out.println(valueMap);
 			
-			assertEquals(4, valueMap.keySet().size());
 			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "hasBirthdate")));
 			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "isAlive")));
 			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "hasWeightInKG")));
 			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "dateOfDeath")));
+			assertEquals(4, valueMap.keySet().size());
 			
 			Set<DataValue> terms = valueMap.get(container.getWsmoFactory().createIRI(defaultNS + "hasBirthdate"));
-			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1949, 8, 12, 0, 0)));
+			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1949, 9, 12, 0, 0)));
 
 			terms = valueMap.get(container.getWsmoFactory().createIRI(defaultNS + "isAlive"));
 			assertTrue(terms.contains(container.getXmlDataFactory().createBoolean(true)));
@@ -481,7 +533,7 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 			assertTrue(terms.contains(container.getXmlDataFactory().createDecimal("60.3")));
 
 			terms = valueMap.get(container.getWsmoFactory().createIRI(defaultNS + "dateOfDeath"));
-			assertTrue(terms.contains(container.getXmlDataFactory().createDate(2049, 8, 12, 0, 0)));
+			assertTrue(terms.contains(container.getXmlDataFactory().createDate(2049, 9, 12, 0, 0)));
 
 		}
 	}
@@ -511,9 +563,9 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 			System.out.println("All Constraint AttributeValues for Instance " + instanceID + " and Attribute " + attributeID + ":");
 			System.out.println(valueSet);
 			
+			assertTrue(valueSet.contains(container.getXmlDataFactory().createDate(1976, 8, 16, 0, 0)));
+			assertTrue(valueSet.contains(container.getXmlDataFactory().createDate(1967, 8, 16, 0, 0)));
 			assertEquals(2, valueSet.size());
-			assertTrue(valueSet.contains(container.getXmlDataFactory().createDate(1976, 7, 16, 0, 0)));
-			assertTrue(valueSet.contains(container.getXmlDataFactory().createDate(1967, 7, 16, 0, 0)));
 		}
 
 		{
@@ -541,33 +593,32 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 			System.out.println("All Constraint AttributeValues for Instance " + instanceID + " and Attribute " + attributeID + ":");
 			System.out.println(valueSet);
 			
+			assertTrue(valueSet.contains(container.getXmlDataFactory().createDecimal("60.3")));
 			assertEquals(1, valueSet.size());
-			assertTrue(valueSet.contains(container.getXmlDataFactory().createDecimal("60.3").toString()));
-			
-
 		}
 		
 	}
-
-	public void testGetDirectConcepts() {
-		fail("Not yet implemented");
-	}
-
-	public void testGetDirectSubConcepts() throws InconsistencyException {
-		fail("Not yet implemented");
-	}
-
-	public void testGetDirectSubRelations() {
-		fail("Not yet implemented");
-	}
-
-	public void testGetDirectSuperConcepts() {
-		fail("Not yet implemented");
-	}
-
-	public void testGetDirectSuperRelations() {
-		fail("Not yet implemented");
-	}
+	
+// not supported in elp
+//	public void testGetDirectConcepts() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testGetDirectSubConcepts() throws InconsistencyException {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testGetDirectSubRelations() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testGetDirectSuperConcepts() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testGetDirectSuperRelations() {
+//		fail("Not yet implemented");
+//	}
 
 	public void testGetEquivalentConcepts() throws InconsistencyException {
 		
@@ -587,13 +638,12 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 			Set<Concept> eqConcepts = reasoner.getEquivalentConcepts(concept);
 			
 			System.out.println("Equal Concepts of " + concept);
+			System.out.println(eqConcepts);
 			
-			assertEquals(2, eqConcepts.size());
 			assertTrue(eqConcepts.contains(container.getWsmoFactory().createConcept(container.getWsmoFactory().createIRI(defaultNS + "Father"))));
 			assertTrue(eqConcepts.contains(container.getWsmoFactory().createConcept(container.getWsmoFactory().createIRI(defaultNS + "Daddy"))));
+			assertEquals(2, eqConcepts.size());
 		}
-		
-		fail("Not yet implemented");
 	}
 
 	public void testGetEquivalentRelations() throws InconsistencyException {
@@ -610,16 +660,15 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 
 		{
 			Identifier attID = container.getWsmoFactory().createIRI(defaultNS + "hasMother");
-			Set<IRI> eqConcepts = reasoner.getEquivalentRelations(attID);
+			Set<IRI> eqRoles = reasoner.getEquivalentRelations(attID);
 			
 			System.out.println("Equal Attributes of " + attID);
+			System.out.println(eqRoles);
 			
-			assertEquals(2, eqConcepts.size());
-			assertTrue(eqConcepts.contains((container.getWsmoFactory().createIRI(defaultNS + "hasMum"))));
-			assertTrue(eqConcepts.contains((container.getWsmoFactory().createIRI(defaultNS + "hasMother"))));
+			assertTrue(eqRoles.contains((container.getWsmoFactory().createIRI(defaultNS + "hasMum"))));
+			assertTrue(eqRoles.contains((container.getWsmoFactory().createIRI(defaultNS + "hasMother"))));
+			assertEquals(2, eqRoles.size());
 		}
-		
-		fail("Not yet implemented");
 	}
 
 	public void testGetInferingAttributeInstances() throws InconsistencyException {
@@ -652,18 +701,23 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 				instanceMapID.put(instanceID, instanceMap.get(instance));
 			}
 			
-			assertEquals(2, instanceMap.keySet().size());
 			assertTrue(instanceMapID.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "Mary")));
 			assertTrue(instanceMapID.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "Paul")));
+			assertEquals(2, instanceMap.keySet().size());
 			
 			
 			Set<Term> terms = instanceMapID.get(container.getWsmoFactory().createIRI(defaultNS + "Mary"));
 			assertTrue(terms.contains((container.getWsmoFactory().createIRI(defaultNS + "Susan"))));
 			assertTrue(terms.contains((container.getWsmoFactory().createIRI(defaultNS + "Paul"))));
 			assertTrue(terms.contains((container.getWsmoFactory().createIRI(defaultNS + "George"))));
+			assertEquals(3, terms.size());
 			
 			terms = instanceMapID.get(container.getWsmoFactory().createIRI(defaultNS + "Paul"));
 			assertTrue(terms.contains((container.getWsmoFactory().createIRI(defaultNS + "George"))));
+			assertTrue(terms.contains((container.getWsmoFactory().createIRI(defaultNS + "Paula"))));
+			assertTrue(terms.contains((container.getWsmoFactory().createIRI(defaultNS + "Frank"))));
+			assertTrue(terms.contains((container.getWsmoFactory().createIRI(defaultNS + "Mary"))));
+			assertEquals(4, terms.size());
 		}
 		
 	}
@@ -702,30 +756,32 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 		            hasAncestor		hasValue Frank
 		  			hasMother		hasValue Mary
 		            hasBirthplace	hasValue Innsbruck
-		            isMarriedTo		hasValue Paula 
+		            isMarriedTo		hasValue Paula
 			 */
 			
-			assertEquals(8, valueMap.keySet().size());
 			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "hasName")));
 			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "hasChild")));
 			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "hasCitizenship")));
 			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "hasAncestor")));
 			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "hasRelative")));
 			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "hasMother")));
+			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "hasMum"))); // since it is sub-attribute to hasMother
+			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "hasParent")));
 			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "hasBirthplace")));
 			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "isMarriedTo")));
 			assertFalse(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "hasBirthdate")));
+			assertEquals(10, valueMap.keySet().size());
 			
 			Set<Term> terms = valueMap.get(container.getWsmoFactory().createIRI(defaultNS + "hasName"));
-			assertEquals(1, terms.size());
 			assertTrue(terms.contains(container.getXmlDataFactory().createString("Paul Smith")));
+			assertEquals(1, terms.size());
 
 			terms = valueMap.get(container.getWsmoFactory().createIRI(defaultNS + "hasRelative"));
-			assertEquals(4, terms.size());
 			assertTrue(terms.contains(container.getWsmoFactory().createIRI(defaultNS + "Paula")));
 			assertTrue(terms.contains(container.getWsmoFactory().createIRI(defaultNS + "Frank")));
 			assertTrue(terms.contains(container.getWsmoFactory().createIRI(defaultNS + "Mary")));
 			assertTrue(terms.contains(container.getWsmoFactory().createIRI(defaultNS + "George")));
+			assertEquals(4, terms.size());
 		}
 
 	}
@@ -755,8 +811,8 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 			System.out.println("All Inferring AttributeValues for Instance " + instanceID + " and Attribute " + attributeID + ":");
 			System.out.println(valueSet);
 			
+			assertTrue(valueSet.contains(container.getWsmoFactory().createIRI(defaultNS + "Mary")));
 			assertEquals(1, valueSet.size());
-			assertTrue(valueSet.contains(container.getWsmoFactory().createIRI(defaultNS + "Mary").toString()));
 		}
 
 		{
@@ -872,9 +928,10 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 
 	}
 
-	public void testGetInverseRelations() {
-		fail("Not yet implemented");
-	}
+	// not supported in elp
+//	public void testGetInverseRelations() {
+//		fail("Not yet implemented");
+//	}
 
 	public void testGetRangesOfConstraintAttribute() throws InconsistencyException {
 		ontology = loadOntology(prefix + "Human_of_type.wsml");
@@ -887,17 +944,14 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 		 * Query
 		 * **********/
 
-		IRI mother = container.getWsmoFactory().createIRI("http://www.example.org/example/hasMother");
+		IRI mother = container.getWsmoFactory().createIRI(defaultNS + "hasBirthdate");
 		Set<DataType> ranges = reasoner.getRangesOfConstraintAttribute(mother);
 
 		System.out.println("Constraining Ranges of hasMother:");
 		System.out.println(ranges);
 		
-		assertEquals(4, ranges.size());
-		assertTrue(ranges.contains(container.getWsmoFactory().createIRI("http://www.example.org/example/FemaleHuman")));
-		assertTrue(ranges.contains(container.getWsmoFactory().createIRI("http://www.example.org/example/Mother")));
-		assertTrue(ranges.contains(container.getWsmoFactory().createIRI("http://www.example.org/example/SingleWoman")));
-		assertTrue(ranges.contains(container.getWsmoFactory().createIRI("http://www.example.org/example/HappyMother")));
+		assertEquals(1, ranges.size());
+		assertTrue(ranges.contains(container.getXmlDataFactory().createDataType(XmlSchemaDataType.XSD_DATE)));
 	}
 
 	public void testGetRangesOfInferingAttribute() throws InconsistencyException {
@@ -917,11 +971,11 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 		System.out.println("Inferring Ranges of hasMother:");
 		System.out.println(ranges);
 		
+		assertTrue(ranges.contains(container.getWsmoFactory().createConcept(container.getWsmoFactory().createIRI("http://www.example.org/example/Mother"))));
+		assertTrue(ranges.contains(container.getWsmoFactory().createConcept(container.getWsmoFactory().createIRI("http://www.example.org/example/FemaleHuman"))));
+		assertTrue(ranges.contains(container.getWsmoFactory().createConcept(container.getWsmoFactory().createIRI("http://www.example.org/example/Woman"))));
+		assertTrue(ranges.contains(container.getWsmoFactory().createConcept(container.getWsmoFactory().createIRI("http://www.example.org/example/Human"))));
 		assertEquals(4, ranges.size());
-		assertTrue(ranges.contains(container.getWsmoFactory().createIRI("http://www.example.org/example/Mother")));
-		assertTrue(ranges.contains(container.getWsmoFactory().createIRI("http://www.example.org/example/FemaleHuman")));
-		assertTrue(ranges.contains(container.getWsmoFactory().createIRI("http://www.example.org/example/Woman")));
-		assertTrue(ranges.contains(container.getWsmoFactory().createIRI("http://www.example.org/example/Human")));
 	}
 
 	public void testGetSubConcepts() throws InconsistencyException {
@@ -968,8 +1022,47 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 		assertEquals(4, superConcepts.size());
 	}
 
-	public void testGetSubRelations() {
-		fail("Not yet implemented");
+	public void testGetSubRelations() throws InconsistencyException {
+		ontology = loadOntology(prefix + "Human_of_type.wsml");
+		if (ontology == null)
+			fail();
+		
+		reasoner.registerOntology(ontology);
+
+		/* **********
+		 * Query
+		 * **********/
+
+		{
+			IRI mum = container.getWsmoFactory().createIRI("http://www.example.org/example/hasMum");
+	
+			Set<IRI> subAtts = reasoner.getSubRelations(mum);
+			System.out.println("SubAtts of hasMum:");
+			System.out.println(subAtts);
+
+			IRI mother = container.getWsmoFactory().createIRI("http://www.example.org/example/hasMother");
+			assertTrue(subAtts.contains(mother));
+			assertTrue(subAtts.contains(mum));
+			assertEquals(2, subAtts.size());
+		}
+		{
+			IRI ancestor = container.getWsmoFactory().createIRI("http://www.example.org/example/hasAncestor");
+	
+			Set<IRI> subAtts = reasoner.getSubRelations(ancestor);
+			System.out.println("SubAtts of hasAncestor:");
+			System.out.println(subAtts);
+
+			IRI mother= container.getWsmoFactory().createIRI("http://www.example.org/example/hasMother");
+			IRI mum = container.getWsmoFactory().createIRI("http://www.example.org/example/hasMum");
+			IRI parent = container.getWsmoFactory().createIRI("http://www.example.org/example/hasParent");
+	
+	
+			assertTrue(subAtts.contains(parent));
+			assertTrue(subAtts.contains(ancestor));
+			assertTrue(subAtts.contains(mother));
+			assertTrue(subAtts.contains(mum));
+			assertEquals(4, subAtts.size());
+		}
 	}
 
 	public void testGetSuperConcepts() throws InconsistencyException {
@@ -1030,6 +1123,7 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 		IRI mother = container.getWsmoFactory().createIRI("http://www.example.org/example/hasMother");
 
 		Set<IRI> superAtts = reasoner.getSuperRelations(mother);
+		IRI mum = container.getWsmoFactory().createIRI("http://www.example.org/example/hasMum");
 		IRI parent = container.getWsmoFactory().createIRI("http://www.example.org/example/hasParent");
 		IRI ancestor = container.getWsmoFactory().createIRI("http://www.example.org/example/hasAncestor");
 		IRI relative = container.getWsmoFactory().createIRI("http://www.example.org/example/hasRelative");
@@ -1040,18 +1134,79 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 		assertTrue(superAtts.contains(parent));
 		assertTrue(superAtts.contains(ancestor));
 		assertTrue(superAtts.contains(relative));
+		assertTrue(superAtts.contains(mother));
+		assertTrue(superAtts.contains(mum));
+		assertEquals(5, superAtts.size());
 	}
 
-	public void testIsConceptSatisfiable() {
-		fail("Not yet implemented");
+	public void testIsConceptSatisfiable() throws InconsistencyException {
+		ontology = loadOntology(prefix + "Human_unsatisfiable_concept.wsml");
+		if (ontology == null)
+			fail();
+		
+		reasoner.registerOntology(ontology);
+
+		/* **********
+		 * Query
+		 * **********/
+
+		assertTrue(reasoner.isSatisfiable());
+		
+		MembershipMolecule boy = container.getLogicalExpressionFactory().
+		createMemberShipMolecule(container.getWsmoFactory().createIRI("http://www.example.org/example/aBoy"), // dummy
+				container.getWsmoFactory().createIRI("http://www.example.org/example/Boy"));
+		
+		assertFalse(reasoner.isConceptSatisfiable(boy));
 	}
 
-	public void testIsEquivalentConcept() {
-		fail("Not yet implemented");
+	public void testIsEquivalentConcept() throws InconsistencyException {
+		
+		List<Ontology> ontologies = loadOntologies(prefix + "Human.wsml");
+		if (ontologies.isEmpty())
+			fail();
+		
+		reasoner.registerOntologies(new HashSet<Ontology>(ontologies));
+
+		/* **********
+		 * Query
+		 * **********/
+
+		{
+			assertTrue(reasoner.isEquivalentConcept(
+					container.getWsmoFactory().createConcept(container.getWsmoFactory().createIRI(defaultNS + "Father")),
+					container.getWsmoFactory().createConcept(container.getWsmoFactory().createIRI(defaultNS + "Daddy"))));
+		}
 	}
 
-	public void testIsMemberOf() {
-		fail("Not yet implemented");
+	public void testIsMemberOf() throws InconsistencyException {
+
+		ontology = loadOntology(prefix + "Human_instance.wsml");
+		if (ontology == null)
+			fail();
+		
+		reasoner.registerOntology(ontology);
+
+		/* **********
+		 * Query
+		 * **********/
+
+		{
+			Identifier conceptID = container.getWsmoFactory().createIRI(defaultNS + "Woman");
+			Concept concept = container.getWsmoFactory().createConcept(conceptID);
+			Identifier instanceID = container.getWsmoFactory().createIRI(defaultNS + "Mary");
+			Instance instance = container.getWsmoFactory().createInstance(instanceID);
+
+			assertTrue(reasoner.isMemberOf(instance, concept));
+		}
+		
+		{
+			Identifier conceptID = container.getWsmoFactory().createIRI(defaultNS + "Mother");
+			Concept concept = container.getWsmoFactory().createConcept(conceptID);
+			Identifier instanceID = container.getWsmoFactory().createIRI(defaultNS + "Mary");
+			Instance instance = container.getWsmoFactory().createInstance(instanceID);
+
+			assertTrue(reasoner.isMemberOf(instance, concept));
+		}
 	}
 
 	public void testIsSatisfiable() throws InconsistencyException {
@@ -1083,12 +1238,24 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 		assertFalse("The ontology must not be satisfiable!", reasoner.isSatisfiable());
 	}
 
-	public void testIsSubConceptOf() {
-		fail("Not yet implemented");
-	}
+	public void testIsSubConceptOf() throws InconsistencyException {
+		ontology = loadOntology(prefix + "Human_concept.wsml");
+		if (ontology == null)
+			fail();
+		
+		reasoner.registerOntology(ontology);
 
-	public void testConvertEntities() {
-		fail("Not yet implemented");
+		/* **********
+		 * Query
+		 * **********/
+
+		IRI humanID = container.getWsmoFactory().createIRI("http://www.example.org/example/Human");
+		Concept human = container.getWsmoFactory().createConcept(humanID);
+
+		IRI boyID = container.getWsmoFactory().createIRI("http://www.example.org/example/Boy");
+		Concept boy = container.getWsmoFactory().createConcept(boyID);
+
+		assertTrue(reasoner.isSubConceptOf(boy, human));
 	}
 
 	
