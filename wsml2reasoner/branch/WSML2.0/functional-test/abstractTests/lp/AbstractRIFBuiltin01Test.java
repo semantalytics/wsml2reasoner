@@ -24,7 +24,12 @@ public abstract class AbstractRIFBuiltin01Test extends TestCase implements LP {
 	
 	public void test_file() throws Exception {
 
-		String query = "M(?x)";
+		String query = "m(?x)";
+		checkSTD(query);
+	}
+	
+	public void test_add() throws Exception {
+		String query = "numericAddTest(?x)";
 		checkSTD(query);
 	}
 	
