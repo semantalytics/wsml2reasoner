@@ -36,6 +36,7 @@ import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.Variable;
 import org.omwg.ontology.WsmlDataType;
+import org.omwg.ontology.XmlSchemaDataType;
 import org.wsmo.common.IRI;
 import org.wsmo.common.NumberedAnonymousID;
 import org.wsmo.common.UnnumberedAnonymousID;
@@ -107,11 +108,15 @@ public class DatatypeVisitor implements TermVisitor {
      * Constructs a new VisitorDatatype and sets up type mappings.
      */
     public DatatypeVisitor() {
+    	// TODO mp: add support for all datatypes
         simpleDataTypes.put(WsmlDataType.WSML_STRING, String.class);
         simpleDataTypes.put(WsmlDataType.WSML_DECIMAL, BigDecimal.class);
         simpleDataTypes.put(WsmlDataType.WSML_INTEGER, BigDecimal.class);
         
-
+        simpleDataTypes.put(XmlSchemaDataType.XSD_STRING, String.class);
+        simpleDataTypes.put(XmlSchemaDataType.XSD_DECIMAL, BigDecimal.class);
+        simpleDataTypes.put(XmlSchemaDataType.XSD_INTEGER, BigDecimal.class);
+        
         complextDataTypes.put(WsmlDataType.WSML_FLOAT, BigDecimal.class);
         complextDataTypes.put(WsmlDataType.WSML_DOUBLE, BigDecimal.class);
         
@@ -128,6 +133,23 @@ public class DatatypeVisitor implements TermVisitor {
         complextDataTypes.put(WsmlDataType.WSML_GYEAR, java.sql.Timestamp.class);
         complextDataTypes.put(WsmlDataType.WSML_GDAY, java.sql.Timestamp.class);
         complextDataTypes.put(WsmlDataType.WSML_GMONTH, java.sql.Timestamp.class);
+        
+        complextDataTypes.put(XmlSchemaDataType.XSD_FLOAT, BigDecimal.class);
+        complextDataTypes.put(XmlSchemaDataType.XSD_DOUBLE, BigDecimal.class);
+        
+        complextDataTypes.put(XmlSchemaDataType.XSD_BOOLEAN, Boolean.class);
+
+        complextDataTypes.put(XmlSchemaDataType.XSD_DURATION, String.class);
+
+        complextDataTypes.put(XmlSchemaDataType.XSD_DATETIME, java.sql.Timestamp.class);
+        complextDataTypes.put(XmlSchemaDataType.XSD_TIME, java.sql.Timestamp.class);
+        complextDataTypes.put(XmlSchemaDataType.XSD_DATE, java.sql.Timestamp.class);
+
+        complextDataTypes.put(XmlSchemaDataType.XSD_GYEARMONTH, java.sql.Timestamp.class);
+        complextDataTypes.put(XmlSchemaDataType.XSD_GMONTHDAY, java.sql.Timestamp.class);
+        complextDataTypes.put(XmlSchemaDataType.XSD_GYEAR, java.sql.Timestamp.class);
+        complextDataTypes.put(XmlSchemaDataType.XSD_GDAY, java.sql.Timestamp.class);
+        complextDataTypes.put(XmlSchemaDataType.XSD_GMONTH, java.sql.Timestamp.class);
         
 //        complextDataTypes.put(WsmlDataType.WSML_DATETIME, Calendar.class);
 //        complextDataTypes.put(WsmlDataType.WSML_TIME, Calendar.class);
@@ -163,26 +185,40 @@ public class DatatypeVisitor implements TermVisitor {
             throw new IllegalArgumentException("Datatype " + complextType + " is not supported at the moment.");
         }
 
-        Object value = null;
-        // WsmlDataType.WSML_DATETIME, WsmlDataType.WSML_TIME,
-        // WsmlDataType.WSML_DATE are already stored as Calendar
-        if (complextType.equals(WsmlDataType.WSML_GYEARMONTH) || complextType.equals(WsmlDataType.WSML_GMONTHDAY) || complextType.equals(WsmlDataType.WSML_GYEAR) || complextType.equals(WsmlDataType.WSML_GDAY) || complextType.equals(WsmlDataType.WSML_GMONTH)) {
+		Object value = null;
+		// WsmlDataType.WSML_DATETIME, WsmlDataType.WSML_TIME,
+		// WsmlDataType.WSML_DATE are already stored as Calendar
+		if (complextType.equals(WsmlDataType.WSML_GYEARMONTH)
+				|| complextType.equals(WsmlDataType.WSML_GMONTHDAY)
+				|| complextType.equals(WsmlDataType.WSML_GYEAR)
+				|| complextType.equals(WsmlDataType.WSML_GDAY)
+				|| complextType.equals(WsmlDataType.WSML_GMONTH)
+				|| complextType.equals(XmlSchemaDataType.XSD_GYEARMONTH)
+				|| complextType.equals(XmlSchemaDataType.XSD_GMONTHDAY)
+				|| complextType.equals(XmlSchemaDataType.XSD_GYEAR)
+				|| complextType.equals(XmlSchemaDataType.XSD_GDAY)
+				|| complextType.equals(XmlSchemaDataType.XSD_GMONTH)) {
 
-        	Calendar cal = convertTimeValue(t);        
-            value = new java.sql.Timestamp(cal.getTimeInMillis());
-        }
-        else if(complextType.equals(WsmlDataType.WSML_DATE) || 
-        		complextType.equals(WsmlDataType.WSML_DATETIME) || 
-        		complextType.equals(WsmlDataType.WSML_TIME)) {
-        	//these are actually already implemented as calendar in wsmo4j
-        	Calendar cal = (Calendar)t.getValue();
-        	value = new java.sql.Timestamp(cal.getTimeInMillis());
-        }
-        else if (complextType.equals(WsmlDataType.WSML_FLOAT)) {
+			Calendar cal = convertTimeValue(t);
+			value = new java.sql.Timestamp(cal.getTimeInMillis());
+		}
+ else if (complextType.equals(WsmlDataType.WSML_DATE)
+				|| complextType.equals(WsmlDataType.WSML_DATETIME)
+				|| complextType.equals(WsmlDataType.WSML_TIME)
+				|| complextType.equals(XmlSchemaDataType.XSD_DATE)
+				|| complextType.equals(XmlSchemaDataType.XSD_DATETIME)
+				|| complextType.equals(XmlSchemaDataType.XSD_TIME)) {
+			// these are actually already implemented as calendar in wsmo4j
+			Calendar cal = (Calendar) t.getValue();
+			value = new java.sql.Timestamp(cal.getTimeInMillis());
+		}
+        else if (complextType.equals(WsmlDataType.WSML_FLOAT) 
+        	|| complextType.equals(XmlSchemaDataType.XSD_FLOAT)) {
             Float f = (Float) t.getValue();
             value = new BigDecimal(Float.toString( f ));
         }
-        else if (complextType.equals(WsmlDataType.WSML_DOUBLE)) {
+        else if (complextType.equals(WsmlDataType.WSML_DOUBLE) 
+        	|| complextType.equals(XmlSchemaDataType.XSD_DOUBLE)) {
             Double d = (Double) t.getValue();
             value = new BigDecimal( Double.toString( d ));
         }
@@ -224,7 +260,7 @@ public class DatatypeVisitor implements TermVisitor {
         }
 
         // perform necessary conversions
-        if (simpleValueType.equals(WsmlDataType.WSML_INTEGER)) {
+        if (simpleValueType.equals(XmlSchemaDataType.XSD_INTEGER)) {
             mapping = new Entry(convertInteger(t), javaTypeForWSMLType);
         }
         else {
@@ -243,7 +279,7 @@ public class DatatypeVisitor implements TermVisitor {
     }
 
     protected BigDecimal convertInteger(SimpleDataValue i) {
-        assert i.getType().getIdentifier().toString().equals(WsmlDataType.WSML_INTEGER);
+        assert i.getType().getIdentifier().toString().equals(XmlSchemaDataType.XSD_INTEGER);
 
         return new BigDecimal((BigInteger) i.getValue());
     }
@@ -263,26 +299,26 @@ public class DatatypeVisitor implements TermVisitor {
         tempCal.clear();
         tempCal.setGregorianChange(new Date(Long.MIN_VALUE));
 
-        if (complextType.equals(WsmlDataType.WSML_GYEARMONTH)) {
+        if (complextType.equals(WsmlDataType.WSML_GYEARMONTH) || complextType.equals(XmlSchemaDataType.XSD_GYEARMONTH)  ) {
             Integer[] ym = (Integer[]) t.getValue();
             tempCal.set(Calendar.YEAR, ym[0]);
             tempCal.set(Calendar.MONTH, ym[1] - 1); // moths start at 0 in a
             // Java Calendar
         }
-        else if (complextType.equals(WsmlDataType.WSML_GMONTHDAY)) {
+        else if (complextType.equals(WsmlDataType.WSML_GMONTHDAY) || complextType.equals(XmlSchemaDataType.XSD_GMONTHDAY)) {
             Integer[] md = (Integer[]) t.getValue();
             tempCal.set(Calendar.MONTH, md[0] - 1);
             tempCal.set(Calendar.DAY_OF_MONTH, md[1]);
         }
-        else if (complextType.equals(WsmlDataType.WSML_GYEAR)) {
+        else if (complextType.equals(WsmlDataType.WSML_GYEAR) || complextType.equals(XmlSchemaDataType.XSD_GYEAR)) {
             Integer y = (Integer) t.getValue();
             tempCal.set(Calendar.YEAR, y);
         }
-        else if (complextType.equals(WsmlDataType.WSML_GDAY)) {
+        else if (complextType.equals(WsmlDataType.WSML_GDAY) || complextType.equals(XmlSchemaDataType.XSD_GDAY)) {
             Integer d = (Integer) t.getValue();
             tempCal.set(Calendar.DAY_OF_MONTH, d);
         }
-        else if (complextType.equals(WsmlDataType.WSML_GMONTH)) {
+        else if (complextType.equals(WsmlDataType.WSML_GMONTH) || complextType.equals(XmlSchemaDataType.XSD_GMONTH)) {
             Integer y = (Integer) t.getValue();
             tempCal.set(Calendar.MONTH, y - 1);
         }

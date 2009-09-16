@@ -31,7 +31,6 @@ import java.util.Set;
 
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.Conjunction;
-import org.omwg.logicalexpression.Constants;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.Molecule;
 import org.omwg.logicalexpression.NegationAsFailure;
