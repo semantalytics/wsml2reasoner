@@ -18,7 +18,7 @@ instance e memberOf C2
 
      
 axiom testEqualInHead definedBy
-		 b = d :- wsml#true. 
+		 b = d impliedBy wsml#true. 
 		 p(?x) :- ?x memberOf C1 and ?x memberOf C2.
 
 

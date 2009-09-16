@@ -97,6 +97,7 @@ import org.deri.iris.facts.IDataSource;
 import org.deri.iris.querycontainment.QueryContainment;
 import org.deri.iris.storage.IRelation;
 import org.deri.iris.storage.simple.SimpleRelationFactory;
+import org.omwg.logicalexpression.Constants;
 import org.omwg.logicalexpression.terms.BuiltInConstructedTerm;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
@@ -189,9 +190,6 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
     final static String DAYTIMEDURATION_LESS_THAN = WSML.WSML_NAMESPACE + "dayTimeDurationLessThan";
     final static String YEARMONTHDURATION_GREATER_THAN = WSML.WSML_NAMESPACE + "yearMonthDurationGreaterThan";
     final static String YEARMONTHDURATION_LESS_THAN = WSML.WSML_NAMESPACE + "yearMonthDurationLessThan";
-    
-    final static String TRUE = WSML.WSML_NAMESPACE + "true";
-    final static String FALSE = WSML.WSML_NAMESPACE + "false";
     
     /**
      *  New Datatypes from  D3.1.4 Defining the features of the WSML-Rule v2.0 language
@@ -592,10 +590,10 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 //        else if (sym.equals(HAS_DATATYPE)) { // TODO check
 //        	return BUILTIN.createHasDatatype(toArray(terms));
 //        }
-        else if (sym.equals(TRUE)){
+        else if (sym.equals(Constants.TRUE) || sym.equals(Constants.UNIV_TRUE) ){
         	return BUILTIN.createTrue();
         }
-        else if (sym.equals(FALSE)){
+        else if (sym.equals(Constants.FALSE) || sym.equals(Constants.UNIV_FALSE) ){
         	return BUILTIN.createFalse();
         }
         else if (sym.equals(NUMERIC_MODULUS)) { // check is done by normal Modulus
