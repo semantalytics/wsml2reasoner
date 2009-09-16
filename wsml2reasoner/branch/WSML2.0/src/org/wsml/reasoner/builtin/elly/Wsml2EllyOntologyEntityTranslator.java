@@ -18,9 +18,13 @@ public class Wsml2EllyOntologyEntityTranslator {
 	private static ITermFactory TERM = TermFactory.getInstance();
 
 	private static String asString(IdentifiableEntity entity) {
-		return entity.getIdentifier().toString();
+		return asString(entity.getIdentifier());
 	}
 	
+	private static String asString(Identifier identifier) {
+		return identifier.toString();
+	}
+
 	public static IIndividual createIndividual(Instance instance) {
 		return TERM.createIndividual(asString(instance));
 	}
@@ -31,10 +35,6 @@ public class Wsml2EllyOntologyEntityTranslator {
 
 	public static IAtomicRole createRole(Identifier attributeId) {
 		return BASIC.createAtomicRole(asString(attributeId));
-	}
-
-	private static String asString(Identifier identifier) {
-		return identifier.toString();
 	}
 
 }

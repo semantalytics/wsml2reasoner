@@ -161,6 +161,8 @@ public class Elly2WsmlOntologyEntityTranslator {
 			return container.getXmlDataFactory().createBase64Binary(((IBase64Binary) t).getValue().getBytes());
 		} else if (t instanceof IHexBinary) {
 			return container.getXmlDataFactory().createHexBinary(((IHexBinary) t).getValue().getBytes());
+//		} else if (t instanceof IIri) { // not of type DataValue
+//			return WSMO_FACTORY.createIRI(((IIri) t).getValue());
 		} else if (t instanceof IStringTerm) {
 			return container.getXmlDataFactory().createString(((IStringTerm) t).getValue());
 		} else if (t instanceof IBooleanTerm) {
