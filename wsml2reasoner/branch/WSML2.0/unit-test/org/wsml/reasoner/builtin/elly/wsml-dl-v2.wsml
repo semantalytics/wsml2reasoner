@@ -1,0 +1,145 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-dl"
+
+namespace {_"http://www.example.org#",
+        xsd _"http://www.w3.org/2001/XMLSchema#"}
+
+ontology SimpsonsOntology
+
+/* ****************
+ * Concepts
+ * ****************/
+concept Thing
+ 
+concept Person subConceptOf Thing
+    name ofType xsd#string
+    ageInYears ofType xsd#integer
+    hasChild impliesType Child
+    loves impliesType Thing
+    dislikes impliesType Thing
+
+concept Man subConceptOf Person
+    hasWife impliesType Woman
+
+concept Woman subConceptOf Person
+    hasHusband impliesType Man
+
+concept Child subConceptOf Person
+	hasSibling impliesType Person
+	
+	
+concept Pet subConceptOf Thing
+	name ofType xsd#string
+
+concept Cat subConceptOf Pet
+
+concept Dog subConceptOf Pet
+
+concept FoodProduct
+
+concept MeatProduct subConceptOf FoodProduct
+
+concept Dish
+
+/* ****************
+ * Instances
+ * ****************/
+instance Homer memberOf Man
+    name hasValue "Homer Simpson"
+    hasChild hasValue Bart
+    hasChild hasValue Lisa
+    hasChild hasValue Maggie
+    hasWife hasValue Marge
+    loves hasValue Homer
+
+instance Marge memberOf Woman
+    name hasValue "Marge Simpson"
+    hasChild hasValue Bart
+    hasChild hasValue Lisa
+    hasChild hasValue Maggie
+    hasHusband hasValue Homer
+
+instance Bart memberOf Child
+    name hasValue "Bart Simpson"
+    ageInYears hasValue xsd#integer("10")
+    loves hasValue SantasLittleHelper
+
+instance Lisa memberOf {Child, Vegetarian}
+    name hasValue "Lisa Simpson"
+    ageInYears hasValue xsd#integer("8")
+
+instance Maggie memberOf Child
+    name hasValue "Maggie Simpson"
+    ageInYears hasValue xsd#integer("2")
+
+instance ElBarto memberOf Person
+    name hasValue "El Barto"
+    
+instance SantasLittleHelper memberOf Dog
+	name hasValue "Santa's Little Helper"
+	loves hasValue SantasLittleHelper
+	
+instance Snowball2 memberOf Cat
+	name hasValue "Snowball II"
+	
+instance Steak memberOf MeatProduct
+
+instance SteakSandwich memberOf Dish
+	contains hasValue Steak
+
+
+/* ****************
+ * Axioms
+ * ****************/
+   
+axiom SiblingAxiom
+	definedBy
+		?p[hasChild hasValue ?c1] and ?p[hasChild hasValue ?c2] implies ?c1[hasSibling hasValue ?c2].
+		
+axiom LovesChild
+	definedBy
+		?p[hasChild hasValue ?c] implies ?p[loves hasValue ?c].
+		
+axiom HusbandSubSpouse
+	definedBy
+		?p[hasHusband hasValue ?s] implies ?p[hasSpouse hasValue ?s].
+		
+axiom WifeSubSpouse
+	definedBy
+		?p[hasWife hasValue ?s] implies ?p[hasSpouse hasValue ?s].
+		
+axiom LovesSpouse
+	definedBy
+		?p[hasSpouse hasValue ?s] implies ?p[loves hasValue ?s].
+
+axiom PetLovesThemselves
+	definedBy
+		?p memberOf Pet implies ?p[loves hasValue ?p].
+		
+axiom NarcistLoverAxiom
+	definedBy
+		exists ?x (loves(?x, ?y) and ?y[loves hasValue ?y] and ?y memberOf Person) implies ?x memberOf NarcistLover.
+
+axiom LovesSelf
+	definedBy
+		?x[loves hasValue ?x] implies ?x memberOf LovesSelf.
+
+axiom VegetarianDislikeMeat
+	definedBy
+		?x memberOf Vegetarian and ?y memberOf MeatProduct implies ?x[dislikes hasValue ?y]. 
+
+axiom DislikeFood
+	definedBy
+		?x[dislikes hasValue !v] and ?y memberOf Dish and ?y[contains hasValue !v] implies ?x[dislikes hasValue ?y].
+
+
+/*
+axiom BartEqElBarto
+    definedBy
+        Bart = ElBarto.
+
+a) Who is "El Barto"?
+
+ElBarto[name hasValue ?name] and ElBarto[ageInYears hasValue ?age]
+
+
+*/
