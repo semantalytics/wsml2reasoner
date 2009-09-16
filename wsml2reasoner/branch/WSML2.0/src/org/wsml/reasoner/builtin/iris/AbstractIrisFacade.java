@@ -170,7 +170,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
     
     /**
      *  New WSML builtin predicates from  D3.1.4 Defining the features of the WSML-Rule v2.0 language
-	 *
+	 *	 (Not in WSMO-api BuiltIns.)
      */
 	private final static String IS_PREFIX = WSML.WSML_NAMESPACE + "is"; // + DATATYPE				// RIF : pred:isLiteralOfType
 	final static String IS_DOUBLE = IS_PREFIX + "Double";
@@ -196,43 +196,6 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 	final static String IS_TEXT = IS_PREFIX + "Text";
 	final static String IS_XML_LITERAL = IS_PREFIX + "XMLLiteral";
 
-	// TODO mp: add RIF data type support
-//	final static String IS_DATATYPE = WSML.WSML_NAMESPACE + "isDatatype";							// RIF : pred:isLiteralOfType	
-//	final static String IS_NOT_DATATYPE = WSML.WSML_NAMESPACE + "isNotDatatype";					// RIF : pred:isLiteralNotOfType
-// // final static String HAS_DATATYPE = WSML.WSML_NAMESPACE + "hasDatatype";						// RIF : pred:hasDatatype  // TODO check
-//	final static String NUMERIC_MODULUS = WSML.WSML_NAMESPACE + "numericModulus";					// RIF : func:numeric-mod
-//	final static String STRING_COMPARE = WSML.WSML_NAMESPACE + "stringCompare";					    // RIF : func:compare
-//	final static String STRING_CONCAT = WSML.WSML_NAMESPACE + "stringConcat";						// RIF : func:concat
-//	final static String STRING_JOIN = WSML.WSML_NAMESPACE + "stringJoin";							// RIF : func:string-join<N>
-//	final static String STRING_SUBSTRING = WSML.WSML_NAMESPACE + "stringSubstring";				    // RIF : func:substring1 , func:substring1
-//	final static String STRING_LENGTH = WSML.WSML_NAMESPACE + "stringLength";						// RIF : func:string-length
-//	final static String STRING_TO_UPPER = WSML.WSML_NAMESPACE + "stringToUpper";					// RIF : func:upper-case
-//	final static String STRING_TO_LOWER = WSML.WSML_NAMESPACE + "stringToLower";					// RIF : func:lower-case
-//	final static String STRING_URI_ENCODE = WSML.WSML_NAMESPACE + "stringUriEncode";				// RIF : func:encode-for-uri
-//	final static String STRING_IRI_TO_URI = WSML.WSML_NAMESPACE + "stringIriToUri";				    // RIF : func:iri-to-uri
-//	final static String STRING_ESCAPE_HTML_URI = WSML.WSML_NAMESPACE + "stringEscapeHtmlUri";		// RIF : func:escape-html-uri
-//	final static String STRING_SUBSTRING_BEFORE = WSML.WSML_NAMESPACE + "stringSubstringBefore";	// RIF : func:substring-before1 , func:substring-before2
-//	final static String STRING_SUBSTRING_AFTER = WSML.WSML_NAMESPACE + "stringSubstringAfter";		// RIF : func:substring-after1 , func:substring-after2
-//	final static String STRING_REPLACE = WSML.WSML_NAMESPACE + "stringReplace";					    // RIF : func:substring-replace1 , func:substring-replace2
-//	final static String STRING_CONTAINS = WSML.WSML_NAMESPACE + "stringContains";					// RIF : pred:contains1 , pred:contains2
-//	final static String STRING_STARTS_WITH = WSML.WSML_NAMESPACE + "stringStartsWith";				// RIF : pred:starts-with1 , pred:starts-with2
-//	final static String STRING_ENDS_WITH = WSML.WSML_NAMESPACE + "stringEndsWith";					// RIF : pres:ends-with1 , pred:ends-with2
-//	final static String STRING_MATCHES = WSML.WSML_NAMESPACE + "stringMatches";					    // RIF : pres:matches1 , pred:matches2
-//	final static String YEAR_PART = WSML.WSML_NAMESPACE + "yearPart";								// RIF : func:year-from-dateTime , func:year-from-date , func:years-from-duration
-//	final static String MONTH_PART = WSML.WSML_NAMESPACE + "monthPart";							    // RIF : func:month-from-dateTime , func:month-from-date , func:month-from-duration
-//	final static String DAY_PART = WSML.WSML_NAMESPACE + "dayPart";								    // RIF : func:day-from-dateTime , func:day-from-date , func:day-from-duration
-//	final static String HOUR_PART = WSML.WSML_NAMESPACE + "hourPart";								// RIF : func:hour-from-dateTime , func:hour-from-date , func:hour-from-duration
-//	final static String MINUTE_PART = WSML.WSML_NAMESPACE + "minutePart";							// RIF : func:minute-from-dateTime , func:minute-from-date , func:minute-from-duration
-//	final static String SECOND_PART = WSML.WSML_NAMESPACE + "secondPart";							// RIF : func:second-from-dateTime , func:second-from-date , func:second-from-duration
-//	final static String TIMEZONE_PART = WSML.WSML_NAMESPACE + "timezonePart";						// RIF : func:timezone-from-dateTime , func:timezone-from-date , func:timezone-from-duration
-//	final static String TEXT_FROM_STRING_LANG = WSML.WSML_NAMESPACE + "textFromStringLang";		     // RIF : func:text-from-string-lang
-//	final static String TEXT_FROM_STRING = WSML.WSML_NAMESPACE + "textFromString";					// RIF : func:text-from-string
-//	final static String STRING_FROM_TEXT = WSML.WSML_NAMESPACE + "stringFromText";					// RIF : func:string-from-text
-//	final static String LANG_FROM_TEXT = WSML.WSML_NAMESPACE + "langFromText";						// RIF : func:lang-from-text
-//	final static String TEXT_COMPARE = WSML.WSML_NAMESPACE + "textCompare";						// RIF : func:text-compare
-//	final static String TEXT_LENGTH = WSML.WSML_NAMESPACE + "textLength";							// RIF : func:text-length
-//    
-	@SuppressWarnings("unchecked")
 	public AbstractIrisFacade(final FactoryContainer factory, final Map<String, Object> config) {
         DATA_FACTORY = factory.getXmlDataFactory();
         WSMO_FACTORY = factory.getWsmoFactory();
@@ -535,19 +498,15 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 		}
         else if (sym.equals(BuiltIn.GREATER_EQUAL.getFullName())) {
             return BUILTIN.createGreaterEqual(terms.get(0), terms.get(1));
-
         }
         else if (sym.equals(BuiltIn.NUMERIC_ADD.getFullName())) {
             return BUILTIN.createAddBuiltin(terms.get(1), terms.get(2), terms.get(0));
-
         }
         else if (sym.equals(BuiltIn.NUMERIC_SUBTRACT.getFullName())) {
             return BUILTIN.createSubtractBuiltin(terms.get(1), terms.get(2), terms.get(0));
-
         }
         else if (sym.equals(BuiltIn.NUMERIC_MULTIPLY.getFullName())) {
             return BUILTIN.createMultiplyBuiltin(terms.get(1), terms.get(2), terms.get(0));
-
         }
         else if (sym.equals(BuiltIn.NUMERIC_DIVIDE.getFullName())) {
             return BUILTIN.createDivideBuiltin(terms.get(1), terms.get(2), terms.get(0));
@@ -568,7 +527,8 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         	return BUILTIN.createFalse();
         }
         else if (sym.equals(BuiltIn.NUMERIC_MODULUS.getFullName())) { // check is done by normal Modulus
-        	return BUILTIN.createNumericModulus(toArray(terms));
+        	// TODO mp: change the order of the terms according to the builtIns (e.g.: x,y,z -> yzx).
+        	return BUILTIN.createNumericModulus(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.STRING_COMPARE.getFullName())) {
         	return BUILTIN.createStringCompare(toArray(terms));
@@ -862,11 +822,6 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         // return an ordinary atom
         return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()), BASIC.createTuple(terms));
 	}
-
-	private static ITerm[] toArray(List<ITerm> terms) {
-    	ITerm[] array = new ITerm[terms.size()];
-    	return terms.toArray(array);
-    }
 
 	/**
 	 * Converts a wsmo4j term to an iris term
@@ -1319,6 +1274,16 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         }
     }
     
+    /**
+     * 
+     * 
+     * @param terms
+     * @return
+     */
+    private static ITerm[] toArray(List<ITerm> terms) {
+    	ITerm[] array = new ITerm[terms.size()];
+    	return terms.toArray(array);
+    }
     
 	/**
 	 * Checks if a literal contains an equal statement.
@@ -1327,7 +1292,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 	 * @return true if the Literal contains an equal statement (equal,
 	 *         equal_date,...), else false.
 	 */
-	private boolean containsEqualBuiltin(Literal literal) {
+	private static boolean containsEqualBuiltin(Literal literal) {
 		String sym = literal.getPredicateUri();
 		assert sym != null;
 		if (sym.equals(BuiltIn.EQUAL.getFullName())
@@ -1344,7 +1309,24 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 				|| sym.equals(BuiltIn.DURATION_EQUAL.getFullName())) {
 			return true;
 		}
-
 		return false;
+	}
+	
+	/**
+	 *  Changes the order of the terms for IRIS. 
+	 *  The first entry becomes the last one. 
+	 * 
+	 * @param terms a list of terms in normal order.
+	 * @return a list of terms where the first entry is the last one.
+	 */
+	private static List<ITerm> sortListForIRIS(List<ITerm> terms) {
+		assert terms != null;
+		List<ITerm> terms2 = new ArrayList<ITerm>();
+		ITerm one = terms.get(0);
+		for (int i = 1; i < terms.size(); i++) {
+			terms2.add(terms.get(i));
+		}
+		terms2.add(one);
+		return terms2;
 	}
 }
