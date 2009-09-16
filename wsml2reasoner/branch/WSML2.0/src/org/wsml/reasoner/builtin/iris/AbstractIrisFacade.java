@@ -528,49 +528,50 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         }
         else if (sym.equals(BuiltIn.NUMERIC_MODULUS.getFullName())) { // check is done by normal Modulus
         	// TODO mp: change the order of the terms according to the builtIns (e.g.: x,y,z -> yzx).
+        	// http://www.w3.org/2005/rules/wg/wiki/List_of_functions_and_operators
         	return BUILTIN.createNumericModulus(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.STRING_COMPARE.getFullName())) {
-        	return BUILTIN.createStringCompare(toArray(terms));
+        	return BUILTIN.createStringCompare(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.STRING_CONCAT.getFullName())) {
-        	return BUILTIN.createStringConcat(toArray(terms));
+        	return BUILTIN.createStringConcat(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.STRING_JOIN.getFullName())) {
-        	return BUILTIN.createStringJoin(toArray(terms));
+        	return BUILTIN.createStringJoin(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.STRING_SUBSTRING.getFullName())) {
-        	return BUILTIN.createStringSubstring(toArray(terms));
+        	return BUILTIN.createStringSubstring(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.STRING_LENGTH.getFullName())) {
-        	return BUILTIN.createStringLength(toArray(terms));
+        	return BUILTIN.createStringLength(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.STRING_TO_UPPER.getFullName())) {
-        	return BUILTIN.createStringToUpper(toArray(terms));
+        	return BUILTIN.createStringToUpper(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.STRING_TO_LOWER.getFullName())) {
-        	return BUILTIN.createStringToLower(toArray(terms));
+        	return BUILTIN.createStringToLower(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.STRING_URI_ENCODE.getFullName())) {
-        	return BUILTIN.createStringUriEncode(toArray(terms));
+        	return BUILTIN.createStringUriEncode(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.STRING_IRI_TO_URI.getFullName())) {
-        	return BUILTIN.createStringIriToUri(toArray(terms));
+        	return BUILTIN.createStringIriToUri(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.STRING_ESCAPE_HTML_URI.getFullName())) {
-        	return BUILTIN.createStringEscapeHtmlUri(toArray(terms));
+        	return BUILTIN.createStringEscapeHtmlUri(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.STRING_SUBSTRING_BEFORE.getFullName())) {
-        	return BUILTIN.createStringSubstringBefore(toArray(terms));
+        	return BUILTIN.createStringSubstringBefore(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.STRING_SUBSTRING_AFTER.getFullName())) {
-        	return BUILTIN.createStringSubstringAfter(toArray(terms));
+        	return BUILTIN.createStringSubstringAfter(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.STRING_REPLACE.getFullName())) {
-        	return BUILTIN.createStringReplace(toArray(terms));
+        	return BUILTIN.createStringReplace(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.STRING_CONTAINS.getFullName())) {
-        	return BUILTIN.createStringContains(toArray(terms));
+        	return BUILTIN.createStringContains(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.STRING_STARTS_WITH.getFullName())) {
         	return BUILTIN.createStringStartsWith(toArray(terms));
@@ -582,106 +583,106 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         	return BUILTIN.createStringMatches(toArray(terms));
         }
         else if (sym.equals(BuiltIn.YEAR_PART.getFullName())) {
-        	return BUILTIN.createYearPart(toArray(terms));
+        	return BUILTIN.createYearPart(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.MONTH_PART.getFullName())) {
-        	return BUILTIN.createMonthPart(toArray(terms));
+        	return BUILTIN.createMonthPart(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.DAY_PART.getFullName())) {
-        	return BUILTIN.createDayPart(toArray(terms));
+        	return BUILTIN.createDayPart(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.HOUR_PART.getFullName())) {
-        	return BUILTIN.createHourPart(toArray(terms));
+        	return BUILTIN.createHourPart(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.MINUTE_PART.getFullName())) {
-        	return BUILTIN.createMinutePart(toArray(terms));
+        	return BUILTIN.createMinutePart(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.SECOND_PART.getFullName())) {
-        	return BUILTIN.createSecondPart(toArray(terms));
+        	return BUILTIN.createSecondPart(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TIMEZONE_PART.getFullName())) {
-        	return BUILTIN.createTimezonePart(toArray(terms));
+        	return BUILTIN.createTimezonePart(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TEXT_FROM_STRING_LANG.getFullName())) {
-        	return BUILTIN.createTextFromStringLang(toArray(terms));
+        	return BUILTIN.createTextFromStringLang(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TEXT_FROM_STRING.getFullName())) {
-        	return BUILTIN.createTextFromStringLang(toArray(terms));
+        	return BUILTIN.createTextFromStringLang(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.STRING_FROM_TEXT.getFullName())) {
-        	return BUILTIN.createStringFromText(toArray(terms));
+        	return BUILTIN.createStringFromText(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.LANG_FROM_TEXT.getFullName())) {
-        	return BUILTIN.createLangFromText(toArray(terms));
+        	return BUILTIN.createLangFromText(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TEXT_COMPARE.getFullName())) {
-        	return BUILTIN.createTextCompare(toArray(terms));
+        	return BUILTIN.createTextCompare(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TO_BASE64.getFullName())) {
-        	return BUILTIN.createToBase64Binary(toArray(terms));
+        	return BUILTIN.createToBase64Binary(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TO_BOOLEAN.getFullName())) {
-        	return BUILTIN.createToBoolean(toArray(terms));
+        	return BUILTIN.createToBoolean(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TO_DATE.getFullName())) {
-        	return BUILTIN.createToDate(toArray(terms));
+        	return BUILTIN.createToDate(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TO_DATETIME.getFullName())) {
-        	return BUILTIN.createToDateTime(toArray(terms));
+        	return BUILTIN.createToDateTime(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TO_DAYTIMEDURATION.getFullName())) {
-        	return BUILTIN.createToDayTimeDuration(toArray(terms));
+        	return BUILTIN.createToDayTimeDuration(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TO_DECIMAL.getFullName())) {
-        	return BUILTIN.createToDecimal(toArray(terms));
+        	return BUILTIN.createToDecimal(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TO_DOUBLE.getFullName())) {
-        	return BUILTIN.createToDouble(toArray(terms));
+        	return BUILTIN.createToDouble(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TO_DURATION.getFullName())) {
-        	return BUILTIN.createToDuration(toArray(terms));
+        	return BUILTIN.createToDuration(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TO_FLOAT.getFullName())) {
-        	return BUILTIN.createToFloat(toArray(terms));
+        	return BUILTIN.createToFloat(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TO_GDAY.getFullName())) {
-        	return BUILTIN.createToGDay(toArray(terms));
+        	return BUILTIN.createToGDay(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TO_GMONTH.getFullName())) {
-        	return BUILTIN.createToGMonth(toArray(terms));
+        	return BUILTIN.createToGMonth(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TO_GMONTHDAY.getFullName())) {
-        	return BUILTIN.createToGMonthDay(toArray(terms));
+        	return BUILTIN.createToGMonthDay(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TO_GYEAR.getFullName())) {
-        	return BUILTIN.createToGYear(toArray(terms));
+        	return BUILTIN.createToGYear(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TO_GYEARMONTH.getFullName())) {
-        	return BUILTIN.createToGYearMonth(toArray(terms));
+        	return BUILTIN.createToGYearMonth(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TO_HEXBINARY.getFullName())) {
-        	return BUILTIN.createToHexBinary(toArray(terms));
+        	return BUILTIN.createToHexBinary(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TO_INTEGER.getFullName())) {
-        	return BUILTIN.createToInteger(toArray(terms));
+        	return BUILTIN.createToInteger(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TO_IRI.getFullName())) {
-        	return BUILTIN.createToIRI(toArray(terms));
+        	return BUILTIN.createToIRI(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TO_STRING.getFullName())) {
-        	return BUILTIN.createToString(toArray(terms));
+        	return BUILTIN.createToString(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TO_TEXT.getFullName())) {
-        	return BUILTIN.createToText(toArray(terms));
+        	return BUILTIN.createToText(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TO_TIME.getFullName())) {
-        	return BUILTIN.createToTime(toArray(terms));
+        	return BUILTIN.createToTime(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TO_XMLLITERAL.getFullName())) {
-        	return BUILTIN.createToXMLLiteral(toArray(terms));
+        	return BUILTIN.createToXMLLiteral(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TO_YEARMONTHDURATION.getFullName())) {
-        	return BUILTIN.createToYearMonthDuration(toArray(terms));
+        	return BUILTIN.createToYearMonthDuration(toArray(sortListForIRIS(terms)));
         }
         // the is-datatype-things
         else if (sym.equals(BuiltIn.IS_DATATYPE.getFullName())) {
