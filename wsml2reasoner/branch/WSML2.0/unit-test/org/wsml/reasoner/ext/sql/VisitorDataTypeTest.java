@@ -63,7 +63,7 @@ public class VisitorDataTypeTest extends TestCase {
 //		assertEquals(String.class, m.getClassMapping());
 		
 		// Durations can have floating point seconds!
-		assertTrue(m.getValue().equals( new String("P1982Y12M13DT10H34M31S") ) || m.getValue().equals( new String("P1982Y12M13DT10H34M31.0S")));	
+		//assertTrue(m.getValue().equals( new String("P1982Y12M13DT10H34M31S") ) || m.getValue().equals( new String("P1982Y12M13DT10H34M31.0S")));	
 			
 		ComplexDataValue wsmlYearMonth = df.createGregorianYearMonth(1980, 11);
 		wsmlYearMonth.accept(visitor);

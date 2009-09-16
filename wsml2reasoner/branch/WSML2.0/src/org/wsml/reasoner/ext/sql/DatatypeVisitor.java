@@ -202,15 +202,18 @@ public class DatatypeVisitor implements TermVisitor {
 			Calendar cal = convertTimeValue(t);
 			value = new java.sql.Timestamp(cal.getTimeInMillis());
 		}
- else if (complextType.equals(WsmlDataType.WSML_DATE)
+		else if (complextType.equals(WsmlDataType.WSML_DATE)
 				|| complextType.equals(WsmlDataType.WSML_DATETIME)
 				|| complextType.equals(WsmlDataType.WSML_TIME)
 				|| complextType.equals(XmlSchemaDataType.XSD_DATE)
 				|| complextType.equals(XmlSchemaDataType.XSD_DATETIME)
 				|| complextType.equals(XmlSchemaDataType.XSD_TIME)) {
-			// these are actually already implemented as calendar in wsmo4j
-			Calendar cal = (Calendar) t.getValue();
-			value = new java.sql.Timestamp(cal.getTimeInMillis());
+			// these are implemented as Number array.
+	 		Number [] num = (Number[]) t.getValue();
+	 		dateTime2Calendar(complextType, num);
+	 		
+	 		// TODO mp: add number[] to java.sql.Timestamp();
+			value = new java.sql.Timestamp( (long) 1 );
 		}
         else if (complextType.equals(WsmlDataType.WSML_FLOAT) 
         	|| complextType.equals(XmlSchemaDataType.XSD_FLOAT)) {
@@ -324,6 +327,26 @@ public class DatatypeVisitor implements TermVisitor {
         }
 
         return tempCal;
+    }
+    
+    
+    private Calendar dateTime2Calendar(String datetype, Number [] num) {
+    	// TODO mp: convertation to calendar.
+    	Calendar cal = Calendar.getInstance();
+    	if (datetype.equals(XmlSchemaDataType.XSD_DATE) || datetype.equals(WsmlDataType.WSML_DATE)){
+    		cal.set(Calendar.YEAR, new Integer(num[0].toString()));
+    		cal.set(Calendar.MONTH, new Integer(num[1].toString())-1 );
+    		cal.set(Calendar.YEAR, new Integer(num[0].toString()));
+    		return cal;
+    		
+    	}
+    	if (datetype.equals(XmlSchemaDataType.XSD_TIME) || datetype.equals(WsmlDataType.WSML_TIME)){
+    		return cal;
+    	}
+    	if (datetype.equals(XmlSchemaDataType.XSD_DATETIME) || datetype.equals(WsmlDataType.WSML_DATETIME)){
+    		return cal;
+    	}
+    	return null;
     }
 
 }
