@@ -17,6 +17,6 @@ instance C memberOf C3
 
 		
 axiom equal definedBy
-		A = B :- true.
+		A = B :- wsml#true.
 		p(?x) :- ?x[?n1 hasValue name].
 	

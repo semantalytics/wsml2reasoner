@@ -22,5 +22,5 @@ instance C1 memberOf C
 	    y hasValue l
 		
 axiom S definedBy
-	?a = ?b :- ?a[x hasValue ?x] and ?a[y hasValue ?y] and ?b[x hasValue ?z] and ?b[y hasValue ?w] and ?x = ?z and ?y = ?w.
+	 ?a = ?b :- ?a[x hasValue ?x] and ?a[y hasValue ?y] and ?b[x hasValue ?z] and ?b[y hasValue ?w] and ?x = ?z and ?y = ?w.
 	 p(?x) :- ?x memberOf B. 

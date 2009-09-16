@@ -29,7 +29,6 @@ public abstract class AbstractRuleHead6EqualityTest extends TestCase implements
 		r.addBinding(Results.iri("http://simple6#B1"));
 		r.addBinding(Results.iri("http://simple6#A1"));
 
-		// LPHelper.output = true;
 		LPHelper.executeQueryAndCheckResults(OntologyHelper
 				.loadOntology(ONTOLOGY_FILE), query, r.get(), reasoner);
 	}

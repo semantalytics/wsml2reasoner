@@ -21,6 +21,6 @@ instance D memberOf C4
 instance E memberOf C5
 		
 axiom equal definedBy
-	A = B :- true.
-	C = D :- true.
+	A = B :- wsml#true.
+	C = D :- wsml#true.
 	p(?x) :- ?x memberOf C1.

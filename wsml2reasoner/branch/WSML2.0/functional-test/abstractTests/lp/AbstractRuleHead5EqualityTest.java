@@ -38,8 +38,6 @@ public abstract class AbstractRuleHead5EqualityTest extends TestCase implements
 		r.addBinding(Results.iri("http://simple5#aa"), Results
 				.iri("http://simple5#other"), Results.iri("http://simple5#B1"));
 
-		
-//		LPHelper.output = true;
 		LPHelper.executeQueryAndCheckResults(OntologyHelper
 				.loadOntology(ONTOLOGY_FILE), query, r.get(), reasoner);
 

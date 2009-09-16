@@ -17,5 +17,5 @@ instance B memberOf C2
 	anotherString hasValue _string( "another string-value" )
 		
 axiom equal definedBy
-	//C1 = C2 :- true.
-	A = B :- true.
+	//C1 = C2 :- wsml#true.
+	A = B :- wsml#true.

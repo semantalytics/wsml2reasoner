@@ -14,5 +14,5 @@ instance b memberOf C2
 	
 	
 axiom equalInHead definedBy
-	a = b :- true. 
+	a = b :- wsml#true. 
 	p(?x) :- ?x memberOf C2 and ?x[name hasValue aName].
