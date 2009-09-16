@@ -123,6 +123,26 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 		registerOntologies(ontologies);
 	}
 
+	public void registerOntologyNoVerification(Ontology ontology) {
+		setChanged();
+
+		// safe consistency check setting
+		boolean consistencyCheck = this.disableConsitencyCheck;
+		
+		// disable consistency check
+		setDisableConsitencyCheck(true);
+		
+		// register ontology
+		try {
+			registerOntology(ontology);
+		} catch (InconsistencyException e) {
+			new RuntimeException("Must not occur since consistency check disabled");
+		}
+
+		// set to old value
+		setDisableConsitencyCheck(consistencyCheck);
+	}
+
 	public void registerOntologies(Set<Ontology> ontologies) throws InconsistencyException {
 		setChanged();
 
@@ -147,7 +167,7 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 		registerEntities(entities);
 	}
 
-	public void registerEntities(Set<Entity> theEntities) throws InconsistencyException {
+	private void registerEntities(Set<Entity> theEntities) throws InconsistencyException {
 		setChanged();
 
 		registerEntitiesNoVerification(theEntities);
@@ -168,7 +188,7 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 		}
 	}
 
-	public void registerEntitiesNoVerification(Set<Entity> theEntities) {
+	private void registerEntitiesNoVerification(Set<Entity> theEntities) {
 		setChanged();
 
 		List<IRule> ruleBase = new ArrayList<IRule>();
@@ -181,18 +201,6 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 			throw new IllegalArgumentException(
 					"This set of entities could not be registered with the built-in reasoner", e);
 		}
-	}
-
-	public void registerOntologyNoVerification(Ontology ontology) {
-		setChanged();
-
-		Set<Entity> entities = new HashSet<Entity>();
-		entities.addAll(ontology.listConcepts());
-		entities.addAll(ontology.listInstances());
-		entities.addAll(ontology.listRelations());
-		entities.addAll(ontology.listRelationInstances());
-		entities.addAll(ontology.listAxioms());
-		registerEntitiesNoVerification(entities);
 	}
 
 	@Override
@@ -914,7 +922,7 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 					Identifier id = attribute.getIdentifier();
 					if (id instanceof IRI) {
 						inferringAttributes.add((IRI) id);
-//						inferringAttributes.addAll(getSubRelations(id)); TODO this is very slow! but need to be added later again
+//						inferringAttributes.addAll(getSubRelations(id)); // TODO this is very slow! but need to be added later again
 					}
 				}
 			}
@@ -936,7 +944,7 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 					Identifier id = attribute.getIdentifier();
 					if (id instanceof IRI) {
 						constrainingAttributes.add((IRI) id);
-//						constrainingAttributes.addAll(getSubRelations(id)); TODO this is very slow! but need to be added later again
+//						constrainingAttributes.addAll(getSubRelations(id)); // TODO this is very slow! but need to be added later again
 					}
 				}
 			}
