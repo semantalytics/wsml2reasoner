@@ -31,6 +31,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -98,7 +99,6 @@ import org.deri.iris.querycontainment.QueryContainment;
 import org.deri.iris.storage.IRelation;
 import org.deri.iris.storage.simple.SimpleRelationFactory;
 import org.omwg.logicalexpression.Constants;
-import org.omwg.logicalexpression.terms.BuiltInConstructedTerm;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.ComplexDataValue;
@@ -439,31 +439,42 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         List<IRule> rules = new ArrayList<IRule>();
 
         // translating all the rules
-        for (final Rule r : kb) {
-            if (r.isFact()) { // the rule is a fact
-                IAtom atom = literal2Atom(r.getHead(), true);
-                IPredicate pred = atom.getPredicate();
+		for (final Rule r : kb) {
+			if (r.isFact()) { // the rule is a fact
+				IAtom atom = literal2Atom(r.getHead(), true);
+				IPredicate pred = atom.getPredicate();
+				// if its a fact with equal - it is transformed to a new rule
+				// (e.g.: a=b. -> a=b impliedBy wsml#true)
+				if (containsEqualBuiltin(r.getHead())) {
+					IRule newRule = BASIC.createRule(Collections
+							.singletonList(BASIC.createLiteral(true, atom)),
+							Collections.singletonList(BASIC.createLiteral(true,
+									BUILTIN.createTrue())));
+					rules.add(newRule);
+				} else {
+					org.deri.iris.storage.IRelation relation = facts.get(atom
+							.getPredicate());
+					if (relation == null) {
+						relation = new org.deri.iris.storage.simple.SimpleRelationFactory()
+								.createRelation();
+						facts.put(pred, relation);
+					}
+					relation.add(atom.getTuple());
+				}
+			} else { // the rule is an ordinary rule
+				final List<ILiteral> head = new ArrayList<ILiteral>(1);
+				final List<ILiteral> body = new ArrayList<ILiteral>(r.getBody()
+						.size());
+				// converting the head of the rule
+				head.add(literal2Literal(r.getHead(), true));
 
-                org.deri.iris.storage.IRelation relation = facts.get(atom.getPredicate());
-                if (relation == null) {
-                    relation = new org.deri.iris.storage.simple.SimpleRelationFactory().createRelation();
-                    facts.put(pred, relation);
-                }
-                relation.add(atom.getTuple());
-            }
-            else { // the rule is an ordinary rule
-            	final List<ILiteral> head = new ArrayList<ILiteral>(1);
-                final List<ILiteral> body = new ArrayList<ILiteral>(r.getBody().size());
-                // converting the head of the rule
-                head.add(literal2Literal(r.getHead(), true));
-               
-                // converting the body of the rule
-                for (final Literal l : r.getBody()) {
-                    body.add(literal2Literal(l, false));
-                }
-                rules.add(BASIC.createRule(head, body));
-            }
-        }
+				// converting the body of the rule
+				for (final Literal l : r.getBody()) {
+					body.add(literal2Literal(l, false));
+				}
+				rules.add(BASIC.createRule(head, body));
+			}
+		}
         // add the wsml-member-of rules for primitive data types
         // Removed. See bug 2248622
 //        for (final IRule r : getWsmlMemberOfRules()) {
@@ -897,64 +908,47 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
     	ITerm[] array = new ITerm[terms.size()];
     	return terms.toArray(array);
     }
-    /**
-     * Converts a wsmo4j term to an iris term
-     * 
-     * @param t the wsmo4j term
-     * @return the converted iris term
-     */
+
+	/**
+	 * Converts a wsmo4j term to an iris term
+	 * 
+	 * @param t the wsmo4j term
+	 * @return the converted iris term
+	 */
 	static ITerm convertTermFromWsmo4jToIris(final Term t) {
-        if (t == null) {
-            throw new NullPointerException("The term must not be null");
-        }
-        // TODO matthias: remove
-       // System.out.println("\n** TERM : " + t);
-        if (t instanceof BuiltInConstructedTerm) {
-//        	  System.out.println("BUILTIN CONSTRUCTED TERM: " + t);
-//        	  final BuiltInConstructedTerm ct = (BuiltInConstructedTerm) t;
-//              final List<ITerm> terms = new ArrayList<ITerm>(ct.getArity());
-//              for (final Term term : (List<Term>) ct.listParameters()) {
-//                  terms.add(convertTermFromWsmo4jToIris(term));
-//              }
-//              return TERM.createConstruct(ct.getFunctionSymbol().toString(), terms);
-        	// return convertWSMO4JBuiltin2IrisBuiltin
-            // TODO: builtins are left out at the moment
-        }
-        else if (t instanceof ConstructedTerm) {
-//            System.out.println("CONSTRUCTED TERM: " + t);
-            final ConstructedTerm ct = (ConstructedTerm) t;
-            final List<ITerm> terms = new ArrayList<ITerm>(ct.getArity());
-            for (final Term term : (List<Term>) ct.listParameters()) {
-                terms.add(convertTermFromWsmo4jToIris(term));
-            }
-            return TERM.createConstruct(ct.getFunctionSymbol().toString(), terms);
-        }
-        else if (t instanceof DataValue) {
-//        	 System.out.println("DATAVALUE: " + t);
-            return convertWsmo4jDataValueToIrisTerm((DataValue) t);
-        }
-        else if (t instanceof IRI) {
-//        	System.out.println("IRI: " + t);
-            return CONCRETE.createIri(t.toString());
-        }
-        else if (t instanceof Variable) {
-//        	System.out.println("VARIABLE: " + t);
-            return TERM.createVariable(((Variable) t).getName());
-        }
-        else if (t instanceof Identifier) {
-//        	System.out.println("IDENTIFIER: " + t);
-            // i doubt we got something analogous in iris -> exception
-        }
-        else if (t instanceof NumberedAnonymousID) {
-//        	System.out.println("NUMBEREDANONYMOUSID: " + t);
-            // i doubt we got something analogous in iris -> exception
-        }
-        else if (t instanceof UnnumberedAnonymousID) {
-//        	System.out.println("UNNUMBEREDANONYMOUSID: " + t);
-            // i doubt we got something analogous in iris -> exception
-        }
-        throw new IllegalArgumentException("Can't convert a term of type " + t.getClass().getName());
-    }
+		if (t == null) {
+			throw new NullPointerException("The term must not be null");
+		} else if (t instanceof ConstructedTerm) {
+			// System.out.println("CONSTRUCTED TERM: " + t);
+			final ConstructedTerm ct = (ConstructedTerm) t;
+			final List<ITerm> terms = new ArrayList<ITerm>(ct.getArity());
+			for (final Term term : (List<Term>) ct.listParameters()) {
+				terms.add(convertTermFromWsmo4jToIris(term));
+			}
+			return TERM.createConstruct(ct.getFunctionSymbol().toString(),
+					terms);
+		} else if (t instanceof DataValue) {
+			// System.out.println("DATAVALUE: " + t);
+			return convertWsmo4jDataValueToIrisTerm((DataValue) t);
+		} else if (t instanceof IRI) {
+			// System.out.println("IRI: " + t);
+			return CONCRETE.createIri(t.toString());
+		} else if (t instanceof Variable) {
+			// System.out.println("VARIABLE: " + t);
+			return TERM.createVariable(((Variable) t).getName());
+		} else if (t instanceof Identifier) {
+			// System.out.println("IDENTIFIER: " + t);
+			// i doubt we got something analogous in iris -> exception
+		} else if (t instanceof NumberedAnonymousID) {
+			// System.out.println("NUMBEREDANONYMOUSID: " + t);
+			// i doubt we got something analogous in iris -> exception
+		} else if (t instanceof UnnumberedAnonymousID) {
+			// System.out.println("UNNUMBEREDANONYMOUSID: " + t);
+			// i doubt we got something analogous in iris -> exception
+		}
+		throw new IllegalArgumentException("Can't convert a term of type "
+				+ t.getClass().getName());
+	}
 
     /**
      * Converts a wsmo4j DataValue to an iris ITerm.
@@ -1325,13 +1319,13 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
      */
     private class IrisDataSource implements IDataSource {
 
-        /** Predicate for the iris memeber-of facts. */
+        /** Predicate for the iris member-of facts. */
         private final IPredicate memberOf = BASIC.createPredicate(WSML2DatalogTransformer.PRED_MEMBER_OF, 2);
 
         /** Predicate for the iris has-value facts. */
         private final IPredicate hasValue = BASIC.createPredicate(WSML2DatalogTransformer.PRED_HAS_VALUE, 3);
 
-        /** Datasource from where to get the values from. */
+        /** Data source from where to get the values from. */
         private final ExternalDataSource source;
 
         public IrisDataSource(final ExternalDataSource source) {
@@ -1342,7 +1336,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         }
 
         public void get(IPredicate p, ITuple from, ITuple to, IRelation r) {
-            // TODO: from and to can't be used by iris atm, so we leave it out
+            // TODO: from and to can't be used by iris atom, so we leave it out
             // for the moment
             if (p == null) {
                 throw new IllegalArgumentException("The predicate must not be null");
@@ -1363,4 +1357,33 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
             }
         }
     }
+    
+    
+	/**
+	 * Checks if a literal contains an equal statement.
+	 * 
+	 * @param literal
+	 * @return true if the Literal contains an equal statement (equal,
+	 *         equal_date,...), else false.
+	 */
+	private boolean containsEqualBuiltin(Literal literal) {
+		String sym = literal.getPredicateUri();
+		assert sym != null;
+		if (sym.equals(BuiltIn.EQUAL.getFullName())
+				|| sym.equals(BuiltIn.NUMERIC_EQUAL.getFullName())
+				|| sym.equals(BuiltIn.STRING_EQUAL.getFullName())
+				|| sym.equals(BuiltIn.DATE_EQUAL.getFullName())
+				|| sym.equals(BuiltIn.TIME_EQUAL.getFullName())
+				|| sym.equals(BuiltIn.DATETIME_EQUAL.getFullName())
+				|| sym.equals(BuiltIn.GYEAR_EQUAL.getFullName())
+				|| sym.equals(BuiltIn.GYEARMONTH_EQUAL.getFullName())
+				|| sym.equals(BuiltIn.GMONTHDAY_EQUAL.getFullName())
+				|| sym.equals(BuiltIn.GDAY_EQUAL.getFullName())
+				|| sym.equals(BuiltIn.GMONTH_EQUAL.getFullName())
+				|| sym.equals(BuiltIn.DURATION_EQUAL.getFullName())) {
+			return true;
+		}
+
+		return false;
+	}
 }
