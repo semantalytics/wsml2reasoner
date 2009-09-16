@@ -98,7 +98,6 @@ public abstract class AbstractDataTypes1Declared extends TestCase implements LP 
     	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_RDF_XMLLiteral" ), Results._xmlliteral("<tag>XML Literal</tag>", ""));
     	
     	// new XSD Datatypes
-    	// TODO mp : these are mapped to duration - is that right!
     	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aYearMonthDuration" ), Results._duration(2008, 10, 0,0,0,0) );
     	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_YearMonthDuration" ),  Results._duration(2008, 11, 0,0,0,0) );
     	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDayTimeDuration" ), Results._duration(0,0,1, 10, 31, 15.5) );
