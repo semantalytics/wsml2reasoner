@@ -30,7 +30,6 @@ import org.omwg.logicalexpression.AtomicExpression;
 import org.omwg.logicalexpression.AttributeConstraintMolecule;
 import org.omwg.logicalexpression.AttributeInferenceMolecule;
 import org.omwg.logicalexpression.AttributeValueMolecule;
-import org.omwg.logicalexpression.Constants;
 import org.omwg.logicalexpression.Constraint;
 import org.omwg.logicalexpression.Disjunction;
 import org.omwg.logicalexpression.Equivalence;
@@ -602,7 +601,6 @@ public class WSML2DatalogTransformer {
 
 		@Override
 		public void enterEquivalence(Equivalence arg0) {
-			System.out.println("Enter: " + arg0);
 			inHeadOfRule = true;
 			inBodyOfRule = false;
 		}
@@ -783,7 +781,6 @@ public class WSML2DatalogTransformer {
 
 		@Override
 		public void handleEquivalence(Equivalence arg0) {
-			//System.out.println("Handle: " + arg0);
 			inHeadOfRule = false;
 			inBodyOfRule = true;
 		}

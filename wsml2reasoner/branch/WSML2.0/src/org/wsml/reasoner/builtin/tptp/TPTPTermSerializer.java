@@ -48,6 +48,7 @@ import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.Variable;
 import org.omwg.ontology.WsmlDataType;
+import org.omwg.ontology.XmlSchemaDataType;
 import org.wsmo.common.IRI;
 import org.wsmo.common.NumberedAnonymousID;
 import org.wsmo.common.TopEntity;
@@ -61,7 +62,7 @@ import org.wsmo.common.UnnumberedAnonymousID;
  */
 public class TPTPTermSerializer implements LogicalExpressionVisitor, TermVisitor {
 
-    private Map atoms2ConstructedTerms;
+    private Map<?, ?> atoms2ConstructedTerms;
 
     private Vector<String> stack;
 
@@ -85,7 +86,7 @@ public class TPTPTermSerializer implements LogicalExpressionVisitor, TermVisitor
         stack = new Vector<String>();
     }
 
-    public void setAtoms2ConstructedTerms(Map atoms2ConstructedTerms) {
+    public void setAtoms2ConstructedTerms(Map<?, ?> atoms2ConstructedTerms) {
         this.atoms2ConstructedTerms = atoms2ConstructedTerms;
     }
 
@@ -153,7 +154,7 @@ public class TPTPTermSerializer implements LogicalExpressionVisitor, TermVisitor
     }
 
     public void visitSimpleDataValue(SimpleDataValue value) {
-        if (value.getType().getIdentifier().toString().equals(WsmlDataType.WSML_STRING)) {
+        if (value.getType().getIdentifier().toString().equals(WsmlDataType.WSML_STRING) || value.getType().getIdentifier().toString().equals(XmlSchemaDataType.XSD_STRING) ) {
             // escape \ and "
             String content = (String) value.getValue();
             content = content.replaceAll("\\\\", "\\\\\\\\");

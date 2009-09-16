@@ -20,7 +20,6 @@ package org.wsml.reasoner.builtin.tptp;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.omwg.logicalexpression.Constants;
 import org.wsmo.common.BuiltIn;
 
 /**
