@@ -175,7 +175,8 @@ public class ELLYFacade implements ELPReasonerFacade {
 						termSet.add(tuple.get(1));
 				}
 
-				roleTermSetMap.put(role, termSet);
+				if (termSet.size() > 0)
+					roleTermSetMap.put(role, termSet);
 			}
 
 			return roleTermSetMap;
@@ -226,7 +227,8 @@ public class ELLYFacade implements ELPReasonerFacade {
 						termSet.add(tuple.get(1));
 				}
 
-				roleTermSetMap.put(role, termSet);
+				if (termSet.size() > 0)
+					roleTermSetMap.put(role, termSet);
 			}
 
 			return roleTermSetMap;
