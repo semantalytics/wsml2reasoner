@@ -180,9 +180,6 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
 		
 		ELPBasedWSMLReasoner reasoner = new ELPBasedWSMLReasoner(BuiltInReasoner.ELLY, container);
 		
-		// FIXME temporary solution
-		reasoner.setAllowImports(-1);
-		
 		return reasoner;
 	}
 }
