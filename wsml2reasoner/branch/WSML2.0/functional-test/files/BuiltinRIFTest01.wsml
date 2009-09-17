@@ -40,7 +40,7 @@ axiom testRIFBuiltin definedBy
        isHexBinaryTest(?x)	:- ?x[?attribute hasValue ?value] and wsml#isHexBinary(xsd#hexBinary("FFFF")).
        isTimeTest(?x)	:- ?x[?attribute hasValue ?value] and wsml#isTime(xsd#time(14, 31, 30.0, 0, 0)).
        isDayTimeDurationTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isDayTimeDuration(xsd#dayTimeDuration(5, 3, 2, 1.0)).
-	   isYearMonthDurationTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isYearMonthDuratation(xsd#yearMonthDuration(24, 2)).
+	   isYearMonthDurationTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isYearMonthDuration(xsd#yearMonthDuration(24, 2)).
 	   isTextTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isText(rdf#text("Text", "en")).
 	   isXMLLiteralTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isXMLLiteral(rdf#XMLLiteral("<tag>Text</tag>", "")).
 

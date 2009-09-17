@@ -192,7 +192,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 	final static String IS_TIME = IS_PREFIX + "Time";
 	final static String IS_DAYTIME_DURATION = IS_PREFIX + "DayTimeDuration";
 	final static String IS_YEAR_MONTH_DURATION = IS_PREFIX + "YearMonthDuration";
-	final static String IS_IRI = IS_PREFIX + "IRI";
+	final static String IS_IRI = IS_PREFIX + "Iri";
 	final static String IS_TEXT = IS_PREFIX + "Text";
 	final static String IS_XML_LITERAL = IS_PREFIX + "XMLLiteral";
 
