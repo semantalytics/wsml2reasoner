@@ -28,6 +28,7 @@ import org.sti2.elly.api.basics.IRule;
 import org.sti2.elly.api.factory.IBasicFactory;
 import org.sti2.elly.api.terms.IIndividual;
 import org.sti2.elly.basics.BasicFactory;
+import org.sti2.elly.util.Rules;
 import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.sti2.wsmo4j.merger.Merger;
 import org.wsml.reasoner.ELPReasonerFacade;
@@ -104,8 +105,9 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 		switch (builtInType) {
 		case ELLY:
 			return new ELLYFacade();
+		default:
+			throw new InternalReasonerException("Reasoning with " + builtInType.toString() + " is not supported!");
 		}
-		throw new InternalReasonerException("Reasoning with " + builtInType.toString() + " is not supported!");
 	}
 
 	public void setDisableConsitencyCheck(boolean check) {
@@ -774,6 +776,34 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 		}
 	}
 
+
+	@Override
+	public boolean isEntailed(LogicalExpression expression) {
+		checkRegistered();
+		
+		if (expression == null)
+			throw new IllegalArgumentException("LogicalExpression must not be null");
+		
+		List<IRule> rules = new ArrayList<IRule>();
+		expression.accept(new Wsml2EllyTranslator(rules));
+		
+		if (rules.size() != 1)
+			throw new IllegalArgumentException("LogicalExpression must not be a rule or contain implications");
+		
+		IRule fact = rules.get(0);
+		
+		if (!Rules.isFact(fact))
+			throw new IllegalArgumentException("LogicalExpression must not be a rule or contain implications");
+		
+		
+		try {
+			return builtInFacade.isEntailed(fact);
+		} catch (ExternalToolException e) {
+			throw new InternalReasonerException(e);
+		}
+	}
+
+
 	@Override
 	public boolean isConceptSatisfiable(LogicalExpression expression) {
 		checkRegistered();
@@ -1016,5 +1046,4 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 
 		return p;
 	}
-
 }
