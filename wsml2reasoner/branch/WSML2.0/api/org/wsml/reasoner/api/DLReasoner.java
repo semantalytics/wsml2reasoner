@@ -42,7 +42,14 @@ public interface DLReasoner extends WSMLReasoner {
 
     public boolean isSatisfiable();
     
-//    boolean isEntails( LogicalExpression expression );
+	/**
+	 * This method does satisifiability testing on the given logical expression 
+	 * that must identify a (possible) set of instances.
+	 * The Logical Expression must not be a rule or contain implications.
+	 * 
+	 * @return true if the given expression is consistent, false otherwise.
+	 */
+    boolean isEntailed( LogicalExpression expression );
 
 	/**
 	 * This method does a "CONCEPT SATIFIABLITY TEST" on the given logical expression 
@@ -52,9 +59,6 @@ public interface DLReasoner extends WSMLReasoner {
 	 * - Atom<br />
 	 * - MembershipMolecule<br />
 	 * - Conjunction<br />
-	 * - Disjunction<br />
-	 * - Negation<br />
-	 * - UniversalQuantification<br />
 	 * - ExistentialQuantification<br />
 	 * <br /> 
 	 * and contain exactly one free variable (that represents the instances).

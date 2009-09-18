@@ -12,6 +12,7 @@ import org.sti2.elly.api.basics.IAtomicRole;
 import org.sti2.elly.api.basics.IConceptDescription;
 import org.sti2.elly.api.basics.IDescription;
 import org.sti2.elly.api.basics.IRoleDescription;
+import org.sti2.elly.api.basics.IRule;
 import org.sti2.elly.api.basics.IRuleBase;
 import org.sti2.elly.api.factory.IBasicFactory;
 import org.sti2.elly.api.reasoning.IReasoner;
@@ -310,6 +311,15 @@ public class ELLYFacade implements ELPReasonerFacade {
 	}
 
 	@Override
+	public boolean isEntailed(IRule fact) throws ExternalToolException {
+		try {
+			return reasoner.isEntailed(fact);
+		} catch (ReasoningException e) {
+			throw new ExternalToolException("isEntailed(" + fact + ")", e);
+		}
+	}
+	
+	@Override
 	public boolean isConsistent() throws ExternalToolException {
 		try {
 			return reasoner.isSatisfiable();
@@ -403,5 +413,4 @@ public class ELLYFacade implements ELPReasonerFacade {
 	public Set<IAtomicConcept> directTypesOf(IIndividual individual) throws ExternalToolException {
 		throw new UnsupportedOperationException("directTypesOf not supported");
 	}
-
 }

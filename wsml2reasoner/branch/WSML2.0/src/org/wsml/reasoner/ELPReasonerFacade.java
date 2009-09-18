@@ -27,6 +27,7 @@ import org.sti2.elly.api.basics.IAtomicRole;
 import org.sti2.elly.api.basics.IConceptDescription;
 import org.sti2.elly.api.basics.IDescription;
 import org.sti2.elly.api.basics.IRoleDescription;
+import org.sti2.elly.api.basics.IRule;
 import org.sti2.elly.api.basics.IRuleBase;
 import org.sti2.elly.api.terms.IIndividual;
 
@@ -58,6 +59,15 @@ public interface ELPReasonerFacade {
 	 * @return <code>true</code> if the given rule base is consistent, <code>false</code> otherwise.
 	 */
 	public boolean isConsistent() throws ExternalToolException;
+
+    /**
+     * Checks whether or not a Fact (i.e. a list of Atoms) is entailed by the rule base.
+     * 
+     * @param fact The Fact to be checked for entailment; Note that a Fact is a rule with empty body.
+     * @return {@code true} if the the given Fact is entailed by the knowledge base; <code>false</code> otherwise.
+     * @throws IllegalArgumentException if the given fact is not a valid Fact.
+     */
+	public boolean isEntailed(IRule fact) throws ExternalToolException;
 
 	/**
 	 * @return <code>true</code> if the given Description is satisfiable, <code>false</code> otherwise.
