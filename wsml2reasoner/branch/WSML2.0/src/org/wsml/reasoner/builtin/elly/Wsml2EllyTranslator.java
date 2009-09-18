@@ -3,8 +3,10 @@ package org.wsml.reasoner.builtin.elly;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Stack;
 
 import org.deri.iris.api.basics.ITuple;
@@ -101,13 +103,11 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 	private final List<IRule> rules;
 	private final Stack<ITerm> termStack;
 	private final Stack<IDescription> descriptionStack;
-	private final Stack<IAtom> atomStack;
+	private final Stack<Queue<IAtom>> atomListStack;
 
 	private final Map<Object, Object> wsml2EllyCache;
 
 	private Type expectedType;
-
-	private boolean inRule;
 
 	public Wsml2EllyTranslator(List<IRule> rules) {
 		if (rules == null)
@@ -116,11 +116,9 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 
 		termStack = new Stack<ITerm>();
 		descriptionStack = new Stack<IDescription>();
-		atomStack = new Stack<IAtom>();
+		atomListStack = new Stack<Queue<IAtom>>();
 
 		wsml2EllyCache = new HashMap<Object, Object>();
-
-		inRule = false;
 	}
 
 	/* *******************************
@@ -247,7 +245,13 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 	public void visitAtom(Atom expr) {
 		// must be an Built-in Atom
 		if (expr instanceof BuiltInAtom) {
-			handleAtom(translateBuiltIn((BuiltInAtom) expr));
+			IBuiltinAtom builtin = translateBuiltIn((BuiltInAtom) expr);
+			
+			if (emptyStack()) {
+				rules.add(BASIC.createFact(builtin));
+			} else {
+				addAtom(builtin);
+			}
 		} else {
 			throw new UnsupportedOperationException("Atoms are not supported by ELP");
 		}
@@ -262,7 +266,7 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 	 */
 	@Override
 	public void visitAttributeConstraintMolecule(AttributeConstraintMolecule expr) {
-		setInRule();
+		assert emptyStack();
 
 		expectedType = Type.ROLE;
 		expr.getAttribute().accept(this);
@@ -283,8 +287,6 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		head.add(BASIC.createAtom(dt, tupleY));
 
 		rules.add(BASIC.createRule(head, body));
-
-		clearInRule();
 	}
 
 	/**
@@ -296,7 +298,7 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 	 */
 	@Override
 	public void visitAttributeInferenceMolecule(AttributeInferenceMolecule expr) {
-		setInRule();
+		assert emptyStack();
 
 		expectedType = Type.ROLE;
 		expr.getAttribute().accept(this);
@@ -317,8 +319,6 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		head.add(BASIC.createAtom(id3, tupleY));
 
 		rules.add(BASIC.createRule(head, body));
-
-		clearInRule();
 	}
 
 	/**
@@ -342,15 +342,19 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		ITerm x2 = popTerm();
 
 		IAtom atom = null;
-		if (x1.equals(x2)) { // Self Restriction
+		if ((x1 instanceof IVariable) && (x1.equals(x2))) { // Self Restriction
 			ITuple tuple = BASIC.createTuple(x1);
 			atom = BASIC.createAtom(BASIC.createSelfRestriction(id2), tuple);
 		} else {
 			ITuple tuple = BASIC.createTuple(x1, x2);
 			atom = BASIC.createAtom(id2, tuple);
 		}
-
-		handleAtom(atom);
+		
+		if (emptyStack()) {
+			rules.add(BASIC.createFact(atom));
+		} else {
+			addAtom(atom);
+		}
 	}
 
 	/**
@@ -363,8 +367,16 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 	 */
 	@Override
 	public void visitCompoundMolecule(CompoundMolecule expr) {
+		pushAtomList();
+
 		for (LogicalExpression molecule : expr.listOperands()) {
 			molecule.accept(this);
+		}
+		
+		if (emptyStack()) {
+			rules.add(BASIC.createFact(new ArrayList<IAtom>(popAtomList())));
+		} else {
+			peekAtomList().addAll(popAtomList());
 		}
 	}
 
@@ -377,18 +389,23 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 	 */
 	@Override
 	public void visitConjunction(Conjunction expr) {
+		pushAtomList();
 		expr.getLeftOperand().accept(this);
 		expr.getRightOperand().accept(this);
-
 		// Check if this is a Concept or Role Intersection 
-		IAtom atom1 = popAtom();
-		IAtom atom2 = popAtom();
+		Queue<IAtom> atomList = popAtomList();
+	
+		IAtom atom1 = atomList.remove();
+		IAtom atom2 = atomList.remove();
+		
+		assert atomList.isEmpty() : 
+			"AtomList not empty : " + atomList;
 
 		// If they are not equal it is not, therefore push again
 		if (!(atom1.getTuple().equals(atom2.getTuple()))) {
 			// push in different order
-			pushAtom(atom2);
-			pushAtom(atom1);
+			atomList.add(atom1);
+			atomList.add(atom2);
 		} else {
 			if (atom1.getDescription() instanceof IConceptDescription) {
 				if (atom2.getDescription() instanceof IConceptDescription) {
@@ -396,7 +413,7 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 					IDescription conceptIntersection = BASIC.createIntersectionConcept((IConceptDescription) atom1
 							.getDescription(), (IConceptDescription) atom2.getDescription());
 
-					pushAtom(BASIC.createAtom(conceptIntersection, atom1.getTuple()));
+					atomList.add(BASIC.createAtom(conceptIntersection, atom1.getTuple()));
 				} else {
 					throw new RuntimeException("Descriptions of conjunction " + expr + " must be equal!");
 				}
@@ -406,28 +423,32 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 					IDescription roleIntersection = BASIC.createIntersectionRole((IRoleDescription) atom1
 							.getDescription(), (IRoleDescription) atom2.getDescription());
 
-					pushAtom(BASIC.createAtom(roleIntersection, atom1.getTuple()));
+					atomList.add(BASIC.createAtom(roleIntersection, atom1.getTuple()));
 				} else {
 					throw new RuntimeException("Descriptions of conjunction " + expr + " must be equal!");
 				}
 			}
 		}
+		
+		if (emptyStack()) {
+			rules.add(BASIC.createFact(new ArrayList<IAtom>(atomList)));
+		} else {
+			peekAtomList().addAll(atomList);
+		}
 	}
 
 	@Override
 	public void visitConstraint(Constraint expr) {
-		setInRule();
+		assert emptyStack();
 
-		assert atomStack.isEmpty();
-
+		pushAtomList();
 		expr.getOperand().accept(this);
+		Queue<IAtom> atomList = popAtomList();
+		
+		assert emptyStack();
+		assert atomList.size() > 0;
 
-		assert atomStack.size() > 0;
-
-		rules.add(BASIC.createIntegrityConstraint(new ArrayList<IAtom>(atomStack)));
-		atomStack.clear();
-
-		clearInRule();
+		rules.add(BASIC.createIntegrityConstraint(new ArrayList<IAtom>(atomList)));
 	}
 
 	@Override
@@ -448,10 +469,14 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 	 */
 	@Override
 	public void visitExistentialQuantification(ExistentialQuantification expr) {
+		pushAtomList();
 		expr.getOperand().accept(this);
-
-		IAtom conceptAtom = popAtom();
-		IAtom roleAtom = popAtom();
+		Queue<IAtom> atomList = popAtomList();
+		
+		IAtom roleAtom = atomList.remove();
+		IAtom conceptAtom = atomList.remove();
+		
+		assert atomList.isEmpty();
 
 		if (!(conceptAtom.getDescription() instanceof IConceptDescription))
 			throw new IllegalArgumentException(
@@ -479,7 +504,13 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		IConceptDescription existential = BASIC.createExistentialConcept(role, concept);
 		ITuple tuple = BASIC.createTuple(roleAtom.getTuple().get(0));
 
-		handleAtom(BASIC.createAtom(existential, tuple));
+		IAtom atom = BASIC.createAtom(existential, tuple);
+		if (emptyStack()) {
+			rules.add(BASIC.createFact(atom));
+		} else {
+			addAtom(atom);
+		}
+		
 	}
 
 	@Override
@@ -498,26 +529,22 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 	}
 
 	private void visitImplication(LogicalExpression headExpression, LogicalExpression bodyExpression) {
-		setInRule();
+		assert emptyStack();
 
-		assert atomStack.isEmpty();
-
+		pushAtomList();
 		headExpression.accept(this);
-		List<IAtom> head = new ArrayList<IAtom>(atomStack);
-
-		atomStack.clear();
-
+		pushAtomList();
 		bodyExpression.accept(this);
-		List<IAtom> body = new ArrayList<IAtom>(atomStack);
-
-		atomStack.clear();
+		
+		
+		List<IAtom> body = new ArrayList<IAtom>(popAtomList());
+		List<IAtom> head = new ArrayList<IAtom>(popAtomList());
 
 		assert head.size() > 0;
 		assert body.size() > 0;
+		assert emptyStack();
 
 		rules.add(BASIC.createRule(head, body));
-
-		clearInRule();
 	}
 
 	/**
@@ -536,7 +563,13 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		expr.getRightParameter().accept(this);
 		IDescription id2 = popDescription();
 
-		handleAtom(BASIC.createAtom(id2, BASIC.createTuple(x1)));
+		IAtom atom = BASIC.createAtom(id2, BASIC.createTuple(x1));
+		
+		if (emptyStack()) {
+			rules.add(BASIC.createFact(atom));
+		} else {
+			addAtom(atom);
+		}
 	}
 
 	@Override
@@ -557,8 +590,8 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 	 */
 	@Override
 	public void visitSubConceptMolecule(SubConceptMolecule expr) {
-		setInRule();
-
+		assert emptyStack();
+		
 		expectedType = Type.CONCEPT;
 		expr.getLeftParameter().accept(this);
 		IDescription id1_subConcept = popDescription();
@@ -571,16 +604,21 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		List<IAtom> body = Collections.singletonList(BASIC.createAtom(id1_subConcept, tupleX));
 
 		rules.add(BASIC.createRule(head, body));
-
-		clearInRule();
 	}
 
 	@Override
 	public void visitTruthValue(TruthValue expr) { 
+		IAtom atom;
 		if (expr.getValue())
-			handleAtom(BASIC.createAtom(Vocabulary.topConcept, tupleX));
+			atom = BASIC.createAtom(Vocabulary.topConcept, tupleX);
 		else
-			handleAtom(BASIC.createAtom(Vocabulary.bottomConcept, tupleX));
+			atom = BASIC.createAtom(Vocabulary.bottomConcept, tupleX);
+		
+		if (emptyStack()) {
+			rules.add(BASIC.createFact(atom));
+		} else {
+			addAtom(atom);
+		}
 	}
 
 	@Override
@@ -652,34 +690,24 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		return descriptionStack.pop();
 	}
 
-	private IAtom pushAtom(IAtom atom) {
-		return atomStack.push(atom);
+	private boolean addAtom(IAtom atom) {
+		return atomListStack.peek().add(atom);
 	}
 
-	private IAtom popAtom() {
-		return atomStack.pop();
+	private Queue<IAtom> pushAtomList() {
+		return atomListStack.push(new LinkedList<IAtom>());
 	}
 
-	private void setInRule() {
-		inRule = true;
+	private Queue<IAtom> popAtomList() {
+		return atomListStack.pop();
 	}
 
-	private void clearInRule() {
-		inRule = false;
+	private Queue<IAtom> peekAtomList() {
+		return atomListStack.peek();
 	}
 
-	private boolean isInRule() {
-		return inRule;
-	}
-
-	private void handleAtom(IAtom atom) {
-		assert atom != null;
-
-		if (isInRule()) {
-			pushAtom(atom);
-		} else {
-			rules.add(BASIC.createFact(atom));
-		}
+	private boolean emptyStack() {
+		return atomListStack.isEmpty();
 	}
 
 	private static class NameFactory extends AbstractFactory {
