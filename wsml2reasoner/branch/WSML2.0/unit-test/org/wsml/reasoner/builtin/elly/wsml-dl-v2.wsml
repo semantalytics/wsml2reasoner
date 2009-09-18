@@ -60,16 +60,16 @@ instance Marge memberOf Woman
 
 instance Bart memberOf Child
     name hasValue "Bart Simpson"
-    ageInYears hasValue xsd#integer("10")
+    ageInYears hasValue xsd#integer(10)
     loves hasValue SantasLittleHelper
 
 instance Lisa memberOf {Child, Vegetarian}
     name hasValue "Lisa Simpson"
-    ageInYears hasValue xsd#integer("8")
+    ageInYears hasValue xsd#integer(8)
 
 instance Maggie memberOf Child
     name hasValue "Maggie Simpson"
-    ageInYears hasValue xsd#integer("2")
+    ageInYears hasValue xsd#integer(2)
 
 instance ElBarto memberOf Person
     name hasValue "El Barto"
@@ -117,7 +117,7 @@ axiom PetLovesThemselves
 		
 axiom NarcistLoverAxiom
 	definedBy
-		exists ?x (loves(?x, ?y) and ?y[loves hasValue ?y] and ?y memberOf Person) implies ?x memberOf NarcistLover.
+		exists ?x (?x[loves hasValue ?y] and ?y[loves hasValue ?y] and ?y memberOf Person) implies ?x memberOf NarcistLover.
 
 axiom LovesSelf
 	definedBy
@@ -132,11 +132,11 @@ axiom DislikeFood
 		?x[dislikes hasValue !v] and ?y memberOf Dish and ?y[contains hasValue !v] implies ?x[dislikes hasValue ?y].
 
 
-/*
 axiom BartEqElBarto
     definedBy
         Bart = ElBarto.
 
+/*
 a) Who is "El Barto"?
 
 ElBarto[name hasValue ?name] and ElBarto[ageInYears hasValue ?age]

@@ -121,8 +121,8 @@ public class WsmlDlTest extends TestCase {
 		System.out.println("ElBarto's name:");
 		System.out.println(values);
 
-		assertTrue(values.contains(container.getXmlDataFactory().createString(defaultNS + "Bart Simpson")));
-		assertTrue(values.contains(container.getXmlDataFactory().createString(defaultNS + "El Barto")));
+		assertTrue(values.contains(container.getXmlDataFactory().createString("Bart Simpson")));
+		assertTrue(values.contains(container.getXmlDataFactory().createString("El Barto")));
 		assertEquals(2, values.size());
 
 	
