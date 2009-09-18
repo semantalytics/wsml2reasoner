@@ -112,7 +112,6 @@ public class WsmlDlTest extends TestCase {
 	ElBarto[name hasValue ?name] and ElBarto[ageInYears hasValue ?age]
 	*/
 	public void testElBarto() {
-		
 		IRI ageInYears = container.getWsmoFactory().createIRI(defaultNS + "ageInYears");
 		IRI name = container.getWsmoFactory().createIRI(defaultNS + "name");
 		Instance bart = container.getWsmoFactory().createInstance(container.getWsmoFactory().createIRI(defaultNS + "ElBarto"));

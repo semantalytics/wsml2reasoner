@@ -64,7 +64,7 @@ ontology _"http://www.example.org/ontologies/example"
                   !- ?x memberOf Man and ?x memberOf Woman.
 
       concept Parent subConceptOf Human
-            hasChild impliesType Human
+            hasChild impliesType Child
 
       concept Father subConceptOf Parent
       
