@@ -129,12 +129,6 @@ public abstract class AbstractRIFBuiltin01Test extends TestCase implements LP {
 		checkSTD(query);
 	}
 	
-	public void test_isIRI() throws Exception {
-
-		String query = "isIRITest(?x)";
-		checkSTD(query);
-	}
-	
 	public void test_isText() throws Exception {
 
 		String query = "isTextTest(?x)";
@@ -163,12 +157,6 @@ public abstract class AbstractRIFBuiltin01Test extends TestCase implements LP {
 	public void test_stringConcat() throws Exception {
 
 		String query = "stringConcatTest(?x)";
-		checkSTD(query);
-	}
-
-	public void test_gyearEqual() throws Exception {
-
-		String query = "gyearEqualTest(?x)";
 		checkSTD(query);
 	}
 
