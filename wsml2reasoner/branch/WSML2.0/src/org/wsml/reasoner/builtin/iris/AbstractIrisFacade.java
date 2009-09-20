@@ -99,6 +99,7 @@ import org.deri.iris.querycontainment.QueryContainment;
 import org.deri.iris.storage.IRelation;
 import org.deri.iris.storage.simple.SimpleRelationFactory;
 import org.omwg.logicalexpression.Constants;
+import org.omwg.logicalexpression.terms.BuiltInConstructedTerm;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.ComplexDataValue;
@@ -161,12 +162,6 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
      * The external data sources.
      */
     private final Collection<ExternalDataSource> sources;
-    
-    /**
-     *  New Datatypes from  D3.1.4 Defining the features of the WSML-Rule v2.0 language
-	 *
-     */
-    final static String XMLLiteral = WSML.WSML_NAMESPACE + "xmlLiteral";
     
     /**
      *  New WSML builtin predicates from  D3.1.4 Defining the features of the WSML-Rule v2.0 language
@@ -443,13 +438,19 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
     	
         assert sym != null;
         assert inTerms != null;
-
+        
         final List<ITerm> terms = new ArrayList<ITerm>(inTerms.length);
         // convert the terms of the literal
         for (final Term t : inTerms) {
             terms.add(convertTermFromWsmo4jToIris(t));
         }
-        return checkBuiltin(headLiteral ,sym, terms);
+        
+        IAtom atom =checkBuiltin(headLiteral ,sym, terms);
+        
+        // TODO Handle built-ins with terms representing built-ins.
+        // An example for this is: wsml#equal(wsml#numericAdd(1, 1), 2).
+        
+        return atom;
     }
     
     
@@ -833,6 +834,8 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 	static ITerm convertTermFromWsmo4jToIris(final Term t) {
 		if (t == null) {
 			throw new NullPointerException("The term must not be null");
+		} else if (t instanceof BuiltInConstructedTerm) {
+            // TODO: builtins are left out at the moment
 		} else if (t instanceof ConstructedTerm) {
 			// System.out.println("CONSTRUCTED TERM: " + t);
 			final ConstructedTerm ct = (ConstructedTerm) t;
