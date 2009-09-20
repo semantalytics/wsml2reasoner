@@ -20,7 +20,7 @@ instance B memberOf C2
 axiom testRIFBuiltin definedBy
 	   m(?x) :- ?x[?attribute hasValue ?value].
        
-       numericAddTest(?x) :- ?x[?attribute hasValue ?value] and  wsml#numericAdd(1, 1) = 2.
+       numericAddTest(?x) :- ?x[?attribute hasValue ?value] and  wsml#numericAdd(2, 1, 1).
        
        isDecimalTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isDecimal(xsd#decimal( 123456.78901 )).
        isStringTest(?x) :- ?x[?attribute hasValue ?value] and wsml#isString(xsd#string("string-value")).
@@ -64,22 +64,22 @@ axiom testRIFBuiltin definedBy
        toDayTimeDurationTest(?x) :-  ?x[?attribute hasValue ?value] and ( wsml#dayTimeDuration(6.00) = wsml#toDayTimeDuration(xsd#string("6.00")) ).
        toYearMonthDurationTest(?x) :-  ?x[?attribute hasValue ?value] and ( wsml#yearMonthDuration(6.00) = xsd#toYearMonthDuration(xsd#string("6.00")) ).
        toTextTest(?x) :-   ?x[?attribute hasValue ?value] and ( wsml#text("Text") = wsml#toText(xsd#string("Text")) ).
-       toXMLLiteralTest(?x) :-  ?x[?attribute hasValue ?value] and ( rdf#XMLLiteral("<tag>Text</tag>", "") =  wsml#toXMLLiteral(xsd#string("<tag>Text</tag>")) ).
+       toXMLLiteralTest(?x) :-  ?x[?attribute hasValue ?value] and rdf#XMLLiteral("<tag>Text</tag>", "") =  wsml#toXMLLiteral(xsd#string("<tag>Text</tag>")).
 	   
-	   numericModulusTest(?x) :- ?x[?attribute hasValue ?value] and wsml#numericModulus(1, 1) = 0.
-	   stringCompareTest(?x) :-  ?x[?attribute hasValue ?value] and wsml#stringCompare(?value, "InstanceA") = -2.
+	   numericModulusTest(?x) :- ?x[?attribute hasValue ?value] and wsml#numericModulus(0, 1, 1).
+	   stringCompareTest(?x) :-  ?x[?attribute hasValue ?value] and wsml#stringCompare(0, "InstanceA", "InstanceA").
 	   stringEqualTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEqual("InstanceA", xsd#string("InstanceA")).
-	   stringConcatTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEqual(wsml#stringConcat(xsd#string("con"), xsd#string("cat")), xsd#string("concat")).  
+	   stringConcatTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringConcat(?y, xsd#string("con"), xsd#string("cat")) and wsml#stringEqual(?y, xsd#string("concat")).  
 	   stringJoinTest(?x) :-  ?x[?attribute hasValue ?value] and wsml#stringJoin(xsd#string("a"), xsd#string("b"), xsd#string("b")) = ?z. //??
-	   stringSubstringTest(?x) :-?x[?attribute hasValue ?value] and wsml#stringSubstring(xsd#string("aaabbb"), xsd#integer(3)) = ?z. //??
-	   stringLengthTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringLength(xsd#string("aaabbb")) = ?z. 
-	   stringToUpperTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEqual(wsml#stringToUpper(xsd#string("this is a string")), xsd#string("THIS IS A STRING")).
-	   stringToLowerTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEqual(wsml#stringToLower(xsd#string("THIS IS A STRING")), xsd#string("this is a string")).
+	   stringSubstringTest(?x) :-?x[?attribute hasValue ?value] and wsml#stringSubstring(?z, xsd#string("aaabbb"), xsd#integer(3)) and ?z = xsd#string("bb"). //??
+	   stringLengthTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringLength(?z, xsd#string("aaabbb")) and ?z = 6. 
+	   stringToUpperTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringToUpper(?z, xsd#string("this is a string")) and ?z = xsd#string("THIS IS A STRING").
+	   stringToLowerTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringToLower(?z, xsd#string("THIS IS A STRING")) and ?z = xsd#string("this is a string").
 	   
-	   stringUriEncodeTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringUriEncode(xsd#string("")) = ?z. 
-	   stringIriToUriTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringIriToUri(xsd#string("")) = ?z. 
-	   stringEscapeHtmlUriTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEscapeHtmlUri(xsd#string("")) = ?z. 
-	   stringSubstringBeforeTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringSubstringBefore(xsd#string("a long string for testing"), xsd#string("long")) = ?z. 
+	   stringUriEncodeTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringUriEncode(?z, xsd#string("")) and ?z = xsd#string(""). 
+	   stringIriToUriTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringIriToUri(?z, xsd#string("")) and ?z = xsd#string(""). 
+	   stringEscapeHtmlUriTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEscapeHtmlUri(?z, xsd#string("")) and ?z = xsd#string(""). 
+	   stringSubstringBeforeTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringSubstringBefore(?z, xsd#string("a long string for testing"), xsd#string("long")) and ?z = xsd#string("a "). 
 	   stringSubstringAfterTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringSubstringAfter(xsd#string("a long string for testing"), xsd#string("long")) = ?z. 
 	   stringReplaceTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringReplace(xsd#string("a long string for testing"), xsd#string("a"), xsd#string("short")) = ?z. 
 	   stringContainsTest(?x) :- ?x[?attribute hasValue ?value] and  wsml#stringContains(xsd#string("a long string for testing"), xsd#string("long")).
