@@ -391,42 +391,59 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 	public void visitConjunction(Conjunction expr) {
 		pushAtomList();
 		expr.getLeftOperand().accept(this);
+		pushAtomList();
 		expr.getRightOperand().accept(this);
 		// Check if this is a Concept or Role Intersection 
-		Queue<IAtom> atomList = popAtomList();
+		Queue<IAtom> atomListR = popAtomList();
+		Queue<IAtom> atomListL = popAtomList();
+		Queue<IAtom> atomList = new LinkedList<IAtom>();
 	
-		IAtom atom1 = atomList.remove();
-		IAtom atom2 = atomList.remove();
 		
-		assert atomList.isEmpty() : 
-			"AtomList not empty : " + atomList;
-
-		// If they are not equal it is not, therefore push again
-		if (!(atom1.getTuple().equals(atom2.getTuple()))) {
-			// push in different order
-			atomList.add(atom1);
-			atomList.add(atom2);
+		// Try to create a concept/role intersection
+		// this is possible if the right list is of size 1
+		// and the last item of the left list matches against
+		// the right one
+		boolean createIntersection = true;
+		
+		createIntersection &= atomListR.size() == 1;
+		
+		// set atomL to the last atom of left list
+		// since there are generally very little items
+		// in the list iterating may be faster than
+		// creating new list, asking for size and getting last element
+		IAtom atomL = null;
+		for (IAtom atom : atomListL) {
+			atomL = atom;
+		}
+		IAtom atomR = atomListR.element();
+		
+		createIntersection &= atomL.getTuple().equals(atomR.getTuple());
+		
+		if (!createIntersection) {
+			// flatten atom lists
+			atomList.addAll(atomListL);
+			atomList.addAll(atomListR);
 		} else {
-			if (atom1.getDescription() instanceof IConceptDescription) {
-				if (atom2.getDescription() instanceof IConceptDescription) {
-					// Create Concept Intersection
-					IDescription conceptIntersection = BASIC.createIntersectionConcept((IConceptDescription) atom1
-							.getDescription(), (IConceptDescription) atom2.getDescription());
+			// add all (but last) elements of left list
+			while (atomListL.size() > 1) {
+				atomList.add(atomListL.remove());
+			}
+			
+			// safe since atomListL is not used any more
+			assert atomListL.remove().equals(atomL);
+			
+			if (atomL.getDescription() instanceof IConceptDescription) { // since tuple arity matches they have to be of equal type
+				// Create Concept Intersection
+				IDescription conceptIntersection = BASIC.createIntersectionConcept((IConceptDescription)
+						atomL.getDescription(), (IConceptDescription) atomR.getDescription());
 
-					atomList.add(BASIC.createAtom(conceptIntersection, atom1.getTuple()));
-				} else {
-					throw new RuntimeException("Descriptions of conjunction " + expr + " must be equal!");
-				}
-			} else if (atom1.getDescription() instanceof IRoleDescription) {
-				if (atom2.getDescription() instanceof IRoleDescription) {
-					// Create Concept Intersection
-					IDescription roleIntersection = BASIC.createIntersectionRole((IRoleDescription) atom1
-							.getDescription(), (IRoleDescription) atom2.getDescription());
+				atomList.add(BASIC.createAtom(conceptIntersection, atomL.getTuple()));
+			} else if (atomL.getDescription() instanceof IRoleDescription) { // since tuple arity matches they have to be of equal type
+				// Create Concept Intersection
+				IDescription roleIntersection = BASIC.createIntersectionRole((IRoleDescription)
+						atomL.getDescription(), (IRoleDescription) atomR.getDescription());
 
-					atomList.add(BASIC.createAtom(roleIntersection, atom1.getTuple()));
-				} else {
-					throw new RuntimeException("Descriptions of conjunction " + expr + " must be equal!");
-				}
+				atomList.add(BASIC.createAtom(roleIntersection, atomL.getTuple()));
 			}
 		}
 		
