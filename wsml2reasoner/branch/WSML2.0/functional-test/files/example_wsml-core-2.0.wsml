@@ -1,0 +1,45 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
+
+namespace {_"http://www.example.org#",
+		xsd _"http://www.w3.org/2001/XMLSchema#"}
+
+ontology AboutPersons
+
+concept Person
+	name ofType xsd#string
+	hasChild ofType Child
+
+concept Man subConceptOf Person
+	hasWife ofType Woman
+
+concept Woman subConceptOf Person
+	hasHusband ofType Man
+
+concept Child subConceptOf Person
+
+instance Homer memberOf Man
+	name hasValue "Homer Simpson"
+	hasChild hasValue Bart
+	hasWife hasValue Marge
+
+instance Marge memberOf Woman
+	name hasValue "Marge Simpson"
+	hasChild hasValue Bart
+	hasHusband hasValue Homer
+
+instance Bart memberOf Child
+	name hasValue "Bart Simpson"
+	ageInYears hasValue 10
+	
+instance ElBarto memberOf Person
+	name hasValue "El Barto"
+	
+axiom thisIsElBarto
+	definedBy
+		Bart = ElBarto.
+
+/*
+a) Who is "El Barto"? In axiom "thisIsElBarto" we make use of the new feature "instance equivalence", which allows the definition that two instances are equivalent.
+
+ElBarto[name hasValue ?name, ageInYears hasValue ?age]
+*/
