@@ -51,7 +51,8 @@ public class WsmlDlTest extends TestCase {
 		System.out.println(instances);
 
 		assertTrue(instances.contains(container.getWsmoFactory().createInstance(container.getWsmoFactory().createIRI(defaultNS + "Marge"))));
-		assertEquals(1, instances.size());
+		assertTrue(instances.contains(container.getWsmoFactory().createInstance(container.getWsmoFactory().createIRI(defaultNS + "Homer"))));
+		assertEquals(2, instances.size());
 	}
 	
 	
