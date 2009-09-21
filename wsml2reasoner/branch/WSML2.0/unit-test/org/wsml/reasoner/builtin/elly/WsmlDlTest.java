@@ -80,6 +80,10 @@ public class WsmlDlTest extends TestCase {
 		Instance snowball2 = container.getWsmoFactory().createInstance(container.getWsmoFactory().createIRI(defaultNS + "Snowball2"));
 		Instance bart = container.getWsmoFactory().createInstance(container.getWsmoFactory().createIRI(defaultNS + "Bart"));
 		Instance homer = container.getWsmoFactory().createInstance(container.getWsmoFactory().createIRI(defaultNS + "Homer"));
+		Instance lisa = container.getWsmoFactory().createInstance(container.getWsmoFactory().createIRI(defaultNS + "Lisa"));
+		Instance elBarto = container.getWsmoFactory().createInstance(container.getWsmoFactory().createIRI(defaultNS + "ElBarto"));
+		Instance marge = container.getWsmoFactory().createInstance(container.getWsmoFactory().createIRI(defaultNS + "Marge"));
+		Instance maggie = container.getWsmoFactory().createInstance(container.getWsmoFactory().createIRI(defaultNS + "Maggie"));
 		IRI loves = container.getWsmoFactory().createIRI(defaultNS + "loves");
 
 		Set<Instance> instances = reasoner.getInstances(pet);
@@ -105,7 +109,21 @@ public class WsmlDlTest extends TestCase {
 		
 		
 		Set<Term> bartLoves = reasoner.getInferingAttributeValues(bart, loves);
-		assertTrue(bartLoves.contains(container.getWsmoFactory().createIRI(defaultNS + "SantasLittleHelper")));
+		assertTrue(bartLoves.contains(santasLittleHelper.getIdentifier()));
+
+		Set<Term> homerLoves = reasoner.getInferingAttributeValues(homer, loves);
+		System.out.println("Homer loves: " + homerLoves);
+		assertTrue(homerLoves.contains(homer.getIdentifier()));
+		assertTrue(homerLoves.contains(marge.getIdentifier()));
+		assertTrue(homerLoves.contains(maggie.getIdentifier()));
+		assertTrue(homerLoves.contains(lisa.getIdentifier()));
+		assertTrue(homerLoves.contains(bart.getIdentifier()));
+		assertTrue(homerLoves.contains(elBarto.getIdentifier()));
+		assertEquals(6, homerLoves.size());
+	
+		Set<Term> slhLoves = reasoner.getInferingAttributeValues(santasLittleHelper, loves);
+		System.out.println("santasLittleHelper loves: " + slhLoves);
+		assertTrue(slhLoves.contains(santasLittleHelper.getIdentifier()));
 	}
 	
 	/*
