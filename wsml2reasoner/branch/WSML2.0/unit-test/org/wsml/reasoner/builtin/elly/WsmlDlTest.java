@@ -8,6 +8,8 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
+import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.DataValue;
@@ -20,6 +22,7 @@ import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 import org.wsmo.factory.FactoryContainer;
 import org.wsmo.wsml.Parser;
+import org.wsmo.wsml.ParserException;
 
 import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
@@ -150,6 +153,37 @@ public class WsmlDlTest extends TestCase {
 
 		assertTrue(values.contains(container.getXmlDataFactory().createInteger("10")));
 		assertEquals(1, values.size());
+	}
+	
+	public void testEntailment() throws IllegalArgumentException, ParserException {
+
+		LogicalExpression expression = new WsmlLogicalExpressionParser(ontology, container)
+				.parse("Maggie memberOf Child");
+
+		assertTrue(reasoner.isEntailed(expression));
+
+		expression = new WsmlLogicalExpressionParser(ontology, container)
+		.parse("Maggie memberOf Man");
+
+		assertFalse(reasoner.isEntailed(expression));
+
+		expression = new WsmlLogicalExpressionParser(ontology, container)
+				.parse("Marge memberOf NarcistLover");
+
+		assertTrue(reasoner.isEntailed(expression));
+
+		expression = new WsmlLogicalExpressionParser(ontology, container)
+			.parse("Bart memberOf NarcistLover");
+
+		assertFalse(reasoner.isEntailed(expression));
+
+		expression = new WsmlLogicalExpressionParser(ontology, container).parse("ElBarto[name hasValue \"Bart Simpson\"]");
+
+		assertTrue(reasoner.isEntailed(expression));
+
+		expression = new WsmlLogicalExpressionParser(ontology, container).parse("Lisa[dislikes hasValue SteakSandwich]");
+
+		assertTrue(reasoner.isEntailed(expression));
 	}
 	
 	
