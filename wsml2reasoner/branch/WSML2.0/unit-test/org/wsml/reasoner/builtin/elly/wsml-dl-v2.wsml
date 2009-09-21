@@ -117,7 +117,7 @@ axiom PetLovesThemselves
 		
 axiom NarcistLoverAxiom
 	definedBy
-		exists ?x (?x[loves hasValue ?y] and ?y[loves hasValue ?y] and ?y memberOf Person) implies ?x memberOf NarcistLover.
+		exists ?x (?x[loves hasValue ?y] and (?y[loves hasValue ?y] and ?y memberOf Person)) implies ?x memberOf NarcistLover.
 
 axiom LovesSelf
 	definedBy
