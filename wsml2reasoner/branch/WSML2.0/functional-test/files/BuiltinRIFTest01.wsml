@@ -115,24 +115,25 @@ axiom testRIFBuiltin definedBy
 	   
 	   minutePartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#minutePart(xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )) = ?z. 
 	   minutePartTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#minutePart(xsd#date(1981, 12, 31)) = ?z.
-	   minutePartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#minutePart(xsd#duration(1, 2, 3, 4, 5, 6.0 )) = ?z. // all part things until here return integer
+	   minutePartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#minutePart(xsd#duration(1, 2, 3, 4, 5, 6.0 )) = ?z. 
 	   
-	   secondPartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#secondPart(xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )) = ?z.  // returns decimal
+	   secondPartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#secondPart(xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )) = ?z. 
 	   secondPartTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#secondPart(xsd#date(1981, 12, 31)) = ?z.
 	   secondPartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#secondPart(xsd#duration(1, 2, 3, 4, 5, 6.0 )) = ?z.
 	   
-	   timezonePartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#timezonePart(xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )) = ?z. // returns dayTimeDuration
+	   timezonePartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#timezonePart(xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )) = ?z. 
 	   timezonePartTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#timezonePart(xsd#date(1981, 12, 31)) = ?z.
 	   timezonePartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#timezonePart(xsd#duration(1, 2, 3, 4, 5, 6.0 )) = ?z.
 	   
 	   // Section [G]
-	   textFromStringLangTest(?x) :- ?x[?attribute hasValue ?value] and wsml#textFromStringLang(xsd#string("some string", "en")) = ?z.  // returns rdfText  
-	   textFromStringTest(?x) :-  ?x[?attribute hasValue ?value] and wsml#textFromString(xsd#string("abc")) = ?z.  // returns rdfText 
+	   textFromStringLangTest(?x) :- ?x[?attribute hasValue ?value] and wsml#textFromStringLang(xsd#string("some string", "en")) = ?z.  
+	   textFromStringTest(?x) :-  ?x[?attribute hasValue ?value] and wsml#textFromString(xsd#string("abc")) = ?z.  
 	   
-	   stringFromTextTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEquals(wsml#stringFromText(_rdfText("abc")), xsd#string("abc")).  // returns string  ??
-	   langFromTextTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEquals(wsml#langFromText(_rdfText("Rdf Text","en")), xsd#string("en")).
-	   textCompareTest(?x) :- ?x[?attribute hasValue ?value] and ( wsml#textCompare( _rdfText("Rdf Text") , _rdfText("Rdf blabla")) = 1).
-	   textLengthTest(?x) :-  ?x[?attribute hasValue ?value] and ( wsml#textLength( _rdfText("Rdf Text") ) != 1).
+	   stringFromTextTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringFromText(?z, rdf#text("abc", "de")) and wsml#stringEquals(?z, xsd#string("abc")).  
+	   langFromTextTest(?x) :- ?x[?attribute hasValue ?value] and wsml#langFromText(?z, rdf#text("Rdf Text","en")) and wsml#stringEquals(?z, xsd#string("en")).
+	   textCompareTest(?x) :- ?x[?attribute hasValue ?value] and ?z = wsml#textCompare(rdf#text("Rdf Text", "en") , rdf#text("Rdf Text", "en")) and ?z = 0.
+	   
+	   textLengthTest(?x) :-  ?x[?attribute hasValue ?value] and ( wsml#textLength( rdf#text("Rdf Text", "en") ) != 1).
 	   
 	   
 	   
