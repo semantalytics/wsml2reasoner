@@ -1,11 +1,11 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-rule"
 
-namespace {_"http://www.example.org#",
+namespace {_"http://www.example.org/rule#",
 		wsml _"http://www.wsmo.org/wsml/wsml-syntax#",
 		xsd _"http://www.w3.org/2001/XMLSchema#",
 		rdf _"http://www.w3.org/1999/02/22-rdf-syntax-ns#"}
 
-ontology AboutPersons
+ontology About_Persons_rule
 
 	concept Person
 		name ofType xsd#string

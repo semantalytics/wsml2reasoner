@@ -1,9 +1,9 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
 
-namespace {_"http://www.example.org#",
+namespace {_"http://www.example.org/core#",
 		xsd _"http://www.w3.org/2001/XMLSchema#"}
 
-ontology AboutPersons
+ontology About_Persons_core
 
 concept Person
 	name ofType xsd#string
