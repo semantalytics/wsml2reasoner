@@ -89,12 +89,12 @@ axiom testRIFBuiltin definedBy
 	   stringIriToUriTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringIriToUri(?z, xsd#string("")) and ?z = xsd#string(""). 
 	   stringEscapeHtmlUriTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEscapeHtmlUri(?z, xsd#string("")) and ?z = xsd#string(""). 
 	   stringSubstringBeforeTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringSubstringBefore(?z, xsd#string("a long string for testing"), xsd#string("long")) and ?z = xsd#string("a "). 
-	   stringSubstringAfterTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringSubstringAfter(xsd#string("a long string for testing"), xsd#string("long")) = ?z. 
-	   stringReplaceTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringReplace(xsd#string("a long string for testing"), xsd#string("a"), xsd#string("short")) = ?z. 
-	   stringContainsTest(?x) :- ?x[?attribute hasValue ?value] and  wsml#stringContains(xsd#string("a long string for testing"), xsd#string("long")).
-	   stringStartsWithTest(?x) :- ?x[?attribute hasValue ?value] and  wsml#stringStartsWith(xsd#string("a long string for testing"), xsd#string("long")).
-	   stringEndsWithTest(?x) :- ?x[?attribute hasValue ?value] and  wsml#stringEndsWith(xsd#string("a long string for testing"), xsd#string("long")).
-	   stringMatchesTest(?x) :- ?x[?attribute hasValue ?value] and  wsml#stringMatches(xsd#string("a long string for testing"), xsd#string("long")).
+	   stringSubstringAfterTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringSubstringAfter(?z, xsd#string("a long string for testing"), xsd#string("long")) and ?z = xsd#string(" string for testing"). 
+	   stringReplaceTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringReplace(?z, xsd#string("a long string for testing"), xsd#string("long"), xsd#string("short")) and ?z = xsd#string("a short string for testing"). 
+	   stringContainsTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringContains(xsd#string("a long string for testing"), xsd#string("long")).
+	   stringStartsWithTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringStartsWith(xsd#string("a long string for testing"), xsd#string("a")).
+	   stringEndsWithTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEndsWith(xsd#string("a long string for testing"), xsd#string("testing")).
+	   stringMatchesTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringMatches(xsd#string("a long string for testing"), xsd#string("long")).
 	   
 	   // Section [F]
 	   yearPartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#yearPart(xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )) = ?z.
@@ -129,8 +129,8 @@ axiom testRIFBuiltin definedBy
 	   textFromStringLangTest(?x) :- ?x[?attribute hasValue ?value] and wsml#textFromStringLang(xsd#string("some string", "en")) = ?z.  // returns rdfText  
 	   textFromStringTest(?x) :-  ?x[?attribute hasValue ?value] and wsml#textFromString(xsd#string("abc")) = ?z.  // returns rdfText 
 	   
-	   stringFromTextTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEquals(wsml#stringFromText(_rdfText("abc")), xsd#string("abc")).  // returns string 
-	   langFromTextTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEquals(wsml#langFromText(_rdfText("Rdf Text")), xsd#string("Rdf Text")).
+	   stringFromTextTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEquals(wsml#stringFromText(_rdfText("abc")), xsd#string("abc")).  // returns string  ??
+	   langFromTextTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEquals(wsml#langFromText(_rdfText("Rdf Text","en")), xsd#string("en")).
 	   textCompareTest(?x) :- ?x[?attribute hasValue ?value] and ( wsml#textCompare( _rdfText("Rdf Text") , _rdfText("Rdf blabla")) = 1).
 	   textLengthTest(?x) :-  ?x[?attribute hasValue ?value] and ( wsml#textLength( _rdfText("Rdf Text") ) != 1).
 	   
