@@ -13,7 +13,7 @@ concept Thing
 concept Person subConceptOf Thing
     name ofType xsd#string
     ageInYears ofType xsd#integer
-    hasChild impliesType Child
+    hasChild impliesType Person
     loves impliesType Thing
     dislikes impliesType Thing
 
@@ -58,7 +58,7 @@ instance Marge memberOf Woman
     hasChild hasValue Maggie
     hasHusband hasValue Homer
 
-instance Bart memberOf Child
+instance Bart memberOf Man
     name hasValue "Bart Simpson"
     ageInYears hasValue xsd#integer(10)
     loves hasValue SantasLittleHelper
@@ -90,11 +90,11 @@ instance SteakSandwich memberOf Dish
 /* ****************
  * Axioms
  * ****************/
-   
-axiom SiblingAxiom
+
+axiom ChildAxiom
 	definedBy
-		?p[hasChild hasValue ?c1] and ?p[hasChild hasValue ?c2] implies ?c1[hasSibling hasValue ?c2].
-		
+		?child[ageInYears hasValue ?age] and ?age < xsd#integer(16) implies ?child memberOf Child.
+
 axiom LovesChild
 	definedBy
 		?p[hasChild hasValue ?c] implies ?p[loves hasValue ?c].
@@ -136,10 +136,3 @@ axiom BartEqElBarto
     definedBy
         Bart = ElBarto.
 
-/*
-a) Who is "El Barto"?
-
-ElBarto[name hasValue ?name] and ElBarto[ageInYears hasValue ?age]
-
-
-*/

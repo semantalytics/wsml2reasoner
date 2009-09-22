@@ -168,6 +168,16 @@ public class WsmlDlTest extends TestCase {
 		assertFalse(reasoner.isEntailed(expression));
 
 		expression = new WsmlLogicalExpressionParser(ontology, container)
+		.parse("Bart memberOf Child");
+
+		assertTrue(reasoner.isEntailed(expression));
+
+		expression = new WsmlLogicalExpressionParser(ontology, container)
+		.parse("Bart memberOf Woman");
+
+		assertFalse(reasoner.isEntailed(expression));
+
+		expression = new WsmlLogicalExpressionParser(ontology, container)
 				.parse("Marge memberOf NarcistLover");
 
 		assertTrue(reasoner.isEntailed(expression));
