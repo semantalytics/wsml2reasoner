@@ -644,7 +644,6 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         else if (sym.equals(BuiltIn.TO_FLOAT.getFullName())) {
         	return BUILTIN.createToFloat(toArray(sortListForIRIS(terms)));
         }
-		// TODO  mp: problems: no return values by to<datatype> builtins where duration or time is needed!
         else if (sym.equals(BuiltIn.TO_GDAY.getFullName())) {
         	return BUILTIN.createToGDay(toArray(sortListForIRIS(terms)));
         }
