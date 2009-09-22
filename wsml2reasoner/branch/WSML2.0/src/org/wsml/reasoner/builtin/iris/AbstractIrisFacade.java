@@ -347,13 +347,20 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 			if (r.isFact()) { // the rule is a fact
 				IAtom atom = literal2Atom(r.getHead(), true);
 				IPredicate pred = atom.getPredicate();
-				// if its a fact with equal - it is transformed to a new rule
-				// (e.g.: a=b. -> a=b impliedBy wsml#true)
+				// Check if the rule represents a fact with equality. If so, it
+				// is transformed to a new rule, e.g. "a = b." is transformed to
+				// "a = b :- true.".
+				// TODO Maybe do this in the WSML2DatalogTransformer.
 				if (containsEqualBuiltin(r.getHead())) {
-					IRule newRule = BASIC.createRule(Collections
-							.singletonList(BASIC.createLiteral(true, atom)),
-							Collections.singletonList(BASIC.createLiteral(true,
-									BUILTIN.createTrue())));
+					List<ILiteral> head = Collections
+					.singletonList(BASIC.createLiteral(true, atom));
+					
+					List<ILiteral> body = Collections
+					.singletonList(BASIC.createLiteral(true,
+							BUILTIN.createTrue()));
+					
+					IRule newRule = BASIC.createRule(head, body);
+					
 					rules.add(newRule);
 				} else {
 					org.deri.iris.storage.IRelation relation = facts.get(atom
@@ -644,6 +651,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         else if (sym.equals(BuiltIn.TO_FLOAT.getFullName())) {
         	return BUILTIN.createToFloat(toArray(sortListForIRIS(terms)));
         }
+		// TODO  mp: problems: no return values by to<datatype> builtins where duration or time is needed!
         else if (sym.equals(BuiltIn.TO_GDAY.getFullName())) {
         	return BUILTIN.createToGDay(toArray(sortListForIRIS(terms)));
         }
