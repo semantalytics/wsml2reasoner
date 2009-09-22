@@ -528,8 +528,6 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         	return BUILTIN.createFalse();
         }
         else if (sym.equals(BuiltIn.NUMERIC_MODULUS.getFullName())) { // check is done by normal Modulus
-        	// TODO mp: change the order of the terms according to the builtIns (e.g.: x,y,z -> yzx).
-        	// http://www.w3.org/2005/rules/wg/wiki/List_of_functions_and_operators
         	return BUILTIN.createNumericModulus(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.STRING_COMPARE.getFullName())) {
@@ -646,6 +644,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         else if (sym.equals(BuiltIn.TO_FLOAT.getFullName())) {
         	return BUILTIN.createToFloat(toArray(sortListForIRIS(terms)));
         }
+		// TODO  mp: problems: no return values by to<datatype> builtins where duration or time is needed!
         else if (sym.equals(BuiltIn.TO_GDAY.getFullName())) {
         	return BUILTIN.createToGDay(toArray(sortListForIRIS(terms)));
         }
@@ -1089,7 +1088,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
             final ITime time = (ITime) t;
             int[] tzData = getTZData(time.getTimeZone());
             return DATA_FACTORY.createTime(time.getHour(), time.getMinute(), (float) time.getDecimalSecond(), 
-            		// TODO gigi: I introduced the float cast, check if this is correct
+            // TODO gigi: I introduced the float cast, check if this is correct
             				tzData[0], tzData[1]);
         }
         else if (t instanceof IDecimalTerm) {
@@ -1319,6 +1318,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 	/**
 	 *  Changes the order of the terms for IRIS. 
 	 *  The first entry becomes the last one. 
+	 *  http://www.w3.org/2005/rules/wg/wiki/List_of_functions_and_operators
 	 * 
 	 * @param terms a list of terms in normal order.
 	 * @return a list of terms where the first entry is the last one.
