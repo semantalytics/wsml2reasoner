@@ -25,12 +25,12 @@ ontology TruthValueOntology
 
 	axiom isHero
 		definedBy
-			isHero(?x) impliedBy
+			isSeriousSam(?x) impliedBy
 				?x[name hasValue xsd#string("Gordon Freeman")] and
 				false.
 				
 	axiom hasGravityGun
 		definedBy
-			hasGravityGun(?x) impliedBy
+			hasRailgun(?x) impliedBy
 				?x[name hasValue xsd#string("Gordon Freeman")] and
 				wsml#false.

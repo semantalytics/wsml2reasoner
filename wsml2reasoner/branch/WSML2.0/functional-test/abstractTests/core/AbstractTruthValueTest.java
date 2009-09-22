@@ -56,19 +56,20 @@ public abstract class AbstractTruthValueTest extends TestCase implements LP {
 		checkResult(query);
 	}
 	
-	public void testEqualsTrue() throws ParserException, InconsistencyException {
-		String query = "hasPwnage(?x)";
-		checkResult(query);
-	}
-	
 	public void testWsmlFalse() throws ParserException, InconsistencyException {
-		String query = "hasGravityGun(?x)";
-		checkResult(query);
+		String query = "hasRailgun(?x)";
+		checkEmptyResult(query);
 	}
 	
 	public void testUniversalFalse() throws ParserException, InconsistencyException {
-		String query = "isHero(?x)";
-		checkResult(query);
+		String query = "isSeriousSam(?x)";
+		checkEmptyResult(query);
+	}
+	
+	private void checkEmptyResult(String query) throws ParserException, InconsistencyException {
+		Set<Map<Variable, Term>> result = LPHelper.executeQuery(ontology, query, reasoner);
+		
+		assertEquals(query + " result is not empty", 0, result.size());
 	}
 	
 	private void checkResult(String query) throws ParserException, InconsistencyException {
@@ -84,4 +85,5 @@ public abstract class AbstractTruthValueTest extends TestCase implements LP {
 		assertNotNull(term);
 		assertEquals(query + " did not return correct instance", "http://example.com/truthValue#Gordon", term.toString());
 	}
+	
 }

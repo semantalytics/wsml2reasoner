@@ -30,6 +30,7 @@ import org.omwg.logicalexpression.AtomicExpression;
 import org.omwg.logicalexpression.AttributeConstraintMolecule;
 import org.omwg.logicalexpression.AttributeInferenceMolecule;
 import org.omwg.logicalexpression.AttributeValueMolecule;
+import org.omwg.logicalexpression.Constants;
 import org.omwg.logicalexpression.Constraint;
 import org.omwg.logicalexpression.Disjunction;
 import org.omwg.logicalexpression.Equivalence;
@@ -43,6 +44,7 @@ import org.omwg.logicalexpression.Molecule;
 import org.omwg.logicalexpression.Negation;
 import org.omwg.logicalexpression.NegationAsFailure;
 import org.omwg.logicalexpression.SubConceptMolecule;
+import org.omwg.logicalexpression.TruthValue;
 import org.omwg.logicalexpression.UniversalQuantification;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
@@ -251,6 +253,11 @@ public class WSML2DatalogTransformer {
         @Override
         public void handleAttributeValueMolecule(AttributeValueMolecule arg0) {
             // do nothing.
+        }
+        
+        @Override
+        public void handleTruthValue(TruthValue truthValue) {
+        	// do nothing.
         }
 
     }
@@ -577,6 +584,16 @@ public class WSML2DatalogTransformer {
 					atom.listParameters()) : new Literal(positive, predUri,
 					new ArrayList<Term>());
 			storeLiteral(l);
+		}
+		
+		@Override
+		public void handleTruthValue(TruthValue truthValue) {
+			boolean value = truthValue.getValue();
+			String identifier = value ? Constants.TRUE : Constants.FALSE;
+			
+			// Create a new literal representing the truth value.
+			Literal literal = new Literal(true, identifier, new ArrayList<Term>());
+			storeLiteral(literal);
 		}
 
 		private void storeLiteral(Literal l) {
