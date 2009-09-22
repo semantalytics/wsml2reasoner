@@ -570,7 +570,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         	return BUILTIN.createStringReplace(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.STRING_CONTAINS.getFullName())) {
-        	return BUILTIN.createStringContains(toArray(sortListForIRIS(terms)));
+        	return BUILTIN.createStringContains(toArray(terms));
         }
         else if (sym.equals(BuiltIn.STRING_STARTS_WITH.getFullName())) {
         	return BUILTIN.createStringStartsWith(toArray(terms));
