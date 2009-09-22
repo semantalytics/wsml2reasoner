@@ -26,8 +26,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.Assert;
-
 import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
@@ -42,21 +40,7 @@ import org.wsmo.wsml.ParserException;
  */
 public class LPHelper
 {
-    public static void executeQueryAndCheckResults( Ontology ontology, String query, Set<Map<Variable, Term>> expectedResults, LPReasoner reasoner ) throws Exception
-    {
-    	Set<Ontology> ontologies = new HashSet<Ontology>();
-    	ontologies.add( ontology );
-
-        executeQueryAndCheckResults( ontologies, query, expectedResults, reasoner );
-    }
-    
-    public static void executeQueryAndCheckResults( Set<Ontology> ontologies, String query, Set<Map<Variable, Term>> expectedResults, LPReasoner reasoner ) throws Exception
-    {
-		Set<Map<Variable, Term>> actualResults = executeQuery(ontologies, query, reasoner );
-		
-		checkResults( actualResults, expectedResults );
-    }
-    
+   
     public static Set<Map<Variable, Term>> executeQuery( Ontology ontology, String query, LPReasoner reasoner ) throws ParserException, InconsistencyException
     {
     	Set<Ontology> ontologies = new HashSet<Ontology>();
@@ -75,48 +59,6 @@ public class LPHelper
 //		System.out.println("Executing query LE: '" + OntologyHelper.toString( ontology, qExpression ) + "'");
 
 		return reasoner.executeQuery(qExpression);
-    }
-    
-    public static void checkResults( Set<Map<Variable, Term>> actualResults, Set<Map<Variable, Term>> expectedResults )
-    {
-//		System.out.println( "Expected results: " + OntologyHelper.toString( expectedResults ));
-//		System.out.println( "Actual results: " + OntologyHelper.toString( actualResults ));
-
-    	Assert.assertEquals(expectedResults.size(), actualResults.size());
-
-		for (Map<Variable, Term> binding : expectedResults)
-		{
-			if( ! contains( actualResults, binding ) )
-				System.out.println( binding );
-			Assert.assertTrue( contains( actualResults, binding ) );
-		}
-    }
-    	
-	/**
-     * Checks whether there is a binding in result which contains all of the
-     * variable bindings of expected
-     * 
-     * @param result
-     *            the set of bindings to check
-     * @param expectedBinding
-     *            the reference binding
-     * @return true if there is such an element
-     */
-    private static boolean contains(Set<Map<Variable, Term>> result,
-            Map<Variable, Term> expectedBinding) {
-        boolean contains = false;
-        for (Map<Variable, Term> vBinding : result) {
-            boolean containsAll = true;
-            for (Variable var : expectedBinding.keySet()) {
-                containsAll = containsAll
-                        && expectedBinding.get(var).equals(vBinding.get(var));
-            }
-            if (containsAll) {
-                contains = true;
-                break;
-            }
-        }
-        return contains;
     }
 
 }

@@ -34,8 +34,6 @@ import java.io.StringWriter;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.Assert;
-
 import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
 import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
 import org.omwg.logicalexpression.LogicalExpression;
@@ -162,12 +160,8 @@ public class OntologyHelper
             InputStream is = LPHelper.class.getClassLoader()
                     .getResourceAsStream(location);
             // System.out.println();
-            Assert.assertNotNull("Could not load file from class path: " + location,
-                    is);
             ontoReader = new InputStreamReader(is);
         }
-        Assert.assertNotNull("Could not load file from file system: " + location,
-                ontoReader);
         return ontoReader;
     }
 }
