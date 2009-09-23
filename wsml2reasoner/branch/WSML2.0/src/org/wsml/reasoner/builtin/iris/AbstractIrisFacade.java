@@ -528,10 +528,10 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 //        else if (sym.equals(HAS_DATATYPE)) { // TODO check
 //        	return BUILTIN.createHasDatatype(toArray(terms));
 //        }
-        else if (sym.equals(Constants.TRUE) || sym.equals(Constants.UNIV_TRUE) ){
+        else if (sym.equals(Constants.TRUE) || sym.equals(Constants.WSML_TRUE) ){
         	return BUILTIN.createTrue();
         }
-        else if (sym.equals(Constants.FALSE) || sym.equals(Constants.UNIV_FALSE) ){
+        else if (sym.equals(Constants.FALSE) || sym.equals(Constants.WSML_FALSE) ){
         	return BUILTIN.createFalse();
         }
         else if (sym.equals(BuiltIn.NUMERIC_MODULUS.getFullName())) { // check is done by normal Modulus
