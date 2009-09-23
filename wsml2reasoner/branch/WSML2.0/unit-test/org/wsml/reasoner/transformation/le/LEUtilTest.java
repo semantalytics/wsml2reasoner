@@ -65,8 +65,8 @@ public class LEUtilTest extends TestCase {
 				LETestHelper
 						.buildLE("_\"urn:a\"[_\"urn:c\" ofType _\"urn:d\"] subConceptOf _\"urn:b\" "));
 		assertEquals(
-				con.getRightOperand().toString(),
-				("_\"urn:a\"[_\"urn:c\" hasValue _\"urn:e\"] implies _\"urn:l\" ."));
+				"_\"urn:a\"[_\"urn:c\" hasValue _\"urn:e\"]\n implies \n_\"urn:l\".",
+				con.getRightOperand().toString().trim());
 		
 		Disjunction dis = LEUtil.buildNaryDisjunction(leFactory, list);
 		assertEquals(
@@ -74,8 +74,8 @@ public class LEUtilTest extends TestCase {
 				LETestHelper
 						.buildLE("_\"urn:a\"[_\"urn:c\" ofType _\"urn:d\"] subConceptOf _\"urn:b\" "));
 		assertEquals(
-				dis.getRightOperand().toString(),
-				("_\"urn:a\"[_\"urn:c\" hasValue _\"urn:e\"] implies _\"urn:l\" ."));
+				("_\"urn:a\"[_\"urn:c\" hasValue _\"urn:e\"]\n implies \n_\"urn:l\". "),
+				dis.getRightOperand().toString());
 	
 	}
 
