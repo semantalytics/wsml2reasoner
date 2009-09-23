@@ -613,7 +613,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         	return BUILTIN.createTextFromStringLang(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TEXT_FROM_STRING.getFullName())) {
-        	return BUILTIN.createTextFromStringLang(toArray(sortListForIRIS(terms)));
+        	return BUILTIN.createTextFromString(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.STRING_FROM_TEXT.getFullName())) {
         	return BUILTIN.createStringFromText(toArray(sortListForIRIS(terms)));
@@ -623,6 +623,9 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         }
         else if (sym.equals(BuiltIn.TEXT_COMPARE.getFullName())) {
         	return BUILTIN.createTextCompare(toArray(sortListForIRIS(terms)));
+        }
+        else if (sym.equals(BuiltIn.TEXT_LENGTH.getFullName())) {
+        	return BUILTIN.createTextLength(toArray(sortListForIRIS(terms)));
         }
         else if (sym.equals(BuiltIn.TO_BASE64.getFullName())) {
         	return BUILTIN.createToBase64Binary(toArray(sortListForIRIS(terms)));
