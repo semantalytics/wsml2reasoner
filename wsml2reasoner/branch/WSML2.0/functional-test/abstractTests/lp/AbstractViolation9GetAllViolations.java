@@ -35,7 +35,7 @@ import org.omwg.ontology.Concept;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.SimpleDataType;
 import org.omwg.ontology.SimpleDataValue;
-import org.omwg.ontology.WsmlDataType;
+import org.omwg.ontology.XmlSchemaDataType;
 import org.wsml.reasoner.api.inconsistency.AttributeTypeViolation;
 import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
@@ -111,7 +111,7 @@ public abstract class AbstractViolation9GetAllViolations extends TestCase implem
 							.getViolatingValue();
 					String value = val.getValue().toString();
 					assertEquals(NS + "iC", instanceId);
-					assertEquals(WsmlDataType.WSML_INTEGER, (typeId));
+					assertEquals(XmlSchemaDataType.XSD_INTEGER, (typeId));
 					assertEquals("blah", value);
 					dTypeChecked = true;
 				}
