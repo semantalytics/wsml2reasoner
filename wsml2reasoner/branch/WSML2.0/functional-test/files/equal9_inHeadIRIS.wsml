@@ -15,7 +15,7 @@ instance B memberOf C2
 
 		
 axiom equal definedBy
-	C1 = C2 :- wsml#true.
+	C1 = C2 :- true.
 	p(?x) :- ?x memberOf C2.
 	
 

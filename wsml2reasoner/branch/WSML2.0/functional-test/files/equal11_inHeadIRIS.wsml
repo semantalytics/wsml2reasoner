@@ -20,4 +20,4 @@ instance B memberOf C3
 	//aInteger hasValue _integer( 12345 )
 		
 axiom equal definedBy
-	A = B :- wsml#true.
+	A = B :- true.
