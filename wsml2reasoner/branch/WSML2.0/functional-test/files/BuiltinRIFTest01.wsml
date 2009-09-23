@@ -97,33 +97,33 @@ axiom testRIFBuiltin definedBy
 	   stringMatchesTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringMatches(xsd#string("a long string for testing"), xsd#string("long")).
 	   
 	   // Section [F]
-	   yearPartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#yearPart(xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )) = ?z.
-	   yearPartTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#yearPart(xsd#date(1981, 12, 31)) = ?z.
-	   yearPartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#yearPart(xsd#duration(1, 2, 3, 4, 5, 6.0 )) = ?z.
+	   yearPartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#yearPart(?z, xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )) and ?z = 1981. 
+	   yearPartTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#yearPart(?z, xsd#date(1981, 12, 31)) and ?z = 1981. 
+	   yearPartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#yearPart(?z, xsd#duration(1, 2, 3, 4, 5, 6.0 )) and ?z = 1. 
 	   
-	   monthPartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#monthPart(xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )) = ?z.
-	   monthPartTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#monthPart(xsd#date(1981, 12, 31)) = ?z.
-	   monthPartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#monthPart(xsd#duration(1, 2, 3, 4, 5, 6.0 )) = ?z.
+	   monthPartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#monthPart(?z, xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )) and ?z = 12. 
+	   monthPartTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#monthPart(?z, xsd#date(1981, 12, 31)) and ?z = 12. 
+	   monthPartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#monthPart(?z, xsd#duration(1, 2, 3, 4, 5, 6.0 )) and ?z = 2. 
 	   
-	   dayPartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#dayPart(xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )) = ?z.
-	   dayPartTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#dayPart(xsd#date(1981, 12, 31)) = ?z.
-	   dayPartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#dayPart(xsd#duration(1, 2, 3, 4, 5, 6.0 )) = ?z.
+	   dayPartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#dayPart(?z, xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )) and ?z = 31.	   
+	   dayPartTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#dayPart(?z, xsd#date(1981, 12, 31))  and ?z = 31.	   
+	   dayPartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#dayPart(?z, xsd#duration(1, 2, 3, 4, 5, 6.0 ))  and ?z = 3.	   
 	   
-	   hourPartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#hourPart(xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )) = ?z.
-	   hourPartTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#hourPart(xsd#date(1981, 12, 31)) = ?z.
-	   hourPartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#hourPart(xsd#duration(1, 2, 3, 4, 5, 6.0 )) = ?z.
+	   hourPartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#hourPart(?z, xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )) and ?z = 23.	   
+	   hourPartTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#hourPart(?z, xsd#time(9, 46, 13.0)) and ?z = 9.	   
+	   hourPartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#hourPart(?z, xsd#duration(1, 2, 3, 4, 5, 6.0 )) and ?z = 4.	   
 	   
 	   minutePartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#minutePart(?z, xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )) and ?z = 59. 
 	   minutePartTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#minutePart(?z, xsd#time(9, 46, 13.0)) and ?z = 46.
 	   minutePartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#minutePart(?z, xsd#duration(1, 2, 3, 4, 5, 6.0 )) and ?z = 5. 
 	   
-	   secondPartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#secondPart(xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )) = ?z. 
-	   secondPartTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#secondPart(xsd#time(9, 46, 13.0)) = ?z.
-	   secondPartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#secondPart(xsd#duration(1, 2, 3, 4, 5, 6.0 )) = ?z.
+	   secondPartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#secondPart(?z, xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )) and ?z = 58.0. 
+	   secondPartTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#secondPart(?z, xsd#time(9, 46, 13.0)) and ?z = 13.0. 
+	   secondPartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#secondPart(?z, xsd#duration(1, 2, 3, 4, 5, 6.0 )) and ?z = 6.0. 
 	   
-	   timezonePartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#timezonePart(xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )) = ?z. 
-	   timezonePartTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#timezonePart(xsd#date(1981, 12, 31)) = ?z.
-	   timezonePartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#timezonePart(xsd#duration(1, 2, 3, 4, 5, 6.0 )) = ?z.
+	   timezonePartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#timezonePart(?z, xsd#dateTime( 1981, 12, 31, 23, 59, 58.0, 0, 0)) and ?z = xsd#dayTimeDuration(0, 0, 0, 0.0). 
+	   timezonePartTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#timezonePart(?z, xsd#date(1981, 12, 31))  and ?z = xsd#dayTimeDuration(0, 0, 0, 0.0). 
+	   timezonePartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#timezonePart(?z, xsd#duration(1, 2, 3, 4, 5, 6.0 ))  and ?z = xsd#dayTimeDuration(0, 0, 0, 0.0). 
 	   
 	   // Section [G]
 	   textFromStringLangTest(?x) :- ?x[?attribute hasValue ?value] and wsml#textFromStringLang(?z, xsd#string("some string"), xsd#string("en")) and ?z = rdf#text("some string", "en").  
