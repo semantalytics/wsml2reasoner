@@ -411,11 +411,11 @@ public abstract class AbstractRIFBuiltin01Test extends TestCase implements LP {
 		String query = "timezonePartTest1(?x)";
 		checkSTD(query);
 		
-//		query = "timezonePartTest2(?x)";
-//		checkSTD(query);
-//		
-//		query = "timezonePartTest3(?x)";
-//		checkSTD(query);
+		query = "timezonePartTest2(?x)";
+		checkSTD(query);
+		
+		query = "timezonePartTest3(?x)";
+		checkSTD(query);
 	}
 	
 	// SECTION [G]
