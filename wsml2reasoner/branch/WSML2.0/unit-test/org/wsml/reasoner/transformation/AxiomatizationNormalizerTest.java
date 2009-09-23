@@ -80,7 +80,7 @@ public class AxiomatizationNormalizerTest extends TestCase {
     		if( en instanceof Axiom){
     			Set <LogicalExpression> les = ((Axiom)en).listDefinitions();
     			for(LogicalExpression le : les) {
-    				assertEquals(le.toString(), "!- _\"urn:a\" [_\"urn:a\" hasValue _\"urn:c\"] subConceptOf _\"urn:b\" .");
+    				assertEquals(le.toString(), "!- _\"urn:a\"[_\"urn:a\" hasValue _\"urn:c\"] subConceptOf _\"urn:b\". ");
     			}
     		}
     		
@@ -125,7 +125,7 @@ public class AxiomatizationNormalizerTest extends TestCase {
     		if( en instanceof Axiom){
     			Set <LogicalExpression> les = ((Axiom)en).listDefinitions();
     			for(LogicalExpression le : les) {
-    				assertEquals(le.toString(), "_\"urn:a\" .");
+    				assertEquals(le.toString(), "_\"urn:a\". ");
     			}
     		}
     		

@@ -170,42 +170,42 @@ public class ConstraintReplacementNormalizerTest extends TestCase {
 				.toString()
 				.trim()
 				.equals(
-						"_\"http://www.wsmo.org/reasoner/VIOLATION\"\n:-\n_\"http://www.wsmo.org/reasoner/ATTR_OFTYPE\"(?v1,?v2,?v3,?v4,?v5).")) {
+						"_\"http://www.wsmo.org/reasoner/VIOLATION\"\n :- \n_\"http://www.wsmo.org/reasoner/ATTR_OFTYPE\"(?v1,?v2,?v3,?v4,?v5).")) {
 			return true;
 		}
 		if (le
 				.toString()
 				.trim()
 				.equals(
-						"_\"http://www.wsmo.org/reasoner/VIOLATION\"\n:-\n_\"http://www.wsmo.org/reasoner/MIN_CARD\"(?v1,?v2,?v3).")) {
+						"_\"http://www.wsmo.org/reasoner/VIOLATION\"\n :- \n_\"http://www.wsmo.org/reasoner/MIN_CARD\"(?v1,?v2,?v3).")) {
 			return true;
 		}
 		if (le
 				.toString()
 				.trim()
 				.equals(
-						"_\"http://www.wsmo.org/reasoner/VIOLATION\"\n:-\n_\"http://www.wsmo.org/reasoner/MAX_CARD\"(?v1,?v2,?v3).")) {
+						"_\"http://www.wsmo.org/reasoner/VIOLATION\"\n :- \n_\"http://www.wsmo.org/reasoner/MAX_CARD\"(?v1,?v2,?v3).")) {
 			return true;
 		}
 		if (le
 				.toString()
 				.trim()
 				.equals(
-						"_\"http://www.wsmo.org/reasoner/VIOLATION\"\n:-\n_\"http://www.wsmo.org/reasoner/NAMED_USER\"(?v1).")) {
+						"_\"http://www.wsmo.org/reasoner/VIOLATION\"\n :- \n_\"http://www.wsmo.org/reasoner/NAMED_USER\"(?v1).")) {
 			return true;
 		}
 		if (le
 				.toString()
 				.trim()
 				.equals(
-						"_\"http://www.wsmo.org/reasoner/VIOLATION\"\n:-\n_\"http://www.wsmo.org/reasoner/UNNAMED_USER\"(?v1).")) {
+						"_\"http://www.wsmo.org/reasoner/VIOLATION\"\n :- \n_\"http://www.wsmo.org/reasoner/UNNAMED_USER\"(?v1).")) {
 			return true;
 		}
 		if (le
 				.toString()
 				.trim()
 				.equals(
-						"_\"http://www.wsmo.org/reasoner/NAMED_USER\"(_\"http://ex.org#axiom1\")\n:-\n_\"urn:a\" memberOf _#.")) {
+						"_\"http://www.wsmo.org/reasoner/NAMED_USER\"(_\"http://ex.org#axiom1\")\n :- \n_\"urn:a\" memberOf _#.")) {
 			return true;
 		}
 		return false;
