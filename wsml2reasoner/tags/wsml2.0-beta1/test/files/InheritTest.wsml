@@ -1,0 +1,46 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-rule"
+namespace { _"http://biology#", 
+	unit _"http://org.deri.wsml.unittesting#"
+ }
+
+
+
+ontology InheritTest
+importsOntology Inheritance
+
+instance lisa memberOf Woman
+	hasBloodgroup hasValue A
+	
+instance homer memberOf Man
+	hasBloodgroup hasValue B
+	
+instance marge memberOf Woman
+	hasBloodgroup hasValue B
+
+instance bart memberOf Man
+	hasBloodgroup hasValue Null
+
+
+instance matching_persons memberOf unit#ComplexTest
+		unit#matchValue hasValue "intersected match"
+		unit#query hasValue "mayBeParentOf(?father, ?mother, ?child)"
+		unit#result hasValue "matching_persons_result(?father, ?mother, ?child)"
+		
+
+relation matching_persons_result/3
+axiom matching_persons_result
+		definedBy 
+		 	matching_persons_result(homer, lisa, marge).
+		 	//matching_persons_result(homer, lisa, bart).
+		 	//matching_persons_result(homer, marge, bart).
+		 	//matching_persons_result(bart, marge, homer).
+		 	
+instance man_not_woman memberOf unit#UserConstraintTest
+	unit#axioms hasValue {manDisjointWoman}
+    unit#numberOfViolations hasValue  1
+    unit#violatingOntology hasValue  "http://biology#Inheritance"
+	
+
+
+
+		 	

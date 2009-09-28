@@ -1,0 +1,25 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-rule"
+namespace { _"http://example.com/axiom5#" } 
+
+ontology AxiomTestOntology5
+
+// ================================================================
+
+instance john memberOf Man
+instance mary memberOf Woman
+instance brian memberOf Man
+
+relation Bachelor( ofType Man )
+relation Married( ofType Man, ofType Woman )
+
+relationInstance Married(john, mary)
+
+axiom free_variable_in_naf definedBy
+	Bachelor(?x) :- ?x memberOf Man and naf Married(?x,?y).
+
+
+// ================================================================
+
+axiom free_variable_in_head definedBy
+	Everything(?z) :- ?x memberOf ?y.
+

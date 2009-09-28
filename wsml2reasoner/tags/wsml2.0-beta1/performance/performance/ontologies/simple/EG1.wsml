@@ -1,0 +1,96 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"webode://mccarthy.dia.fi.upm.es/eures/Job_Offer_Eures_Instances_Ontology#"
+, 
+     JobOffOnt _"webode://mccarthy.dia.fi.upm.es/eures/Job_Offer_Eures_Ontology#", 
+     OccOnt _"webode://mccarthy.dia.fi.upm.es/Occupation_Eures_Ontology#", 
+     EcoActOnt _"webode://mccarthy.dia.fi.upm.es/Economic_Activity_Eures_Ontology#", 
+     ComOnt _"webode://mccarthy.dia.fi.upm.es/Competence_Eures_Ontology#", 
+     CompOnt _"webode://mccarthy.dia.fi.upm.es/Compensation_Eures_Ontology#", 
+     EduOnt _"webode://mccarthy.dia.fi.upm.es/Education_Eures_Ontology#", 
+     LabRegOnt _"webode://mccarthy.dia.fi.upm.es/Labour_Regulatory_Eures_Ontology#", 
+     GeoOnt _"webode://mccarthy.dia.fi.upm.es/Geography_Eures_Ontology#", 
+     Time _"webode://mccarthy.dia.fi.upm.es/Time_Eures_Ontology#", 
+     DrvOnt _"webode://mccarthy.dia.fi.upm.es/Driving_License_Eures_Ontology#", 
+     LanOnt _"webode://mccarthy.dia.fi.upm.es/Language_Eures_Ontology#" }
+
+ontology EURES_Job_Offer_Ontology
+
+     importsOntology
+          { _"webode://mccarthy.dia.fi.upm.es/Competence_Eures_Ontology#Competence_Eures_Ontology", 
+            _"webode://mccarthy.dia.fi.upm.es/Economic_Activity_Eures_Ontology#Economic_Activity_Eures_Ontology", 
+            _"webode://mccarthy.dia.fi.upm.es/Occupation_Eures_Ontology#Occupation_Eures_Ontology", 
+            _"webode://mccarthy.dia.fi.upm.es/Education_Eures_Ontology#Education_Eures_Ontology", 
+            _"webode://mccarthy.dia.fi.upm.es/Labour_Regulatory_Eures_Ontology#Labour_Regulatory_Eures_Ontology", 
+            _"webode://mccarthy.dia.fi.upm.es/Compensation_Eures_Ontology#Compensation_Eures_Ontology", 
+            _"webode://mccarthy.dia.fi.upm.es/eures/Job_Offer_Eures_Ontology#Job_Offer_Eures_Ontology", 
+            _"webode://mccarthy.dia.fi.upm.es/Geography_Eures_Ontology#Geography_Eures_Ontology", 
+            _"webode://mccarthy.dia.fi.upm.es/Driving_License_Eures_Ontology#Driving_License_Eures_Ontology", 
+            _"webode://mccarthy.dia.fi.upm.es/Language_Eures_Ontology#Language_Eures_Ontology"}
+
+concept JobOffOnt#Vacancy
+
+instance Organization_ZAV_im_Auftrag_131_27 memberOf JobOffOnt#Organization
+     Telephone hasValue "00492287131417"
+     Full_Name hasValue "ZAV im Auftrag 131.27"
+     contact_person hasValue "Moukou"
+     Address hasValue "Villemombler Str. 76, D-53123 Bonn, DEUTSCHLAND"
+     is_located_in hasValue GeoOnt#GREECE__GR
+     has_job_vacancy hasValue JobVacancy_478405908101110604491800
+     has_activity_sector hasValue Other_retail_sale_of_new_goods_in_specialized_stores__524_Instance
+
+instance Vacancy_478405908101110604491800 memberOf JobOffOnt#Vacancy
+     job_name hasValue "IT-Spezialist Warenwirtschaftsysteme (WWS)"
+     job_description hasValue "Langform:                                                   Adaption des Kassen- und Warenwirtschaftssystem (WWS) der Media Markt Gruppe auf griechische Anforderungen   Einf¿hrung und Sicherstellung von Organisationsabl¿e unseres griechischen WWS in unserer griechischen Landesgesellschaft  Training unsere griechischen Marktkollegen auf unser WWS  Support der Anwender des WWS in Griechenland, in Zusammenarbeit mit den Kollegen aus der Media Markt Systemzentrale  Profil: International ausgerichtetes betriebswirtschaftliches Studium mit Schwerpunkt IT mit besten Abschlussnoten  Nachweisbare Berufserfahrung mit WWS in einem gro¿n internationalen Einzelhandelsunternehmen  Einschl¿ge SAP FI Kenntnisse  Erfahrung in Projekt- und Prozessmanagement  analytisches und fach¿bergreifendes Denken und Handeln  bereit Verantwortung zu ¿bernehmen  vielseitig, flexibel und teamf¿g   Englischkenntnisse -verhandlungssicher- in Wort und Schrift   Griechischkenntnisse -verhandlungssicher- in Wort und Schrift, idealerwei"
+     Min_age hasValue 0
+     Max_age hasValue 0
+     belongs_to hasValue JobVacancy_478405908101110604491800
+     requires_competence hasValue eng__English_LP_Instance
+     requires_education_level hasValue EduOnt#Higher_Train_academic
+     requires_prof_qualification hasValue true
+     has_compensation hasValue Compensation_478405908101110604491800
+     has_work_condition hasValue WorkCondition_478405908101110604491800
+     has_contract_type hasValue LabRegOnt#PERMANENT_FULLTIME
+     is_located_in_country hasValue GeoOnt#GREECE__GR
+     has_job_category hasValue Web_supervisor__2524_Instance
+     requires_work_experience hasValue JobOffOnt#Between_2_and_5_years
+     Begin_date hasValue Vacancy_478405908101110604491800_StartDate
+     End_date hasValue Vacancy_478405908101110604491800_EndDate
+
+instance JobVacancy_478405908101110604491800 memberOf JobOffOnt#Job_Vacancy
+     has_vacancy hasValue Vacancy_478405908101110604491800
+     belongs_to hasValue Organization_ZAV_im_Auftrag_131_27
+     employment_agent hasValue "EURES"
+     how_to_apply hasValue JobOffOnt#Letter_plus_CV_to_EMPLOYER
+     publication_date hasValue JobVacancy_478405908101110604491800_Creation_Date
+
+instance Compensation_478405908101110604491800 memberOf CompOnt#Compensation
+     salary_period hasValue CompOnt#Monthly
+     applied_tax hasValue "Gross"
+     is_associated_with_Vacancy hasValue Vacancy_478405908101110604491800
+     has_currency_Currency hasValue CompOnt#SAINT_PIERRE_AND_MIQUELON__Euro
+
+instance WorkCondition_478405908101110604491800 memberOf LabRegOnt#Work_Condition
+     relocation_required hasValue true
+     is_associated_with_Vacancy hasValue Vacancy_478405908101110604491800
+
+instance Vacancy_478405908101110604491800_StartDate memberOf Time#DateTimeDescription
+     day hasValue 2
+     month hasValue 8
+     year hasValue 2004
+
+instance Vacancy_478405908101110604491800_EndDate memberOf Time#DateTimeDescription
+     day hasValue 2
+     month hasValue 8
+     year hasValue 2007
+
+instance JobVacancy_478405908101110604491800_Creation_Date memberOf Time#DateTimeDescription
+     day hasValue 16
+     month hasValue 6
+     year hasValue 2004
+
+instance Other_retail_sale_of_new_goods_in_specialized_stores__524_Instance memberOf EcoActOnt#Other_retail_sale_of_new_goods_in_specialized_stores__524
+
+instance Web_supervisor__2524_Instance memberOf OccOnt#Web_supervisor__2524
+
+instance eng__English_LP_Instance memberOf LanOnt#Language_Proficiency
+     related_language hasValue LanOnt#eng__English
