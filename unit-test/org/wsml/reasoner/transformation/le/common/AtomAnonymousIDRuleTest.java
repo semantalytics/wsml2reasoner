@@ -25,11 +25,11 @@ package org.wsml.reasoner.transformation.le.common;
 import junit.framework.TestCase;
 
 import org.omwg.logicalexpression.LogicalExpression;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.transformation.AnonymousIdTranslator;
 import org.wsml.reasoner.transformation.AnonymousIdUtils;
 import org.wsml.reasoner.transformation.le.LETestHelper;
-import org.wsml.reasoner.transformation.le.common.AtomAnonymousIDRule;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.wsml.ParserException;
 
 
@@ -43,8 +43,8 @@ public class AtomAnonymousIDRuleTest extends TestCase {
     
     protected void setUp() throws Exception {
         super.setUp();
-        WSMO4JManager wsmoManager = new WSMO4JManager();
-        this.rule = new AtomAnonymousIDRule(wsmoManager, new AnonymousIdTranslator(wsmoManager.getWSMOFactory()));
+        FactoryContainer factory = new WsmlFactoryContainer();
+        this.rule = new AtomAnonymousIDRule(factory, new AnonymousIdTranslator(factory.getWsmoFactory()));
     }
    
     

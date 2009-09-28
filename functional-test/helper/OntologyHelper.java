@@ -33,8 +33,11 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Map;
 import java.util.Set;
+
 import junit.framework.Assert;
+
 import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
+import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
@@ -45,11 +48,17 @@ import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 import org.wsmo.wsml.Serializer;
 
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
+
 /**
  * Helper to make loading, parsing and serialising ontologies and their components simpler.
  */
 public class OntologyHelper
 {
+	// TODO gigi: probably won't work as expected since the factories changed and are now stateful
+	//private static WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
+	private static Parser wsmlparserimpl = new WsmlParser();
+
 	/**
 	 * Load an ontology from a wsml file.
 	 * @param ontologyFile The filenanme containing the wsml.
@@ -77,7 +86,7 @@ public class OntologyHelper
      */
     public static String toString( Ontology ontology )
     {
-        Serializer ontologySerializer = org.wsmo.factory.Factory.createSerializer(null);
+		Serializer ontologySerializer = new WSMLSerializerImpl();
 
 		StringWriter sw = new StringWriter();
 		try
@@ -151,5 +160,4 @@ public class OntologyHelper
         return ontoReader;
     }
     
-    private static Parser wsmlparserimpl = org.wsmo.factory.Factory.createParser(null);
 }

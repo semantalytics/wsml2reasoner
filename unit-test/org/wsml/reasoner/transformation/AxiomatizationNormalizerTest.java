@@ -26,21 +26,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+
+import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Relation;
 import org.omwg.ontology.RelationInstance;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.common.Entity;
 import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
-
-import junit.framework.TestCase;
 
 public class AxiomatizationNormalizerTest extends TestCase {
 
@@ -55,10 +57,10 @@ public class AxiomatizationNormalizerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		WSMO4JManager wsmoManager = new WSMO4JManager(); 
+		FactoryContainer wsmoManager = new WsmlFactoryContainer(); 
 		normalizer = new AxiomatizationNormalizer(wsmoManager);
 		
-        wsmoFactory = wsmoManager.getWSMOFactory();
+        wsmoFactory = wsmoManager.getWsmoFactory();
         leFactory = wsmoManager.getLogicalExpressionFactory();
 
 	}
@@ -78,7 +80,7 @@ public class AxiomatizationNormalizerTest extends TestCase {
     		if( en instanceof Axiom){
     			Set <LogicalExpression> les = ((Axiom)en).listDefinitions();
     			for(LogicalExpression le : les) {
-    				assertEquals(le.toString(), "!- _\"urn:a\" [_\"urn:a\" hasValue _\"urn:c\"] subConceptOf _\"urn:b\" .");
+    				assertEquals(le.toString(), "!- _\"urn:a\"[_\"urn:a\" hasValue _\"urn:c\"] subConceptOf _\"urn:b\". ");
     			}
     		}
     		
@@ -123,7 +125,7 @@ public class AxiomatizationNormalizerTest extends TestCase {
     		if( en instanceof Axiom){
     			Set <LogicalExpression> les = ((Axiom)en).listDefinitions();
     			for(LogicalExpression le : les) {
-    				assertEquals(le.toString(), "_\"urn:a\" .");
+    				assertEquals(le.toString(), "_\"urn:a\". ");
     			}
     		}
     		

@@ -23,6 +23,7 @@
 package concreteTests.mins;
 
 import org.wsml.reasoner.api.LPReasoner;
+
 import abstractTests.lp.AbstractAttribute4InheritingOfType;
 
 public class Attribute4InheritingOfTypeTest extends AbstractAttribute4InheritingOfType {

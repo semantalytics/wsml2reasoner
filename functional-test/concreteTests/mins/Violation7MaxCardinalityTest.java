@@ -23,6 +23,7 @@
 package concreteTests.mins;
 
 import org.wsml.reasoner.api.LPReasoner;
+
 import abstractTests.lp.AbstractViolation7MaxCardinality;
 
 public class Violation7MaxCardinalityTest extends AbstractViolation7MaxCardinality {

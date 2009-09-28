@@ -29,7 +29,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Axiom;
@@ -38,6 +40,7 @@ import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.omwg.ontology.WsmlDataType;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.ConjunctiveQuery;
 import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
@@ -45,15 +48,16 @@ import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.common.Entity;
 import org.wsmo.factory.DataFactory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
+
 import com.ontotext.wsmo4j.ontology.InstanceImpl;
 
 public class DatalogBasedWSMLReasonerTest extends TestCase {
 	
 	protected DatalogBasedWSMLReasoner reasoner;
-	protected WSMO4JManager wsmoManager;
 	protected String ns = "http://ex.org#";
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
@@ -66,10 +70,10 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		WSMO4JManager wsmoManager = new WSMO4JManager(); 
-		wsmoFactory = wsmoManager.getWSMOFactory();
-		dataFactory = wsmoManager.getDataFactory();
-        leFactory = wsmoManager.getLogicalExpressionFactory();
+		FactoryContainer factory = new WsmlFactoryContainer(); 
+		wsmoFactory = factory.getWsmoFactory();
+		dataFactory = factory.getXmlDataFactory();
+        leFactory = factory.getLogicalExpressionFactory();
         
         ontology = wsmoFactory.createOntology(wsmoFactory.createIRI(ns + "ont"));
         ontology.setDefaultNamespace(wsmoFactory.createIRI(ns));
@@ -79,7 +83,7 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
         ontology.addConcept(badConcept);
         
         Attribute badAttribute = badConcept.createAttribute(wsmoFactory.createIRI(ns + "a"));
-		badAttribute.addType(dataFactory.createWsmlDataType(WsmlDataType.WSML_STRING));
+		badAttribute.addInferringType(dataFactory.createDataType(WsmlDataType.WSML_STRING));
 
 
 		Axiom axiom1 = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns + "axiom01"));
@@ -98,7 +102,7 @@ public class DatalogBasedWSMLReasonerTest extends TestCase {
 		
 		Instance i = new InstanceImpl(wsmoFactory.createIRI(ns + "aa"));
 		i.addConcept(badConcept);
-		i.addAttributeValue( wsmoFactory.createIRI( ns + "a" ), dataFactory.createWsmlInteger( new BigInteger("3")) );
+		i.addAttributeValue( wsmoFactory.createIRI( ns + "a" ), dataFactory.createInteger( new BigInteger("3")) );
 		
 		ontology.addInstance(i);
 		

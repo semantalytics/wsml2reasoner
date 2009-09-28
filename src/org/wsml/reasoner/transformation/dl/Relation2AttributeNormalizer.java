@@ -22,6 +22,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Attribute;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Concept;
@@ -31,15 +33,12 @@ import org.omwg.ontology.Relation;
 import org.omwg.ontology.RelationInstance;
 import org.omwg.ontology.Type;
 import org.omwg.ontology.Value;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.AnonymousIdTranslator;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsmo.common.Entity;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.common.exception.SynchronisationException;
-import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.LogicalExpressionFactory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
 
@@ -57,19 +56,14 @@ import org.wsmo.wsml.ParserException;
  */
 public class Relation2AttributeNormalizer implements OntologyNormalizer {
 
-    protected WsmoFactory wsmoFactory;
+    private WsmoFactory wsmoFactory;
 
-    protected LogicalExpressionFactory leFactory;
+    private AnonymousIdTranslator anonymousIdTranslator;
 
-    protected DataFactory dataFactory;
-
-    protected AnonymousIdTranslator anonymousIdTranslator;
-
-    public Relation2AttributeNormalizer(WSMO4JManager wsmoManager) {
-        wsmoFactory = wsmoManager.getWSMOFactory();
-        leFactory = wsmoManager.getLogicalExpressionFactory();
-        dataFactory = wsmoManager.getDataFactory();
-        anonymousIdTranslator = new AnonymousIdTranslator(wsmoFactory);
+    public Relation2AttributeNormalizer(FactoryContainer factory) {
+    	
+    	wsmoFactory = factory.getWsmoFactory();
+        anonymousIdTranslator = new AnonymousIdTranslator(factory.getWsmoFactory());
     }
 
     public Set<Axiom> normalizeAxioms(Collection<Axiom> theAxioms) {
@@ -90,9 +84,6 @@ public class Relation2AttributeNormalizer implements OntologyNormalizer {
             else if (e instanceof RelationInstance) {
                 try {
                     result.addAll(normalizeRelationInstance((RelationInstance) e));
-                }
-                catch (SynchronisationException e1) {
-                    e1.printStackTrace();
                 }
                 catch (InvalidModelException e1) {
                     e1.printStackTrace();
@@ -124,9 +115,12 @@ public class Relation2AttributeNormalizer implements OntologyNormalizer {
 
                 Attribute attribute = newConcept.createAttribute(relation.getIdentifier());
                 for (Type type : p2.listTypes()) {
-                    attribute.addType(type);
                     if (p2.isConstraining()) {
                         attribute.setConstraining(true);
+                        attribute.addConstrainingType(type);
+                    } else {
+                        attribute.setInferring(true);
+                        attribute.addInferringType(type);
                     }
                 }
             }
@@ -148,8 +142,9 @@ public class Relation2AttributeNormalizer implements OntologyNormalizer {
         Axiom result = wsmoFactory.createAxiom((Identifier) anonymousIdTranslator.translate(wsmoFactory.createAnonymousID()));
         for (Relation sr : superRelations){
             String le = "?x[_\"" + relation.getIdentifier() + "\" hasValue ?y] implies " + "?x[_\"" + sr.getIdentifier() + "\" hasValue ?y].";
+            LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
             try {
-                result.addDefinition(leFactory.createLogicalExpression(le));
+                result.addDefinition(leParser.parse(le));
             }
             catch (ParserException e) {
                 e.printStackTrace();
@@ -162,7 +157,7 @@ public class Relation2AttributeNormalizer implements OntologyNormalizer {
      * Relation instances are replaced by attribute values.
      */
 
-    private Set<Entity> normalizeRelationInstance(RelationInstance relationInstance) throws SynchronisationException, InvalidModelException {
+    private Set<Entity> normalizeRelationInstance(RelationInstance relationInstance) throws InvalidModelException {
         Set<Entity> result = new HashSet<Entity>();
         Value v1 = relationInstance.getParameterValue((byte) 0);
         Value v2 = relationInstance.getParameterValue((byte) 1);

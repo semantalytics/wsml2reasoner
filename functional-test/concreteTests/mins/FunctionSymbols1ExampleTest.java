@@ -23,6 +23,7 @@
 package concreteTests.mins;
 
 import org.wsml.reasoner.api.LPReasoner;
+
 import abstractTests.lp.AbstractFunctionSymbols1Example;
 
 public class FunctionSymbols1ExampleTest extends AbstractFunctionSymbols1Example

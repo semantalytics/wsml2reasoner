@@ -26,18 +26,19 @@ package org.wsml.reasoner.transformation.le;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.LogicalExpression;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.transformation.AnonymousIdUtils;
 import org.wsml.reasoner.transformation.le.disjunctionpull.DisjunctionPullRules;
-import org.wsml.reasoner.transformation.le.foldecomposition.FOLMoleculeDecompositionRules;
 import org.wsml.reasoner.transformation.le.foldecomposition.FOLMoleculeDecompositionRule;
+import org.wsml.reasoner.transformation.le.foldecomposition.FOLMoleculeDecompositionRules;
 import org.wsml.reasoner.transformation.le.implicationreduction.ImplicationReductionRules;
 import org.wsml.reasoner.transformation.le.moleculedecomposition.MoleculeDecompositionRules;
 import org.wsml.reasoner.transformation.le.negationpush.NegationPushRules;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.wsml.ParserException;
-
-import junit.framework.TestCase;
 
 public class OnePassReplacementNormalizerTest extends TestCase {
 
@@ -49,7 +50,7 @@ public class OnePassReplacementNormalizerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		WSMO4JManager wsmoManager = new WSMO4JManager();
+		FactoryContainer wsmoManager = new WsmlFactoryContainer();
 		List<NormalizationRule> preOrderRules = new ArrayList<NormalizationRule>();
 		preOrderRules.addAll(new ImplicationReductionRules(wsmoManager)
 				.getRules());
@@ -66,7 +67,7 @@ public class OnePassReplacementNormalizerTest extends TestCase {
 	}
 
 	public void testNormalize() throws ParserException {
-		WSMO4JManager wsmoManager = new WSMO4JManager();
+		FactoryContainer wsmoManager = new WsmlFactoryContainer();
 		List<NormalizationRule> postOrderRules = new ArrayList<NormalizationRule>();
 		postOrderRules.addAll(new FOLMoleculeDecompositionRules(wsmoManager)
 				.getRules());

@@ -23,6 +23,7 @@
 package concreteTests.irisStratified;
 
 import org.wsml.reasoner.api.LPReasoner;
+
 import abstractTests.lp.AbstractDataTypes7DateTimeComparison;
 
 public class DataTypes7DateTimeComparisonTest extends AbstractDataTypes7DateTimeComparison

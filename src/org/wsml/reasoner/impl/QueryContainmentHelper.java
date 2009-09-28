@@ -30,6 +30,7 @@ import org.omwg.logicalexpression.MembershipMolecule;
 import org.omwg.logicalexpression.Negation;
 import org.omwg.logicalexpression.NegationAsFailure;
 import org.omwg.logicalexpression.SubConceptMolecule;
+import org.omwg.logicalexpression.TruthValue;
 
 /**
  * A helper class for the Query Containment Check.
@@ -64,7 +65,7 @@ public class QueryContainmentHelper extends AbstractVisitor {
         }
     }
 
-    public void visitAttributeContraintMolecule(AttributeConstraintMolecule expr) {
+    public void visitAttributeConstraintMolecule(AttributeConstraintMolecule expr) {
         // TODO Auto-generated method stub
 
     }
@@ -93,6 +94,12 @@ public class QueryContainmentHelper extends AbstractVisitor {
         // TODO Auto-generated method stub
 
     }
+
+	@Override
+	public void visitTruthValue(TruthValue expr) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
 /*

@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.deri.mins.Atom;
 import org.deri.mins.Body;
 import org.deri.mins.DB;
@@ -21,7 +22,6 @@ import org.deri.mins.api.DBInterface;
 import org.deri.mins.builtins.BuiltinBody;
 import org.deri.mins.builtins.BuiltinConfig;
 import org.deri.mins.builtins.Equal;
-import org.deri.mins.builtins.IsConst;
 import org.deri.mins.builtins.IsInteger;
 import org.deri.mins.builtins.IsNum;
 import org.deri.mins.builtins.IsString;
@@ -44,8 +44,9 @@ import org.wsml.reasoner.Literal;
 import org.wsml.reasoner.UnsupportedFeatureException;
 import org.wsml.reasoner.WSML2DatalogTransformer;
 import org.wsml.reasoner.api.exception.InternalReasonerException;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.common.BuiltIn;
 import org.wsmo.common.IRI;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.WsmoFactory;
 
 public abstract class AbstractMinsFacade implements DatalogReasonerFacade
@@ -99,7 +100,7 @@ public abstract class AbstractMinsFacade implements DatalogReasonerFacade
      */
     private RuleSet minsEngine;
 
-    private WSMO4JManager wsmoManager;
+    private FactoryContainer factory;
 
     private MinsSymbolMap symbTransfomer;
 
@@ -107,10 +108,10 @@ public abstract class AbstractMinsFacade implements DatalogReasonerFacade
      * Creates a facade object that allows to invoke the MINS rule system for
      * performing query evaluation tasks.
      */
-    public AbstractMinsFacade(WSMO4JManager wsmoManager, final Map<String, Object> config) {
+    public AbstractMinsFacade(FactoryContainer factory, final Map<String, Object> config) {
         super();
-        this.wsmoManager = wsmoManager;
-        this.symbTransfomer = new MinsSymbolMap(wsmoManager);
+        this.factory = factory;
+        this.symbTransfomer = new MinsSymbolMap(factory);
         logger.setLevel(Level.OFF);
     }
 
@@ -294,13 +295,13 @@ public abstract class AbstractMinsFacade implements DatalogReasonerFacade
         boolean positive = !lit.isPositive();
 
         if (no == -1) {
-            if (predSym.equals(org.omwg.logicalexpression.Constants.NUMERIC_ADD) || predSym.equals(org.omwg.logicalexpression.Constants.NUMERIC_MUL)) {
+            if (predSym.equals(BuiltIn.NUMERIC_ADD.getFullName()) || predSym.equals(BuiltIn.NUMERIC_MULTIPLY.getFullName())) {
                 terms = new org.deri.mins.terms.Term[] { terms[1], terms[2], terms[0] };
             }
-            if (predSym.equals(org.omwg.logicalexpression.Constants.NUMERIC_SUB) || predSym.equals(org.omwg.logicalexpression.Constants.NUMERIC_DIV)) {
+            if (predSym.equals(BuiltIn.NUMERIC_SUBTRACT.getFullName()) || predSym.equals(BuiltIn.NUMERIC_DIVIDE.getFullName())) {
                 terms = new org.deri.mins.terms.Term[] { terms[0], terms[2], terms[1] };
             }
-            if (predSym.equals(org.omwg.logicalexpression.Constants.STRING_INEQUAL) || predSym.equals(org.omwg.logicalexpression.Constants.NUMERIC_INEQUAL) || predSym.equals(org.omwg.logicalexpression.Constants.INEQUAL)) {
+            if (predSym.equals(BuiltIn.STRING_INEQUAL.getFullName()) || predSym.equals(BuiltIn.NUMERIC_INEQUAL.getFullName()) || predSym.equals(BuiltIn.INEQUAL.getFullName())) {
                 positive = !positive;
             }
             // int num = symbTransfomer.minsBuiltIn2No.get(predSym);
@@ -350,7 +351,7 @@ public abstract class AbstractMinsFacade implements DatalogReasonerFacade
         }
         else if (wsmlTerm instanceof SimpleDataValue) {
             SimpleDataValue val = (SimpleDataValue) wsmlTerm;
-            String type = val.getType().getIRI().toString();
+            String type = val.getType().getIdentifier().toString();
             // System.out.println(type);
             if (type.equals(WsmlDataType.WSML_STRING)) {
                 minsTerm = new StringTerm(val.toString());
@@ -365,7 +366,7 @@ public abstract class AbstractMinsFacade implements DatalogReasonerFacade
         }
         else {
             ComplexDataValue val = (ComplexDataValue) wsmlTerm;
-            String type = val.getType().getIRI().toString();
+            String type = val.getType().getIdentifier().toString();
             // int arity = val.getArity();
             if (type.equals(WsmlDataType.WSML_BOOLEAN)) {
                 minsTerm = new StringTerm(val.toString());
@@ -415,10 +416,9 @@ public abstract class AbstractMinsFacade implements DatalogReasonerFacade
     }
 
     private void addDataTypeMemberShipRules(RuleSet rs) {
-        WsmoFactory f = wsmoManager.getWSMOFactory();
+        WsmoFactory f = factory.getWsmoFactory();
         int memberOfNo = symbTransfomer.convertToTool(new Literal(true, WSML2DatalogTransformer.PRED_MEMBER_OF, new Term[2]));
         int integerNo = symbTransfomer.convertToTool(f.createIRI(WsmlDataType.WSML_INTEGER));
-        int iriNo = symbTransfomer.convertToTool(f.createIRI(WsmlDataType.WSML_IRI));
         int stringNo = symbTransfomer.convertToTool(f.createIRI(WsmlDataType.WSML_STRING));
         int decimalNo = symbTransfomer.convertToTool(f.createIRI(WsmlDataType.WSML_DECIMAL));
         int booleanNo = symbTransfomer.convertToTool(f.createIRI(WsmlDataType.WSML_BOOLEAN));
@@ -445,7 +445,8 @@ public abstract class AbstractMinsFacade implements DatalogReasonerFacade
         rs.addRule(new Rule(new Head[] { new Head(memberOfNo, new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(0), new ConstTerm(booleanNo) }) }, new Body[] { new BuiltinBody(6, false, new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(0), new StringTerm("_boolean(\"false\")") }, new Equal()) }));
 
         // ?x memberOf _integer :- isConst(?x)
-        rs.addRule(new Rule(new Head[] { new Head(memberOfNo, new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(0), new ConstTerm(iriNo) }) }, new Body[] { new BuiltinBody(15, false, new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(0) }, new IsConst()) }));
+//        TODO gigi: implement IRI another way, since the WSML datatype IRI is no longer supported
+//        rs.addRule(new Rule(new Head[] { new Head(memberOfNo, new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(0), new ConstTerm(iriNo) }) }, new Body[] { new BuiltinBody(15, false, new org.deri.mins.terms.Term[] { new org.deri.mins.terms.Variable(0) }, new IsConst()) }));
     }
 
     public boolean checkQueryContainment(ConjunctiveQuery query1, ConjunctiveQuery query2) {

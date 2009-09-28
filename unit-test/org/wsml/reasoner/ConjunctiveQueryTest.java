@@ -25,13 +25,14 @@ package org.wsml.reasoner;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.wsml.ParserException;
-
-import junit.framework.TestCase;
 
 public class ConjunctiveQueryTest extends TestCase {
 
@@ -65,8 +66,8 @@ public class ConjunctiveQueryTest extends TestCase {
 		query = null;
 		ArrayList <Literal> list = new ArrayList<Literal>();
 		
-		WSMO4JManager wsmoManager = new WSMO4JManager();
-		LogicalExpressionFactory f = wsmoManager.getLogicalExpressionFactory();
+		FactoryContainer factory = new WsmlFactoryContainer();
+		LogicalExpressionFactory f = factory.getLogicalExpressionFactory();
 		
 		Variable test1 = f.createVariable("Variable01");
 		Variable test2 = f.createVariable("Variable02");
@@ -111,6 +112,20 @@ public class ConjunctiveQueryTest extends TestCase {
 		query2 = new ConjunctiveQuery(list2);
 		
 		assertEquals(false, query.equals(query2));
+		
+	}
+	
+	public void testEquals02() {
+		query = null;
+		ArrayList <Literal> list = new ArrayList<Literal>();
+	
+		Literal literal01 = new Literal(true, new String("TEST_PREDICATE_A"), new Term[0]);
+		Literal literal02 = new Literal(true, new String("TEST_PREDICATE_B"), new Term[0]);
+		list.add(literal01);
+		list.add(literal02);
+		
+		
+		query = new ConjunctiveQuery(list);
 		
 	}
 	

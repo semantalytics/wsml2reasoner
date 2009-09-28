@@ -36,12 +36,12 @@ import org.omwg.logicalexpression.Implication;
 import org.omwg.logicalexpression.InverseImplication;
 import org.omwg.logicalexpression.LogicProgrammingRule;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionVisitor;
 import org.omwg.logicalexpression.MembershipMolecule;
 import org.omwg.logicalexpression.Negation;
 import org.omwg.logicalexpression.NegationAsFailure;
 import org.omwg.logicalexpression.SubConceptMolecule;
 import org.omwg.logicalexpression.UniversalQuantification;
-import org.omwg.logicalexpression.Visitor;
 
 /**
  * Implements a left-first, depth-first traversal over logical expressions. The
@@ -67,9 +67,9 @@ import org.omwg.logicalexpression.Visitor;
  * @author Uwe Keller, DERI Innsbruck
  * @author Gabor Nagypal, FZI
  */
-public abstract class PostfixOrderLogicalExpressionVisitor implements Visitor {
+public abstract class PostfixOrderLogicalExpressionVisitor implements LogicalExpressionVisitor {
 
-    public void visitAtom(Atom arg0) {
+    public void visit(Atom arg0) {
         enterAtom(arg0);
         handleAtom(arg0);
         leaveAtom(arg0);
@@ -103,7 +103,7 @@ public abstract class PostfixOrderLogicalExpressionVisitor implements Visitor {
 
     }
 
-    public void visitAttributeContraintMolecule(AttributeConstraintMolecule arg0) {
+    public void visitAttributeConstraintMolecule(AttributeConstraintMolecule arg0) {
         enterAttributeConstraintMolecule(arg0);
         handleAttributeConstraintMolecule(arg0);
         leaveAttributeConstraintMolecule(arg0);

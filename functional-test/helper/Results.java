@@ -30,13 +30,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.DataFactory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -61,29 +63,29 @@ public class Results
 			mVariables[ v ] = leFactory.createVariable( variableNames[ v ] );
 	}
 
-	public static Term string( String value )
+	public static Term _string( String value )
 	{
-		return dataFactory.createWsmlString( value );
+		return dataFactory.createString( value );
 	}
 	
-	public static Term decimal( double value )
+	public static Term _decimal( double value )
 	{
-		return dataFactory.createWsmlDecimal( new BigDecimal( Double.toString( value ) ) );
+		return dataFactory.createDecimal( new BigDecimal( Double.toString( value ) ) );
 	}
 	
 	public static Term _integer( int value )
 	{
-		return dataFactory.createWsmlInteger( new BigInteger( Integer.toString( value ) ) );
+		return dataFactory.createInteger( new BigInteger( Integer.toString( value ) ) );
 	}
 	
 	public static Term _float( float value )
 	{
-		return dataFactory.createWsmlFloat( value );
+		return dataFactory.createFloat( value );
 	}
 	
 	public static Term _double( double value )
 	{
-		return dataFactory.createWsmlDouble( value );
+		return dataFactory.createDouble( value );
 	}
 
 	/**
@@ -91,81 +93,103 @@ public class Results
 	 * @param b The value of the term.
 	 * @return The wsml boolean term object.
 	 */
-	public static Term bool( boolean b )
+	public static Term _bool( boolean b )
 	{
-		return dataFactory.createWsmlBoolean( b );
+		return dataFactory.createBoolean( b );
 	}
 	
 	/**
 	 * Create a duration.
 	 * @return The new wsml object.
 	 */
-	public static ComplexDataValue duration(boolean sign, int year, int month, int day, int hour, int minute, double second)
+	public static ComplexDataValue _duration( int year, int month, int day, int hour, int minute, double second)
 	{
-		return dataFactory.createWsmlDuration( sign, year, month, day, hour, minute, second );
+//		FIXME gigi: add duration support
+		return dataFactory.createDuration(year, month, day, hour, minute, second );
 	}
 	
 	/**
 	 * Create a datetime.
 	 * @return The new wsml object.
 	 */
-	public static ComplexDataValue datetime(int year, int month, int day, int hour, int minute, double second, int tzHour, int tzMinute)
+	public static ComplexDataValue _datetime(int year, int month, int day, int hour, int minute, double second, int tzHour, int tzMinute)
 	{
-		return dataFactory.createWsmlDateTime( year, month, day, hour, minute, second, tzHour, tzMinute );
+		return dataFactory.createDateTime( year, month, day, hour, minute, (float) second, tzHour, tzMinute ); // TODO gigi: introduced the float cast, check if this makes sense
 	}
 	
 	/**
 	 * Create a time.
 	 * @return The new wsml object.
 	 */
-	public static ComplexDataValue time(int hour, int minute, double second, int tzHour, int tzMinute)
+	public static ComplexDataValue _time(int hour, int minute, double second, int tzHour, int tzMinute)
 	{
-		return dataFactory.createWsmlTime( hour, minute, second, tzHour, tzMinute );
+		return dataFactory.createTime( hour, minute, (float) second, tzHour, tzMinute ); // TODO gigi: introduced the float cast, check if this makes sense
 	}
 	
 	/**
 	 * Create a date.
 	 * @return The new wsml object.
 	 */
-	public static ComplexDataValue date(int year, int month, int day, int tzHour, int tzMinute)
+	public static ComplexDataValue _date(int year, int month, int day, int tzHour, int tzMinute)
 	{
-		return dataFactory.createWsmlDate( year, month, day, tzHour, tzMinute );
+		return dataFactory.createDate( year, month, day, tzHour, tzMinute );
 	}
 	
-	public static Term yearMonth( int year, int month )
+	public static Term _yearMonth( int year, int month )
 	{
-		return dataFactory.createWsmlGregorianYearMonth( year, month );
+		return dataFactory.createGregorianYearMonth( year, month );
 	}
 
-	public static Term year( int year )
+	public static Term _year( int year )
 	{
-		return dataFactory.createWsmlGregorianYear( year );
+		return dataFactory.createGregorianYear( year );
 	}
 
-	public static Term monthDay( int month, int day )
+	public static Term _monthDay( int month, int day )
 	{
-		return dataFactory.createWsmlGregorianMonthDay( month, day );
+		return dataFactory.createGregorianMonthDay( month, day );
 	}
 
-	public static Term day( int day )
+	public static Term _day( int day )
 	{
-		return dataFactory.createWsmlGregorianDay( day );
+		return dataFactory.createGregorianDay( day );
 	}
 
-	public static Term month( int month )
+	public static Term _month( int month )
 	{
-		return dataFactory.createWsmlGregorianMonth( month );
+		return dataFactory.createGregorianMonth( month );
 	}
 
-	public static Term hexBinary( String value )
+	public static Term _hexBinary( String value )
 	{
-		return dataFactory.creatWsmlHexBinary( value.getBytes() );
+		return dataFactory.createHexBinary( value.getBytes() );
 	}
 
-	public static Term base64Binary( String value )
+	public static Term _base64Binary( String value )
 	{
-		return dataFactory.createWsmlBase64Binary( value.getBytes() );
+		return dataFactory.createBase64Binary( value.getBytes() );
 	}
+	
+	public static Term _text( String value, String lang )
+	{
+		return dataFactory.createText(value, lang);
+	}
+	
+	public static Term _xmlliteral( String tag, String lang )
+	{
+		return dataFactory.createXMLLiteral(tag, lang);
+	}
+	
+	public static Term _yearmonthduration(int year, int month)
+	{
+		return dataFactory.createYearMonthDuration(year, month);
+	}
+	
+	public static Term _daytimeduration(int day, int hour, int minute, double second)
+	{
+		return dataFactory.createDayTimeDuration(day, hour, minute, second);
+	}
+
 
 	/**
 	 * Create an IRI.
@@ -225,13 +249,13 @@ public class Results
     private static final WsmoFactory wsmoFactory;
     private static final LogicalExpressionFactory leFactory;
     private static final DataFactory dataFactory;
-    private static final WSMO4JManager wsmoManager;
+    private static final FactoryContainer wsmoManager;
     
     static{
     	// 	 Set up factories for creating WSML elements
-	   	wsmoManager = new WSMO4JManager();
+	   	wsmoManager = new WsmlFactoryContainer();
 	   	leFactory = wsmoManager.getLogicalExpressionFactory();
-	   	wsmoFactory = wsmoManager.getWSMOFactory();
-	   	dataFactory = wsmoManager.getDataFactory();
+	   	wsmoFactory = wsmoManager.getWsmoFactory();
+	   	dataFactory = wsmoManager.getXmlDataFactory();
    }
 }

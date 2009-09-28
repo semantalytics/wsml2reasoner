@@ -1,48 +1,183 @@
-wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
-namespace { _"http://example.com/datatypes1#",
-	wsml _"http://www.wsmo.org/wsml/wsml-syntax#" }
-
-ontology DatatypesTestOntology1
-
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
+namespace { _"http://example.com/wsml2reasoner/datatypes01#",
+	wsml _"http://www.wsmo.org/wsml/wsml-syntax#",
+	xsd  _"http://www.w3.org/2001/XMLSchema#",
+	rdf  _"http://www.w3.org/1999/02/22-rdf-syntax-ns#"}
+	
 // See http://www.wsmo.org/TR/d16/d16.1/v1.0/#sec:wsml-builtin-datatypes
+// ( http://www.wsmo.org/TR/d16/d16.1/v0.2/ ) for wsml datatypes 
+// See http://www.w3.org/TR/xmlschema-2/#sec:datatypes for xsd datatypes
+// See http://www.w3.org/TR/rdf-concepts/ for rdf datatypes
 // for a complete list of all data-types.
-// SQName and IRI are not tested here.
+// SQName and IRI are not tested here, since they have been removed in WSML 1.0.
+
+ontology Datatypes_Test_Ontology01
 
 concept anEntity
-	aString       ofType _string
-	aDecimal      ofType _decimal
-	aInteger      ofType _integer
-	aFloat        ofType _float
-	aDouble       ofType _double
-	aBoolean      ofType _boolean
-	aDuration     ofType _duration
-	aDateTime     ofType _dateTime
-	aTime         ofType _time
-	aDate         ofType _date
-	aGYearMonth   ofType _gyearmonth
-	aGYear        ofType _gyear
-	aGMonthDay    ofType _gmonthday
-	aGDay         ofType _gday
-	aGMonth       ofType _gmonth
-	aHexBinary    ofType _hexbinary
-	aBase64Binary ofType _base64binary
+	// XSD, WSML
+	aString      ofType wsml#string
+	a_String     ofType _string
+	aXSD_String  ofType xsd#string
 
+	aDecimal 	 ofType wsml#decimal
+	a_Decimal 	 ofType _decimal
+	aXSD_Decimal ofType xsd#decimal
+	
+	aInteger     ofType wsml#integer
+	a_Integer    ofType _integer
+	aXSD_Integer ofType xsd#integer
+	
+	aFloat       ofType wsml#float
+	a_Float	  	 ofType _float
+	aXSD_Float   ofType xsd#float
+	
+	aDouble      ofType wsml#double
+	a_Double     ofType _double
+	aXSD_Double  ofType xsd#double
+	
+	aBoolean     ofType wsml#boolean
+	a_Boolean    ofType _boolean
+	aXSD_Boolean ofType xsd#boolean
+	
+	aDuration    ofType wsml#duration
+	a_Duration   ofType _duration
+	aXSD_Duration ofType xsd#duration
+	
+	aDateTime    ofType wsml#dateTime
+	a_DateTime   ofType _datetime
+	aXSD_DateTime ofType xsd#dateTime
+	
+	aTime        ofType wsml#time
+	a_Time       ofType _time
+	aXSD_Time    ofType xsd#time
+	
+	aDate        ofType wsml#date
+	a_Date       ofType _date
+	aXSD_Date    ofType xsd#date
+	
+	aGYearMonth  ofType wsml#gYearMonth
+	a_GYearMonth ofType _gyearmonth
+	aXSD_GYearMonth ofType xsd#gYearMonth
+	
+	aGYear       ofType wsml#gYear
+	a_GYear      ofType _gyear
+	aXSD_GYear   ofType xsd#gYear
+	
+	aGMonthDay   ofType wsml#gMonthDay
+	a_GMonthDay  ofType _gmonthday
+	aXSD_GMonthDay ofType xsd#gMonthDay
+	
+	aGDay        ofType wsml#gDay
+	a_GDay       ofType _gday
+	aXSD_GDay    ofType xsd#gDay
+	
+	aGMonth      ofType wsml#gMonth
+	a_GMonth     ofType _gmonth
+	aXSD_GMonth  ofType xsd#gMonth
+	
+	aHexBinary   ofType wsml#hexBinary
+	a_HexBinary  ofType _hexbinary
+	aXSD_HexBinary ofType xsd#hexBinary
+	
+	aBase64Binary ofType wsml#base64Binary
+	a_Base64Binary ofType _base64binary
+	aXSD_Base64Binary ofType xsd#base64Binary
+	
+	// RDF Datatypes
+	aRDFText     ofType rdf#text
+	a_RDFText    ofType _rdftext
+	
+	aRDF_XMLLiteral ofType rdf#XMLLiteral
+	a_RDF_XMLLiteral ofType _xmlliteral
+	
+	// new XSD Datatypes
+	aYearMonthDuration ofType xsd#yearMonthDuration
+	a_YearMonthDuration ofType _yearmonthduration
+	
+	aDayTimeDuration ofType xsd#dayTimeDuration
+	a_DayTimeDuration ofType _daytimeduration
+	
+	
 instance anInstance memberOf anEntity
-	aString       hasValue _string( "string-value" )
-	aDecimal      hasValue _decimal( 123456.78901 )
-	aInteger      hasValue _integer( 12345 )
-	aFloat        hasValue _float( "123.456" )
-	aDouble       hasValue _double( "12345.6789" )
-	aBoolean      hasValue _boolean( "true" )
-	aDuration     hasValue _duration( 1, 2, 3, 4, 5, 6 )
-	aDateTime     hasValue _dateTime( 1981, 12, 31, 23, 59, 58 )
-	aTime         hasValue _time( 23, 59, 58 )
-	aDate         hasValue _date( 1981, 12, 31 )
-	aGYearMonth   hasValue _gyearmonth( 2008, 12 )
-	aGYear        hasValue _gyear( 1999 )
-	aGMonthDay    hasValue _gmonthday( 12, 31 )
-	aGDay         hasValue _gday( 28 )
-	aGMonth       hasValue _gmonth( 2 )
-	aHexBinary    hasValue _hexbinary( "0FB7abcd" ) 
-	aBase64Binary hasValue _base64binary( "QmFycnkgQmlzaG9w" )
-
+	aString      hasValue wsml#string( "string-value" )
+	a_String     hasValue _string( "string-value_" )
+	aXSD_String  hasValue xsd#string("string-value-xsd")
+	
+	aDecimal 	 hasValue wsml#decimal( 123456.78901 )
+	a_Decimal 	 hasValue _decimal( 987654.32101 )
+	aXSD_Decimal hasValue xsd#decimal(123456.78901)
+	
+	aInteger     hasValue wsml#integer( 12345 )
+	a_Integer    hasValue _integer( 12345 )
+	aXSD_Integer hasValue xsd#integer(12345)
+	
+	aFloat       hasValue wsml#float( "123.456" )
+	a_Float      hasValue _float( "123.456" )
+	aXSD_Float   hasValue xsd#float( "123.456" )
+	
+	aDouble      hasValue wsml#double( "12345.6789" )
+	a_Double     hasValue _double( "12345.6789" )
+	aXSD_Double  hasValue xsd#double( "12345.6789" )
+	
+	aBoolean     hasValue wsml#boolean( "true" )
+	a_Boolean    hasValue _boolean( "true" )
+	aXSD_Boolean hasValue xsd#boolean( "true" )
+	
+	aDuration    hasValue wsml#duration( 1, 2, 3, 4, 5, 6.0)
+	a_Duration   hasValue _duration( 1, 2, 3, 4, 5, 6.1 )
+	aXSD_Duration hasValue xsd#duration( 1, 2, 3, 4, 5, 6.2)
+	
+	aDateTime    hasValue wsml#dateTime( 1981, 12, 31, 23, 59, 58.0 )
+	a_DateTime   hasValue _datetime( 1981, 12, 31, 23, 59, 58.1 )           // not like in the specification, to be consistent! 
+	aXSD_DateTime hasValue xsd#dateTime( 1981, 12, 31, 23, 59, 58.2 )
+	
+	aTime        hasValue wsml#time( 23, 59, 58.0 )
+	a_Time       hasValue _time( 23, 59, 58.1 )
+	aXSD_Time    hasValue xsd#time( 23, 59, 58.2 )
+	
+	aDate        hasValue wsml#date( 1981, 12, 29 )
+	a_Date       hasValue _date( 1981, 12, 30 )
+	aXSD_Date    hasValue xsd#date( 1981, 12, 31 )
+	
+	aGYearMonth  hasValue wsml#gYearMonth( 2008, 10 )
+	a_GYearMonth hasValue _gyearmonth( 2008, 11 )
+	aXSD_GYearMonth hasValue xsd#gYearMonth( 2008, 12 )
+	
+	aGYear       hasValue wsml#gYear( 1999 )
+	a_GYear      hasValue _gyear( 2000 )
+	aXSD_GYear   hasValue xsd#gYear( 2001 )
+	
+	aGMonthDay   hasValue wsml#gMonthDay( 10, 31 )
+	a_GMonthDay  hasValue _gmonthday( 11, 31 )
+	aXSD_GMonthDay hasValue xsd#gMonthDay( 12, 31 )
+	
+	aGDay        hasValue wsml#gDay( 28 )
+	a_GDay       hasValue _gday( 29 )
+	aXSD_GDay    hasValue xsd#gDay( 30 )
+	
+	aGMonth      hasValue wsml#gMonth( 2 )
+	a_GMonth     hasValue _gmonth( 3 )
+	aXSD_GMonth  hasValue xsd#gMonth( 4 )
+	
+	aHexBinary   hasValue wsml#hexBinary( "0FB7abcd" )
+	a_HexBinary  hasValue _hexbinary( "0FB7abcd" )
+	aXSD_HexBinary hasValue xsd#hexBinary( "0FB7abcd" )
+	
+	aBase64Binary hasValue wsml#base64Binary( "QmFycnkgQmlzaG9w" )
+	a_Base64Binary hasValue _base64binary( "QmFycnkgQmlzaG9w" )
+	aXSD_Base64Binary hasValue xsd#base64Binary( "QmFycnkgQmlzaG9w" )
+	
+	// RDF Datatypes
+	aRDFText hasValue rdf#text("Family Guy", "en")
+	a_RDFText hasValue _rdftext("Padre de Familia", "es")
+	
+	aRDF_XMLLiteral hasValue rdf#XMLLiteral("<tag>XML Things</tag>", "")
+	a_RDF_XMLLiteral hasValue _xmlliteral("<tag>XML Literal</tag>", "")
+	
+	// new XSD Datatypes
+	aYearMonthDuration hasValue xsd#yearMonthDuration(2008, 10)
+	a_YearMonthDuration hasValue _yearmonthduration(2008, 11)    // specification : _yearMonthDuration ??? 
+	
+	aDayTimeDuration hasValue xsd#dayTimeDuration(1, 10, 31, 15.5)
+	a_DayTimeDuration hasValue _daytimeduration(1, 10, 31, 15.6)
+	

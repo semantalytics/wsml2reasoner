@@ -4,14 +4,16 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import junit.framework.TestCase;
+
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Ontology;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsmo.common.IRI;
-import org.wsmo.factory.Factory;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
+import org.wsmo.factory.FactoryContainer;
 
 
 /**
@@ -20,24 +22,24 @@ import org.wsmo.factory.WsmoFactory;
  */
 public class SpassTest extends TestCase{
     
-    private LogicalExpressionFactory leF;
     private Ontology nsContainer;
     private SpassFacade tptp;
+	protected FactoryContainer wsmoManager;
 
     protected void setUp() throws Exception {
-        leF = Factory.createLogicalExpressionFactory(null);
-        WsmoFactory wsmoF = Factory.createWsmoFactory(null);
+    	wsmoManager = new WsmlFactoryContainer();
 
-        tptp = new SpassFacade(new WSMO4JManager(),"urn:foo");
+        tptp = new SpassFacade(new WsmlFactoryContainer(),"urn:foo");
 
-        IRI i = wsmoF.createIRI("foo:bar#");
-        nsContainer = wsmoF.createOntology(i);
+        IRI i = wsmoManager.getWsmoFactory().createIRI("foo:bar#");
+        nsContainer = wsmoManager.getWsmoFactory().createOntology(i);
         nsContainer.setDefaultNamespace(i);
      }
 
     public void testConjunctionDisjunction() throws Exception{
-        LogicalExpression le = leF.createLogicalExpression(
-            "a and b or c ",nsContainer);
+    	LogicalExpressionParser leParser = new WsmlLogicalExpressionParser(nsContainer);
+        LogicalExpression le = leParser.parse(
+            "a and b or c ");
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
         tptp.register(set);
@@ -58,8 +60,8 @@ public class SpassTest extends TestCase{
     }
     
     private void check(String wsml, String fol) throws Exception{
-        LogicalExpression le = leF.createLogicalExpression(
-                wsml,nsContainer);
+        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser(nsContainer);
+        LogicalExpression le = leParser.parse(wsml);
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
         tptp.register(set);

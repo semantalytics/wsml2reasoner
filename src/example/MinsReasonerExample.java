@@ -24,7 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.serializer.wsml.VisitorSerializeWSMLTerms;
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
+import org.deri.wsmo4j.io.serializer.wsml.SerializeWSMLTermsVisitor;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
@@ -32,11 +33,10 @@ import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.TopEntity;
-import org.wsmo.factory.Factory;
-import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.wsml.Parser;
+
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 /**
  * Usage Example for the wsml2Reasoner Framework
@@ -67,11 +67,10 @@ public class MinsReasonerExample {
         Ontology exampleOntology = loadOntology("example/simpleOntology.wsml");
         if (exampleOntology == null)
             return;
-        LogicalExpressionFactory leFactory = new WSMO4JManager().getLogicalExpressionFactory();
 
         String queryString = "?x memberOf ?y";
 
-        LogicalExpression query = leFactory.createLogicalExpression(queryString, exampleOntology);
+        LogicalExpression query = new WsmlLogicalExpressionParser(exampleOntology).parse(queryString);
 
         // get A reasoner
         Map<String, Object> params = new HashMap<String, Object>();
@@ -104,7 +103,7 @@ public class MinsReasonerExample {
      * @return object model of ontology at file location
      */
     private Ontology loadOntology(String file) {
-        Parser wsmlParser = Factory.createParser(null);
+    	Parser wsmlParser = new WsmlParser();
 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);
         try {
@@ -126,7 +125,7 @@ public class MinsReasonerExample {
     }
 
     private String termToString(Term t, Ontology o) {
-        VisitorSerializeWSMLTerms v = new VisitorSerializeWSMLTerms(o);
+        SerializeWSMLTermsVisitor v = new SerializeWSMLTermsVisitor(o);
         t.accept(v);
         return v.getSerializedObject();
     }

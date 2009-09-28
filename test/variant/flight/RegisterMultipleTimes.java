@@ -5,17 +5,23 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Set;
 
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
+import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
 import base.BaseReasonerTest;
+
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 /**
  * Interface or class description
@@ -32,7 +38,8 @@ import base.BaseReasonerTest;
  */
 public class RegisterMultipleTimes  extends BaseReasonerTest  {
 	
-	Parser parser = org.wsmo.factory.Factory.createParser(null);
+	WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
+	Parser wsmlParser = new WsmlParser();
 //	LogicalExpressionFactory leFactory = Factory.createLogicalExpressionFactory(null);
 	
     LPReasoner reasoner;
@@ -65,12 +72,12 @@ public class RegisterMultipleTimes  extends BaseReasonerTest  {
     	reasoner = (LPReasoner) BaseReasonerTest.getReasoner();
     	InputStream is = this.getClass().getClassLoader().getResourceAsStream(file1);
     	assertNotNull(is);
-    	Ontology ont0 =(Ontology)parser.parse(new InputStreamReader(is))[0]; 
+    	Ontology ont0 =(Ontology)wsmlParser.parse(new InputStreamReader(is))[0]; 
     	InputStream is1 = this.getClass().getClassLoader().getResourceAsStream(file2);
     	assertNotNull(is1);
-    	Ontology ont1 =(Ontology)parser.parse(new InputStreamReader(is1))[0]; 
-        LogicalExpression query = leFactory.createLogicalExpression(
-                "?x memberOf ?y", ont0);
+    	Ontology ont1 =(Ontology)wsmlParser.parse(new InputStreamReader(is1))[0];
+    	LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
+        LogicalExpression query = leParser.parse("?x memberOf ?y");
 
         Set<Map<Variable, Term>> result = null;
         for (int i = 0; i < 50; i++) {
@@ -104,10 +111,10 @@ public class RegisterMultipleTimes  extends BaseReasonerTest  {
                 "instance i2 memberOf c \n ";
         
 
-        Ontology o = (Ontology) parser.parse(new StringBuffer(test))[0];
+        Ontology o = (Ontology) wsmlParser.parse(new StringBuffer(test))[0];
 
-        LogicalExpression query = leFactory.createLogicalExpression(
-                "?x memberOf ?y", o);
+        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
+        LogicalExpression query = leParser.parse("?x memberOf ?y");
         Instance instance = o.findInstance(wsmoFactory.createIRI(ns+"i1"));
 
 

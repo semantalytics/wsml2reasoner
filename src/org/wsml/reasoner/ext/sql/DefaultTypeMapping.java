@@ -22,9 +22,6 @@
 package org.wsml.reasoner.ext.sql;
 
 import java.math.BigDecimal;
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.sql.Time;
 import java.sql.Types;
 import java.util.Calendar;
 import java.util.HashMap;

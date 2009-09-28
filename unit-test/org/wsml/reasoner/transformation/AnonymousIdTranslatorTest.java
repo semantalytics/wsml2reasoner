@@ -23,18 +23,17 @@
 
 package org.wsml.reasoner.transformation;
 
+import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsmo.common.Identifier;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
-
-
-
-import junit.framework.TestCase;
 
 public class AnonymousIdTranslatorTest extends TestCase {
 
@@ -46,8 +45,8 @@ public class AnonymousIdTranslatorTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		WSMO4JManager wsmoManager = new WSMO4JManager();
-		WsmoFactory wsmoFactory = wsmoManager.getWSMOFactory();
+		FactoryContainer factory = new WsmlFactoryContainer();
+		WsmoFactory wsmoFactory = factory.getWsmoFactory();
 	    translator = new AnonymousIdTranslator(wsmoFactory);
 		
 	}

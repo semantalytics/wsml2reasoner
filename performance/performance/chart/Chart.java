@@ -1,27 +1,43 @@
 package performance.chart;
 
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-import org.jfree.chart.*;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.omwg.ontology.*;
+import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.Ontology;
+import org.omwg.ontology.RelationInstance;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.Factory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
 import performance.BenchmarkOntologyGenerator;
+
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 public class Chart {
 	
@@ -88,14 +104,14 @@ public class Chart {
 	final static String ENDCONTENT="<!--enddata--->";
 	final static String STARTCONTENT="<!--data--->";
 	
-	WsmoFactory wsmoFactory = Factory.createWsmoFactory(null);
+	WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
 	String firstNfpAsString(Entity e,String key){
 		IRI i = wsmoFactory.createIRI(key);
-		Set<Object> list = e.listNFPValues(i);
+		Set<Term> list = e.listAnnotationValues(i);
 		return list.iterator().next().toString();
 	}
 	
-	Parser p = Factory.createParser(null);
+	Parser p = new WsmlParser();
 	TestInfo getTestInfo(File dir) throws FileNotFoundException, IOException, ParserException, InvalidModelException{
 		TestInfo ret = new TestInfo();
 		File[] files = dir.listFiles(wsmlfilter);

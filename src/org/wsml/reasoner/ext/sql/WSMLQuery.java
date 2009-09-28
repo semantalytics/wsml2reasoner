@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -41,9 +42,10 @@ import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.Variable;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 /**
@@ -160,8 +162,9 @@ public class WSMLQuery {
     private Set<Map<Variable, Term>> convertSQLResult(ResultSet sqlResult) throws SQLException {
         assert sqlResult != null;
 
-        DataFactory f = Factory.createDataFactory(null);
-        LogicalExpressionFactory l = Factory.createLogicalExpressionFactory(null);
+        FactoryContainer factory = new WsmlFactoryContainer();
+		DataFactory wsmlDataFactory = factory.getXmlDataFactory();
+        LogicalExpressionFactory l = factory.getLogicalExpressionFactory();
         ResultSetMetaData m = sqlResult.getMetaData();
         int columns = m.getColumnCount();
 
@@ -177,31 +180,29 @@ public class WSMLQuery {
                 Object entry = sqlResult.getObject(i);
                 // figure out object type and convert to wsmo4j implementation
                 if (className.equals(String.class.getCanonicalName())) {
-                    SimpleDataValue dv = f.createWsmlString((String) entry);
+                    SimpleDataValue dv = wsmlDataFactory.createString((String) entry);
                     row.put(v, dv);
                 }
                 else if (className.equals(BigDecimal.class.getCanonicalName())) {
-                    SimpleDataValue dv = f.createWsmlDecimal((BigDecimal) entry);
+                    SimpleDataValue dv = wsmlDataFactory.createDecimal((BigDecimal) entry);
                     row.put(v, dv);
                 }
                 else if (className.equals(Boolean.class.getCanonicalName())) {
-                    ComplexDataValue dv = f.createWsmlBoolean((Boolean) entry);
+                    ComplexDataValue dv = wsmlDataFactory.createBoolean((Boolean) entry);
                     row.put(v, dv);
                 }
                 //it is here where additional type information could be needed.
                 else if(className.equals(java.sql.Timestamp.class.getCanonicalName()))
                 {
-                	java.sql.Timestamp time = (java.sql.Timestamp) entry;
                 	Calendar cal = Calendar.getInstance();
-                	cal.clear();
-                	cal.setTimeInMillis(time.getTime());
-                	ComplexDataValue dv = f.createWsmlDateTime(cal);
+                	cal.setTimeInMillis(System.currentTimeMillis());
+                	ComplexDataValue dv = wsmlDataFactory.createDateTime(cal) ;
                 	row.put(v, dv);               	
                 }
                 // this is mainly needed because COUNT returns integers
                 else if (className.equals(java.lang.Integer.class.getCanonicalName())) {
                     Integer in = (java.lang.Integer) entry;
-                    SimpleDataValue dv = f.createWsmlInteger(in.toString());
+                    SimpleDataValue dv = wsmlDataFactory.createInteger(in.toString());
                     row.put(v, dv);
                 }
                 else {

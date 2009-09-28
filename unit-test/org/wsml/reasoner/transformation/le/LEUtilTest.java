@@ -25,14 +25,15 @@ package org.wsml.reasoner.transformation.le;
 
 import java.util.ArrayList;
 
+import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.Conjunction;
 import org.omwg.logicalexpression.Disjunction;
 import org.omwg.logicalexpression.LogicalExpression;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.wsml.ParserException;
-
-import junit.framework.TestCase;
 
 public class LEUtilTest extends TestCase {
 
@@ -47,7 +48,7 @@ public class LEUtilTest extends TestCase {
 
 	public void testBuildNary() throws ParserException {
 
-		WSMO4JManager wsmoManager = new WSMO4JManager();
+		FactoryContainer wsmoManager = new WsmlFactoryContainer();
 		LogicalExpressionFactory leFactory = wsmoManager
 				.getLogicalExpressionFactory();
 		LogicalExpression in1 = LETestHelper
@@ -64,8 +65,8 @@ public class LEUtilTest extends TestCase {
 				LETestHelper
 						.buildLE("_\"urn:a\"[_\"urn:c\" ofType _\"urn:d\"] subConceptOf _\"urn:b\" "));
 		assertEquals(
-				con.getRightOperand().toString(),
-				("_\"urn:a\"[_\"urn:c\" hasValue _\"urn:e\"] implies _\"urn:l\" ."));
+				"_\"urn:a\"[_\"urn:c\" hasValue _\"urn:e\"]\n implies \n_\"urn:l\".",
+				con.getRightOperand().toString().trim());
 		
 		Disjunction dis = LEUtil.buildNaryDisjunction(leFactory, list);
 		assertEquals(
@@ -73,8 +74,8 @@ public class LEUtilTest extends TestCase {
 				LETestHelper
 						.buildLE("_\"urn:a\"[_\"urn:c\" ofType _\"urn:d\"] subConceptOf _\"urn:b\" "));
 		assertEquals(
-				dis.getRightOperand().toString(),
-				("_\"urn:a\"[_\"urn:c\" hasValue _\"urn:e\"] implies _\"urn:l\" ."));
+				("_\"urn:a\"[_\"urn:c\" hasValue _\"urn:e\"]\n implies \n_\"urn:l\". "),
+				dis.getRightOperand().toString());
 	
 	}
 

@@ -23,6 +23,7 @@
 package concreteTests.mins;
 
 import org.wsml.reasoner.api.LPReasoner;
+
 import abstractTests.lp.AbstractFlight2Example2;
 
 public class Flight2Example2Test extends AbstractFlight2Example2{

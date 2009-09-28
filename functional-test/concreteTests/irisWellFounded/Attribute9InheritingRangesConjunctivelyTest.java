@@ -23,6 +23,7 @@
 package concreteTests.irisWellFounded;
 
 import org.wsml.reasoner.api.LPReasoner;
+
 import abstractTests.lp.AbstractAttribute9InheritingRangesConjunctively;
 
 public class Attribute9InheritingRangesConjunctivelyTest extends AbstractAttribute9InheritingRangesConjunctively {

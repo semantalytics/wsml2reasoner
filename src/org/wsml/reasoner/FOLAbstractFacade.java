@@ -34,7 +34,7 @@ import org.apache.log4j.Logger;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.wsml.reasoner.api.FOLReasoner.EntailmentType;
 import org.wsml.reasoner.builtin.tptp.TPTPSymbolMap;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.factory.FactoryContainer;
 
 /**
  * <p>
@@ -51,7 +51,7 @@ public abstract class FOLAbstractFacade implements FOLReasonerFacade {
 
     private Logger log = Logger.getLogger(FOLAbstractFacade.class);
 
-    WSMO4JManager wsmo4jmanager;
+    FactoryContainer factory;
 
     String httpAddress;
 
@@ -63,8 +63,8 @@ public abstract class FOLAbstractFacade implements FOLReasonerFacade {
 
     static public String DERI_SPASS_REASONER = "http://dev1.deri.at/spass-plus-t";
 
-    public FOLAbstractFacade(WSMO4JManager manager, String endpoint) {
-        this.wsmo4jmanager = manager;
+    public FOLAbstractFacade(FactoryContainer factory, String endpoint) {
+        this.factory = factory;
         this.httpAddress = endpoint;
     }
 

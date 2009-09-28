@@ -24,7 +24,9 @@ package org.wsml.reasoner;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.terms.Term;
 
 public class RuleTest extends TestCase

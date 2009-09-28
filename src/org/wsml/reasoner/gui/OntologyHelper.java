@@ -33,8 +33,9 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Map;
 import java.util.Set;
-import junit.framework.Assert;
+
 import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
+import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Instance;
@@ -45,6 +46,8 @@ import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 import org.wsmo.wsml.Serializer;
+
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 /**
  * Helper to make loading, parsing and serialising ontologies and their components simpler.
@@ -78,7 +81,7 @@ public class OntologyHelper
      */
     public static String toString( Ontology ontology )
     {
-        Serializer ontologySerializer = org.wsmo.factory.Factory.createSerializer(null);
+        Serializer ontologySerializer = new WSMLSerializerImpl();
 
 		StringWriter sw = new StringWriter();
 		try
@@ -134,14 +137,18 @@ public class OntologyHelper
     }
     
     private static Ontology parseThis(Reader ontoReader) throws IOException, ParserException, InvalidModelException{
-      	 final TopEntity[] identifiable = wsmlparserimpl.parse(ontoReader);
-      	 for( TopEntity entity : identifiable )
-      	 {
-      		 if (entity instanceof Ontology)
-      			 return (Ontology) entity;
-      	 }
-
-      	 throw new RuntimeException( "No ontology found in input." );
+      	 
+    	//WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
+    	Parser wsmlParser = new WsmlParser();
+    	
+    	final TopEntity[] identifiable = wsmlParser.parse(ontoReader);
+    	
+	  	for( TopEntity entity : identifiable ) {
+	  		 if (entity instanceof Ontology)
+	  			 return (Ontology) entity;
+	  	}
+	
+	  	throw new RuntimeException( "No ontology found in input." );
       }
       
     private static Reader getReaderForFile(String location) {
@@ -153,14 +160,8 @@ public class OntologyHelper
             InputStream is = LPHelper.class.getClassLoader()
                     .getResourceAsStream(location);
             // System.out.println();
-            Assert.assertNotNull("Could not load file from class path: " + location,
-                    is);
             ontoReader = new InputStreamReader(is);
         }
-        Assert.assertNotNull("Could not load file from file system: " + location,
-                ontoReader);
         return ontoReader;
     }
-    
-    private static Parser wsmlparserimpl = org.wsmo.factory.Factory.createParser(null);
 }

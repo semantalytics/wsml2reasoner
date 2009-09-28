@@ -19,6 +19,7 @@
 package org.wsml.reasoner.builtin.mins;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,13 +38,13 @@ import org.deri.mins.terms.Term;
 import org.deri.mins.terms.concrete.BooleanTerm;
 import org.deri.mins.terms.concrete.DateTerm;
 import org.deri.mins.terms.concrete.IntegerTerm;
-import org.omwg.logicalexpression.Constants;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.ConjunctiveQuery;
 import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.UnsupportedFeatureException;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.common.BuiltIn;
 import org.wsmo.common.IRI;
+import org.wsmo.factory.FactoryContainer;
 
 /**
  * Package: package org.wsml.reasoner.datalog.wrapper.mins;
@@ -86,51 +87,51 @@ public class MinsSymbolMap {
 
     protected Map<String, Integer> minsBuiltIn2No = new HashMap<String, Integer>();
 
-    protected WSMO4JManager wsmoManager;
+    protected FactoryContainer factory;
 
-    public MinsSymbolMap(WSMO4JManager wsmoManager) {
-        this.wsmoManager = wsmoManager;
-        minsBuiltinFunc.put(Constants.LESS_THAN, new Less());
-        minsBuiltIn2No.put(Constants.LESS_THAN, 0);
+    public MinsSymbolMap(FactoryContainer factory) {
+        this.factory = factory;
+        minsBuiltinFunc.put(BuiltIn.LESS_THAN.getFullName(), new Less());
+        minsBuiltIn2No.put(BuiltIn.LESS_THAN.getFullName(), 0);
 
-        minsBuiltinFunc.put(Constants.LESS_EQUAL, new Lessorequal());
-        minsBuiltIn2No.put(Constants.LESS_EQUAL, 1);
+        minsBuiltinFunc.put(BuiltIn.LESS_EQUAL.getFullName(), new Lessorequal());
+        minsBuiltIn2No.put(BuiltIn.LESS_EQUAL.getFullName(), 1);
 
-        minsBuiltinFunc.put(Constants.GREATER_THAN, new Greater());
-        minsBuiltIn2No.put(Constants.GREATER_THAN, 2);
+        minsBuiltinFunc.put(BuiltIn.GREATER_THAN.getFullName(), new Greater());
+        minsBuiltIn2No.put(BuiltIn.GREATER_THAN.getFullName(), 2);
 
-        minsBuiltinFunc.put(Constants.GREATER_EQUAL, new Greaterorequal());
-        minsBuiltIn2No.put(Constants.GREATER_EQUAL, 3);
+        minsBuiltinFunc.put(BuiltIn.GREATER_EQUAL.getFullName(), new Greaterorequal());
+        minsBuiltIn2No.put(BuiltIn.GREATER_EQUAL.getFullName(), 3);
 
-        minsBuiltinFunc.put(Constants.NUMERIC_ADD, new NumericAdd());
-        minsBuiltIn2No.put(Constants.NUMERIC_ADD, 4);
+        minsBuiltinFunc.put(BuiltIn.NUMERIC_ADD.getFullName(), new NumericAdd());
+        minsBuiltIn2No.put(BuiltIn.NUMERIC_ADD.getFullName(), 4);
 
-        minsBuiltinFunc.put(Constants.NUMERIC_SUB, new NumericAdd());
-        minsBuiltIn2No.put(Constants.NUMERIC_SUB, 4);
+        minsBuiltinFunc.put(BuiltIn.NUMERIC_SUBTRACT.getFullName(), new NumericAdd());
+        minsBuiltIn2No.put(BuiltIn.NUMERIC_SUBTRACT.getFullName(), 4);
 
-        minsBuiltinFunc.put(Constants.NUMERIC_MUL, new NumericMult());
-        minsBuiltIn2No.put(Constants.NUMERIC_MUL, 5);
+        minsBuiltinFunc.put(BuiltIn.NUMERIC_MULTIPLY.getFullName(), new NumericMult());
+        minsBuiltIn2No.put(BuiltIn.NUMERIC_MULTIPLY.getFullName(), 5);
 
-        minsBuiltinFunc.put(Constants.NUMERIC_DIV, new NumericMult());
-        minsBuiltIn2No.put(Constants.NUMERIC_DIV, 5);
+        minsBuiltinFunc.put(BuiltIn.NUMERIC_DIVIDE.getFullName(), new NumericMult());
+        minsBuiltIn2No.put(BuiltIn.NUMERIC_DIVIDE.getFullName(), 5);
 
-        minsBuiltinFunc.put(Constants.EQUAL, new Equal());
-        minsBuiltIn2No.put(Constants.EQUAL, 6);
+        minsBuiltinFunc.put(BuiltIn.EQUAL.getFullName(), new Equal());
+        minsBuiltIn2No.put(BuiltIn.EQUAL.getFullName(), 6);
 
-        minsBuiltinFunc.put(Constants.INEQUAL, new Equal());
-        minsBuiltIn2No.put(Constants.INEQUAL, 6);
+        minsBuiltinFunc.put(BuiltIn.INEQUAL.getFullName(), new Equal());
+        minsBuiltIn2No.put(BuiltIn.INEQUAL.getFullName(), 6);
 
-        minsBuiltinFunc.put(Constants.NUMERIC_EQUAL, new Equal());
-        minsBuiltIn2No.put(Constants.NUMERIC_EQUAL, 6);
+        minsBuiltinFunc.put(BuiltIn.NUMERIC_EQUAL.getFullName(), new Equal());
+        minsBuiltIn2No.put(BuiltIn.NUMERIC_EQUAL.getFullName(), 6);
 
-        minsBuiltinFunc.put(Constants.NUMERIC_INEQUAL, new Equal());
-        minsBuiltIn2No.put(Constants.NUMERIC_INEQUAL, 6);
+        minsBuiltinFunc.put(BuiltIn.NUMERIC_INEQUAL.getFullName(), new Equal());
+        minsBuiltIn2No.put(BuiltIn.NUMERIC_INEQUAL.getFullName(), 6);
 
-        minsBuiltinFunc.put(Constants.STRING_EQUAL, new Equal());
-        minsBuiltIn2No.put(Constants.STRING_EQUAL, 6);
+        minsBuiltinFunc.put(BuiltIn.STRING_EQUAL.getFullName(), new Equal());
+        minsBuiltIn2No.put(BuiltIn.STRING_EQUAL.getFullName(), 6);
 
-        minsBuiltinFunc.put(Constants.STRING_INEQUAL, new Equal());
-        minsBuiltIn2No.put(Constants.STRING_INEQUAL, 6);
+        minsBuiltinFunc.put(BuiltIn.STRING_INEQUAL.getFullName(), new Equal());
+        minsBuiltIn2No.put(BuiltIn.STRING_INEQUAL.getFullName(), 6);
     }
 
     public int convertToTool(org.wsml.reasoner.Literal literal) {
@@ -220,7 +221,7 @@ public class MinsSymbolMap {
             for (int i = 0; i < term.pars.length; i++) {
                 termList.add(convertToWSML(term.pars[i]));
             }
-            return wsmoManager.getLogicalExpressionFactory().createConstructedTerm((IRI) id, termList);
+            return factory.getLogicalExpressionFactory().createConstructedTerm((IRI) id, termList);
 
         }
         else if (term.isStringTerm()) {
@@ -229,33 +230,34 @@ public class MinsSymbolMap {
             // BooleanTerms
             if (term.toString().contains("boolean")) {
                 if (term.toString().contains("true")) {
-                    return wsmoManager.getDataFactory().createWsmlBoolean(true);
+                    return factory.getXmlDataFactory().createBoolean(true);
                 }
                 else {
-                    return wsmoManager.getDataFactory().createWsmlBoolean(false);
+                    return factory.getXmlDataFactory().createBoolean(false);
                 }
             }
-            return wsmoManager.getDataFactory().createWsmlString(((StringTerm) term).s);
+            return factory.getXmlDataFactory().createString(((StringTerm) term).s);
         }
         else if (term.isNumTerm()) {
             if (term instanceof IntegerTerm) {
-                return wsmoManager.getDataFactory().createWsmlInteger(((IntegerTerm) term).zahl + "");
+                return factory.getXmlDataFactory().createInteger(((IntegerTerm) term).zahl + "");
             }
             if (term instanceof DateTerm) {
                 DateTerm date = (DateTerm) term;
-                return wsmoManager.getDataFactory().createWsmlDate(date.cal);
+                Calendar cal = date.cal;
+                return factory.getXmlDataFactory().createDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0 ,0 );
             }
             // org.deri.mins.terms.NumTerm numTerm =
             // (org.deri.mins.terms.NumTerm)term;
-            return wsmoManager.getDataFactory().createWsmlDecimal(term.toString());
+            return factory.getXmlDataFactory().createDecimal(term.toString());
         }
         else if (term instanceof BooleanTerm) {
             boolean value = ((BooleanTerm) term).getValue();
-            return wsmoManager.getDataFactory().createWsmlBoolean(value);
+            return factory.getXmlDataFactory().createBoolean(value);
         }
         else
             System.err.println("ERROR - UNKNOWN MINS TERM: " + term + " " + term.getClass());
-        return wsmoManager.getDataFactory().createWsmlString("unknown");
+        return factory.getXmlDataFactory().createString("unknown");
         // throw new RuntimeException("Unknown Term Symbol:"+term);
     }
 }

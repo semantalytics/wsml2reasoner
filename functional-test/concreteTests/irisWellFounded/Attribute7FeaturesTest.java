@@ -23,6 +23,7 @@
 package concreteTests.irisWellFounded;
 
 import org.wsml.reasoner.api.LPReasoner;
+
 import abstractTests.lp.AbstractAttribute7Features;
 
 public class Attribute7FeaturesTest extends AbstractAttribute7Features {

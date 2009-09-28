@@ -20,12 +20,14 @@ package framework.normalization;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.transformation.LloydToporNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsml.reasoner.transformation.le.lloydtopor.LloydToporRules;
+import org.wsmo.factory.FactoryContainer;
 
 public class LloydToporNormalizerTest extends BaseNormalizationTest
 {
@@ -35,8 +37,8 @@ public class LloydToporNormalizerTest extends BaseNormalizationTest
     protected void setUp() throws Exception
     {
         super.setUp();
-        WSMO4JManager wmsoManager = new WSMO4JManager();
-        normalizer = new LloydToporNormalizer(wmsoManager);
+        FactoryContainer wsmoManager = new WsmlFactoryContainer();
+        normalizer = new LloydToporNormalizer(wsmoManager);
     }
 
     @Override
@@ -55,7 +57,7 @@ public class LloydToporNormalizerTest extends BaseNormalizationTest
         
         // normalize ontology with the LELloydToporNormalizer:
         axioms = normalizer.normalizeAxioms(axioms);
-        System.out.println("\n\n***\n"+ new LloydToporRules(new WSMO4JManager()).toString());
+        System.out.println("\n\n***\n"+ new LloydToporRules(new WsmlFactoryContainer()).toString());
 
         // test whether produced ontology contains exactly 4 axioms:
         assertTrue(axioms.iterator().next().listDefinitions().size() == 4);

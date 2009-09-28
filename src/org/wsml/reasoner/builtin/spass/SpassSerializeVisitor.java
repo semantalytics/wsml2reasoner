@@ -22,6 +22,7 @@ import java.util.List;
 import org.deri.wsmo4j.io.parser.wsml.TempVariable;
 import org.deri.wsmo4j.logicalexpression.terms.ConstructedTermImpl;
 import org.omwg.logicalexpression.Atom;
+import org.omwg.logicalexpression.AttributeConstraintMolecule;
 import org.omwg.logicalexpression.Conjunction;
 import org.omwg.logicalexpression.Disjunction;
 import org.omwg.logicalexpression.Equivalence;
@@ -29,6 +30,7 @@ import org.omwg.logicalexpression.ExistentialQuantification;
 import org.omwg.logicalexpression.Implication;
 import org.omwg.logicalexpression.InverseImplication;
 import org.omwg.logicalexpression.Negation;
+import org.omwg.logicalexpression.TruthValue;
 import org.omwg.logicalexpression.UniversalQuantification;
 import org.omwg.logicalexpression.terms.Term;
 import org.wsml.reasoner.FOLAbstractSerializeVisitor;
@@ -140,4 +142,17 @@ public class SpassSerializeVisitor extends FOLAbstractSerializeVisitor {
         stack.add(" implies (" + stack.remove(stack.size() - 1) + " , " + stack.remove(stack.size() - 1) + ")");
 
     }
+
+	@Override
+	public void visitAttributeConstraintMolecule(
+			AttributeConstraintMolecule expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitTruthValue(TruthValue expr) {
+		// TODO Auto-generated method stub
+		
+	}
 }

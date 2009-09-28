@@ -22,14 +22,14 @@
  */
 package org.wsml.reasoner.transformation.le;
 
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpression;
-import org.wsmo.factory.Factory;
 import org.wsmo.wsml.ParserException;
 
 
 public class LETestHelper {
 
     public static LogicalExpression buildLE(String theString) throws ParserException{
-        return Factory.createLogicalExpressionFactory(null).createLogicalExpression(theString);
+    	return new WsmlLogicalExpressionParser().parse(theString);
     }
 }
