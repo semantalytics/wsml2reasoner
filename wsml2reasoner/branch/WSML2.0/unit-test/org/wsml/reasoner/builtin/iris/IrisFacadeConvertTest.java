@@ -25,7 +25,7 @@ package org.wsml.reasoner.builtin.iris;
 import junit.framework.TestCase;
 
 import org.deri.iris.api.basics.IAtom;
-import org.omwg.logicalexpression.Constants;
+import org.omwg.ontology.XmlSchemaDataType;
 import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.Literal;
 import org.wsml.reasoner.LiteralTestHelper;
@@ -62,32 +62,95 @@ public class IrisFacadeConvertTest extends TestCase {
 				LiteralTestHelper.createVariable("x"), LiteralTestHelper
 						.createVariable("y"));
 
-		// Literal expected = new Literal(true, Constants.EQUAL,
-		// LiteralTestHelper
-		// .createVariable("x"), LiteralTestHelper.createVariable("y"));
-
 		assertEquals("EQUAL(?x, ?y)", IrisStratifiedFacade.literal2Atom(
 				wsmlLiteral, true).toString());
 	}
 	
-	public void testBuiltins() {
+	public void testDataTypes() {
+		String name = "";
+		String expected ="";
 		String irins = "http://iris.sti-innsbruck.at/urn:";
-		String ns = "http://www.wsmo.org/wsml/wsml-syntax#";
+		int i = 1;
+		
+		name = "string";
+		expected = XmlSchemaDataType.XSD_STRING + "(" + irins + i + ")";
+		checkdt(false, name, expected, i++);
+		
+		name = "decimal";
+		expected = XmlSchemaDataType.XSD_DECIMAL + "(" + irins + i + ")";
+		checkdt(false, name, expected, i++);
+		
+		name = "double";
+		expected = XmlSchemaDataType.XSD_DOUBLE + "(" + irins + i + ")";
+		checkdt(false, name, expected, i++);
+		
+		name = "float";
+		expected = XmlSchemaDataType.XSD_FLOAT + "(" + irins + i + ")";
+		checkdt(false, name, expected, i++);
+		
+		name = "integer";
+		expected = XmlSchemaDataType.XSD_INTEGER + "(" + irins + i + ")";
+		checkdt(false, name, expected, i++);
+		
+		name = "boolean";
+		expected = XmlSchemaDataType.XSD_BOOLEAN + "(" + irins + i + ")";
+		checkdt(false, name, expected, i++);
+		
+		name = "dateTime";
+		expected = XmlSchemaDataType.XSD_DATETIME + "(" + irins + i + ")";
+		checkdt(false, name, expected, i++);
+		
+		name = "time";
+		expected = XmlSchemaDataType.XSD_TIME + "(" + irins + i + ")";
+		checkdt(false, name, expected, i++);
+		
+		name = "date";
+		expected = XmlSchemaDataType.XSD_DATE + "(" + irins + i + ")";
+		checkdt(false, name, expected, i++);
+		
+		name = "gYearMonth";
+		expected = XmlSchemaDataType.XSD_GYEARMONTH + "(" + irins + i + ")";
+		checkdt(false, name, expected, i++);
+		
+		name = "gYear";
+		expected = XmlSchemaDataType.XSD_GYEAR + "(" + irins + i + ")";
+		checkdt(false, name, expected, i++);
+		
+		name = "gMonthDay";
+		expected = XmlSchemaDataType.XSD_GMONTHDAY + "(" + irins + i + ")";
+		checkdt(false, name, expected, i++);
+		
+		name = "gDay";
+		expected = XmlSchemaDataType.XSD_GDAY + "(" + irins + i + ")";
+		checkdt(false, name, expected, i++);
+		
+		name = "gMonth";
+		expected = XmlSchemaDataType.XSD_GMONTH + "(" + irins + i + ")";
+		checkdt(false, name, expected, i++);
+		
+		name = "hexBinary";
+		expected = XmlSchemaDataType.XSD_HEXBINARY + "(" + irins + i + ")";
+		checkdt(false, name, expected, i++);
+		
+		name = "base64Binary";
+		expected = XmlSchemaDataType.XSD_BASE64BINARY + "(" + irins + i + ")";
+		checkdt(false, name, expected, i++);
+			
+	}
+	
+	private void checkdt(boolean output, String name, String expected, int i) {
+		String irins = "http://iris.sti-innsbruck.at/urn:";
+		String ns = "http://www.w3.org/2001/XMLSchema#";
 		Literal l = null;
 		IAtom atom = null;
 		
-		// String
-		l = LiteralTestHelper.createLiteral(true, ns +"String", irins + "a" );
+		l = LiteralTestHelper.createLiteral(true, ns + name , irins +  i);
 		atom = IrisStratifiedFacade.literal2Atom(l, false);
-		System.out.println(atom);
-		assertTrue(atom.toString().contains(ns + "String"));
+		if(output) {
+			System.out.println(atom);
+		}
 		
-		// double
-		l = LiteralTestHelper.createLiteral(true, ns +"Double", irins + "a" );
-		atom = IrisStratifiedFacade.literal2Atom(l, false);
-		System.out.println(atom);
-		assertTrue(atom.toString().contains(ns + "Double"));
-		
+		assertTrue(atom.toString().equals(expected));
 	}
 
 }
