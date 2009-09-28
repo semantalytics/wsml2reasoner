@@ -137,7 +137,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
     /**
      * This is the key value this facade will look for to get the external data
      * source. The value for this Map.Entry should be a map containing
-     * <code>ontologyUri(String)->Collection&lt;ExternalDatasource&gt;</code>.
+     * <code>ontologyUri(String)->Collection&lt;ExternalDataSource&gt;</code>.
      */
     public static final String EXTERNAL_DATA_SOURCE = "iris.external.source";
 
