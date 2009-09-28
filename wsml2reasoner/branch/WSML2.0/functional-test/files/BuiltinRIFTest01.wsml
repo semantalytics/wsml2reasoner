@@ -78,7 +78,7 @@ axiom testRIFBuiltin definedBy
 	   stringCompareTest(?x) :-  ?x[?attribute hasValue ?value] and wsml#stringCompare(0, "InstanceA", "InstanceA").
 	   stringEqualTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringEqual("InstanceA", xsd#string("InstanceA")).
 	   stringConcatTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringConcat(?y, xsd#string("con"), xsd#string("cat")) and wsml#stringEqual(?y, xsd#string("concat")).  
-	   stringJoinTest(?x) :-  ?x[?attribute hasValue ?value] and wsml#stringJoin(xsd#string("a"), xsd#string("b"), xsd#string("b")) = ?z. //??
+	   stringJoinTest(?x) :-  ?x[?attribute hasValue ?value] and wsml#stringJoin( ?z, xsd#string("a"), xsd#string("b"), xsd#string(" ")) and wsml#stringEqual(?z, xsd#string("a b ")).
 	   stringSubstringTest(?x) :-?x[?attribute hasValue ?value] and wsml#stringSubstring(?z, xsd#string("aaabbb"), xsd#integer(3)) and ?z = xsd#string("bbb"). 
 	   stringLengthTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringLength(?z, xsd#string("aaabbb")) and ?z = 6. 
 	   stringToUpperTest(?x) :- ?x[?attribute hasValue ?value] and wsml#stringToUpper(?z, xsd#string("this is a string")) and ?z = xsd#string("THIS IS A STRING").
