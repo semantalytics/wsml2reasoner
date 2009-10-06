@@ -459,13 +459,9 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
     }
 
     private Attribute findAttributeForError(Identifier id, Concept concept) {
-        Attribute attribute = null;
-        Set <Attribute> attributes = concept.findAttributes(id);
-        if (attributes.size() == 0){
+        Attribute attribute = concept.findAttribute(id);
+        if (attribute == null){
         	attribute = new AttributeImpl(id, concept);
-        }
-        else{
-        	attribute = attributes.iterator().next();
         }
         return attribute;
     }
