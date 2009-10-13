@@ -124,6 +124,15 @@ public abstract class AbstractQueryContainment1 extends TestCase implements LP {
 		};
 	}
 	
+	public void testSubclassQueryContainment() throws Exception {
+        String ontology = "namespace _\"http://queryContainment8#\" \n" +
+                "ontology o8 \n" +
+                "concept A \n" +
+                "concept B subConceptOf A\n";
+        
+        checkQueryContainment( ontology, "?x memberOf B", "?x memberOf A", true);
+	}
+	
 	private void checkQueryContainment( String ontologyString, String queryString1, String queryString2, boolean expected ) throws Exception
 	{
         Ontology ontology = OntologyHelper.parseOntology( ontologyString );
