@@ -44,6 +44,7 @@ import org.deri.iris.api.basics.IPredicate;
 import org.deri.iris.api.basics.IQuery;
 import org.deri.iris.api.basics.IRule;
 import org.deri.iris.api.basics.ITuple;
+import org.deri.iris.api.builtins.IBuiltinAtom;
 import org.deri.iris.api.terms.IConstructedTerm;
 import org.deri.iris.api.terms.IStringTerm;
 import org.deri.iris.api.terms.ITerm;
@@ -85,6 +86,7 @@ import org.deri.iris.builtins.IsIriBuiltin;
 import org.deri.iris.builtins.IsSqNameBuiltin;
 import org.deri.iris.builtins.IsStringBuiltin;
 import org.deri.iris.builtins.IsTimeBuiltin;
+import org.deri.iris.builtins.TrueBuiltin;
 import org.deri.iris.facts.IDataSource;
 import org.deri.iris.querycontainment.QueryContainment;
 import org.deri.iris.storage.IRelation;
@@ -179,6 +181,8 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
     final static String DAYTIMEDURATION_LESS_THAN = Constants.WSML_NAMESPACE + "dayTimeDurationLessThan";
     final static String YEARMONTHDURATION_GREATER_THAN = Constants.WSML_NAMESPACE + "yearMonthDurationGreaterThan";
     final static String YEARMONTHDURATION_LESS_THAN = Constants.WSML_NAMESPACE + "yearMonthDurationLessThan";
+
+	private static final boolean DO_THE_QC_HACK = true;
 
     
     
@@ -337,7 +341,27 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 
         // translating all the rules
         for (final Rule r : kb) {
-            if (r.isFact()) { // the rule is a fact
+			/*
+			 * FIXME Implement this in a better way. 
+			 * 
+			 * The following code is an evil quick hack to get query
+			 * containment working. More precisely, to get the functional test
+			 * AbstractQueryContainment1.testSubclassQueryContainment working.
+			 */
+			if (r.getHead().getPredicateUri().equals(
+					WSML2DatalogTransformer.PRED_SUB_CONCEPT_OF)
+					&& r.isFact() && DO_THE_QC_HACK) {
+        		final List<ILiteral> head = new ArrayList<ILiteral>(1);
+                final List<ILiteral> body = new ArrayList<ILiteral>(r.getBody().size());
+                // converting the head of the rule
+                head.add(literal2Literal(r.getHead(), true));
+                // converting the body of the rule
+            	IBuiltinAtom trueAtom = new TrueBuiltin(new ITerm[0]);
+            	ILiteral trueLiteral = BASIC.createLiteral(true, trueAtom);
+                body.add(trueLiteral);
+                rules.add(BASIC.createRule(head, body));
+                /* </hack> */
+        	} else if (r.isFact()) { // the rule is a fact
                 IAtom atom = literal2Atom(r.getHead(), true);
                 IPredicate pred = atom.getPredicate();
 
