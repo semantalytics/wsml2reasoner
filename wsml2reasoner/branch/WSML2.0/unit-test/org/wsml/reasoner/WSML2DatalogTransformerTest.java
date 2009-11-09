@@ -680,7 +680,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 			System.out.println(out.toString());
 			fail();
 		} catch (DatalogException e) {
-
+			// Why should this transformation throw a DatalogException? /Gigi
 		}
 
 	}
