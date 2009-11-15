@@ -5,7 +5,6 @@ import java.math.BigInteger;
 import java.util.TimeZone;
 
 import org.deri.iris.api.terms.IStringTerm;
-import org.deri.iris.api.terms.ITerm;
 import org.deri.iris.api.terms.concrete.IBase64Binary;
 import org.deri.iris.api.terms.concrete.IBooleanTerm;
 import org.deri.iris.api.terms.concrete.IDateTerm;
@@ -34,6 +33,8 @@ import org.omwg.ontology.Instance;
 import org.sti2.elly.api.basics.IAtomicConcept;
 import org.sti2.elly.api.basics.IAtomicDescription;
 import org.sti2.elly.api.terms.IIndividual;
+import org.sti2.elly.api.terms.ITerm;
+import org.sti2.elly.terms.ConcreteTerm;
 import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
@@ -127,13 +128,13 @@ public class Elly2WsmlOntologyEntityTranslator {
 	 * @throws IllegalArgumentException
 	 *             if the term-type couldn't be converted
 	 */
-	private Term _createTerm(ITerm t) {
-		if (t == null) {
+	private Term _createTerm(ITerm term) {
+		if (term == null) {
 			throw new IllegalArgumentException("The term must not be null");
 		}
 
-		if (t instanceof IIndividual) {
-			return container.getWsmoFactory().createIRI(((IIndividual) t).getValue());
+		if (term instanceof IIndividual) {
+			return container.getWsmoFactory().createIRI(((IIndividual) term).getValue());
 		}
 		return null;
 	}
@@ -149,91 +150,97 @@ public class Elly2WsmlOntologyEntityTranslator {
 	 * @throws IllegalArgumentException
 	 *             if the term-type couldn't be converted
 	 */
-	private DataValue _createDataValue(ITerm t) {
-		if (t == null) {
+	private DataValue _createDataValue(ITerm ellyTerm) {
+		if (ellyTerm == null) {
 			throw new IllegalArgumentException("The term must not be null");
 		}
+		
+		if (!(ellyTerm instanceof ConcreteTerm))
+			throw new IllegalArgumentException("The term must not be instanceof org.sti2.elly.terms.ConcreteTerm");
+		
+		org.deri.iris.api.terms.ITerm irisTerm = ((ConcreteTerm) ellyTerm).asIRISTerm();
+		
 		/*
 		 * subinterfaces of IStringTerm have to be handeled before the
 		 * IStringTerm block
 		 */
-		if (t instanceof IBase64Binary) {
-			return container.getXmlDataFactory().createBase64Binary(((IBase64Binary) t).getValue().getBytes());
-		} else if (t instanceof IHexBinary) {
-			return container.getXmlDataFactory().createHexBinary(((IHexBinary) t).getValue().getBytes());
+		if (irisTerm instanceof IBase64Binary) {
+			return container.getXmlDataFactory().createBase64Binary(((IBase64Binary) irisTerm).getValue().getBytes());
+		} else if (irisTerm instanceof IHexBinary) {
+			return container.getXmlDataFactory().createHexBinary(((IHexBinary) irisTerm).getValue().getBytes());
 //		} else if (t instanceof IIri) { // not of type DataValue
 //			return WSMO_FACTORY.createIRI(((IIri) t).getValue());
-		} else if (t instanceof IStringTerm) {
-			return container.getXmlDataFactory().createString(((IStringTerm) t).getValue());
-		} else if (t instanceof IBooleanTerm) {
-			return container.getXmlDataFactory().createBoolean(((IBooleanTerm) t).getValue());
-		} else if (t instanceof IDateTerm) {
-			final IDateTerm dt = (IDateTerm) t;
+		} else if (irisTerm instanceof IStringTerm) {
+			return container.getXmlDataFactory().createString(((IStringTerm) irisTerm).getValue());
+		} else if (irisTerm instanceof IBooleanTerm) {
+			return container.getXmlDataFactory().createBoolean(((IBooleanTerm) irisTerm).getValue());
+		} else if (irisTerm instanceof IDateTerm) {
+			final IDateTerm dt = (IDateTerm) irisTerm;
 			int[] tzData = getTZData(dt.getTimeZone());
 			return container.getXmlDataFactory().createDate(dt.getYear(), dt.getMonth(), dt.getDay(), tzData[0],
 					tzData[1]);
-		} else if (t instanceof IDateTime) {
-			final IDateTime dt = (IDateTime) t;
+		} else if (irisTerm instanceof IDateTime) {
+			final IDateTime dt = (IDateTime) irisTerm;
 			int[] tzData = getTZData(dt.getTimeZone());
 			return container.getXmlDataFactory().createDateTime(dt.getYear(), dt.getMonth(), dt.getDay(), dt.getHour(),
 					dt.getMinute(), (float) dt.getDecimalSecond(), tzData[0], tzData[1]);
-		} else if (t instanceof ITime) {
-			final ITime time = (ITime) t;
+		} else if (irisTerm instanceof ITime) {
+			final ITime time = (ITime) irisTerm;
 			int[] tzData = getTZData(time.getTimeZone());
 			return container.getXmlDataFactory().createTime(time.getHour(), time.getMinute(),
 					(float) time.getDecimalSecond(),
 					tzData[0], tzData[1]);
-		} else if (t instanceof IDecimalTerm) {
-			return container.getXmlDataFactory().createDecimal(new BigDecimal(((IDecimalTerm) t).toString()));
-		} else if (t instanceof IDoubleTerm) {
-			return container.getXmlDataFactory().createDouble(((IDoubleTerm) t).getValue());
+		} else if (irisTerm instanceof IDecimalTerm) {
+			return container.getXmlDataFactory().createDecimal(new BigDecimal(((IDecimalTerm) irisTerm).toString()));
+		} else if (irisTerm instanceof IDoubleTerm) {
+			return container.getXmlDataFactory().createDouble(((IDoubleTerm) irisTerm).getValue());
 		}
-		else if (t instanceof IDuration) {
-			final IDuration dt = (IDuration) t;
+		else if (irisTerm instanceof IDuration) {
+			final IDuration dt = (IDuration) irisTerm;
 			return container.getXmlDataFactory().createDuration(dt.getYear(), dt.getMonth(), dt.getDay(), dt.getHour(),
 					dt.getMinute(), dt.getDecimalSecond());
-		} else if (t instanceof IFloatTerm) {
-			return container.getXmlDataFactory().createFloat(((IFloatTerm) t).getValue());
-		} else if (t instanceof IGDay) {
-			return container.getXmlDataFactory().createGregorianDay(((IGDay) t).getDay());
-		} else if (t instanceof IGMonth) {
-			return container.getXmlDataFactory().createGregorianMonth(((IGMonth) t).getMonth());
-		} else if (t instanceof IGMonthDay) {
-			final IGMonthDay md = (IGMonthDay) t;
+		} else if (irisTerm instanceof IFloatTerm) {
+			return container.getXmlDataFactory().createFloat(((IFloatTerm) irisTerm).getValue());
+		} else if (irisTerm instanceof IGDay) {
+			return container.getXmlDataFactory().createGregorianDay(((IGDay) irisTerm).getDay());
+		} else if (irisTerm instanceof IGMonth) {
+			return container.getXmlDataFactory().createGregorianMonth(((IGMonth) irisTerm).getMonth());
+		} else if (irisTerm instanceof IGMonthDay) {
+			final IGMonthDay md = (IGMonthDay) irisTerm;
 			return container.getXmlDataFactory().createGregorianMonthDay(md.getMonth(), md.getDay());
-		} else if (t instanceof IGYear) {
-			return container.getXmlDataFactory().createGregorianYear(((IGYear) t).getYear());
-		} else if (t instanceof IGYearMonth) {
-			final IGYearMonth md = (IGYearMonth) t;
+		} else if (irisTerm instanceof IGYear) {
+			return container.getXmlDataFactory().createGregorianYear(((IGYear) irisTerm).getYear());
+		} else if (irisTerm instanceof IGYearMonth) {
+			final IGYearMonth md = (IGYearMonth) irisTerm;
 			return container.getXmlDataFactory().createGregorianYearMonth(md.getYear(), md.getMonth());
-		} else if (t instanceof IIntegerTerm) {
-			return container.getXmlDataFactory().createInteger(new BigInteger(t.getValue().toString()));
-		} else if (t instanceof IYearMonthDuration) {
-			return container.getXmlDataFactory().createYearMonthDuration(((IYearMonthDuration) t).getYear(),
-					((IYearMonthDuration) t).getMonth());
-		} else if (t instanceof IDayTimeDuration) {
-			return container.getXmlDataFactory().createDayTimeDuration(((IDayTimeDuration) t).getDay(),
-					((IDayTimeDuration) t).getHour(), ((IDayTimeDuration) t).getMinute(),
-					((IDayTimeDuration) t).getSecond());
-		} else if (t instanceof IXMLLiteral) {
+		} else if (irisTerm instanceof IIntegerTerm) {
+			return container.getXmlDataFactory().createInteger(new BigInteger(irisTerm.getValue().toString()));
+		} else if (irisTerm instanceof IYearMonthDuration) {
+			return container.getXmlDataFactory().createYearMonthDuration(((IYearMonthDuration) irisTerm).getYear(),
+					((IYearMonthDuration) irisTerm).getMonth());
+		} else if (irisTerm instanceof IDayTimeDuration) {
+			return container.getXmlDataFactory().createDayTimeDuration(((IDayTimeDuration) irisTerm).getDay(),
+					((IDayTimeDuration) irisTerm).getHour(), ((IDayTimeDuration) irisTerm).getMinute(),
+					((IDayTimeDuration) irisTerm).getSecond());
+		} else if (irisTerm instanceof IXMLLiteral) {
 			// checks if there is a language string
 			String lang;
-			if (((IXMLLiteral) t).getLang() == null) {
+			if (((IXMLLiteral) irisTerm).getLang() == null) {
 				lang = "";
 			} else {
-				lang = ((IXMLLiteral) t).getLang();
+				lang = ((IXMLLiteral) irisTerm).getLang();
 			}
-			return container.getXmlDataFactory().createXMLLiteral(((IXMLLiteral) t).getString(), lang);
-		} else if (t instanceof IText) {
+			return container.getXmlDataFactory().createXMLLiteral(((IXMLLiteral) irisTerm).getString(), lang);
+		} else if (irisTerm instanceof IText) {
 			// checks if there is a language string
 			String lang;
-			if (((IText) t).getLang() == null) {
+			if (((IText) irisTerm).getLang() == null) {
 				lang = "";
 			} else {
-				lang = ((IText) t).getLang();
+				lang = ((IText) irisTerm).getLang();
 			}
-			return container.getXmlDataFactory().createText(((IText) t).getString(), lang);
-		} else if (t instanceof ISqName) {
+			return container.getXmlDataFactory().createText(((IText) irisTerm).getString(), lang);
+		} else if (irisTerm instanceof ISqName) {
 			// couldn't find this type in wsmo4j
 		}
 		

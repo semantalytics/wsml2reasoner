@@ -21,7 +21,6 @@ package org.wsml.reasoner;
 import java.util.Map;
 import java.util.Set;
 
-import org.deri.iris.api.terms.ITerm;
 import org.sti2.elly.api.basics.IAtomicConcept;
 import org.sti2.elly.api.basics.IAtomicRole;
 import org.sti2.elly.api.basics.IConceptDescription;
@@ -30,6 +29,7 @@ import org.sti2.elly.api.basics.IRoleDescription;
 import org.sti2.elly.api.basics.IRule;
 import org.sti2.elly.api.basics.IRuleBase;
 import org.sti2.elly.api.terms.IIndividual;
+import org.sti2.elly.api.terms.ITerm;
 
 /**
  * This interface represents a facade to various WSML-DL v2.0 engines that allows to perform a reasoning request, e.g.

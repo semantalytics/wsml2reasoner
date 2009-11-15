@@ -587,7 +587,7 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 			assertTrue(terms.contains(container.getXmlDataFactory().createBoolean(true)));
 
 			terms = valueMap.get(container.getWsmoFactory().createIRI(defaultNS + "hasWeightInKG"));
-			assertTrue(terms.contains(container.getXmlDataFactory().createDecimal("60.3")));
+			assertTrue(terms.contains(container.getXmlDataFactory().createFloat("60.3")));
 
 			terms = valueMap.get(container.getWsmoFactory().createIRI(defaultNS + "dateOfDeath"));
 			assertTrue(terms.contains(container.getXmlDataFactory().createDate(2049, 9, 12, 0, 0)));
@@ -650,7 +650,7 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 					+ attributeID + ":");
 			System.out.println(valueSet);
 
-			assertTrue(valueSet.contains(container.getXmlDataFactory().createDecimal("60.3")));
+			assertTrue(valueSet.contains(container.getXmlDataFactory().createFloat("60.3")));
 			assertEquals(1, valueSet.size());
 		}
 
@@ -822,12 +822,16 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "hasCitizenship")));
 			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "hasAncestor")));
 			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "hasRelative")));
-			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "hasMother")));
-			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "hasMum"))); // since it is sub-attribute to hasMother
 			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "hasParent")));
 			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "hasBirthplace")));
 			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "isMarriedTo")));
 			assertFalse(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "hasBirthdate")));
+			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "hasMother")));
+			
+			// This test fails because the calculation would take too long (45 seconds on 2.4 GHz quadcore (utilizing 1 core ;) ))
+			// change in ELPBasedWSMLReasoner.synchronize to fix
+			// if enabled, the test passes
+			assertTrue(valueMap.keySet().contains(container.getWsmoFactory().createIRI(defaultNS + "hasMum"))); // since it is sub-attribute to hasMother
 			assertEquals(10, valueMap.keySet().size());
 
 			Set<Term> terms = valueMap.get(container.getWsmoFactory().createIRI(defaultNS + "hasName"));

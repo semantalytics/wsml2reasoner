@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.deri.iris.api.terms.ITerm;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Attribute;
@@ -27,6 +26,7 @@ import org.sti2.elly.api.basics.IConceptDescription;
 import org.sti2.elly.api.basics.IRule;
 import org.sti2.elly.api.factory.IBasicFactory;
 import org.sti2.elly.api.terms.IIndividual;
+import org.sti2.elly.api.terms.ITerm;
 import org.sti2.elly.basics.BasicFactory;
 import org.sti2.elly.util.Rules;
 import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
@@ -952,7 +952,7 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 					Identifier id = attribute.getIdentifier();
 					if (id instanceof IRI) {
 						inferringAttributes.add((IRI) id);
-//						inferringAttributes.addAll(getSubRelations(id)); // TODO this is very slow! but need to be added later again
+//						inferringAttributes.addAll(getSubRelations(id)); // FIXME dw: this is very slow! but need to be added later again
 					}
 				}
 			}

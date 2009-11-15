@@ -25,7 +25,6 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.omwg.ontology.Concept;
-import org.omwg.ontology.DataType;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Type;
@@ -203,12 +202,12 @@ public class EllyReasonerTest extends TestCase {
 		 * **********/
 
 		IRI mother = container.getWsmoFactory().createIRI("http://www.example.org/example/hasMother");
-		Set<DataType> ranges = reasoner.getRangesOfConstraintAttribute(mother);
+		Set<Type> ranges = reasoner.getRangesOfInferingAttribute(mother);
 
-		System.out.println("Constraining Ranges of hasMother:");
+		System.out.println("Inferring Ranges of hasMother:");
 		System.out.println(ranges);
 		
-		assertEquals(4, ranges.size());
+		assertEquals(3, ranges.size());
 
 		Set<IRI> superAtts = reasoner.getSuperRelations(mother);
 		IRI parent = container.getWsmoFactory().createIRI("http://www.example.org/example/hasParent");

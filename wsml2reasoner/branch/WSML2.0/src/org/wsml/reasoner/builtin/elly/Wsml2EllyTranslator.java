@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Stack;
 
-import org.deri.iris.api.basics.ITuple;
-import org.deri.iris.api.terms.ITerm;
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.AttributeConstraintMolecule;
 import org.omwg.logicalexpression.AttributeInferenceMolecule;
@@ -39,20 +37,22 @@ import org.omwg.logicalexpression.terms.TermVisitor;
 import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.Variable;
-import org.sti2.elly.api.DataType;
-import org.sti2.elly.api.Vocabulary;
+import org.sti2.elly.DataType;
+import org.sti2.elly.Vocabulary;
 import org.sti2.elly.api.basics.IAtom;
 import org.sti2.elly.api.basics.IAtomicConcept;
 import org.sti2.elly.api.basics.IAtomicRole;
-import org.sti2.elly.api.basics.IBuiltinAtom;
 import org.sti2.elly.api.basics.IConceptDescription;
 import org.sti2.elly.api.basics.IDescription;
 import org.sti2.elly.api.basics.IRoleDescription;
 import org.sti2.elly.api.basics.IRule;
+import org.sti2.elly.api.basics.ITuple;
 import org.sti2.elly.api.factory.IBasicFactory;
 import org.sti2.elly.api.factory.IBuiltinsFactory;
 import org.sti2.elly.api.factory.ITermFactory;
+import org.sti2.elly.api.terms.IConcreteTerm;
 import org.sti2.elly.api.terms.IIndividual;
+import org.sti2.elly.api.terms.ITerm;
 import org.sti2.elly.api.terms.IVariable;
 import org.sti2.elly.basics.BasicFactory;
 import org.sti2.elly.basics.BuiltinsFactory;
@@ -144,7 +144,7 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		if (expectedType != Type.TERM)
 			throw new RuntimeException("Unable to create a " + expectedType + " from Term " + t);
 
-		ITerm dataValue = Wsml2EllyDataValueTranslator.convertWsmo4jDataValueToIrisTerm(t);
+		IConcreteTerm dataValue = Wsml2EllyDataValueTranslator.convertWsmo4jDataValueToEllyTerm(t);
 		pushTerm(dataValue);
 	}
 
@@ -153,7 +153,7 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		if (expectedType != Type.TERM)
 			throw new RuntimeException("Unable to create a " + expectedType + " from Term " + t);
 
-		ITerm dataValue = Wsml2EllyDataValueTranslator.convertWsmo4jDataValueToIrisTerm(t);
+		IConcreteTerm dataValue = Wsml2EllyDataValueTranslator.convertWsmo4jDataValueToEllyTerm(t);
 		pushTerm(dataValue);
 	}
 
@@ -245,7 +245,7 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 	public void visitAtom(Atom expr) {
 		// must be an Built-in Atom
 		if (expr instanceof BuiltInAtom) {
-			IBuiltinAtom builtin = translateBuiltIn((BuiltInAtom) expr);
+			IAtom builtin = translateBuiltIn((BuiltInAtom) expr);
 			
 			if (emptyStack()) {
 				rules.add(BASIC.createFact(builtin));
@@ -746,7 +746,7 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 	 * Built Ins
 	 * **************/
 	
-	private IBuiltinAtom translateBuiltIn(BuiltInAtom builtInAtom) {
+	private IAtom translateBuiltIn(BuiltInAtom builtInAtom) {
 		BuiltIn builtIn = BuiltIn.from(builtInAtom.getIdentifier().toString());
 		expectedType = Type.TERM;
 		
@@ -754,6 +754,12 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		for (Term term : builtInAtom.listParameters()) {
 			term.accept(this);
 			terms.add(popTerm());
+		}
+		
+		// handle individual equality
+		// makes no difference if it is equality of concrete terms
+		if (builtIn.equals(BuiltIn.EQUAL)) {
+			return BASIC.createAtom(Vocabulary.equal, terms.get(0), terms.get(1));
 		}
 		
 		// for some Built-ins the list must be sorted in a different order (first gets last)

@@ -91,7 +91,7 @@ ontology _"http://www.example.org/ontologies/example"
             hasName hasValue "Maria Smith"
             hasBirthdate hasValue xsd#date(1949,09,12)
             isAlive hasValue xsd#boolean("true")
-            hasWeightInKG hasValue 60.3
+            hasWeightInKG hasValue xsd#float("60.3")
             dateOfDeath hasValue xsd#date(2049,09,12)
             hasChild hasValue { Paul, Susan }
 
@@ -116,7 +116,7 @@ ontology _"http://www.example.org/ontologies/example"
       instance George memberOf Man
             hasName hasValue "George Smith"
             /*hasAncestor hasValue Mary - can be inferred from the rest of this example */
-            hasWeightInKG hasValue 3.52
+            hasWeightInKG hasValue xsd#float("3.52")
             hasBirthdate hasValue xsd#date(1977,10,21)
             
 ontology _"http://www.example.org/ontologies/example2"
@@ -189,6 +189,6 @@ ontology _"http://www.example.org/ontologies/example2"
       instance George2 memberOf Man
             hasName hasValue "George Smith"
             /*hasAncestor hasValue Mary - can be inferred from the rest of this example */
-            hasWeightInKG hasValue 3.52
+            hasWeightInKG hasValue xsd#float("3.52")
             
             

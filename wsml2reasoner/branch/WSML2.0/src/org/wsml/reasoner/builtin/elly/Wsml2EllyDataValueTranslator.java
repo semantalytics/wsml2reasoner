@@ -3,11 +3,12 @@ package org.wsml.reasoner.builtin.elly;
 import static org.deri.iris.factory.Factory.CONCRETE;
 import static org.deri.iris.factory.Factory.TERM;
 
-import org.deri.iris.api.terms.ITerm;
+import org.deri.iris.api.terms.IConcreteTerm;
 import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.DataValue;
 import org.omwg.ontology.WsmlDataType;
 import org.omwg.ontology.XmlSchemaDataType;
+import org.sti2.elly.terms.ConcreteTerm;
 
 /**
  * Helper Class to convert data values to terms, copied from Wsml2Datalog translation.
@@ -15,6 +16,10 @@ import org.omwg.ontology.XmlSchemaDataType;
  */
 public class Wsml2EllyDataValueTranslator {
 
+	static org.sti2.elly.api.terms.IConcreteTerm convertWsmo4jDataValueToEllyTerm(final DataValue v) {
+		return ConcreteTerm.fromIRISConcreteTerm(convertWsmo4jDataValueToIrisTerm(v));
+	}
+	
 	/**
 	 * Converts a wsmo4j DataValue to an iris ITerm.
 	 * 
@@ -22,7 +27,7 @@ public class Wsml2EllyDataValueTranslator {
 	 *            the wsmo4j value to convert
 	 * @return the corresponding ITerm implementation
 	 */
-	static ITerm convertWsmo4jDataValueToIrisTerm(final DataValue v) {
+	static IConcreteTerm convertWsmo4jDataValueToIrisTerm(final DataValue v) {
 		if (v == null) {
 			throw new NullPointerException("The data value must not be null");
 		}
