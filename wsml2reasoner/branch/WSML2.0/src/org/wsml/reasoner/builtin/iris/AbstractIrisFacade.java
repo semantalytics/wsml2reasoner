@@ -69,7 +69,7 @@ import org.deri.iris.api.terms.concrete.IHexBinary;
 import org.deri.iris.api.terms.concrete.IIntegerTerm;
 import org.deri.iris.api.terms.concrete.IIri;
 import org.deri.iris.api.terms.concrete.ISqName;
-import org.deri.iris.api.terms.concrete.IText;
+import org.deri.iris.api.terms.concrete.IPlainLiteral;
 import org.deri.iris.api.terms.concrete.ITime;
 import org.deri.iris.api.terms.concrete.IXMLLiteral;
 import org.deri.iris.api.terms.concrete.IYearMonthDuration;
@@ -90,7 +90,7 @@ import org.deri.iris.builtins.datatype.IsGYearMonthBuiltin;
 import org.deri.iris.builtins.datatype.IsHexBinaryBuiltin;
 import org.deri.iris.builtins.datatype.IsIntegerBuiltin;
 import org.deri.iris.builtins.datatype.IsStringBuiltin;
-import org.deri.iris.builtins.datatype.IsTextBuiltin;
+import org.deri.iris.builtins.datatype.IsPlainLiteralBuiltin;
 import org.deri.iris.builtins.datatype.IsTimeBuiltin;
 import org.deri.iris.builtins.datatype.IsXMLLiteralBuiltin;
 import org.deri.iris.builtins.datatype.IsYearMonthDurationBuiltin;
@@ -820,7 +820,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         				return new IsDayTimeDurationBuiltin( t0 );
         			// RDF 
         			else if( type.equals( RDFDataType.RDF_TEXT ) )  {
-        				return new IsTextBuiltin( t0 );
+        				return new IsPlainLiteralBuiltin( t0 );
         			}
         			else if( type.equals( RDFDataType.RDF_XMLLITERAL ) )  
         				return new IsXMLLiteralBuiltin( t0 );
@@ -970,7 +970,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         // RDF Datatypes
         else if (t.equals(RDFDataType.RDF_TEXT)) {
         	final ComplexDataValue cv = (ComplexDataValue) v;
-            return CONCRETE.createText(getStringFromValue(cv, 0), getStringFromValue(cv, 1));
+            return CONCRETE.createPlainLiteral(getStringFromValue(cv, 0), getStringFromValue(cv, 1));
         }
         else if (t.equals(RDFDataType.RDF_XMLLITERAL)) {
         	final ComplexDataValue cv = (ComplexDataValue) v;
@@ -1150,15 +1150,15 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 			return DATA_FACTORY.createXMLLiteral(((IXMLLiteral) t).getString(),
 					lang);
         }
-        else if (t instanceof IText) {
+        else if (t instanceof IPlainLiteral) {
         	// checks if there is a language string
         	String lang;
-			if (((IText) t).getLang() == null) {
+			if (((IPlainLiteral) t).getLang() == null) {
 				lang = "";
 			} else {
-				lang = ((IText) t).getLang();
+				lang = ((IPlainLiteral) t).getLang();
 			}
-        	return DATA_FACTORY.createText(((IText) t).getString(),lang);
+        	return DATA_FACTORY.createText(((IPlainLiteral) t).getString(),lang);
         }
         else if (t instanceof ISqName) {
             // couldn't find this type in wsmo4j

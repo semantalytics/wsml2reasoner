@@ -22,7 +22,7 @@ import org.deri.iris.api.terms.concrete.IGYearMonth;
 import org.deri.iris.api.terms.concrete.IHexBinary;
 import org.deri.iris.api.terms.concrete.IIntegerTerm;
 import org.deri.iris.api.terms.concrete.ISqName;
-import org.deri.iris.api.terms.concrete.IText;
+import org.deri.iris.api.terms.concrete.IPlainLiteral;
 import org.deri.iris.api.terms.concrete.ITime;
 import org.deri.iris.api.terms.concrete.IXMLLiteral;
 import org.deri.iris.api.terms.concrete.IYearMonthDuration;
@@ -231,15 +231,15 @@ public class Elly2WsmlOntologyEntityTranslator {
 				lang = ((IXMLLiteral) irisTerm).getLang();
 			}
 			return container.getXmlDataFactory().createXMLLiteral(((IXMLLiteral) irisTerm).getString(), lang);
-		} else if (irisTerm instanceof IText) {
+		} else if (irisTerm instanceof IPlainLiteral) {
 			// checks if there is a language string
 			String lang;
-			if (((IText) irisTerm).getLang() == null) {
+			if (((IPlainLiteral) irisTerm).getLang() == null) {
 				lang = "";
 			} else {
-				lang = ((IText) irisTerm).getLang();
+				lang = ((IPlainLiteral) irisTerm).getLang();
 			}
-			return container.getXmlDataFactory().createText(((IText) irisTerm).getString(), lang);
+			return container.getXmlDataFactory().createText(((IPlainLiteral) irisTerm).getString(), lang);
 		} else if (irisTerm instanceof ISqName) {
 			// couldn't find this type in wsmo4j
 		}
