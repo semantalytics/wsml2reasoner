@@ -22,7 +22,6 @@
 package org.wsml.reasoner.ext.sql;
 
 import java.math.BigDecimal;
-import java.sql.Types;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,18 +36,18 @@ import java.util.Map;
  */
 public class DefaultTypeMapping {
     public DefaultTypeMapping() {
-        typeMap.put(String.class, Types.VARCHAR);
-        typeMap.put(Integer.class, Types.INTEGER);
-        typeMap.put(Long.class, Types.BIGINT);
-        typeMap.put(BigDecimal.class, Types.DECIMAL);
-        typeMap.put(Boolean.class, Types.BIT);
-        typeMap.put(Float.class, Types.FLOAT);
-        typeMap.put(Double.class, Types.DOUBLE);
+        typeMap.put(String.class, java.sql.Types.VARCHAR);
+        typeMap.put(Integer.class, java.sql.Types.INTEGER);
+        typeMap.put(Long.class, java.sql.Types.BIGINT);
+        typeMap.put(BigDecimal.class, java.sql.Types.DECIMAL);
+        typeMap.put(Boolean.class, java.sql.Types.BIT);
+        typeMap.put(Float.class, java.sql.Types.FLOAT);
+        typeMap.put(Double.class, java.sql.Types.DOUBLE);
         
-        typeMap.put(java.sql.Date.class, Types.DATE);
-        typeMap.put(java.sql.Timestamp.class, Types.TIMESTAMP);
-        typeMap.put(java.sql.Time.class, Types.TIME);
-        typeMap.put(Calendar.class, Types.TIMESTAMP);
+        typeMap.put(java.sql.Date.class, java.sql.Types.DATE);
+        typeMap.put(java.sql.Timestamp.class, java.sql.Types.TIMESTAMP);
+        typeMap.put(java.sql.Time.class, java.sql.Types.TIME);
+        typeMap.put(Calendar.class, java.sql.Types.TIMESTAMP);
 
         // for convenience all the common sql types are mapped here
         syntaxMap.put(java.sql.Types.BIT, "BIT");
@@ -110,7 +109,7 @@ public class DefaultTypeMapping {
         Integer typeNumber = typeMap.get(javaType);
 
         if (typeNumber == null) {
-            throw new IllegalArgumentException("The mappoing of " + javaType.getName() + " is not supported.");
+            throw new IllegalArgumentException("The mapping of " + javaType.getName() + " is not supported.");
         }
 
         return typeNumber;

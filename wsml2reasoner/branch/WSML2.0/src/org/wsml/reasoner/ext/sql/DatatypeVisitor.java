@@ -49,28 +49,30 @@ import org.wsmo.common.UnnumberedAnonymousID;
  * </p>
  * 
  * <pre>
- *  _string         _string(&quot;any-character*&quot;)                           java.lang.String    
- *  _decimal        _decimal(&quot;'-'?numeric+.numeric+&quot;)                   java.math.BigDecimal    
- *  _integer        _integer(&quot;'-'?numeric+&quot;)                            java.math.BigInteger    
- *  _float          _float(&quot;see XML Schema document&quot;)                   java.lang.Float 
- *  _double         _double(&quot;see XML Schema document&quot;)                  java.lang.Double    
- *  _iri            _iri(&quot;iri-according-to-rfc3987&quot;)                    java.lang.String    
- *  _sqname         _sqname(&quot;iri-rfc3987&quot;, &quot;localname&quot;)                 java.lang.String[]  
- *  _boolean        _boolean(&quot;true-or-false&quot;)                           java.lang.Boolean   
- *  _duration       _duration(year, month, day, hour, minute, second)   java.lang.String    
- *  _dateTime       _dateTime(year, month, day, hour, minute, second, timezone-hour, timezone-minute)
- *                  _dateTime(year, month, day, hour, minute, second)   java.util.Calendar  
- *  _time           _time(hour, minute, second, timezone-hour, timezone-minute) 
- *                  _time(hour, minute, second)                         java.util.Calendar  
- *  _date           _date(year, month, day, timezone-hour, timezone-minute) 
- *                  _date(year, month, day)                             java.util.Calendar
- *  _gyearmonth     _gyearmonth(year, month)                            java.lang.Integer[] 
- *  _gyear          _gyear(year)    java.lang.Integer   
- *  _gmonthday      _gmonthday(month, day)                              java.lang.Integer[] 
- *  _gday           _gday(day)                                          java.lang.Integer   
- *  _gmonth         _gmonth(month)                                      java.lang.Integer   
- *  _hexbinary      _hexbinary(hexadecimal-encoding)                    java.lang.String    
- *  _base64binary   _base64binary(hexadecimal-encoding)                 java.lang.String    
+ *  _string          	_string(&quot;any-character*&quot;)                           java.lang.String    
+ *  _decimal        	_decimal(&quot;'-'?numeric+.numeric+&quot;)                   java.math.BigDecimal    
+ *  _integer       	 	_integer(&quot;'-'?numeric+&quot;)                            java.math.BigInteger    
+ *  _float          	_float(&quot;see XML Schema document&quot;)                   java.lang.Float 
+ *  _double         	_double(&quot;see XML Schema document&quot;)                  java.lang.Double    
+ *  ( _iri            	_iri(&quot;iri-according-to-rfc3987&quot;)                    java.lang.String   ) // 
+ *  ( _sqname         	_sqname(&quot;iri-rfc3987&quot;, &quot;localname&quot;)       java.lang.String[] ) //
+ *  _boolean        	_boolean(&quot;true-or-false&quot;)                           java.lang.Boolean   
+ *  _duration      	 	_duration(year, month, day, hour, minute, second)   		  java.lang.String    
+ *  _dateTime       	_dateTime(year, month, day, hour, minute, second,timezone-hour, timezone-minute)
+ *                  	_dateTime(year, month, day, hour, minute, second)   		  java.util.Calendar  
+ *  _time           	_time(hour, minute, second, timezone-hour, timezone-minute) 
+ *                  	_time(hour, minute, second)                         		  java.util.Calendar  
+ *  _date           	_date(year, month, day, timezone-hour, timezone-minute) 
+ *                  	_date(year, month, day)                             		  java.util.Calendar
+ *  _gyearmonth     	_gyearmonth(year, month)                            		  java.lang.Integer[] 
+ *  _gyear          	_gyear(year)    											  java.lang.Integer   
+ *  _gmonthday      	_gmonthday(month, day)                              		  java.lang.Integer[] 
+ *  _gday           	_gday(day)                                          		  java.lang.Integer   
+ *  _gmonth         	_gmonth(month)                                     			  java.lang.Integer   
+ *  _hexbinary      	_hexbinary(hexadecimal-encoding)                  			  java.lang.String    
+ *  _base64binary   	_base64binary(hexadecimal-encoding)              		      java.lang.String    
+ *  _yearmonthduration  _yearmonthduration( )                 					   	  java.lang.String    
+ *  _daytimeduration	_daytimeduratinon											  java.lang.String    
  * </pre>
  * 
  * <p>
@@ -102,13 +104,15 @@ public class DatatypeVisitor implements TermVisitor {
 
     private Map<String, Class< ? >> simpleDataTypes = new HashMap<String, Class< ? >>();
 
-    private Map<String, Class< ? >> complextDataTypes = new HashMap<String, Class< ? >>();
+    private Map<String, Class< ? >> complexDataTypes = new HashMap<String, Class< ? >>();
 
     /***************************************************************************
      * Constructs a new VisitorDatatype and sets up type mappings.
      */
     public DatatypeVisitor() {
-    	// TODO mp: add support for all datatypes
+    	// simpleDataTypes:
+    	// also integer is mapped to BigDecimal
+    	// see: http://hsqldb.org/doc/guide/ch09.html#datatypes-section
         simpleDataTypes.put(WsmlDataType.WSML_STRING, String.class);
         simpleDataTypes.put(WsmlDataType.WSML_DECIMAL, BigDecimal.class);
         simpleDataTypes.put(WsmlDataType.WSML_INTEGER, BigDecimal.class);
@@ -117,49 +121,47 @@ public class DatatypeVisitor implements TermVisitor {
         simpleDataTypes.put(XmlSchemaDataType.XSD_DECIMAL, BigDecimal.class);
         simpleDataTypes.put(XmlSchemaDataType.XSD_INTEGER, BigDecimal.class);
         
-        complextDataTypes.put(WsmlDataType.WSML_FLOAT, BigDecimal.class);
-        complextDataTypes.put(WsmlDataType.WSML_DOUBLE, BigDecimal.class);
+        // complexDataTypes:
+        complexDataTypes.put(WsmlDataType.WSML_FLOAT, BigDecimal.class);
+        complexDataTypes.put(WsmlDataType.WSML_DOUBLE, BigDecimal.class);
+        complexDataTypes.put(WsmlDataType.WSML_BOOLEAN, Boolean.class);
+        complexDataTypes.put(WsmlDataType.WSML_DURATION, String.class);
+
+        complexDataTypes.put(WsmlDataType.WSML_DATETIME, java.sql.Timestamp.class);
+        complexDataTypes.put(WsmlDataType.WSML_TIME, java.sql.Timestamp.class);
+        complexDataTypes.put(WsmlDataType.WSML_DATE, java.sql.Timestamp.class);
+
+        complexDataTypes.put(WsmlDataType.WSML_GYEARMONTH, java.sql.Timestamp.class);  // or calendar 
+        complexDataTypes.put(WsmlDataType.WSML_GMONTHDAY, java.sql.Timestamp.class);
+        complexDataTypes.put(WsmlDataType.WSML_GYEAR, java.sql.Timestamp.class);
+        complexDataTypes.put(WsmlDataType.WSML_GDAY, java.sql.Timestamp.class);
+        complexDataTypes.put(WsmlDataType.WSML_GMONTH, java.sql.Timestamp.class);
+        complexDataTypes.put(WsmlDataType.WSML_HEXBINARY, String.class);
+        complexDataTypes.put(WsmlDataType.WSML_BASE64BINARY, String.class);
+      
+        complexDataTypes.put(XmlSchemaDataType.XSD_FLOAT, BigDecimal.class);
+        complexDataTypes.put(XmlSchemaDataType.XSD_DOUBLE, BigDecimal.class);
+        complexDataTypes.put(XmlSchemaDataType.XSD_BOOLEAN, Boolean.class);
+        complexDataTypes.put(XmlSchemaDataType.XSD_DURATION, String.class);
+//        complexDataTypes.put(XmlSchemaDataType.XSD_DURATION, BigDecimal.class); // mapped in seconds
+
+        complexDataTypes.put(XmlSchemaDataType.XSD_DATETIME, java.sql.Timestamp.class);
+        complexDataTypes.put(XmlSchemaDataType.XSD_TIME, java.sql.Timestamp.class);
+        complexDataTypes.put(XmlSchemaDataType.XSD_DATE, java.sql.Timestamp.class);
+
+        complexDataTypes.put(XmlSchemaDataType.XSD_GYEARMONTH, java.sql.Timestamp.class);
+        complexDataTypes.put(XmlSchemaDataType.XSD_GMONTHDAY, java.sql.Timestamp.class);
+        complexDataTypes.put(XmlSchemaDataType.XSD_GYEAR, java.sql.Timestamp.class);
+        complexDataTypes.put(XmlSchemaDataType.XSD_GDAY, java.sql.Timestamp.class);
+        complexDataTypes.put(XmlSchemaDataType.XSD_GMONTH, java.sql.Timestamp.class);
+        complexDataTypes.put(XmlSchemaDataType.XSD_HEXBINARY, String.class);
+        complexDataTypes.put(XmlSchemaDataType.XSD_BASE64BINARY, String.class);
         
-        complextDataTypes.put(WsmlDataType.WSML_BOOLEAN, Boolean.class);
-
-        complextDataTypes.put(WsmlDataType.WSML_DURATION, String.class);
-
-        complextDataTypes.put(WsmlDataType.WSML_DATETIME, java.sql.Timestamp.class);
-        complextDataTypes.put(WsmlDataType.WSML_TIME, java.sql.Timestamp.class);
-        complextDataTypes.put(WsmlDataType.WSML_DATE, java.sql.Timestamp.class);
-
-        complextDataTypes.put(WsmlDataType.WSML_GYEARMONTH, java.sql.Timestamp.class);
-        complextDataTypes.put(WsmlDataType.WSML_GMONTHDAY, java.sql.Timestamp.class);
-        complextDataTypes.put(WsmlDataType.WSML_GYEAR, java.sql.Timestamp.class);
-        complextDataTypes.put(WsmlDataType.WSML_GDAY, java.sql.Timestamp.class);
-        complextDataTypes.put(WsmlDataType.WSML_GMONTH, java.sql.Timestamp.class);
+//        complexDataTypes.put(XmlSchemaDataType.XSD_YEARMONTHDURATION, BigDecimal.class); // mapped in seconds
+//        complexDataTypes.put(XmlSchemaDataType.XSD_DAYTIMEDURATION, BigDecimal.class); // mapped in seconds
+        complexDataTypes.put(XmlSchemaDataType.XSD_YEARMONTHDURATION, String.class);
+        complexDataTypes.put(XmlSchemaDataType.XSD_DAYTIMEDURATION, String.class); 
         
-        complextDataTypes.put(XmlSchemaDataType.XSD_FLOAT, BigDecimal.class);
-        complextDataTypes.put(XmlSchemaDataType.XSD_DOUBLE, BigDecimal.class);
-        
-        complextDataTypes.put(XmlSchemaDataType.XSD_BOOLEAN, Boolean.class);
-
-        complextDataTypes.put(XmlSchemaDataType.XSD_DURATION, String.class);
-
-        complextDataTypes.put(XmlSchemaDataType.XSD_DATETIME, java.sql.Timestamp.class);
-        complextDataTypes.put(XmlSchemaDataType.XSD_TIME, java.sql.Timestamp.class);
-        complextDataTypes.put(XmlSchemaDataType.XSD_DATE, java.sql.Timestamp.class);
-
-        complextDataTypes.put(XmlSchemaDataType.XSD_GYEARMONTH, java.sql.Timestamp.class);
-        complextDataTypes.put(XmlSchemaDataType.XSD_GMONTHDAY, java.sql.Timestamp.class);
-        complextDataTypes.put(XmlSchemaDataType.XSD_GYEAR, java.sql.Timestamp.class);
-        complextDataTypes.put(XmlSchemaDataType.XSD_GDAY, java.sql.Timestamp.class);
-        complextDataTypes.put(XmlSchemaDataType.XSD_GMONTH, java.sql.Timestamp.class);
-        
-//        complextDataTypes.put(WsmlDataType.WSML_DATETIME, Calendar.class);
-//        complextDataTypes.put(WsmlDataType.WSML_TIME, Calendar.class);
-//        complextDataTypes.put(WsmlDataType.WSML_DATE, Calendar.class);
-//
-//        complextDataTypes.put(WsmlDataType.WSML_GYEARMONTH, Calendar.class);
-//        complextDataTypes.put(WsmlDataType.WSML_GMONTHDAY, Calendar.class);
-//        complextDataTypes.put(WsmlDataType.WSML_GYEAR, Calendar.class);
-//        complextDataTypes.put(WsmlDataType.WSML_GDAY, Calendar.class);
-//        complextDataTypes.put(WsmlDataType.WSML_GMONTH, Calendar.class);
     }
 
     /**
@@ -179,7 +181,7 @@ public class DatatypeVisitor implements TermVisitor {
         assert t != null;
 
         String complextType = t.getType().getIdentifier().toString();
-        Class< ? > javaTypeForWSMLType = complextDataTypes.get(complextType);
+        Class< ? > javaTypeForWSMLType = complexDataTypes.get(complextType);
 
         if (javaTypeForWSMLType == null) {
             throw new IllegalArgumentException("Datatype " + complextType + " is not supported at the moment.");
@@ -210,10 +212,8 @@ public class DatatypeVisitor implements TermVisitor {
 				|| complextType.equals(XmlSchemaDataType.XSD_TIME)) {
 			// these are implemented as Number array.
 	 		Number [] num = (Number[]) t.getValue();
-	 		dateTime2Calendar(complextType, num);
-	 		
-	 		// TODO mp: add number[] to java.sql.Timestamp();
-			value = new java.sql.Timestamp( (long) 1 );
+	 		Calendar cal = dateTime2Calendar(complextType, num);
+			value = new java.sql.Timestamp( cal.getTimeInMillis() );
 		}
         else if (complextType.equals(WsmlDataType.WSML_FLOAT) 
         	|| complextType.equals(XmlSchemaDataType.XSD_FLOAT)) {
@@ -224,6 +224,16 @@ public class DatatypeVisitor implements TermVisitor {
         	|| complextType.equals(XmlSchemaDataType.XSD_DOUBLE)) {
             Double d = (Double) t.getValue();
             value = new BigDecimal( Double.toString( d ));
+        }
+        else if (complextType.equals(WsmlDataType.WSML_DURATION)
+        		|| complextType.equals(XmlSchemaDataType.XSD_DURATION) ){
+        	value = new String(t.getValue().toString());
+        	
+        }
+        else if (complextType.equals(XmlSchemaDataType.XSD_YEARMONTHDURATION)
+        		|| complextType.equals(XmlSchemaDataType.XSD_DAYTIMEDURATION) ){
+        	value = new String(t.getValue().toString());
+        	
         }
         else {
             // otherwise the type matches
@@ -331,7 +341,6 @@ public class DatatypeVisitor implements TermVisitor {
     
     
     private Calendar dateTime2Calendar(String datetype, Number [] num) {
-    	// TODO mp: convertation to calendar.
     	Calendar cal = Calendar.getInstance();
     	if (datetype.equals(XmlSchemaDataType.XSD_DATE) || datetype.equals(WsmlDataType.WSML_DATE)){
     		cal.set(Calendar.YEAR, new Integer(num[0].toString()));
