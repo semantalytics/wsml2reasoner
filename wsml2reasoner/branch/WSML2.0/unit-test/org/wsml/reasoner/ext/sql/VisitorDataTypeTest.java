@@ -22,16 +22,16 @@ public class VisitorDataTypeTest extends TestCase {
 		factory.reset();
 	}
 	
-	public void testVisitIRI() {
-		// TODO gigi: since _iri and _sqname have been removed, this test needs to be rewritten
-		// Write a test which checks if IRIs get parsed correctly according to D16.1v1.0 WSML Language Reference
+//	public void testVisitIRI() {
+//		// TODO gigi: since _iri and _sqname have been removed, this test needs to be rewritten
+//		// Write a test which checks if IRIs get parsed correctly according to D16.1v1.0 WSML Language Reference
 //		IRI testIRI1 = new IRIImpl("http://www.wsmo.org/2004/wsml#someID");
 //		testIRI1.accept(visitor);
 //		Entry res = visitor.getMapping();
 //		assertEquals(true, res.getClassMapping().equals(String.class));
 //		assertEquals(true, res.getClassMapping().equals(res.getValue().getClass()));
 //		assertEquals(true, testIRI1.toString().equals(res.getValue()) );				
-	}
+//	}
 
 	public void testVisitComplexDataValue() {		
 		ComplexDataValue wsmlFloat = df.createFloat("34.45");
@@ -56,14 +56,15 @@ public class VisitorDataTypeTest extends TestCase {
 		assertEquals(new Boolean("true"), m.getValue());
 		
 //		FIXME duration support
-//		ComplexDataValue wsmlDuration = df.createWsmlDuration(1982, 12, 13, 10, 34, 31);
-//		wsmlDuration.accept(visitor);
-//		m = visitor.getMapping();
-//		assertTrue(m.getValue() instanceof String);
-//		assertEquals(String.class, m.getClassMapping());
+		ComplexDataValue wsmlDuration = df.createDuration(1982, 12, 13, 10, 34, 31);
+		wsmlDuration.accept(visitor);
+		m = visitor.getMapping();
+//		System.out.println(m.getValue().getClass());
+//		assertTrue(m.getValue() instanceof Number);
+		assertEquals(String.class, m.getClassMapping());
 		
 		// Durations can have floating point seconds!
-		//assertTrue(m.getValue().equals( new String("P1982Y12M13DT10H34M31S") ) || m.getValue().equals( new String("P1982Y12M13DT10H34M31.0S")));	
+//		 assertTrue(m.getValue().equals( new String("P1982Y12M13DT10H34M31S") ) || m.getValue().equals( new String("P1982Y12M13DT10H34M31.0S")));	
 			
 		ComplexDataValue wsmlYearMonth = df.createGregorianYearMonth(1980, 11);
 		wsmlYearMonth.accept(visitor);

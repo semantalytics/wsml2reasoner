@@ -101,12 +101,11 @@ public class TableTest extends TestCase {
 	   
 	    // gives a indexOutOfBoundsException - if entryRows are not equal in size!
 	    table.promoteDataTypes();
-	    assertEquals(table.getColumnTypeName(0), String.class);
-	    assertEquals(table.getColumnTypeName(1), String.class);
+	    assertEquals(table.getColumnTypeName(0), this.getClass());
+	    assertEquals(table.getColumnTypeName(1), this.getClass());
 	    assertEquals(table.getColumnTypeName(2), this.getClass());
 	    assertEquals(table.getColumnTypeName(3), this.getClass());
 	
-	    
 	}
 	
 
