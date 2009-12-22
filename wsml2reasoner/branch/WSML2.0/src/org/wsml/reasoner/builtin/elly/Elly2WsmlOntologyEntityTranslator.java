@@ -193,14 +193,14 @@ public class Elly2WsmlOntologyEntityTranslator {
 		} else if (irisTerm instanceof IDecimalTerm) {
 			return container.getXmlDataFactory().createDecimal(new BigDecimal(((IDecimalTerm) irisTerm).toString()));
 		} else if (irisTerm instanceof IDoubleTerm) {
-			return container.getXmlDataFactory().createDouble(((IDoubleTerm) irisTerm).getValue());
+			return container.getXmlDataFactory().createDouble(((IDoubleTerm) irisTerm).getValue().doubleValue());
 		}
 		else if (irisTerm instanceof IDuration) {
 			final IDuration dt = (IDuration) irisTerm;
 			return container.getXmlDataFactory().createDuration(dt.getYear(), dt.getMonth(), dt.getDay(), dt.getHour(),
 					dt.getMinute(), dt.getDecimalSecond());
 		} else if (irisTerm instanceof IFloatTerm) {
-			return container.getXmlDataFactory().createFloat(((IFloatTerm) irisTerm).getValue());
+			return container.getXmlDataFactory().createFloat(((IFloatTerm) irisTerm).getValue().floatValue());
 		} else if (irisTerm instanceof IGDay) {
 			return container.getXmlDataFactory().createGregorianDay(((IGDay) irisTerm).getDay());
 		} else if (irisTerm instanceof IGMonth) {

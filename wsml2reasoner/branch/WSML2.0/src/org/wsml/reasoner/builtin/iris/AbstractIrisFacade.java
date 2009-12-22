@@ -1104,14 +1104,14 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
             return DATA_FACTORY.createDecimal(new BigDecimal(((IDecimalTerm) t).toString()));
         }
         else if (t instanceof IDoubleTerm) {
-            return DATA_FACTORY.createDouble(((IDoubleTerm) t).getValue());
+            return DATA_FACTORY.createDouble(((IDoubleTerm) t).getValue().doubleValue());
         }
         else if (t instanceof IDuration) {
             final IDuration dt = (IDuration) t;
             return DATA_FACTORY.createDuration( dt.getYear(), dt.getMonth(), dt.getDay(), dt.getHour(), dt.getMinute(), dt.getDecimalSecond());
         }
         else if (t instanceof IFloatTerm) {
-            return DATA_FACTORY.createFloat(((IFloatTerm) t).getValue());
+            return DATA_FACTORY.createFloat(((IFloatTerm) t).getValue().floatValue());
         }
         else if (t instanceof IGDay) {
             return DATA_FACTORY.createGregorianDay(((IGDay) t).getDay());
