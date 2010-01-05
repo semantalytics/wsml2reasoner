@@ -1100,18 +1100,21 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
             // TODO gigi: I introduced the float cast, check if this is correct
             				tzData[0], tzData[1]);
         }
+        else if (t instanceof IDoubleTerm) {
+        	return DATA_FACTORY.createDouble(((IDoubleTerm) t).getValue().doubleValue());
+        }
+        else if (t instanceof IFloatTerm) {
+        	return DATA_FACTORY.createFloat(((IFloatTerm) t).getValue().floatValue());
+        }
+        else if (t instanceof IIntegerTerm) {
+        	return DATA_FACTORY.createInteger(new BigInteger(t.getValue().toString()));
+        }
         else if (t instanceof IDecimalTerm) {
             return DATA_FACTORY.createDecimal(new BigDecimal(((IDecimalTerm) t).toString()));
-        }
-        else if (t instanceof IDoubleTerm) {
-            return DATA_FACTORY.createDouble(((IDoubleTerm) t).getValue().doubleValue());
         }
         else if (t instanceof IDuration) {
             final IDuration dt = (IDuration) t;
             return DATA_FACTORY.createDuration( dt.getYear(), dt.getMonth(), dt.getDay(), dt.getHour(), dt.getMinute(), dt.getDecimalSecond());
-        }
-        else if (t instanceof IFloatTerm) {
-            return DATA_FACTORY.createFloat(((IFloatTerm) t).getValue().floatValue());
         }
         else if (t instanceof IGDay) {
             return DATA_FACTORY.createGregorianDay(((IGDay) t).getDay());
@@ -1129,9 +1132,6 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         else if (t instanceof IGYearMonth) {
             final IGYearMonth md = (IGYearMonth) t;
             return DATA_FACTORY.createGregorianYearMonth(md.getYear(), md.getMonth());
-        }
-        else if (t instanceof IIntegerTerm) {
-            return DATA_FACTORY.createInteger(new BigInteger(t.getValue().toString()));
         }
         else if (t instanceof IYearMonthDuration) {
         	return DATA_FACTORY.createYearMonthDuration( ((IYearMonthDuration) t).getYear(), ((IYearMonthDuration) t).getMonth());
