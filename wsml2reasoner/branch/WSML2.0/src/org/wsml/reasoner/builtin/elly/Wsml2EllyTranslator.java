@@ -758,7 +758,8 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		
 		// handle individual equality
 		// makes no difference if it is equality of concrete terms
-		if (builtIn.equals(BuiltIn.EQUAL)) {
+		if (builtIn.equals(BuiltIn.EQUAL) && (terms.get(0) instanceof IIndividual)) {
+			assert (terms.get(1) instanceof IIndividual);
 			return BASIC.createAtom(Vocabulary.equal, terms.get(0), terms.get(1));
 		}
 		
