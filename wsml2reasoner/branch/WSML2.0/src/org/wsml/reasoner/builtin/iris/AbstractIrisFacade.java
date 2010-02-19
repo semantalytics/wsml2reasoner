@@ -68,8 +68,8 @@ import org.deri.iris.api.terms.concrete.IGYearMonth;
 import org.deri.iris.api.terms.concrete.IHexBinary;
 import org.deri.iris.api.terms.concrete.IIntegerTerm;
 import org.deri.iris.api.terms.concrete.IIri;
-import org.deri.iris.api.terms.concrete.ISqName;
 import org.deri.iris.api.terms.concrete.IPlainLiteral;
+import org.deri.iris.api.terms.concrete.ISqName;
 import org.deri.iris.api.terms.concrete.ITime;
 import org.deri.iris.api.terms.concrete.IXMLLiteral;
 import org.deri.iris.api.terms.concrete.IYearMonthDuration;
@@ -89,8 +89,8 @@ import org.deri.iris.builtins.datatype.IsGYearBuiltin;
 import org.deri.iris.builtins.datatype.IsGYearMonthBuiltin;
 import org.deri.iris.builtins.datatype.IsHexBinaryBuiltin;
 import org.deri.iris.builtins.datatype.IsIntegerBuiltin;
-import org.deri.iris.builtins.datatype.IsStringBuiltin;
 import org.deri.iris.builtins.datatype.IsPlainLiteralBuiltin;
+import org.deri.iris.builtins.datatype.IsStringBuiltin;
 import org.deri.iris.builtins.datatype.IsTimeBuiltin;
 import org.deri.iris.builtins.datatype.IsXMLLiteralBuiltin;
 import org.deri.iris.builtins.datatype.IsYearMonthDurationBuiltin;
@@ -123,7 +123,6 @@ import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.NumberedAnonymousID;
 import org.wsmo.common.UnnumberedAnonymousID;
-import org.wsmo.common.WSML;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
@@ -163,33 +162,6 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
      */
     private final Collection<ExternalDataSource> sources;
     
-    /**
-     *  New WSML builtin predicates from  D3.1.4 Defining the features of the WSML-Rule v2.0 language
-	 *	 (Not in WSMO-api BuiltIns.)
-     */
-	private final static String IS_PREFIX = WSML.WSML_NAMESPACE + "is"; // + DATATYPE				// RIF : pred:isLiteralOfType
-	final static String IS_DOUBLE = IS_PREFIX + "Double";
-	final static String IS_STRING = IS_PREFIX + "String";
-	final static String IS_DECIMAL = IS_PREFIX + "Decimal";
-	final static String IS_BOOLEAN = IS_PREFIX + "Boolean";
-	final static String IS_INTEGER = IS_PREFIX + "Integer";
-	final static String IS_BASE64BINARY = IS_PREFIX + "Base64Binary";
-	final static String IS_DATE = IS_PREFIX + "Date";
-	final static String IS_DATETIME = IS_PREFIX + "DateTime";
-	final static String IS_DURATION = IS_PREFIX + "Duration";
-	final static String IS_FLOAT = IS_PREFIX + "Float";
-	final static String IS_GDAY = IS_PREFIX + "GDay";
-	final static String IS_GMONTH = IS_PREFIX + "GMonth";
-	final static String IS_GMONTHDAY = IS_PREFIX + "GMonthDay";
-	final static String IS_GYEAR = IS_PREFIX + "GYear";
-	final static String IS_GYEARMONTH= IS_PREFIX + "GYearMonth";
-	final static String IS_HEXBINARY = IS_PREFIX + "HexBinary";
-	final static String IS_TIME = IS_PREFIX + "Time";
-	final static String IS_DAYTIME_DURATION = IS_PREFIX + "DayTimeDuration";
-	final static String IS_YEAR_MONTH_DURATION = IS_PREFIX + "YearMonthDuration";
-	final static String IS_IRI = IS_PREFIX + "Iri";
-	final static String IS_TEXT = IS_PREFIX + "Text";
-	final static String IS_XML_LITERAL = IS_PREFIX + "XMLLiteral";
 
 	public AbstractIrisFacade(final FactoryContainer factory, final Map<String, Object> config) {
         DATA_FACTORY = factory.getXmlDataFactory();
@@ -700,70 +672,70 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
         else if (sym.equals(BuiltIn.IS_NOT_DATATYPE.getFullName())) {
         	return BUILTIN.createIsNotDatatype(toArray(terms));
         }
-        else if (sym.equals(IS_BASE64BINARY)) {
+        else if (sym.equals(BuiltIn.IS_BASE64BINARY)) {
         	return BUILTIN.createIsBase64Binary(toArray(terms));
         }
-        else if (sym.equals(IS_BOOLEAN)) {
+        else if (sym.equals(BuiltIn.IS_BOOLEAN)) {
         	return BUILTIN.createIsBoolean(toArray(terms));
         }
-        else if (sym.equals(IS_DATE)) {
+        else if (sym.equals(BuiltIn.IS_DATE)) {
         	return BUILTIN.createIsDate(toArray(terms));
         }
-        else if (sym.equals(IS_DATETIME)) {
+        else if (sym.equals(BuiltIn.IS_DATETIME)) {
         	return BUILTIN.createIsDateTime(toArray(terms));
         }
-        else if (sym.equals(IS_DAYTIME_DURATION)) {
+        else if (sym.equals(BuiltIn.IS_DAYTIME_DURATION)) {
         	return BUILTIN.createIsDayTimeDuration(toArray(terms));
         }
-        else if (sym.equals(IS_DECIMAL)) {
+        else if (sym.equals(BuiltIn.IS_DECIMAL)) {
         	return BUILTIN.createIsDecimal(toArray(terms));
         }
-        else if (sym.equals(IS_DOUBLE)) {
+        else if (sym.equals(BuiltIn.IS_DOUBLE)) {
         	return BUILTIN.createIsDouble(toArray(terms));
         }
-        else if (sym.equals(IS_DURATION)) {
+        else if (sym.equals(BuiltIn.IS_DURATION)) {
         	return BUILTIN.createIsDuration(toArray(terms));
         }
-        else if (sym.equals(IS_FLOAT)) {
+        else if (sym.equals(BuiltIn.IS_FLOAT)) {
         	return BUILTIN.createIsFloat(toArray(terms));
         }
-        else if (sym.equals(IS_GDAY)) {
+        else if (sym.equals(BuiltIn.IS_GDAY)) {
         	return BUILTIN.createIsGDay(toArray(terms));
         }
-        else if (sym.equals(IS_GMONTH)) {
+        else if (sym.equals(BuiltIn.IS_GMONTH)) {
         	return BUILTIN.createIsGMonth(toArray(terms));
         }
-        else if (sym.equals(IS_GMONTHDAY)) {
+        else if (sym.equals(BuiltIn.IS_GMONTHDAY)) {
         	return BUILTIN.createIsGMonthDay(toArray(terms));
         }
-        else if (sym.equals(IS_GYEAR)) {
+        else if (sym.equals(BuiltIn.IS_GYEAR)) {
         	return BUILTIN.createIsGYear(toArray(terms));
         }
-        else if (sym.equals(IS_GYEARMONTH)) {
+        else if (sym.equals(BuiltIn.IS_GYEARMONTH)) {
         	return BUILTIN.createIsGYearMonth(toArray(terms));
         }
-        else if (sym.equals(IS_HEXBINARY)) {
+        else if (sym.equals(BuiltIn.IS_HEXBINARY)) {
         	return BUILTIN.createIsHexBinary(toArray(terms));
         }
-        else if (sym.equals(IS_INTEGER)) {
+        else if (sym.equals(BuiltIn.IS_INTEGER)) {
         	return BUILTIN.createIsInteger(toArray(terms));
         }
-        else if (sym.equals(IS_IRI)) {
+        else if (sym.equals(BuiltIn.IS_IRI)) {
         	return BUILTIN.createIsIRI(toArray(terms));
         }
-        else if (sym.equals(IS_STRING)) {
+        else if (sym.equals(BuiltIn.IS_STRING)) {
         	return BUILTIN.createIsString(toArray(terms));
         }
-        else if (sym.equals(IS_TEXT)) {
+        else if (sym.equals(BuiltIn.IS_TEXT)) {
         	return BUILTIN.createIsText(toArray(terms));
         }
-        else if (sym.equals(IS_TIME)) {
+        else if (sym.equals(BuiltIn.IS_TIME)) {
         	return BUILTIN.createIsTime(toArray(terms));
         }
-        else if (sym.equals(IS_XML_LITERAL)) {
+        else if (sym.equals(BuiltIn.IS_XML_LITERAL)) {
         	return BUILTIN.createIsXMLLiteral(toArray(terms));
         }
-        else if (sym.equals(IS_YEAR_MONTH_DURATION)) {
+        else if (sym.equals(BuiltIn.IS_YEAR_MONTH_DURATION)) {
         	return BUILTIN.createIsYearMonthDuration(toArray(terms));
         }
         else if( ! headLiteral && sym.equals( WSML2DatalogTransformer.PRED_MEMBER_OF ) ) {
