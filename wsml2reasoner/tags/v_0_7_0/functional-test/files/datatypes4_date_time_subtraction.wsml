@@ -1,0 +1,44 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://example.com/datatypes4#",
+	wsml _"http://www.wsmo.org/wsml/wsml-syntax#" }
+
+ontology DatatypesTestOntology4
+
+instance allFields
+	dob hasValue _datetime( 2007,07,13,19,48,27.1 )
+
+instance smallPositive
+	dob hasValue _datetime( 2008, 9, 16, 23, 53, 33.7 )
+
+instance smallNegative
+	dob hasValue _datetime( 2008, 9, 16, 23, 53, 33.9 )
+
+// Problems with 3 or more numbers after the floating point.
+instance oneMicro
+	dob hasValue _datetime( 2008, 9, 16, 23, 53, 33.799999 )
+
+instance oneMilli
+	dob hasValue _datetime( 2008, 9, 16, 23, 53, 33.799 )
+
+instance oneSecond
+	dob hasValue _datetime( 2008, 9, 16, 23, 53, 32.8 )
+
+instance oneMinute
+	dob hasValue _datetime( 2008, 9, 16, 23, 52, 33.8 )
+
+instance oneHour
+	dob hasValue _datetime( 2008, 9, 16, 22, 53, 33.8 )
+
+instance oneDay
+	dob hasValue _datetime( 2008, 9, 15, 23, 53, 33.8 )
+
+instance oneMonth
+	dob hasValue _datetime( 2008, 8, 16, 23, 53, 33.8 )
+
+instance oneYear
+	dob hasValue _datetime( 2007, 9, 16, 23, 53, 33.8 )
+	
+// Compute an age attribute from s specific timestamp and the instance's dob (date of birth)
+axiom computeAge definedBy
+	?x[age hasValue ?a] :- ?x[dob hasValue ?d] and wsml#numericSubtract(?d,_datetime( 2008, 9, 16, 23, 53, 33.8 ),?a).
+

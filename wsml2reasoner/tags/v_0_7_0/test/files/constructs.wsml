@@ -1,0 +1,29 @@
+namespace { _"urn://mu#",
+      xsd _"http://www.w3.org/2001/XMLSchema#"}
+
+ontology _"http://wsmo4jtests/test.wsml"
+
+concept Pizza subConceptOf Dish
+	topping ofType (1 27) Topping
+	style impliesType Style
+concept Topping
+concept Margarita subConceptOf Pizza
+	
+axiom implications
+definedBy
+(?x memberOf A and ?x memberOf B) equivalent ((?x memberOf C or ?x memberOf D) implies ?x memberOf E).
+
+axiom complexMolecules
+definedBy
+a[r1 hasValue v1, r2 hasValue v2] or 
+b[r1 hasValue v2] or 
+c[r1 hasValue v1, r2 hasValue v2, r3 hasValue v3].
+A[r1 ofType v1, r2 impliesType v2].
+
+axiom negation
+definedBy
+?x memberOf C and (?x memberOf Z and naf(naf(?x memberOf A or ?x memberOf B))).
+
+axiom nestedAndOr
+definedBy
+?x memberOf y and (?x memberOf z or ?x memberOf a and (?x memberOf b or (?x memberOf c and (?x memberOf d or ?x memberOf e)))).

@@ -1,0 +1,22 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
+namespace { _"http://simple7#"
+}
+
+ontology simple_7
+
+concept C1
+concept C2
+concept C3
+	
+instance A memberOf C1
+	n1 hasValue name
+		
+instance B memberOf C2
+		
+instance C memberOf C3
+
+		
+axiom equal definedBy
+		A = B :- true.
+		p(?x) :- ?x[?n1 hasValue name].
+	

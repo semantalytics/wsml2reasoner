@@ -1,0 +1,77 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://www.wsmo.org/TR/d13/d13.7/ontologies/VTAServiceOntology#", 
+	 xsd _"http://www.w3.org/2001/XMLSchema#", 
+     dc _"http://purl.org/dc/elements/1.1#", 
+     wsml _"http://www.wsmo.org/wsml/wsml-syntax#" }
+
+ontology _"urn:fzi:travel1"
+
+concept string
+concept boolean
+concept time
+concept date
+
+concept station
+     code ofType string
+     sourceLocBool impliesType boolean
+     destLocBool impliesType boolean
+
+concept route
+	sourceLocation ofType station
+	destinationLocation ofType station
+	
+concept routeOnDate
+     forRoute ofType route
+	 onDate ofType date
+	 onTime ofType time
+	 forPrice ofType price
+	 
+concept price
+
+concept person
+    name ofType string
+
+concept creditCard
+   	number ofType integer
+    owner ofType person
+    expirationDate ofType date
+
+concept reservation
+	reservationNumber ofType integer
+	reservedRoute ofType routeOnDate
+	reservationHolder ofType person
+	
+concept myRoute
+    sourceLocation ofType station
+    destinationLocation ofType station
+    onDate ofType date
+
+concept confirmedCreditCard
+   	confirmedNumber ofType integer
+    confirmedOwner ofType person
+    confirmedExpirationDate ofType date	 
+
+instance t memberOf boolean
+instance f memberOf boolean
+instance departureDay memberOf date
+
+instance galway_station memberOf station
+    sourceLocBool hasValue t
+    destLocBool hasValue f
+
+instance dublin_station memberOf station
+    sourceLocBool hasValue f
+    destLocBool hasValue t
+    
+instance galway_dublin memberOf myRoute
+    sourceLocation hasValue galway_station
+    destinationLocation hasValue dublin_station
+    onDate hasValue departureDay
+
+instance routeProvider memberOf route
+	sourceLocation hasValue galway_station
+	destinationLocation hasValue dublin_station    
+	
+instance routeOnDateProvider memberOf routeOnDate
+     forRoute hasValue routeProvider
+	 onDate hasValue departureDay
