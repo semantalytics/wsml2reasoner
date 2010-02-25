@@ -23,6 +23,7 @@
 package concreteTests.irisStratified;
 
 import org.wsml.reasoner.api.LPReasoner;
+
 import abstractTests.lp.AbstractAnonymousId1Relation;
 
 public class AnonymousId1RelationTest extends AbstractAnonymousId1Relation{

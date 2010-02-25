@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.omwg.logicalexpression.Constants;
 import org.omwg.ontology.DataValue;
 import org.omwg.ontology.SimpleDataValue;
@@ -39,9 +40,10 @@ import org.wsml.reasoner.DatalogReasonerFacade;
 import org.wsml.reasoner.ExternalToolException;
 import org.wsml.reasoner.UnsupportedFeatureException;
 import org.wsml.reasoner.WSML2DatalogTransformer;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.common.BuiltIn;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.DataFactory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -65,10 +67,10 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 
 	private String ontologyUri;
 
-	public Kaon2LPWrapperImplementation( WSMO4JManager wsmoManager, final Map<String, Object> config )
+	public Kaon2LPWrapperImplementation( FactoryContainer wsmoManager, final Map<String, Object> config )
 	{
-		df = wsmoManager.getDataFactory();
-		wf = wsmoManager.getWSMOFactory();
+		df = wsmoManager.getXmlDataFactory();
+		wf = wsmoManager.getWsmoFactory();
 		lef = wsmoManager.getLogicalExpressionFactory();
 	}
 
@@ -267,18 +269,18 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 			String p = l.getPredicateUri();
 			Predicate pred = null;
 			List<Term> terms = new ArrayList<Term>();
-			if( p.equals( Constants.EQUAL ) )
+			if( p.equals( BuiltIn.EQUAL.getFullName() ) )
 			{
 				pred = f.equal();
 				translateTerms( l, terms );
 			}
-			else if( p.equals( Constants.INEQUAL ) )
+			else if( p.equals( BuiltIn.INEQUAL.getFullName() ) )
 			{
 				pred = f.equal();
 				isPositive = false;
 				translateTerms( l, terms );
 			}
-			else if( p.equals( Constants.LESS_THAN ) )
+			else if( p.equals( BuiltIn.LESS_THAN.getFullName() ) )
 			{
 				if( l.getTerms().length == 2 )
 				{
@@ -291,7 +293,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 					throw new ExternalToolException( "wsml#lessThan should have exactly two arguments!" );
 				}
 			}
-			else if( p.equals( Constants.LESS_EQUAL ) )
+			else if( p.equals( BuiltIn.LESS_EQUAL.getFullName() ) )
 			{
 				if( l.getTerms().length == 2 )
 				{
@@ -304,7 +306,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 					throw new ExternalToolException( "wsml#lessEqual should have exactly two arguments!" );
 				}
 			}
-			else if( p.equals( Constants.GREATER_THAN ) )
+			else if( p.equals( BuiltIn.GREATER_THAN.getFullName() ) )
 			{
 				if( l.getTerms().length == 2 )
 				{
@@ -317,7 +319,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 					throw new ExternalToolException( "wsml#greaterThan should have exactly two arguments!" );
 				}
 			}
-			else if( p.equals( Constants.GREATER_EQUAL ) )
+			else if( p.equals( BuiltIn.GREATER_EQUAL.getFullName() ) )
 			{
 				if( l.getTerms().length == 2 )
 				{
@@ -330,7 +332,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 					throw new ExternalToolException( "wsml#greaterEqual should have exactly two arguments!" );
 				}
 			}
-			else if( p.equals( Constants.NUMERIC_EQUAL ) )
+			else if( p.equals( BuiltIn.NUMERIC_EQUAL.getFullName() ) )
 			{
 				if( l.getTerms().length == 2 )
 				{
@@ -343,7 +345,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 					throw new ExternalToolException( "wsml#numericEqual should have exactly two arguments!" );
 				}
 			}
-			else if( p.equals( Constants.NUMERIC_INEQUAL ) )
+			else if( p.equals( BuiltIn.NUMERIC_INEQUAL.getFullName() ) )
 			{
 				if( l.getTerms().length == 2 )
 				{
@@ -356,7 +358,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 					throw new ExternalToolException( "wsml#numericInEqual should have exactly two arguments!" );
 				}
 			}
-			else if( p.equals( Constants.STRING_EQUAL ) )
+			else if( p.equals( BuiltIn.STRING_EQUAL.getFullName() ) )
 			{
 				if( l.getTerms().length == 2 )
 				{
@@ -369,7 +371,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 					throw new ExternalToolException( "wsml#stringEqual should have exactly two arguments!" );
 				}
 			}
-			else if( p.equals( Constants.STRING_INEQUAL ) )
+			else if( p.equals( BuiltIn.STRING_INEQUAL.getFullName() ) )
 			{
 				if( l.getTerms().length == 2 )
 				{
@@ -382,7 +384,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 					throw new ExternalToolException( "wsml#lessThan should have exactly two arguments!" );
 				}
 			}
-			else if( p.equals( Constants.NUMERIC_ADD ) )
+			else if( p.equals( BuiltIn.NUMERIC_ADD.getFullName() ) )
 			{
 				if( l.getTerms().length == 3 )
 				{
@@ -398,7 +400,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 					throw new ExternalToolException( "wsml#numericAdd should have exactly three arguments!" );
 				}
 			}
-			else if( p.equals( Constants.NUMERIC_SUB ) )
+			else if( p.equals( BuiltIn.NUMERIC_SUBTRACT.getFullName() ) )
 			{
 				if( l.getTerms().length == 3 )
 				{
@@ -414,7 +416,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 					throw new ExternalToolException( "wsml#numericSubtract should have exactly three arguments!" );
 				}
 			}
-			else if( p.equals( Constants.NUMERIC_MUL ) )
+			else if( p.equals( BuiltIn.NUMERIC_MULTIPLY.getFullName() ) )
 			{
 				if( l.getTerms().length == 3 )
 				{
@@ -430,7 +432,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 					throw new ExternalToolException( "wsml#numericAdd should have exactly three arguments!" );
 				}
 			}
-			else if( p.equals( Constants.NUMERIC_DIV ) )
+			else if( p.equals( BuiltIn.NUMERIC_DIVIDE.getFullName() ) )
 			{
 				if( l.getTerms().length == 3 )
 				{
@@ -530,7 +532,7 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 				Object value = dv.getValue();
 				terms.add( f.constant( value ) );
 			}
-			else if( WsmlDataType.WSML_BOOLEAN.equals( dv.getType().getIRI().toString() ) )
+			else if( WsmlDataType.WSML_BOOLEAN.equals( dv.getType().getIdentifier().toString() ) )
 			{
 				terms.add( f.constant( dv.getValue() ) );
 			}
@@ -581,19 +583,19 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 				}
 				else if( ((id) obj).getFunctionSymbol() instanceof String )
 				{
-					result[ i ] = df.createWsmlString( (String) ((id) obj).getFunctionSymbol() );
+					result[ i ] = df.createString( (String) ((id) obj).getFunctionSymbol() );
 				}
 				else if( ((id) obj).getFunctionSymbol() instanceof BigInteger )
 				{
-					result[ i ] = df.createWsmlInteger( (BigInteger) ((id) obj).getFunctionSymbol() );
+					result[ i ] = df.createInteger( (BigInteger) ((id) obj).getFunctionSymbol() );
 				}
 				else if( ((id) obj).getFunctionSymbol() instanceof BigDecimal )
 				{
-					result[ i ] = df.createWsmlDecimal( (BigDecimal) ((id) obj).getFunctionSymbol() );
+					result[ i ] = df.createDecimal( (BigDecimal) ((id) obj).getFunctionSymbol() );
 				}
 				else if( ((id) obj).getFunctionSymbol() instanceof Boolean )
 				{
-					result[ i ] = df.createWsmlBoolean( (Boolean) ((id) obj).getFunctionSymbol() );
+					result[ i ] = df.createBoolean( (Boolean) ((id) obj).getFunctionSymbol() );
 				}
 			}
 			else if( obj instanceof ld )
@@ -605,19 +607,19 @@ public class Kaon2LPWrapperImplementation implements DatalogReasonerFacade
 				}
 				else if( ((ld) obj).getFunctionSymbol() instanceof String )
 				{
-					result[ i ] = df.createWsmlString( (String) ((ld) obj).getFunctionSymbol() );
+					result[ i ] = df.createString( (String) ((ld) obj).getFunctionSymbol() );
 				}
 				else if( ((ld) obj).getFunctionSymbol() instanceof BigInteger )
 				{
-					result[ i ] = df.createWsmlInteger( (BigInteger) ((ld) obj).getFunctionSymbol() );
+					result[ i ] = df.createInteger( (BigInteger) ((ld) obj).getFunctionSymbol() );
 				}
 				else if( ((ld) obj).getFunctionSymbol() instanceof BigDecimal )
 				{
-					result[ i ] = df.createWsmlDecimal( (BigDecimal) ((ld) obj).getFunctionSymbol() );
+					result[ i ] = df.createDecimal( (BigDecimal) ((ld) obj).getFunctionSymbol() );
 				}
 				else if( ((ld) obj).getFunctionSymbol() instanceof Boolean )
 				{
-					result[ i ] = df.createWsmlBoolean( (Boolean) ((ld) obj).getFunctionSymbol() );
+					result[ i ] = df.createBoolean( (Boolean) ((ld) obj).getFunctionSymbol() );
 				}
 			}
 			else

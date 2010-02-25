@@ -23,7 +23,6 @@ import java.util.Set;
 
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
-import org.wsmo.common.Entity;
 
 /**
  * An interface for invoking a WSML reasoner with a particular reasoning task.
@@ -59,7 +58,7 @@ public interface WSMLReasoner {
      */
     public void registerOntologyNoVerification(Ontology ontology);
 
-    /**
+    /*
      * Register some entities and do a consistency check.
      * 
      * @param theEntities
@@ -67,9 +66,10 @@ public interface WSMLReasoner {
      * @throws InconsistencyException
      *             If a consistency violation is detected.
      */
-    public void registerEntities(Set<Entity> theEntities) throws InconsistencyException;
-
-    public void registerEntitiesNoVerification(Set<Entity> ontologies);
+    // not supported any more, use registerOntology*() 
+	//    public void registerEntities(Set<Entity> theEntities) throws InconsistencyException;
+	//
+	//    public void registerEntitiesNoVerification(Set<Entity> ontologies);
 
     /**
      * Deregisters the ontology. Any further request using this ontologyID will

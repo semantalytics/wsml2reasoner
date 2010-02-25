@@ -21,14 +21,17 @@ import java.util.Set;
 
 import org.deri.wsmo4j.io.parser.wsml.TempVariable;
 import org.omwg.logicalexpression.Atom;
+import org.omwg.logicalexpression.AttributeConstraintMolecule;
+import org.omwg.logicalexpression.TruthValue;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
-import org.omwg.logicalexpression.terms.NumberedAnonymousID;
 import org.omwg.logicalexpression.terms.Term;
+import org.omwg.logicalexpression.terms.TermVisitor;
 import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.SimpleDataValue;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.transformation.InfixOrderLogicalExpressionVisitor;
 import org.wsmo.common.IRI;
+import org.wsmo.common.NumberedAnonymousID;
 import org.wsmo.common.UnnumberedAnonymousID;
 
 public class PredicateAndFSymbolCollector extends InfixOrderLogicalExpressionVisitor {
@@ -72,33 +75,63 @@ public class PredicateAndFSymbolCollector extends InfixOrderLogicalExpressionVis
     public Object getSerializedObject() {
         return null;
     }
+
+	@Override
+	public void visitAttributeConstraintMolecule(
+			AttributeConstraintMolecule expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitTruthValue(TruthValue expr) {
+		// TODO Auto-generated method stub
+		
+	}
 }
 
-class FSymCollector implements org.omwg.logicalexpression.terms.Visitor {
+class FSymCollector implements TermVisitor {
     Set<ConstructedTerm> fsymbols = new HashSet<ConstructedTerm>();
 
     Set<Term> constants = new HashSet<Term>();
 
-    public void visitIRI(IRI arg0) {
-        constants.add(arg0);
-    }
+	@Override
+	public void visit(ConstructedTerm t) {
+		fsymbols.add(t);
+	}
 
-    public void visitComplexDataValue(ComplexDataValue arg0) {
-    }
+	@Override
+	public void visit(Variable t) {
+		// Do nothing
+		
+	}
 
-    public void visitNumberedID(NumberedAnonymousID arg0) {
-    }
+	@Override
+	public void visit(SimpleDataValue t) {
+		// Do nothing
+		
+	}
 
-    public void visitSimpleDataValue(SimpleDataValue arg0) {
-    }
+	@Override
+	public void visit(ComplexDataValue t) {
+		// Do nothing
+		
+	}
 
-    public void visitUnnumberedID(UnnumberedAnonymousID arg0) {
-    }
+	@Override
+	public void visit(UnnumberedAnonymousID t) {
+		// Do nothing
+		
+	}
 
-    public void visitVariable(Variable arg0) {
-    }
+	@Override
+	public void visit(NumberedAnonymousID t) {
+		// Do nothing
+		
+	}
 
-    public void visitConstructedTerm(ConstructedTerm arg0) {
-        fsymbols.add(arg0);
-    }
+	@Override
+	public void visit(IRI t) {
+		 constants.add(t);
+	}
 }

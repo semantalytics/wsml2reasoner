@@ -1,8 +1,5 @@
 package org.wsml.reasoner.ext.sql;
 
-import org.wsml.reasoner.ext.sql.QueryFormatException;
-import org.wsml.reasoner.ext.sql.QueryProcessor;
-
 import junit.framework.TestCase;
 
 public class QueryProcessorTest extends TestCase {

@@ -1,6 +1,6 @@
 package org.wsml.reasoner.api.inconsistency;
 
-import org.deri.wsmo4j.io.serializer.wsml.VisitorSerializeWSMLTerms;
+import org.deri.wsmo4j.io.serializer.wsml.SerializeWSMLTermsVisitor;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
@@ -23,7 +23,7 @@ public class ConsistencyViolation {
             return toString(((Concept) t).getIdentifier(), te);
         }
         else {
-            return toString(((WsmlDataType) t).getIRI(), te);
+            return toString(((WsmlDataType) t).getIdentifier(), te);
         }
     }
 
@@ -38,7 +38,7 @@ public class ConsistencyViolation {
 
     protected static String toString(Term t, TopEntity te) {
         if (te != null) {
-            VisitorSerializeWSMLTerms v = new VisitorSerializeWSMLTerms(te);
+            SerializeWSMLTermsVisitor v = new SerializeWSMLTermsVisitor(te);
             t.accept(v);
             return v.getSerializedObject();
         }

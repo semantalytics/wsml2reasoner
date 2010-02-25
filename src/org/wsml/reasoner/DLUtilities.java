@@ -6,18 +6,20 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.exception.InternalReasonerException;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.ConstraintReplacementNormalizer;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
@@ -29,10 +31,11 @@ public class DLUtilities {
     private final LogicalExpressionFactory leFactory;
 
     private final LPReasoner mReasoner;
-    
-    public DLUtilities(LPReasoner reasoner, WSMO4JManager wsmoManager) {
-        this.wsmoFactory = wsmoManager.getWSMOFactory();
-        this.leFactory = wsmoManager.getLogicalExpressionFactory();
+
+    public DLUtilities(LPReasoner reasoner, FactoryContainer factory) {
+    	
+        this.wsmoFactory = factory.getWsmoFactory();
+        this.leFactory = factory.getLogicalExpressionFactory();
         this.mReasoner = reasoner;
     }
 
@@ -55,7 +58,7 @@ public class DLUtilities {
         Set<Concept> concepts = new HashSet<Concept>();
         for (Map<Variable, Term> binding : bindings) {
             IRI conceptID = (IRI) binding.get(leFactory.createVariable("x"));
-            concepts.add(wsmoFactory.getConcept(conceptID));
+            concepts.add(wsmoFactory.createConcept(conceptID));
         }
         return concepts;
     }
@@ -73,7 +76,7 @@ public class DLUtilities {
         Set<Instance> instances = new HashSet<Instance>();
         for (Map<Variable, Term> binding : bindings) {
             IRI instanceID = (IRI) binding.get(leFactory.createVariable("x"));
-            instances.add(wsmoFactory.getInstance(instanceID));
+            instances.add(wsmoFactory.createInstance(instanceID));
         }
 
         return instances;
@@ -92,7 +95,7 @@ public class DLUtilities {
         Set<Concept> concepts = new HashSet<Concept>();
         for (Map<Variable, Term> binding : bindings) {
             IRI subConceptID = (IRI) binding.get(leFactory.createVariable("x"));
-            concepts.add(wsmoFactory.getConcept(subConceptID));
+            concepts.add(wsmoFactory.createConcept(subConceptID));
         }
         if (concepts.contains(concept)) {
             concepts.remove(concept);
@@ -105,8 +108,9 @@ public class DLUtilities {
         Term conceptID = concept.getIdentifier();
         LogicalExpression query = null;
         Set<Map<Variable, Term>> bindings;
+        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
         try {
-            query = leFactory.createLogicalExpression("_\"" + org.wsml.reasoner.WSML2DatalogTransformer.PRED_DIRECT_SUBCONCEPT + "\"(?x, _\"" + conceptID.toString() + "\")");
+            query = leParser.parse("_\"" + org.wsml.reasoner.WSML2DatalogTransformer.PRED_DIRECT_SUBCONCEPT + "\"(?x, _\"" + conceptID.toString() + "\")");
             // submit query to reasoner:
             bindings = mReasoner.executeQuery(query);
         }
@@ -118,7 +122,7 @@ public class DLUtilities {
         Set<Concept> concepts = new HashSet<Concept>();
         for (Map<Variable, Term> binding : bindings) {
             IRI subConceptID = (IRI) binding.get(leFactory.createVariable("x"));
-            concepts.add(wsmoFactory.getConcept(subConceptID));
+            concepts.add(wsmoFactory.createConcept(subConceptID));
         }
         if (concepts.contains(concept)) {
             concepts.remove(concept);
@@ -139,7 +143,7 @@ public class DLUtilities {
         Set<Concept> concepts = new HashSet<Concept>();
         for (Map<Variable, Term> binding : bindings) {
             IRI superConceptID = (IRI) binding.get(leFactory.createVariable("x"));
-            concepts.add(wsmoFactory.getConcept(superConceptID));
+            concepts.add(wsmoFactory.createConcept(superConceptID));
         }
         if (concepts.contains(concept)) {
             concepts.remove(concept);
@@ -152,8 +156,9 @@ public class DLUtilities {
         Term conceptID = concept.getIdentifier();
         LogicalExpression query = null;
         Set<Map<Variable, Term>> bindings;
+        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
         try {
-            query = leFactory.createLogicalExpression("_\"" + org.wsml.reasoner.WSML2DatalogTransformer.PRED_DIRECT_SUBCONCEPT + "\"(_\"" + conceptID.toString() + "\", ?x)");
+            query = leParser.parse("_\"" + org.wsml.reasoner.WSML2DatalogTransformer.PRED_DIRECT_SUBCONCEPT + "\"(_\"" + conceptID.toString() + "\", ?x)");
 
             // submit query to reasoner:
             bindings = mReasoner.executeQuery(query);
@@ -166,7 +171,7 @@ public class DLUtilities {
         Set<Concept> concepts = new HashSet<Concept>();
         for (Map<Variable, Term> binding : bindings) {
             IRI subConceptID = (IRI) binding.get(leFactory.createVariable("x"));
-            concepts.add(wsmoFactory.getConcept(subConceptID));
+            concepts.add(wsmoFactory.createConcept(subConceptID));
         }
         if (concepts.contains(concept)) {
             concepts.remove(concept);
@@ -274,7 +279,7 @@ public class DLUtilities {
         for (Map<Variable, Term> binding : bindings) {
             if (binding.get(leFactory.createVariable("x")) instanceof IRI) {
                 IRI instanceID = (IRI) binding.get(leFactory.createVariable("x"));
-                instances.add(wsmoFactory.getInstance(instanceID));
+                instances.add(wsmoFactory.createInstance(instanceID));
             }
         }
 
@@ -288,12 +293,12 @@ public class DLUtilities {
         for (Map<Variable, Term> binding : bindings) {
             IRI instanceID = (IRI) binding.get(leFactory.createVariable("x"));
             if (!instanceID.getNamespace().toString().startsWith("http://www.wsmo.org/wsml/wsml-syntax")) {
-                instances.add(wsmoFactory.getInstance(instanceID));
+                instances.add(wsmoFactory.createInstance(instanceID));
             }
             if (binding.get(leFactory.createVariable("y")) instanceof IRI) {
                 instanceID = (IRI) binding.get(leFactory.createVariable("y"));
                 if (!instanceID.getNamespace().toString().startsWith("http://www.wsmo.org/wsml/wsml-syntax")) {
-                    instances.add(wsmoFactory.getInstance(instanceID));
+                    instances.add(wsmoFactory.createInstance(instanceID));
                 }
             }
         }
@@ -387,8 +392,9 @@ public class DLUtilities {
         Term instanceID = instance.getIdentifier();
         LogicalExpression query = null;
         Set<Map<Variable, Term>> bindings;
+        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
         try {
-            query = leFactory.createLogicalExpression("_\"" + org.wsml.reasoner.WSML2DatalogTransformer.PRED_DIRECT_CONCEPT + "\"(_\"" + instanceID.toString() + "\", ?x)");
+            query = leParser.parse("_\"" + org.wsml.reasoner.WSML2DatalogTransformer.PRED_DIRECT_CONCEPT + "\"(_\"" + instanceID.toString() + "\", ?x)");
             // submit query to reasoner:
             bindings = mReasoner.executeQuery(query);
         }
@@ -400,7 +406,7 @@ public class DLUtilities {
         Set<Concept> concepts = new HashSet<Concept>();
         for (Map<Variable, Term> binding : bindings) {
             IRI conceptID = (IRI) binding.get(leFactory.createVariable("x"));
-            concepts.add(wsmoFactory.getConcept(conceptID));
+            concepts.add(wsmoFactory.createConcept(conceptID));
         }
         return concepts;
     }
@@ -421,7 +427,7 @@ public class DLUtilities {
         Set<Concept> concepts = new HashSet<Concept>();
         for (Map<Variable, Term> binding : bindings) {
             IRI conceptID = (IRI) binding.get(leFactory.createVariable("z"));
-            concepts.add(wsmoFactory.getConcept(conceptID));
+            concepts.add(wsmoFactory.createConcept(conceptID));
         }
         return concepts;
     }
@@ -546,7 +552,7 @@ public class DLUtilities {
         // extract results:
         Map<Instance, Set<Term>> results = new HashMap<Instance, Set<Term>>();
         for (Map<Variable, Term> binding : bindings) {
-            Instance instance = wsmoFactory.getInstance((IRI) binding.get(leFactory.createVariable("y")));
+            Instance instance = wsmoFactory.createInstance((IRI) binding.get(leFactory.createVariable("y")));
             if (results.containsKey(instance)) {
                 Set<Term> temp = new HashSet<Term>();
                 Term value = binding.get(leFactory.createVariable("x"));
@@ -581,7 +587,7 @@ public class DLUtilities {
         // extract results:
         Map<Instance, Set<Term>> results = new HashMap<Instance, Set<Term>>();
         for (Map<Variable, Term> binding : bindings) {
-            Instance instance = wsmoFactory.getInstance((IRI) binding.get(leFactory.createVariable("y")));
+            Instance instance = wsmoFactory.createInstance((IRI) binding.get(leFactory.createVariable("y")));
             if (results.containsKey(instance)) {
                 Set<Term> temp = new HashSet<Term>();
                 Term value = binding.get(leFactory.createVariable("x"));
@@ -670,7 +676,7 @@ public class DLUtilities {
             if (term instanceof IRI) {
                 IRI conceptID = (IRI) binding.get(variable);
                 if (!conceptID.getNamespace().toString().startsWith("http://www.wsmo.org/wsml/wsml-syntax")) {
-                    concepts.add(wsmoFactory.getConcept(conceptID));
+                    concepts.add(wsmoFactory.createConcept(conceptID));
                 }
             }
         }

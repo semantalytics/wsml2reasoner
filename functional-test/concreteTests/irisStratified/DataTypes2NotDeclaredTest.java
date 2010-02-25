@@ -23,6 +23,7 @@
 package concreteTests.irisStratified;
 
 import org.wsml.reasoner.api.LPReasoner;
+
 import abstractTests.lp.AbstractDataTypes2NotDeclared;
 
 public class DataTypes2NotDeclaredTest extends AbstractDataTypes2NotDeclared

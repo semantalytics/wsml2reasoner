@@ -43,13 +43,14 @@ import org.omwg.logicalexpression.Implication;
 import org.omwg.logicalexpression.InverseImplication;
 import org.omwg.logicalexpression.LogicProgrammingRule;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionVisitor;
 import org.omwg.logicalexpression.MembershipMolecule;
 import org.omwg.logicalexpression.Molecule;
 import org.omwg.logicalexpression.Negation;
 import org.omwg.logicalexpression.NegationAsFailure;
 import org.omwg.logicalexpression.SubConceptMolecule;
+import org.omwg.logicalexpression.TruthValue;
 import org.omwg.logicalexpression.UniversalQuantification;
-import org.omwg.logicalexpression.Visitor;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.ComplexDataValue;
@@ -92,7 +93,7 @@ import org.semanticweb.owl.model.change.OntologyChange;
 import org.semanticweb.owl.model.change.RemoveClassAxiom;
 import org.semanticweb.owl.model.change.SetSymmetric;
 import org.semanticweb.owl.model.change.SetTransitive;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsmo.common.Identifier;
 import org.wsmo.factory.LogicalExpressionFactory;
 
@@ -108,7 +109,7 @@ import org.wsmo.factory.LogicalExpressionFactory;
  * @author Nathalie Steinmetz, DERI Innsbruck
  * @version $Revision: 1.14 $ $Date: 2007-04-26 17:38:53 $
  */
-public class WSMLDL2OWLTransformer implements Visitor {
+public class WSMLDL2OWLTransformer implements LogicalExpressionVisitor {
 
     private OWLOntology owlOntology = null;
 
@@ -133,7 +134,7 @@ public class WSMLDL2OWLTransformer implements Visitor {
     private TransformationHelper helper = new TransformationHelper();
 
     // FIXME should be configured
-    private LogicalExpressionFactory leFactory = new WSMO4JManager().getLogicalExpressionFactory();
+    private LogicalExpressionFactory leFactory = new WsmlFactoryContainer().getLogicalExpressionFactory();
 
     public WSMLDL2OWLTransformer(OWLOntology owlOntology, OWLDataFactory owlDataFactory, ChangeVisitor changeVisitor) {
         this.owlOntology = owlOntology;
@@ -261,7 +262,7 @@ public class WSMLDL2OWLTransformer implements Visitor {
         }
     }
 
-    public void visitAttributeContraintMolecule(AttributeConstraintMolecule expr) {
+    public void visitAttributeConstraintMolecule(AttributeConstraintMolecule expr) {
         Identifier conceptId = (Identifier) expr.getLeftParameter();
         Identifier attrId = (Identifier) expr.getAttribute();
         Term data = expr.getRightParameter();
@@ -368,9 +369,9 @@ public class WSMLDL2OWLTransformer implements Visitor {
         // if the left expression is a conjunction, the expression can be
         // splitted in 2
         if (expr.getLeftOperand() instanceof Conjunction) {
-            InverseImplication inv = new WSMO4JManager().getLogicalExpressionFactory().createInverseImplication(((Conjunction) expr.getLeftOperand()).getLeftOperand(), expr.getRightOperand());
+            InverseImplication inv = new WsmlFactoryContainer().getLogicalExpressionFactory().createInverseImplication(((Conjunction) expr.getLeftOperand()).getLeftOperand(), expr.getRightOperand());
             inv.accept(this);
-            inv = new WSMO4JManager().getLogicalExpressionFactory().createInverseImplication(((Conjunction) expr.getLeftOperand()).getRightOperand(), expr.getRightOperand());
+            inv = new WsmlFactoryContainer().getLogicalExpressionFactory().createInverseImplication(((Conjunction) expr.getLeftOperand()).getRightOperand(), expr.getRightOperand());
             inv.accept(this);
             return;
         }
@@ -378,9 +379,9 @@ public class WSMLDL2OWLTransformer implements Visitor {
         // if the right expression is a disunction, the expression can be
         // splitted in 2
         if (expr.getRightOperand() instanceof Disjunction) {
-            InverseImplication inv = new WSMO4JManager().getLogicalExpressionFactory().createInverseImplication(expr.getLeftOperand(), ((Disjunction) expr.getRightOperand()).getLeftOperand());
+            InverseImplication inv = new WsmlFactoryContainer().getLogicalExpressionFactory().createInverseImplication(expr.getLeftOperand(), ((Disjunction) expr.getRightOperand()).getLeftOperand());
             inv.accept(this);
-            inv = new WSMO4JManager().getLogicalExpressionFactory().createInverseImplication(expr.getLeftOperand(), ((Disjunction) expr.getRightOperand()).getRightOperand());
+            inv = new WsmlFactoryContainer().getLogicalExpressionFactory().createInverseImplication(expr.getLeftOperand(), ((Disjunction) expr.getRightOperand()).getRightOperand());
             inv.accept(this);
             return;
         }
@@ -1426,10 +1427,6 @@ public class WSMLDL2OWLTransformer implements Visitor {
                     uri = new URI(xsd + "float");
                 if (value.equals(WsmlDataType.WSML_DOUBLE))
                     uri = new URI(xsd + "double");
-                if (value.equals(WsmlDataType.WSML_IRI))
-                    uri = new URI(xsd + "anyURI");
-                if (value.equals(WsmlDataType.WSML_SQNAME))
-                    uri = new URI(xsd + "QName");
                 if (value.equals(WsmlDataType.WSML_BOOLEAN))
                     uri = new URI(xsd + "boolean");
                 if (value.equals(WsmlDataType.WSML_DURATION))
@@ -1486,10 +1483,6 @@ public class WSMLDL2OWLTransformer implements Visitor {
                     uri = new URI(xsd + "float");
                 if (value.getType().toString().equals(WsmlDataType.WSML_DOUBLE))
                     uri = new URI(xsd + "double");
-                if (value.getType().toString().equals(WsmlDataType.WSML_IRI))
-                    uri = new URI(xsd + "anyURI");
-                if (value.getType().toString().equals(WsmlDataType.WSML_SQNAME))
-                    uri = new URI(xsd + "QName");
                 if (value.getType().toString().equals(WsmlDataType.WSML_BOOLEAN))
                     uri = new URI(xsd + "boolean");
                 if (value.getType().toString().equals(WsmlDataType.WSML_DURATION))
@@ -1596,6 +1589,12 @@ public class WSMLDL2OWLTransformer implements Visitor {
             return dataValue;
         }
     }
+
+	@Override
+	public void visitTruthValue(TruthValue expr) {
+		// TODO Auto-generated method stub
+		
+	}
 }
 /*
  * $Log: not supported by cvs2svn $ Revision 1.13 2007/04/25 15:55:07 graham

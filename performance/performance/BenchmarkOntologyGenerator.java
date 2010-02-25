@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
 import org.deri.wsmo4j.logicalexpression.util.OntologyUtil;
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.AttributeValueMolecule;
@@ -44,15 +45,15 @@ import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Relation;
 import org.omwg.ontology.RelationInstance;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
+import org.wsmo.common.BuiltIn;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Namespace;
 import org.wsmo.common.TopEntity;
 import org.wsmo.common.WSML;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.common.exception.SynchronisationException;
 import org.wsmo.factory.DataFactory;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
@@ -150,11 +151,11 @@ public class BenchmarkOntologyGenerator {
 	
 	
 	public static void main(String[] args) throws Exception{
-		WSMO4JManager wsmo4jManager = new WSMO4JManager();
-		wsmoFactory = wsmo4jManager.getWSMOFactory();
-		leFactory = wsmo4jManager.getLogicalExpressionFactory();
-		dataFactory = wsmo4jManager.getDataFactory();
-		serializer = Factory.createSerializer(null);
+		FactoryContainer factory = new WsmlFactoryContainer();
+		wsmoFactory = factory.getWsmoFactory();
+		leFactory = factory.getLogicalExpressionFactory();
+		dataFactory = factory.getXmlDataFactory();
+		serializer = new WSMLSerializerImpl();
 		
 		BenchmarkOntologyGenerator generator = new BenchmarkOntologyGenerator();
 		generator.genSubconceptOntologies();
@@ -193,7 +194,7 @@ public class BenchmarkOntologyGenerator {
 	 * @throws InvalidModelException
 	 */
 	public void genSubconceptOntologies() 
-			throws IOException, SynchronisationException, InvalidModelException {
+			throws IOException, InvalidModelException {
 		Ontology ontology = null;
 		
 		int[] amount = new int[numberOfDataPoints];
@@ -249,7 +250,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r1 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query1"));
 			r1.createParameter((byte) 0);
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
-			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("?x memberOf c1"));
+			query1.setParameterValue((byte) 0, dataFactory.createString("?x memberOf c1"));
 			// add NFPs to query 1
 			String description = "This query will return two result sets containing " +
 					"i1 and i2.";
@@ -260,7 +261,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
 			r2.createParameter((byte) 0);
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
-			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("?x memberOf ?y"));
+			query2.setParameterValue((byte) 0, dataFactory.createString("?x memberOf ?y"));
 			// add NFPs to query 2
 			description = "This query will return three result sets containing i1 and i2 (i2 is " +
 					"member of two concepts).";
@@ -303,7 +304,7 @@ public class BenchmarkOntologyGenerator {
 	 * @throws InvalidModelException
 	 */
 	public void genDeepSubconceptOntologies() 
-			throws IOException, SynchronisationException, InvalidModelException {
+			throws IOException, InvalidModelException {
 		Ontology ontology = null;
 		
 		// reduce amounts of entities that shall be created for this ontology type
@@ -360,7 +361,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r1 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query1"));
 			r1.createParameter((byte) 0);
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
-			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("?x memberOf c1"));
+			query1.setParameterValue((byte) 0, dataFactory.createString("?x memberOf c1"));
 			// add NFPs to query 1
 			String description = "This query will return two result sets containing " +
 					"i1 and i2.";
@@ -371,7 +372,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
 			r2.createParameter((byte) 0);
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
-			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("?x memberOf ?y"));
+			query2.setParameterValue((byte) 0, dataFactory.createString("?x memberOf ?y"));
 			// add NFPs to query 2
 			description = "This query will return a number of result sets rising along with " +
 					"the amount of subconcept expressions in the ontology.";
@@ -413,7 +414,7 @@ public class BenchmarkOntologyGenerator {
 	 * @throws InvalidModelException
 	 */
 	public void genInstanceOntologies() 
-			throws IOException, SynchronisationException, InvalidModelException {
+			throws IOException, InvalidModelException {
 		Ontology ontology = null;
 		
 		int[] amount = new int[numberOfDataPoints];
@@ -458,7 +459,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r1 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query1"));
 			r1.createParameter((byte) 0);
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
-			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("?x memberOf c1"));
+			query1.setParameterValue((byte) 0, dataFactory.createString("?x memberOf c1"));
 			// add NFPs to query 1
 			String description = "This query will return a number of result sets equivalent " +
 					"to the number of memberof expressions in the ontology.";
@@ -500,7 +501,7 @@ public class BenchmarkOntologyGenerator {
 	 * @throws InvalidModelException
 	 */
 	public void genInstanceANDsubconceptOntologies() 
-			throws IOException, SynchronisationException, InvalidModelException {
+			throws IOException, InvalidModelException {
 		Ontology ontology = null;
 		
 		int[] amount = new int[numberOfDataPoints];
@@ -546,7 +547,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r1 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query1"));
 			r1.createParameter((byte) 0);
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
-			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("?x memberOf c1"));
+			query1.setParameterValue((byte) 0, dataFactory.createString("?x memberOf c1"));
 			// add NFPs to query 1
 			String description = "This query will return a number of result sets equivalent " +
 					"to the number of memberof expressions in the ontology.";
@@ -557,7 +558,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
 			r2.createParameter((byte) 0);
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
-			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("?x memberOf ?y"));
+			query2.setParameterValue((byte) 0, dataFactory.createString("?x memberOf ?y"));
 			// add NFPs to query 2
 			description = "This query will return a number of result sets equivalent " +
 					"to 2 x the number of memberof expressions in the ontology.";
@@ -601,7 +602,7 @@ public class BenchmarkOntologyGenerator {
 	 * @throws InvalidModelException
 	 */
 	public void genInstanceANDdeepSubconceptOntologies() 
-			throws IOException, SynchronisationException, InvalidModelException {
+			throws IOException, InvalidModelException {
 		Ontology ontology = null;
 		int[] amount = new int[numberOfDataPoints];
 		for (int i=0;i <amount.length;i++){
@@ -651,7 +652,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r1 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query1"));
 			r1.createParameter((byte) 0);
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
-			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("?x memberOf c1"));
+			query1.setParameterValue((byte) 0, dataFactory.createString("?x memberOf c1"));
 			// add NFPs to query 1
 			String description = "This query will return a number of result sets equivalent " +
 					"to the number of memberof expressions in the ontology.";
@@ -662,7 +663,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
 			r2.createParameter((byte) 0);
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
-			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("?x memberOf ?y"));
+			query2.setParameterValue((byte) 0, dataFactory.createString("?x memberOf ?y"));
 			// add NFPs to query 2
 			description = "The number of result sets returned by this query is growing exponentially " +
 					"in relation to the amount of subconcept expressions in the ontology.";
@@ -710,7 +711,7 @@ public class BenchmarkOntologyGenerator {
 	 * @throws InvalidModelException
 	 */
 	public void genOfTypeOntologies() 
-			throws IOException, SynchronisationException, InvalidModelException {
+			throws IOException, InvalidModelException {
 		Ontology ontology = null;
 		
 		int[] amount = new int[numberOfDataPoints];
@@ -754,7 +755,7 @@ public class BenchmarkOntologyGenerator {
 			Attribute attribute;
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept1.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
-				attribute.addType(concept2);
+				attribute.addConstrainingType(concept2);
 				attribute.setConstraining(true);
 				instance1.addAttributeValue(attribute.getIdentifier(), instance2);
 			}
@@ -766,7 +767,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r1 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query1"));
 			r1.createParameter((byte) 0);
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
-			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("i1[a1 hasValue ?x]"));
+			query1.setParameterValue((byte) 0, dataFactory.createString("i1[a1 hasValue ?x]"));
 			// add NFPs to query 1
 			String description = "This query will return exactly one result set.";
 			String result1 = "?x=i2";
@@ -776,7 +777,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
 			r2.createParameter((byte) 0);
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
-			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("?x[?y hasValue ?z]"));
+			query2.setParameterValue((byte) 0, dataFactory.createString("?x[?y hasValue ?z]"));
 			// add NFPs to query 2
 			description = "This query returns a number of result sets equivalent to the number " +
 					"of attribute value expressions in the ontology.";
@@ -824,7 +825,7 @@ public class BenchmarkOntologyGenerator {
 	 * @throws InvalidModelException
 	 */
 	public void genOfTypeANDsubconceptOntologies() 
-			throws IOException, SynchronisationException, InvalidModelException {
+			throws IOException, InvalidModelException {
 		Ontology ontology = null;
 		
 		int[] amount = new int[numberOfDataPoints];
@@ -869,7 +870,7 @@ public class BenchmarkOntologyGenerator {
 			Attribute attribute;
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept1.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
-				attribute.addType(concept1);
+				attribute.addConstrainingType(concept1);
 				attribute.setConstraining(true);
 				instance1.addAttributeValue(attribute.getIdentifier(), instance2);
 			}
@@ -881,7 +882,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r1 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query1"));
 			r1.createParameter((byte) 0);
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
-			query1.setParameterValue((byte) 0, dataFactory.createWsmlString(
+			query1.setParameterValue((byte) 0, dataFactory.createString(
 					"i1[a1 hasValue ?x]"));
 			// add NFPs to query 1
 			String description = "This query will return exactly one result set, as it is querying " +
@@ -893,7 +894,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
 			r2.createParameter((byte) 0);
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
-			query2.setParameterValue((byte) 0, dataFactory.createWsmlString(
+			query2.setParameterValue((byte) 0, dataFactory.createString(
 					"?x[?y hasValue ?z]"));
 			// add NFPs to query 2
 			description = "This query will return a number of result sets equivalent to the " +
@@ -941,7 +942,7 @@ public class BenchmarkOntologyGenerator {
 	 * @throws InvalidModelException
 	 */
 	public void genCardinality01Ontologies() 
-			throws IOException, SynchronisationException, InvalidModelException {
+			throws IOException, InvalidModelException {
 		Ontology ontology = null;	
 		
 		int[] amount = new int[numberOfDataPoints];
@@ -982,7 +983,7 @@ public class BenchmarkOntologyGenerator {
 			Attribute attribute = null;
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
-				attribute.addType(concept);
+				attribute.addInferringType(concept);
 				attribute.setMinCardinality(0);
 				attribute.setMaxCardinality(1);
 				instance1.addAttributeValue(attribute.getIdentifier(), instance2);
@@ -995,7 +996,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r1 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query1"));
 			r1.createParameter((byte) 0);
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
-			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("i1[a1 hasValue ?x]"));
+			query1.setParameterValue((byte) 0, dataFactory.createString("i1[a1 hasValue ?x]"));
 			// add NFPs to query 1
 			String description = "This query will return exactly one result set, as it is querying " +
 					"for the value of one specific attribute.";
@@ -1006,7 +1007,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
 			r2.createParameter((byte) 0);
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
-			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("?x[?y hasValue ?z]"));
+			query2.setParameterValue((byte) 0, dataFactory.createString("?x[?y hasValue ?z]"));
 			// add NFPs to query 2
 			description = "This query will return a number of result sets equivalent to the " +
 					"amount of attribute value expressions in the ontology.";
@@ -1051,7 +1052,7 @@ public class BenchmarkOntologyGenerator {
 	 * @throws InvalidModelException
 	 */
 	public void genCardinality010Ontologies() 
-			throws IOException, SynchronisationException, InvalidModelException {
+			throws IOException, InvalidModelException {
 		Ontology ontology = null;
 		
 		int[] amount = new int[numberOfDataPoints];
@@ -1091,7 +1092,7 @@ public class BenchmarkOntologyGenerator {
 			Attribute attribute = null;
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
-				attribute.addType(concept);
+				attribute.addInferringType(concept);
 				attribute.setMinCardinality(0);
 				attribute.setMaxCardinality(10);
 				instance1.addAttributeValue(attribute.getIdentifier(), instance2);
@@ -1104,7 +1105,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r1 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query1"));
 			r1.createParameter((byte) 0);
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
-			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("i1[a1 hasValue ?x]"));
+			query1.setParameterValue((byte) 0, dataFactory.createString("i1[a1 hasValue ?x]"));
 			// add NFPs to query 1
 			String description = "This query will return exactly one result set, as it is querying " +
 					"for the value of one specific attribute.";
@@ -1115,7 +1116,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
 			r2.createParameter((byte) 0);
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
-			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("?x[?y hasValue ?z]"));
+			query2.setParameterValue((byte) 0, dataFactory.createString("?x[?y hasValue ?z]"));
 			// add NFPs to query 2
 			description = "This query will return a number of result sets equivalent to the " +
 					"amount of attribute value expressions in the ontology.";
@@ -1160,7 +1161,7 @@ public class BenchmarkOntologyGenerator {
 	 * @throws InvalidModelException
 	 */
 	public void genMinCardinalityOntologies() 
-			throws IOException, SynchronisationException, InvalidModelException {
+			throws IOException, InvalidModelException {
 		Ontology ontology = null;
 		
 		int[] amount = new int[numberOfDataPoints];
@@ -1200,7 +1201,7 @@ public class BenchmarkOntologyGenerator {
 			Attribute attribute = null;
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
-				attribute.addType(wsmoFactory.createConcept(wsmoFactory.createIRI(ns, "c2")));
+				attribute.addInferringType(wsmoFactory.createConcept(wsmoFactory.createIRI(ns, "c2")));
 				attribute.setMinCardinality(1);
 				attribute.setMaxCardinality(Integer.MAX_VALUE);
 				instance1.addAttributeValue(attribute.getIdentifier(), instance2);
@@ -1213,7 +1214,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r1 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query1"));
 			r1.createParameter((byte) 0);
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
-			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("i1[a1 hasValue ?x]"));
+			query1.setParameterValue((byte) 0, dataFactory.createString("i1[a1 hasValue ?x]"));
 			// add NFPs to query 1
 			String description = "This query will return exactly one result set, as it is querying " +
 					"for the value of one specific attribute.";
@@ -1224,7 +1225,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
 			r2.createParameter((byte) 0);
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
-			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("?x[?y hasValue ?z]"));
+			query2.setParameterValue((byte) 0, dataFactory.createString("?x[?y hasValue ?z]"));
 			// add NFPs to query 2
 			description = "This query will return a number of result sets equivalent to the " +
 					"amount of attribute value expressions in the ontology.";
@@ -1272,7 +1273,7 @@ public class BenchmarkOntologyGenerator {
 	 * @throws InvalidModelException
 	 */
 	public void genInverseAttributeOntologies() 
-			throws IOException, SynchronisationException, InvalidModelException {
+			throws IOException, InvalidModelException {
 		Ontology ontology = null;
 		
 		int[] amount = new int[numberOfDataPoints];
@@ -1300,7 +1301,7 @@ public class BenchmarkOntologyGenerator {
 			ontology.addConcept(concept1);
 			ontology.addConcept(concept2);
 			Attribute attribute1 = concept2.createAttribute(wsmoFactory.createIRI(ns, "a0"));
-			attribute1.addType(concept1);
+			attribute1.addInferringType(concept1);
 			
 			// add instances
 			Instance instance1 = wsmoFactory.createInstance(
@@ -1316,7 +1317,7 @@ public class BenchmarkOntologyGenerator {
 			Attribute attribute = null;
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept1.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
-				attribute.addType(concept2);
+				attribute.addInferringType(concept2);
 				attribute.setInverseOf(attribute1.getIdentifier());
 				instance2.addAttributeValue(attribute1.getIdentifier(), instance1);
 			}
@@ -1328,7 +1329,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r1 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query1"));
 			r1.createParameter((byte) 0);
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
-			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("i1[a1 hasValue ?x]"));
+			query1.setParameterValue((byte) 0, dataFactory.createString("i1[a1 hasValue ?x]"));
 			// add NFPs to query 1
 			String description = "This query will return exactly one result set, as it is querying " +
 					"for the value of one specific attribute.";
@@ -1339,7 +1340,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
 			r2.createParameter((byte) 0);
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
-			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("i1[?x hasValue ?y]"));
+			query2.setParameterValue((byte) 0, dataFactory.createString("i1[?x hasValue ?y]"));
 			// add NFPs to query 2
 			description = "This query will return a number of result sets equivalent to the " +
 					"amount of inverse attribute expressions in the ontology.";
@@ -1387,7 +1388,7 @@ public class BenchmarkOntologyGenerator {
 	 * @throws InvalidModelException
 	 */
 	public void genTransitiveAttributeOntologies() 
-			throws IOException, SynchronisationException, InvalidModelException {
+			throws IOException, InvalidModelException {
 		Ontology ontology = null;
 		
 		int[] amount = new int[numberOfDataPoints];
@@ -1413,7 +1414,7 @@ public class BenchmarkOntologyGenerator {
 			Concept concept = wsmoFactory.createConcept(wsmoFactory.createIRI(ns, "c1"));
 			ontology.addConcept(concept);
 			Attribute attribute1 = concept.createAttribute(wsmoFactory.createIRI(ns, "a0"));
-			attribute1.addType(concept);
+			attribute1.addInferringType(concept);
 			attribute1.setTransitive(true);
 			
 			// add instances
@@ -1436,7 +1437,7 @@ public class BenchmarkOntologyGenerator {
 			Attribute attribute = null;
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
-				attribute.addType(concept);
+				attribute.addInferringType(concept);
 				attribute.setTransitive(true);
 				instance1.addAttributeValue(attribute.getIdentifier(), instance2);
 				instance2.addAttributeValue(attribute.getIdentifier(), instance3);
@@ -1449,7 +1450,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r1 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query1"));
 			r1.createParameter((byte) 0);
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
-			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("i1[a0 hasValue ?x]"));
+			query1.setParameterValue((byte) 0, dataFactory.createString("i1[a0 hasValue ?x]"));
 			// add NFPs to query 1
 			String description = "This query will return two result sets; it is querying " +
 					"for the value of one specific transitive attribute.";
@@ -1460,7 +1461,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
 			r2.createParameter((byte) 0);
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
-			query2.setParameterValue((byte) 0, dataFactory.createWsmlString(
+			query2.setParameterValue((byte) 0, dataFactory.createString(
 					"?x[?y hasValue ?z]"));
 			// add NFPs to query 2
 			description = "This query will return a number of result sets equivalent to" +
@@ -1508,7 +1509,7 @@ public class BenchmarkOntologyGenerator {
 	 * @throws InvalidModelException
 	 */
 	public void genSymmetricAttributeOntologies() 
-			throws IOException, SynchronisationException, InvalidModelException {
+			throws IOException, InvalidModelException {
 		Ontology ontology = null;
 		
 		int[] amount = new int[numberOfDataPoints];
@@ -1534,7 +1535,7 @@ public class BenchmarkOntologyGenerator {
 			Concept concept = wsmoFactory.createConcept(wsmoFactory.createIRI(ns, "c1"));
 			ontology.addConcept(concept);
 			Attribute attribute1 = concept.createAttribute(wsmoFactory.createIRI(ns, "a0"));
-			attribute1.addType(concept);
+			attribute1.addInferringType(concept);
 			attribute1.setSymmetric(true);
 			
 			// add instances
@@ -1552,7 +1553,7 @@ public class BenchmarkOntologyGenerator {
 			Attribute attribute = null;
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
-				attribute.addType(concept);
+				attribute.addInferringType(concept);
 				attribute.setSymmetric(true);
 				instance1.addAttributeValue(attribute.getIdentifier(), instance2);
 			}
@@ -1564,7 +1565,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r1 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query1"));
 			r1.createParameter((byte) 0);
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
-			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("i2[a0 hasValue ?x]"));
+			query1.setParameterValue((byte) 0, dataFactory.createString("i2[a0 hasValue ?x]"));
 			// add NFPs to query 1
 			String description = "This query will return exactly one result set as it is querying " +
 					"for the value of one specific symmetric attribute.";
@@ -1575,7 +1576,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
 			r2.createParameter((byte) 0);
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
-			query2.setParameterValue((byte) 0, dataFactory.createWsmlString(
+			query2.setParameterValue((byte) 0, dataFactory.createString(
 					"?x[?y hasValue ?z]"));
 			ontology.addRelationInstance(query2);
 			// add NFPs to query 2
@@ -1620,7 +1621,7 @@ public class BenchmarkOntologyGenerator {
 	 * @throws InvalidModelException
 	 */
 	public void genReflexiveAttributeOntologies() 
-			throws IOException, SynchronisationException, InvalidModelException {
+			throws IOException, InvalidModelException {
 		Ontology ontology = null;
 		
 		int[] amount = new int[numberOfDataPoints];
@@ -1656,7 +1657,7 @@ public class BenchmarkOntologyGenerator {
 			Attribute attribute = null;
 			for (int j = 0; j < amount[i]; j++) {
 				attribute = concept.createAttribute(wsmoFactory.createIRI(ns, "a" + (j + 1)));
-				attribute.addType(concept);
+				attribute.addInferringType(concept);
 				attribute.setReflexive(true);
 			}
 
@@ -1667,7 +1668,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r1 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query1"));
 			r1.createParameter((byte) 0);
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
-			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("i1[a1 hasValue ?x]"));
+			query1.setParameterValue((byte) 0, dataFactory.createString("i1[a1 hasValue ?x]"));
 			// add NFPs to query 1
 			String description = "This query will return exactly one result set as it is querying " +
 					"for the value of one specific reflexive attribute.";
@@ -1678,7 +1679,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
 			r2.createParameter((byte) 0);
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
-			query2.setParameterValue((byte) 0, dataFactory.createWsmlString("i1[?x hasValue ?y]"));
+			query2.setParameterValue((byte) 0, dataFactory.createString("i1[?x hasValue ?y]"));
 			// add NFPs to query 2
 			description = "This query will return a number of result sets equivalent to the " +
 					"amount of reflexive attribute expressions in the ontology.";
@@ -1723,7 +1724,7 @@ public class BenchmarkOntologyGenerator {
 	 * @throws ParserException 
 	 */
 	public void genLocallyStratifiedNegationOntologies() 
-			throws IOException, SynchronisationException, InvalidModelException, ParserException {
+			throws IOException, InvalidModelException, ParserException {
 		Ontology ontology = null;
 		
 		int[] amount = new int[numberOfDataPoints];
@@ -1789,7 +1790,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r1 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query1"));
 			r1.createParameter((byte) 0);
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
-			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("i1[a0 hasValue ?x]"));
+			query1.setParameterValue((byte) 0, dataFactory.createString("i1[a0 hasValue ?x]"));
 			// add NFPs to query 1
 			String description = "This query will return exactly one result set; it is querying " +
 					"for the value of one specific attribute that gets a value as result of " +
@@ -1801,7 +1802,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r2 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query2"));
 			r2.createParameter((byte) 0);
 			RelationInstance query2 = wsmoFactory.createRelationInstance(r2);
-			query2.setParameterValue((byte) 0, dataFactory.createWsmlString(
+			query2.setParameterValue((byte) 0, dataFactory.createString(
 					"?x[?y hasValue ?z]"));
 			// add NFPs to query 2
 			description = "This query will return a number of result sets that is equivalent to the " +
@@ -1852,7 +1853,7 @@ public class BenchmarkOntologyGenerator {
 	 * @throws ParserException 
 	 */
 	public void genGloballyStratifiedNegationOntologies() 
-			throws IOException, SynchronisationException, InvalidModelException, ParserException {
+			throws IOException, InvalidModelException, ParserException {
 		Ontology ontology = null;
 		
 		int[] amount = new int[numberOfDataPoints];
@@ -1918,7 +1919,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r1 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query1"));
 			r1.createParameter((byte) 0);
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
-			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("?x memberOf c2"));
+			query1.setParameterValue((byte) 0, dataFactory.createString("?x memberOf c2"));
 			// add NFPs to query 1
 			String description = "This query will return a number of result sets equivalent " +
 					"to the number of logical expressions, as well as instances and attribute " +
@@ -1969,7 +1970,7 @@ public class BenchmarkOntologyGenerator {
 	 * @throws ParserException 
 	 */
 	public void genBuiltInAttributeOntologies() 
-			throws IOException, SynchronisationException, InvalidModelException, ParserException {
+			throws IOException, InvalidModelException, ParserException {
 		Ontology ontology = null;
 		
 		int[] amount = new int[numberOfDataPoints];
@@ -2002,7 +2003,7 @@ public class BenchmarkOntologyGenerator {
 			// add instance
 			Instance instance1 = wsmoFactory.createInstance(wsmoFactory.createIRI(ns, "i0"));
 			instance1.addAttributeValue(wsmoFactory.createIRI(ns, "a0"), 
-					dataFactory.createWsmlInteger("10"));
+					dataFactory.createInteger("10"));
 			ontology.addInstance(instance1);
 			
 			// add amount[i] number of logical expressions containing built-ins
@@ -2021,30 +2022,30 @@ public class BenchmarkOntologyGenerator {
 			for (int j = 0; j < amount[i]; j++) {
 				instance = wsmoFactory.createInstance(wsmoFactory.createIRI(ns, "i" + (j+1)));
 				instance.addAttributeValue(wsmoFactory.createIRI(ns, "a" + (j+1)), 
-						dataFactory.createWsmlInteger("" + (Math.abs(random.nextInt()) % 80)));
+						dataFactory.createInteger("" + (Math.abs(random.nextInt()) % 80)));
 				/* create the following logical expression programmaticaly:
 				 * "?x[a" + j + " hasValue ?y] and (((?y*2)/4)+1) < 16 implies ?x memberOf c2" */
 				molecule = leFactory.createAttributeValue(leFactory.createVariable("?x"), 
 						wsmoFactory.createIRI(ns, "a" + j), leFactory.createVariable("?y"));
 				terms2.clear();
 				terms2.add(leFactory.createVariable("?y"));
-				terms2.add(dataFactory.createWsmlInteger("2"));
+				terms2.add(dataFactory.createInteger("2"));
 				builtIn2 = leFactory.createConstructedTerm(
-						wsmoFactory.createIRI(Constants.NUMERIC_MUL), terms2);
+						wsmoFactory.createIRI(BuiltIn.NUMERIC_MULTIPLY.getFullName()), terms2);
 				terms3.clear();
 				terms3.add(builtIn2);
-				terms3.add(dataFactory.createWsmlInteger("4"));
+				terms3.add(dataFactory.createInteger("4"));
 				builtIn3 = leFactory.createConstructedTerm(
-						wsmoFactory.createIRI(Constants.NUMERIC_DIV), terms3);
+						wsmoFactory.createIRI(BuiltIn.NUMERIC_DIVIDE.getFullName()), terms3);
 				terms4.clear();
 				terms4.add(builtIn3);
-				terms4.add(dataFactory.createWsmlInteger("1"));
+				terms4.add(dataFactory.createInteger("1"));
 				builtIn4 = leFactory.createConstructedTerm(
-						wsmoFactory.createIRI(Constants.NUMERIC_ADD), terms4);
+						wsmoFactory.createIRI(BuiltIn.NUMERIC_ADD.getFullName()), terms4);
 				terms1.clear();
 				terms1.add(builtIn4);
-				terms1.add(dataFactory.createWsmlInteger("16"));
-				builtIn1 = leFactory.createAtom(wsmoFactory.createIRI(Constants.LESS_THAN), 
+				terms1.add(dataFactory.createInteger("16"));
+				builtIn1 = leFactory.createAtom(wsmoFactory.createIRI(BuiltIn.LESS_THAN.getFullName()), 
 						terms1);
 				memberMol = leFactory.createMemberShipMolecule(leFactory.createVariable("?x"),
 						wsmoFactory.createIRI(ns, "c2"));
@@ -2061,7 +2062,7 @@ public class BenchmarkOntologyGenerator {
 			Relation r1 = wsmoFactory.createRelation(wsmoFactory.createIRI(ns, "query1"));
 			r1.createParameter((byte) 0);
 			RelationInstance query1 = wsmoFactory.createRelationInstance(r1);
-			query1.setParameterValue((byte) 0, dataFactory.createWsmlString("?x memberOf c2"));
+			query1.setParameterValue((byte) 0, dataFactory.createString("?x memberOf c2"));
 			// add NFPs to query 1
 			String description = "This query will return a number of result sets which is " +
 					"depending on the random factor at creating the logical expressions for " +
@@ -2122,12 +2123,12 @@ public class BenchmarkOntologyGenerator {
 	 */
 	private Ontology addNFPs(Ontology ontology, String title, String description, 
 			int replications) 
-			throws SynchronisationException, InvalidModelException {
+			throws InvalidModelException {
 		
-		ontology.addNFPValue(wsmoFactory.createIRI(DC_TITLE), 
-				dataFactory.createWsmlString(title));
-		ontology.addNFPValue(wsmoFactory.createIRI(DC_DESCRIPTION), 
-				dataFactory.createWsmlString(description));
+		ontology.addAnnotationValue(wsmoFactory.createIRI(DC_TITLE), 
+				dataFactory.createString(title));
+		ontology.addAnnotationValue(wsmoFactory.createIRI(DC_DESCRIPTION), 
+				dataFactory.createString(description));
 		
 		// collect amount of ontology terms
 		List <Term> concepts = OntologyUtil.getConcepts(ontology);
@@ -2137,17 +2138,17 @@ public class BenchmarkOntologyGenerator {
 		}
 		int instances = OntologyUtil.getInstances(ontology).size();
 		
-		ontology.addNFPValue(wsmoFactory.createIRI(BM_CONCEPTS), 
-				dataFactory.createWsmlInteger("" + concepts.size()));
-		ontology.addNFPValue(wsmoFactory.createIRI(BM_INSTANCES), 
-				dataFactory.createWsmlInteger("" + instances));
-		ontology.addNFPValue(wsmoFactory.createIRI(BM_ATTRIBUTES), 
-				dataFactory.createWsmlInteger("" + attributes));
-		ontology.addNFPValue(wsmoFactory.createIRI(BM_TOTAL), 
-				dataFactory.createWsmlInteger("" + 
+		ontology.addAnnotationValue(wsmoFactory.createIRI(BM_CONCEPTS), 
+				dataFactory.createInteger("" + concepts.size()));
+		ontology.addAnnotationValue(wsmoFactory.createIRI(BM_INSTANCES), 
+				dataFactory.createInteger("" + instances));
+		ontology.addAnnotationValue(wsmoFactory.createIRI(BM_ATTRIBUTES), 
+				dataFactory.createInteger("" + attributes));
+		ontology.addAnnotationValue(wsmoFactory.createIRI(BM_TOTAL), 
+				dataFactory.createInteger("" + 
 						(concepts.size() + instances + attributes)));
-		ontology.addNFPValue(wsmoFactory.createIRI(BM_REPLICATED), 
-				dataFactory.createWsmlInteger("" + replications));
+		ontology.addAnnotationValue(wsmoFactory.createIRI(BM_REPLICATED), 
+				dataFactory.createInteger("" + replications));
 		
 		return ontology;
 	}
@@ -2157,13 +2158,13 @@ public class BenchmarkOntologyGenerator {
 	 */
 	private RelationInstance addNFPs(RelationInstance relInst, String title, 
 			String description, String result) 
-			throws SynchronisationException, InvalidModelException {
-		relInst.addNFPValue(wsmoFactory.createIRI(DC_TITLE), 
-				dataFactory.createWsmlString(title));
-		relInst.addNFPValue(wsmoFactory.createIRI(DC_DESCRIPTION), 
-				dataFactory.createWsmlString(description));
-		relInst.addNFPValue(wsmoFactory.createIRI(BM_RESULT), 
-				dataFactory.createWsmlString(result));
+			throws InvalidModelException {
+		relInst.addAnnotationValue(wsmoFactory.createIRI(DC_TITLE), 
+				dataFactory.createString(title));
+		relInst.addAnnotationValue(wsmoFactory.createIRI(DC_DESCRIPTION), 
+				dataFactory.createString(description));
+		relInst.addAnnotationValue(wsmoFactory.createIRI(BM_RESULT), 
+				dataFactory.createString(result));
 		
 		return relInst;
 	}

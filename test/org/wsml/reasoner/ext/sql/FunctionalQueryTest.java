@@ -5,26 +5,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.wsml.reasoner.api.LPReasoner;
-import org.wsml.reasoner.api.WSMLReasonerFactory;
-import org.wsml.reasoner.api.inconsistency.InconsistencyException;
-import org.wsml.reasoner.ext.sql.WSMLQuery;
-import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsmo.common.TopEntity;
-import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.Factory;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
+import org.wsml.reasoner.api.LPReasoner;
+import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
+import org.wsmo.common.TopEntity;
+import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
+
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 public class FunctionalQueryTest extends TestCase
 {
@@ -43,7 +40,8 @@ public class FunctionalQueryTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		parser = Factory.createParser(null);
+//		WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
+		parser = new WsmlParser();
 		ontologyIRI1 = lotrOntology.toURI().toURL();
 		ontologyIRI2 = simpsonsOntology.toURI().toURL();
 		

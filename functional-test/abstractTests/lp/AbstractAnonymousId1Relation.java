@@ -18,13 +18,17 @@
  */
 package abstractTests.lp;
 
-import java.util.Map;
-import java.util.Set;
-import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Variable;
 import helper.LPHelper;
 import helper.OntologyHelper;
+
+import java.util.Map;
+import java.util.Set;
+
 import junit.framework.TestCase;
+
+import org.omwg.logicalexpression.terms.Term;
+import org.omwg.ontology.Variable;
+
 import abstractTests.LP;
 
 public abstract class AbstractAnonymousId1Relation extends TestCase implements LP {

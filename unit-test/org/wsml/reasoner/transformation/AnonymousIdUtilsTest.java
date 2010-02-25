@@ -20,8 +20,6 @@ package org.wsml.reasoner.transformation;
 
 import junit.framework.TestCase;
 
-import org.wsml.reasoner.transformation.AnonymousIdUtils;
-
 public class AnonymousIdUtilsTest extends TestCase {
 
     public void testIriGeneration() {

@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.logicalexpression.terms.NumberedAnonymousID;
 import org.omwg.logicalexpression.terms.Term;
 import org.wsmo.common.IRI;
+import org.wsmo.common.NumberedAnonymousID;
 import org.wsmo.common.UnnumberedAnonymousID;
 import org.wsmo.factory.WsmoFactory;
 

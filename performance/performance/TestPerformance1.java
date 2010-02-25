@@ -10,8 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.serializer.wsml.VisitorSerializeWSMLTerms;
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
+import org.deri.wsmo4j.io.serializer.wsml.SerializeWSMLTermsVisitor;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
@@ -19,11 +21,11 @@ import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.TopEntity;
-import org.wsmo.factory.Factory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
+
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 public class TestPerformance1 {
 
@@ -219,7 +221,8 @@ public class TestPerformance1 {
         PerformanceResult performanceresult = new PerformanceResult(reasoner);
         
         if (reasoner != null){
-            LogicalExpression query = new WSMO4JManager().getLogicalExpressionFactory().createLogicalExpression(theQuery, theOntology);
+        	LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
+            LogicalExpression query = leParser.parse(theQuery);
             
             System.out.print("Registering Ontology ");
             long t1_start = System.currentTimeMillis();
@@ -270,7 +273,7 @@ public class TestPerformance1 {
     }
     
     private Ontology loadOntology(String file) {
-        Parser wsmlParser = Factory.createParser(null);
+    	Parser wsmlParser = new WsmlParser();
 
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);
         try {
@@ -291,7 +294,7 @@ public class TestPerformance1 {
     }
 
     private String termToString(Term t, Ontology o) {
-        VisitorSerializeWSMLTerms v = new VisitorSerializeWSMLTerms(o);
+        SerializeWSMLTermsVisitor v = new SerializeWSMLTermsVisitor(o);
         t.accept(v);
         return v.getSerializedObject();
     }

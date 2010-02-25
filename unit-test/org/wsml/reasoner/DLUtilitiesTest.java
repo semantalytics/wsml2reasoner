@@ -34,12 +34,13 @@ import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.WsmlDataType;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DatalogBasedWSMLReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.factory.DataFactory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -51,7 +52,7 @@ public class DLUtilitiesTest extends TestCase {
 	protected DatalogBasedWSMLReasoner reasoner;
 	protected String ns = "http://ex.org#";
 	protected Ontology ontology;
-	protected WSMO4JManager wsmoManager;
+	protected FactoryContainer factory;
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
 	protected DataFactory dataFactory;
@@ -61,10 +62,10 @@ public class DLUtilitiesTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		wsmoManager = new WSMO4JManager();
-		wsmoFactory = wsmoManager.getWSMOFactory();
-		dataFactory = wsmoManager.getDataFactory();
-		leFactory = wsmoManager.getLogicalExpressionFactory();
+		factory = new WsmlFactoryContainer();
+		wsmoFactory = factory.getWsmoFactory();
+		dataFactory = factory.getXmlDataFactory();
+		leFactory = factory.getLogicalExpressionFactory();
 
 		ontology = wsmoFactory
 				.createOntology(wsmoFactory.createIRI(ns + "ont"));
@@ -88,13 +89,12 @@ public class DLUtilitiesTest extends TestCase {
 
 		Attribute badAttribute = badConcept.createAttribute(wsmoFactory
 				.createIRI(ns + "a"));
-		badAttribute.addType(dataFactory
-				.createWsmlDataType(WsmlDataType.WSML_STRING));
+		badAttribute.addInferringType(dataFactory.createDataType(WsmlDataType.WSML_STRING));
 
 		Instance i = new InstanceImpl(wsmoFactory.createIRI(ns + "aa"));
 		i.addConcept(badConcept);
 		i.addAttributeValue(wsmoFactory.createIRI(ns + "a"), dataFactory
-				.createWsmlInteger(new BigInteger("3")));
+				.createInteger(new BigInteger("3")));
 
 		ontology.addInstance(i);
 
@@ -105,7 +105,7 @@ public class DLUtilitiesTest extends TestCase {
 				.getFactory().createFlightReasoner(params);
 
 		reasoner.registerOntology(ontology);
-		dlUtils = new DLUtilities(reasoner, wsmoManager);
+		dlUtils = new DLUtilities(reasoner, factory);
 	}
 
 	public void testGetAllConcepts() {

@@ -30,8 +30,9 @@ import junit.framework.TestCase;
 
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.transformation.le.LETestHelper;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
@@ -39,8 +40,11 @@ import org.wsmo.wsml.ParserException;
 public class LloydToporNormalizerTest extends TestCase {
 
 	protected LloydToporNormalizer normalizer;
+
 	protected String ns = "http://ex.org#";
+
 	protected WsmoFactory wsmoFactory;
+
 	protected LogicalExpressionFactory leFactory;
 
 	public LloydToporNormalizerTest() {
@@ -49,10 +53,10 @@ public class LloydToporNormalizerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		WSMO4JManager wsmoManager = new WSMO4JManager();
+		FactoryContainer wsmoManager = new WsmlFactoryContainer();
 		normalizer = new LloydToporNormalizer(wsmoManager);
 
-		wsmoFactory = wsmoManager.getWSMOFactory();
+		wsmoFactory = wsmoManager.getWsmoFactory();
 		leFactory = wsmoManager.getLogicalExpressionFactory();
 
 	}
@@ -74,19 +78,22 @@ public class LloydToporNormalizerTest extends TestCase {
 			Set<LogicalExpression> les = ax.listDefinitions();
 			int all = 0;
 			for (LogicalExpression le : les) {
-				if (checkContains(le, "_\"urn:f\"\n:-\n_\"urn:d\". ")) {
+				if (checkContains(le, LETestHelper
+						.buildLE("_\"urn:f\" :- _\"urn:d\"."))) {
 					all++;
 				}
-				if (checkContains(le, "_\"urn:a\"\n:-\n_\"urn:d\". ")) {
+				if (checkContains(le, LETestHelper
+						.buildLE("_\"urn:a\" :- _\"urn:d\"."))) {
 					all++;
 				}
-				if (checkContains(le, "_\"urn:b\"\n:-\n_\"urn:d\". ")) {
+				if (checkContains(le, LETestHelper
+						.buildLE("_\"urn:b\" :- _\"urn:d\"."))) {
 					all++;
 				}
-				if (checkContains(le, "_\"urn:c\"\n:-\n_\"urn:d\". ")) {
+				if (checkContains(le, LETestHelper
+						.buildLE("_\"urn:c\" :- _\"urn:d\"."))) {
 					all++;
 				}
-
 			}
 			assertEquals(4, all);
 
@@ -112,11 +119,14 @@ public class LloydToporNormalizerTest extends TestCase {
 			Set<LogicalExpression> les = ax.listDefinitions();
 			int all = 0;
 			for (LogicalExpression le : les) {
-				if (checkContains(le, "_\"urn:a\"\n:-\n_\"urn:b\". ")) {
+				if (checkContains(le, LETestHelper
+						.buildLE("_\"urn:a\" :- _\"urn:b\". "))) {
 					all++;
 				}
-				if (checkContains(le,
-						"_\"urn:a\"\n:-\n_\"urn:c\"\n  and _\"urn:f\"\n  and _\"urn:d\". ")) {
+				if (checkContains(
+						le,
+						LETestHelper
+								.buildLE("_\"urn:a\" :- _\"urn:c\"  and _\"urn:f\"  and _\"urn:d\". "))) {
 					all++;
 				}
 
@@ -124,37 +134,38 @@ public class LloydToporNormalizerTest extends TestCase {
 			assertEquals(2, all);
 		}
 	}
-	
-	public void testNormalizeAxiomsSplitComplexDisjunctiveBody() 
+
+	public void testNormalizeAxiomsSplitComplexDisjunctiveBody()
 			throws ParserException {
-		
+
 		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createIRI(ns
 				+ "axiom2"));
 		axiom
-				.addDefinition(LETestHelper		
-		//added to replicate bug no. 2615905 on sourceforge
-        //this is bound to fail right now
-        //remove when fixed
-        .buildLE(" _\"urn:r\"  :- _\"urn:a\" and ( _\"urn:b\" or _\"urn:c\")  and ( _\"urn:d\" or _\"urn:e\" )"));
-		
+				.addDefinition(LETestHelper
+				// added to replicate bug no. 2615905 on sourceforge
+						// this is bound to fail right now
+						// remove when fixed
+						.buildLE(" _\"urn:r\"  :- _\"urn:a\" and ( _\"urn:b\" or _\"urn:c\")  and ( _\"urn:d\" or _\"urn:e\" )"));
+
 		Set<Axiom> axioms = new HashSet<Axiom>();
 		axioms.add(axiom);
 
 		Set<Axiom> out = normalizer.normalizeAxioms(axioms);
-		//afterwards there should be no disjunctions left in the set of output axioms, i.e. they should be "simple"
-		
+		// afterwards there should be no disjunctions left in the set of output
+		// axioms, i.e. they should be "simple"
+
 		for (Axiom ax : out) {
 			assertEquals(ax.getIdentifier().toString(), "_#");
 			Set<LogicalExpression> les = ax.listDefinitions();
 			int disjunctions = 0;
-			
+
 			for (LogicalExpression le : les) {
 				if (le.toString().contains("or")) {
-					disjunctions++;					
-				}		
+					disjunctions++;
+				}
 			}
 			assertEquals(0, disjunctions);
-		}           	
+		}
 	}
 
 	public void testNormalizeAxiomsSplitConstraint() throws ParserException {
@@ -174,10 +185,11 @@ public class LloydToporNormalizerTest extends TestCase {
 			Set<LogicalExpression> les = ax.listDefinitions();
 			int all = 0;
 			for (LogicalExpression le : les) {
-				if (checkContains(le, "!- _\"urn:a\". ")) {
+				if (checkContains(le, LETestHelper.buildLE("!- _\"urn:a\". "))) {
 					all++;
 				}
-				if (checkContains(le, "!- _\"urn:a\"\n  and _\"urn:c\". ")) {
+				if (checkContains(le, LETestHelper
+						.buildLE("!- _\"urn:a\"\n  and _\"urn:c\". "))) {
 
 					all++;
 				}
@@ -206,13 +218,16 @@ public class LloydToporNormalizerTest extends TestCase {
 			Set<LogicalExpression> les = ax.listDefinitions();
 			int all = 0;
 			for (LogicalExpression le : les) {
-				if (checkContains(le, "_\"urn:a\"\n:-\n_\"urn:d\". ")) {
+				if (checkContains(le, LETestHelper
+						.buildLE("_\"urn:a\" :- _\"urn:d\". "))) {
 					all++;
 				}
-				if (checkContains(le, "_\"urn:b\"\n:-\n_\"urn:d\". ")) {
+				if (checkContains(le, LETestHelper
+						.buildLE("_\"urn:b\" :- _\"urn:d\". "))) {
 					all++;
 				}
-				if (checkContains(le, "_\"urn:c\"\n:-\n_\"urn:d\". ")) {
+				if (checkContains(le, LETestHelper
+						.buildLE("_\"urn:c\" :- _\"urn:d\". "))) {
 					all++;
 				}
 
@@ -239,8 +254,8 @@ public class LloydToporNormalizerTest extends TestCase {
 			Set<LogicalExpression> les = ax.listDefinitions();
 			int all = 0;
 			for (LogicalExpression le : les) {
-				if (checkContains(le,
-						"_\"urn:a\"\n:-\n_\"urn:b\"\n  and _\"urn:c\". ")) {
+				if (checkContains(le, LETestHelper
+						.buildLE("_\"urn:a\" :- _\"urn:b\"  and _\"urn:c\". "))) {
 					all++;
 				}
 			}
@@ -264,13 +279,13 @@ public class LloydToporNormalizerTest extends TestCase {
 			Set<LogicalExpression> les = ax.listDefinitions();
 			int all = 0;
 			for (LogicalExpression le : les) {
-				if (checkContains(le, "_\"urn:a\". ")) {
+				if (checkContains(le, LETestHelper.buildLE("_\"urn:a\". "))) {
 					all++;
 				}
-				if (checkContains(le, "_\"urn:b\". ")) {
+				if (checkContains(le, LETestHelper.buildLE("_\"urn:b\". "))) {
 					all++;
 				}
-				if (checkContains(le, "_\"urn:c\". ")) {
+				if (checkContains(le, LETestHelper.buildLE("_\"urn:c\". "))) {
 					all++;
 				}
 			}
@@ -296,7 +311,8 @@ public class LloydToporNormalizerTest extends TestCase {
 			Set<LogicalExpression> les = ax.listDefinitions();
 			int all = 0;
 			for (LogicalExpression le : les) {
-				if (checkContains(le, "_\"urn:a\"\n:-\n_\"urn:b\". ")) {
+				if (checkContains(le, LETestHelper
+						.buildLE("_\"urn:a\" :- _\"urn:b\". "))) {
 					all++;
 				}
 
@@ -306,8 +322,9 @@ public class LloydToporNormalizerTest extends TestCase {
 
 	}
 
-	private boolean checkContains(LogicalExpression le, String g) {
-		if (le.toString().equals(g))
+	private boolean checkContains(LogicalExpression expected,
+			LogicalExpression actual) {
+		if (expected.toString().equals(actual.toString()))
 			return true;
 
 		return false;

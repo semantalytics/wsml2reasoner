@@ -23,6 +23,7 @@
 package concreteTests.pellet;
 
 import org.wsml.reasoner.api.WSMLReasoner;
+
 import abstractTests.core.AbstractOntology1SimpleImport;
 
 public class Ontology1SimpleImportTest extends AbstractOntology1SimpleImport

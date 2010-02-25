@@ -2,8 +2,6 @@ package org.wsml.reasoner.ext.sql;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Map;
 import java.util.Set;
@@ -15,11 +13,7 @@ import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
-import org.wsml.reasoner.ext.sql.QueryUtil;
-import org.wsml.reasoner.ext.sql.ReasonerResult;
-import org.wsml.reasoner.ext.sql.WSMLReasonerFacade;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsmo.common.TopEntity;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.wsml.ParserException;
 

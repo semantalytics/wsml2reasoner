@@ -23,6 +23,7 @@
 package concreteTests.irisStratified;
 
 import org.wsml.reasoner.api.LPReasoner;
+
 import abstractTests.lp.AbstractDataTypes3DateTimeDurationTypes;
 
 public class DataTypes3DateTimeDurationTest extends AbstractDataTypes3DateTimeDurationTypes
@@ -31,5 +32,7 @@ public class DataTypes3DateTimeDurationTest extends AbstractDataTypes3DateTimeDu
 	{
 		return Reasoner.get();
 	}
+	
+	// TODO Fix duration bug with decimal seconds with more than 3 decimal numbers.
 
 }

@@ -25,15 +25,16 @@ package helper;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 import junit.framework.Assert;
+
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
-import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.wsml.ParserException;
 
 /**
@@ -41,6 +42,8 @@ import org.wsmo.wsml.ParserException;
  */
 public class LPHelper
 {
+	private static boolean output = false;
+	
     public static void executeQueryAndCheckResults( Ontology ontology, String query, Set<Map<Variable, Term>> expectedResults, LPReasoner reasoner ) throws Exception
     {
     	Set<Ontology> ontologies = new HashSet<Ontology>();
@@ -68,18 +71,23 @@ public class LPHelper
     {
         reasoner.registerOntologies(ontologies);
 
-        LogicalExpression qExpression = leFactory.createLogicalExpression( query, ontologies.iterator().next());
+        LogicalExpression qExpression = new WsmlLogicalExpressionParser(ontologies.iterator().next()).parse( query );
 
-//		System.out.println("Executing query string '" + query + "'");
-//		System.out.println("Executing query LE: '" + OntologyHelper.toString( ontology, qExpression ) + "'");
+        if(output){
+        	System.out.println("Executing query string '" + query + "'");
+			System.out.println("Executing query LE: '"
+					+ OntologyHelper.toString( ontologies.iterator().next(),  qExpression ) + "'");
+        }
 
 		return reasoner.executeQuery(qExpression);
     }
     
     public static void checkResults( Set<Map<Variable, Term>> actualResults, Set<Map<Variable, Term>> expectedResults )
     {
-//		System.out.println( "Expected results: " + OntologyHelper.toString( expectedResults ));
-//		System.out.println( "Actual results: " + OntologyHelper.toString( actualResults ));
+    	if(output){
+    		System.out.println( "Expected results: " + OntologyHelper.toString( expectedResults ));
+    		System.out.println( "Actual results: " + OntologyHelper.toString( actualResults ));
+    	}
 
     	Assert.assertEquals(expectedResults.size(), actualResults.size());
 
@@ -104,11 +112,22 @@ public class LPHelper
     private static boolean contains(Set<Map<Variable, Term>> result,
             Map<Variable, Term> expectedBinding) {
         boolean contains = false;
+       
         for (Map<Variable, Term> vBinding : result) {
-            boolean containsAll = true;
+        	boolean containsAll = true;  
             for (Variable var : expectedBinding.keySet()) {
+            	Term expected = expectedBinding.get(var);
+            	Term actual = vBinding.get(var);
+            	if(actual == null ) {
+            		System.out.println("\nError: Actual Binding has value null: " + vBinding  +" !");
+            		return false;
+            	}
+            	if(expected == null ) {
+            		System.out.println("\nError: Expected Binding has value null: " + expectedBinding  +" !");
+            		return false;
+            	}
                 containsAll = containsAll
-                        && expectedBinding.get(var).equals(vBinding.get(var));
+                        && expected.equals(actual);
             }
             if (containsAll) {
                 contains = true;
@@ -117,6 +136,13 @@ public class LPHelper
         }
         return contains;
     }
-
-    private static final LogicalExpressionFactory leFactory = new WSMO4JManager().getLogicalExpressionFactory();
+    
+   public static void outputON(){
+    	output = true;
+   }
+   
+   public static void outputOFF(){
+   		output = false;
+   }
+    
 }

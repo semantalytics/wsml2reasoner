@@ -22,17 +22,20 @@ import java.io.Reader;
 
 import junit.framework.TestCase;
 
+import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
 import org.omwg.ontology.Ontology;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsmo.common.TopEntity;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.Serializer;
 
 import base.BaseReasonerTest;
+
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 /**
  * 
@@ -45,14 +48,15 @@ public abstract class BaseDLReasonerTest extends TestCase
     protected OntologyNormalizer normalizer;
     protected WsmoFactory wsmoFactory;
     protected LogicalExpressionFactory leFactory;
+	protected FactoryContainer factory;
 
     @Override
     protected void setUp() throws Exception
     {
         super.setUp();
-        WSMO4JManager wmsoManager = new WSMO4JManager();
-        wsmoFactory = wmsoManager.getWSMOFactory();
-        leFactory = wmsoManager.getLogicalExpressionFactory();
+        factory = new WsmlFactoryContainer();
+        wsmoFactory = factory.getWsmoFactory();
+        leFactory = factory.getLogicalExpressionFactory();
     }
 
     @Override
@@ -76,7 +80,7 @@ public abstract class BaseDLReasonerTest extends TestCase
     
     protected Ontology parseOntology(String fileName) throws Exception
     {
-        Parser parser = Factory.createParser(null);
+        Parser parser = new WsmlParser();
         Reader input = BaseReasonerTest.getReaderForFile(fileName);
         return (Ontology)parser.parse(input)[0];
     }
@@ -84,7 +88,7 @@ public abstract class BaseDLReasonerTest extends TestCase
     public static String serializeOntology(Ontology ontology)
     {
         StringBuffer buf = new StringBuffer();
-        Serializer serializer = Factory.createSerializer(null);
+        Serializer serializer = new WSMLSerializerImpl();
         serializer.serialize(new TopEntity[] { ontology }, buf);
         return buf.toString();
     }

@@ -25,13 +25,16 @@ package org.wsml.reasoner;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.transformation.le.LETestHelper;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
@@ -44,7 +47,8 @@ public class WSML2DatalogTransformerTest extends TestCase {
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
 	protected Axiom axiom;
-	protected WSMO4JManager wsmoManager;
+	protected FactoryContainer wsmoManager;
+	
 
 	public WSML2DatalogTransformerTest() {
 		super();
@@ -52,11 +56,11 @@ public class WSML2DatalogTransformerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		wsmoManager = new WSMO4JManager();
+		wsmoManager = new WsmlFactoryContainer();
 
 		transformer = new WSML2DatalogTransformer(wsmoManager);
 
-		wsmoFactory = wsmoManager.getWSMOFactory();
+		wsmoFactory = wsmoManager.getWsmoFactory();
 		leFactory = wsmoManager.getLogicalExpressionFactory();
 
 		ontology = wsmoFactory
@@ -314,10 +318,12 @@ public class WSML2DatalogTransformerTest extends TestCase {
 
 	public void testTransformEquivalentInHead() throws ParserException {
 		// More than one implication in the given WSML rule detected!
-		// [ 2002256 ] 'implies' should be allowed in rule bodies.
+		// [ 2002256 ] 'implies' should be allowed in rule bodies.         // TODO
 		LogicalExpression le = LETestHelper
 				.buildLE("_\"urn:a\" equivalent _\"urn:b\" :- _\"urn:c\"");
-
+		
+//		LogicalExpression le = LETestHelper.buildLE("_\"urn:a\" = _\"urn:b\" :- _\"urn:c\"");
+		
 		// result should be:
 		// A implies B :- C
 		// A impliedBy B :- C
@@ -330,10 +336,12 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		// normalized:
 		try {
 			Set<Rule> out = transformer.transform(le);
-			System.out.println(out.toString());
+//			checkContainsRule(out, LiteralTestHelper.createSimplePosLiteral("urn:b"),  LiteralTestHelper.createPosLiteral(("urn_a"));
+			System.out.println("Output: " + out.toString());
 			fail();
 		} catch (DatalogException e1) {
-
+			e1.printStackTrace();
+			
 		}
 
 	}
@@ -358,6 +366,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		// normalized:
 		try {
 			Set<Rule> out = transformer.transform(le);
+//			checkContainsRule(out, LiteralTestHelper.createSimplePosLiteral("urn:a"), LiteralTestHelper.createNegLiteral("urn_c"));
 			System.out.println(out.toString());
 			fail();
 		} catch (DatalogException e1) {
@@ -378,7 +387,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 		try {
 			Set<Rule> out = transformer.transform(le);
 			System.out.println(out.toString());
-//			fail();
+			fail();
 		} catch (DatalogException e1) {
 
 		}
@@ -671,7 +680,7 @@ public class WSML2DatalogTransformerTest extends TestCase {
 			System.out.println(out.toString());
 			fail();
 		} catch (DatalogException e) {
-
+			// Why should this transformation throw a DatalogException? /Gigi
 		}
 
 	}

@@ -25,11 +25,11 @@ import java.util.Set;
 
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.LogicalExpressionTransformer;
 import org.wsml.reasoner.transformation.le.TopDownLESplitter;
 import org.wsml.reasoner.transformation.le.inverseimplicationtransformation.InverseImplicationTransformationRules;
 import org.wsmo.common.Entity;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.WsmoFactory;
 
 public class InverseImplicationNormalizer implements OntologyNormalizer {
@@ -37,10 +37,10 @@ public class InverseImplicationNormalizer implements OntologyNormalizer {
 
 	protected WsmoFactory wsmoFactory;
 
-	public InverseImplicationNormalizer(WSMO4JManager wsmoManager) {
+	public InverseImplicationNormalizer(FactoryContainer wsmoManager) {
 	    InverseImplicationTransformationRules inverseImplicationTransformerRules = new InverseImplicationTransformationRules(wsmoManager);
 		leTransformer = new TopDownLESplitter(inverseImplicationTransformerRules.getRules());
-		wsmoFactory = wsmoManager.getWSMOFactory();
+		wsmoFactory = wsmoManager.getWsmoFactory();
 
 	}
 

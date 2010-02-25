@@ -18,13 +18,13 @@
  */
 package org.wsml.reasoner.transformation.le.disjunctionpull;
 
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
 import org.wsml.reasoner.transformation.le.Rules;
+import org.wsmo.factory.FactoryContainer;
 
 public class DisjunctionPullRules extends Rules <NormalizationRule>{
 
-    public DisjunctionPullRules(WSMO4JManager wsmoManager) {
-        addRule(new ConjunctionPushRule(wsmoManager));
+    public DisjunctionPullRules(FactoryContainer factory) {
+        addRule(new ConjunctionPushRule(factory));
     }
 }

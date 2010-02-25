@@ -32,7 +32,7 @@ import org.wsml.reasoner.ExternalToolException;
 import org.wsml.reasoner.Literal;
 import org.wsml.reasoner.UnsupportedFeatureException;
 import org.wsml.reasoner.api.exception.InternalReasonerException;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.wsmo.factory.FactoryContainer;
 
 import com.declarativa.interprolog.TermModel;
 
@@ -50,7 +50,7 @@ public class XSBFacade implements DatalogReasonerFacade {
      */
     private String program;
 
-    private WSMO4JManager wsmoManager;
+    private FactoryContainer wsmoManager;
 
     private XSBSymbolMap symbTransfomer;
 
@@ -58,10 +58,10 @@ public class XSBFacade implements DatalogReasonerFacade {
      * Creates a facade object that allows to invoke the MINS rule system for
      * performing query evaluation tasks.
      */
-    public XSBFacade(WSMO4JManager wsmoManager, Map<String, Object> config) {
+    public XSBFacade(FactoryContainer factory, Map<String, Object> config) {
         super();
-        this.wsmoManager = wsmoManager;
-        this.symbTransfomer = new XSBSymbolMap(wsmoManager);
+        this.wsmoManager = factory;
+        this.symbTransfomer = new XSBSymbolMap(factory);
     }
 
     /**

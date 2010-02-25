@@ -32,27 +32,33 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
+import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.DLReasoner;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.TopEntity;
 import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.DataFactory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 import org.wsmo.wsml.Serializer;
+
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 public class BaseReasonerTest extends TestCase {
 
@@ -85,9 +91,9 @@ public class BaseReasonerTest extends TestCase {
 
     protected static DataFactory dataFactory = null;
 
-    protected static WSMO4JManager wsmoManager = null;
+    protected static FactoryContainer factory = null;
     
-    protected static Parser wsmlparserimpl = org.wsmo.factory.Factory.createParser(null);
+    protected static Parser wsmlparserimpl = new WsmlParser();
 
     /**
      * Instantiates a new reasoner with a default configuration
@@ -148,14 +154,14 @@ public class BaseReasonerTest extends TestCase {
     
     protected static void setUpFactories(){
 //    	 Set up factories for creating WSML elements
-    	wsmoManager = new WSMO4JManager();
+    	factory = new WsmlFactoryContainer();
 
-        leFactory = wsmoManager.getLogicalExpressionFactory();
+        leFactory = factory.getLogicalExpressionFactory();
 
-        wsmoFactory = wsmoManager.getWSMOFactory();
+        wsmoFactory = factory.getWsmoFactory();
 
-        dataFactory = wsmoManager.getDataFactory();
-    	
+        dataFactory = factory.getXmlDataFactory();
+        
     }
 
     /**
@@ -190,8 +196,7 @@ public class BaseReasonerTest extends TestCase {
 
         // Set up serializer
 
-        Serializer ontologySerializer = org.wsmo.factory.Factory
-                .createSerializer(null);
+        Serializer ontologySerializer = new WSMLSerializerImpl();
 
         // Read simple ontology from file
         final Reader ontoReader = getReaderForFile(ontologyFile);
@@ -216,8 +221,8 @@ public class BaseReasonerTest extends TestCase {
             throws Exception {
         System.out.println("\n\nStarting reasoner with query '" + query + "'");
         System.out.println("\n\nExpecting " + expected.size() + " result(s)...");
-        LogicalExpression qExpression = leFactory.createLogicalExpression(
-                query, o);
+        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
+		LogicalExpression qExpression = leParser.parse(query);
         System.out.println("WSML Query LE:");
         System.out.println(logExprSerializer.serialize(qExpression));
         System.out.println("--------------\n\n");

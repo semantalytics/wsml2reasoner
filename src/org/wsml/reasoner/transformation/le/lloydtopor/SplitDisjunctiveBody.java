@@ -24,8 +24,8 @@ import java.util.Set;
 import org.omwg.logicalexpression.Disjunction;
 import org.omwg.logicalexpression.LogicProgrammingRule;
 import org.omwg.logicalexpression.LogicalExpression;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.TransformationRule;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 
@@ -33,7 +33,7 @@ public class SplitDisjunctiveBody implements TransformationRule {
     
     private LogicalExpressionFactory leFactory;
     
-    public SplitDisjunctiveBody(WSMO4JManager wsmoManager){
+    public SplitDisjunctiveBody(FactoryContainer wsmoManager){
         this.leFactory = wsmoManager.getLogicalExpressionFactory();
     }
     

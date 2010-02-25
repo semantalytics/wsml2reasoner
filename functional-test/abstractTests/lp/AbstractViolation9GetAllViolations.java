@@ -27,12 +27,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.util.Set;
+
 import junit.framework.TestCase;
+
+import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.SimpleDataType;
 import org.omwg.ontology.SimpleDataValue;
-import org.omwg.ontology.WsmlDataType;
+import org.omwg.ontology.XmlSchemaDataType;
 import org.wsml.reasoner.api.inconsistency.AttributeTypeViolation;
 import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
@@ -44,11 +47,13 @@ import org.wsml.reasoner.api.inconsistency.UserConstraintViolation;
 import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.Factory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 import org.wsmo.wsml.Serializer;
+
 import abstractTests.LP;
+
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 public abstract class AbstractViolation9GetAllViolations extends TestCase implements LP {
 	private Set<ConsistencyViolation> errors;
@@ -61,14 +66,14 @@ public abstract class AbstractViolation9GetAllViolations extends TestCase implem
 	}
 
 	private void getViolations() throws InvalidModelException, IOException, ParserException {
-		Parser parser = Factory.createParser(null);
+		//WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
+		Parser parser = new WsmlParser();
 		InputStream is = this.getClass().getClassLoader().getResourceAsStream(ONTOLOGY_FILE);
 		assertNotNull(is);
 		try {
 			Ontology ontology = (Ontology) parser.parse(new InputStreamReader(is))[0];
 			StringWriter sw = new StringWriter();
-			Serializer ontologySerializer = org.wsmo.factory.Factory
-					.createSerializer(null);
+			Serializer ontologySerializer = new WSMLSerializerImpl();
 			ontologySerializer.serialize(new TopEntity[] { ontology }, sw);
 			// Reasoner
 			(this.getLPReasoner()).registerOntology(ontology);
@@ -101,12 +106,12 @@ public abstract class AbstractViolation9GetAllViolations extends TestCase implem
 
 				} else if ((NS + "ad").equals(attributeId)) {
 					SimpleDataType t = (SimpleDataType) v.getExpectedType();
-					String typeId = t.getIRI().toString();
+					String typeId = t.getIdentifier().toString();
 					SimpleDataValue val = (SimpleDataValue) v
 							.getViolatingValue();
 					String value = val.getValue().toString();
 					assertEquals(NS + "iC", instanceId);
-					assertEquals(WsmlDataType.WSML_INTEGER, (typeId));
+					assertEquals(XmlSchemaDataType.XSD_INTEGER, (typeId));
 					assertEquals("blah", value);
 					dTypeChecked = true;
 				}

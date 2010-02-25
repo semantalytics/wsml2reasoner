@@ -21,15 +21,16 @@ package org.wsml.reasoner.transformation;
 import java.util.HashSet;
 import java.util.Set;
 
+import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.transformation.le.LETestHelper;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
-
-import junit.framework.TestCase;
 
 public class InverseImplicationNormalizerTest extends TestCase {
 
@@ -44,9 +45,9 @@ public class InverseImplicationNormalizerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		WSMO4JManager wsmoManager = new WSMO4JManager();
+		FactoryContainer wsmoManager = new WsmlFactoryContainer();
 		normalizer = new InverseImplicationNormalizer(wsmoManager);
-		wsmoFactory = wsmoManager.getWSMOFactory();
+		wsmoFactory = wsmoManager.getWsmoFactory();
 		leFactory = wsmoManager.getLogicalExpressionFactory();
 	}
 

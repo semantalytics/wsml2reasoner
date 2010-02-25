@@ -28,16 +28,17 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import junit.framework.TestCase;
+
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.LiteralTestHelper;
 import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.WSML2DatalogTransformer;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
-import org.wsml.reasoner.impl.DatalogBasedWSMLReasoner;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.ConstraintReplacementNormalizer;
 import org.wsml.reasoner.transformation.ConstructReductionNormalizer;
@@ -48,12 +49,10 @@ import org.wsml.reasoner.transformation.le.LETestHelper;
 import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
 import org.wsmo.common.Entity;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.common.exception.SynchronisationException;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.ParserException;
-
-import junit.framework.TestCase;
 
 public class TransformationNormalizationTest extends TestCase {
 
@@ -65,7 +64,7 @@ public class TransformationNormalizationTest extends TestCase {
 	protected AxiomatizationNormalizer ax_normalizer;
 
 	protected DatalogBasedWSMLReasoner reasoner;
-	protected WSMO4JManager wsmoManager;
+	protected FactoryContainer wsmoManager;
 	protected String ns = "http://ex.org#";
 	protected WsmoFactory wsmoFactory;
 	protected LogicalExpressionFactory leFactory;
@@ -82,8 +81,8 @@ public class TransformationNormalizationTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		WSMO4JManager wsmoManager = new WSMO4JManager();
-		wsmoFactory = wsmoManager.getWSMOFactory();
+		FactoryContainer wsmoManager = new WsmlFactoryContainer();
+		wsmoFactory = wsmoManager.getWsmoFactory();
 
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
@@ -94,7 +93,7 @@ public class TransformationNormalizationTest extends TestCase {
 
 		transformer = new WSML2DatalogTransformer(wsmoManager);
 
-		wsmoFactory = wsmoManager.getWSMOFactory();
+		wsmoFactory = wsmoManager.getWsmoFactory();
 		leFactory = wsmoManager.getLogicalExpressionFactory();
 
 		ontology = wsmoFactory
@@ -348,7 +347,7 @@ public class TransformationNormalizationTest extends TestCase {
 	
 
 	public void testTransformImpliesInHead() throws ParserException,
-			SynchronisationException, InvalidModelException,
+			InvalidModelException,
 			InconsistencyException {
 
 		Set<Rule> p = new HashSet<Rule>();
@@ -369,7 +368,7 @@ public class TransformationNormalizationTest extends TestCase {
 		// 1.
 		// Convert conceptual syntax to logical expressions
 		OntologyNormalizer normalizer = new AxiomatizationNormalizer(
-				new WSMO4JManager());
+				new WsmlFactoryContainer());
 		entities = normalizer.normalizeEntities(entities);
 
 		Set<Axiom> axioms = new HashSet<Axiom>();
@@ -383,7 +382,7 @@ public class TransformationNormalizationTest extends TestCase {
 
 		// 2.
 		// Convert constraints to support debugging
-		normalizer = new ConstraintReplacementNormalizer(new WSMO4JManager());
+		normalizer = new ConstraintReplacementNormalizer(new WsmlFactoryContainer());
 		axioms = normalizer.normalizeAxioms(axioms);
 
 		// printAxioms(axioms);
@@ -391,20 +390,20 @@ public class TransformationNormalizationTest extends TestCase {
 		// Simplify axioms
 		// OnePassReplacementNormalizer should change C :- A implies B to C :- B
 		// impliedBy A
-		normalizer = new ConstructReductionNormalizer(new WSMO4JManager());
+		normalizer = new ConstructReductionNormalizer(new WsmlFactoryContainer());
 		axioms = normalizer.normalizeAxioms(axioms);
 		axiomsContainLE(axioms, LETestHelper
 				.buildLE("(_\"urn:b\" impliedBy _\"urn:a\") :-_\"urn:c\""));
 		printAxioms(axioms);
 
 		// Apply Lloyd-Topor rules to get Datalog-compatible LEs
-		normalizer = new LloydToporNormalizer(new WSMO4JManager());
+		normalizer = new LloydToporNormalizer(new WsmlFactoryContainer());
 		axioms = normalizer.normalizeAxioms(axioms);
 
 		// printAxioms(axioms);
 
 		org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
-				new WSMO4JManager());
+				new WsmlFactoryContainer());
 		Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
 		for (Axiom a : axioms) {
 			lExprs.addAll(a.listDefinitions());
@@ -431,7 +430,7 @@ public class TransformationNormalizationTest extends TestCase {
 	}
 
 	public void testTransformImpliesInBody() throws ParserException,
-			SynchronisationException, InvalidModelException,
+			InvalidModelException,
 			InconsistencyException {
 
 		Set<Rule> p = new HashSet<Rule>();
@@ -452,7 +451,7 @@ public class TransformationNormalizationTest extends TestCase {
 		// 1.
 		// Convert conceptual syntax to logical expressions
 		OntologyNormalizer normalizer = new AxiomatizationNormalizer(
-				new WSMO4JManager());
+				new WsmlFactoryContainer());
 		entities = normalizer.normalizeEntities(entities);
 
 		Set<Axiom> axioms = new HashSet<Axiom>();
@@ -466,7 +465,7 @@ public class TransformationNormalizationTest extends TestCase {
 
 		// 2.
 		// Convert constraints to support debugging
-		normalizer = new ConstraintReplacementNormalizer(new WSMO4JManager());
+		normalizer = new ConstraintReplacementNormalizer(new WsmlFactoryContainer());
 		axioms = normalizer.normalizeAxioms(axioms);
 
 		// printAxioms(axioms);
@@ -474,24 +473,24 @@ public class TransformationNormalizationTest extends TestCase {
 		// Simplify axioms
 		// OnePassReplacementNormalizer should change C :- A implies B to C :- B
 		// impliedBy A
-		normalizer = new ConstructReductionNormalizer(new WSMO4JManager());
+		normalizer = new ConstructReductionNormalizer(new WsmlFactoryContainer());
 		axioms = normalizer.normalizeAxioms(axioms);
 		axiomsContainLE(axioms, LETestHelper
 				.buildLE("_\"urn:c\" :- (_\"urn:b\" impliedBy _\"urn:a\")"));
 		printAxioms(axioms);
 
 		 // Apply InverseImplicationTransformation (wsml-rule)
-        normalizer = new InverseImplicationNormalizer(new WSMO4JManager());
+        normalizer = new InverseImplicationNormalizer(new WsmlFactoryContainer());
         axioms = normalizer.normalizeAxioms(axioms);
 		
 		// Apply Lloyd-Topor rules to get Datalog-compatible LEs
-		normalizer = new LloydToporNormalizer(new WSMO4JManager());
+		normalizer = new LloydToporNormalizer(new WsmlFactoryContainer());
 		axioms = normalizer.normalizeAxioms(axioms);
 
 		// printAxioms(axioms);
 
 		org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
-				new WSMO4JManager());
+				new WsmlFactoryContainer());
 		Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
 		for (Axiom a : axioms) {
 			lExprs.addAll(a.listDefinitions());
@@ -522,7 +521,7 @@ public class TransformationNormalizationTest extends TestCase {
 	}
 
 	public void testTransformEquivalentInBody() throws ParserException,
-			SynchronisationException, InvalidModelException,
+			InvalidModelException,
 			InconsistencyException {
 
 		Set<Rule> p = new HashSet<Rule>();
@@ -543,7 +542,7 @@ public class TransformationNormalizationTest extends TestCase {
 		// 1.
 		// Convert conceptual syntax to logical expressions
 		OntologyNormalizer normalizer = new AxiomatizationNormalizer(
-				new WSMO4JManager());
+				new WsmlFactoryContainer());
 		entities = normalizer.normalizeEntities(entities);
 
 		Set<Axiom> axioms = new HashSet<Axiom>();
@@ -557,7 +556,7 @@ public class TransformationNormalizationTest extends TestCase {
 
 		// 2.
 		// Convert constraints to support debugging
-		normalizer = new ConstraintReplacementNormalizer(new WSMO4JManager());
+		normalizer = new ConstraintReplacementNormalizer(new WsmlFactoryContainer());
 		axioms = normalizer.normalizeAxioms(axioms);
 
 		// printAxioms(axioms);
@@ -565,19 +564,19 @@ public class TransformationNormalizationTest extends TestCase {
 		// Simplify axioms
 		// OnePassReplacementNormalizer should change C :- A implies B to C :- B
 		// impliedBy A
-		normalizer = new ConstructReductionNormalizer(new WSMO4JManager());
+		normalizer = new ConstructReductionNormalizer(new WsmlFactoryContainer());
 		axioms = normalizer.normalizeAxioms(axioms);
 
 		printAxioms(axioms);
 
 		// Apply Lloyd-Topor rules to get Datalog-compatible LEs
-		normalizer = new LloydToporNormalizer(new WSMO4JManager());
+		normalizer = new LloydToporNormalizer(new WsmlFactoryContainer());
 		axioms = normalizer.normalizeAxioms(axioms);
 
 		// printAxioms(axioms);
 
 		org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
-				new WSMO4JManager());
+				new WsmlFactoryContainer());
 		Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
 		for (Axiom a : axioms) {
 			lExprs.addAll(a.listDefinitions());
@@ -621,7 +620,7 @@ public class TransformationNormalizationTest extends TestCase {
 	}
 
 	public void testTransformEuqiImpliedByInBody() throws ParserException,
-			SynchronisationException, InvalidModelException,
+			InvalidModelException,
 			InconsistencyException {
 
 		Set<Rule> p = new HashSet<Rule>();
@@ -643,7 +642,7 @@ public class TransformationNormalizationTest extends TestCase {
 		// 1.
 		// Convert conceptual syntax to logical expressions
 		OntologyNormalizer normalizer = new AxiomatizationNormalizer(
-				new WSMO4JManager());
+				new WsmlFactoryContainer());
 		entities = normalizer.normalizeEntities(entities);
 
 		Set<Axiom> axioms = new HashSet<Axiom>();
@@ -657,25 +656,25 @@ public class TransformationNormalizationTest extends TestCase {
 
 		// 2.
 		// Convert constraints to support debugging
-		normalizer = new ConstraintReplacementNormalizer(new WSMO4JManager());
+		normalizer = new ConstraintReplacementNormalizer(new WsmlFactoryContainer());
 		axioms = normalizer.normalizeAxioms(axioms);
 
 		printAxioms(axioms);
 
 		// Simplify axioms
 
-		normalizer = new ConstructReductionNormalizer(new WSMO4JManager());
+		normalizer = new ConstructReductionNormalizer(new WsmlFactoryContainer());
 		axioms = normalizer.normalizeAxioms(axioms);
 		printAxioms(axioms);
 
 		// Apply Lloyd-Topor rules to get Datalog-compatible LEs
-		normalizer = new LloydToporNormalizer(new WSMO4JManager());
+		normalizer = new LloydToporNormalizer(new WsmlFactoryContainer());
 		axioms = normalizer.normalizeAxioms(axioms);
 
 		printAxioms(axioms);
 
 		org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
-				new WSMO4JManager());
+				new WsmlFactoryContainer());
 		Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
 		for (Axiom a : axioms) {
 			lExprs.addAll(a.listDefinitions());
@@ -713,7 +712,7 @@ public class TransformationNormalizationTest extends TestCase {
 	}
 
 	public void testTransformEquivalentInHead() throws ParserException,
-			SynchronisationException, InvalidModelException,
+			InvalidModelException,
 			InconsistencyException {
 
 		Set<Rule> p = new HashSet<Rule>();
@@ -734,7 +733,7 @@ public class TransformationNormalizationTest extends TestCase {
 		// 1.
 		// Convert conceptual syntax to logical expressions
 		OntologyNormalizer normalizer = new AxiomatizationNormalizer(
-				new WSMO4JManager());
+				new WsmlFactoryContainer());
 		entities = normalizer.normalizeEntities(entities);
 
 		Set<Axiom> axioms = new HashSet<Axiom>();
@@ -748,7 +747,7 @@ public class TransformationNormalizationTest extends TestCase {
 
 		// 2.
 		// Convert constraints to support debugging
-		normalizer = new ConstraintReplacementNormalizer(new WSMO4JManager());
+		normalizer = new ConstraintReplacementNormalizer(new WsmlFactoryContainer());
 		axioms = normalizer.normalizeAxioms(axioms);
 
 		// printAxioms(axioms);
@@ -756,19 +755,19 @@ public class TransformationNormalizationTest extends TestCase {
 		// Simplify axioms
 		// OnePassReplacementNormalizer should change C :- A implies B to C :- B
 		// impliedBy A
-		normalizer = new ConstructReductionNormalizer(new WSMO4JManager());
+		normalizer = new ConstructReductionNormalizer(new WsmlFactoryContainer());
 		axioms = normalizer.normalizeAxioms(axioms);
 
 		printAxioms(axioms);
 
 		// Apply Lloyd-Topor rules to get Datalog-compatible LEs
-		normalizer = new LloydToporNormalizer(new WSMO4JManager());
+		normalizer = new LloydToporNormalizer(new WsmlFactoryContainer());
 		axioms = normalizer.normalizeAxioms(axioms);
 
 		// printAxioms(axioms);
 
 		org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
-				new WSMO4JManager());
+				new WsmlFactoryContainer());
 		Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
 		for (Axiom a : axioms) {
 			lExprs.addAll(a.listDefinitions());
@@ -809,7 +808,7 @@ public class TransformationNormalizationTest extends TestCase {
 
 
 	public void testTransformEquivalent() throws ParserException,
-			SynchronisationException, InvalidModelException,
+			InvalidModelException,
 			InconsistencyException {
 
 		Set<Rule> p = new HashSet<Rule>();
@@ -830,7 +829,7 @@ public class TransformationNormalizationTest extends TestCase {
 		// 1.
 		// Convert conceptual syntax to logical expressions
 		OntologyNormalizer normalizer = new AxiomatizationNormalizer(
-				new WSMO4JManager());
+				new WsmlFactoryContainer());
 		entities = normalizer.normalizeEntities(entities);
 
 		Set<Axiom> axioms = new HashSet<Axiom>();
@@ -844,7 +843,7 @@ public class TransformationNormalizationTest extends TestCase {
 
 		// 2.
 		// Convert constraints to support debugging
-		normalizer = new ConstraintReplacementNormalizer(new WSMO4JManager());
+		normalizer = new ConstraintReplacementNormalizer(new WsmlFactoryContainer());
 		axioms = normalizer.normalizeAxioms(axioms);
 
 		// printAxioms(axioms);
@@ -852,19 +851,19 @@ public class TransformationNormalizationTest extends TestCase {
 		// Simplify axioms
 		// OnePassReplacementNormalizer should change C :- A implies B to C :- B
 		// impliedBy A
-		normalizer = new ConstructReductionNormalizer(new WSMO4JManager());
+		normalizer = new ConstructReductionNormalizer(new WsmlFactoryContainer());
 		axioms = normalizer.normalizeAxioms(axioms);
 
 		printAxioms(axioms);
 
 		// Apply Lloyd-Topor rules to get Datalog-compatible LEs
-		normalizer = new LloydToporNormalizer(new WSMO4JManager());
+		normalizer = new LloydToporNormalizer(new WsmlFactoryContainer());
 		axioms = normalizer.normalizeAxioms(axioms);
 
 		// printAxioms(axioms);
 
 		org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
-				new WSMO4JManager());
+				new WsmlFactoryContainer());
 		Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
 		for (Axiom a : axioms) {
 			lExprs.addAll(a.listDefinitions());
@@ -896,7 +895,7 @@ public class TransformationNormalizationTest extends TestCase {
 	}
 
 	public void testTransformMoreAndInHead() throws ParserException,
-			SynchronisationException, InvalidModelException,
+			InvalidModelException,
 			InconsistencyException {
 
 		Set<Rule> p = new HashSet<Rule>();
@@ -918,7 +917,7 @@ public class TransformationNormalizationTest extends TestCase {
 		// 1.
 		// Convert conceptual syntax to logical expressions
 		OntologyNormalizer normalizer = new AxiomatizationNormalizer(
-				new WSMO4JManager());
+				new WsmlFactoryContainer());
 		entities = normalizer.normalizeEntities(entities);
 
 		Set<Axiom> axioms = new HashSet<Axiom>();
@@ -932,26 +931,26 @@ public class TransformationNormalizationTest extends TestCase {
 
 		// 2.
 		// Convert constraints to support debugging
-		normalizer = new ConstraintReplacementNormalizer(new WSMO4JManager());
+		normalizer = new ConstraintReplacementNormalizer(new WsmlFactoryContainer());
 		axioms = normalizer.normalizeAxioms(axioms);
 
 		// printAxioms(axioms);
 
 		// Simplify axioms
-		normalizer = new ConstructReductionNormalizer(new WSMO4JManager());
+		normalizer = new ConstructReductionNormalizer(new WsmlFactoryContainer());
 		axioms = normalizer.normalizeAxioms(axioms);
 		printAxioms(axioms);
 
 		// Apply Lloyd-Topor rules to get Datalog-compatible LEs
 		// 
-		normalizer = new LloydToporNormalizer(new WSMO4JManager());
+		normalizer = new LloydToporNormalizer(new WsmlFactoryContainer());
 		axioms = normalizer.normalizeAxioms(axioms);
 
 		System.out.println("LloydTopor");
 		printAxioms(axioms);
 
 		org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
-				new WSMO4JManager());
+				new WsmlFactoryContainer());
 		Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
 		for (Axiom a : axioms) {
 			lExprs.addAll(a.listDefinitions());
@@ -990,7 +989,7 @@ public class TransformationNormalizationTest extends TestCase {
 	}
 
 	public void testTransformMoreAndInBody() throws ParserException,
-			SynchronisationException, InvalidModelException,
+			InvalidModelException,
 			InconsistencyException {
 
 		Set<Rule> p = new HashSet<Rule>();
@@ -1012,7 +1011,7 @@ public class TransformationNormalizationTest extends TestCase {
 		// 1.
 		// Convert conceptual syntax to logical expressions
 		OntologyNormalizer normalizer = new AxiomatizationNormalizer(
-				new WSMO4JManager());
+				new WsmlFactoryContainer());
 		entities = normalizer.normalizeEntities(entities);
 
 		Set<Axiom> axioms = new HashSet<Axiom>();
@@ -1026,26 +1025,26 @@ public class TransformationNormalizationTest extends TestCase {
 
 		// 2.
 		// Convert constraints to support debugging
-		normalizer = new ConstraintReplacementNormalizer(new WSMO4JManager());
+		normalizer = new ConstraintReplacementNormalizer(new WsmlFactoryContainer());
 		axioms = normalizer.normalizeAxioms(axioms);
 
 		// printAxioms(axioms);
 
 		// Simplify axioms
-		normalizer = new ConstructReductionNormalizer(new WSMO4JManager());
+		normalizer = new ConstructReductionNormalizer(new WsmlFactoryContainer());
 		axioms = normalizer.normalizeAxioms(axioms);
 		printAxioms(axioms);
 
 		// Apply Lloyd-Topor rules to get Datalog-compatible LEs
 		// 
-		normalizer = new LloydToporNormalizer(new WSMO4JManager());
+		normalizer = new LloydToporNormalizer(new WsmlFactoryContainer());
 		axioms = normalizer.normalizeAxioms(axioms);
 
 		System.out.println("LloydTopor");
 		printAxioms(axioms);
 
 		org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(
-				new WSMO4JManager());
+				new WsmlFactoryContainer());
 		Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
 		for (Axiom a : axioms) {
 			lExprs.addAll(a.listDefinitions());

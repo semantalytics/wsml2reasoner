@@ -22,8 +22,9 @@
  */
 package org.wsml.reasoner;
 
-import org.omwg.logicalexpression.terms.Term;
 import junit.framework.TestCase;
+
+import org.omwg.logicalexpression.terms.Term;
 
 public class LiteralTest extends TestCase
 {

@@ -21,8 +21,8 @@ package org.wsml.reasoner.transformation.le.negationpush;
 import org.omwg.logicalexpression.Conjunction;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.NegationAsFailure;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 
@@ -30,8 +30,8 @@ public class NegateConjunctionRule implements NormalizationRule {
     
     private LogicalExpressionFactory leFactory;
     
-    public NegateConjunctionRule(WSMO4JManager wsmoManager){
-        this.leFactory = wsmoManager.getLogicalExpressionFactory();
+    public NegateConjunctionRule(FactoryContainer factory){
+        this.leFactory = factory.getLogicalExpressionFactory();
     }
     
     public boolean isApplicable(LogicalExpression expression) {

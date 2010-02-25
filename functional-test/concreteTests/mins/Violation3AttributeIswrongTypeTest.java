@@ -23,6 +23,7 @@
 package concreteTests.mins;
 
 import org.wsml.reasoner.api.WSMLReasoner;
+
 import abstractTests.core.AbstractViolation3AttributeIsWrongType;
 
 public class Violation3AttributeIswrongTypeTest extends AbstractViolation3AttributeIsWrongType {

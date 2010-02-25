@@ -24,7 +24,9 @@ package abstractTests.lp;
 
 import helper.OntologyHelper;
 import junit.framework.TestCase;
+
 import org.wsml.reasoner.api.LPReasoner;
+
 import abstractTests.LP;
 
 public abstract class AbstractConsistent1Example1 extends TestCase implements LP {

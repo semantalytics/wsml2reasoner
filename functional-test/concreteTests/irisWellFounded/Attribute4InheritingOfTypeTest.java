@@ -23,6 +23,7 @@
 package concreteTests.irisWellFounded;
 
 import org.wsml.reasoner.api.LPReasoner;
+
 import abstractTests.lp.AbstractAttribute4InheritingOfType;
 
 public class Attribute4InheritingOfTypeTest extends AbstractAttribute4InheritingOfType {

@@ -23,7 +23,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 import org.omwg.ontology.WsmlDataType;
@@ -65,9 +67,9 @@ public class PreserveTypeTests extends BaseReasonerTest {
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
         binding.put(leFactory.createVariable("x"), 
-                dataFactory.createWsmlInteger("1"));
+                dataFactory.createInteger("1"));
         binding.put(leFactory.createVariable("y"), 
-                dataFactory.createWsmlDecimal("1.0"));
+                dataFactory.createDecimal("1.0"));
         expected.add(binding);
         performQuery(query, expected);
         System.out.println("Finished query.");
@@ -77,8 +79,8 @@ public class PreserveTypeTests extends BaseReasonerTest {
     //This test ensures that decimal equations result in decimals
     public void preserveTypeAfterOperationWithConcepts() throws Exception {
         String query = "?x[value hasValue ?y] memberOf Miles";
-        LogicalExpression qExpression = leFactory.createLogicalExpression(
-                query, o);
+        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
+        LogicalExpression qExpression = leParser.parse(query);
         logExprSerializer.serialize(qExpression);
         
         Set<Map<Variable, Term>> result = ((LPReasoner) wsmlReasoner).executeQuery(qExpression);
@@ -97,7 +99,7 @@ public class PreserveTypeTests extends BaseReasonerTest {
         Set<Map<Variable, Term>> expected = new HashSet<Map<Variable, Term>>();
         Map<Variable, Term> binding = new HashMap<Variable, Term>();
         binding.put(leFactory.createVariable("x"), 
-                dataFactory.createWsmlDecimal("7.5"));
+                dataFactory.createDecimal("7.5"));
         expected.add(binding);
         performQuery(query, expected);
         System.out.println("Finished query.");

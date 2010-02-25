@@ -21,21 +21,24 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.FOLReasoner;
 import org.wsml.reasoner.api.FOLReasoner.EntailmentType;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
-import org.wsmo.factory.Factory;
-import org.wsmo.factory.LogicalExpressionFactory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
 import base.BaseReasonerTest;
+
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 /**
  * Interface or class description
@@ -53,43 +56,40 @@ import base.BaseReasonerTest;
 public class TPTPEntailmentTest extends BaseReasonerTest {
 
     private WsmoFactory wsmoFactory = null;
-    private LogicalExpressionFactory leFactory = null;
     private FOLReasoner wsmlReasoner = null;
     BuiltInReasoner previous;  
-    private Parser parser = null; 
+    private Parser wsmlParser = null;
+	protected FactoryContainer wsmoManager;
     
     
     protected void setUp() throws Exception {
         super.setUp();
-        WSMO4JManager wsmoManager = new WSMO4JManager();
-        wsmoFactory = wsmoManager.getWSMOFactory();
-        leFactory = wsmoManager.getLogicalExpressionFactory();
+        wsmoManager = new WsmlFactoryContainer();
+        wsmoFactory = wsmoManager.getWsmoFactory();
         previous = BaseReasonerTest.reasoner;
         wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createFOLReasoner(new HashMap <String, Object> ());
-        parser = Factory.createParser(null);
+    	wsmlParser = new WsmlParser();
     }
     
     public void test() throws Exception{
         InputStream in = getClass().getClassLoader().getResourceAsStream(
                 "files/family.wsml");
-        Ontology ont = (Ontology)parser.parse(new InputStreamReader(in))[0];
+        Ontology ont = (Ontology)wsmlParser.parse(new InputStreamReader(in))[0];
         
         wsmlReasoner.registerOntology(ont);
-        LogicalExpression conjecture = leFactory.createLogicalExpression(
-                "Lisa[hasAncestor hasValue GrandPa]",ont);
+        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
+        LogicalExpression conjecture = leParser.parse("Lisa[hasAncestor hasValue GrandPa]");
         EntailmentType result = wsmlReasoner.checkEntailment(
                 conjecture);
         assertEquals(EntailmentType.entailed, result);
         
         
-        conjecture = leFactory.createLogicalExpression(
-                "exists ?x (?x[hasChild hasValue someChild])",ont);
+        conjecture = leParser.parse("exists ?x (?x[hasChild hasValue someChild])");
         result = wsmlReasoner.checkEntailment(
                 conjecture);
         assertEquals(EntailmentType.entailed, result);
         
-        conjecture = leFactory.createLogicalExpression(
-                "exists ?x (March[hasChild hasValue ?x])",ont);
+        conjecture = leParser.parse("exists ?x (March[hasChild hasValue ?x])");
         result = wsmlReasoner.checkEntailment(
                 conjecture);
         assertEquals(EntailmentType.entailed, result);
@@ -100,8 +100,8 @@ public class TPTPEntailmentTest extends BaseReasonerTest {
         IRI iri = wsmoFactory.createIRI("urn://foobar");
         Ontology ont = wsmoFactory.createOntology(iri);
         ont.setDefaultNamespace(iri);
-        LogicalExpression le = leFactory.createLogicalExpression(
-            "a[b hasValue c]",ont);
+        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
+		LogicalExpression le = leParser .parse("a[b hasValue c]");
         Axiom a = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
         a.addDefinition(le);
         ont.addAxiom(a);

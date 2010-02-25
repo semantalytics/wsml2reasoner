@@ -26,11 +26,13 @@ import helper.LPHelper;
 import helper.OntologyHelper;
 import helper.Results;
 import junit.framework.TestCase;
+
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.LPReasoner;
-import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.factory.LogicalExpressionFactory;
+
 import abstractTests.LP;
 
 public abstract class AbstractFlight1Example1 extends TestCase implements LP {
@@ -39,20 +41,23 @@ public abstract class AbstractFlight1Example1 extends TestCase implements LP {
 
 	private static final String NS = "http://example.com/flight1#";
 	
-    private static final LogicalExpressionFactory leFactory = new WSMO4JManager().getLogicalExpressionFactory();
+    private LogicalExpressionParser leParser;
 
     private Ontology ontology;
 	private LPReasoner reasoner;
 	
     protected void setUp() throws Exception	{
 		ontology = OntologyHelper.loadOntology( ONTOLOGY_FILE );
+		
+		leParser = new WsmlLogicalExpressionParser(ontology);
+		
 		reasoner = getLPReasoner();
 		reasoner.registerOntology( ontology );
     }
 	
 	private void query( String query, Results results ) throws Exception
 	{
-        LogicalExpression qExpression = leFactory.createLogicalExpression( query, ontology);
+        LogicalExpression qExpression = leParser.parse( query );
 		LPHelper.checkResults( reasoner.executeQuery(qExpression), results.get() );
 	}
 
@@ -96,32 +101,32 @@ public abstract class AbstractFlight1Example1 extends TestCase implements LP {
     
     public void testNamedAragorn() throws Exception {
 		Results r = new Results("x", "v");
-		r.addBinding(Results.iri(NS + "Aragorn"), Results.string( "Aragorn" ));
+		r.addBinding(Results.iri(NS + "Aragorn"), Results._string( "Aragorn" ));
 		query( "?x[hasName hasValue ?v] and ?v = \"Aragorn\"", r );
     }
     
     public void testNamedArwen() throws Exception {
 		Results r = new Results("x", "v");
-		r.addBinding(Results.iri(NS + "Arwen"), Results.string( "Arwen" ));
+		r.addBinding(Results.iri(NS + "Arwen"), Results._string( "Arwen" ));
 		query( "?x[hasName hasValue ?v] and ?v = \"Arwen\"", r );
     }
     
     public void testHigherThan7Feet() throws Exception {
 		Results r = new Results("x", "v");
-		r.addBinding(Results.iri(NS + "Aragorn"), Results.decimal( 7.5 ));
+		r.addBinding(Results.iri(NS + "Aragorn"), Results._decimal( 7.5 ));
 		query( "?x[heightInFeet hasValue ?v] and ?v > 7.0", r );
     }
     
     public void testLowerThan7Feet() throws Exception {
 		Results r = new Results("x", "v");
-		r.addBinding(Results.iri(NS + "Arwen"), Results.decimal( 6.0 ));
+		r.addBinding(Results.iri(NS + "Arwen"), Results._decimal( 6.0 ));
 		query( "?x[heightInFeet hasValue ?v] and ?v < 7.0", r );
     }
     
     public void testLowerEqualThan7AndHalfFeet() throws Exception {
 		Results r = new Results("x", "v");
-		r.addBinding(Results.iri(NS + "Aragorn"), Results.decimal( 7.5 ));
-		r.addBinding(Results.iri(NS + "Arwen"), Results.decimal( 6.0 ));
+		r.addBinding(Results.iri(NS + "Aragorn"), Results._decimal( 7.5 ));
+		r.addBinding(Results.iri(NS + "Arwen"), Results._decimal( 6.0 ));
 		query( "?x[heightInFeet hasValue ?v] and ?v =< 7.5", r );
     }
     
@@ -133,7 +138,7 @@ public abstract class AbstractFlight1Example1 extends TestCase implements LP {
     
     public void testHigherThan6Feet() throws Exception {
 		Results r = new Results("x", "v");
-		r.addBinding(Results.iri(NS + "Aragorn"), Results.decimal( 7.5 ));
+		r.addBinding(Results.iri(NS + "Aragorn"), Results._decimal( 7.5 ));
 		query( "?x[heightInFeet hasValue ?v] and ?v > 6.0", r );
     }
         
@@ -144,8 +149,8 @@ public abstract class AbstractFlight1Example1 extends TestCase implements LP {
      */
     public void testHigherEqualThan6Feet() throws Exception {
 		Results r = new Results("x", "v");
-		r.addBinding(Results.iri(NS + "Aragorn"), Results.decimal( 7.5 ));
-		r.addBinding(Results.iri(NS + "Arwen"), Results.decimal( 6.0 ));
+		r.addBinding(Results.iri(NS + "Aragorn"), Results._decimal( 7.5 ));
+		r.addBinding(Results.iri(NS + "Arwen"), Results._decimal( 6.0 ));
 		query( "?x[heightInFeet hasValue ?v] and ?v >= 6.0", r );
     }
         
