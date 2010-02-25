@@ -105,6 +105,18 @@
 <table>
 	<tr valign=top>
 		<td width=150>
+			<p align=left>24 Feb 2010</p>
+		</td>
+		<td>
+			<p align=left>
+				WSML2Reasoner <a href="download#v0_7_0">version 0.7.0</a> released.<br />
+				This version includes support for the WSML v2.0 family of language variants.
+			</p>
+		</td>
+	</tr>
+
+	<tr valign=top>
+		<td width=150>
 			<p align=left>
 				02 Dec 2008
 			</p>
