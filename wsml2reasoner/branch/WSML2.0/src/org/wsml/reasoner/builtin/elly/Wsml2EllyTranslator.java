@@ -259,8 +259,7 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 
 	/**
 	 * AttributeConstraintMolecule represents a constraining attribute molecule (e.g. human[age ofType _integer)).
-	 * Creates and adds a rule {@code DT(y) :- C(x) and r(x,y)} from {@code C[r ofType DT]}. </p> π(id1[id2 ofType dt])
-	 * | dt(y) ← id1(x) ∧ id2(x,y)
+	 * Creates and adds a rule {@code DT(y) :- C(x) and r(x,y)} from {@code C[r ofType DT]}.
 	 * 
 	 * @see org.omwg.logicalexpression.LogicalExpressionVisitor#visitAttributeConstraintMolecule(org.omwg.logicalexpression.AttributeConstraintMolecule)
 	 */
@@ -291,8 +290,7 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 
 	/**
 	 * AttributeInferenceMolecule Represents an inferring attribute molecule (e.g. human[ancestor impliesType human]).
-	 * Creates and adds a rule {@code DT(y) :- C(x) and r(x,y)} from {@code C[r impliesType DT]}. </p> π(id1[id2
-	 * impliesType id3]) | id3(y) ← id1(x) ∧ id2(x,y)
+	 * Creates and adds a rule {@code DT(y) :- C(x) and r(x,y)} from {@code C[r impliesType DT]}.
 	 * 
 	 * @see org.omwg.logicalexpression.LogicalExpressionVisitor#visitAttributeInferenceMolecule(org.omwg.logicalexpression.AttributeInferenceMolecule)
 	 */
@@ -322,8 +320,8 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 	}
 
 	/**
-	 * AttributeValueMolecule Represents a value attribute molecule (e.g. human[age hasValue 4]). </p> Creates and adds
-	 * a fact {@code id2(X1,X2).} </p> π(X1[id2 hasValue X2]) | id2(X1,X2)
+	 * AttributeValueMolecule Represents a value attribute molecule (e.g. human[age hasValue 4]). Creates and adds
+	 * a fact {@code id2(X1,X2).}
 	 * 
 	 * @see org.omwg.logicalexpression.LogicalExpressionVisitor#visitAttributeValueMolecule(org.omwg.logicalexpression.AttributeValueMolecule)
 	 */
@@ -359,7 +357,7 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 
 	/**
 	 * CompoundMolecule Represents a compound molecule which is a container for simple molecules E.g.,
-	 * "x subConceptOf {y,z}" or "a[b hasValue c] memberOf d". </p> Visits all {@link CompoundMolecule#listOperands()}
+	 * "x subConceptOf {y,z}" or "a[b hasValue c] memberOf d". Visits all {@link CompoundMolecule#listOperands()}
 	 * Molecules, since all other {@code list} methods are just filters on all operands.
 	 * 
 	 * 
@@ -381,8 +379,8 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 	}
 
 	/**
-	 * Conjunction represents specific kind of <code>Binary</code>. A conjunction whose operator is an and. </p> π(lexpr
-	 * and rexpr) | π(lexpr) ∧ π(rexpr) </p> Both Operands are visited and the resulting Descriptions are left on the
+	 * Conjunction represents specific kind of <code>Binary</code>. A conjunction whose operator is an and.
+	 * Both Operands are visited and the resulting Descriptions are left on the
 	 * {@link #atomStack}.
 	 * 
 	 * @see org.omwg.logicalexpression.LogicalExpressionVisitor#visitConjunction(org.omwg.logicalexpression.Conjunction)
@@ -480,7 +478,6 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 	}
 
 	/**
-	 * π(exists Y1,..,Yn expr) | ∃ Y1,..,Yn π(expr)
 	 * 
 	 * @see org.omwg.logicalexpression.LogicalExpressionVisitor#visitExistentialQuantification(org.omwg.logicalexpression.ExistentialQuantification)
 	 */
@@ -565,8 +562,8 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 	}
 
 	/**
-	 * MembershipMolecule Represents a molecule of the form "a memberOf b". </p> Creates and pushes an Atom
-	 * <code>b(a)</code>. </p> π(X1 memberOf id2) | id2(X1)
+	 * MembershipMolecule Represents a molecule of the form "a memberOf b". Creates and pushes an Atom
+	 * <code>b(a)</code>.
 	 * 
 	 * @see org.omwg.logicalexpression.LogicalExpressionVisitor#visitMemberShipMolecule(org.omwg.logicalexpression.MembershipMolecule)
 	 */
@@ -600,7 +597,8 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 	}
 
 	/**
-	 * SubConceptMolecule Represents a Molecule of the Form "a subConceptOf b". </p> π(id1 subConceptOf id2) | id2(x) ←
+	 * SubConceptMolecule Represents a Molecule of the Form "a subConceptOf b".
+	 * 
 	 * id1(x)
 	 * 
 	 * @see org.omwg.logicalexpression.LogicalExpressionVisitor#visitSubConceptMolecule(org.omwg.logicalexpression.SubConceptMolecule)
