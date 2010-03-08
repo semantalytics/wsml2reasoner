@@ -16,6 +16,12 @@
 	</ul>
 </p>
 
+<p>
+	The continued development of WSML2Reasoner has been funded in part by
+	<a href="http://www.soa4all.eu/">SOA4All</a>
+	a <a href="http://cordis.europa.eu/fp7/home_en.html">European Framework 7</a> research project. 
+</p>
+
 <h2>Reasoners</h2>
 
 <p>
