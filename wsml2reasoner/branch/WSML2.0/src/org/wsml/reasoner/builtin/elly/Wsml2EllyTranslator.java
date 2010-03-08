@@ -811,96 +811,96 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 			return BUILTIN.createGreater(terms.get(0), terms.get(1));
         case GREATER_EQUAL:
             return BUILTIN.createGreaterEqual(terms.get(0), terms.get(1));
-        case IS_DATATYPE:
-        	return BUILTIN.createIsDatatype(terms.get(0), terms.get(1));
-        case IS_NOT_DATATYPE:
-        	return BUILTIN.createIsNotDatatype(terms.get(0), terms.get(1));
-//        case HAS_DATATYPE: // TODO currently not supported
-//        	return BUILTIN.createHasDatatype(toArray(terms));
-        case STRING_LENGTH:
-        	return BUILTIN.createStringLength(sortedTerms.get(0), sortedTerms.get(1));
-        case STRING_TO_UPPER:
-        	return BUILTIN.createStringToUpper(sortedTerms.get(0), sortedTerms.get(1));
-        case STRING_TO_LOWER:
-        	return BUILTIN.createStringToLower(sortedTerms.get(0), sortedTerms.get(1));
-        case STRING_URI_ENCODE:
-        	return BUILTIN.createStringUriEncode(sortedTerms.get(0), sortedTerms.get(1));
-        case STRING_IRI_TO_URI:
-        	return BUILTIN.createStringIriToUri(sortedTerms.get(0), sortedTerms.get(1));
-        case STRING_ESCAPE_HTML_URI:
-        	return BUILTIN.createStringEscapeHtmlUri(sortedTerms.get(0), sortedTerms.get(1));
-        case STRING_CONTAINS:
-        	return BUILTIN.createStringContains(sortedTerms.get(0), sortedTerms.get(1));
-        case STRING_STARTS_WITH:
-        	return BUILTIN.createStringStartsWith(terms.get(0), terms.get(1));
-        case STRING_ENDS_WITH:
-        	return BUILTIN.createStringEndsWith(terms.get(0), terms.get(1));
-        case STRING_MATCHES:
-        	return BUILTIN.createStringMatches(terms.get(0), terms.get(1));
-        case YEAR_PART:
-        	return BUILTIN.createYearPart(sortedTerms.get(0), sortedTerms.get(1));
-        case MONTH_PART:
-        	return BUILTIN.createMonthPart(sortedTerms.get(0), sortedTerms.get(1));
-        case DAY_PART:
-        	return BUILTIN.createDayPart(sortedTerms.get(0), sortedTerms.get(1));
-        case HOUR_PART:
-        	return BUILTIN.createHourPart(sortedTerms.get(0), sortedTerms.get(1));
-        case MINUTE_PART:
-        	return BUILTIN.createMinutePart(sortedTerms.get(0), sortedTerms.get(1));
-        case SECOND_PART:
-        	return BUILTIN.createSecondPart(sortedTerms.get(0), sortedTerms.get(1));
-        case TIMEZONE_PART:
-        	return BUILTIN.createTimezonePart(sortedTerms.get(0), sortedTerms.get(1));
-        case TEXT_FROM_STRING:
-        	return BUILTIN.createTextFromString(sortedTerms.get(0), sortedTerms.get(1));
-        case STRING_FROM_TEXT:
-        	return BUILTIN.createStringFromText(sortedTerms.get(0), sortedTerms.get(1));
-        case LANG_FROM_TEXT:
-        	return BUILTIN.createLangFromText(sortedTerms.get(0), sortedTerms.get(1));
-        case TO_BASE64:
-        	return BUILTIN.createToBase64Binary(sortedTerms.get(0), sortedTerms.get(1));
-        case TO_BOOLEAN:
-        	return BUILTIN.createToBoolean(sortedTerms.get(0), sortedTerms.get(1));
-        case TO_DATE:
-        	return BUILTIN.createToDate(sortedTerms.get(0), sortedTerms.get(1));
-        case TO_DATETIME:
-        	return BUILTIN.createToDateTime(sortedTerms.get(0), sortedTerms.get(1));
-        case TO_DAYTIMEDURATION:
-        	return BUILTIN.createToDayTimeDuration(sortedTerms.get(0), sortedTerms.get(1));
-        case TO_DECIMAL:
-        	return BUILTIN.createToDecimal(sortedTerms.get(0), sortedTerms.get(1));
-        case TO_DOUBLE:
-        	return BUILTIN.createToDouble(sortedTerms.get(0), sortedTerms.get(1));
-        case TO_DURATION:
-        	return BUILTIN.createToDuration(sortedTerms.get(0), sortedTerms.get(1));
-        case TO_FLOAT:
-        	return BUILTIN.createToFloat(sortedTerms.get(0), sortedTerms.get(1));
-        case TO_GDAY:
-        	return BUILTIN.createToGDay(sortedTerms.get(0), sortedTerms.get(1));
-        case TO_GMONTH:
-        	return BUILTIN.createToGMonth(sortedTerms.get(0), sortedTerms.get(1));
-        case TO_GMONTHDAY:
-        	return BUILTIN.createToGMonthDay(sortedTerms.get(0), sortedTerms.get(1));
-        case TO_GYEAR:
-        	return BUILTIN.createToGYear(sortedTerms.get(0), sortedTerms.get(1));
-        case TO_GYEARMONTH:
-        	return BUILTIN.createToGYearMonth(sortedTerms.get(0), sortedTerms.get(1));
-        case TO_HEXBINARY:
-        	return BUILTIN.createToHexBinary(sortedTerms.get(0), sortedTerms.get(1));
-        case TO_INTEGER:
-        	return BUILTIN.createToInteger(sortedTerms.get(0), sortedTerms.get(1));
-        case TO_IRI:
-        	return BUILTIN.createToIRI(sortedTerms.get(0), sortedTerms.get(1));
-        case TO_STRING:
-        	return BUILTIN.createToString(sortedTerms.get(0), sortedTerms.get(1));
-        case TO_TEXT:
-        	return BUILTIN.createToText(sortedTerms.get(0), sortedTerms.get(1));
-        case TO_TIME:
-        	return BUILTIN.createToTime(sortedTerms.get(0), sortedTerms.get(1));
-        case TO_XMLLITERAL:
-        	return BUILTIN.createToXMLLiteral(sortedTerms.get(0), sortedTerms.get(1));
-        case TO_YEARMONTHDURATION:
-        	return BUILTIN.createToYearMonthDuration(sortedTerms.get(0), sortedTerms.get(1));
+//        case IS_DATATYPE:
+//        	return BUILTIN.createIsDatatype(terms.get(0), terms.get(1));
+//        case IS_NOT_DATATYPE:
+//        	return BUILTIN.createIsNotDatatype(terms.get(0), terms.get(1));
+////        case HAS_DATATYPE: // TODO currently not supported
+////        	return BUILTIN.createHasDatatype(toArray(terms));
+//        case STRING_LENGTH:
+//        	return BUILTIN.createStringLength(sortedTerms.get(0), sortedTerms.get(1));
+//        case STRING_TO_UPPER:
+//        	return BUILTIN.createStringToUpper(sortedTerms.get(0), sortedTerms.get(1));
+//        case STRING_TO_LOWER:
+//        	return BUILTIN.createStringToLower(sortedTerms.get(0), sortedTerms.get(1));
+//        case STRING_URI_ENCODE:
+//        	return BUILTIN.createStringUriEncode(sortedTerms.get(0), sortedTerms.get(1));
+//        case STRING_IRI_TO_URI:
+//        	return BUILTIN.createStringIriToUri(sortedTerms.get(0), sortedTerms.get(1));
+//        case STRING_ESCAPE_HTML_URI:
+//        	return BUILTIN.createStringEscapeHtmlUri(sortedTerms.get(0), sortedTerms.get(1));
+//        case STRING_CONTAINS:
+//        	return BUILTIN.createStringContains(sortedTerms.get(0), sortedTerms.get(1));
+//        case STRING_STARTS_WITH:
+//        	return BUILTIN.createStringStartsWith(terms.get(0), terms.get(1));
+//        case STRING_ENDS_WITH:
+//        	return BUILTIN.createStringEndsWith(terms.get(0), terms.get(1));
+//        case STRING_MATCHES:
+//        	return BUILTIN.createStringMatches(terms.get(0), terms.get(1));
+//        case YEAR_PART:
+//        	return BUILTIN.createYearPart(sortedTerms.get(0), sortedTerms.get(1));
+//        case MONTH_PART:
+//        	return BUILTIN.createMonthPart(sortedTerms.get(0), sortedTerms.get(1));
+//        case DAY_PART:
+//        	return BUILTIN.createDayPart(sortedTerms.get(0), sortedTerms.get(1));
+//        case HOUR_PART:
+//        	return BUILTIN.createHourPart(sortedTerms.get(0), sortedTerms.get(1));
+//        case MINUTE_PART:
+//        	return BUILTIN.createMinutePart(sortedTerms.get(0), sortedTerms.get(1));
+//        case SECOND_PART:
+//        	return BUILTIN.createSecondPart(sortedTerms.get(0), sortedTerms.get(1));
+//        case TIMEZONE_PART:
+//        	return BUILTIN.createTimezonePart(sortedTerms.get(0), sortedTerms.get(1));
+//        case TEXT_FROM_STRING:
+//        	return BUILTIN.createTextFromString(sortedTerms.get(0), sortedTerms.get(1));
+//        case STRING_FROM_TEXT:
+//        	return BUILTIN.createStringFromText(sortedTerms.get(0), sortedTerms.get(1));
+//        case LANG_FROM_TEXT:
+//        	return BUILTIN.createLangFromText(sortedTerms.get(0), sortedTerms.get(1));
+//        case TO_BASE64:
+//        	return BUILTIN.createToBase64Binary(sortedTerms.get(0), sortedTerms.get(1));
+//        case TO_BOOLEAN:
+//        	return BUILTIN.createToBoolean(sortedTerms.get(0), sortedTerms.get(1));
+//        case TO_DATE:
+//        	return BUILTIN.createToDate(sortedTerms.get(0), sortedTerms.get(1));
+//        case TO_DATETIME:
+//        	return BUILTIN.createToDateTime(sortedTerms.get(0), sortedTerms.get(1));
+//        case TO_DAYTIMEDURATION:
+//        	return BUILTIN.createToDayTimeDuration(sortedTerms.get(0), sortedTerms.get(1));
+//        case TO_DECIMAL:
+//        	return BUILTIN.createToDecimal(sortedTerms.get(0), sortedTerms.get(1));
+//        case TO_DOUBLE:
+//        	return BUILTIN.createToDouble(sortedTerms.get(0), sortedTerms.get(1));
+//        case TO_DURATION:
+//        	return BUILTIN.createToDuration(sortedTerms.get(0), sortedTerms.get(1));
+//        case TO_FLOAT:
+//        	return BUILTIN.createToFloat(sortedTerms.get(0), sortedTerms.get(1));
+//        case TO_GDAY:
+//        	return BUILTIN.createToGDay(sortedTerms.get(0), sortedTerms.get(1));
+//        case TO_GMONTH:
+//        	return BUILTIN.createToGMonth(sortedTerms.get(0), sortedTerms.get(1));
+//        case TO_GMONTHDAY:
+//        	return BUILTIN.createToGMonthDay(sortedTerms.get(0), sortedTerms.get(1));
+//        case TO_GYEAR:
+//        	return BUILTIN.createToGYear(sortedTerms.get(0), sortedTerms.get(1));
+//        case TO_GYEARMONTH:
+//        	return BUILTIN.createToGYearMonth(sortedTerms.get(0), sortedTerms.get(1));
+//        case TO_HEXBINARY:
+//        	return BUILTIN.createToHexBinary(sortedTerms.get(0), sortedTerms.get(1));
+//        case TO_INTEGER:
+//        	return BUILTIN.createToInteger(sortedTerms.get(0), sortedTerms.get(1));
+//        case TO_IRI:
+//        	return BUILTIN.createToIRI(sortedTerms.get(0), sortedTerms.get(1));
+//        case TO_STRING:
+//        	return BUILTIN.createToString(sortedTerms.get(0), sortedTerms.get(1));
+//        case TO_TEXT:
+//        	return BUILTIN.createToText(sortedTerms.get(0), sortedTerms.get(1));
+//        case TO_TIME:
+//        	return BUILTIN.createToTime(sortedTerms.get(0), sortedTerms.get(1));
+//        case TO_XMLLITERAL:
+//        	return BUILTIN.createToXMLLiteral(sortedTerms.get(0), sortedTerms.get(1));
+//        case TO_YEARMONTHDURATION:
+//        	return BUILTIN.createToYearMonthDuration(sortedTerms.get(0), sortedTerms.get(1));
         	
         // TODO support for following? Add to WSMO4J?
 //        // the is-datatype-things
