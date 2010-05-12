@@ -1,14 +1,15 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
-namespace { _"http://example.com/datatypes6#"}
+namespace { _"http://example.com/datatypes6#", 
+		xsd _"http://www.w3.org/2001/XMLSchema#"}
 
 ontology DatatypesTestOntology6
 
 concept conceptualizations
-	reallyExists ofType _boolean
+	//reallyExists ofType xsd#boolean
 
 instance truth memberOf conceptualizations
-	reallyExists hasValue _boolean("true")
+	reallyExists hasValue xsd#boolean("true")
 
 instance mysticism memberOf conceptualizations
-	reallyExists hasValue _boolean("false")
+	reallyExists hasValue xsd#boolean("false")
  

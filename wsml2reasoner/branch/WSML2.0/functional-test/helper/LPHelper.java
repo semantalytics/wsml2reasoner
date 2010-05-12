@@ -93,8 +93,10 @@ public class LPHelper
 
 		for (Map<Variable, Term> binding : expectedResults)
 		{
-			if( ! contains( actualResults, binding ) )
+			if( !contains( actualResults, binding ) ){
 				System.out.println( binding );
+			}
+			
 			Assert.assertTrue( contains( actualResults, binding ) );
 		}
     }

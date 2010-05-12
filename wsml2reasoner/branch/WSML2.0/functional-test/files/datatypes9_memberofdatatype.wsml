@@ -6,4 +6,7 @@ ontology DatatypesTestOntology9
 instance i
     a hasValue "a"
     b hasValue 1
+    
+    // a hasValue _string("a")
+    // b hasValue _integer("1")
  

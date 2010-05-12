@@ -1,6 +1,5 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
-namespace { _"http://simple9#"
-}
+namespace { _"http://simple9#"}
 
 ontology simple_9
 
@@ -12,7 +11,6 @@ concept C3
 
 instance A memberOf C1
 instance B memberOf C2
-
 		
 axiom equal definedBy
 	C1 = C2 :- true.

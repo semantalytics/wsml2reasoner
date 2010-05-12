@@ -2,10 +2,10 @@ package concreteTests.irisStratified;
 
 import org.wsml.reasoner.api.LPReasoner;
 
-import abstractTests.lp.AbstractRIFBuiltin01Test;
+import abstractTests.lp.AbstractRIFBuiltinTest;
 
-public class RIFBuiltin01Test extends AbstractRIFBuiltin01Test{
 
+public class RIFBuiltinTest extends AbstractRIFBuiltinTest{
 	@Override
 	public LPReasoner getLPReasoner() {
 		return Reasoner.get();

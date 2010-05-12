@@ -28,7 +28,7 @@ public abstract class AbstractRuleHead9EqualityTest extends TestCase implements
 		r.addBinding(Results.iri("http://simple9#A"));
 		r.addBinding(Results.iri("http://simple9#B"));
 
-//		LPHelper.outputON();
+		LPHelper.outputON();
 		LPHelper.executeQueryAndCheckResults(OntologyHelper
 				.loadOntology(ONTOLOGY_FILE), query, r.get(), reasoner);
 	}

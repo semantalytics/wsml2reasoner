@@ -70,7 +70,8 @@ public abstract class AbstractDataTypes3DateTimeDurationTypes extends TestCase i
     	Results r = new Results( "x", "t" );
     	r.addBinding( Results.iri( NS + "decimalSeconds" ), Results._duration( 1, 2, 3, 4, 5, 6.98765 ) );
     	r.addBinding( Results.iri( NS + "decimalSecondsWithTimeZones" ), Results._duration( 1, 2, 3, 4, 5, 6.98765 ) );
-    	
+
+//    	LPHelper.outputON();
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );
     }
     
@@ -81,7 +82,7 @@ public abstract class AbstractDataTypes3DateTimeDurationTypes extends TestCase i
     	r.addBinding( Results.iri( NS + "decimalSeconds" ), Results._duration( 1, 2, 3, 4, 5, 1.337 ) );
     	r.addBinding( Results.iri( NS + "decimalSecondsWithTimeZones" ), Results._duration( 1, 2, 3, 4, 5, 1.337 ) );
     	
-    	LPHelper.outputON();
+//    	LPHelper.outputON();
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );
     }
 }

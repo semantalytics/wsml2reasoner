@@ -103,11 +103,11 @@ instance anInstance memberOf anEntity
 	a_String     hasValue _string( "string-value_" )
 	aXSD_String  hasValue xsd#string("string-value-xsd")
 	
-	aDecimal 	 hasValue wsml#decimal( 123456.78901 )
+	aDecimal 	 hasValue wsml#decimal(123456.78901)
 	a_Decimal 	 hasValue _decimal( 987654.32101 )
 	aXSD_Decimal hasValue xsd#decimal(123456.78901)
 	
-	aInteger     hasValue wsml#integer( 12345 )
+	aInteger     hasValue wsml#integer( "12345" )
 	a_Integer    hasValue _integer( 12345 )
 	aXSD_Integer hasValue xsd#integer(12345)
 	

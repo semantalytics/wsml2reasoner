@@ -4,8 +4,8 @@ namespace { _"http://example.com/attribute2#",
      bm _"http://wsml2reasoner/benchmarks#" }
 
 ontology attribute2
-     nonFunctionalProperties
-          dc#title hasValue "Minimal cardinality contraint (1 *) expressions"
+       annotations
+         dc#title hasValue "Minimal cardinality contraint (1 *) expressions"
           bm#replicated hasValue 250
           bm#totalTermAmount hasValue 254
           bm#attributesAmount hasValue 250
@@ -22,10 +22,10 @@ ontology attribute2
 
 			 The following two queries are applied to it:
 			 Query 1: i1[a1 hasValue ?y]
-			 Query 2: ?x[?y hasValue ?z]"
+			 Query 2: ?x[?y hasValue ?z] "
           bm#conceptsAmount hasValue 2
-          bm#instancesAmount hasValue 2
-     endNonFunctionalProperties
+          bm#instancesAmount hasValue 2 
+     endAnnotations
 
 concept c1
      a1 impliesType  (1 *) c2
@@ -534,15 +534,15 @@ instance i1 memberOf c1
 instance i2
 
 relationInstance query1("i1[a1 hasValue ?x]")
-     nonFunctionalProperties
+     /* nonFunctionalProperties
           dc#title hasValue "Attribute value query 1"
           dc#description hasValue "This query will return exactly one result set, as it is querying for the value of one specific attribute."
           bm#result hasValue "?x=i2"
-     endNonFunctionalProperties
+     endNonFunctionalProperties */
 
 relationInstance query2("?x[?y hasValue ?z]")
-     nonFunctionalProperties
+    /* nonFunctionalProperties
           dc#title hasValue "Attribute value query 2"
           dc#description hasValue "This query will return a number of result sets equivalent to the amount of attribute value expressions in the ontology."
           bm#result hasValue "?x=i1,?y=a250,?z=i2"
-     endNonFunctionalProperties
+     endNonFunctionalProperties */

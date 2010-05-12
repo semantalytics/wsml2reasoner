@@ -4,7 +4,7 @@ namespace { _"http://example.com/datatypes8#" }
 ontology DatatypesTestOntology8
 
 concept Human
-//  birthday ofType _date
+  birthday ofType _date
   
 concept Child subConceptOf Human  
   
