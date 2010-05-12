@@ -91,7 +91,9 @@ public class IrisFacadeHelper {
 		//
 		// WSML BuiltIn /////////////////////////////////////////
 		// http://www.wsmo.org/TR/d16/d16.1/v1.0/#cha:built-ins
+		// NOTE mp: not longer supported - RIF Built-ins replace them mostly
 		//
+		
 		ITerm[] t = toArray(sortListForIRIS(terms));
 		switch (wsmlBuiltIn) {
 		case EQUAL:
@@ -236,9 +238,8 @@ public class IrisFacadeHelper {
 			return BUILTIN.createAddYearMonthDurationToDateTime(t);
 		case BOOLEAN_EQUAL:
 			return BUILTIN.createBooleanEqual(t);
-			// case BOOLEAN_NOT_EQUAL: // TODO mp: not implemented
-			// return
-			// BUILTIN.createBooleanInEqual(t);
+//	    case BOOLEAN_NOT_EQUAL: // TODO mp: not implemented
+//			return BUILTIN.(t);
 			// break;
 		case BOOLEAN_GREATER_THAN:
 			return BUILTIN.createBooleanGreater(t);
@@ -425,8 +426,8 @@ public class IrisFacadeHelper {
 			return BUILTIN.createIsNotHexBinary(t);
 		case IS_LITERAL_NOT_INTEGER:
 			return BUILTIN.createIsNotInteger(t);
-			// case IS_LITERAL_NOT_INT: // TODO mp: implement
-			// return BUILTIN.createIsNotInt(t);
+//		case IS_LITERAL_NOT_INT: // TODO mp: implement
+//			// return BUILTIN.createIsNotInt(t);
 		case IS_LITERAL_NOT_LANGUAGE:
 			return BUILTIN.createIsNotLanguage(t);
 		case IS_LITERAL_NOT_LONG:
@@ -472,7 +473,7 @@ public class IrisFacadeHelper {
 		case IS_LITERAL_NOT_YEARMONTHDURATION:
 			return BUILTIN.createIsNotYearMonthDuration(t);
 		case IS_LITERAL_PLAINLITERAL: // TODO mp : implement
-			// return BUILTIN.createisdf
+//			return BUILTIN.crea
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
 		case IS_LITERAL_POSITIVEINTEGER:
@@ -497,28 +498,28 @@ public class IrisFacadeHelper {
 			return BUILTIN.createIsXMLLiteral(t);
 		case IS_LITERAL_YEARMONTHDURATION:
 			return BUILTIN.createIsYearMonthDuration(t);
-		case LANG_FROM_PLAINLITERAL: // TODO mp: check
+		case LANG_FROM_PLAINLITERAL: 				// TODO mp: error
 			return BUILTIN.createLangFromText(t);
-		case LIST_CONTAINS: // TODO mp: implement?
-			// return BUILTIN.create
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
-		case LITERAL_NOT_IDENTICAL: // TODO mp: implement?
-			// return BUILTIN.createl
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
-		case LOWER_CASE:
-			return BUILTIN.createStringToLower(t);
-		case MAKE_LISTS: // TODO mp: implement?
-			// return BUILTIN.createMa
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
-		case MATCHES:
-			return BUILTIN.createStringMatches(t);
-		case MATCHES_LANGUAGE_RANGE: // TODO mp: implement?
-			// return BUILTIN.creatematch
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+//		case LIST_CONTAINS: // TODO mp: implement?
+//			// return BUILTIN.create
+//			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
+//					BASIC.createTuple(terms));
+//		case LITERAL_NOT_IDENTICAL: // TODO mp: implement?
+//			// return BUILTIN.createl
+//			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
+//					BASIC.createTuple(terms));
+//		case LOWER_CASE:
+//			return BUILTIN.createStringToLower(t);
+//		case MAKE_LISTS: // TODO mp: implement?
+//			// return BUILTIN.createMa
+//			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
+//					BASIC.createTuple(terms));
+//		case MATCHES:
+//			return BUILTIN.createStringMatches(t);
+//		case MATCHES_LANGUAGE_RANGE: // TODO mp: implement?
+//			// return BUILTIN.creatematch
+//			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
+//					BASIC.createTuple(terms));
 		case MINUTES_FROM_DATETIME:
 			return BUILTIN.createMinutesFromDateTime(t);
 		case MINUTES_FROM_DURATION:
@@ -543,6 +544,7 @@ public class IrisFacadeHelper {
 			// return BUILTIN.createNot
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
+		
 		case NUMERIC_ADD:
 			return BUILTIN.createNumericAdd(t);
 		case NUMERIC_DIVIDE:
@@ -567,14 +569,12 @@ public class IrisFacadeHelper {
 			return BUILTIN.createNumericNotEqual(t);
 		case NUMERIC_SUBTRACT:
 			return BUILTIN.createNumericSubtract(t);
-		case PLAINLITERAL_COMPARE:// TODO mp: implement?
+		case PLAINLITERAL_COMPARE:						// TODO mp: implement?
 			// return BUILTIN.create
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
-		case PLAINLITERAL_FROM_STRING_LANG: // TODO mp: implement?
-			// return BUILTIN.create
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+		case PLAINLITERAL_FROM_STRING_LANG: 			// TODO mp: error
+			return BUILTIN.createTextFromStringLang(t);
 		case PLAINLITERAL_LENGTH:// TODO mp: implement?
 			// return BUILTIN.create
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
@@ -597,10 +597,8 @@ public class IrisFacadeHelper {
 			return BUILTIN.createSecondsFromTime(t);
 		case STARTS_WITH:
 			return BUILTIN.createStringStartsWith(t);
-		case STRING_FROM_PLAINLITERAL: // TODO mp: implement
-			// return BUILTIN.createStringFromText(t);
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+		case STRING_FROM_PLAINLITERAL: 				// TODO mp: error
+			return BUILTIN.createStringFromText(t);
 		case STRING_JOIN:
 			return BUILTIN.createStringJoin(t);
 		case STRING_LENGTH:
@@ -619,17 +617,17 @@ public class IrisFacadeHelper {
 			// return BUILTIN.createSubtractBuiltin(t0, t1, t2)
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
-		case SUBTRACT_DATETIMES: // TODO mp: check
+		case SUBTRACT_DATETIMES: 
 			return BUILTIN.createDateTimeSubtract(t);
-		case SUBTRACT_DAYTIMEDURATION_FROM_DATE:// TODO mp: check
+		case SUBTRACT_DAYTIMEDURATION_FROM_DATE:
 			return BUILTIN.createSubtractDayTimeDurationFromDate(t);
 		case SUBTRACT_DAYTIMEDURATION_FROM_DATETIME:
 			return BUILTIN.createSubtractDayTimeDurationFromDateTime(t);
 		case SUBTRACT_DAYTIMEDURATION_FROM_TIME:
 			return BUILTIN.createSubtractDayTimeDurationFromTime(t);
-		case SUBTRACT_DAYTIMEDURATIONS: // TODO mp: check
+		case SUBTRACT_DAYTIMEDURATIONS: 
 			return BUILTIN.createDayTimeDurationSubtract(t);
-		case SUBTRACT_TIMES: // TODO mp: check
+		case SUBTRACT_TIMES: 
 			return BUILTIN.createTimeSubtract(t);
 		case SUBTRACT_YEARMONTHDURATION_FROM_DATE:
 			return BUILTIN.createSubtractYearMonthDurationFromDate(t);
