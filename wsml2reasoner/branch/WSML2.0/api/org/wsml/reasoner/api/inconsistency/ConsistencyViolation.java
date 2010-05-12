@@ -6,7 +6,7 @@ import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Type;
 import org.omwg.ontology.Value;
-import org.omwg.ontology.WsmlDataType;
+import org.omwg.ontology.XmlSchemaDataType;
 import org.wsmo.common.TopEntity;
 
 public class ConsistencyViolation {
@@ -23,7 +23,7 @@ public class ConsistencyViolation {
             return toString(((Concept) t).getIdentifier(), te);
         }
         else {
-            return toString(((WsmlDataType) t).getIdentifier(), te);
+            return toString(((XmlSchemaDataType) t).getIdentifier(), te);
         }
     }
 
