@@ -35,8 +35,8 @@
 	<classpathentry kind="lib" path="lib/ext/iris-reasoner/iris/iris-0.60.jar"/>
 	<classpathentry kind="var" path="JUNIT_HOME/junit.jar" sourcepath="ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.1.0/src/org.junit_3.8.1/junitsrc.zip"/>
 	<classpathentry kind="lib" path="lib/ext/kaon2-reasoner/kaon2.jar"/>
-	<classpathentry kind="lib" path="lib/ext/wsmo/WSML-grammar-2.0.1.jar"/>
-	<classpathentry kind="lib" path="lib/ext/wsmo/wsmo-api-2.0.1.jar"/>
-	<classpathentry kind="lib" path="lib/ext/wsmo/wsmo4j-2.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/ext/wsmo/WSML-grammar-2.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/ext/wsmo/wsmo-api-2.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/ext/wsmo/wsmo4j-2.0.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
