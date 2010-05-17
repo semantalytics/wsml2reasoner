@@ -38,6 +38,7 @@ import org.omwg.ontology.Concept;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Type;
 import org.omwg.ontology.Variable;
+import org.sti2.wsmo4j.merger.Merger;
 import org.wsml.reasoner.ConjunctiveQuery;
 import org.wsml.reasoner.DatalogException;
 import org.wsml.reasoner.DatalogReasonerFacade;
@@ -386,8 +387,10 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         if (allowImports == 0) {
             ontologies = getAllOntologies(ontologies);
         }
-
+        
         Set<Entity> entities = new HashSet<Entity>();
+        
+        /* FIXME am,dw: error-prone since entities may be lost 
         for (Ontology o : ontologies) {
             entities.addAll(o.listConcepts());
             entities.addAll(o.listInstances());
@@ -395,6 +398,25 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
             entities.addAll(o.listRelationInstances());
             entities.addAll(o.listAxioms());
         }
+        */
+        
+        IRI newIdentifier = ontologies.iterator().next().getIdentifier();
+
+        Ontology mergedOntology;
+		try {
+			mergedOntology = new Merger().merge(newIdentifier , ontologies);
+		} catch (IllegalArgumentException e) {
+			throw new InconsistencyException(e.getLocalizedMessage());
+		} catch (InvalidModelException e) {
+			throw new InconsistencyException(e.getLocalizedMessage());
+		}
+
+		entities.addAll(mergedOntology.listConcepts());
+        entities.addAll(mergedOntology.listInstances());
+        entities.addAll(mergedOntology.listRelations());
+        entities.addAll(mergedOntology.listRelationInstances());
+        entities.addAll(mergedOntology.listAxioms());
+        
         registerEntities(entities);
     }
 
