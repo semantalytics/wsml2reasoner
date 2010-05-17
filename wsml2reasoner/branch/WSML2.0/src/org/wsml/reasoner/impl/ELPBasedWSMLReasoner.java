@@ -147,12 +147,14 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 
 	public void registerOntologies(Set<Ontology> ontologies) throws InconsistencyException {
 		setChanged();
+		
+		Set<Ontology> newOntologies = new HashSet<Ontology>(ontologies);
 
 		if (registeredOntology != null)
-			ontologies.add(registeredOntology);
+			newOntologies.add(registeredOntology);
 		
 		try {
-			registeredOntology = merger.merge(factories.getWsmoFactory().createIRI("http://org.wsml.reasoner.impl.ELPBasedWSMLReasoner/registeredOntology"), ontologies);
+			registeredOntology = merger.merge(factories.getWsmoFactory().createIRI("http://org.wsml.reasoner.impl.ELPBasedWSMLReasoner/registeredOntology"), newOntologies);
 		} catch (InvalidModelException e) {
 			throw new RuntimeException("Error merging Ontolgies", e);
 		}
