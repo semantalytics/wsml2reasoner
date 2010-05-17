@@ -400,11 +400,11 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         }
         */
         
-        IRI newIdentifier = ontologies.iterator().next().getIdentifier();
+        IRI newIdentifier = wsmoFactory.createIRI("urn:org.wsml.reasoner.impl.DatalogBasedWSMLReasoner:registeredOntology");
 
         Ontology mergedOntology;
 		try {
-			mergedOntology = new Merger().merge(newIdentifier , ontologies);
+			mergedOntology = Merger.merge(newIdentifier , ontologies);
 		} catch (IllegalArgumentException e) {
 			throw new InconsistencyException(e.getLocalizedMessage());
 		} catch (InvalidModelException e) {

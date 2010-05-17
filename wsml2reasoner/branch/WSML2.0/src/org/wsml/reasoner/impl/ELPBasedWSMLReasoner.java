@@ -64,7 +64,6 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 	private boolean changed;
 	
 	private Ontology registeredOntology = null;
-	private final Merger merger;
 	
 	/* ********************************************
 	 * Caches
@@ -87,7 +86,6 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 
 		this.builtInFacade = createFacade(builtInType);
 
-		this.merger = new Merger();
 		this.factories = factories;
 		this.elly2wsml = new Elly2WsmlOntologyEntityTranslator(factories);
 		
@@ -154,7 +152,7 @@ public class ELPBasedWSMLReasoner implements DLReasoner {
 			newOntologies.add(registeredOntology);
 		
 		try {
-			registeredOntology = merger.merge(factories.getWsmoFactory().createIRI("http://org.wsml.reasoner.impl.ELPBasedWSMLReasoner/registeredOntology"), newOntologies);
+			registeredOntology = Merger.merge(factories.getWsmoFactory().createIRI("urn:org.wsml.reasoner.impl.ELPBasedWSMLReasoner:registeredOntology"), newOntologies);
 		} catch (InvalidModelException e) {
 			throw new RuntimeException("Error merging Ontolgies", e);
 		}
