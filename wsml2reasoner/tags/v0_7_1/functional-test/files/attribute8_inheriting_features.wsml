@@ -1,0 +1,23 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://example.com/attribute8#" }
+
+ontology attribute8
+
+concept Human 
+	parent inverseOf(child) impliesType Human
+	child impliesType Human
+	ancestor transitive impliesType Human
+	marriedTo symmetric impliesType (0 1) Human
+	friend reflexive impliesType Human
+
+concept Man subConceptOf Human
+
+instance baz memberOf Man
+	parent hasValue gordi		// => gordi[child hasValue baz] memberOf Human
+	child hasValue lola			// => lola[parent hasValue baz] memberOf Human
+	ancestor hasValue harold	// see below
+	marriedTo hasValue bizzi	// => bizzi[marriedTo hasValue baz] memberOf Human
+	//friend					// => baz[friend hasValue baz]
+	
+instance harold
+	ancestor hasValue arthur	// => baz[ancestor hasValue arthur ] memberOf Human

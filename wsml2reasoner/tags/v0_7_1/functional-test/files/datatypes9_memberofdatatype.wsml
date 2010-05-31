@@ -1,0 +1,12 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://example.com/datatypes9#" } 
+
+ontology DatatypesTestOntology9
+
+instance i
+    a hasValue "a"
+    b hasValue 1
+    
+    // a hasValue _string("a")
+    // b hasValue _integer("1")
+ 

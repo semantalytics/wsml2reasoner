@@ -1,0 +1,43 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
+namespace { _"http://example.com/axiom4#" } 
+
+ontology AxiomTestOntology4
+
+// ================================================================
+
+instance mary memberOf {Person, Female}
+
+axiom implied_by_expression definedBy
+	?x memberOf Woman impliedBy ?x memberOf Person and ?x memberOf Female.
+
+// ================================================================
+
+instance john memberOf {Human, Male}
+
+axiom implies_expression definedBy
+	?x memberOf Human and ?x memberOf Male implies ?x memberOf Man.
+
+// ================================================================
+
+instance elephant memberOf Large
+instance planet memberOf Big
+
+axiom equivalent_expression definedBy
+	?x memberOf Large equivalent ?x memberOf Big.
+
+// ================================================================
+
+instance knife memberOf Sharp
+instance rifle memberOf Shoots
+
+axiom disjunction definedBy
+	?x memberOf Weapon impliedBy ?x memberOf Sharp or ?x memberOf Shoots.
+
+// ================================================================
+
+instance swan memberOf {Alive, Flys}
+instance learjet memberOf Flys
+instance giraffe memberOf Alive
+
+axiom conjunction definedBy
+	?x memberOf Alive and ?x memberOf Flys implies ?x memberOf Bird.

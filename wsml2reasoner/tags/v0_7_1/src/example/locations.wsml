@@ -1,0 +1,134 @@
+namespace {_"http://www.example.org/example/",
+    dc _"http://purl.org/dc/elements/1.1#",
+    xsd _"http://www.w3.org/2001/XMLSchema#",
+    wsml _"http://www.wsmo.org/2004/wsml"}
+
+ontology _"http://www.example.org/example/location"
+      annotations
+            dc#title hasValue "Locations Ontology"
+            dc#creator hasValue _"http://www.deri.org/foaf#deri"
+            dc#subject hasValue {"Location", "Country", "State", "City", "Address"}
+            dc#description hasValue "Ontology for representing locations in the current political/social system"
+            dc#publisher hasValue _"http://www.deri.org/foaf#deri"
+            dc#contributor hasValue {_"http://www.deri.org/foaf#lara",
+                  _"http://www.deri.org/foaf#polleres"}
+            dc#date hasValue "2004-10-04"
+            dc#type hasValue _"http://www.wsmo.org/2004/d2#ontologies"
+            dc#format hasValue "text/html"
+            dc#language hasValue "en-US"
+            dc#identifier hasValue _"http://www.wsmo.org/ontologies/location"
+            dc#source hasValue _"http://www.daml.org/2001/02/geofile/geofile-ont"
+            dc#language hasValue "en-US"
+            dc#relation hasValue {_"http://www.daml.org/2001/09/countries/fips-10-4-ont",
+                  _"http://www.daml.org/2001/09/countries/iso-3166-ont",
+                  _"http://www.daml.org/2003/09/factbook/factbook-ont",
+                  _"http://www.daml.org/2001/02/geofile/geofile-ont",
+                  _"http://daml.umbc.edu/ontologies/ittalks/address"}
+            dc#coverage hasValue "ID:7029392 Name:World"
+            dc#rights hasValue _"http://www.deri.org/privacy.html"
+            version hasValue "$Revision: 2315 $"
+      endAnnotations
+
+      usesMediator {_"http://www.wsmo.org/2004/d3/d3.2/v0.1/20041004/resources/owlFactbookMediator.wsml",
+            _"http://www.wsmo.org/2004/d3/d3.2/v0.1/20041004/resources/owlAddressMediator.wsml",
+            _"http://www.daml.org/2004/d3/d3.2/v0.1/20041004/resources/owlGeoMediator.wsml"}
+
+      concept country 
+            annotations
+                  dc#description hasValue "Add the codes to the CIA country properties"
+            endAnnotations
+            fipsCode ofType wsml#string
+            annotations
+                  dc#description hasValue "FIPS 10-4 Country Code"
+            endAnnotations
+            isoCode ofType wsml#string
+            annotations
+                  dc#description hasValue "ISO 3166 Country Code"
+            endAnnotations
+
+      concept address 
+            annotations
+                  dc#description hasValue "Extended address, adding more details to
+                        city, state and country"
+            endAnnotations
+            //city ofType city
+            hasState ofType state
+            hasCountry ofType country
+
+      concept city //subConceptOf geo#city
+            annotations
+                  dc#description hasValue "City"
+            endAnnotations
+            population ofType _integer
+            extension ofType _integer
+                  annotations
+                        dc#description hasValue "Extension of the city in square kilometers"
+                  endAnnotations
+            zipcodes ofType wsml#string
+            
+      concept bigCity subConceptOf city
+      
+      concept capital subConceptOf bigCity
+
+      concept state //subConceptOf geo#state
+            annotations
+                  dc#description hasValue "State"
+            endAnnotations
+            cities ofType city
+            population ofType _integer
+            extension ofType _integer
+
+      concept border //subConceptOf geo#geographicLocation
+            annotations
+                  dc#description hasValue "Border between two countries. Notice that it
+                        would be more natural to model this as a location with a cardinality
+                        constraint = 2 for the country property. However, it is not clear
+                        how to do this in F-Logic"
+            endAnnotations
+            countryA ofType country
+            countryB ofType country
+
+      concept distance
+            annotations
+                  dc#description hasValue "Distance between two points"
+            endAnnotations
+            amount ofType _float
+            units ofType wsml#string
+
+      axiom validDistance
+            annotations
+                  dc#description hasValue "The amount in a distance cannot be less than 0.
+                        We only accept kilometers and miles."
+            endAnnotations
+            definedBy
+                  !- ?D[amount hasValue ?A,
+                        units hasValue ?U
+                      ]memberOf distance.
+
+      instance austria memberOf country
+            fipsCode hasValue "AU"
+            isoCode hasValue "AT"
+
+      instance germany memberOf country
+            fipsCode hasValue "GM"
+            isoCode hasValue "DE"
+
+      instance usa memberOf country
+            fipsCode hasValue "US"
+            isoCode hasValue "US"
+
+      instance innsbruck memberOf city
+            name hasValue "Innsbruck"
+            locatedIn hasValue austria
+
+      instance frankfurt memberOf city
+            name hasValue "Frankfurt"
+            locatedIn hasValue germany
+
+      instance boston memberOf city
+            name hasValue "Boston"
+            locatedIn hasValue usa
+
+      instance massachusetts memberOf state
+            name hasValue "Massachusetts"
+            locatedIn hasValue usa

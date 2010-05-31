@@ -1,0 +1,548 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://example.com/attribute2#", 
+     dc _"http://purl.org/dc/elements/1.1#", 
+     bm _"http://wsml2reasoner/benchmarks#" }
+
+ontology attribute2
+       annotations
+         dc#title hasValue "Minimal cardinality contraint (1 *) expressions"
+          bm#replicated hasValue 250
+          bm#totalTermAmount hasValue 254
+          bm#attributesAmount hasValue 250
+          dc#description hasValue "
+			 This ontology is containing cardinality constraint expressions with a minimal cardinality of 1.
+
+			 The x-axis value of the graph indicates the number of cardinality constraint expressions.
+			 Ontology example: 
+			 concept c1 
+			 	 a1 ofType (1 *) c1
+			 instance i1 memberOf c1 
+			 	 a1 hasValue i2
+			 instance i2 memberOf c1
+
+			 The following two queries are applied to it:
+			 Query 1: i1[a1 hasValue ?y]
+			 Query 2: ?x[?y hasValue ?z] "
+          bm#conceptsAmount hasValue 2
+          bm#instancesAmount hasValue 2 
+     endAnnotations
+
+concept c1
+     a1 impliesType  (1 *) c2
+     a2 impliesType  (1 *) c2
+     a3 impliesType  (1 *) c2
+     a4 impliesType  (1 *) c2
+     a5 impliesType  (1 *) c2
+     a6 impliesType  (1 *) c2
+     a7 impliesType  (1 *) c2
+     a8 impliesType  (1 *) c2
+     a9 impliesType  (1 *) c2
+     a10 impliesType  (1 *) c2
+     a11 impliesType  (1 *) c2
+     a12 impliesType  (1 *) c2
+     a13 impliesType  (1 *) c2
+     a14 impliesType  (1 *) c2
+     a15 impliesType  (1 *) c2
+     a16 impliesType  (1 *) c2
+     a17 impliesType  (1 *) c2
+     a18 impliesType  (1 *) c2
+     a19 impliesType  (1 *) c2
+     a20 impliesType  (1 *) c2
+     a21 impliesType  (1 *) c2
+     a22 impliesType  (1 *) c2
+     a23 impliesType  (1 *) c2
+     a24 impliesType  (1 *) c2
+     a25 impliesType  (1 *) c2
+     a26 impliesType  (1 *) c2
+     a27 impliesType  (1 *) c2
+     a28 impliesType  (1 *) c2
+     a29 impliesType  (1 *) c2
+     a30 impliesType  (1 *) c2
+     a31 impliesType  (1 *) c2
+     a32 impliesType  (1 *) c2
+     a33 impliesType  (1 *) c2
+     a34 impliesType  (1 *) c2
+     a35 impliesType  (1 *) c2
+     a36 impliesType  (1 *) c2
+     a37 impliesType  (1 *) c2
+     a38 impliesType  (1 *) c2
+     a39 impliesType  (1 *) c2
+     a40 impliesType  (1 *) c2
+     a41 impliesType  (1 *) c2
+     a42 impliesType  (1 *) c2
+     a43 impliesType  (1 *) c2
+     a44 impliesType  (1 *) c2
+     a45 impliesType  (1 *) c2
+     a46 impliesType  (1 *) c2
+     a47 impliesType  (1 *) c2
+     a48 impliesType  (1 *) c2
+     a49 impliesType  (1 *) c2
+     a50 impliesType  (1 *) c2
+     a51 impliesType  (1 *) c2
+     a52 impliesType  (1 *) c2
+     a53 impliesType  (1 *) c2
+     a54 impliesType  (1 *) c2
+     a55 impliesType  (1 *) c2
+     a56 impliesType  (1 *) c2
+     a57 impliesType  (1 *) c2
+     a58 impliesType  (1 *) c2
+     a59 impliesType  (1 *) c2
+     a60 impliesType  (1 *) c2
+     a61 impliesType  (1 *) c2
+     a62 impliesType  (1 *) c2
+     a63 impliesType  (1 *) c2
+     a64 impliesType  (1 *) c2
+     a65 impliesType  (1 *) c2
+     a66 impliesType  (1 *) c2
+     a67 impliesType  (1 *) c2
+     a68 impliesType  (1 *) c2
+     a69 impliesType  (1 *) c2
+     a70 impliesType  (1 *) c2
+     a71 impliesType  (1 *) c2
+     a72 impliesType  (1 *) c2
+     a73 impliesType  (1 *) c2
+     a74 impliesType  (1 *) c2
+     a75 impliesType  (1 *) c2
+     a76 impliesType  (1 *) c2
+     a77 impliesType  (1 *) c2
+     a78 impliesType  (1 *) c2
+     a79 impliesType  (1 *) c2
+     a80 impliesType  (1 *) c2
+     a81 impliesType  (1 *) c2
+     a82 impliesType  (1 *) c2
+     a83 impliesType  (1 *) c2
+     a84 impliesType  (1 *) c2
+     a85 impliesType  (1 *) c2
+     a86 impliesType  (1 *) c2
+     a87 impliesType  (1 *) c2
+     a88 impliesType  (1 *) c2
+     a89 impliesType  (1 *) c2
+     a90 impliesType  (1 *) c2
+     a91 impliesType  (1 *) c2
+     a92 impliesType  (1 *) c2
+     a93 impliesType  (1 *) c2
+     a94 impliesType  (1 *) c2
+     a95 impliesType  (1 *) c2
+     a96 impliesType  (1 *) c2
+     a97 impliesType  (1 *) c2
+     a98 impliesType  (1 *) c2
+     a99 impliesType  (1 *) c2
+     a100 impliesType  (1 *) c2
+     a101 impliesType  (1 *) c2
+     a102 impliesType  (1 *) c2
+     a103 impliesType  (1 *) c2
+     a104 impliesType  (1 *) c2
+     a105 impliesType  (1 *) c2
+     a106 impliesType  (1 *) c2
+     a107 impliesType  (1 *) c2
+     a108 impliesType  (1 *) c2
+     a109 impliesType  (1 *) c2
+     a110 impliesType  (1 *) c2
+     a111 impliesType  (1 *) c2
+     a112 impliesType  (1 *) c2
+     a113 impliesType  (1 *) c2
+     a114 impliesType  (1 *) c2
+     a115 impliesType  (1 *) c2
+     a116 impliesType  (1 *) c2
+     a117 impliesType  (1 *) c2
+     a118 impliesType  (1 *) c2
+     a119 impliesType  (1 *) c2
+     a120 impliesType  (1 *) c2
+     a121 impliesType  (1 *) c2
+     a122 impliesType  (1 *) c2
+     a123 impliesType  (1 *) c2
+     a124 impliesType  (1 *) c2
+     a125 impliesType  (1 *) c2
+     a126 impliesType  (1 *) c2
+     a127 impliesType  (1 *) c2
+     a128 impliesType  (1 *) c2
+     a129 impliesType  (1 *) c2
+     a130 impliesType  (1 *) c2
+     a131 impliesType  (1 *) c2
+     a132 impliesType  (1 *) c2
+     a133 impliesType  (1 *) c2
+     a134 impliesType  (1 *) c2
+     a135 impliesType  (1 *) c2
+     a136 impliesType  (1 *) c2
+     a137 impliesType  (1 *) c2
+     a138 impliesType  (1 *) c2
+     a139 impliesType  (1 *) c2
+     a140 impliesType  (1 *) c2
+     a141 impliesType  (1 *) c2
+     a142 impliesType  (1 *) c2
+     a143 impliesType  (1 *) c2
+     a144 impliesType  (1 *) c2
+     a145 impliesType  (1 *) c2
+     a146 impliesType  (1 *) c2
+     a147 impliesType  (1 *) c2
+     a148 impliesType  (1 *) c2
+     a149 impliesType  (1 *) c2
+     a150 impliesType  (1 *) c2
+     a151 impliesType  (1 *) c2
+     a152 impliesType  (1 *) c2
+     a153 impliesType  (1 *) c2
+     a154 impliesType  (1 *) c2
+     a155 impliesType  (1 *) c2
+     a156 impliesType  (1 *) c2
+     a157 impliesType  (1 *) c2
+     a158 impliesType  (1 *) c2
+     a159 impliesType  (1 *) c2
+     a160 impliesType  (1 *) c2
+     a161 impliesType  (1 *) c2
+     a162 impliesType  (1 *) c2
+     a163 impliesType  (1 *) c2
+     a164 impliesType  (1 *) c2
+     a165 impliesType  (1 *) c2
+     a166 impliesType  (1 *) c2
+     a167 impliesType  (1 *) c2
+     a168 impliesType  (1 *) c2
+     a169 impliesType  (1 *) c2
+     a170 impliesType  (1 *) c2
+     a171 impliesType  (1 *) c2
+     a172 impliesType  (1 *) c2
+     a173 impliesType  (1 *) c2
+     a174 impliesType  (1 *) c2
+     a175 impliesType  (1 *) c2
+     a176 impliesType  (1 *) c2
+     a177 impliesType  (1 *) c2
+     a178 impliesType  (1 *) c2
+     a179 impliesType  (1 *) c2
+     a180 impliesType  (1 *) c2
+     a181 impliesType  (1 *) c2
+     a182 impliesType  (1 *) c2
+     a183 impliesType  (1 *) c2
+     a184 impliesType  (1 *) c2
+     a185 impliesType  (1 *) c2
+     a186 impliesType  (1 *) c2
+     a187 impliesType  (1 *) c2
+     a188 impliesType  (1 *) c2
+     a189 impliesType  (1 *) c2
+     a190 impliesType  (1 *) c2
+     a191 impliesType  (1 *) c2
+     a192 impliesType  (1 *) c2
+     a193 impliesType  (1 *) c2
+     a194 impliesType  (1 *) c2
+     a195 impliesType  (1 *) c2
+     a196 impliesType  (1 *) c2
+     a197 impliesType  (1 *) c2
+     a198 impliesType  (1 *) c2
+     a199 impliesType  (1 *) c2
+     a200 impliesType  (1 *) c2
+     a201 impliesType  (1 *) c2
+     a202 impliesType  (1 *) c2
+     a203 impliesType  (1 *) c2
+     a204 impliesType  (1 *) c2
+     a205 impliesType  (1 *) c2
+     a206 impliesType  (1 *) c2
+     a207 impliesType  (1 *) c2
+     a208 impliesType  (1 *) c2
+     a209 impliesType  (1 *) c2
+     a210 impliesType  (1 *) c2
+     a211 impliesType  (1 *) c2
+     a212 impliesType  (1 *) c2
+     a213 impliesType  (1 *) c2
+     a214 impliesType  (1 *) c2
+     a215 impliesType  (1 *) c2
+     a216 impliesType  (1 *) c2
+     a217 impliesType  (1 *) c2
+     a218 impliesType  (1 *) c2
+     a219 impliesType  (1 *) c2
+     a220 impliesType  (1 *) c2
+     a221 impliesType  (1 *) c2
+     a222 impliesType  (1 *) c2
+     a223 impliesType  (1 *) c2
+     a224 impliesType  (1 *) c2
+     a225 impliesType  (1 *) c2
+     a226 impliesType  (1 *) c2
+     a227 impliesType  (1 *) c2
+     a228 impliesType  (1 *) c2
+     a229 impliesType  (1 *) c2
+     a230 impliesType  (1 *) c2
+     a231 impliesType  (1 *) c2
+     a232 impliesType  (1 *) c2
+     a233 impliesType  (1 *) c2
+     a234 impliesType  (1 *) c2
+     a235 impliesType  (1 *) c2
+     a236 impliesType  (1 *) c2
+     a237 impliesType  (1 *) c2
+     a238 impliesType  (1 *) c2
+     a239 impliesType  (1 *) c2
+     a240 impliesType  (1 *) c2
+     a241 impliesType  (1 *) c2
+     a242 impliesType  (1 *) c2
+     a243 impliesType  (1 *) c2
+     a244 impliesType  (1 *) c2
+     a245 impliesType  (1 *) c2
+     a246 impliesType  (1 *) c2
+     a247 impliesType  (1 *) c2
+     a248 impliesType  (1 *) c2
+     a249 impliesType  (1 *) c2
+     a250 impliesType  (1 *) c2
+
+instance i1 memberOf c1
+     a1 hasValue i2
+     a2 hasValue i2
+     a3 hasValue i2
+     a4 hasValue i2
+     a5 hasValue i2
+     a6 hasValue i2
+     a7 hasValue i2
+     a8 hasValue i2
+     a9 hasValue i2
+     a10 hasValue i2
+     a11 hasValue i2
+     a12 hasValue i2
+     a13 hasValue i2
+     a14 hasValue i2
+     a15 hasValue i2
+     a16 hasValue i2
+     a17 hasValue i2
+     a18 hasValue i2
+     a19 hasValue i2
+     a20 hasValue i2
+     a21 hasValue i2
+     a22 hasValue i2
+     a23 hasValue i2
+     a24 hasValue i2
+     a25 hasValue i2
+     a26 hasValue i2
+     a27 hasValue i2
+     a28 hasValue i2
+     a29 hasValue i2
+     a30 hasValue i2
+     a31 hasValue i2
+     a32 hasValue i2
+     a33 hasValue i2
+     a34 hasValue i2
+     a35 hasValue i2
+     a36 hasValue i2
+     a37 hasValue i2
+     a38 hasValue i2
+     a39 hasValue i2
+     a40 hasValue i2
+     a41 hasValue i2
+     a42 hasValue i2
+     a43 hasValue i2
+     a44 hasValue i2
+     a45 hasValue i2
+     a46 hasValue i2
+     a47 hasValue i2
+     a48 hasValue i2
+     a49 hasValue i2
+     a50 hasValue i2
+     a51 hasValue i2
+     a52 hasValue i2
+     a53 hasValue i2
+     a54 hasValue i2
+     a55 hasValue i2
+     a56 hasValue i2
+     a57 hasValue i2
+     a58 hasValue i2
+     a59 hasValue i2
+     a60 hasValue i2
+     a61 hasValue i2
+     a62 hasValue i2
+     a63 hasValue i2
+     a64 hasValue i2
+     a65 hasValue i2
+     a66 hasValue i2
+     a67 hasValue i2
+     a68 hasValue i2
+     a69 hasValue i2
+     a70 hasValue i2
+     a71 hasValue i2
+     a72 hasValue i2
+     a73 hasValue i2
+     a74 hasValue i2
+     a75 hasValue i2
+     a76 hasValue i2
+     a77 hasValue i2
+     a78 hasValue i2
+     a79 hasValue i2
+     a80 hasValue i2
+     a81 hasValue i2
+     a82 hasValue i2
+     a83 hasValue i2
+     a84 hasValue i2
+     a85 hasValue i2
+     a86 hasValue i2
+     a87 hasValue i2
+     a88 hasValue i2
+     a89 hasValue i2
+     a90 hasValue i2
+     a91 hasValue i2
+     a92 hasValue i2
+     a93 hasValue i2
+     a94 hasValue i2
+     a95 hasValue i2
+     a96 hasValue i2
+     a97 hasValue i2
+     a98 hasValue i2
+     a99 hasValue i2
+     a100 hasValue i2
+     a101 hasValue i2
+     a102 hasValue i2
+     a103 hasValue i2
+     a104 hasValue i2
+     a105 hasValue i2
+     a106 hasValue i2
+     a107 hasValue i2
+     a108 hasValue i2
+     a109 hasValue i2
+     a110 hasValue i2
+     a111 hasValue i2
+     a112 hasValue i2
+     a113 hasValue i2
+     a114 hasValue i2
+     a115 hasValue i2
+     a116 hasValue i2
+     a117 hasValue i2
+     a118 hasValue i2
+     a119 hasValue i2
+     a120 hasValue i2
+     a121 hasValue i2
+     a122 hasValue i2
+     a123 hasValue i2
+     a124 hasValue i2
+     a125 hasValue i2
+     a126 hasValue i2
+     a127 hasValue i2
+     a128 hasValue i2
+     a129 hasValue i2
+     a130 hasValue i2
+     a131 hasValue i2
+     a132 hasValue i2
+     a133 hasValue i2
+     a134 hasValue i2
+     a135 hasValue i2
+     a136 hasValue i2
+     a137 hasValue i2
+     a138 hasValue i2
+     a139 hasValue i2
+     a140 hasValue i2
+     a141 hasValue i2
+     a142 hasValue i2
+     a143 hasValue i2
+     a144 hasValue i2
+     a145 hasValue i2
+     a146 hasValue i2
+     a147 hasValue i2
+     a148 hasValue i2
+     a149 hasValue i2
+     a150 hasValue i2
+     a151 hasValue i2
+     a152 hasValue i2
+     a153 hasValue i2
+     a154 hasValue i2
+     a155 hasValue i2
+     a156 hasValue i2
+     a157 hasValue i2
+     a158 hasValue i2
+     a159 hasValue i2
+     a160 hasValue i2
+     a161 hasValue i2
+     a162 hasValue i2
+     a163 hasValue i2
+     a164 hasValue i2
+     a165 hasValue i2
+     a166 hasValue i2
+     a167 hasValue i2
+     a168 hasValue i2
+     a169 hasValue i2
+     a170 hasValue i2
+     a171 hasValue i2
+     a172 hasValue i2
+     a173 hasValue i2
+     a174 hasValue i2
+     a175 hasValue i2
+     a176 hasValue i2
+     a177 hasValue i2
+     a178 hasValue i2
+     a179 hasValue i2
+     a180 hasValue i2
+     a181 hasValue i2
+     a182 hasValue i2
+     a183 hasValue i2
+     a184 hasValue i2
+     a185 hasValue i2
+     a186 hasValue i2
+     a187 hasValue i2
+     a188 hasValue i2
+     a189 hasValue i2
+     a190 hasValue i2
+     a191 hasValue i2
+     a192 hasValue i2
+     a193 hasValue i2
+     a194 hasValue i2
+     a195 hasValue i2
+     a196 hasValue i2
+     a197 hasValue i2
+     a198 hasValue i2
+     a199 hasValue i2
+     a200 hasValue i2
+     a201 hasValue i2
+     a202 hasValue i2
+     a203 hasValue i2
+     a204 hasValue i2
+     a205 hasValue i2
+     a206 hasValue i2
+     a207 hasValue i2
+     a208 hasValue i2
+     a209 hasValue i2
+     a210 hasValue i2
+     a211 hasValue i2
+     a212 hasValue i2
+     a213 hasValue i2
+     a214 hasValue i2
+     a215 hasValue i2
+     a216 hasValue i2
+     a217 hasValue i2
+     a218 hasValue i2
+     a219 hasValue i2
+     a220 hasValue i2
+     a221 hasValue i2
+     a222 hasValue i2
+     a223 hasValue i2
+     a224 hasValue i2
+     a225 hasValue i2
+     a226 hasValue i2
+     a227 hasValue i2
+     a228 hasValue i2
+     a229 hasValue i2
+     a230 hasValue i2
+     a231 hasValue i2
+     a232 hasValue i2
+     a233 hasValue i2
+     a234 hasValue i2
+     a235 hasValue i2
+     a236 hasValue i2
+     a237 hasValue i2
+     a238 hasValue i2
+     a239 hasValue i2
+     a240 hasValue i2
+     a241 hasValue i2
+     a242 hasValue i2
+     a243 hasValue i2
+     a244 hasValue i2
+     a245 hasValue i2
+     a246 hasValue i2
+     a247 hasValue i2
+     a248 hasValue i2
+     a249 hasValue i2
+     a250 hasValue i2
+
+instance i2
+
+relationInstance query1("i1[a1 hasValue ?x]")
+     /* nonFunctionalProperties
+          dc#title hasValue "Attribute value query 1"
+          dc#description hasValue "This query will return exactly one result set, as it is querying for the value of one specific attribute."
+          bm#result hasValue "?x=i2"
+     endNonFunctionalProperties */
+
+relationInstance query2("?x[?y hasValue ?z]")
+    /* nonFunctionalProperties
+          dc#title hasValue "Attribute value query 2"
+          dc#description hasValue "This query will return a number of result sets equivalent to the amount of attribute value expressions in the ontology."
+          bm#result hasValue "?x=i1,?y=a250,?z=i2"
+     endNonFunctionalProperties */

@@ -1,0 +1,17 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://example.com/axiom1#" } 
+
+ontology AxiomTestOntology1
+
+concept Human
+
+concept Mineral
+
+concept Alive
+
+instance Brian memberOf Human
+  
+instance Chalk memberOf Mineral
+
+axiom definedBy
+	?x memberOf Alive :- ?x memberOf Human.

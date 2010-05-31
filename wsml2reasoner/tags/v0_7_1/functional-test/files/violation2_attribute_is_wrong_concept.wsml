@@ -1,0 +1,19 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+
+namespace {_"http://example.com/violation2#"}
+ 
+ontology Violation2
+
+concept C1
+
+concept C2
+
+concept C3
+	attribute ofType C1
+
+instance i2 memberOf C2
+
+instance i3 memberOf C3
+	attribute hasValue i2
+
+  
