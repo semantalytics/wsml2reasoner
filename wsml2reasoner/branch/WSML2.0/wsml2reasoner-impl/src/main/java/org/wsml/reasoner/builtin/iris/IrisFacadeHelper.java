@@ -91,41 +91,45 @@ public class IrisFacadeHelper {
 		//
 		// WSML BuiltIn /////////////////////////////////////////
 		// http://www.wsmo.org/TR/d16/d16.1/v1.0/#cha:built-ins
-		// NOTE mp: not longer supported - RIF Built-ins replace them mostly
+		// NOTE mp: not all longer supported - RIF Built-ins replace them mostly
 		//
 		
-		ITerm[] t = toArray(sortListForIRIS(terms));
+		// terms as array for built-ins with boolean output.
+		ITerm[] wsmlTerms = toArray(terms);
+		// in wsml returnvalue is on first position - in iris on last position.
+		ITerm[] sortedTerms = toArray(sortListForIRIS(terms));
+		
 		switch (wsmlBuiltIn) {
 		case EQUAL:
 			return BUILTIN.createEqual(terms.get(0), terms.get(1));
 		case DATE_EQUAL:
-			return BUILTIN.createDateEqual(t);
+			return BUILTIN.createDateEqual(wsmlTerms);
 		case DATE_GREATER_THAN:
-			return BUILTIN.createDateGreater(t);
+			return BUILTIN.createDateGreater(wsmlTerms);
 		case DATE_INEQUAL:
-			return BUILTIN.createDateNotEqual(t);
+			return BUILTIN.createDateNotEqual(wsmlTerms);
 		case DATE_LESS_THAN:
-			return BUILTIN.createDateLess(t);
+			return BUILTIN.createDateLess(wsmlTerms);
 		case DATETIME_EQUAL:
-			return BUILTIN.createDateTimeEqual(t);
+			return BUILTIN.createDateTimeEqual(wsmlTerms);
 		case DATETIME_GREATER_THAN:
-			return BUILTIN.createDateTimeGreater(t);
+			return BUILTIN.createDateTimeGreater(wsmlTerms);
 		case DATETIME_INEQUAL:
-			return BUILTIN.createDateTimeNotEqual(t);
+			return BUILTIN.createDateTimeNotEqual(wsmlTerms);
 		case DATETIME_LESS_THAN:
-			return BUILTIN.createDateTimeLess(t);
+			return BUILTIN.createDateTimeLess(sortedTerms);
 		case DAYTIMEDURATION_EQUAL: // TODO mp: implement
 //			return BUILTIN.createdaytimeduration
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
 		case DAYTIMEDURATION_GREATER_THAN:
-			return BUILTIN.createDayTimeDurationGreater(t);
+			return BUILTIN.createDayTimeDurationGreater(wsmlTerms);
 		case DAYTIMEDURATION_LESS_THAN:
-			return BUILTIN.createDayTimeDurationLess(t);
+			return BUILTIN.createDayTimeDurationLess(wsmlTerms);
 		case DURATION_EQUAL:
-			return BUILTIN.createDurationEqual(t);
+			return BUILTIN.createDurationEqual(wsmlTerms);
 		case DURATION_INEQUAL:
-			return BUILTIN.createDurationNotEqual(t);
+			return BUILTIN.createDurationNotEqual(wsmlTerms);
 		case GDAY_EQUAL:  // TODO mp: implement
 //			return BUILTIN.createdaytimeduration
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
@@ -139,10 +143,9 @@ public class IrisFacadeHelper {
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
 		case GREATER_EQUAL:
-			return BUILTIN.createGreaterEqual(t[0], t[1]);
-//			return BUILTIN.createGreaterEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createGreaterEqual(terms.get(0), terms.get(1));
 		case GREATER_THAN:
-			return BUILTIN.createGreaterEqual(t[0], t[1]);
+			return BUILTIN.createGreater(terms.get(0), terms.get(1));
 		case GYEAR_EQUAL: // TODO mp: implement
 //			return BUILTIN.createG
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
@@ -154,25 +157,25 @@ public class IrisFacadeHelper {
 		case INEQUAL:  // TODO mp: implement?
 //			return BUILTIN.createno
 		case LESS_EQUAL:
-			return BUILTIN.createLessEqual(t[0], t[1]);
+			return BUILTIN.createLessEqual(wsmlTerms[0], wsmlTerms[1]);
 		case LESS_THAN:
-			return BUILTIN.createLess(t[0], t[1]);
+			return BUILTIN.createLess(wsmlTerms[0], wsmlTerms[1]);
 		case NUMERIC_ADD:
-			return BUILTIN.createNumericAdd(t);
+			return BUILTIN.createNumericAdd(sortedTerms);
 		case NUMERIC_DIVIDE:
-			return BUILTIN.createNumericDivide(t);
+			return BUILTIN.createNumericDivide(sortedTerms);
 		case NUMERIC_EQUAL:
-			return BUILTIN.createNumericEqual(t);
+			return BUILTIN.createNumericEqual(wsmlTerms);
 		case NUMERIC_GREATER_THAN:
-			return BUILTIN.createNumericGreater(t);
+			return BUILTIN.createNumericGreater(wsmlTerms);
 		case NUMERIC_INEQUAL:
-			return BUILTIN.createNumericNotEqual(t);
+			return BUILTIN.createNumericNotEqual(wsmlTerms);
 		case NUMERIC_LESS_THAN:
-			return BUILTIN.createNumericLess(t);
+			return BUILTIN.createNumericLess(wsmlTerms);
 		case NUMERIC_MULTIPLY:
-			return BUILTIN.createNumericMultiply(t);
+			return BUILTIN.createNumericMultiply(sortedTerms);
 		case NUMERIC_SUBTRACT:
-			return BUILTIN.createNumericSubtract(t);
+			return BUILTIN.createNumericSubtract(sortedTerms);
 		case STRING_EQUAL: // TODO mp : implement ? String 
 //			return BUILTIN.createstringe
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
@@ -182,21 +185,21 @@ public class IrisFacadeHelper {
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
 		case TIME_EQUAL:
-			return BUILTIN.createTimeEqual(t);
+			return BUILTIN.createTimeEqual(wsmlTerms);
 		case TIME_GREATER_THAN:
-			return BUILTIN.createTimeGreater(t);
+			return BUILTIN.createTimeGreater(wsmlTerms);
 		case TIME_INEQUAL:
-			return BUILTIN.createTimeNotEqual(t);
+			return BUILTIN.createTimeNotEqual(wsmlTerms);
 		case TIME_LESS_THAN:
-			return BUILTIN.createTimeLess(t);
+			return BUILTIN.createTimeLess(wsmlTerms);
 		case YEARMONTHDURATION_EQUAL: // TODO mp: implement
 //			return BUILTIN.createYearMonthDurationGreater(terms)
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
 		case YEARMONTHDURATION_GREATER_THAN:
-			return BUILTIN.createYearMonthDurationGreater(t);
+			return BUILTIN.createYearMonthDurationGreater(wsmlTerms);
 		case YEARMONTHDURATION_LESS_THAN:
-			return BUILTIN.createYearMonthDurationLess(t);
+			return BUILTIN.createYearMonthDurationLess(wsmlTerms);
 			
 		default:
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
@@ -220,102 +223,107 @@ public class IrisFacadeHelper {
 		// RIF BuiltIn ///////////////////////////////////////////
 		// http://www.w3.org/2005/rules/wiki/DTB
 		// 
-		ITerm[] t = toArray(sortListForIRIS(terms));
+		
+		// terms as array for built-ins with boolean output.
+		ITerm[] wsmlTerms = toArray(terms);
+		// in wsml returnvalue is on first position - in iris on last position.
+		ITerm[] sortedTerms = toArray(sortListForIRIS(terms));
+		
 		switch (rifbuiltIn) {
 		case ADD_DAYTIMEDURATIONS: // TODO mp: needed?
-			return BUILTIN.createAddDayTimeDurationToDateTime(t);
+			return BUILTIN.createAddDayTimeDurationToDateTime(sortedTerms);
 		case ADD_DAYTIMEDURATION_TO_DATE:
-			return BUILTIN.createAddDayTimeDurationToDate(t);
+			return BUILTIN.createAddDayTimeDurationToDate(sortedTerms);
 		case ADD_DAYTIMEDURATION_TO_TIME:
-			return BUILTIN.createAddDayTimeDurationToTime(t);
+			return BUILTIN.createAddDayTimeDurationToTime(sortedTerms);
 		case ADD_DAYTIMEDURATION_TO_DATETIME:
-			return BUILTIN.createAddDayTimeDurationToDateTime(t);
+			return BUILTIN.createAddDayTimeDurationToDateTime(sortedTerms);
 		case ADD_YEARMONTHDURATIONS: // TODO mp: needed?
-			return BUILTIN.createAddYearMonthDurationToDateTime(t);
+			return BUILTIN.createAddYearMonthDurationToDateTime(sortedTerms);
 		case ADD_YEARMONTHDURATION_TO_DATE:
-			return BUILTIN.createAddYearMonthDurationToDate(t);
+			return BUILTIN.createAddYearMonthDurationToDate(sortedTerms);
 		case ADD_YEARMONTHDURATION_TO_DATETIME:
-			return BUILTIN.createAddYearMonthDurationToDateTime(t);
+			return BUILTIN.createAddYearMonthDurationToDateTime(sortedTerms);
 		case BOOLEAN_EQUAL:
-			return BUILTIN.createBooleanEqual(t);
+			return BUILTIN.createBooleanEqual(wsmlTerms);
 //	    case BOOLEAN_NOT_EQUAL: // TODO mp: not implemented
-//			return BUILTIN.(t);
+//			return BUILTIN.createBooleanNot()
 			// break;
 		case BOOLEAN_GREATER_THAN:
-			return BUILTIN.createBooleanGreater(t);
+			return BUILTIN.createBooleanGreater(wsmlTerms);
 		case BOOLEAN_LESS_THAN:
-			return BUILTIN.createBooleanLess(t);
+			return BUILTIN.createBooleanLess(wsmlTerms);
 			// RIF String builtins
 		case COMPARE:
-			return BUILTIN.createStringCompare(t);
+			return BUILTIN.createStringCompare(wsmlTerms);
 		case CONCAT:
-			return BUILTIN.createStringConcat(t);
+			return BUILTIN.createStringConcat(wsmlTerms);
 			// case CONCATENATE // TODO needed?
 			// return
 			// BUILTIN.createStringConcatenate(t);
 		case CONTAINS:
-			return BUILTIN.createStringContains(t);
+			return BUILTIN.createStringContains(wsmlTerms);
 		case DATE_EQUAL:
-			return BUILTIN.createDateEqual(t);
+			return BUILTIN.createDateEqual(wsmlTerms);
 		case DATE_NOT_EQUAL:
-			return BUILTIN.createDateNotEqual(t);
+			return BUILTIN.createDateNotEqual(wsmlTerms);
 		case DATE_GREATER_THAN:
-			return BUILTIN.createDateGreater(t);
+			return BUILTIN.createDateGreater(wsmlTerms);
 		case DATE_GREATER_THAN_OR_EQUAL:
-			return BUILTIN.createDateGreaterEqual(t);
+			return BUILTIN.createDateGreaterEqual(wsmlTerms);
 		case DATE_LESS_THAN:
-			return BUILTIN.createDateLess(t);
+			return BUILTIN.createDateLess(wsmlTerms);
 		case DATE_LESS_THAN_OR_EQUAL:
-			return BUILTIN.createDateLessEqual(t);
+			return BUILTIN.createDateLessEqual(wsmlTerms);
 		case DATETIME_EQUAL:
-			return BUILTIN.createDateTimeEqual(t);
+			return BUILTIN.createDateTimeEqual(wsmlTerms);
 		case DATETIME_NOT_EQUAL:
-			return BUILTIN.createDateTimeNotEqual(t);
+			return BUILTIN.createDateTimeNotEqual(wsmlTerms);
 		case DATETIME_GREATER_THAN:
-			return BUILTIN.createDateTimeGreater(t);
+			return BUILTIN.createDateTimeGreater(wsmlTerms);
 		case DATETIME_GREATER_THAN_OR_EQUAL:
-			return BUILTIN.createDateTimeGreaterEqual(t);
+			return BUILTIN.createDateTimeGreaterEqual(wsmlTerms);
 		case DATETIME_LESS_THAN:
-			return BUILTIN.createDateTimeLess(t);
+			return BUILTIN.createDateTimeLess(wsmlTerms);
 		case DATETIME_LESS_THAN_OR_EQUAL:
-			return BUILTIN.createDateTimeLessEqual(t);
+			return BUILTIN.createDateTimeLessEqual(wsmlTerms);
 		case DAY_FROM_DATE:
-			return BUILTIN.createDayFromDate(t);
+			return BUILTIN.createDayFromDate(sortedTerms);
 		case DAY_FROM_DATETIME:
-			return BUILTIN.createDayFromDateTime(t);
+			return BUILTIN.createDayFromDateTime(sortedTerms);
 		case DAYS_FROM_DURATION:
-			return BUILTIN.createDaysFromDuration(t);
+			return BUILTIN.createDaysFromDuration(sortedTerms);
 		case DAYTIMEDURATION_GREATER_THAN:
-			return BUILTIN.createDayTimeDurationGreater(t);
+			return BUILTIN.createDayTimeDurationGreater(wsmlTerms);
 		case DAYTIMEDURATION_GREATER_THAN_OR_EQUAL:
-			return BUILTIN.createDayTimeDurationGreaterEqual(t);
+			return BUILTIN.createDayTimeDurationGreaterEqual(wsmlTerms);
 		case DAYTIMEDURATION_LESS_THAN:
-			return BUILTIN.createDayTimeDurationLess(t);
+			return BUILTIN.createDayTimeDurationLess(wsmlTerms);
 		case DAYTIMEDURATION_LESS_THAN_OR_EQUAL:
-			return BUILTIN.createDayTimeDurationLessEqual(t);
+			return BUILTIN.createDayTimeDurationLessEqual(wsmlTerms);
 		case DISTINCT_VALUES: // TODO mp: needed ? check
 			// return BUILTIN
 			// .createDistinctValues(t);
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
 		case DIVIDE_DAYTIMEDURATION:
-			return BUILTIN.createDayTimeDurationDivide(t);
+			return BUILTIN.createDayTimeDurationDivide(sortedTerms);
 		case DIVIDE_DAYTIMEDURATION_BY_DAYTIMEDURATION:
-			return BUILTIN.createDayTimeDurationDivideByDayTimeDuration(t);
+			return BUILTIN.createDayTimeDurationDivideByDayTimeDuration(sortedTerms);
 		case DIVIDE_YEARMONTHDURATION:
-			return BUILTIN.createYearMonthDurationDivide(t);
+			return BUILTIN.createYearMonthDurationDivide(sortedTerms);
 		case DIVIDE_YEARMONTHDURATION_BY_YEARMONTHDURATION:
-			return BUILTIN.createYearMonthDurationDivideByYearMonthDuration(t);
+			return BUILTIN.createYearMonthDurationDivideByYearMonthDuration(sortedTerms);
 		case DURATION_EQUAL:
-			return BUILTIN.createDurationEqual(t);
+			return BUILTIN.createDurationEqual(wsmlTerms);
 		case DURATION_NOT_EQUAL:
-			return BUILTIN.createDurationNotEqual(t);
+			return BUILTIN.createDurationNotEqual(wsmlTerms);
 		case ENCODE_FOR_URI: // TODO mp: needed ? check
 			// return BUILTIN.create
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
 		case ENDS_WITH:
-			return BUILTIN.createStringEndsWith(t);
+			return BUILTIN.createStringEndsWith(sortedTerms);
 		case ESCAPE_HTML_URI: // TODO mp: needed ? check
 			// return BUILTIN.create
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
@@ -329,11 +337,11 @@ public class IrisFacadeHelper {
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
 		case HOURS_FROM_DATETIME:
-			return BUILTIN.createHoursFromDateTime(t);
+			return BUILTIN.createHoursFromDateTime(sortedTerms);
 		case HOURS_FROM_DURATION:
-			return BUILTIN.createHoursFromDuration(t);
+			return BUILTIN.createHoursFromDuration(sortedTerms);
 		case HOURS_FROM_TIME:
-			return BUILTIN.createHoursFromTime(t);
+			return BUILTIN.createHoursFromTime(sortedTerms);
 		case INDEX_OF:// TODO mp: needed ? check
 			// return BUILTIN.create
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
@@ -345,7 +353,7 @@ public class IrisFacadeHelper {
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
 		case IRI_STRING:
-			return BUILTIN.createIriString(t);
+			return BUILTIN.createIriString(sortedTerms);
 		case IRI_TO_URI: // TODO mp: needed ? check
 			// return BUILTIN.createI
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
@@ -355,151 +363,151 @@ public class IrisFacadeHelper {
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
 		case IS_LITERAL_ANYURI:
-			return BUILTIN.createIsAnyURI(t);
+			return BUILTIN.createIsAnyURI(wsmlTerms);
 		case IS_LITERAL_BASE64BINARY:
-			return BUILTIN.createIsBase64Binary(t);
+			return BUILTIN.createIsBase64Binary(wsmlTerms);
 		case IS_LITERAL_BOOLEAN:
-			return BUILTIN.createIsBoolean(t);
+			return BUILTIN.createIsBoolean(wsmlTerms);
 		case IS_LITERAL_BYTE:
-			return BUILTIN.createIsByte(t);
+			return BUILTIN.createIsByte(wsmlTerms);
 		case IS_LITERAL_DATE:
-			return BUILTIN.createIsDate(t);
+			return BUILTIN.createIsDate(wsmlTerms);
 		case IS_LITERAL_DATETIME:
-			return BUILTIN.createIsDateTime(t);
+			return BUILTIN.createIsDateTime(wsmlTerms);
 		case IS_LITERAL_DATETIMESTAMP:
-			return BUILTIN.createIsDateTimeStamp(t);
+			return BUILTIN.createIsDateTimeStamp(wsmlTerms);
 		case IS_LITERAL_DAYTIMEDURATION:
-			return BUILTIN.createIsDayTimeDuration(t);
+			return BUILTIN.createIsDayTimeDuration(wsmlTerms);
 		case IS_LITERAL_DECIMAL:
-			return BUILTIN.createIsDecimal(t);
+			return BUILTIN.createIsDecimal(wsmlTerms);
 		case IS_LITERAL_DOUBLE:
-			return BUILTIN.createIsDouble(t);
+			return BUILTIN.createIsDouble(wsmlTerms);
 		case IS_LITERAL_FLOAT:
-			return BUILTIN.createIsFloat(t);
+			return BUILTIN.createIsFloat(wsmlTerms);
 		case IS_LITERAL_HEXBINARY:
-			return BUILTIN.createIsHexBinary(t);
+			return BUILTIN.createIsHexBinary(wsmlTerms);
 		case IS_LITERAL_INT:
-			return BUILTIN.createIsInt(t);
+			return BUILTIN.createIsInt(wsmlTerms);
 		case IS_LITERAL_INTEGER:
-			return BUILTIN.createIsInteger(t);
+			return BUILTIN.createIsInteger(wsmlTerms);
 		case IS_LITERAL_LANGUAGE:
-			return BUILTIN.createIsLanguage(t);
+			return BUILTIN.createIsLanguage(wsmlTerms);
 		case IS_LITERAL_LONG:
-			return BUILTIN.createIsLong(t);
+			return BUILTIN.createIsLong(wsmlTerms);
 		case IS_LITERAL_NAME:
-			return BUILTIN.createIsName(t);
+			return BUILTIN.createIsName(wsmlTerms);
 		case IS_LITERAL_NCNAME:
-			return BUILTIN.createIsNCName(t);
+			return BUILTIN.createIsNCName(wsmlTerms);
 		case IS_LITERAL_NEGATIVEINTEGER:
-			return BUILTIN.createIsNegativeInteger(t);
+			return BUILTIN.createIsNegativeInteger(wsmlTerms);
 		case IS_LITERAL_NMTOKEN:
-			return BUILTIN.createIsNMTOKEN(t);
+			return BUILTIN.createIsNMTOKEN(wsmlTerms);
 		case IS_LITERAL_NONNEGATIVEINTEGER:
-			return BUILTIN.createIsNonNegativeInteger(t);
+			return BUILTIN.createIsNonNegativeInteger(wsmlTerms);
 		case IS_LITERAL_NONPOSITIVEINTEGER:
-			return BUILTIN.createIsNonPositiveInteger(t);
+			return BUILTIN.createIsNonPositiveInteger(wsmlTerms);
 		case IS_LITERAL_NORMALIZEDSTRING:
-			return BUILTIN.createIsNormalizedString(t);
+			return BUILTIN.createIsNormalizedString(wsmlTerms);
 		case IS_LITERAL_NOT_ANYURI:
-			return BUILTIN.createIsNotAnyURI(t);
+			return BUILTIN.createIsNotAnyURI(wsmlTerms);
 		case IS_LITERAL_NOT_BASE64BINARY:
-			return BUILTIN.createIsNotBase64Binary(t);
+			return BUILTIN.createIsNotBase64Binary(wsmlTerms);
 		case IS_LITERAL_NOT_BOOLEAN:
-			return BUILTIN.createIsNotBoolean(t);
+			return BUILTIN.createIsNotBoolean(wsmlTerms);
 		case IS_LITERAL_NOT_BYTE:
-			return BUILTIN.createIsNotByte(t);
+			return BUILTIN.createIsNotByte(wsmlTerms);
 		case IS_LITERAL_NOT_DATE:
-			return BUILTIN.createIsNotDate(t);
+			return BUILTIN.createIsNotDate(wsmlTerms);
 		case IS_LITERAL_NOT_DATETIME:
-			return BUILTIN.createIsNotDateTime(t);
+			return BUILTIN.createIsNotDateTime(wsmlTerms);
 		case IS_LITERAL_NOT_DATETIMESTAMP:
-			return BUILTIN.createIsNotDateTimeStamp(t);
+			return BUILTIN.createIsNotDateTimeStamp(wsmlTerms);
 		case IS_LITERAL_NOT_DAYTIMEDURATION:
-			return BUILTIN.createIsNotDayTimeDuration(t);
+			return BUILTIN.createIsNotDayTimeDuration(wsmlTerms);
 		case IS_LITERAL_NOT_DECIMAL:
-			return BUILTIN.createIsNotDecimal(t);
+			return BUILTIN.createIsNotDecimal(wsmlTerms);
 		case IS_LITERAL_NOT_DOUBLE:
-			return BUILTIN.createIsNotDouble(t);
+			return BUILTIN.createIsNotDouble(wsmlTerms);
 		case IS_LITERAL_NOT_FLOAT:
-			return BUILTIN.createIsNotFloat(t);
+			return BUILTIN.createIsNotFloat(wsmlTerms);
 		case IS_LITERAL_NOT_HEXBINARY:
-			return BUILTIN.createIsNotHexBinary(t);
+			return BUILTIN.createIsNotHexBinary(wsmlTerms);
 		case IS_LITERAL_NOT_INTEGER:
-			return BUILTIN.createIsNotInteger(t);
+			return BUILTIN.createIsNotInteger(wsmlTerms);
 //		case IS_LITERAL_NOT_INT: // TODO mp: implement
 //			// return BUILTIN.createIsNotInt(t);
 		case IS_LITERAL_NOT_LANGUAGE:
-			return BUILTIN.createIsNotLanguage(t);
+			return BUILTIN.createIsNotLanguage(wsmlTerms);
 		case IS_LITERAL_NOT_LONG:
-			return BUILTIN.createIsNotLong(t);
+			return BUILTIN.createIsNotLong(wsmlTerms);
 		case IS_LITERAL_NOT_NAME:
-			return BUILTIN.createIsNotName(t);
+			return BUILTIN.createIsNotName(wsmlTerms);
 		case IS_LITERAL_NOT_NCNAME:
-			return BUILTIN.createIsNotNCName(t);
+			return BUILTIN.createIsNotNCName(wsmlTerms);
 		case IS_LITERAL_NOT_NEGATIVEINTEGER:
-			return BUILTIN.createIsNotNegativeInteger(t);
+			return BUILTIN.createIsNotNegativeInteger(wsmlTerms);
 		case IS_LITERAL_NOT_NMTOKEN:
-			return BUILTIN.createIsNotNMTOKEN(t);
+			return BUILTIN.createIsNotNMTOKEN(wsmlTerms);
 		case IS_LITERAL_NOT_NONNEGATIVEINTEGER:
-			return BUILTIN.createIsNotNonNegativeInteger(t);
+			return BUILTIN.createIsNotNonNegativeInteger(wsmlTerms);
 		case IS_LITERAL_NOT_NONPOSITIVEINTEGER:
-			return BUILTIN.createIsNotNonPositiveInteger(t);
+			return BUILTIN.createIsNotNonPositiveInteger(wsmlTerms);
 		case IS_LITERAL_NOT_NORMALIZEDSTRING:
-			return BUILTIN.createIsNotNormalizedString(t);
+			return BUILTIN.createIsNotNormalizedString(wsmlTerms);
 		case IS_LITERAL_NOT_PLAINLITERAL: // TODO mp : implement
 			// return BUILTIN.createIsNotPlainLiteral(t);
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
 		case IS_LITERAL_NOT_POSITIVEINTEGER:
-			return BUILTIN.createIsNotPositiveInteger(t);
+			return BUILTIN.createIsNotPositiveInteger(wsmlTerms);
 		case IS_LITERAL_NOT_SHORT:
-			return BUILTIN.createIsNotShort(t);
+			return BUILTIN.createIsNotShort(wsmlTerms);
 		case IS_LITERAL_NOT_STRING:
-			return BUILTIN.createIsNotString(t);
+			return BUILTIN.createIsNotString(wsmlTerms);
 		case IS_LITERAL_NOT_TIME:
-			return BUILTIN.createIsNotTime(t);
+			return BUILTIN.createIsNotTime(wsmlTerms);
 		case IS_LITERAL_NOT_TOKEN:
-			return BUILTIN.createIsNotToken(t);
+			return BUILTIN.createIsNotToken(wsmlTerms);
 		case IS_LITERAL_NOT_UNSIGNEDBYTE:
-			return BUILTIN.createIsNotUnsignedByte(t);
+			return BUILTIN.createIsNotUnsignedByte(wsmlTerms);
 		case IS_LITERAL_NOT_UNSIGNEDINT:
-			return BUILTIN.createIsNotUnsignedInt(t);
+			return BUILTIN.createIsNotUnsignedInt(wsmlTerms);
 		case IS_LITERAL_NOT_UNSIGNEDLONG:
-			return BUILTIN.createIsNotUnsignedLong(t);
+			return BUILTIN.createIsNotUnsignedLong(wsmlTerms);
 		case IS_LITERAL_NOT_UNSIGNEDSHORT:
-			return BUILTIN.createIsNotUnsignedShort(t);
+			return BUILTIN.createIsNotUnsignedShort(wsmlTerms);
 		case IS_LITERAL_NOT_XMLLITERAL:
-			return BUILTIN.createIsNotXMLLiteral(t);
+			return BUILTIN.createIsNotXMLLiteral(wsmlTerms);
 		case IS_LITERAL_NOT_YEARMONTHDURATION:
-			return BUILTIN.createIsNotYearMonthDuration(t);
+			return BUILTIN.createIsNotYearMonthDuration(wsmlTerms);
 		case IS_LITERAL_PLAINLITERAL: // TODO mp : implement
 //			return BUILTIN.crea
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
 		case IS_LITERAL_POSITIVEINTEGER:
-			return BUILTIN.createIsPositiveInteger(t);
+			return BUILTIN.createIsPositiveInteger(wsmlTerms);
 		case IS_LITERAL_SHORT:
-			return BUILTIN.createIsShort(t);
+			return BUILTIN.createIsShort(wsmlTerms);
 		case IS_LITERAL_STRING:
-			return BUILTIN.createIsString(t);
+			return BUILTIN.createIsString(wsmlTerms);
 		case IS_LITERAL_TIME:
-			return BUILTIN.createIsTime(t);
+			return BUILTIN.createIsTime(wsmlTerms);
 		case IS_LITERAL_TOKEN:
-			return BUILTIN.createIsToken(t);
+			return BUILTIN.createIsToken(wsmlTerms);
 		case IS_LITERAL_UNSIGNEDBYTE:
-			return BUILTIN.createIsUnsignedByte(t);
+			return BUILTIN.createIsUnsignedByte(wsmlTerms);
 		case IS_LITERAL_UNSIGNEDINT:
-			return BUILTIN.createIsUnsignedInt(t);
+			return BUILTIN.createIsUnsignedInt(wsmlTerms);
 		case IS_LITERAL_UNSIGNEDLONG:
-			return BUILTIN.createIsUnsignedLong(t);
+			return BUILTIN.createIsUnsignedLong(wsmlTerms);
 		case IS_LITERAL_UNSIGNEDSHORT:
-			return BUILTIN.createIsUnsignedShort(t);
+			return BUILTIN.createIsUnsignedShort(wsmlTerms);
 		case IS_LITERAL_XMLLITERAL:
-			return BUILTIN.createIsXMLLiteral(t);
+			return BUILTIN.createIsXMLLiteral(wsmlTerms);
 		case IS_LITERAL_YEARMONTHDURATION:
-			return BUILTIN.createIsYearMonthDuration(t);
+			return BUILTIN.createIsYearMonthDuration(wsmlTerms);
 		case LANG_FROM_PLAINLITERAL: 				// TODO mp: error
-			return BUILTIN.createLangFromText(t);
+			return BUILTIN.createLangFromText(sortedTerms);
 //		case LIST_CONTAINS: // TODO mp: implement?
 //			// return BUILTIN.create
 //			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
@@ -521,17 +529,17 @@ public class IrisFacadeHelper {
 //			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 //					BASIC.createTuple(terms));
 		case MINUTES_FROM_DATETIME:
-			return BUILTIN.createMinutesFromDateTime(t);
+			return BUILTIN.createMinutesFromDateTime(sortedTerms);
 		case MINUTES_FROM_DURATION:
-			return BUILTIN.createMinutesFromDuration(t);
+			return BUILTIN.createMinutesFromDuration(sortedTerms);
 		case MINUTES_FROM_TIME:
-			return BUILTIN.createMinutesFromTime(t);
+			return BUILTIN.createMinutesFromTime(sortedTerms);
 		case MONTH_FROM_DATE:
-			return BUILTIN.createMonthFromDate(t);
+			return BUILTIN.createMonthFromDate(sortedTerms);
 		case MONTH_FROM_DATETIME:
-			return BUILTIN.createMonthFromDate(t);
+			return BUILTIN.createMonthFromDate(sortedTerms);
 		case MONTHS_FROM_DURATION:
-			return BUILTIN.createMonthsFromDuration(t);
+			return BUILTIN.createMonthsFromDuration(sortedTerms);
 		case MULTIPLY_DAYTIMEDURATION: // TODO mp: implement?
 			// return BUILTIN.createMultiplyBuiltin(, t1, t2)
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
@@ -546,35 +554,35 @@ public class IrisFacadeHelper {
 					BASIC.createTuple(terms));
 		
 		case NUMERIC_ADD:
-			return BUILTIN.createNumericAdd(t);
+			return BUILTIN.createNumericAdd(sortedTerms);
 		case NUMERIC_DIVIDE:
-			return BUILTIN.createNumericDivide(t);
+			return BUILTIN.createNumericDivide(sortedTerms);
 		case NUMERIC_EQUAL:
-			return BUILTIN.createNumericEqual(t);
+			return BUILTIN.createNumericEqual(sortedTerms);
 		case NUMERIC_GREATER_THAN:
-			return BUILTIN.createNumericGreater(t);
+			return BUILTIN.createNumericGreater(wsmlTerms);
 		case NUMERIC_GREATER_THAN_OR_EQUAL:
-			return BUILTIN.createNumericGreaterEqual(t);
+			return BUILTIN.createNumericGreaterEqual(wsmlTerms);
 		case NUMERIC_INTEGER_DIVIDE:
-			return BUILTIN.createNumericIntegerDivide(t);
+			return BUILTIN.createNumericIntegerDivide(wsmlTerms);
 		case NUMERIC_LESS_THAN:
-			return BUILTIN.createNumericLess(t);
+			return BUILTIN.createNumericLess(wsmlTerms);
 		case NUMERIC_LESS_THAN_OR_EQUAL:
-			return BUILTIN.createNumericLessEqual(t);
+			return BUILTIN.createNumericLessEqual(wsmlTerms);
 		case NUMERIC_MOD:
-			return BUILTIN.createNumericModulus(t);
+			return BUILTIN.createNumericModulus(sortedTerms);
 		case NUMERIC_MULTIPLY:
-			return BUILTIN.createNumericMultiply(t);
+			return BUILTIN.createNumericMultiply(sortedTerms);
 		case NUMERIC_NOT_EQUAL:
-			return BUILTIN.createNumericNotEqual(t);
+			return BUILTIN.createNumericNotEqual(wsmlTerms);
 		case NUMERIC_SUBTRACT:
-			return BUILTIN.createNumericSubtract(t);
+			return BUILTIN.createNumericSubtract(sortedTerms);
 		case PLAINLITERAL_COMPARE:						// TODO mp: implement?
 			// return BUILTIN.create
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
 		case PLAINLITERAL_FROM_STRING_LANG: 			// TODO mp: error
-			return BUILTIN.createTextFromStringLang(t);
+			return BUILTIN.createTextFromStringLang(sortedTerms);
 		case PLAINLITERAL_LENGTH:// TODO mp: implement?
 			// return BUILTIN.create
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
@@ -584,99 +592,99 @@ public class IrisFacadeHelper {
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
 		case REPLACE:
-			return BUILTIN.createStringReplace(t);
+			return BUILTIN.createStringReplace(sortedTerms);
 		case REVERSE: // TODO mp : implement
 			// return BUILTIN.createStringr
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
 		case SECONDS_FROM_DATETIME:
-			return BUILTIN.createSecondsFromDateTime(t);
+			return BUILTIN.createSecondsFromDateTime(sortedTerms);
 		case SECONDS_FROM_DURATION:
-			return BUILTIN.createSecondsFromDuration(t);
+			return BUILTIN.createSecondsFromDuration(sortedTerms);
 		case SECONDS_FROM_TIME:
-			return BUILTIN.createSecondsFromTime(t);
+			return BUILTIN.createSecondsFromTime(sortedTerms);
 		case STARTS_WITH:
-			return BUILTIN.createStringStartsWith(t);
+			return BUILTIN.createStringStartsWith(sortedTerms);
 		case STRING_FROM_PLAINLITERAL: 				// TODO mp: error
-			return BUILTIN.createStringFromText(t);
+			return BUILTIN.createStringFromText(sortedTerms);
 		case STRING_JOIN:
-			return BUILTIN.createStringJoin(t);
+			return BUILTIN.createStringJoin(sortedTerms);
 		case STRING_LENGTH:
-			return BUILTIN.createStringLength(t);
+			return BUILTIN.createStringLength(sortedTerms);
 		case SUBLIST: // TODO mp: implement?
 			// return BUILTIN.createsubl
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
 		case SUBSTRING:
-			return BUILTIN.createStringSubstring(t);
+			return BUILTIN.createStringSubstring(sortedTerms);
 		case SUBSTRING_AFTER:
-			return BUILTIN.createStringSubstringAfter(t);
+			return BUILTIN.createStringSubstringAfter(sortedTerms);
 		case SUBSTRING_BEFORE:
-			return BUILTIN.createStringSubstringBefore(t);
+			return BUILTIN.createStringSubstringBefore(sortedTerms);
 		case SUBTRACT_DATES: // TODO mp: implement
 			// return BUILTIN.createSubtractBuiltin(t0, t1, t2)
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
 		case SUBTRACT_DATETIMES: 
-			return BUILTIN.createDateTimeSubtract(t);
+			return BUILTIN.createDateTimeSubtract(sortedTerms);
 		case SUBTRACT_DAYTIMEDURATION_FROM_DATE:
-			return BUILTIN.createSubtractDayTimeDurationFromDate(t);
+			return BUILTIN.createSubtractDayTimeDurationFromDate(sortedTerms);
 		case SUBTRACT_DAYTIMEDURATION_FROM_DATETIME:
-			return BUILTIN.createSubtractDayTimeDurationFromDateTime(t);
+			return BUILTIN.createSubtractDayTimeDurationFromDateTime(sortedTerms);
 		case SUBTRACT_DAYTIMEDURATION_FROM_TIME:
-			return BUILTIN.createSubtractDayTimeDurationFromTime(t);
+			return BUILTIN.createSubtractDayTimeDurationFromTime(sortedTerms);
 		case SUBTRACT_DAYTIMEDURATIONS: 
-			return BUILTIN.createDayTimeDurationSubtract(t);
+			return BUILTIN.createDayTimeDurationSubtract(sortedTerms);
 		case SUBTRACT_TIMES: 
-			return BUILTIN.createTimeSubtract(t);
+			return BUILTIN.createTimeSubtract(sortedTerms);
 		case SUBTRACT_YEARMONTHDURATION_FROM_DATE:
-			return BUILTIN.createSubtractYearMonthDurationFromDate(t);
+			return BUILTIN.createSubtractYearMonthDurationFromDate(sortedTerms);
 		case SUBTRACT_YEARMONTHDURATION_FROM_DATETIME:
-			return BUILTIN.createSubtractYearMonthDurationFromDateTime(t);
+			return BUILTIN.createSubtractYearMonthDurationFromDateTime(sortedTerms);
 		case SUBTRACT_YEARMONTHDURATIONS:
-			return BUILTIN.createYearMonthDurationSubtract(t);
+			return BUILTIN.createYearMonthDurationSubtract(sortedTerms);
 		case TIME_EQUAL:
-			return BUILTIN.createTimeEqual(t);
+			return BUILTIN.createTimeEqual(wsmlTerms);
 		case TIME_GREATER_THAN:
-			return BUILTIN.createTimeGreater(t);
+			return BUILTIN.createTimeGreater(wsmlTerms);
 		case TIME_GREATER_THAN_OR_EQUAL:
-			return BUILTIN.createTimeGreaterEqual(t);
+			return BUILTIN.createTimeGreaterEqual(wsmlTerms);
 		case TIME_LESS_THAN:
-			return BUILTIN.createTimeLess(t);
+			return BUILTIN.createTimeLess(wsmlTerms);
 		case TIME_LESS_THAN_OR_EQUAL:
-			return BUILTIN.createTimeLessEqual(t);
+			return BUILTIN.createTimeLessEqual(wsmlTerms);
 		case TIME_NOT_EQUAL:
-			return BUILTIN.createTimeNotEqual(t);
+			return BUILTIN.createTimeNotEqual(wsmlTerms);
 		case TIMEZONE_FROM_DATE:
-			return BUILTIN.createTimezoneFromDate(t);
+			return BUILTIN.createTimezoneFromDate(sortedTerms);
 		case TIMEZONE_FROM_DATETIME:
-			return BUILTIN.createTimezoneFromDateTime(t);
+			return BUILTIN.createTimezoneFromDateTime(sortedTerms);
 		case TIMEZONE_FROM_TIME:
-			return BUILTIN.createTimezoneFromTime(t);
+			return BUILTIN.createTimezoneFromTime(sortedTerms);
 		case UNION: // TODO mp: implement
 			// return BUILTIN.create
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
 		case UPPER_CASE:
-			return BUILTIN.createStringToUpper(t);
+			return BUILTIN.createStringToUpper(sortedTerms);
 		case XMLLITERAL_EQUAL:
-			return BUILTIN.createXMLLiteralEqual(t);
+			return BUILTIN.createXMLLiteralEqual(wsmlTerms);
 		case XMLLITERAL_NOT_EQUAL:
-			return BUILTIN.createXMLLiteralNotEqual(t);
+			return BUILTIN.createXMLLiteralNotEqual(wsmlTerms);
 		case YEAR_FROM_DATE:
-			return BUILTIN.createYearFromDate(t);
+			return BUILTIN.createYearFromDate(sortedTerms);
 		case YEAR_FROM_DATETIME:
-			return BUILTIN.createYearFromDateTime(t);
+			return BUILTIN.createYearFromDateTime(sortedTerms);
 		case YEARMONTHDURATION_GREATER_THAN:
-			return BUILTIN.createYearMonthDurationGreater(t);
+			return BUILTIN.createYearMonthDurationGreater(wsmlTerms);
 		case YEARMONTHDURATION_GREATER_THAN_OR_EQUAL:
-			return BUILTIN.createYearMonthDurationGreaterEqual(t);
+			return BUILTIN.createYearMonthDurationGreaterEqual(wsmlTerms);
 		case YEARMONTHDURATION_LESS_THAN:
-			return BUILTIN.createYearMonthDurationLess(t);
+			return BUILTIN.createYearMonthDurationLess(wsmlTerms);
 		case YEARMONTHDURATION_LESS_THAN_OR_EQUAL:
-			return BUILTIN.createYearMonthDurationLessEqual(t);
+			return BUILTIN.createYearMonthDurationLessEqual(wsmlTerms);
 		case YEARS_FROM_DURATION:
-			return BUILTIN.createYearsFromDuration(t);
+			return BUILTIN.createYearsFromDuration(sortedTerms);
 			// TODO mp: some more builtins ? : yearmonthdurationadd,...?
 		default:
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
