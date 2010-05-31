@@ -120,11 +120,11 @@ public class PelletFacade implements DLReasonerFacade {
         return reasoner.getObjectProperties();
     }
 
-    public Set<Set> descendantClassesOf(OWLDescription clazz) throws OWLException {
+    public Set<Set<?>> descendantClassesOf(OWLDescription clazz) throws OWLException {
         return reasoner.descendantClassesOf(clazz);
     }
 
-    public Set<Set> subClassesOf(OWLDescription clazz) throws OWLException {
+    public Set<Set<?>> subClassesOf(OWLDescription clazz) throws OWLException {
         return reasoner.subClassesOf(clazz);
     }
 
@@ -132,7 +132,7 @@ public class PelletFacade implements DLReasonerFacade {
         return reasoner.ancestorClassesOf(clazz);
     }
 
-    public Set<Set> superClassesOf(OWLDescription clazz) throws OWLException {
+    public Set<Set<?>> superClassesOf(OWLDescription clazz) throws OWLException {
         return reasoner.superClassesOf(clazz);
     }
 
@@ -156,23 +156,23 @@ public class PelletFacade implements DLReasonerFacade {
         return reasoner.allInstancesOf(clazz);
     }
 
-    public Set<Set> typesOf(OWLIndividual individual) throws OWLException {
+    public Set<Set<?>> typesOf(OWLIndividual individual) throws OWLException {
         return reasoner.typesOf(individual);
     }
 
-    public Set<Set> allTypesOf(OWLIndividual individual) throws OWLException {
+    public Set<Set<?>> allTypesOf(OWLIndividual individual) throws OWLException {
         return reasoner.allTypesOf(individual);
     }
 
-    public Set<Set> descendantPropertiesOf(OWLProperty property) throws OWLException {
+    public Set<Set<?>> descendantPropertiesOf(OWLProperty property) throws OWLException {
         return reasoner.descendantPropertiesOf(property);
     }
 
-    public Set<Set> subPropertiesOf(OWLProperty property) throws OWLException {
+    public Set<Set<?>> subPropertiesOf(OWLProperty property) throws OWLException {
         return reasoner.subPropertiesOf(property);
     }
 
-    public Set<Set> ancestorPropertiesOf(OWLProperty property) throws OWLException {
+    public Set<Set<?>> ancestorPropertiesOf(OWLProperty property) throws OWLException {
         return reasoner.ancestorPropertiesOf(property);
     }
 

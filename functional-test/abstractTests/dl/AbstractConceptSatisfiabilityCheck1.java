@@ -31,7 +31,7 @@ import abstractTests.DL;
  */
 public abstract class AbstractConceptSatisfiabilityCheck1 extends TestCase implements DL {
 	
-    private static final String NS = "http://example.com/concept_satisfiability1#";
+    //private static final String NS = "http://example.com/concept_satisfiability1#";
 
     private static final String ONTOLOGY_FILE = "files/concept_satisfiability_check1.wsml";
 

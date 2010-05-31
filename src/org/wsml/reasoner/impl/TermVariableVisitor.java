@@ -23,14 +23,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.transformation.TermVisitor;
+import org.wsml.reasoner.transformation.ConstructedTermVisitor;
 
 /**
  * Collects all variables in the given term.
  * 
  * @author Uwe Keller, DERI Innsbruck
  */
-public class TermVariableVisitor extends TermVisitor {
+public class TermVariableVisitor extends ConstructedTermVisitor {
 
     private Set<Variable> freeVars;
 
@@ -72,7 +72,7 @@ public class TermVariableVisitor extends TermVisitor {
      * @see org.wsml.reasoner.normalization.PostfixOrderTermVisitor#handleVariable(org.omwg.ontology.Variable)
      */
     @Override
-    public void visitVariable(Variable arg0) {
+    public void visit(Variable arg0) {
         freeVars.add(arg0);
     }
 

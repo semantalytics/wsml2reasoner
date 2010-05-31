@@ -5,13 +5,13 @@ import java.util.Set;
 
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.transformation.AxiomatizationNormalizer;
 import org.wsml.reasoner.transformation.ConstraintReplacementNormalizer;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsmo.common.Entity;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.common.exception.SynchronisationException;
+import org.wsmo.factory.FactoryContainer;
 
 import framework.normalization.BaseNormalizationTest;
 
@@ -23,9 +23,9 @@ public class DebugTransformationsTest extends BaseNormalizationTest
     protected void setUp() throws Exception
     {
         super.setUp();
-        WSMO4JManager wmsoManager = new WSMO4JManager();
-        axiomatizationNormalizer = new AxiomatizationNormalizer(wmsoManager);
-        debuggingNormalizer = new ConstraintReplacementNormalizer(wmsoManager);
+        FactoryContainer factory = new WsmlFactoryContainer();
+        axiomatizationNormalizer = new AxiomatizationNormalizer(factory);
+        debuggingNormalizer = new ConstraintReplacementNormalizer(factory);
 
     }
     
@@ -34,7 +34,7 @@ public class DebugTransformationsTest extends BaseNormalizationTest
     	super.tearDown();
     }
     
-    public void testAxiomIDGeneration() throws SynchronisationException, InvalidModelException
+    public void testAxiomIDGeneration() throws InvalidModelException
     {
         Ontology ontology = null;
         try

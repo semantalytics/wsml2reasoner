@@ -13,7 +13,6 @@ import org.omwg.ontology.Concept;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Type;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.AnonymousIdTranslator;
 import org.wsml.reasoner.transformation.OntologyNormalizer;
 import org.wsml.reasoner.transformation.le.LogicalExpressionNormalizer;
@@ -27,7 +26,7 @@ import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.UnnumberedAnonymousID;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.common.exception.SynchronisationException;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -54,7 +53,7 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
     protected LogicalExpressionFactory leFactory;
     protected AnonymousIdTranslator anonymousIdTranslator;
 
-    public WSMLDLLogExprNormalizer(WSMO4JManager wsmoManager) {
+    public WSMLDLLogExprNormalizer(FactoryContainer wsmoManager) {
         List<NormalizationRule> preOrderRules = new ArrayList<NormalizationRule>();
         preOrderRules.addAll(new ImplicationReductionRules(wsmoManager).getRules());
         preOrderRules.addAll(new InverseImplicationReductionRules(wsmoManager).getRules());
@@ -63,7 +62,7 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
         postOrderRules.addAll(new MoleculeDecompositionRules(wsmoManager).getRules());
 
         leNormalizer = new OnePassReplacementNormalizer(preOrderRules, postOrderRules, wsmoManager);
-        wsmoFactory = wsmoManager.getWSMOFactory();
+        wsmoFactory = wsmoManager.getWsmoFactory();
         leFactory = wsmoManager.getLogicalExpressionFactory();
         anonymousIdTranslator = new AnonymousIdTranslator(wsmoFactory);
     }
@@ -101,9 +100,6 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
                 try {
                     result.addAll(normalizeConcept((Concept) e));
                 }
-                catch (SynchronisationException e1) {
-                    e1.printStackTrace();
-                }
                 catch (InvalidModelException e1) {
                     e1.printStackTrace();
                 }
@@ -111,9 +107,6 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
             else if (e instanceof Instance) {
                 try {
                     result.addAll(normalizeInstance((Instance) e));
-                }
-                catch (SynchronisationException e1) {
-                    e1.printStackTrace();
                 }
                 catch (InvalidModelException e1) {
                     e1.printStackTrace();
@@ -137,7 +130,7 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
      * identifier, this superconcept's identifier is also replaced.
      */
 
-    private Set<Entity> normalizeConcept(Concept concept) throws SynchronisationException, InvalidModelException {
+    private Set<Entity> normalizeConcept(Concept concept) throws InvalidModelException {
         Set<Entity> result = new HashSet<Entity>();
         if (concept.getIdentifier() instanceof UnnumberedAnonymousID) {
             Identifier id = (Identifier) anonymousIdTranslator.translate(concept.getIdentifier());
@@ -156,10 +149,11 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
             if (concept.listAttributes().size() > 0) {
                 for (Attribute attribute : concept.listAttributes()){
                     Attribute newAttribute = newConcept.createAttribute(attribute.getIdentifier());
-                    if (attribute.listTypes().size() > 0) {
-                        for (Type type : attribute.listTypes()){
-                            newAttribute.addType(type);
-                        }
+                    for (Type type : attribute.listConstrainingTypes()){
+                        newAttribute.addConstrainingType(type);
+                    }
+                    for (Type type : attribute.listInferringTypes()){
+                        newAttribute.addInferringType(type);
                     }
                 }
             }
@@ -189,7 +183,7 @@ public class WSMLDLLogExprNormalizer implements OntologyNormalizer {
      * anonymous identifier, this concept's identifier is also replaced.
      */
 
-    private Set<Entity> normalizeInstance(Instance instance) throws SynchronisationException, InvalidModelException {
+    private Set<Entity> normalizeInstance(Instance instance) throws InvalidModelException {
         Set<Entity> result = new HashSet<Entity>();
         if (instance.getIdentifier() instanceof UnnumberedAnonymousID) {
             Identifier id = (Identifier) anonymousIdTranslator.translate(instance.getIdentifier());

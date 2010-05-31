@@ -25,8 +25,8 @@ import org.omwg.logicalexpression.Conjunction;
 import org.omwg.logicalexpression.InverseImplication;
 import org.omwg.logicalexpression.LogicProgrammingRule;
 import org.omwg.logicalexpression.LogicalExpression;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.TransformationRule;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 
@@ -34,7 +34,7 @@ public class TransformNestedImplication implements TransformationRule {
     
     private LogicalExpressionFactory leFactory;
     
-    public TransformNestedImplication(WSMO4JManager wsmoManager){
+    public TransformNestedImplication(FactoryContainer wsmoManager){
         this.leFactory = wsmoManager.getLogicalExpressionFactory();
     }
     

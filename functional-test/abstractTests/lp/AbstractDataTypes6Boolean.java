@@ -26,7 +26,9 @@ import helper.LPHelper;
 import helper.OntologyHelper;
 import helper.Results;
 import junit.framework.TestCase;
+
 import org.omwg.ontology.Ontology;
+
 import abstractTests.LP;
 
 /**
@@ -42,12 +44,12 @@ public abstract class AbstractDataTypes6Boolean extends TestCase implements LP{
     	Results r = new Results( "x" );
     	r.addBinding( Results.iri( ns + "truth" ) );
     	
-    	LPHelper.executeQueryAndCheckResults( ontology, "?x[reallyExists hasValue _boolean(\"true\")]", r.get(), getLPReasoner() );
+    	LPHelper.executeQueryAndCheckResults( ontology, "?x[reallyExists hasValue xsd#boolean(\"true\")]", r.get(), getLPReasoner() );
 
     	r = new Results( "x" );
     	r.addBinding( Results.iri( ns + "mysticism" ) );
     	
-    	LPHelper.executeQueryAndCheckResults( ontology, "?x[reallyExists hasValue _boolean(\"false\")]", r.get(), getLPReasoner() );
+    	LPHelper.executeQueryAndCheckResults( ontology, "?x[reallyExists hasValue xsd#boolean(\"false\")]", r.get(), getLPReasoner() );
     }
     
     /**
@@ -66,12 +68,13 @@ public abstract class AbstractDataTypes6Boolean extends TestCase implements LP{
         Ontology ontology = OntologyHelper.parseOntology( test );
         
     	Results r = new Results( "y" );
-    	r.addBinding( Results.bool( false ) );
+    	r.addBinding( Results._bool( false ) );
     	
+    	LPHelper.outputON();
         LPHelper.executeQueryAndCheckResults( ontology, "a[f hasValue ?y]", r.get(), getLPReasoner() );
 
     	r = new Results( "y" );
-    	r.addBinding( Results.bool( true ) );
+    	r.addBinding( Results._bool( true ) );
     	
         LPHelper.executeQueryAndCheckResults( ontology, "a[t hasValue ?y]", r.get(), getLPReasoner() );
 

@@ -29,7 +29,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.serializer.wsml.VisitorSerializeWSMLTerms;
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
+import org.deri.wsmo4j.io.serializer.wsml.SerializeWSMLTermsVisitor;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
@@ -40,11 +41,10 @@ import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsmo.common.TopEntity;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.Factory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
-import com.ontotext.wsmo4j.parser.wsml.ParserImpl;
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 public class LoadReferenceOntology {
 
@@ -65,15 +65,9 @@ public class LoadReferenceOntology {
 
     public static void test(File... files) throws FileNotFoundException, IOException, ParserException, InvalidModelException, InconsistencyException {
 
-        HashMap<String, Object> parserProps = new HashMap<String, Object>();
-        Parser wsmlParser;
-        try {
-            wsmlParser = new ParserImpl(parserProps);
-        }
-        catch (RuntimeException re) {
-            re.printStackTrace();
-            wsmlParser = Factory.createParser(parserProps);
-        }
+//      HashMap<String, Object> parserProps = new HashMap<String, Object>();
+//		WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
+		Parser wsmlParser = new WsmlParser();
 
         Set<Ontology> ontologies = new HashSet<Ontology>();
         for (File f : files) {
@@ -98,7 +92,7 @@ public class LoadReferenceOntology {
         System.out.println("Ontologies registered in " + register + " ms");
         long query_start = System.currentTimeMillis();
 
-        LogicalExpression le = Factory.createLogicalExpressionFactory(new HashMap<String, Object>()).createLogicalExpression("?x memberOf ?y");
+		LogicalExpression le = new WsmlLogicalExpressionParser().parse("?x memberOf ?y");
 
         Ontology ontology = new ArrayList<Ontology>(ontologies).get(0);
         Set<Map<Variable, Term>> result = reasoner.executeQuery(le);
@@ -125,7 +119,7 @@ public class LoadReferenceOntology {
     }
 
     private static String termToString(Term t, Ontology o) {
-        VisitorSerializeWSMLTerms v = new VisitorSerializeWSMLTerms(o);
+        SerializeWSMLTermsVisitor v = new SerializeWSMLTermsVisitor(o);
         t.accept(v);
         return v.getSerializedObject();
     }

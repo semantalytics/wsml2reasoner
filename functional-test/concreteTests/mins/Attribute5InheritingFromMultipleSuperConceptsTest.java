@@ -23,6 +23,7 @@
 package concreteTests.mins;
 
 import org.wsml.reasoner.api.LPReasoner;
+
 import abstractTests.lp.AbstractAttribute5InheritingFromMultipleSuperConcepts;
 
 public class Attribute5InheritingFromMultipleSuperConceptsTest extends AbstractAttribute5InheritingFromMultipleSuperConcepts {

@@ -23,6 +23,7 @@
 package concreteTests.irisStratified;
 
 import org.wsml.reasoner.api.LPReasoner;
+
 import abstractTests.lp.AbstractDataTypes6Boolean;
 
 public class DataTypes6BooleanTest extends AbstractDataTypes6Boolean

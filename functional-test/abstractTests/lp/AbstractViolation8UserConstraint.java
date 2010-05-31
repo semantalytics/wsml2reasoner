@@ -25,7 +25,9 @@ package abstractTests.lp;
 import helper.LPHelper;
 import helper.OntologyHelper;
 import junit.framework.TestCase;
+
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
+
 import abstractTests.LP;
 
 public abstract class AbstractViolation8UserConstraint extends TestCase implements LP {

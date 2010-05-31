@@ -125,14 +125,14 @@ public interface DLReasonerFacade {
      * @throws OWLException
      * @throws URISyntaxException
      */
-    public Set<Set> descendantClassesOf(OWLDescription clazz) throws OWLException, URISyntaxException;
+    public Set<Set<?>> descendantClassesOf(OWLDescription clazz) throws OWLException, URISyntaxException;
 
     /**
      * @return a set containing all direct subclasses of a given class
      * @throws URISyntaxException
      * @throws OWLException
      */
-    public Set<Set> subClassesOf(OWLDescription clazz) throws OWLException, URISyntaxException;
+    public Set<Set<?>> subClassesOf(OWLDescription clazz) throws OWLException, URISyntaxException;
 
     /**
      * @return a set containing all superclasses of a given class
@@ -146,7 +146,7 @@ public interface DLReasonerFacade {
      * @throws URISyntaxException
      * @throws OWLException
      */
-    public Set<Set> superClassesOf(OWLDescription clazz) throws OWLException, URISyntaxException;
+    public Set<Set<?>> superClassesOf(OWLDescription clazz) throws OWLException, URISyntaxException;
 
     /**
      * @return a set containing all classes equivalent to the given class
@@ -188,35 +188,35 @@ public interface DLReasonerFacade {
      * @throws OWLException
      * @throws URISyntaxException
      */
-    public Set<Set> typesOf(OWLIndividual individual) throws OWLException, URISyntaxException;
+    public Set<Set<?>> typesOf(OWLIndividual individual) throws OWLException, URISyntaxException;
 
     /**
      * @return a set with all (also indirect) concepts of a given OWL individual
      * @throws OWLException
      * @throws URISyntaxException
      */
-    public Set<Set> allTypesOf(OWLIndividual individual) throws OWLException, URISyntaxException;
+    public Set<Set<?>> allTypesOf(OWLIndividual individual) throws OWLException, URISyntaxException;
 
     /**
      * @return a set containing all subproperties of a given OWL property
      * @throws OWLException
      * @throws URISyntaxException
      */
-    public Set<Set> descendantPropertiesOf(OWLProperty property) throws OWLException, URISyntaxException;
+    public Set<Set<?>> descendantPropertiesOf(OWLProperty property) throws OWLException, URISyntaxException;
 
     /**
      * @return a set containing all direct subproperties of a given OWL property
      * @throws URISyntaxException
      * @throws OWLException
      */
-    public Set<Set> subPropertiesOf(OWLProperty property) throws OWLException, URISyntaxException;
+    public Set<Set<?>> subPropertiesOf(OWLProperty property) throws OWLException, URISyntaxException;
 
     /**
      * @return a set containing all superproperties of a given OWL property
      * @throws OWLException
      * @throws URISyntaxException
      */
-    public Set<Set> ancestorPropertiesOf(OWLProperty property) throws OWLException, URISyntaxException;
+    public Set<Set<?>> ancestorPropertiesOf(OWLProperty property) throws OWLException, URISyntaxException;
 
     /**
      * @return a set containing all direct superproperties of a given OWL

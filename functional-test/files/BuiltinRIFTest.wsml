@@ -1,0 +1,362 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
+namespace { _"http://example.com/builtin01#",
+	wsml _"http://www.wsmo.org/wsml/wsml-syntax#",
+	xsd  _"http://www.w3.org/2001/XMLSchema#",
+	rif  _"http://www.w3.org/2007/rif-builtin-predicate#",
+	rdf  _"http://www.w3.org/1999/02/22-rdf-syntax-ns#" }
+
+/**
+* To test rif data types
+* see: http://www.w3.org/2005/rules/wiki/DTB#Primitive_Datatypes
+*/
+ontology builtin01
+
+concept C1
+concept C2 
+concept C3 
+
+instance A memberOf C1
+  aStringValue hasValue xsd#string( "InstanceA" )	
+
+instance B memberOf C2
+  bStringValue hasValue xsd#string( "InstanceB" )	
+		
+axiom testRIFBuiltin definedBy
+	   
+	   // Test
+	   m(?x) 					:- ?x[?attribute hasValue ?value].
+       
+////////////////////
+// RIF builtins
+///////////////////
+
+ 	  // rif is-literal tests
+	   isAnyURITest(?x) 		:- ?x[?attribute hasValue ?value] and rif#is-literal-anyURI(rdf#XMLLiteral("<tag>Text</tag>", "")).
+	   isBase64BinaryTest(?x) 	:- ?x[?attribute hasValue ?value] and rif#is-literal-base64Binary(xsd#base64Binary( "FFFF" )).
+	   isBooleanTest(?x) 		:- ?x[?attribute hasValue ?value] and rif#is-literal-boolean(xsd#boolean("true")).
+	   isDateTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#is-literal-date( xsd#date( 1981, 12, 31 )).
+	   isDateTimeTest(?x) 		:- ?x[?attribute hasValue ?value] and rif#is-literal-dateTime( xsd#dateTime( 1981, 12, 31, 20, 33, 23.4, 0, 0 )).
+	   isDateTimeStampTest(?x) 	:- ?x[?attribute hasValue ?value] and rif#is-literal-dateTimeStamp( xsd#dateTime( 1981, 12, 31, 20, 33, 23.4, 0, 0 )).
+	   isDoubleTest(?x) 		:- ?x[?attribute hasValue ?value] and rif#is-literal-double(xsd#double( "12345.6789" )).
+	   isFloatTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#is-literal-float(xsd#float("3.4")).
+	   isHexBinaryTest(?x)		:- ?x[?attribute hasValue ?value] and rif#is-literal-hexBinary(xsd#hexBinary("FFFF")).
+	   isDecimalTest(?x) 		:- ?x[?attribute hasValue ?value] and rif#is-literal-decimal(xsd#decimal(123456.78901)).
+	   isIntegerTest(?x) 		:- ?x[?attribute hasValue ?value] and rif#is-literal-integer(xsd#integer(5)).
+	   isLongTest(?x) 		    :- ?x[?attribute hasValue ?value] and rif#is-literal-long(xsd#long("54784")).
+	   isShortTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#is-literal-short(xsd#short("5")).
+	   isByteTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#is-literal-byte( xsd#byte("2")).
+	   isNonNegativeIntegerTest(?x) 	:- ?x[?attribute hasValue ?value] and rif#is-literal-nonNegativeInteger( xsd#nonNegativeInteger("23")).
+	   isPositiveIntegerTest(?x) 		:- ?x[?attribute hasValue ?value] and rif#is-literal-positiveInteger( xsd#positiveInteger("3")).
+	   isUnsignedLongTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#is-literal-unsignedLong( xsd#unsignedLong("32342")).
+	   isUnsignedIntTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#is-literal-unsignedInt( xsd#unsignedInt("32")).
+	   isUnsignedShortTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#is-literal-unsignedShort(_unsignedshort("3")).
+	   isUnsignedByteTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#is-literal-unsignedByte(xsd#unsignedByte("3")).
+	   isNonPositiveIntegerTest(?x) 	:- ?x[?attribute hasValue ?value] and rif#is-literal-nonPositiveInteger(xsd#nonPositiveInteger(-21)).
+	   isNegativeIntegerTest(?x) 		:- ?x[?attribute hasValue ?value] and rif#is-literal-negativeInteger( xsd#negativeInteger("-1")).
+	   isPlainLiteralTest(?x) 		:- ?x[?attribute hasValue ?value] and rif#is-literal-PlainLiteral( xsd#PlainLiteral("plain literal")).
+	   isStringTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#is-literal-string(xsd#string("string-value")).
+	   isNormalizedStringTest(?x)   :- ?x[?attribute hasValue ?value] and rif#is-literal-normalizedString(xsd#normalizedString("normalized")).
+	   isTokenTest(?x) 				:- ?x[?attribute hasValue ?value] and rif#is-literal-token(xsd#token("this is a token")).
+	   isLanguageTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#is-literal-language(xsd#language("de")).
+	   isNameTest(?x) 				:- ?x[?attribute hasValue ?value] and rif#is-literal-Name(xsd#Name("Baal")).
+	   isNCNameTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#is-literal-NCName(xsd#NCName("NC Hammer")).
+	   isNMTokenTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#is-literal-NMToken(xsd#NMToken("This is a NM Token")).
+	   isTimeTest(?x) 				:- ?x[?attribute hasValue ?value] and rif#is-literal-time(xsd#time(22,10,32.32,0,0)).
+	  
+	   isDayTimeDurationTest(?x) 	:- ?x[?attribute hasValue ?value] and rif#is-literal-dayTimeDuration(xsd#dayTimeDuration(3,34,7,3)).
+ 	   isYearMonthDurationTest(?x) 	:- ?x[?attribute hasValue ?value] and rif#is-literal-yearMonthDuration(xsd#yearMonthDuration(24, 2)).	   
+ 	   isXMLLiteralTest(?x) 		:- ?x[?attribute hasValue ?value] and rif#is-literal-XMLLiteral(rdf#XMLLiteral("<tag>Text</tag>", "")).
+	   
+	   // rif is-not-literal tests
+	   isNotAnyURITest(?x) 			   :- ?x[?attribute hasValue ?value] and rif#is-literal-not-anyURI(xsd#string("not any uri from hell")).
+	   isNotBase64BinaryTest(?x)       :- ?x[?attribute hasValue ?value] and rif#is-literal-not-base64Binary(xsd#string("test_is_not")).
+	   isNotBooleanTest(?x)      	   :- ?x[?attribute hasValue ?value] and rif#is-literal-not-boolean(xsd#string("test_is_not")).
+	   isNotDateTest(?x)         	   :- ?x[?attribute hasValue ?value] and rif#is-literal-not-date(xsd#string("test_is_not")).
+	   isNotDateTimeTest(?x)           :- ?x[?attribute hasValue ?value] and rif#is-literal-not-dateTime(xsd#string("test_is_not")).
+       isNotDateTimeStampTest(?x)      :- ?x[?attribute hasValue ?value] and rif#is-literal-not-dateTimeStamp(xsd#string("test_is_not")).
+	   isNotDoubleTest(?x)      	   :- ?x[?attribute hasValue ?value] and rif#is-literal-not-double(xsd#string("test_is_not")).
+	   isNotFloatTest(?x)        	   :- ?x[?attribute hasValue ?value] and rif#is-literal-not-float(xsd#string("test_is_not")).
+	   isNotHexBinaryTest(?x)	       :- ?x[?attribute hasValue ?value] and rif#is-literal-not-hexBinary(xsd#string("test_is_not")).
+	   isNotDecimalTest(?x)      	   :- ?x[?attribute hasValue ?value] and rif#is-literal-not-decimal(xsd#string("test_is_not")).
+       isNotIntegerTest(?x)      	   :- ?x[?attribute hasValue ?value] and rif#is-literal-not-integer(xsd#string("test_is_not")).
+	   isNotLongTest(?x)         	   		:- ?x[?attribute hasValue ?value] and rif#is-literal-not-long(xsd#string("it is long ")).
+	   isNotShortTest(?x)        	   		:- ?x[?attribute hasValue ?value] and rif#is-literal-not-short(xsd#string("shorty")).
+	   isNotByteTest(?x) 		 	   		:- ?x[?attribute hasValue ?value] and rif#is-literal-not-byte(xsd#string("is not byte")).
+	   isNotNonNegativeIntegerTest(?x) 	:- ?x[?attribute hasValue ?value] and rif#is-literal-not-nonNegativeInteger(xsd#integer(9)).
+	   isNotPositiveIntegerTest(?x)    	:- ?x[?attribute hasValue ?value] and rif#is-literal-not-positiveInteger(xsd#string("test_is_not")).
+	   isNotUnsignedLongTest(?x) 	   		:- ?x[?attribute hasValue ?value] and rif#is-literal-not-unsignedLong( xsd#string("test_is_not")).
+	   isNotUnsignedIntTest(?x)        	:- ?x[?attribute hasValue ?value] and rif#is-literal-not-unsignedInt( xsd#string("test_is_not")).
+	   isNotUnsignedShortTest(?x)     	:- ?x[?attribute hasValue ?value] and rif#is-literal-not-unsignedShort( xsd#string("test_is_not")).
+	   isNotUnsignedByteTest(?x)       	:- ?x[?attribute hasValue ?value] and rif#is-literal-not-unsignedByte( xsd#string("test_is_not")).
+	   isNotNonPositiveIntegerTest(?x) 	:- ?x[?attribute hasValue ?value] and rif#is-literal-not-nonPositiveInteger( xsd#string("test_is_not")).
+	   isNotNegativeIntegerTest(?x)    	:- ?x[?attribute hasValue ?value] and rif#is-literal-not-negativeInteger( xsd#string("test_is_not")). 
+	   isNotPlainLiteral(?x)		   		:- ?x[?attribute hasValue ?value] and rif#is-literal-not-PlainLiteral(xsd#string("test_is_not")). 
+       isNotStringTest(?x)             	:- ?x[?attribute hasValue ?value] and rif#is-literal-not-string(xsd#decimal(123)).
+	   isNotNormalizedStringTest(?x)   	:- ?x[?attribute hasValue ?value] and rif#is-literal-not-normalizedString(xsd#decimal(123)).
+	   isNotTokenTest(?x)              	:- ?x[?attribute hasValue ?value] and rif#is-literal-not-token(xsd#decimal(123)).
+	   isNotLanguageTest(?x) 		   		:- ?x[?attribute hasValue ?value] and rif#is-literal-not-language(xsd#decimal(123)).
+	   isNotNameTest(?x) 			   		:- ?x[?attribute hasValue ?value] and rif#is-literal-not-Name(xsd#decimal(123)).
+	   isNotNCNameTest(?x)			   	:- ?x[?attribute hasValue ?value] and rif#is-literal-not-NCName(xsd#decimal(123)).
+	   isNotNMTokenTest(?x)			   	:- ?x[?attribute hasValue ?value] and rif#is-literal-not-NMToken(xsd#decimal(123)).
+	   isNotTimeTest(?x)			   :- ?x[?attribute hasValue ?value] and rif#is-literal-not-time(xsd#decimal(123)).
+	   isNotDayTimeDurationTest(?x)	   :- ?x[?attribute hasValue ?value] and rif#is-literal-not-dayTimeDuration(xsd#decimal(123)).
+	   isNotYearMonthDurationTest(?x)  :- ?x[?attribute hasValue ?value] and rif#is-literal-not-yearMonthDuration(xsd#decimal(123)).
+	   isNotXMLLiteralTest(?x)         :- ?x[?attribute hasValue ?value] and rif#is-literal-not-XMLLiteral(xsd#decimal(123)).	 
+       isNotDurationTest(?x)     		:- ?x[?attribute hasValue ?value] and rif#is-literal-not-duration(xsd#string("test_is_not")).
+       isNotDateTimeTest(?x)     		:- ?x[?attribute hasValue ?value] and rif#is-literal-not-dateTime(xsd#string("test_is_not")).
+       isNotGDayTest(?x)         		:- ?x[?attribute hasValue ?value] and rif#is-literal-not-gDay(xsd#string("test_is_not")).
+       isNotGMonthTest(?x)       		:- ?x[?attribute hasValue ?value] and rif#is-literal-not-gMonth(xsd#string("test_is_not")).
+       isNotGMonthDayTest(?x)   	 	:- ?x[?attribute hasValue ?value] and rif#is-literal-not-gMonthDay(xsd#string("test_is_not")).
+       isNotGYearTest(?x)        		:- ?x[?attribute hasValue ?value] and rif#is-literal-not-gYear(xsd#string("test_is_not")).
+       isNotGYearMonthTest(?x)	 		:- ?x[?attribute hasValue ?value] and rif#is-literal-not-gYearMonth(xsd#string("test_is_not")).
+       isNotTimeTest(?x)	     		:- ?x[?attribute hasValue ?value] and rif#is-literal-not-time(xsd#string("test_is_not")).
+       isNotDayTimeDurationTest(?x)  	:- ?x[?attribute hasValue ?value] and rif#is-literal-not-dayTimeDuration(xsd#string("test_is_not")).
+	   isNotYearMonthDurationTest(?x)  	:- ?x[?attribute hasValue ?value] and rif#is-literal-not-yearMonthDuration(xsd#string("test_is_not")).
+	   isNotTextTest(?x)  				:- ?x[?attribute hasValue ?value] and rif#is-literal-not-Text(xsd#string("test_is_not")).
+	   isNotXMLLiteralTest(?x)  		:- ?x[?attribute hasValue ?value] and rif#is-literal-not-xmlLiteral(xsd#string("test_is_not")).
+	   
+	   // rif numerics
+	   numericAddTest(?x) 				:- ?x[?attribute hasValue ?value] and rif#numeric-add(1,3,2).
+	   numericSubtractTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#numeric-subtract(xsd#integer("2"),xsd#integer("1"), xsd#integer("1") ).
+	   numericMultiplyTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#numeric-multiply(xsd#integer("2"),xsd#integer("1"), xsd#integer("2") ).
+	   numericDivideTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#numeric-divide(xsd#double("2.2"),xsd#double("2.2"), xsd#double("1.1") ).
+	   numericIntegerDivideTest(?x) 	:- ?x[?attribute hasValue ?value] and rif#numeric-integer-divide(xsd#integer("2"),xsd#integer("2"), xsd#integer("1") ).
+	   numericModTest(?x) 				:- ?x[?attribute hasValue ?value] and rif#numeric-mod(xsd#integer("5"),xsd#integer("2"), xsd#integer("1")).
+	   numericEqualTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#numeric-equal(xsd#integer("5"),xsd#integer("5")).
+	   numericLessThanTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#numeric-less-than(xsd#integer("5"),xsd#integer("3")).
+	   numericGreaterThanTest(?x)		:- ?x[?attribute hasValue ?value] and rif#numeric-greater-than(xsd#integer("2"),xsd#integer("5")).
+	   numericNotEqualTest(?x)			:- ?x[?attribute hasValue ?value] and rif#numeric-not-equal(xsd#integer("2"),xsd#integer("5")).
+	   numericLessThanOrEqualTest(?x)	:- ?x[?attribute hasValue ?value] and rif#numeric-less-than-or-equal(xsd#integer("5"),xsd#integer("5")).
+	   numericGreaterThanOrEqualTest(?x):- ?x[?attribute hasValue ?value] and rif#numeric-greater-than-or-equal(xsd#integer("5"),xsd#integer("5")).
+	   
+	   // rif boolean
+	   notTest(?x)						:- ?x[?attribute hasValue ?value] and rif#not(xsd#boolean("false")).
+	   booleanEqualTest(?x)				:- ?x[?attribute hasValue ?value] and rif#boolean-equal(xsd#boolean("true"), xsd#boolean("true")).
+	   booleanLessThanTest(?x)			:- ?x[?attribute hasValue ?value] and rif#boolean-less-than(xsd#boolean("true"), xsd#boolean("false")).
+	   booleanGreaterThanTest(?x)		:- ?x[?attribute hasValue ?value] and rif#boolean-greater-than(xsd#boolean("false"), xsd#boolean("true")).
+	   
+	   // rif strings
+	   compareTest(?x) 					:- ?x[?attribute hasValue ?value] and rif#compare(xsd#string("compare"),xsd#string("compare")).
+	   concatTest(?x)					:- ?x[?attribute hasValue ?value] and rif#concat(xsd#string("con"),xsd#string("cat"), xsd#string("concate")).
+	   stringJoinTest(?x)				:- ?x[?attribute hasValue ?value] and rif#string-join(xsd#string("string"),xsd#string("join"), xsd#string("stringjoin")).
+	   subStringTest(?x)				:- ?x[?attribute hasValue ?value] and rif#sub-string(xsd#integer(3), xsd#string("string"), xsd#string("ing")).
+	   stringLengthTest(?x)				:- ?x[?attribute hasValue ?value] and rif#string-length(xsd#string("string"), xsd#integer(6)).
+	   upperCaseTest(?x)				:- ?x[?attribute hasValue ?value] and rif#upper-case(xsd#string("string"), xsd#string("STRING")).
+	   lowerCaseTest(?x)				:- ?x[?attribute hasValue ?value] and rif#lower-case(xsd#string("string"), xsd#string("STRING")).
+	   encodeForUriTest(?x)				:- ?x[?attribute hasValue ?value] and rif#encode-for-uri(xsd#string("encode me")).
+	   iriToUriTest(?x)					:- ?x[?attribute hasValue ?value] and rif#iri-to-uri(xsd#iri("encode me")).
+	   escapeHtmlUriTest(?x)			:- ?x[?attribute hasValue ?value] and rif#escape-html-uri(xsd#string("encode me")).
+	   substringBeforeTest(?x)			:- ?x[?attribute hasValue ?value] and rif#substring-before(xsd#string("huh")).
+	   substringAfterTest(?x)			:- ?x[?attribute hasValue ?value] and rif#substring-after(xsd#string("huh")).
+	   replaceTest(?x)					:- ?x[?attribute hasValue ?value] and rif#replace(xsd#string("huh")).
+	   containsTest(?x)					:- ?x[?attribute hasValue ?value] and rif#contains(xsd#string("huh"), xsd#string("u")).
+	   startsWithTest(?x)				:- ?x[?attribute hasValue ?value] and rif#starts-with(xsd#string("huh"),xsd#string("huhubaaa") ).
+	   endsWithTest(?x)					:- ?x[?attribute hasValue ?value] and rif#ends-with(xsd#string("huh"), xsd#string("baaaahuh")).
+	   matchesTest(?x)						:- ?x[?attribute hasValue ?value] and rif#matches(xsd#string("huh"), xsd#string("huh")).
+	   
+	   // rif date time part
+	   yearFromDateTimeTest(?x)			:- ?x[?attribute hasValue ?value] and rif#year-from-dateTime(xsd#year(1986), xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 )).
+	   monthFromDateTimeTest(?x)		:- ?x[?attribute hasValue ?value] and rif#month-from-dateTime(xsd#month(12), xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 )).
+	   dayFromDateTimeTest(?x)			:- ?x[?attribute hasValue ?value] and rif#day-from-dateTime(xsd#day(31), xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 )).
+	   hoursFromDateTimeTest(?x)		:- ?x[?attribute hasValue ?value] and rif#hours-from-dateTime(xsd#hours(20), xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 )).
+	   minutesFromDateTimeTest(?x)		:- ?x[?attribute hasValue ?value] and rif#minutes-from-dateTime(xsd#minutes(33), xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 )).
+	   secondsFromDateTimeTest(?x)		:- ?x[?attribute hasValue ?value] and rif#seconds-from-dateTime(xsd#seconds(23.4), xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 )).
+	   
+	   // rif date part
+	   yearFromDateTest(?x)				:- ?x[?attribute hasValue ?value] and rif#year-from-date(xsd#year(1986), xsd#date( 1986, 12, 31, 0, 0)).
+	   monthFromDateTest(?x)		    :- ?x[?attribute hasValue ?value] and rif#month-from-date(xsd#month(12), xsd#date( 1986, 12, 31, 0, 0)).
+	   dayFromDateTest(?x)				:- ?x[?attribute hasValue ?value] and rif#day-from-date(xsd#day(31), xsd#date( 1986, 12, 31, 0, 0)).
+	   hoursFromDateTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#hours-from-date(xsd#hours(0), xsd#date( 1986, 12, 31, 0, 0)).
+	   minutesFromDateTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#minutes-from-date(xsd#minutes(0), xsd#date( 1986, 12, 31, 0, 0)).
+	   secondsFromDateTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#seconds-from-date(xsd#seconds(0), xsd#date( 1986, 12, 31, 0, 0)).
+	   
+	   // rif duration
+	   yearsFromDurationTest(?x)		:- ?x[?attribute hasValue ?value] and rif#years-from-duration(xsd#integer(1), xsd#duration( 1, 2, 3, 4, 5, 6.0 )).
+	   monthsFromDurationTest(?x)		:- ?x[?attribute hasValue ?value] and rif#months-from-duration(xsd#integer(2), xsd#duration( 1, 2, 3, 4, 5, 6.0 )).
+	   daysFromDurationTest(?x)			:- ?x[?attribute hasValue ?value] and rif#days-from-duration(xsd#integer(3), xsd#duration( 1, 2, 3, 4, 5, 6.0 )).
+	   hoursFromDurationTest(?x)		:- ?x[?attribute hasValue ?value] and rif#hours-from-duration(xsd#integer(4), xsd#duration( 1, 2, 3, 4, 5, 6.0 )).
+	   minutesFromDurationTest(?x)			:- ?x[?attribute hasValue ?value] and rif#minutes-from-duration(xsd#integer(5), xsd#duration( 1, 2, 3, 4, 5, 6.0 )).
+	   secondsFromDurationTest(?x)			:- ?x[?attribute hasValue ?value] and rif#seconds-from-duration(xsd#double("6.0"), xsd#duration( 1, 2, 3, 4, 5, 6.0 )).
+	   
+	   // rif timezones from date
+	   timezoneFromDateTimeTest(?x)	   	:- ?x[?attribute hasValue ?value] and rif#timezone-from-dateTime(xsd#timezone(0,0), xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 )).
+	   timezoneFromDateTest(?x)				:- ?x[?attribute hasValue ?value] and rif#timezone-from-date(xsd#timezone(0,0), xsd#date( 1981, 12, 31 )).
+	   timezoneFromTimeTest(?x)				:- ?x[?attribute hasValue ?value] and rif#timezone-from-time(xsd#timezone(0,0), xsd#time(20, 33, 23.4, 0, 0 )).
+	   
+	   // rif date time manipulation 
+	   subtractDateTimesTest(?x)		:- ?x[?attribute hasValue ?value] and rif#substract-dateTimes(xsd#dateTime( 2001, 12, 31, 20, 33, 23.4, 0, 0 ), xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 )).
+	   subtractDatesTest(?x)			:- ?x[?attribute hasValue ?value] and rif#substract-dates(xsd#date( 2001, 12, 31), xsd#date( 1986, 12, 31)).
+	   subtractTimesTest(?x)			:- ?x[?attribute hasValue ?value] and rif#substract-times(xsd#time(20, 33, 23.4, 0, 0 ), xsd#time(20, 33, 23.4, 0, 0 )).
+	
+	   // rif yearMonthDuration manipulation 
+	   addYearMonthDurationsTest(?x)							:- ?x[?attribute hasValue ?value] and rif#add-yearMonthDurations(xsd#yearMonthDuration(20, 3), xsd#yearMonthDuration(12, 9)).
+	   subtractYearMonthDurationsTest(?x)						:- ?x[?attribute hasValue ?value] and rif#subtract-yearMonthDurations(xsd#yearMonthDuration(20, 3), xsd#yearMonthDuration(12, 9)).
+	   multiplyYearMonthDurationTest(?x)						:- ?x[?attribute hasValue ?value] and rif#multiply-yearMonthDurations(xsd#yearMonthDuration(2, 2), xsd#integer(2)).
+	   divideYearMonthDurationTest(?x)							:- ?x[?attribute hasValue ?value] and rif#divide-yearMonthDurations(xsd#yearMonthDuration(2, 2), xsd#integer(2)).
+	   divideYearMonthDurationByYearMonthDurationTest(?x) 		:- ?x[?attribute hasValue ?value] and rif#divide-yearMonthDurations(xsd#yearMonthDuration(2, 2), xsd#yearMonthDuration(2, 1)).
+	  
+	   // rif dayTimeDuration manipulation
+	   addDayTimeDurationsTest(?x)						:- ?x[?attribute hasValue ?value] and rif#add-dayTimeDurations(xsd#dayTimeDuration(20, 3, 12, 33), xsd#dayTimeDuration(12, 9, 10, 33)).	
+	   subtractDayTimeDurationsTest(?x)					:- ?x[?attribute hasValue ?value] and rif#subtract-dayTimeDurations(xsd#dayTimeDuration(20, 3, 10, 33), xsd#dayTimeDuration(12, 9, 10, 33)).	
+	   multiplyDayTimeDurationTest(?x)					:- ?x[?attribute hasValue ?value] and rif#multiply-dayTimeDurations(xsd#dayTimeDuration(20, 3, 10, 33), xsd#dayTimeDuration(12, 9, 10, 33)).	
+	   divideDayTimeDurationTest(?x)					:- ?x[?attribute hasValue ?value] and rif#divide-dayTimeDurations(xsd#dayTimeDuration(20, 3, 10, 33), xsd#dayTimeDuration(12, 9, 10, 33)).	
+	   divideDayTimeDurationBydayTimeDurationTest(?x)	:- ?x[?attribute hasValue ?value] and rif#divide-dayTimeDuration-by-dayTimeDurations(xsd#dayTimeDuration(20, 3, 10, 33), xsd#dayTimeDuration(12, 9, 10, 33)).	
+	   
+	   // rif yearMonth dayTime
+	   addYearMonthDurationToDateTimeTest(?x)			:- ?x[?attribute hasValue ?value] and rif#add-yearMonthDuration-to-dateTime(xsd#yearMonthDuration(20, 3), xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 )).	
+	   addYearMonthDurationToDateTest(?x)				:- ?x[?attribute hasValue ?value] and rif#add-yearMonthDuration-to-date(xsd#yearMonthDuration(20, 3), xsd#date( 1981, 12, 31 )).
+	   
+	   addDayTimeDurationToDateTimeTest(?x)				:- ?x[?attribute hasValue ?value] and rif#add-dayTimeDuration-to-dateTime( xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 ), xsd#dayTimeDuration(10, 33, 12, 31 )).
+	   addDayTimeDurationToDateTest(?x)					:- ?x[?attribute hasValue ?value] and rif#add-dayTimeDuration-to-date(xsd#date( 1981, 12, 31 ), xsd#dayTimeDuration( 10, 12, 3, 32 ) ).
+	   addDayTimeDurationToTimeTest(?x)					:- ?x[?attribute hasValue ?value] and rif#add-dayTimeDuration-to-time(xsd#time(20, 33, 23.4, 0, 0 ), xsd#dayTimeDuration( 10, 12, 3, 32 )).
+	   
+	   subtractYearMonthDurationFromDateTimeTest(?x)	:- ?x[?attribute hasValue ?value] and rif#subtract-yearMonthDuration-from-dateTime(xsd#yearMonthDuration(20, 3), xsd#dateTime(1986, 12, 31, 20, 33, 23.4, 0, 0 )).	
+	   subtractYearMonthDurationFromDateTest(?x)		:- ?x[?attribute hasValue ?value] and rif#subtract-yearMonthDuration-from-date(xsd#yearMonthDuration(20, 3), xsd#date( 1981, 12, 31 )).
+	   
+	   subtractDayTimeDurationFromDateTimeTest(?x)		:- ?x[?attribute hasValue ?value] and rif#subtract-dayTimeDuration-from-dateTime( xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 ), xsd#dayTimeDuration( 10, 12, 3, 32 )).
+	   subtractDayTimeDurationFromDateTest(?x)			:- ?x[?attribute hasValue ?value] and rif#subtract-dayTimeDuration-from-date(xsd#date( 1981, 12, 31 ), xsd#dayTimeDuration( 10, 12, 3, 32 ) ).
+	   subtractDayTimeDurationFromTimeTest(?x)			:- ?x[?attribute hasValue ?value] and rif#subtract-dayTimeDuration-from-time(xsd#time(20, 33, 23.4, 0, 0 ), xsd#dayTimeDuration( 10, 12, 3, 32 )).
+	   
+	   // rif dateTime boolean   
+	   dateTimeEqualTest(?x)							:- ?x[?attribute hasValue ?value] and rif#dateTime-equal( xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 ), xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 )).
+	   dateTimeLessThanTest(?x)							:- ?x[?attribute hasValue ?value] and rif#dateTime-less-than( xsd#dateTime( 1999, 12, 31, 20, 33, 23.4, 0, 0 ), xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 )).
+	   dateTimeGreaterThanTest(?x)						:- ?x[?attribute hasValue ?value] and rif#dateTime-greater-than( xsd#dateTime( 1988, 12, 31, 20, 33, 23.4, 0, 0 ), xsd#dateTime( 2001, 12, 31, 20, 33, 23.4, 0, 0 )).
+	    
+	   // rif date boolean
+	   dateEqualTest(?x)								:- ?x[?attribute hasValue ?value] and rif#date-equal( xsd#date( 1986, 12, 31), xsd#date( 1986, 12, 31)).
+	   dateLessThanTest(?x)								:- ?x[?attribute hasValue ?value] and rif#date-less-than( xsd#date( 1999, 12, 31), xsd#date( 1986, 12, 31)).
+	   dateGreaterThanTest(?x)							:- ?x[?attribute hasValue ?value] and rif#date-greater-than( xsd#date( 1988, 12, 3 ), xsd#date( 2001, 12, 31)).
+	
+	   // rif time boolean
+	   timeEqualTest(?x)								:- ?x[?attribute hasValue ?value] and rif#time-equal( xsd#time(20, 33, 23.4, 0, 0 ), xsd#time(20, 33, 23.4, 0, 0 )).
+	   timeLessThanTest(?x)								:- ?x[?attribute hasValue ?value] and rif#time-less-than( xsd#time(21, 33, 23.4, 0, 0 ), xsd#time(20, 33, 23.4, 0, 0 )).
+	   timeGreaterThanTest(?x)							:- ?x[?attribute hasValue ?value] and rif#time-greater-than(xsd#time(7, 33, 23.4, 0, 0 ), xsd#time(20, 33, 23.4, 0, 0 )).   
+	   
+	   // rif boolean functions
+	   durationEqualTest(?x)							:- ?x[?attribute hasValue ?value] and rif#duration-equal( xsd#duration( 1, 2, 3, 4, 5, 6.0 ),  xsd#duration( 1, 2, 3, 4, 5, 6.0 )).
+	   
+	   dayTimeDurationLessThanTest(?x)					:- ?x[?attribute hasValue ?value] and rif#dayTimeDuration-less-than( xsd#dayTimeDuration( 6, 2, 3, 4),  xsd#dayTimeDuration( 1, 2, 3, 4 )).
+	   dayTimeDurationGreaterThanTest(?x)				:- ?x[?attribute hasValue ?value] and rif#dayTimeDuration-greater-than( xsd#dayTimeDuration( 1, 2, 3, 4),  xsd#dayTimeDuration( 6, 2, 3, 4 )).
+	   
+	   yearMonthDurationLessThanTest(?x)				:- ?x[?attribute hasValue ?value] and rif#yearMonthDuration-less-than( xsd#yearMonthDuration(22, 3),  xsd#yearMonthDuration(20, 3)).
+	   yearMonthDurationGreaterThanTest(?x)				:- ?x[?attribute hasValue ?value] and rif#yearMonthDuration-greater-than( xsd#yearMonthDuration(20, 3),  xsd#yearMonthDuration(20, 5)).
+
+	   dateTimeNotEqualTest(?x)							:- ?x[?attribute hasValue ?value] and rif#dateTime-not-equal( xsd#dateTime( 1986, 12, 31, 20, 33, 0.4, 1, 0 ), xsd#dateTime( 186, 12, 31, 20, 33, 23.4, 0, 0 )).
+	   dateTimeLessThanOrEqualTest(?x)					:- ?x[?attribute hasValue ?value] and rif#dateTime-less-than-or-equal( xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 ), xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 )).
+	   dateTimeGreaterThanOrEqualTest(?x)				:- ?x[?attribute hasValue ?value] and rif#dateTime-greater-than-or-equal( xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 ), xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 )).
+
+	   dateNotEqualTest(?x)								:- ?x[?attribute hasValue ?value] and rif#date-equal( xsd#date( 1986, 12, 31), xsd#date( 1986, 12, 31)).
+	   dateLessThanOrEqualTest(?x)						:- ?x[?attribute hasValue ?value] and rif#date-equal( xsd#date( 1986, 12, 31), xsd#date( 1986, 12, 31)).
+	   dateGreaterThanOrEqualTest(?x)					:- ?x[?attribute hasValue ?value] and rif#date-equal( xsd#date( 1986, 12, 31), xsd#date( 1986, 12, 31)).
+	
+	   timeNotEqualTest(?x)								:- ?x[?attribute hasValue ?value] and rif#date-equal( xsd#time(20, 33, 23.4, 0, 0 ), xsd#time(20, 33, 23.4, 0, 0 )).
+	   timeLessThanOrEqualTest(?x)						:- ?x[?attribute hasValue ?value] and rif#date-equal(xsd#time(20, 33, 23.4, 0, 0 ),xsd#time(20, 33, 23.4, 0, 0 )).
+	   timeGreaterThanOrEqualTest(?x)					:- ?x[?attribute hasValue ?value] and rif#date-equal( xsd#time(20, 33, 23.4, 0, 0 ), xsd#time(20, 33, 23.4, 0, 0 )).   
+	   
+	   durationNotEqualTest(?x)							:- ?x[?attribute hasValue ?value] and rif#duration-not-equal( xsd#duration( 2, 2, 3, 4, 5, 6.0 ), xsd#duration( 2, 2, 3, 4, 5, 6.0 )).
+	   
+	   dayTimeDurationLessThanOrEqualTest(?x)			:- ?x[?attribute hasValue ?value] and rif#dayTimeDuration-less-than-or-equal(  xsd#dayTimeDuration( 6, 2, 3, 4),  xsd#dayTimeDuration( 6, 2, 3, 4)).
+	   dayTimeDurationGreaterThanOrEqualTest(?x)		:- ?x[?attribute hasValue ?value] and rif#dayTimeDuration-greater-than-or-equal(  xsd#dayTimeDuration( 6, 2, 3, 4),  xsd#dayTimeDuration( 6, 2, 3, 4)).
+	   
+	   yearMonthDurationLessThanOrEqualTest(?x)			:- ?x[?attribute hasValue ?value] and rif#yearMonthDuration-less-than-or-equal( xsd#yearMonthDuration(22, 3),  xsd#yearMonthDuration(22, 3)).
+	   yearMonthDurationGreaterThanOrEqualTest(?x)		:- ?x[?attribute hasValue ?value] and rif#yearMonthDuration-greater-than-or-equal( xsd#yearMonthDuration(22, 3),  xsd#yearMonthDuration(22, 3)).
+	   
+	   // rif xmlLiteral
+	   xmlLiteralEqualTest(?x)							:- ?x[?attribute hasValue ?value] and rif#XMLLiteral-equal( rdf#XMLLiteral("<tag>equal</tag>", ""), rdf#XMLLiteral("<tag>equal</tag>", "")).
+	   xmlLiteralNotEqualTest(?x)						:- ?x[?attribute hasValue ?value] and rif#XMLLiteral-not-equal( rdf#XMLLiteral("<tag>not equal</tag>", ""),  rdf#XMLLiteral("<tag>really not equal!</tag>", "")).
+
+	   // rif plain literal
+	   plainLiteralFromStringLangTest(?x)				:- ?x[?attribute hasValue ?value] and rif#PlainLiteral-from-string-lang(xsd#stringLang("nothing", "en"), rdf#XMLLiteral("<tag>nothing</tag>", "en") ).
+	   stringFromPlainLiteralTest(?x)					:- ?x[?attribute hasValue ?value] and rif#string-from-PlainLiteral(rdf#XMLLiteral("<tag>nothing </tag>", "en"), xsd#string("nothing") ).
+	   langFromPlainLiteralTest(?x)						:- ?x[?attribute hasValue ?value] and rif#lang-from-PlainLiteral(rdf#XMLLiteral("<tag>nothing</tag>", "en"), xsd#lang("en")).
+	   
+	   
+////////////////////
+//  WSML builtins
+///////////////////
+
+	   // Section [A]
+	   toDoubleTest(?x) 		:- ?x[?attribute hasValue ?value] and wsml#toDouble(?z, xsd#string("3")) and ?z = xsd#double("3.0").
+	   toStringTest(?x) 		:- ?x[?attribute hasValue ?value] and wsml#toString(?z, xsd#integer(123)) and ?z = xsd#string("123").
+	   toDecimalTest(?x) 		:- ?x[?attribute hasValue ?value] and wsml#toDecimal(?z, xsd#string("123456.78901")) and ?z = xsd#decimal(123456.78901).
+	   toBooleanTest(?x) 		:- ?x[?attribute hasValue ?value] and wsml#toBoolean( ?z, xsd#string("true")) and ?z = xsd#boolean("true").
+	   toIntegerTest(?x) 		:- ?x[?attribute hasValue ?value] and wsml#toInteger( ?z, xsd#string("1"))  and ?z = xsd#integer(1).
+	   toBase64BinaryTest(?x) 	:- ?x[?attribute hasValue ?value] and wsml#toBase64Binary(?z, xsd#string("10AB")) and ?z = xsd#base64Binary("10AB").
+	   toDateTest(?x) 			:- ?x[?attribute hasValue ?value] and wsml#toDate(?z, xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 ) ) and wsml#dateEqual(?z , xsd#date(1981,12,31) ).
+	   toDateTimeTest(?x) 		:- ?x[?attribute hasValue ?value] and wsml#toDateTime(?z, xsd#date(1981, 12, 31)) and ?z =  xsd#dateTime( 1981, 12, 31, 0, 0, 0.0 ).
+       toDurationTest(?x) 		:- ?x[?attribute hasValue ?value] and wsml#toDuration(?z, xsd#dayTimeDuration(5, 3, 2, 1.0) ) and ?z = xsd#duration(0, 0, 5, 3, 2, 1.0).
+       toFloatTest(?x) 			:- ?x[?attribute hasValue ?value] and wsml#toFloat(?z, xsd#string("3.4"))  and ?z = xsd#float("3.4").
+       toGDayTest(?x) 			:- ?x[?attribute hasValue ?value] and wsml#toGDay(?z, xsd#date(1981,12,31)) and ?z = xsd#gDay(31).
+       toGMonthTest(?x) 		:- ?x[?attribute hasValue ?value] and wsml#toGMonth(?z, xsd#date(1981,12,31)) and ?z = xsd#gMonth(12).
+       toGMonthDayTest(?x) 		:- ?x[?attribute hasValue ?value] and wsml#toGMonthDay(?z, xsd#date(1981,12,31)) and ?z = xsd#gMonthDay(12, 31).
+       toGYearTest(?x)	 		:- ?x[?attribute hasValue ?value] and wsml#toGYear(?z, xsd#date(1965,12,31)) and ?z = xsd#gYear(1965).
+       toGYearMonthTest(?x) 	:- ?x[?attribute hasValue ?value] and wsml#toGYearMonth(?z, xsd#date(1962,6,12)) and ?z = xsd#gYearMonth(1962, 6).
+       toHexBinaryTest(?x)	 	:- ?x[?attribute hasValue ?value] and wsml#toHexBinary(?z, xsd#string("FFFF")) and  ?z = xsd#hexBinary("FFFF").
+       toTimeText(?x) 			:- ?x[?attribute hasValue ?value] and wsml#toTime(?z, xsd#dateTime( 1981, 12, 31, 14, 31, 30.0 )) and ?z  = xsd#time(14, 31, 30.0, 0, 0).
+       toDayTimeDurationTest(?x) 	:- ?x[?attribute hasValue ?value] and wsml#toDayTimeDuration(?z, xsd#duration(0, 0, 5, 3, 2, 1.0)) and ?z = xsd#dayTimeDuration(5, 3, 2, 1.0).
+       toYearMonthDurationTest(?x) 	:- ?x[?attribute hasValue ?value] and wsml#toYearMonthDuration(?z, xsd#duration(1, 0, 0, 0, 0, 0.0)) and ?z = xsd#yearMonthDuration(1,0).
+       toTextTest(?x) 				:- ?x[?attribute hasValue ?value] and wsml#toText(?z, xsd#string("Text", "de")) and ?z = rdf#text("Text", "de").
+       toXMLLiteralTest(?x) 		:- ?x[?attribute hasValue ?value] and wsml#toXMLLiteral(?z, xsd#string("<tag>Text</tag>")) and ?z = rdf#XMLLiteral("<tag>Text</tag>", "").
+	   
+	   // Section [B]
+	   stringCompareTest(?x) 	:- ?x[?attribute hasValue ?value] and wsml#stringCompare(0, "InstanceA", "InstanceA").
+	   stringEqualTest(?x) 		:- ?x[?attribute hasValue ?value] and wsml#stringEqual("InstanceA", xsd#string("InstanceA")).
+	   stringConcatTest(?x) 	:- ?x[?attribute hasValue ?value] and wsml#stringConcat(?y, xsd#string("con"), xsd#string("cat")) and wsml#stringEqual(?y, xsd#string("concat")).  
+	   stringJoinTest(?x) 		:- ?x[?attribute hasValue ?value] and wsml#stringJoin( ?z, xsd#string("a"), xsd#string("b"), xsd#string(" ")) and wsml#stringEqual(?z, xsd#string("a b ")).
+	   stringSubstringTest(?x) 	:- ?x[?attribute hasValue ?value] and wsml#stringSubstring(?z, xsd#string("aaabbb"), xsd#integer(3)) and ?z = xsd#string("bbb"). 
+	   stringLengthTest(?x) 	:- ?x[?attribute hasValue ?value] and wsml#stringLength(?z, xsd#string("aaabbb")) and ?z = 6. 
+	   stringToUpperTest(?x) 	:- ?x[?attribute hasValue ?value] and wsml#stringToUpper(?z, xsd#string("this is a string")) and ?z = xsd#string("THIS IS A STRING").
+	   stringToLowerTest(?x) 	:- ?x[?attribute hasValue ?value] and wsml#stringToLower(?z, xsd#string("THIS IS A STRING")) and ?z = xsd#string("this is a string").
+	   
+	   // Section [C]
+	   stringUriEncodeTest(?x) 			:- ?x[?attribute hasValue ?value] and wsml#stringUriEncode(?z, xsd#string("")) and ?z = xsd#string(""). 
+	   stringIriToUriTest(?x) 			:- ?x[?attribute hasValue ?value] and wsml#stringIriToUri(?z, xsd#string("")) and ?z = xsd#string(""). 
+	   stringEscapeHtmlUriTest(?x) 		:- ?x[?attribute hasValue ?value] and wsml#stringEscapeHtmlUri(?z, xsd#string("")) and ?z = xsd#string(""). 
+	   stringSubstringBeforeTest(?x) 	:- ?x[?attribute hasValue ?value] and wsml#stringSubstringBefore(?z, xsd#string("a long string for testing"), xsd#string("long")) and ?z = xsd#string("a "). 
+	   stringSubstringAfterTest(?x) 	:- ?x[?attribute hasValue ?value] and wsml#stringSubstringAfter(?z, xsd#string("a long string for testing"), xsd#string("long")) and ?z = xsd#string(" string for testing"). 
+	   stringReplaceTest(?x) 			:- ?x[?attribute hasValue ?value] and wsml#stringReplace(?z, xsd#string("a long string for testing"), xsd#string("long"), xsd#string("short")) and ?z = xsd#string("a short string for testing"). 
+	   stringContainsTest(?x) 			:- ?x[?attribute hasValue ?value] and wsml#stringContains(xsd#string("a long string for testing"), xsd#string("long")).
+	   stringStartsWithTest(?x) 		:- ?x[?attribute hasValue ?value] and wsml#stringStartsWith(xsd#string("a long string for testing"), xsd#string("a")).
+	   stringEndsWithTest(?x) 			:- ?x[?attribute hasValue ?value] and wsml#stringEndsWith(xsd#string("a long string for testing"), xsd#string("testing")).
+	   stringMatchesTest(?x) 			:- ?x[?attribute hasValue ?value] and wsml#stringMatches(xsd#string("a long string for testing"), xsd#string("long")).
+	   
+	   // Section [D]
+	   yearPartTest1(?x) 	:- ?x[?attribute hasValue ?value] and wsml#yearPart(?z, xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )) and ?z = 1981. 
+	   yearPartTest2(?x) 	:- ?x[?attribute hasValue ?value] and wsml#yearPart(?z, xsd#date(1981, 12, 31)) and ?z = 1981. 
+	   yearPartTest3(?x) 	:- ?x[?attribute hasValue ?value] and wsml#yearPart(?z, xsd#duration(1, 2, 3, 4, 5, 6.0 )) and ?z = 1. 
+	   
+	   monthPartTest1(?x) 	:- ?x[?attribute hasValue ?value] and wsml#monthPart(?z, xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )) and ?z = 12. 
+	   monthPartTest2(?x) 	:- ?x[?attribute hasValue ?value] and wsml#monthPart(?z, xsd#date(1981, 12, 31)) and ?z = 12. 
+	   monthPartTest3(?x) 	:- ?x[?attribute hasValue ?value] and wsml#monthPart(?z, xsd#duration(1, 2, 3, 4, 5, 6.0 )) and ?z = 2. 
+	   
+	   dayPartTest1(?x) 	:- ?x[?attribute hasValue ?value] and wsml#dayPart(?z, xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )) and ?z = 31.	   
+	   dayPartTest2(?x) 	:- ?x[?attribute hasValue ?value] and wsml#dayPart(?z, xsd#date(1981, 12, 31))  and ?z = 31.	   
+	   dayPartTest3(?x) 	:- ?x[?attribute hasValue ?value] and wsml#dayPart(?z, xsd#duration(1, 2, 3, 4, 5, 6.0 ))  and ?z = 3.	   
+	   
+	   hourPartTest1(?x) 	:- ?x[?attribute hasValue ?value] and wsml#hourPart(?z, xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )) and ?z = 23.	   
+	   hourPartTest2(?x) 	:- ?x[?attribute hasValue ?value] and wsml#hourPart(?z, xsd#time(9, 46, 13.0)) and ?z = 9.	   
+	   hourPartTest3(?x) 	:- ?x[?attribute hasValue ?value] and wsml#hourPart(?z, xsd#duration(1, 2, 3, 4, 5, 6.0 )) and ?z = 4.	   
+	   
+	   minutePartTest1(?x) 	:- ?x[?attribute hasValue ?value] and wsml#minutePart(?z, xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )) and ?z = 59. 
+	   minutePartTest2(?x) 	:- ?x[?attribute hasValue ?value] and wsml#minutePart(?z, xsd#time(9, 46, 13.0)) and ?z = 46.
+	   minutePartTest3(?x) 	:- ?x[?attribute hasValue ?value] and wsml#minutePart(?z, xsd#duration(1, 2, 3, 4, 5, 6.0 )) and ?z = 5. 
+	   
+	   secondPartTest1(?x) 	:- ?x[?attribute hasValue ?value] and wsml#secondPart(?z, xsd#dateTime( 1981, 12, 31, 23, 59, 58.0 )) and ?z = 58.0. 
+	   secondPartTest2(?x) 	:- ?x[?attribute hasValue ?value] and wsml#secondPart(?z, xsd#time(9, 46, 13.0)) and ?z = 13.0. 
+	   secondPartTest3(?x) 	:- ?x[?attribute hasValue ?value] and wsml#secondPart(?z, xsd#duration(1, 2, 3, 4, 5, 6.0 )) and ?z = 6.0. 
+	   
+	   timezonePartTest1(?x) :- ?x[?attribute hasValue ?value] and wsml#timezonePart(?z, xsd#dateTime( 1981, 12, 31, 23, 59, 58.0, 0, 0)) and ?z = xsd#dayTimeDuration(0, 0, 0, 0.0). 
+	   timezonePartTest2(?x) :- ?x[?attribute hasValue ?value] and wsml#timezonePart(?z, xsd#time(9, 46, 13.0)) and ?z = xsd#dayTimeDuration(0, 0, 0, 0.0). 
+	   timezonePartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#timezonePart(?z, xsd#date(1981, 12, 31))  and ?z = xsd#dayTimeDuration(0, 0, 0, 0.0). 
+	   
+	   // Section [E]
+	   textFromStringLangTest(?x) 	:- ?x[?attribute hasValue ?value] and wsml#textFromStringLang(?z, xsd#string("some string"), xsd#string("en")) and ?z = rdf#text("some string", "en").  
+	   textFromStringTest(?x) 		:- ?x[?attribute hasValue ?value] and wsml#textFromString(?text, xsd#string("abc")) and ?text = rdf#text("abc", "").  
+	   stringFromTextTest(?x) 		:- ?x[?attribute hasValue ?value] and wsml#stringFromText(?z, rdf#text("abc", "de")) and wsml#stringEqual(?z, xsd#string("abc")).  
+	   langFromTextTest(?x) 		:- ?x[?attribute hasValue ?value] and wsml#langFromText(?z, rdf#text("Rdf Text","en")) and wsml#stringEqual(?z, xsd#string("en")).
+	   textLengthTest(?x) 			:- ?x[?attribute hasValue ?value] and wsml#textLength(?length, rdf#text("Rdf Text", "en")) and ?length = 8.
+	   textCompareTest(?x) 			:- ?x[?attribute hasValue ?value] and wsml#textCompare(?z, rdf#text("Rdf Text", "en") , rdf#text("Rdf Text", "en")) and ?z = 0.
+	   
+	   
+	   
+

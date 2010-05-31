@@ -31,7 +31,6 @@ import java.util.Set;
 
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.Conjunction;
-import org.omwg.logicalexpression.Constants;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.Molecule;
 import org.omwg.logicalexpression.NegationAsFailure;
@@ -49,12 +48,13 @@ import org.omwg.ontology.SimpleDataType;
 import org.omwg.ontology.Type;
 import org.omwg.ontology.Value;
 import org.omwg.ontology.Variable;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.LEUtil;
+import org.wsmo.common.BuiltIn;
 import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.common.UnnumberedAnonymousID;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
@@ -92,9 +92,9 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
     private Map<LogicalExpression, String> axiomIDs;
 
-    public AxiomatizationNormalizer(WSMO4JManager wsmoManager) {
-        this.leFactory = wsmoManager.getLogicalExpressionFactory();
-        this.wsmoFactory = wsmoManager.getWSMOFactory();
+    public AxiomatizationNormalizer(FactoryContainer factory) {
+        this.leFactory = factory.getLogicalExpressionFactory();
+        this.wsmoFactory = factory.getWsmoFactory();
         this.axiomIDs = new HashMap<LogicalExpression, String>();
     }
 
@@ -192,30 +192,28 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 
         Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
 
-        // process range types:
-        for (Type type : attribute.listTypes()) {
-            // determine Id of range type:
-            Identifier typeID;
-            if (type instanceof Concept) {
-                typeID = ((Concept) type).getIdentifier();
-            }
-            else if (type instanceof SimpleDataType) {
-                typeID = ((SimpleDataType) type).getIRI();
-            }
-            else {
-                typeID = ((ComplexDataType) type).getIRI();
-            }
+		// process range types:
+		if (attribute.isConstraining()) {
+			for (Type type : attribute.listConstrainingTypes()) {
+				// determine Id of range type:
+				Identifier typeID = type.getIdentifier();
+				
+				// create an appropriate molecule per range type:
+				LogicalExpression ofTypeConstraint = leFactory.createAttributeConstraint(conceptID, attributeID, typeID);
+				resultExpressions.add(ofTypeConstraint);
+				proclaimAxiomID(ofTypeConstraint, AnonymousIdUtils.getNewOfTypeIri());
+			}
+		}
 
-            // create an appropriate molecule per range type:
-            if (attribute.isConstraining()) {
-                LogicalExpression ofTypeConstraint = leFactory.createAttributeConstraint(conceptID, attributeID, typeID);
-                resultExpressions.add(ofTypeConstraint);
-                proclaimAxiomID(ofTypeConstraint, AnonymousIdUtils.getNewOfTypeIri());
-            }
-            else {
-                resultExpressions.add(leFactory.createAttributeInference(conceptID, attributeID, typeID));
-            }
-        }
+		if (attribute.isInferring()) {
+			for (Type type : attribute.listInferringTypes()) {
+				// determine Id of range type:
+				Identifier typeID = type.getIdentifier();
+
+				// create an appropriate molecule per range type:
+				resultExpressions.add(leFactory.createAttributeInference(conceptID, attributeID, typeID));
+			}
+		}
 
         // process attribute properties:
         if (attribute.isReflexive()) {
@@ -237,6 +235,12 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         }
         if (attribute.getMaxCardinality() < Integer.MAX_VALUE) {
             resultExpressions.add(createMaxCardinalityConstraint(conceptID, attributeID, attribute.getMaxCardinality()));
+        }
+        
+        // process attribute hierarchy:
+        Identifier superAttributeID = attribute.getSubAttributeOf();
+        if (superAttributeID != null) {
+        	resultExpressions.add(createSubAttributeConstraints(conceptID, attributeID, superAttributeID));
         }
 
         return resultExpressions;
@@ -310,6 +314,20 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
         return inverseConstraints;
     }
 
+    protected LogicalExpression createSubAttributeConstraints(Identifier conceptID, Identifier subAttributeID, Identifier superAttributeID) {
+        // build required LE elements:
+        Variable xVariable = leFactory.createVariable("x");
+        Variable yVariable = leFactory.createVariable("y");
+        LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable, conceptID);
+        LogicalExpression valSubXY = leFactory.createAttributeValue(xVariable, subAttributeID, yVariable);
+        LogicalExpression valSuperXY = leFactory.createAttributeValue(xVariable, superAttributeID, yVariable);
+
+        // build implication : "..."
+        LogicalExpression subConjunction = leFactory.createConjunction(moX, valSubXY);
+
+        return leFactory.createImplication(subConjunction, valSuperXY);
+    }
+    	
     protected Collection<LogicalExpression> createMinCardinalityConstraints(Identifier conceptID, Identifier attributeID, int cardinality) {
         Collection<LogicalExpression> minCardConstraints = new ArrayList<LogicalExpression>(2);
 
@@ -330,7 +348,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 List<Term> args = new ArrayList<Term>(2);
                 args.add(yVariable[i]);
                 args.add(yVariable[j]);
-                inEqualities.add(leFactory.createAtom(wsmoFactory.createIRI(Constants.INEQUAL), args));
+                inEqualities.add(leFactory.createAtom(wsmoFactory.createIRI(BuiltIn.INEQUAL.getFullName()), args));
             }
         }
 
@@ -378,7 +396,7 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                 List<Term> args = new ArrayList<Term>(2);
                 args.add(yVariable[i]);
                 args.add(yVariable[j]);
-                inEqualities.add(leFactory.createAtom(wsmoFactory.createIRI(Constants.INEQUAL), args));
+                inEqualities.add(leFactory.createAtom(wsmoFactory.createIRI(BuiltIn.INEQUAL.getFullName()), args));
             }
         }
 
@@ -429,10 +447,10 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
                     typeID = ((Concept) type).getIdentifier();
                 }
                 else if (type instanceof SimpleDataType) {
-                    typeID = ((SimpleDataType) type).getIRI();
+                    typeID = ((SimpleDataType) type).getIdentifier();
                 }
                 else {
-                    typeID = ((ComplexDataType) type).getIRI();
+                    typeID = ((ComplexDataType) type).getIdentifier();
                 }
                 typeMemberships.add(leFactory.createMemberShipMolecule(terms.get(paramIndex), typeID));
             }

@@ -17,26 +17,29 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.RelationInstance;
 import org.omwg.ontology.Variable;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.common.exception.SynchronisationException;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 
 import performance.chart.IndexEntry;
+
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 public class TestPerformanceWithUseOfFeatures {
     // how often to repeat each query!
@@ -279,7 +282,7 @@ public class TestPerformanceWithUseOfFeatures {
         return runPerformanceTests(reasonerNames, ontologies, path);
     }
 
-    private IndexEntry runPerformanceTests(String[] reasonerNames, Ontology[] ontologies, String path) throws SynchronisationException, InvalidModelException, ParserException, InconsistencyException, IOException {
+    private IndexEntry runPerformanceTests(String[] reasonerNames, Ontology[] ontologies, String path) throws InvalidModelException, ParserException, InconsistencyException, IOException {
     	if (ontologies.length == 0){
     		return null;
     	}
@@ -371,7 +374,8 @@ public class TestPerformanceWithUseOfFeatures {
             return performanceresult;
         }
 
-        LogicalExpression query = new WSMO4JManager().getLogicalExpressionFactory().createLogicalExpression(theQuery, theOntology);
+        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
+        LogicalExpression query = leParser.parse(theQuery);
 
         log.print("Registering Ontology (in total) ");
         RegistrationThread registrationThread = new RegistrationThread(theOntology, reasoner, performanceresult, log);
@@ -380,7 +384,7 @@ public class TestPerformanceWithUseOfFeatures {
         waitUntilAlive(registrationThread);
         while (registrationThread.isAlive()) {
             if (counter > TIMELIMIT_REGISTRATION) {
-                log.print("stopping registration thread due to timeout");
+                log.print("Stopping registration thread due to timeout.");
                 registrationThread.stop();
                 addTimeOut(theReasonerName, "registration");
                 return performanceresult;
@@ -399,7 +403,7 @@ public class TestPerformanceWithUseOfFeatures {
             while (queryThread.isAlive()) {
                 if (counter > TIMELIMIT_QUERY) {
                     ok = false;
-                    log.println("stopping reasoning thread due to timeout");
+                    log.println("Stopping reasoning thread due to timeout.");
                     queryThread.stop();
                     addTimeOut(theReasonerName, theQuery);
                 }
@@ -413,7 +417,7 @@ public class TestPerformanceWithUseOfFeatures {
             log.println("(" + t2 + " ms)");
         }
 
-        log.print("Deregistering Ontology ");
+        log.print("Deregistering Ontology.");
         long t3_start = System.currentTimeMillis();
         reasoner.deRegister();
         long t3_end = System.currentTimeMillis();
@@ -460,7 +464,8 @@ public class TestPerformanceWithUseOfFeatures {
         return reasoner;
     }
 
-    Parser wsmlParser = Factory.createParser(null);
+    WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
+	Parser wsmlParser = new WsmlParser();
 
     private Ontology loadOntology(String file) {
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);

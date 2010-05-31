@@ -2,10 +2,14 @@ package abstractTests.lp;
 
 import helper.LPHelper;
 import helper.Results;
+
 import java.util.HashSet;
 import java.util.Set;
+
 import junit.framework.TestCase;
+
 import org.omwg.ontology.Ontology;
+
 import abstractTests.LP;
 
 public abstract class AbstractRelations4ImportsOntologyBase extends TestCase implements LP {

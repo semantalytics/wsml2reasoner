@@ -37,20 +37,7 @@ if( !file_exists( $filelocation ) ) {
     <!-- ###### Header ###### -->
 
     <div id="header">
-    
-    <!--  <a href="/wsml2reasoner/" style="text-decoration:none" class="headerTitle"><img src="/wsml2reasoner/images/wsmlThinker.png" alt="wsml-thinker" vspace="5" align="absmiddle" /> WSML2Reasoner</a> -->
-	<table width="100%">
-		<tr>
-			<td>
-				<a href="/wsml2reasoner/" style="text-decoration:none" class="headerTitle">
-				<!--<img src="/wsml2reasoner/images/wsmlThinker.png" alt="wsml-thinker" vspace="5" align="absmiddle" />-->
-				WSML2Reasoner</a>
-			</td>
-			<td>
-				<a href="http://www.soa4all.eu/"><img src="/wsml2reasoner/images/soa4all_very_small.jpg" alt="SOA4All" vspace="5" align="right" /></a>
-			</td>
-		</tr>
-	</table>     
+      <a href="/wsml2reasoner/" style="text-decoration:none" class="headerTitle"><img src="/wsml2reasoner/images/wsmlThinker.png" alt="wsml-thinker" vspace="5" align="absmiddle" /> WSML2Reasoner</a>
     </div>
 
     <!-- ###### Side Boxes ###### -->

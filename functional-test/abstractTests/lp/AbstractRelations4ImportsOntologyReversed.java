@@ -1,7 +1,9 @@
 package abstractTests.lp;
 
 import helper.OntologyHelper;
+
 import java.util.Set;
+
 import org.omwg.ontology.Ontology;
 
 public abstract class AbstractRelations4ImportsOntologyReversed extends AbstractRelations4ImportsOntologyBase

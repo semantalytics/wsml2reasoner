@@ -26,15 +26,20 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Set;
+
 import junit.framework.TestCase;
+
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.Ontology;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.DLReasoner;
-import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
+
 import abstractTests.DL;
+
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 public abstract class AbstractOntologyWithCycles extends TestCase implements DL {
 
@@ -50,7 +55,7 @@ public abstract class AbstractOntologyWithCycles extends TestCase implements DL 
 
         // assuming first topentity in file is an ontology  
 		
-        Parser parser = Factory.createParser(null);
+        Parser parser = new WsmlParser();
 
     	Ontology ontology = (Ontology)parser.parse(new InputStreamReader(is))[0]; 
         final String ns = ontology.getDefaultNamespace().getIRI().toString();
@@ -60,8 +65,8 @@ public abstract class AbstractOntologyWithCycles extends TestCase implements DL 
         // register ontology at the wsml reasoner
 		reasoner.registerOntology(ontology);
         
-		WSMO4JManager wsmoManager = new WSMO4JManager();
-        WsmoFactory wsmoFactory = wsmoManager.getWSMOFactory();
+		FactoryContainer factory = new WsmlFactoryContainer();
+        WsmoFactory wsmoFactory = factory.getWsmoFactory();
         
         // test getSubConcepts
 		Set<Concept> set = new HashSet<Concept>();

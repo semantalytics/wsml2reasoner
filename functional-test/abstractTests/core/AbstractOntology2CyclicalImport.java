@@ -26,7 +26,9 @@ import helper.CoreHelper;
 import helper.OntologyHelper;
 import helper.Results;
 import junit.framework.TestCase;
+
 import org.omwg.ontology.Ontology;
+
 import abstractTests.Core;
 
 public abstract class AbstractOntology2CyclicalImport extends TestCase implements Core {

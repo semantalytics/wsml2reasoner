@@ -23,6 +23,7 @@
 package concreteTests.irisStratified;
 
 import org.wsml.reasoner.api.LPReasoner;
+
 import abstractTests.lp.AbstractAttribute2ManyCardinalityConstraints;
 
 public class Attribute2ManyCardinalityConstraintsTest extends AbstractAttribute2ManyCardinalityConstraints {

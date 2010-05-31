@@ -24,7 +24,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
@@ -44,8 +46,7 @@ import org.wsml.reasoner.transformation.le.NormalizationRule;
 import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
 import org.wsml.reasoner.transformation.le.foldecomposition.FOLMoleculeDecompositionRules;
 import org.wsmo.common.Entity;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.wsml.ParserException;
 
 /**
@@ -60,26 +61,20 @@ public class FOLBasedWSMLReasoner implements FOLReasoner {
 
     protected FOLReasonerFacade builtInFacade = null;
 
-    protected WsmoFactory wsmoFactory;
+    protected FactoryContainer factory;
 
-    protected LogicalExpressionFactory leFactory;
-
-    protected WSMO4JManager wsmoManager;
-
-    public FOLBasedWSMLReasoner(WSMLReasonerFactory.BuiltInReasoner builtInType, WSMO4JManager wsmoManager, String uri) {
-        this.wsmoManager = wsmoManager;
+    public FOLBasedWSMLReasoner(WSMLReasonerFactory.BuiltInReasoner builtInType, FactoryContainer factory, String uri) {
+        this.factory = factory;
         switch (builtInType) {
         case TPTP:
-            builtInFacade = new TPTPFacade(wsmoManager, uri);
+            builtInFacade = new TPTPFacade(factory, uri);
             break;
         case SPASS:
-            builtInFacade = new SpassFacade(wsmoManager, uri);
+            builtInFacade = new SpassFacade(factory, uri);
             break;
         default:
             throw new UnsupportedOperationException("Reasoning with " + builtInType.toString() + " is not supported in FOL!");
         }
-        wsmoFactory = this.wsmoManager.getWSMOFactory();
-        leFactory = this.wsmoManager.getLogicalExpressionFactory();
     }
 
     /**
@@ -87,8 +82,8 @@ public class FOLBasedWSMLReasoner implements FOLReasoner {
      */
     public List<EntailmentType> checkEntailment(List<LogicalExpression> conjectures) {
 
-    	List<NormalizationRule> lst =(new FOLMoleculeDecompositionRules(wsmoManager)).getRules();
-    	LogicalExpressionNormalizer moleculeNormalizer = new OnePassReplacementNormalizer(lst, wsmoManager);
+    	List<NormalizationRule> lst = (new FOLMoleculeDecompositionRules(factory)).getRules();
+    	LogicalExpressionNormalizer moleculeNormalizer = new OnePassReplacementNormalizer(lst, factory);
 
         List<LogicalExpression> newconjectures = new ArrayList<LogicalExpression>();
         for (LogicalExpression le : conjectures) {
@@ -124,8 +119,9 @@ public class FOLBasedWSMLReasoner implements FOLReasoner {
         // not sure actually... TODO: CHECK ME!
         // should not be a consisteny violation anyway
         LogicalExpression le;
+        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
         try {
-            le = leFactory.createLogicalExpression("_\"foo:a\" or naf _\"foo:a\"");
+            le = leParser.parse("_\"foo:a\" or naf _\"foo:a\"");
         }
         catch (ParserException e) {
             throw new RuntimeException("should never happen!");
@@ -167,7 +163,7 @@ public class FOLBasedWSMLReasoner implements FOLReasoner {
 
     public void registerEntities(Set<Entity> entities) throws InconsistencyException {
         // Convert conceptual syntax to logical expressions
-        OntologyNormalizer normalizer = new AxiomatizationNormalizer(wsmoManager);
+        OntologyNormalizer normalizer = new AxiomatizationNormalizer(factory);
         entities = normalizer.normalizeEntities(entities);
 
         Set<Axiom> axioms = new HashSet<Axiom>();
@@ -177,7 +173,7 @@ public class FOLBasedWSMLReasoner implements FOLReasoner {
             }
         }
 
-        normalizer = new MoleculeNormalizer(wsmoManager);
+        normalizer = new MoleculeNormalizer(factory);
         axioms = normalizer.normalizeAxioms(axioms);
 
         // System.out.println("\n-------\n Ontology after Normalization:\n" +
@@ -227,7 +223,7 @@ public class FOLBasedWSMLReasoner implements FOLReasoner {
         Set<Variable> freeVars = lev.getFreeVariables(le);
         if (freeVars.isEmpty())
             return le;
-        return leFactory.createUniversalQuantification(freeVars, le);
+        return factory.getLogicalExpressionFactory().createUniversalQuantification(freeVars, le);
     }
 
     public void registerOntologyNoVerification(Ontology ontology) {

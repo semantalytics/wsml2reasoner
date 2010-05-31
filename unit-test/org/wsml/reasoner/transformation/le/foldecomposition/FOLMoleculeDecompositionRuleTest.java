@@ -22,12 +22,13 @@
  */
 package org.wsml.reasoner.transformation.le.foldecomposition;
 
-import org.omwg.logicalexpression.LogicalExpression;
-import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsml.reasoner.transformation.le.LETestHelper;
-import org.wsmo.wsml.ParserException;
-
 import junit.framework.TestCase;
+
+import org.omwg.logicalexpression.LogicalExpression;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
+import org.wsml.reasoner.transformation.le.LETestHelper;
+import org.wsmo.factory.FactoryContainer;
+import org.wsmo.wsml.ParserException;
 
 public class FOLMoleculeDecompositionRuleTest extends TestCase {
 	
@@ -40,8 +41,8 @@ public class FOLMoleculeDecompositionRuleTest extends TestCase {
     
     protected void setUp() throws Exception {
         super.setUp();
-        WSMO4JManager wsmoManager = new WSMO4JManager();
-        this.rule = new FOLMoleculeDecompositionRule(wsmoManager);
+        FactoryContainer factory = new WsmlFactoryContainer();
+        this.rule = new FOLMoleculeDecompositionRule(factory);
     }
     
     

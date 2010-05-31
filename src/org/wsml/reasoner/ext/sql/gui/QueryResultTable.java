@@ -7,7 +7,6 @@ import java.util.Set;
 import javax.swing.table.AbstractTableModel;
 
 import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.ext.sql.QueryUtil;
 

@@ -29,11 +29,11 @@ import org.omwg.logicalexpression.AttributeValueMolecule;
 import org.omwg.logicalexpression.CompoundMolecule;
 import org.omwg.logicalexpression.Constraint;
 import org.omwg.logicalexpression.LogicProgrammingRule;
+import org.omwg.logicalexpression.LogicalExpressionVisitor;
 import org.omwg.logicalexpression.MembershipMolecule;
 import org.omwg.logicalexpression.NegationAsFailure;
 import org.omwg.logicalexpression.Quantified;
 import org.omwg.logicalexpression.SubConceptMolecule;
-import org.omwg.logicalexpression.Visitor;
 import org.omwg.logicalexpression.terms.Term;
 import org.wsml.reasoner.builtin.tptp.TPTPSymbolMap;
 import org.wsml.reasoner.builtin.tptp.TPTPTermSerializer;
@@ -46,7 +46,7 @@ import org.wsmo.common.TopEntity;
  * @version $Revision: 1.1 $ $Date: 2007-08-10 09:44:49 $
  * @see org.omwg.logicalexpression.Visitor
  */
-public abstract class FOLAbstractSerializeVisitor implements Visitor {
+public abstract class FOLAbstractSerializeVisitor implements LogicalExpressionVisitor {
     protected Map<Term, Term> atoms2Rewrite = new HashMap<Term, Term>();
 
     protected Vector<String> stack;
@@ -147,7 +147,7 @@ public abstract class FOLAbstractSerializeVisitor implements Visitor {
         throw new RuntimeException("should not be here anymore!");
     }
 
-    public void visitAttributeContraintMolecule(AttributeConstraintMolecule expr) {
+    public void visitAttributeConstraintMolecule(AttributeConstraintMolecule expr) {
         throw new RuntimeException("should not be here anymore!");
     }
 

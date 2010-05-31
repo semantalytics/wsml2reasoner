@@ -32,7 +32,8 @@ public abstract class AbstractAttribute3InheritingImpliesType extends TestCase i
 
 	private static final String ONTOLOGY_FILE = "files/attribute3_inheriting_implies_type.wsml";
 	private static final String NS = "http://example.com/attribute3#";
-	private static final String WSML_STRING = "http://www.wsmo.org/wsml/wsml-syntax#string";
+//	private static final String WSML_STRING = "http://www.wsmo.org/wsml/wsml-syntax#string";
+	private static final String XSD_STRING = "http://www.w3.org/2001/XMLSchema#string";
 	
 	public void testAttributeInheritance() throws Exception {
 
@@ -42,11 +43,11 @@ public abstract class AbstractAttribute3InheritingImpliesType extends TestCase i
 		{
 			for( int a = i; a >= 1; --a )
 			{
-				r.addBinding( Results.iri( NS + "c" + i ), Results.iri( NS + "a" + a ), Results.iri( WSML_STRING ) );
+				r.addBinding( Results.iri( NS + "c" + i ), Results.iri( NS + "a" + a ), Results.iri( XSD_STRING ) );
 			}
 		}
 
-//		System.out.println( OntologyHelper.toString( LPHelper.executeQuery(OntologyHelper.loadOntology(ONTOLOGY_FILE), "?i[?attr impliesType ?type]", getLPReasoner()) ) );
+//		System.out.println( OntologyHelper.toString( LPHelper.executeQuery(OntologyHelper.loadOntology(ONTOLOGY_FILE), "?concept[?attribute impliesType ?type]", getLPReasoner()) ) );
 		LPHelper.executeQueryAndCheckResults(OntologyHelper.loadOntology(ONTOLOGY_FILE), "?concept[?attribute impliesType ?type]", r.get(), getLPReasoner());
 		
 	}

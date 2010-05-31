@@ -24,7 +24,8 @@ package org.wsml.reasoner.transformation.le.moleculedecomposition;
 
 import junit.framework.TestCase;
 
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.wsml.ParserException;
 
 public class MoleculeDecompositionRulesTest extends TestCase {
@@ -37,7 +38,7 @@ public class MoleculeDecompositionRulesTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		WSMO4JManager wsmoManager = new WSMO4JManager();
+		FactoryContainer wsmoManager = new WsmlFactoryContainer();
 		this.rules = new MoleculeDecompositionRules(wsmoManager);
 	}
 

@@ -24,7 +24,10 @@ import java.util.Set;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Concept;
+import org.omwg.ontology.DataType;
+import org.omwg.ontology.DataValue;
 import org.omwg.ontology.Instance;
+import org.omwg.ontology.Type;
 import org.wsml.reasoner.api.exception.InternalReasonerException;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
@@ -39,7 +42,14 @@ public interface DLReasoner extends WSMLReasoner {
 
     public boolean isSatisfiable();
     
-//    boolean isEntails( LogicalExpression expression );
+	/**
+	 * This method does satisifiability testing on the given logical expression 
+	 * that must identify a (possible) set of instances.
+	 * The Logical Expression must not be a rule or contain implications.
+	 * 
+	 * @return true if the given expression is consistent, false otherwise.
+	 */
+    boolean isEntailed( LogicalExpression expression );
 
 	/**
 	 * This method does a "CONCEPT SATIFIABLITY TEST" on the given logical expression 
@@ -49,9 +59,6 @@ public interface DLReasoner extends WSMLReasoner {
 	 * - Atom<br />
 	 * - MembershipMolecule<br />
 	 * - Conjunction<br />
-	 * - Disjunction<br />
-	 * - Negation<br />
-	 * - UniversalQuantification<br />
 	 * - ExistentialQuantification<br />
 	 * <br /> 
 	 * and contain exactly one free variable (that represents the instances).
@@ -240,12 +247,12 @@ public interface DLReasoner extends WSMLReasoner {
     /**
      * @return a set containing the ranges of the given infering attribute
      */
-    public Set<IRI> getRangesOfInferingAttribute(Identifier attributeId);
+    public Set<Type> getRangesOfInferingAttribute(Identifier attributeId);
 
     /**
      * @return a set containing the ranges of the given constraint attribute
      */
-    public Set<IRI> getRangesOfConstraintAttribute(Identifier attributeId);
+    public Set<DataType> getRangesOfConstraintAttribute(Identifier attributeId);
 
     /**
      * @return a map containing all infering attributes of a specified instance
@@ -257,7 +264,7 @@ public interface DLReasoner extends WSMLReasoner {
      * @return a map containing all constraint attributes of a specified
      *         instance and for each a set containing all its values
      */
-    public Map<IRI, Set<Term>> getConstraintAttributeValues(Instance instance);
+    public Map<IRI, Set<DataValue>> getConstraintAttributeValues(Instance instance);
 
     /**
      * @return a map containing all instances who have values for a specified
@@ -269,17 +276,17 @@ public interface DLReasoner extends WSMLReasoner {
      * @return a map containing all instances who have values for a specified
      *         constraint attribute and for each a set containing all its values
      */
-    public Map<Instance, Set<Term>> getConstraintAttributeInstances(Identifier attributeId);
+    public Map<Instance, Set<DataValue>> getConstraintAttributeInstances(Identifier attributeId);
 
     /**
      * @return set containing instance values of the given instance and infering
      *         attribute
      */
-    public Set<IRI> getInferingAttributeValues(Instance subject, Identifier attributeId);
+    public Set<Term> getInferingAttributeValues(Instance subject, Identifier attributeId);
 
     /**
      * @return set containing data values of the given instance and constraint
      *         attribute
      */
-    public Set<String> getConstraintAttributeValues(Instance subject, Identifier attributeId);
+    public Set<DataValue> getConstraintAttributeValues(Instance subject, Identifier attributeId);
 }

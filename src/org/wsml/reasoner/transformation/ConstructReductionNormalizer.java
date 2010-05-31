@@ -26,7 +26,6 @@ import java.util.Set;
 
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.LogicalExpressionNormalizer;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
 import org.wsml.reasoner.transformation.le.OnePassReplacementNormalizer;
@@ -35,6 +34,7 @@ import org.wsml.reasoner.transformation.le.implicationreduction.ImplicationReduc
 import org.wsml.reasoner.transformation.le.moleculedecomposition.MoleculeDecompositionRules;
 import org.wsml.reasoner.transformation.le.negationpush.NegationPushRules;
 import org.wsmo.common.Entity;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.WsmoFactory;
 
 public class ConstructReductionNormalizer implements OntologyNormalizer {
@@ -44,17 +44,17 @@ public class ConstructReductionNormalizer implements OntologyNormalizer {
 
     protected AnonymousIdTranslator anonymousIdTranslator;
 
-    public ConstructReductionNormalizer(WSMO4JManager wsmoManager) {
+    public ConstructReductionNormalizer(FactoryContainer factory) {
         List<NormalizationRule> preOrderRules = new ArrayList<NormalizationRule>();
-        preOrderRules.addAll(new ImplicationReductionRules(wsmoManager).getRules());
-        preOrderRules.addAll(new NegationPushRules(wsmoManager).getRules());
+        preOrderRules.addAll(new ImplicationReductionRules(factory).getRules());
+        preOrderRules.addAll(new NegationPushRules(factory).getRules());
         
         List<NormalizationRule> postOrderRules = new ArrayList<NormalizationRule>();
-        postOrderRules.addAll(new MoleculeDecompositionRules(wsmoManager).getRules());
-        postOrderRules.addAll(new DisjunctionPullRules(wsmoManager).getRules());
+        postOrderRules.addAll(new MoleculeDecompositionRules(factory).getRules());
+        postOrderRules.addAll(new DisjunctionPullRules(factory).getRules());
         
-        leNormalizer = new OnePassReplacementNormalizer(preOrderRules, postOrderRules, wsmoManager);
-        wsmoFactory = wsmoManager.getWSMOFactory();
+        leNormalizer = new OnePassReplacementNormalizer(preOrderRules, postOrderRules, factory);
+        wsmoFactory = factory.getWsmoFactory();
         anonymousIdTranslator = new AnonymousIdTranslator(wsmoFactory);
     }
 

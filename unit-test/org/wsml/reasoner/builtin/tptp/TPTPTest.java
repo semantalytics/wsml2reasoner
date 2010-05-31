@@ -4,14 +4,16 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import junit.framework.TestCase;
+
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.ontology.Ontology;
-import org.wsml.reasoner.impl.WSMO4JManager;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsmo.common.IRI;
-import org.wsmo.factory.Factory;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
+import org.wsmo.factory.FactoryContainer;
 
 
 /**
@@ -20,24 +22,24 @@ import org.wsmo.factory.WsmoFactory;
  */
 public class TPTPTest extends TestCase{
     
-    private LogicalExpressionFactory leF;
+    private FactoryContainer wsmoManager;
     private Ontology nsContainer;
     private TPTPFacade tptp;
+	private LogicalExpressionParser leParser;
     
     protected void setUp() throws Exception {
-        leF = Factory.createLogicalExpressionFactory(null);
-        WsmoFactory wsmoF = Factory.createWsmoFactory(null);
+    	wsmoManager = new WsmlFactoryContainer();
         
-        tptp = new TPTPFacade(new WSMO4JManager(),"urn:foo");
+        tptp = new TPTPFacade(new WsmlFactoryContainer(),"urn:foo");
 
-        IRI i = wsmoF.createIRI("foo:bar#");
-        nsContainer = wsmoF.createOntology(i);
+        IRI i = wsmoManager.getWsmoFactory().createIRI("foo:bar#");
+        nsContainer = wsmoManager.getWsmoFactory().createOntology(i);
         nsContainer.setDefaultNamespace(i);
+        leParser = new WsmlLogicalExpressionParser(nsContainer);
     }
 
     public void testatom() throws Exception{
-        LogicalExpression le = leF.createLogicalExpression(
-            "subConceptof(_\"urn:/Foo\",  Animal)",nsContainer);
+		LogicalExpression le = leParser.parse("subConceptof(_\"urn:/Foo\",  Animal)");
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
         tptp.register(set);
@@ -51,10 +53,10 @@ public class TPTPTest extends TestCase{
     }
 
     public void testVars() throws Exception{
-        LogicalExpression le = leF.createLogicalExpression(
-            "forall {?x,?y,?z} \n " +
+        LogicalExpression le = leParser.parse(
+            "forall ?x,?y,?z \n " +
             " (subConceptof(?x,?y) and subConceptof(?y,?z) \n" +
-            " implies subConceptof(?x,?z)) ",nsContainer);
+            " implies subConceptof(?x,?z)) ");
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
         tptp.register(set);
@@ -69,8 +71,8 @@ public class TPTPTest extends TestCase{
     }
     
     public void testConjunctionDisjunction() throws Exception{
-        LogicalExpression le = leF.createLogicalExpression(
-            "a and b or c ",nsContainer);
+        LogicalExpression le = leParser.parse(
+            "a and b or c ");
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
         tptp.register( set);
@@ -84,8 +86,8 @@ public class TPTPTest extends TestCase{
     }
     
     public void testNegation() throws Exception{
-        LogicalExpression le = leF.createLogicalExpression(
-            "a or neg a",nsContainer);
+        LogicalExpression le = leParser.parse(
+            "a or neg a");
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
         tptp.register( set);
@@ -100,8 +102,8 @@ public class TPTPTest extends TestCase{
     }
 
     public void testFsymbols() throws Exception{
-        LogicalExpression le = leF.createLogicalExpression(
-            "a(f(b(c,d,e)))",nsContainer);
+        LogicalExpression le = leParser.parse(
+            "a(f(b(c,d,e)))");
         Set<LogicalExpression> set = new HashSet<LogicalExpression>();
         set.add(le);
         tptp.register( set);

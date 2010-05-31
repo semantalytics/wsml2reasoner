@@ -8,22 +8,24 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.serializer.wsml.VisitorSerializeWSMLTerms;
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
+import org.deri.wsmo4j.io.serializer.wsml.SerializeWSMLTermsVisitor;
+import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.TopEntity;
 import org.wsmo.common.exception.InvalidModelException;
-import org.wsmo.factory.Factory;
-import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.wsml.Parser;
 import org.wsmo.wsml.ParserException;
 import org.wsmo.wsml.Serializer;
+
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 /**
  * This is a test class which runs a few queries to be used with the
@@ -34,11 +36,9 @@ import org.wsmo.wsml.Serializer;
  */
 public class NobelTest {
 	
-	private LogicalExpressionFactory leFactory = null;
+	private Parser wsmlParser = null;
 
-	private WSMO4JManager wsmoManager = null;
-
-	private Parser wsmlparser = null;
+	private LogicalExpressionParser leParser;
 
 	// Location of ontolgy
 	static String ontLoc = null;
@@ -166,9 +166,8 @@ public class NobelTest {
 	 * Sets up factories for creating WSML elements
 	 */
 	private void setUpFactories() {
-		wsmoManager = new WSMO4JManager();
-		leFactory = wsmoManager.getLogicalExpressionFactory();
-		wsmlparser = Factory.createParser(null);
+    	wsmlParser = new WsmlParser();
+    	leParser = new WsmlLogicalExpressionParser();
 	}
 
 	/**
@@ -184,7 +183,7 @@ public class NobelTest {
 		InputStream is = this.getClass().getClassLoader().getResourceAsStream(
 				ontologyFile);
 		try {
-			final TopEntity[] identifiable = wsmlparser
+			final TopEntity[] identifiable = wsmlParser
 					.parse(new InputStreamReader(is));
 			if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {
 				System.out.println("Ontology parsed");
@@ -208,8 +207,7 @@ public class NobelTest {
 	 */
 	private void printOntology(Ontology o) {
 		// Set up serializer
-		Serializer ontologySerializer = org.wsmo.factory.Factory
-				.createSerializer(null);
+		Serializer ontologySerializer = new WSMLSerializerImpl();
 		System.out.println("WSML Ontology:\n");
 		StringWriter sw = new StringWriter();
 		try {
@@ -250,8 +248,7 @@ public class NobelTest {
 	 */
 	private Set<Map<Variable, Term>> performQuery(LPReasoner reasoner,
 			Ontology o, String queryString) throws Exception {
-		LogicalExpression query = this.leFactory.createLogicalExpression(
-				queryString, o);
+		LogicalExpression query = leParser.parse(queryString);
 		// Executes query request
 		Set<Map<Variable, Term>> result = reasoner.executeQuery(query);
 
@@ -287,7 +284,7 @@ public class NobelTest {
 	 * @return String representation of the term.
 	 */
 	private String termToString(Term t, Ontology o) {
-		VisitorSerializeWSMLTerms v = new VisitorSerializeWSMLTerms(o);
+		SerializeWSMLTermsVisitor v = new SerializeWSMLTermsVisitor(o);
 		t.accept(v);
 		return v.getSerializedObject();
 	}

@@ -26,6 +26,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.deri.wsmo4j.logicalexpression.ConstantTransformer;
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.ConstructedTerm;
@@ -36,7 +38,7 @@ import org.omwg.ontology.Concept;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Type;
 import org.omwg.ontology.Variable;
-import org.omwg.ontology.WsmlDataType;
+import org.sti2.wsmo4j.merger.Merger;
 import org.wsml.reasoner.ConjunctiveQuery;
 import org.wsml.reasoner.DatalogException;
 import org.wsml.reasoner.DatalogReasonerFacade;
@@ -75,9 +77,12 @@ import org.wsml.reasoner.transformation.le.moleculedecomposition.MoleculeDecompo
 import org.wsmo.common.Entity;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
+import org.wsmo.common.ImportedOntologiesBlock;
 import org.wsmo.common.exception.InvalidModelException;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
+
 import com.ontotext.wsmo4j.ontology.AttributeImpl;
 
 /**
@@ -98,7 +103,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
 
     protected WsmoFactory wsmoFactory;
     protected LogicalExpressionFactory leFactory;
-    protected WSMO4JManager wsmoManager;
+    protected FactoryContainer factory;
 
     private int allowImports = 0;
     private boolean disableConsitencyCheck = false;
@@ -114,8 +119,8 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
      * 
      * @param builtInType
      *            the underlying reasoner to use
-     * @param wsmoManager
-     *            the wsmo4j manager to use
+     * @param factory
+     *            the wsmo4j factory to use
      * @param config
      *            additional configuration for the facade
      * @throws IllegalArgumentException
@@ -123,49 +128,49 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
      * @throws IllegalArgumentException
      *             if the wsml4j manager is <code>null</code>
      */
-    public DatalogBasedWSMLReasoner(final BuiltInReasoner builtInType, final WSMO4JManager wsmoManager, final Map<String, Object> config) {
+    public DatalogBasedWSMLReasoner(final BuiltInReasoner builtInType, final FactoryContainer factory, final Map<String, Object> config) {
         if (builtInType == null) {
             throw new IllegalArgumentException("The facade type must not be null");
         }
-        if (wsmoManager == null) {
+        if (factory == null) {
             throw new IllegalArgumentException("The WSMO4JManager must not be null");
         }
 
-        this.builtInFacade = createFacade(builtInType, wsmoManager, config);
-        this.wsmoManager = wsmoManager;
-        this.wsmoFactory = wsmoManager.getWSMOFactory();
-        this.leFactory = wsmoManager.getLogicalExpressionFactory();
+        this.builtInFacade = createFacade(builtInType, factory, config);
+        this.factory = factory;
+        this.wsmoFactory = factory.getWsmoFactory();
+        this.leFactory = factory.getLogicalExpressionFactory();
     }
 
     /**
      * Instantiates a new facade using reflection. The facade must have a
      * constructor taking a <code>WSMO4JManager<code>.
      * @param className the class of the facade
-     * @param wsmoManager the manager to pass to the constructor
+     * @param factory the wsmo4j factory to pass to the constructor
      * @param config the additional configuration for the facade
      * @return the newly instantiated facade
      * @throws InternalReasonerException if something went wrong while 
      * instantiating the reasoner
      */
-    private DatalogReasonerFacade createFacade(BuiltInReasoner builtInType, WSMO4JManager wsmoManager, Map<String, Object> config) throws InternalReasonerException {
-        assert wsmoManager != null : "The manager must not be null";
+    private DatalogReasonerFacade createFacade(BuiltInReasoner builtInType, FactoryContainer factory, Map<String, Object> config) throws InternalReasonerException {
+        assert factory != null : "The manager must not be null";
 
         switch( builtInType )
         {
         case KAON2:
-        	return new Kaon2LPFacade( wsmoManager, config );
+        	return new Kaon2LPFacade( factory, config );
         case MINS:
-        	return new MinsWellFoundedFacade( wsmoManager, config );
+        	return new MinsWellFoundedFacade( factory, config );
 //      case MINS_NAIVE:
 //        	return new MinsWellNaive( wsmoManager, config );
         case XSB:
-        	return new XSBFacade( wsmoManager, config );
+        	return new XSBFacade( factory, config );
         case IRIS_STRATIFIED:
-        	return new IrisStratifiedFacade( wsmoManager, config );
+        	return new IrisStratifiedFacade( factory, config );
         case IRIS_WELL_FOUNDED:
-        	return new IrisWellFoundedFacade( wsmoManager, config );
+        	return new IrisWellFoundedFacade( factory, config );
         case IRIS_SLDNF:
-        	return new IrisSLDNFFacade( wsmoManager, config );
+        	return new IrisSLDNFFacade( factory, config );
         }
         
         throw new InternalReasonerException( "An built-in reasoner could not be instantiated. " +
@@ -202,7 +207,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         Set<Entity> entities = theEntities;
 
         // Convert conceptual syntax to logical expressions
-        OntologyNormalizer normalizer = new AxiomatizationNormalizer(wsmoManager);
+        OntologyNormalizer normalizer = new AxiomatizationNormalizer(factory);
         entities = normalizer.normalizeEntities(entities);
 
         Set<Axiom> axioms = new HashSet<Axiom>();
@@ -213,22 +218,22 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         }
 
         // Convert constraints to support debugging
-        normalizer = new ConstraintReplacementNormalizer(wsmoManager);
+        normalizer = new ConstraintReplacementNormalizer(factory);
         axioms = normalizer.normalizeAxioms(axioms);
 
         // Simplify axioms
-        normalizer = new ConstructReductionNormalizer(wsmoManager);
+        normalizer = new ConstructReductionNormalizer(factory);
         axioms = normalizer.normalizeAxioms(axioms);
         
         // Apply InverseImplicationTransformation (wsml-rule)
-        normalizer = new InverseImplicationNormalizer(wsmoManager);
+        normalizer = new InverseImplicationNormalizer(factory);
         axioms = normalizer.normalizeAxioms(axioms);
         
         // Apply Lloyd-Topor rules to get Datalog-compatible LEs
-        normalizer = new LloydToporNormalizer(wsmoManager);
+        normalizer = new LloydToporNormalizer(factory);
         axioms = normalizer.normalizeAxioms(axioms);
         
-        org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(wsmoManager);
+        org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(factory);
         Set<org.omwg.logicalexpression.LogicalExpression> lExprs = new LinkedHashSet<org.omwg.logicalexpression.LogicalExpression>();
         for (Axiom a : axioms) {
             lExprs.addAll(a.listDefinitions());
@@ -246,58 +251,58 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
      * Helper method for handleAttributeInheritance()
      * See the note before that method.
      */
-    private void inheritAttributesToSubConcepts( Concept concept )
-    {
-        Set<Attribute> attributes = concept.listAttributes();
-        
-        for (Concept subConcept : concept.listSubConcepts()) {
-            for (Attribute a : attributes) {
-                try {
-                	Attribute attribute = subConcept.createAttribute(a.getIdentifier());
-                    // process range types:
-                    for (Type type : a.listTypes()) {
-                        attribute.addType(type);
-                        // create an appropriate molecule per range
-                        // type:
-                        if (a.isConstraining()) {
-                            attribute.setConstraining(true);
-                        }
-                    }
-
-                    // process attribute properties:
-                    if (a.isReflexive()) {
-                        attribute.setReflexive(true);
-                    }
-                    if (a.isSymmetric()) {
-                        attribute.setSymmetric(true);
-                    }
-                    if (a.isTransitive()) {
-                        attribute.setTransitive(true);
-                    }
-                    Identifier inverseAttribute = a.getInverseOf();
-                    if (inverseAttribute != null) {
-                        attribute.setInverseOf(inverseAttribute);
-                    }
-
-                    // process cardinality constraints:
-                    if (a.getMinCardinality() > 0) {
-                        attribute.setMinCardinality(a.getMinCardinality());
-                    }
-                    if (a.getMaxCardinality() < Integer.MAX_VALUE) {
-                        attribute.setMaxCardinality(a.getMaxCardinality());
-                    }
-                }
-                catch (InvalidModelException ex) {
-                    throw new RuntimeException( "An error occurred while propogating attributes to sub-concepts", ex );
-                }
-            }
-        }
-
-        // Now recurse all the way down to concepts that don't have any sub-concepts
-        for (Concept subConcept : concept.listSubConcepts()) {
-        	inheritAttributesToSubConcepts( subConcept );
-        }
-    }
+//    private void inheritAttributesToSubConcepts( Concept concept )
+//    {
+//        Set<Attribute> attributes = concept.listAttributes();
+//        
+//        for (Concept subConcept : concept.listSubConcepts()) {
+//            for (Attribute a : attributes) {
+//                try {
+//                	Attribute attribute = subConcept.createAttribute(a.getIdentifier());
+//                    // process range types:
+//                    for (Type type : a.listTypes()) {
+//                        attribute.addType(type);
+//                        // create an appropriate molecule per range
+//                        // type:
+//                        if (a.isConstraining()) {
+//                            attribute.setConstraining(true);
+//                        }
+//                    }
+//
+//                    // process attribute properties:
+//                    if (a.isReflexive()) {
+//                        attribute.setReflexive(true);
+//                    }
+//                    if (a.isSymmetric()) {
+//                        attribute.setSymmetric(true);
+//                    }
+//                    if (a.isTransitive()) {
+//                        attribute.setTransitive(true);
+//                    }
+//                    Identifier inverseAttribute = a.getInverseOf();
+//                    if (inverseAttribute != null) {
+//                        attribute.setInverseOf(inverseAttribute);
+//                    }
+//
+//                    // process cardinality constraints:
+//                    if (a.getMinCardinality() > 0) {
+//                        attribute.setMinCardinality(a.getMinCardinality());
+//                    }
+//                    if (a.getMaxCardinality() < Integer.MAX_VALUE) {
+//                        attribute.setMaxCardinality(a.getMaxCardinality());
+//                    }
+//                }
+//                catch (InvalidModelException ex) {
+//                    throw new RuntimeException( "An error occurred while propogating attributes to sub-concepts", ex );
+//                }
+//            }
+//        }
+//
+//        // Now recurse all the way down to concepts that don't have any sub-concepts
+//        for (Concept subConcept : concept.listSubConcepts()) {
+//        	inheritAttributesToSubConcepts( subConcept );
+//        }
+//    }
     /*
      * Add all attributes of superconcepts to the subconcepts
      * This is a BAD way to do it! 
@@ -305,20 +310,20 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
      * but in case these new rules cause some problems this code will be left
      * for a little while.
      */
-    private Set<Entity> handleAttributeInheritance(Set<Entity> theEntities) {
-        Set<Entity> result = new HashSet<Entity>();
-
-        for (Entity e : theEntities) {
-            if (e instanceof Concept) {
-                Concept concept = (Concept) e;
-                // If this is a base concept, then push attributes
-                if( concept.listSuperConcepts().size() == 0 )
-                	inheritAttributesToSubConcepts( concept );
-            }
-            result.add(e);
-        }
-        return result;
-    }
+//    private Set<Entity> handleAttributeInheritance(Set<Entity> theEntities) {
+//        Set<Entity> result = new HashSet<Entity>();
+//
+//        for (Entity e : theEntities) {
+//            if (e instanceof Concept) {
+//                Concept concept = (Concept) e;
+//                // If this is a base concept, then push attributes
+//                if( concept.listSuperConcepts().size() == 0 )
+//                	inheritAttributesToSubConcepts( concept );
+//            }
+//            result.add(e);
+//        }
+//        return result;
+//    }
 
     public void deRegister() {
         try {
@@ -382,8 +387,10 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         if (allowImports == 0) {
             ontologies = getAllOntologies(ontologies);
         }
-
+        
         Set<Entity> entities = new HashSet<Entity>();
+        
+        /* FIXME am,dw: error-prone since entities may be lost 
         for (Ontology o : ontologies) {
             entities.addAll(o.listConcepts());
             entities.addAll(o.listInstances());
@@ -391,6 +398,25 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
             entities.addAll(o.listRelationInstances());
             entities.addAll(o.listAxioms());
         }
+        */
+        
+        IRI newIdentifier = wsmoFactory.createIRI("urn:org.wsml.reasoner.impl.DatalogBasedWSMLReasoner:registeredOntology");
+
+        Ontology mergedOntology;
+		try {
+			mergedOntology = Merger.merge(newIdentifier , ontologies);
+		} catch (IllegalArgumentException e) {
+			throw new InconsistencyException(e.getLocalizedMessage());
+		} catch (InvalidModelException e) {
+			throw new InconsistencyException(e.getLocalizedMessage());
+		}
+
+		entities.addAll(mergedOntology.listConcepts());
+        entities.addAll(mergedOntology.listInstances());
+        entities.addAll(mergedOntology.listRelations());
+        entities.addAll(mergedOntology.listRelationInstances());
+        entities.addAll(mergedOntology.listAxioms());
+        
         registerEntities(entities);
     }
 
@@ -410,8 +436,8 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         }
     }
 
-    private void addAttributeOfTypeViolations(Set<ConsistencyViolation> errors) throws InvalidModelException {
-        // ATTR_OFTYPE(instance,value,concept, attribute,violated_type)
+	private void addAttributeOfTypeViolations(Set<ConsistencyViolation> errors) throws InvalidModelException {
+        // ATTR_OFTYPE(instance, value, concept, attribute, violated_type)
         Variable i = leFactory.createVariable("i");
         Variable v = leFactory.createVariable("v");
         Variable c = leFactory.createVariable("c");
@@ -431,36 +457,33 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         Set<Map<Variable, Term>> violations = executeQuery(atom);
         for (Map<Variable, Term> violation : violations) {
             Term rawValue = violation.get(v);
-            Concept concept = wsmoFactory.getConcept((IRI) violation.get(c));
+            Concept concept = wsmoFactory.createConcept((IRI) violation.get(c));
             
             Attribute attribute = findAttributeForError((IRI) violation.get(a), concept);
             Type type;
             IRI typeId = (IRI) violation.get(t);
-            if (WsmlDataType.WSML_STRING.equals(typeId.toString()) || WsmlDataType.WSML_INTEGER.equals(typeId.toString()) || WsmlDataType.WSML_DECIMAL.equals(typeId.toString()) || WsmlDataType.WSML_BOOLEAN.equals(typeId.toString())){
-                type = wsmoManager.getDataFactory().createWsmlDataType(typeId);
+            ConstantTransformer constTransformer = ConstantTransformer.getInstance();
+            if (constTransformer.isDataType(typeId.toString())) {
+            	type = factory.getXmlDataFactory().createDataType(typeId);
             }
             else{
-                type = wsmoFactory.getConcept(typeId);
+                type = wsmoFactory.createConcept(typeId);
+            }    
+            Term instanceTerm = violation.get(i);
+			if (instanceTerm instanceof Identifier) {
+                errors.add(new AttributeTypeViolation(wsmoFactory.createInstance((IRI) instanceTerm), rawValue, attribute, type));
             }
-
-            if (violation.get(i) instanceof Identifier) {
-                errors.add(new AttributeTypeViolation(wsmoFactory.getInstance((IRI) violation.get(i)), rawValue, attribute, type));
-            }
-            if (violation.get(i) instanceof ConstructedTerm) {
-                errors.add(new AttributeTypeViolation((ConstructedTerm) violation.get(i), rawValue, attribute, type));
+            if (instanceTerm instanceof ConstructedTerm) {
+                errors.add(new AttributeTypeViolation((ConstructedTerm) instanceTerm, rawValue, attribute, type));
             }
         }
 
     }
 
     private Attribute findAttributeForError(Identifier id, Concept concept) {
-        Attribute attribute = null;
-        Set <Attribute> attributes = concept.findAttributes(id);
-        if (attributes.size() == 0){
+        Attribute attribute = concept.findAttribute(id);
+        if (attribute == null){
         	attribute = new AttributeImpl(id, concept);
-        }
-        else{
-        	attribute = attributes.iterator().next();
         }
         return attribute;
     }
@@ -481,7 +504,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
 
         Set<Map<Variable, Term>> violations = executeQuery(atom);
         for (Map<Variable, Term> violation : violations) {
-            Concept concept = wsmoFactory.getConcept((Identifier) violation.get(c));
+            Concept concept = wsmoFactory.createConcept((Identifier) violation.get(c));
             Attribute attribute = findAttributeForError((Identifier) violation.get(a), concept);
             errors.add(new MinCardinalityViolation(violation.get(i), attribute, concept.getOntology()));
         }
@@ -503,7 +526,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
 
         Set<Map<Variable, Term>> violations = executeQuery(atom);
         for (Map<Variable, Term> violation : violations) {
-            Concept concept = wsmoFactory.getConcept((IRI) violation.get(c));
+            Concept concept = wsmoFactory.createConcept((IRI) violation.get(c));
             Attribute attribute = findAttributeForError((Identifier) violation.get(a), concept);
             errors.add(new MaxCardinalityViolation(violation.get(i), attribute, concept.getOntology()));
         }
@@ -529,7 +552,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
             else {
                 id = id.substring(0, id.indexOf(AnonymousIdUtils.NAMED_AXIOM_SUFFIX));
                 IRI iri = wsmoFactory.createIRI(id);
-                axiom = wsmoFactory.getAxiom(iri);
+                axiom = wsmoFactory.createAxiom(iri);
                 errors.add(new NamedUserConstraintViolation(axiom));
             }
         }
@@ -570,20 +593,23 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
     }
 
     protected Set<org.wsml.reasoner.ConjunctiveQuery> convertQuery(org.omwg.logicalexpression.LogicalExpression q) {
-        org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(wsmoManager);
+        org.wsml.reasoner.WSML2DatalogTransformer wsml2datalog = new org.wsml.reasoner.WSML2DatalogTransformer(factory);
 
         List<Term> params = new LinkedList<Term>();
         LogicalExpressionVariableVisitor varVisitor = new LogicalExpressionVariableVisitor();
         q.accept(varVisitor);
-        params.addAll(varVisitor.getFreeVariables(q));
+        Set<Variable> freeVariables = varVisitor.getFreeVariables(q);
+		if (freeVariables != null) {
+			params.addAll(freeVariables);
+		}
         Atom rHead = leFactory.createAtom(wsmoFactory.createIRI(WSML_RESULT_PREDICATE), params);
 
-        LogicalExpressionNormalizer moleculeNormalizer = new OnePassReplacementNormalizer(new MoleculeDecompositionRules(wsmoManager).getRules(), wsmoManager);
+        LogicalExpressionNormalizer moleculeNormalizer = new OnePassReplacementNormalizer(new MoleculeDecompositionRules(factory).getRules(), factory);
         q = moleculeNormalizer.normalize(q);
 
         org.omwg.logicalexpression.LogicalExpression resultDefRule = leFactory.createInverseImplication(rHead, q);
 
-        LloydToporRules lloydToporRules = new LloydToporRules(wsmoManager);
+        LloydToporRules lloydToporRules = new LloydToporRules(factory);
         LogicalExpressionTransformer lloydToporNormalizer = new TopDownLESplitter(lloydToporRules.getRules());
         Set<LogicalExpression> conjunctiveQueries = lloydToporNormalizer.transform(resultDefRule);
 
@@ -611,7 +637,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
                 // DATALOG PROGRAM
                 // for each query! which is bad if one precomputes the model for
                 // a program
-                // an materializes the result, since the materializtion needs to
+                // an materializes the result, since the materialization needs to
                 // be done all
                 // the time again and again.
                 // CurrentlY this does not fit to our reasoner implementation.
@@ -675,7 +701,9 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
     }
 
     private void getAllOntologies(Ontology o, Set<Ontology> ontologies) {
-        for (Ontology imported : o.listOntologies()) {
+        ImportedOntologiesBlock importedOntologies = o.getImportedOntologies();
+        if (importedOntologies != null)
+		for (Ontology imported : importedOntologies.listOntologies()) {
             if (!ontologies.contains(imported)) {
                 ontologies.add(imported);
                 getAllOntologies(imported, ontologies);

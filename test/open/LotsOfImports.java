@@ -24,20 +24,21 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.deri.wsmo4j.io.serializer.wsml.VisitorSerializeWSMLTerms;
+import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
+import org.deri.wsmo4j.io.serializer.wsml.SerializeWSMLTermsVisitor;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
+import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.TopEntity;
-import org.wsmo.factory.Factory;
-import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
+
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 /**
  * Usage Example for the wsml2Reasoner Framework
@@ -46,11 +47,10 @@ import org.wsmo.wsml.Parser;
  */
 public class LotsOfImports {
 
-    WSMO4JManager wsmoManager = new WSMO4JManager();
+    WsmlFactoryContainer wsmoManager = new WsmlFactoryContainer();
 
-    WsmoFactory wsmoFactory = wsmoManager.getWSMOFactory();
-
-    Parser wsmlParser = Factory.createParser(null);
+    WsmoFactory wsmoFactory = new WsmlFactoryContainer().getWsmoFactory();
+	Parser wsmlParser = new WsmlParser();
 
     /**
      * @param args
@@ -109,11 +109,10 @@ public class LotsOfImports {
 
         if (exampleOntology == null)
             return;
-        LogicalExpressionFactory leFactory = new WSMO4JManager().getLogicalExpressionFactory();
 
         String queryString = "?x memberOf Time#DateTimeDescription";
 
-        LogicalExpression query = leFactory.createLogicalExpression(queryString, exampleOntology);
+        LogicalExpression query = new WsmlLogicalExpressionParser(exampleOntology).parse(queryString);
 
         // get A reasoner
         Map<String, Object> params = new HashMap<String, Object>();
@@ -208,7 +207,7 @@ public class LotsOfImports {
     }
 
     private String termToString(Term t, Ontology o) {
-        VisitorSerializeWSMLTerms v = new VisitorSerializeWSMLTerms(o);
+        SerializeWSMLTermsVisitor v = new SerializeWSMLTermsVisitor(o);
         t.accept(v);
         return v.getSerializedObject();
     }

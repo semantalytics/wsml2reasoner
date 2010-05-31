@@ -23,6 +23,7 @@
 package concreteTests.irisStratified;
 
 import org.wsml.reasoner.api.LPReasoner;
+
 import abstractTests.lp.AbstractDataTypes4DateTimeSubtraction;
 
 public class DataTypes4DateTimeSubtractionTest extends AbstractDataTypes4DateTimeSubtraction

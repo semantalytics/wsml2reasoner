@@ -24,10 +24,10 @@ import java.util.List;
 import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.AnonymousIdTranslator;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
 import org.wsmo.common.Identifier;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 
 
@@ -36,7 +36,7 @@ public class AtomAnonymousIDRule implements NormalizationRule {
     private LogicalExpressionFactory leFactory;
     private AnonymousIdTranslator anonymousIDTranslator;
     
-    public AtomAnonymousIDRule(WSMO4JManager wsmoManager, AnonymousIdTranslator anonymousIDTranslator){
+    public AtomAnonymousIDRule(FactoryContainer wsmoManager, AnonymousIdTranslator anonymousIDTranslator){
         this.leFactory = wsmoManager.getLogicalExpressionFactory();
         this.anonymousIDTranslator = anonymousIDTranslator;
     }

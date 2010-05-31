@@ -18,9 +18,9 @@
  */
 package org.wsml.reasoner.transformation.le.implicationreduction;
 
-import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsml.reasoner.transformation.le.NormalizationRule;
 import org.wsml.reasoner.transformation.le.Rules;
+import org.wsmo.factory.FactoryContainer;
 
 /**
  * This singleton class represents a set of normalization rules for replacing
@@ -31,8 +31,8 @@ import org.wsml.reasoner.transformation.le.Rules;
  */
 public class ImplicationReductionRules extends Rules <NormalizationRule>{
 
-    public ImplicationReductionRules(WSMO4JManager wsmoManager) {
-        addRule(new EquivalenceReplacementRule(wsmoManager));
-        addRule(new RightImplicationReplacementRule(wsmoManager));
+    public ImplicationReductionRules(FactoryContainer factory) {
+        addRule(new EquivalenceReplacementRule(factory));
+        addRule(new RightImplicationReplacementRule(factory));
     }
 }

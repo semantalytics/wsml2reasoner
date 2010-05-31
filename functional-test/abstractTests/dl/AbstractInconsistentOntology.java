@@ -29,19 +29,20 @@ import junit.framework.TestCase;
 
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
-import org.wsml.reasoner.impl.WSMO4JManager;
-import org.wsmo.factory.Factory;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
 import abstractTests.DL;
+
+import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 /*
  * needs:  files/inconsistentWsml2owlExample.wsml
  */
 public abstract class AbstractInconsistentOntology extends TestCase implements DL {
 	
-	protected WSMO4JManager wsmoManager;
+	protected FactoryContainer factory;
 	protected WsmoFactory wsmoFactory;
 	protected Ontology ontology;
 	protected Parser parser;
@@ -49,9 +50,8 @@ public abstract class AbstractInconsistentOntology extends TestCase implements D
 	
 	protected void setUp() throws Exception {
      	super.setUp();
-        WSMO4JManager wsmoManager = new WSMO4JManager();
-		wsmoFactory = wsmoManager.getWSMOFactory();
-        parser = Factory.createParser(null);
+		wsmoFactory = factory.getWsmoFactory();
+        parser = new WsmlParser();
         
         // inconsistentWsml2owlExample.wsml
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("files/inconsistentWsml2owlExample.wsml");

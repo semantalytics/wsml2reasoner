@@ -35,6 +35,17 @@ However, there are three release variants in accordance with the license agreeme
 
 <h2>Release History</h2>
 
+<p><b><a id="v0_7_0" href="https://sourceforge.net/projects/wsml2reasoner/files/wsml2reasoner/wsml2reasoner_v0.7.0/">v0.7.0</a></b> 24-02-2010</p>
+    
+<p>
+This version contains updates for support of WSML v2.0, which includes:
+<ul>
+	<li>WSML-Core: Semantics of WSML-Core more closely aligned with DLP and a subset of OWL2 RL, including equality in rule heads</li>
+	<li>WSML-DL: New semantics based on ELP (OWL2 RL, EL, QL and EL++)</li>
+	<li>WSML-Flight and WSML-Rule: New built-in data-types and predicates for better compatibility with RIF (BLD, Core and DTB)</li>
+</ul>
+</p>
+
 <p><b><a id="v0_6_4" href="https://sourceforge.net/project/showfiles.php?group_id=208169&package_id=249452&release_id=644356">v0.6.4</a></b> 02-12-2008</p>
     
 <p>
