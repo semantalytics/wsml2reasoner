@@ -1,2 +1,0 @@
-KAON2 is available as a precompiled binary distribution and is free of charge for universities for noncommecial academic usage (national laboratories are not considered universities). For commercial purposes, there is a commercial version of KAON2 called OntoBroker OWL (http://www.ontoprise.de/ontobrokerowl). If you are interested in using OntoBroker OWL, please contact ontoprise GmbH (info@ontoprise.de). By downloading KAON2, you accept these license agreements.
-
