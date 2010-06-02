@@ -1,0 +1,55 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://example.com/relations3#" }
+
+ontology Relations3
+
+concept C1
+concept C2
+concept C3
+concept C4
+concept C5
+concept C6
+
+
+instance i1 memberOf C1
+instance i2 memberOf C2
+instance i3 memberOf C3
+instance i4 memberOf C4
+instance i5 memberOf C5
+instance i6 memberOf C6
+
+
+relation Declared(ofType C1)
+relation Declared(ofType C1, ofType C2)
+relation Declared(ofType C1, ofType C2, ofType C3)
+relation Declared(ofType C1, ofType C2, ofType C3, ofType C4)
+relation Declared(ofType C1, ofType C2, ofType C3, ofType C4, ofType C5)
+relation Declared(ofType C1, ofType C2, ofType C3, ofType C4, ofType C5, ofType C6)
+
+relationInstance Declared(i1)
+relationInstance Declared(i1, i2)
+relationInstance Declared(i1, i2, i3)
+relationInstance Declared(i1, i2, i3, i4)
+relationInstance Declared(i1, i2, i3, i4, i5)
+relationInstance Declared(i1, i2, i3, i4, i5, i6)
+
+relationInstance NotDeclared(i1)
+relationInstance NotDeclared(i1, i2)
+relationInstance NotDeclared(i1, i2, i3)
+relationInstance NotDeclared(i1, i2, i3, i4)
+relationInstance NotDeclared(i1, i2, i3, i4, i5)
+relationInstance NotDeclared(i1, i2, i3, i4, i5, i6)
+
+relationInstance DeclaredAfter(i1)
+relationInstance DeclaredAfter(i1, i2)
+relationInstance DeclaredAfter(i1, i2, i3)
+relationInstance DeclaredAfter(i1, i2, i3, i4)
+relationInstance DeclaredAfter(i1, i2, i3, i4, i5)
+relationInstance DeclaredAfter(i1, i2, i3, i4, i5, i6)
+
+relation DeclaredAfter(ofType C1)
+relation DeclaredAfter(ofType C1, ofType C2)
+relation DeclaredAfter(ofType C1, ofType C2, ofType C3)
+relation DeclaredAfter(ofType C1, ofType C2, ofType C3, ofType C4)
+relation DeclaredAfter(ofType C1, ofType C2, ofType C3, ofType C4, ofType C5)
+relation DeclaredAfter(ofType C1, ofType C2, ofType C3, ofType C4, ofType C5, ofType C6)
