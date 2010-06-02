@@ -71,7 +71,7 @@ ontology _"http://www.example.org/ontologies/example"
       		
       axiom NarcistLoverAxiom
       	definedBy
-      		exists ?x (loves(?x, ?y) and ?y[loves hasValue ?y]) implies ?x memberOf NarcistLover.
+      		exists ?x (?x[loves hasValue ?y] and ?y[loves hasValue ?y] and ?y memberOf Person) implies ?x memberOf NarcistLover.
       
       axiom hasChildSubLoves
       	definedBy

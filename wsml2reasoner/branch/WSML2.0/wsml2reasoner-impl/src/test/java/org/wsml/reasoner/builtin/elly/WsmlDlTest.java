@@ -152,7 +152,10 @@ public class WsmlDlTest extends TestCase {
 		System.out.println("ElBarto's ageInYears:");
 		System.out.println(values);
 
-		assertTrue(values.contains(container.getXmlDataFactory().createInteger("10")));
+		DataValue value10 = container.getXmlDataFactory().createInteger("10");
+		DataValue queryValue = values.iterator().next();
+		assertEquals(value10, queryValue);
+		assertTrue("Value " + value10 + " not contained in values: " + values, values.contains(value10));
 		assertEquals(1, values.size());
 	}
 	

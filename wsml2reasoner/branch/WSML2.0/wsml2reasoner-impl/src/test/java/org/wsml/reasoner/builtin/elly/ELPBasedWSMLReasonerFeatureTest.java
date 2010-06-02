@@ -23,7 +23,7 @@ import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 public class ELPBasedWSMLReasonerFeatureTest extends TestCase {
 
-	private static String defaultNS = "http://www.example.org/example/";
+	private static String defaultNS = "http://www.example.org#";
 	private static String prefix = "";
 	private DLReasoner reasoner;
 	private FactoryContainer container;
@@ -33,7 +33,8 @@ public class ELPBasedWSMLReasonerFeatureTest extends TestCase {
 		container = new WsmlFactoryContainer();
 		reasoner = DefaultWSMLReasonerFactory.getFactory().createDL2Reasoner(null);
 		
-		ontology = loadOntology(prefix + "Human_features.wsml");
+//		ontology = loadOntology(prefix + "Human_features.wsml");
+		ontology = loadOntology(prefix + "wsml-dl-v2.wsml");
 		if (ontology == null)
 			fail();
 		
@@ -48,8 +49,9 @@ public class ELPBasedWSMLReasonerFeatureTest extends TestCase {
 		System.out.println("Instances of NarcistLover:");
 		System.out.println(instances);
 
-		assertTrue(instances.contains(container.getWsmoFactory().createInstance(container.getWsmoFactory().createIRI(defaultNS + "Mary"))));
-		assertEquals(1, instances.size());
+		assertTrue(instances.contains(container.getWsmoFactory().createInstance(container.getWsmoFactory().createIRI(defaultNS + "Marge"))));
+		assertTrue(instances.contains(container.getWsmoFactory().createInstance(container.getWsmoFactory().createIRI(defaultNS + "Homer"))));
+		assertEquals(2, instances.size());
 	}
 	
 
