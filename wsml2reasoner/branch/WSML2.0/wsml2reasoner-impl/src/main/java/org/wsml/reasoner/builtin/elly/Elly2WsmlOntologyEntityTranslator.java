@@ -191,6 +191,7 @@ public class Elly2WsmlOntologyEntityTranslator {
 					(float) time.getDecimalSecond(),
 					tzData[0], tzData[1]);
 		} else if (irisTerm instanceof IDecimalTerm) {
+			// FIXME dw: integer byte short long double .... need to be handled
 			return container.getXmlDataFactory().createDecimal(new BigDecimal(((IDecimalTerm) irisTerm).toString()));
 		} else if (irisTerm instanceof IDoubleTerm) {
 			return container.getXmlDataFactory().createDouble(((IDoubleTerm) irisTerm).getValue().doubleValue());
