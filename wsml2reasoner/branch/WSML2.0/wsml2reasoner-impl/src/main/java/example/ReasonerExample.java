@@ -57,11 +57,6 @@ public class ReasonerExample {
             System.out.println("Must specify a reasoner");
             System.out.println("Options are:");
             System.out.println("IRIS");
-            System.out.println("MINS");
-            System.out.println("KAON2");
-            System.out.println("PELLET");
-            System.out.println("TPTP");
-            System.out.println("XSB");
         }
         else {
             ReasonerExample ex = new ReasonerExample();
@@ -93,16 +88,9 @@ public class ReasonerExample {
         if (reasoningEngine.equals("iris") || reasoningEngine.equals("IRIS")) {
             params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER, WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED);
         }
-        else if (reasoningEngine.equals("tptp") || reasoningEngine.equals("TPTP")) {
-            params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER, WSMLReasonerFactory.BuiltInReasoner.TPTP);
-        }
         else {
             System.out.println("Unrecognized reasoner\nOptions are:");
-            System.out.println("MINS");
-            System.out.println("KAON2");
-            System.out.println("PELLET");
-            System.out.println("TPTP");
-            System.out.println("XSB");
+            System.out.println("IRIS");
             return;
         }
 

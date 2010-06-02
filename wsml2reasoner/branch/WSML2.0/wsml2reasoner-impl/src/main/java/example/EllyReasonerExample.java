@@ -69,7 +69,7 @@ public class EllyReasonerExample {
             return;
 
         // get A reasoner
-        DLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().createDL2Reasoner(container);
+        DLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().createDL2Reasoner(null);
         
         // Register ontology
         reasoner.registerOntology(exampleOntology);
@@ -103,7 +103,7 @@ public class EllyReasonerExample {
             return;
 
         // get A reasoner
-        DLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().createDL2Reasoner(container);
+        DLReasoner reasoner = DefaultWSMLReasonerFactory.getFactory().createDL2Reasoner(null);
         
         // Register ontology
         reasoner.registerOntology(exampleOntology);

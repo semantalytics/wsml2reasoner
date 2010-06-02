@@ -22,7 +22,6 @@ package org.wsml.reasoner.api;
 import java.util.Map;
 
 import org.omwg.ontology.Ontology;
-import org.wsmo.factory.FactoryContainer;
 
 /**
  * An interface for getting WSML Reasoners for the various variants of WSML.
@@ -50,8 +49,6 @@ public interface WSMLReasonerFactory {
         IRIS_STRATIFIED,
         IRIS_WELL_FOUNDED,
         IRIS_SLDNF,
-        TPTP,
-        SPASS,
         ELLY
     };
 
@@ -84,13 +81,10 @@ public interface WSMLReasonerFactory {
 
     public LPReasoner createCoreReasoner(Map<String, Object> params);
 
-    public DLReasoner createDLReasoner(Map<String, Object> params);
-
-    public DLReasoner createDL2Reasoner(FactoryContainer container);
+    public DLReasoner createDL2Reasoner(Map<String, Object> params);
 
     public LPReasoner createFlightReasoner(Map<String, Object> params);
 
     public LPReasoner createRuleReasoner(Map<String, Object> params);
 
-    public FOLReasoner createFOLReasoner(Map<String, Object> params);
 }

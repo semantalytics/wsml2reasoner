@@ -50,7 +50,7 @@ public class ReasonerHelper
         params.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, reasoner);
         params.put(WSMLReasonerFactory.PARAM_ALLOW_IMPORTS, ALLOW_IMPORTS );
 
-        return DefaultWSMLReasonerFactory.getFactory().createDLReasoner(params);
+        return DefaultWSMLReasonerFactory.getFactory().createDL2Reasoner(params);
 	}
 
 	/**

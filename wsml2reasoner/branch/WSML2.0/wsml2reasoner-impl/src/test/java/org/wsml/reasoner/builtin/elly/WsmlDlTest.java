@@ -16,6 +16,7 @@ import org.omwg.ontology.DataValue;
 import org.omwg.ontology.Instance;
 import org.omwg.ontology.Ontology;
 import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
+import org.wsml.reasoner.ResourceHelper;
 import org.wsml.reasoner.api.DLReasoner;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsmo.common.IRI;
@@ -29,14 +30,14 @@ import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 public class WsmlDlTest extends TestCase {
 
 	private static String defaultNS = "http://www.example.org#";
-	private static String prefix = "org/wsml/reasoner/builtin/elly/";
+	private static String prefix = "";
 	private DLReasoner reasoner;
 	private FactoryContainer container;
 	Ontology ontology;
 
 	protected void setUp() throws Exception {
 		container = new WsmlFactoryContainer();
-		reasoner = DefaultWSMLReasonerFactory.getFactory().createDL2Reasoner(container);
+		reasoner = DefaultWSMLReasonerFactory.getFactory().createDL2Reasoner(null);
 		
 		ontology = loadOntology(prefix + "wsml-dl-v2.wsml");
 		if (ontology == null)
@@ -208,7 +209,7 @@ public class WsmlDlTest extends TestCase {
 	Ontology loadOntology(String file) {
 		Parser wsmlParser = new WsmlParser();
 
-		InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);
+		InputStream is = ResourceHelper.loadResourceAsStream(file);
 		try {
 			final TopEntity[] identifiable = wsmlParser.parse(new InputStreamReader(is));
 			if (identifiable.length > 0 && identifiable[0] instanceof Ontology) {

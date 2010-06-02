@@ -27,13 +27,10 @@ import org.deri.wsmo4j.validator.WsmlValidatorImpl;
 import org.omwg.ontology.Ontology;
 import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.DLReasoner;
-import org.wsml.reasoner.api.FOLReasoner;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
-import org.wsml.reasoner.builtin.tptp.TPTPFacade;
 import org.wsmo.common.WSML;
-import org.wsmo.factory.FactoryContainer;
 import org.wsmo.validator.ValidationError;
 import org.wsmo.validator.ValidationWarning;
 import org.wsmo.validator.WsmlValidator;
@@ -90,6 +87,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         }
     }
 
+    @Override
     public WSMLReasoner createWSMLReasoner(Map<String, Object> params, Ontology ontology) {
         if (ontology == null){
             throw new IllegalArgumentException("The ontology paramter may not be null");
@@ -102,12 +100,8 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         if (wsmlVariant.equals(WSML.WSML_CORE)){
             return createCoreReasoner(params);
         }
-        else if (wsmlVariant.equals(WSML.WSML_DL)){
-            return createDLReasoner(params);
-        }
         else if (wsmlVariant.equals(WSML.WSML_DL2)){
-        	// FIXME temporary, apply this behaviour to all reasoners
-            return createDL2Reasoner(new WsmlFactoryContainer());
+            return createDL2Reasoner(params);
         }
         else if (wsmlVariant.equals(WSML.WSML_FLIGHT)){
             return createFlightReasoner(params);
@@ -119,15 +113,12 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         throw new RuntimeException("Unsupported WSML variant: " + wsmlVariant);
     }
 
+    @Override
     public LPReasoner createCoreReasoner(Map<String, Object> params) {
         return createFlightReasoner(params);
     }
 
-    public DLReasoner createDLReasoner(Map<String, Object> params) {
-    	// Keep the createDLReasoner method but tell the callee that it is not supported for now /Gigi
-        throw new UnsupportedOperationException("DL based reasoning is not supported in this version.");
-    }
-
+    @Override
     public LPReasoner createFlightReasoner(Map<String, Object> params) {
         if (params == null){
             params = new HashMap<String, Object>();
@@ -137,6 +128,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         return reasoner;
     }
 
+    @Override
     public LPReasoner createRuleReasoner(Map<String, Object> params) {
         if (params == null){
             params = new HashMap<String, Object>();
@@ -146,39 +138,14 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         return reasoner;
     }
 
-    public FOLReasoner createFOLReasoner(Map<String, Object> params) {
-        if (params == null){
+	@Override
+	public DLReasoner createDL2Reasoner(Map<String, Object> params) {
+		if (params == null){
             params = new HashMap<String, Object>();
         }
-        
-        // TODO: BARRY - Can you look at this, I have no idea what this actually trying to do
-        BuiltInReasoner reasoner = extractReasoner(params, BuiltInReasoner.SPASS);
-        String uri = null;
-        if (params.containsKey(PARAM_EXTERNAL_REASONER_URI)) {
-            uri = (String) params.get(PARAM_EXTERNAL_REASONER_URI);
-        }
-        if (uri == null) {
-            if (reasoner == BuiltInReasoner.SPASS) {
-                uri = TPTPFacade.DERI_SPASS_REASONER;
-            }
-            else if (reasoner == BuiltInReasoner.TPTP) {
-                uri = TPTPFacade.DERI_TPTP_REASONER;
-            }
-            else {
-                throw new RuntimeException("need to specify URI");
-            }
-        }
-        return new org.wsml.reasoner.impl.FOLBasedWSMLReasoner(reasoner, new WsmlFactoryContainer(), uri);
-    }
 
-
-	@Override
-	public DLReasoner createDL2Reasoner(FactoryContainer container) {
-		if (container == null) {
-			container = new WsmlFactoryContainer();
-		}
-		
-		ELPBasedWSMLReasoner reasoner = new ELPBasedWSMLReasoner(BuiltInReasoner.ELLY, container);
+		BuiltInReasoner builtInReasoner = extractReasoner(params, BuiltInReasoner.ELLY);
+		ELPBasedWSMLReasoner reasoner = new ELPBasedWSMLReasoner(builtInReasoner, new WsmlFactoryContainer());
 		
 		return reasoner;
 	}
