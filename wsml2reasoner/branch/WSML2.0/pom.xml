@@ -11,6 +11,7 @@
 	<modules>
 		<module>wsml2reasoner-api</module>
 		<module>wsml2reasoner-impl</module>
+		<module>wsml2reasoner-integration-test</module>
 	</modules>
 
 	<properties>
