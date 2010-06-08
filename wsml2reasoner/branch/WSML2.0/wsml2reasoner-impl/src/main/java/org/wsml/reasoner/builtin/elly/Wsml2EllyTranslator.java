@@ -243,7 +243,7 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 
 	@Override
 	public void visitAtom(Atom expr) {
-		// must be an Built-in Atom
+		// must be a Built-in Atom
 		if (expr instanceof BuiltInAtom) {
 			IAtom builtin = translateBuiltIn((BuiltInAtom) expr);
 			
@@ -762,7 +762,7 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		}
 		
 		// for some Built-ins the list must be sorted in a different order (first gets last)
-		List<ITerm> sortedTerms = sortListForIRIS(terms);
+		// List<ITerm> sortedTerms = sortListForIRIS(terms);
 		
 		assert terms.size() >= 1;
 		assert terms.size() <= 2;
@@ -1035,22 +1035,22 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 		}
 	}
 
-	/**
-	 * Changes the order of the terms for IRIS. The first entry becomes the last one.
-	 * 
-	 * @param terms
-	 *            a list of terms in normal order.
-	 * @return a list of terms where the first entry is the last one.
-	 */
-	private static List<ITerm> sortListForIRIS(List<ITerm> terms) {
-		assert terms != null;
-		List<ITerm> newTerms = new ArrayList<ITerm>();
-		ITerm first = terms.get(0);
-		for (int i = 1; i < terms.size(); i++) {
-			newTerms.add(terms.get(i));
-		}
-		newTerms.add(first);
-		return newTerms;
-	}
+//	/**
+//	 * Changes the order of the terms for IRIS. The first entry becomes the last one.
+//	 * 
+//	 * @param terms
+//	 *            a list of terms in normal order.
+//	 * @return a list of terms where the first entry is the last one.
+//	 */
+//	private static List<ITerm> sortListForIRIS(List<ITerm> terms) {
+//		assert terms != null;
+//		List<ITerm> newTerms = new ArrayList<ITerm>();
+//		ITerm first = terms.get(0);
+//		for (int i = 1; i < terms.size(); i++) {
+//			newTerms.add(terms.get(i));
+//		}
+//		newTerms.add(first);
+//		return newTerms;
+//	}
 
 }
