@@ -270,6 +270,8 @@ public class IrisFacadeTest extends TestCase {
 		// test time
 		// TODO: i'm sorry again, but time isn't implemented in iris at the
 		// moment
+		
+		// FIXME test all datatypes!!
 	}
 	
 	
