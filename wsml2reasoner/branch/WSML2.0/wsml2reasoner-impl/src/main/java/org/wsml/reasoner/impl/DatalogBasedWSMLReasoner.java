@@ -379,16 +379,6 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         
         Set<Entity> entities = new HashSet<Entity>();
         
-        /* FIXME am,dw: error-prone since entities may be lost 
-        for (Ontology o : ontologies) {
-            entities.addAll(o.listConcepts());
-            entities.addAll(o.listInstances());
-            entities.addAll(o.listRelations());
-            entities.addAll(o.listRelationInstances());
-            entities.addAll(o.listAxioms());
-        }
-        */
-        
         IRI newIdentifier = wsmoFactory.createIRI("urn:org.wsml.reasoner.impl.DatalogBasedWSMLReasoner:registeredOntology");
 
         Ontology mergedOntology;
