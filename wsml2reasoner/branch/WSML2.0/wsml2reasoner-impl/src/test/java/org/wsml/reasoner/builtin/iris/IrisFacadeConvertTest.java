@@ -50,8 +50,9 @@ public class IrisFacadeConvertTest extends TestCase {
 	public void testLiteral2Atom() {
 		try {
 			IrisStratifiedFacade.literal2Atom(null, false);
-			fail(); // should throw an exception
+			fail("should throw an exception"); // should throw an exception
 		} catch (Exception e) {
+		} catch (AssertionError ae) {
 		}
 
 	}
