@@ -440,7 +440,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 		if (t == null) {
 			throw new NullPointerException("The term must not be null");
 		} else if (t instanceof BuiltInConstructedTerm) {
-			// TODO: builtins are left out at the moment
+			// TODO: builtins are skipped at the moment
 		} else if (t instanceof ConstructedTerm) {
 			// System.out.println("CONSTRUCTED TERM: " + t);
 			final ConstructedTerm ct = (ConstructedTerm) t;
@@ -486,11 +486,10 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 		final String t = v.getType().getIdentifier().toString();
 		if (t.equals(WsmlDataType.WSML_BASE64BINARY)
 				|| t.equals(XmlSchemaDataType.XSD_BASE64BINARY)) {
-			return CONCRETE.createBase64Binary(v.getValue().toString());
+			return CONCRETE.createBase64Binary((String) v.getValue());
 		} else if (t.equals(WsmlDataType.WSML_BOOLEAN)
 				|| t.equals(XmlSchemaDataType.XSD_BOOLEAN)) {
-			return CONCRETE.createBoolean(Boolean.valueOf(v.getValue()
-					.toString()));
+			return CONCRETE.createBoolean((Boolean) v.getValue());
 		} else if (t.equals(WsmlDataType.WSML_DATE)
 				|| t.equals(XmlSchemaDataType.XSD_DATE)) {
 			final ComplexDataValue cv = (ComplexDataValue) v;
@@ -518,12 +517,10 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 					length > 4 ? getIntFromValue(cv, 4) : 0);
 		} else if (t.equals(WsmlDataType.WSML_DECIMAL)
 				|| t.equals(XmlSchemaDataType.XSD_DECIMAL)) {
-			return CONCRETE.createDecimal(Double.parseDouble(v.getValue()
-					.toString()));
+			return CONCRETE.createDecimal((BigDecimal) v.getValue());
 		} else if (t.equals(WsmlDataType.WSML_DOUBLE)
 				|| t.equals(XmlSchemaDataType.XSD_DOUBLE)) {
-			return CONCRETE.createDouble(Double.parseDouble(v.getValue()
-					.toString()));
+			return CONCRETE.createDouble((Double) v.getValue());
 		} else if (t.equals(WsmlDataType.WSML_DURATION)
 				|| t.equals(XmlSchemaDataType.XSD_DURATION)) {
 			final ComplexDataValue cv = (ComplexDataValue) v;
@@ -533,8 +530,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 					getDoubleFromValue(cv, 5));
 		} else if (t.equals(WsmlDataType.WSML_FLOAT)
 				|| t.equals(XmlSchemaDataType.XSD_FLOAT)) {
-			return CONCRETE.createFloat(Float.parseFloat(v.getValue()
-					.toString()));
+			return CONCRETE.createFloat((Float) v.getValue());
 		} else if (t.equals(WsmlDataType.WSML_GDAY)
 				|| t.equals(XmlSchemaDataType.XSD_GDAY)) {
 			final ComplexDataValue cv = (ComplexDataValue) v;
@@ -559,10 +555,10 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 					getIntFromValue(cv, 1));
 		} else if (t.equals(WsmlDataType.WSML_HEXBINARY)
 				|| t.equals(XmlSchemaDataType.XSD_HEXBINARY)) {
-			return CONCRETE.createHexBinary(v.getValue().toString());
+			return CONCRETE.createHexBinary((String) v.getValue());
 		} else if (t.equals(WsmlDataType.WSML_INTEGER)
 				|| t.equals(XmlSchemaDataType.XSD_INTEGER)) {
-			return CONCRETE.createInteger(Integer.parseInt(v.toString()));
+			return CONCRETE.createInteger((BigInteger) v.getValue());
 		} else if (t.equals(XmlSchemaDataType.XSD_DAYTIMEDURATION)) {
 			final ComplexDataValue cv = (ComplexDataValue) v;
 			return CONCRETE.createDayTimeDuration(true, getIntFromValue(cv, 0),
@@ -573,71 +569,65 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 			return CONCRETE.createYearMonthDuration(true,
 					getIntFromValue(cv, 0), getIntFromValue(cv, 1));
 		} else if (t.equals(XmlSchemaDataType.XSD_LONG)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createLong(new Long(getStringFromValue(cv, 0)));
+			return CONCRETE.createLong((Long) v.getValue());
+		} else if (t.equals(XmlSchemaDataType.XSD_INT)) {
+			return CONCRETE.createInt((Integer) v.getValue());
 		} else if (t.equals(XmlSchemaDataType.XSD_SHORT)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createShort(new Short(getStringFromValue(cv, 0)));
+			return CONCRETE.createShort((Short) v.getValue());
 		} else if (t.equals(XmlSchemaDataType.XSD_BYTE)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createByte(new Byte(getStringFromValue(cv, 0)));
+			return CONCRETE.createByte((Byte) v.getValue());
 		} else if (t.equals(XmlSchemaDataType.XSD_NONPOSITIVEINTEGER)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createNonPositiveInteger(new BigInteger(
-					getStringFromValue(cv, 0)));
+			return CONCRETE.createNonPositiveInteger((BigInteger) v.getValue());
 		} else if (t.equals(XmlSchemaDataType.XSD_NONNEGATIVEINTEGER)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createNonNegativeInteger(new BigInteger(
-					getStringFromValue(cv, 0)));
+			return CONCRETE.createNonNegativeInteger((BigInteger) v.getValue());
 		} else if (t.equals(XmlSchemaDataType.XSD_NEGATIVEINTEGER)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createNegativeInteger(new BigInteger(
-					getStringFromValue(cv, 0)));
+			return CONCRETE.createNegativeInteger((BigInteger) v.getValue());
 		} else if (t.equals(XmlSchemaDataType.XSD_POSITIVEINTEGER)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createPositiveInteger(new BigInteger(
-					getStringFromValue(cv, 0)));
+			return CONCRETE.createPositiveInteger((BigInteger) v.getValue());
 		} else if (t.equals(XmlSchemaDataType.XSD_UNSIGNEDLONG)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createUnsignedLong(new BigInteger(
-					getStringFromValue(cv, 0)));
+			return CONCRETE.createUnsignedLong((BigInteger) v.getValue());
 		} else if (t.equals(XmlSchemaDataType.XSD_UNSIGNEDINT)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createUnsignedInt(getLongFromValue(cv, 0));
+			return CONCRETE.createUnsignedInt((Long) v.getValue());
 		} else if (t.equals(XmlSchemaDataType.XSD_UNSIGNEDSHORT)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createUnsignedShort(getIntFromValue(cv, 0));
+			return CONCRETE.createUnsignedShort((Integer) v.getValue());
 		} else if (t.equals(XmlSchemaDataType.XSD_UNSIGNEDBYTE)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createUnsignedByte((short) getIntFromValue(cv, 0));
+			return CONCRETE.createUnsignedByte((Short) v.getValue());
 		} else if (t.equals(XmlSchemaDataType.XSD_NORMALIZEDSTRING)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createNormalizedString(getStringFromValue(cv, 0));
+			return CONCRETE.createNormalizedString((String) v.getValue());
 		} else if (t.equals(XmlSchemaDataType.XSD_STRING)) {
-			return TERM.createString(v.toString());
+			return TERM.createString((String) v.getValue());
 		} else if (t.equals(XmlSchemaDataType.XSD_NAME)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createName(getStringFromValue(cv, 0));
+			return CONCRETE.createName((String) v.getValue());
 		} else if (t.equals(XmlSchemaDataType.XSD_TOKEN)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createToken(getStringFromValue(cv, 0));
+			return CONCRETE.createToken((String) v.getValue());
 		} else if (t.equals(XmlSchemaDataType.XSD_NMTOKEN)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createNMTOKEN(getStringFromValue(cv, 0));
+			return CONCRETE.createNMTOKEN((String) v.getValue());
 		} else if (t.equals(XmlSchemaDataType.XSD_NCNAME)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createNCName(getStringFromValue(cv, 0));
+			return CONCRETE.createNCName((String) v.getValue());
 		} else if (t.equals(XmlSchemaDataType.XSD_LANGUAGE)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createLanguage(getStringFromValue(cv, 0));
+			return CONCRETE.createLanguage((String) v.getValue());
 		} else if (t.equals(XmlSchemaDataType.XSD_DATETIMESTAMP)) {
 			final ComplexDataValue cv = (ComplexDataValue) v;
 			return CONCRETE.createDateTimeStamp(getIntFromValue(cv, 0),
 					getIntFromValue(cv, 1), getIntFromValue(cv, 2),
 					getIntFromValue(cv, 3), getIntFromValue(cv, 4),
 					getDoubleFromValue(cv, 5), getIntFromValue(cv, 6),
-					getIntFromValue(cv, 7));
-		}
+					getIntFromValue(cv, 7)); // FIXME last two are optionial?
+		} else if (t.equals(XmlSchemaDataType.XSD_ANYURI)) {
+			return CONCRETE.createIri((String) v.getValue());
+		} else if (t.equals(XmlSchemaDataType.XSD_QNAME)) {
+			final ComplexDataValue cv = (ComplexDataValue) v;
+			return CONCRETE.createQName(getStringFromValue(cv, 0), getStringFromValue(cv, 1));
+		} else if (t.equals(XmlSchemaDataType.XSD_NOTATION)) {
+			final ComplexDataValue cv = (ComplexDataValue) v;
+			return CONCRETE.createNOTATION(getStringFromValue(cv, 0), getStringFromValue(cv, 1));
+		} else if (t.equals(XmlSchemaDataType.XSD_ID)) {
+			return CONCRETE.createID((String) v.getValue());
+		} else if (t.equals(XmlSchemaDataType.XSD_IDREF)) {
+			return CONCRETE.createIDREF((String) v.getValue());
+		} else if (t.equals(XmlSchemaDataType.XSD_ENTITY)) {
+			return CONCRETE.createEntity((String) v.getValue());
+		} 
 
 		// RDF Datatypes
 		else if (t.equals(RDFDataType.RDF_TEXT)) {
