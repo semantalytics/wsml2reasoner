@@ -57,20 +57,22 @@ public class IrisFacadeHelper {
 
 		if (rifBuiltIn != null) {
 			return getRIFBuiltin(headLiteral, sym, terms, rifBuiltIn);
-
-		} else {
-			if (wsmlBuiltIn == null) {
-				// Is not a built-in - return an ordinary term
-				return BASIC.createAtom(BASIC
-						.createPredicate(sym, terms.size()), BASIC
-						.createTuple(terms));
-			} else if (!headLiteral
-					&& sym.equals(WSML2DatalogTransformer.PRED_MEMBER_OF)) {
-				return checkWSMLmemberOf(headLiteral, sym, terms);
-			}
-
+		} 
+		
+		if (wsmlBuiltIn != null) {
+			return getWSMLbuiltin(headLiteral, sym, terms, wsmlBuiltIn);
 		}
-		return getWSMLbuiltin(headLiteral, sym, terms, wsmlBuiltIn);
+		
+		if (!headLiteral
+				&& sym.equals(WSML2DatalogTransformer.PRED_MEMBER_OF)) {
+			return checkWSMLmemberOf(headLiteral, sym, terms);
+		}
+		
+				// Is not a built-in - return an ordinary term
+		return BASIC.createAtom(
+				BASIC.createPredicate(sym, terms.size()), 
+				BASIC.createTuple(terms));
+
 		// return an ordinary atom
 		// return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 		// BASIC
@@ -913,8 +915,9 @@ public class IrisFacadeHelper {
 			}
 
 		}
-		return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()), BASIC
-				.createTuple(terms));
+		return BASIC.createAtom(
+				BASIC.createPredicate(sym, terms.size()),
+				BASIC.createTuple(terms));
 	}
 
 	/**
