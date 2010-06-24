@@ -35,6 +35,7 @@ import junit.framework.TestCase;
 import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.deri.wsmo4j.io.serializer.wsml.LogExprSerializerWSML;
 import org.deri.wsmo4j.io.serializer.wsml.WSMLSerializerImpl;
+import org.junit.Ignore;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.logicalexpression.terms.Term;
@@ -61,6 +62,7 @@ import org.wsmo.wsml.Serializer;
 
 import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
+@Ignore
 public class BaseReasonerTest extends TestCase {
 
     //CHANGE HERE TO CHECK DIFFERENT REASONERS!
