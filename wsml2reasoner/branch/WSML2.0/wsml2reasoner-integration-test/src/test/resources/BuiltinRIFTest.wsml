@@ -36,7 +36,7 @@ axiom testRIFBuiltin definedBy
 	   isBooleanTest(?x) 		:- ?x[?attribute hasValue ?value] and rif#is-literal-boolean(xsd#boolean("true")).
 	   isDateTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#is-literal-date( xsd#date( 1981, 12, 31 )).
 	   isDateTimeTest(?x) 		:- ?x[?attribute hasValue ?value] and rif#is-literal-dateTime( xsd#dateTime( 1981, 12, 31, 20, 33, 23.4, 0, 0 )).
-	   isDateTimeStampTest(?x) 	:- ?x[?attribute hasValue ?value] and rif#is-literal-dateTimeStamp( xsd#dateTime( 1981, 12, 31, 20, 33, 23.4, 0, 0 )).
+	   isDateTimeStampTest(?x) 	:- ?x[?attribute hasValue ?value] and rif#is-literal-dateTimeStamp( xsd#dateTimeStamp( 1981, 12, 31, 20, 33, 23.4, 0, 0 )).
 	   isDoubleTest(?x) 		:- ?x[?attribute hasValue ?value] and rif#is-literal-double(xsd#double( "12345.6789" )).
 	   isFloatTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#is-literal-float(xsd#float("3.4")).
 	   isHexBinaryTest(?x)		:- ?x[?attribute hasValue ?value] and rif#is-literal-hexBinary(xsd#hexBinary("FFFF")).
@@ -51,7 +51,7 @@ axiom testRIFBuiltin definedBy
 	   isUnsignedIntTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#is-literal-unsignedInt( xsd#unsignedInt("32")).
 	   isUnsignedShortTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#is-literal-unsignedShort(_unsignedshort("3")).
 	   isUnsignedByteTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#is-literal-unsignedByte(xsd#unsignedByte("3")).
-	   isNonPositiveIntegerTest(?x) 	:- ?x[?attribute hasValue ?value] and rif#is-literal-nonPositiveInteger(xsd#nonPositiveInteger(-21)).
+	   isNonPositiveIntegerTest(?x) 	:- ?x[?attribute hasValue ?value] and rif#is-literal-nonPositiveInteger(xsd#nonPositiveInteger("-21")).
 	   isNegativeIntegerTest(?x) 		:- ?x[?attribute hasValue ?value] and rif#is-literal-negativeInteger( xsd#negativeInteger("-1")).
 	   isPlainLiteralTest(?x) 		:- ?x[?attribute hasValue ?value] and rif#is-literal-PlainLiteral( xsd#PlainLiteral("plain literal")).
 	   isStringTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#is-literal-string(xsd#string("string-value")).

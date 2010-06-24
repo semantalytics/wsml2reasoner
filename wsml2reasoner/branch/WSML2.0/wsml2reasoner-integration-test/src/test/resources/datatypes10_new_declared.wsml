@@ -13,7 +13,7 @@ ontology DatatypesTestOntology10
 concept anEntity
 	aDuration ofType xsd#duration
 	// RDF Datatypes
-	aRDFText ofType rdf#text
+	aPlainLiteral ofType rdf#text
 	aRDF_XMLLiteral ofType rdf#XMLLiteral
 	// XML Schema Datatypes
 	aYearMonthDuration ofType xsd#yearMonthDuration
@@ -21,7 +21,7 @@ concept anEntity
 	
 instance anInstance memberOf anEntity
 	aDuration hasValue xsd#duration(1,2,3,4,5,6.0)
-	aRDFText hasValue rdf#text("This should be a RDF Text", "en")
+	aPlainLiteral hasValue rdf#text("This should be a RDF Text", "en")
 	aRDF_XMLLiteral hasValue rdf#XMLLiteral("<tag>xml literal</tag>", "en")
 	aYearMonthDuration hasValue xsd#yearMonthDuration(2009,9)
 	aDayTimeDuration hasValue xsd#dayTimeDuration(5, 3, 2, 1.0)

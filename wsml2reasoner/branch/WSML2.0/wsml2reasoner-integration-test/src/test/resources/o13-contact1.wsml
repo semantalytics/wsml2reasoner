@@ -24,17 +24,17 @@ concept AddLineItemResponse
      lineItemId ofType  (1 1) _integer
 
 concept Contact
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Contact definition for CRM and OM systems"
-     endNonFunctionalProperties
+     endAnnotations
      contactName ofType _string
      telephone ofType _string
      email ofType _string
 
 concept Customer
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Customer definition for CRM system"
-     endNonFunctionalProperties
+     endAnnotations
      customerId ofType  (0 1) _integer
      roleCode ofType  (0 1) _string
      contact impliesType  (0 1) Contact
@@ -51,9 +51,9 @@ concept item
      quantity ofType _integer
 
 concept Address
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Address definition for CRM and OM systems"
-     endNonFunctionalProperties
+     endAnnotations
      businessName ofType _string
      street ofType _string
      city ofType _string

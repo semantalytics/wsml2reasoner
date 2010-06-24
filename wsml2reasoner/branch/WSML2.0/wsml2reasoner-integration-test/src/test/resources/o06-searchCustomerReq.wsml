@@ -13,17 +13,17 @@ axiom _"http://www.wsmx.org/choreography/state/attribute0"
 concept _"http://www.wsmo.org/ontologies/choreography/oasm#ControlState"
 
 concept Contact
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Contact definition for CRM and OM systems"
-     endNonFunctionalProperties
+     endAnnotations
      contactName ofType _string
      telephone ofType _string
      email ofType _string
 
 concept Address
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Address definition for CRM and OM systems"
-     endNonFunctionalProperties
+     endAnnotations
      businessName ofType _string
      street ofType _string
      city ofType _string
@@ -47,9 +47,9 @@ concept AddLineItemRequest
      lineItem impliesType item
 
 concept Customer
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Customer definition for CRM system"
-     endNonFunctionalProperties
+     endAnnotations
      customerId ofType  (0 1) _integer
      roleCode ofType  (0 1) _string
      contact impliesType  (0 1) Contact

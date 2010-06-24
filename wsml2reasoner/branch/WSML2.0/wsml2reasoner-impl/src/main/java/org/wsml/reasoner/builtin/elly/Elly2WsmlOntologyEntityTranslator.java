@@ -240,7 +240,7 @@ public class Elly2WsmlOntologyEntityTranslator {
 			} else {
 				lang = ((IPlainLiteral) irisTerm).getLang();
 			}
-			return container.getXmlDataFactory().createText(((IPlainLiteral) irisTerm).getString(), lang);
+			return container.getXmlDataFactory().createPlainLiteral(((IPlainLiteral) irisTerm).getString(), lang);
 		} else if (irisTerm instanceof ISqName) {
 			// couldn't find this type in wsmo4j
 		}

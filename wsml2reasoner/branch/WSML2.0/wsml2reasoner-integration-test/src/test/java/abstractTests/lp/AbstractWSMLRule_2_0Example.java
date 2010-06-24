@@ -41,7 +41,7 @@ public abstract class AbstractWSMLRule_2_0Example extends TestCase implements LP
 	 * 
 	 * @throws Exception
 	 */
-	public void test_queryRDFText() throws Exception {
+	public void test_queryPlainLiteral() throws Exception {
 
 		String query = "Bart[slogan hasValue ?slogan]";
 

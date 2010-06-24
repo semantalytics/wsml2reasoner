@@ -6,20 +6,20 @@ namespace { _"wsmt://munit#",
 ontology munit
 
 concept testsuite
-        nonFunctionalProperties
+        annotations
                 dc#title hasValue "MUnit Test Suite"
                 dc#creator hasValue "Mick Kerrigan"
-        endNonFunctionalProperties
+        endAnnotations
         sourceOntology ofType _iri
         targetOntology ofType _iri
         hasTest ofType test
         
 
 concept test
-        nonFunctionalProperties
+        annotations
                 dc#title hasValue "MUnit Test"
                 dc#creator hasValue "Mick Kerrigan"
-        endNonFunctionalProperties
+        endAnnotations
         hasSourceInstance ofType _iri
         hasTargetInstance ofType _iri
         

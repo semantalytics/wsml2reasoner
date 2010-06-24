@@ -8,7 +8,7 @@ ontology _"http://www.example.org/ontologies/inconsistentExample"
   concept Human
   
   concept Woman subConceptOf{Human}
-    nfp dc#relation hasValue "disjoint to Man" endnfp  
+    annotations dc#relation hasValue "disjoint to Man" endAnnotations  
   
   relation hasChild(impliesType {Woman, Man}, impliesType {Child})
 

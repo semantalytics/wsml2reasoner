@@ -14,7 +14,7 @@ ontology _"http://www.example.org/ontologies/example"
   relationInstance ageOfHuman(Mary, 31)
   
   relationInstance ageOfHuman(Anna, 30)
-   nfp dc#description hasValue "Age of Anna" endnfp
+   annotations dc#description hasValue "Age of Anna" endAnnotations
   
   relationInstance isMarriedTo(Mary, Jim)
   

@@ -908,7 +908,7 @@ public class IrisFacadeHelper {
 				else if (type.equals(XmlSchemaDataType.XSD_DAYTIMEDURATION))
 					return new IsDayTimeDurationBuiltin(t0);
 				// RDF
-				else if (type.equals(RDFDataType.RDF_TEXT)) {
+				else if (type.equals(RDFDataType.RDF_PLAINLITERAL)) {
 					return new IsPlainLiteralBuiltin(t0);
 				} else if (type.equals(RDFDataType.RDF_XMLLITERAL))
 					return new IsXMLLiteralBuiltin(t0);

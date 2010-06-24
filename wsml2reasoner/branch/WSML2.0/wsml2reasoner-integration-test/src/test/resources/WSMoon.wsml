@@ -11,12 +11,12 @@ namespace { _"http://www.example.org/ontologies/sws-challenge/MoonWS#",
      }
      
 webService _"http://www.example.org/ontologies/sws-challenge/MoonWS"
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Moon WSs"
           dc#format hasValue "text/plain"
           dc#language hasValue "en-US"
           _"http://owner" hasValue _"http://Moon"
-     endNonFunctionalProperties
+     endAnnotations
 
      importsOntology {_"http://www.example.org/ontologies/sws-challenge/Moon"}
 

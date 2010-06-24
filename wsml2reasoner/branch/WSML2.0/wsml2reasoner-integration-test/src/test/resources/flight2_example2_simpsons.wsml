@@ -35,9 +35,9 @@ implies
 concept gender
 
 concept actor
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Actor"
-     endNonFunctionalProperties
+     endAnnotations
      hasName ofType _string
      hasGender ofType gender
 
@@ -91,138 +91,138 @@ instance male memberOf gender
 instance female memberOf gender
 
 instance dan_castellanata memberOf actor
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Dan Castellanata"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Dan Castellaneta"
      hasGender hasValue male
 
 instance julie_kavner memberOf actor
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Julie Kavner"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Julie Kavner"
      hasGender hasValue female
 
 instance yeardley_smith memberOf actor
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Yeardley Smith"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Yeardley Smith"
      hasGender hasValue female
 
 instance nancy_cartwright memberOf actor
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Nancy Cartwright"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Nancy Cartwright"
      hasGender hasValue female
 
 instance hank_azaria memberOf actor
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Hank Azaria"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Hank Azaria"
      hasGender hasValue male
 
 instance harry_shearer memberOf actor
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Harry Shearer"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Harry Shearer"
      hasGender hasValue male
 
 instance marcia_wallace memberOf actor
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Marcia Wallace"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Marcia Wallace"
      hasGender hasValue female
 
 instance pamela_hayden memberOf actor
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Pamela Hayden"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Pamela Hayden"
      hasGender hasValue female
 
 instance tress_macneille memberOf actor
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Tress MacNeille"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Tress MacNeille"
      hasGender hasValue female
 
 instance maggie_roswell memberOf actor
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Maggie Roswell"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Maggie Roswell"
      hasGender hasValue female
 
 instance doris_grau memberOf actor
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Doris Grau"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Doris Grau"
      hasGender hasValue female
 
 instance kelsey_grammar memberOf actor
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Kelsey Grammar"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Kelsey Grammar"
      hasGender hasValue male
 
 instance springfield memberOf town
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Springfield"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Springfield"
      hasMayor hasValue joe_quimby
      hasPoliceChief hasValue chief_clancy_wiggum
 
 instance shelbyville memberOf town
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Shelbyville"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Shelbyville"
 
 instance nuclear_plant memberOf workplace
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Springfield Nuclear Plant"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Springfield Nuclear Plant"
      hasOwner hasValue monty_burns
      hasLocation hasValue springfield
 
 instance kwik_e_mart memberOf workplace
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Kwik E Mart"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Kwik E Mart"
      hasOwner hasValue apu_nahasapeemapetilon
      hasLocation hasValue springfield
 
 instance channel_6 memberOf workplace
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Channel 6"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Channel 6"
      hasLocation hasValue springfield
 
 instance moes_tavern memberOf workplace
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Moe's Tavern"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Moe's Tavern"
      hasOwner hasValue moe_szyslak
      hasLocation hasValue springfield
 
 instance police_station memberOf workplace
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Springfield Police Station"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Springfield Police Station"
      hasLocation hasValue springfield
 
@@ -237,9 +237,9 @@ instance springfield_church memberOf church
      hasLocation hasValue springfield
 
 instance homer_simpson memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Homer J Simpson"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Homer J Simpson"
      hasGender hasValue male
      hasActor hasValue dan_castellanata
@@ -256,9 +256,9 @@ instance homer_simpson memberOf character
 	 secondTestAttribute hasValue "test"				// test
 	 
 instance marge_simpson memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Marge Simpson"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Marge Simpson"
      hasGender hasValue female
      hasActor hasValue julie_kavner
@@ -272,9 +272,9 @@ instance marge_simpson memberOf character
      worshipsAt hasValue springfield_church
 
 instance lisa_simpson memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Lisa Simpson"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Lisa Simpson"
      hasGender hasValue female
      hasActor hasValue yeardley_smith
@@ -285,9 +285,9 @@ instance lisa_simpson memberOf character
      worshipsAt hasValue springfield_church
 
 instance bart_simpson memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Bart Simpson"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Bart Simpson"
      hasGender hasValue male
      hasActor hasValue nancy_cartwright
@@ -300,9 +300,9 @@ instance bart_simpson memberOf character
      worshipsAt hasValue springfield_church
 
 instance maggie_simpson memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Maggie Simpson"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Maggie Simpson"
      hasGender hasValue female
      hasParent hasValue {homer_simpson, marge_simpson }
@@ -311,26 +311,26 @@ instance maggie_simpson memberOf character
      worshipsAt hasValue springfield_church
 
 instance abe_simpson memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Abraham Simpson"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Abraham Simpson"
      hasGender hasValue male
      hasActor hasValue dan_castellanata
      hasChild hasValue homer_simpson
 
 instance grandma_bouvier memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Grandma Bouvier"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Grandma Bouvier"
      hasGender hasValue female
      hasChild hasValue {marge_simpson, patty_bouvier, selma_bouvier }
 
 instance patty_bouvier memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Patty Bouvier"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Patty Bouvier"
      hasGender hasValue female
      hasActor hasValue julie_kavner
@@ -338,9 +338,9 @@ instance patty_bouvier memberOf character
      hasSibling hasValue {marge_simpson, selma_bouvier }
 
 instance selma_bouvier memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Selma Bouvier"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Selma Bouvier"
      hasGender hasValue female
      hasActor hasValue julie_kavner
@@ -348,9 +348,9 @@ instance selma_bouvier memberOf character
      hasSibling hasValue {marge_simpson, patty_bouvier }
 
 instance milhouse_van_houten memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Milhouse van Houten"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Milhouse van Houten"
      hasGender hasValue male
      hasActor hasValue pamela_hayden
@@ -360,9 +360,9 @@ instance milhouse_van_houten memberOf character
      worshipsAt hasValue springfield_church
 
 instance kirk_van_houten memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Kirk van Houten"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Kirk van Houten"
      hasGender hasValue male
      hasActor hasValue hank_azaria
@@ -370,9 +370,9 @@ instance kirk_van_houten memberOf character
      worshipsAt hasValue springfield_church
 
 instance louanne_van_houten memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Louanne van Houten"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Louanne van Houten"
      hasGender hasValue female
      hasActor hasValue maggie_roswell
@@ -380,9 +380,9 @@ instance louanne_van_houten memberOf character
      worshipsAt hasValue springfield_church
 
 instance ned_flanders memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Ned Flanders"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Ned Flanders"
      hasGender hasValue male
      hasActor hasValue harry_shearer
@@ -390,9 +390,9 @@ instance ned_flanders memberOf character
      worshipsAt hasValue springfield_church
 
 instance maude_flanders memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Maude Flanders"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Maude Flanders"
      hasGender hasValue female
      hasActor hasValue maggie_roswell
@@ -400,9 +400,9 @@ instance maude_flanders memberOf character
      worshipsAt hasValue springfield_church
 
 instance rod_flanders memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Rod Flanders"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Rod Flanders"
      hasGender hasValue male
      hasActor hasValue pamela_hayden
@@ -411,9 +411,9 @@ instance rod_flanders memberOf character
      worshipsAt hasValue springfield_church
 
 instance todd_flanders memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Todd Flanders"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Todd Flanders"
      hasGender hasValue male
      hasActor hasValue nancy_cartwright
@@ -422,27 +422,27 @@ instance todd_flanders memberOf character
      worshipsAt hasValue springfield_church
 
 instance joe_quimby memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "'Diamond' Joe Quimby"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "'Diamond' Joe Quimby"
      hasGender hasValue male
      hasActor hasValue dan_castellanata
      mayorOf hasValue springfield
 
 instance monty_burns memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Charles Montgomery Burns"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Charles Montgomery Burns"
      hasGender hasValue male
      hasActor hasValue harry_shearer
      owns hasValue nuclear_plant
 
 instance waylon_smithers memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Waylon Smithers"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Waylon Smithers"
      hasGender hasValue male
      hasActor hasValue harry_shearer
@@ -450,18 +450,18 @@ instance waylon_smithers memberOf character
      inLoveWith hasValue monty_burns
 
 instance apu_nahasapeemapetilon memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Apu Nahasapeemapetilon"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Apu Nahasapeemapetilon"
      hasGender hasValue male
      hasActor hasValue hank_azaria
      owns hasValue kwik_e_mart
 
 instance moe_szyslak memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Moe Szyslak"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Moe Szyslak"
      hasGender hasValue male
      hasActor hasValue hank_azaria
@@ -469,54 +469,54 @@ instance moe_szyslak memberOf character
      worshipsAt hasValue springfield_church
 
 instance krusty_the_clown memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Krusty The Clown"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Krusty The Clown"
      hasGender hasValue male
      hasActor hasValue dan_castellanata
      hasWorkingPlace hasValue channel_6
 
 instance kent_brockman memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Kent Brockman"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Kent Brockman"
      hasGender hasValue male
      hasActor hasValue harry_shearer
      hasWorkingPlace hasValue channel_6
 
 instance bumblebee_man memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Bumblebee Man"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Bumblebee Man"
      hasGender hasValue male
      hasActor hasValue hank_azaria
      hasWorkingPlace hasValue channel_6
 
 instance sideshow_bob memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Sideshow Bob"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Sideshow Bob"
      hasGender hasValue male
      hasActor hasValue kelsey_grammar
      hasWorkingPlace hasValue channel_6
 
 instance sideshow_mel memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Sideshow Mel"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Sideshow Mel"
      hasGender hasValue male
      hasActor hasValue dan_castellanata
      hasWorkingPlace hasValue channel_6
 
 instance barney_gumble memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Barney Gumble"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Barney Gumble"
      hasGender hasValue male
      hasActor hasValue dan_castellanata
@@ -524,9 +524,9 @@ instance barney_gumble memberOf character
      isCustomerOf hasValue moes_tavern
 
 instance lenny memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Lenny"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Lenny"
      hasGender hasValue male
      hasActor hasValue harry_shearer
@@ -536,9 +536,9 @@ instance lenny memberOf character
      worshipsAt hasValue springfield_church
 
 instance carl memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Carl"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Carl"
      hasGender hasValue male
      hasActor hasValue hank_azaria
@@ -548,27 +548,27 @@ instance carl memberOf character
      worshipsAt hasValue springfield_church
 
 instance nelson_muntz memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Nelson Muntz"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Nelson Muntz"
      hasGender hasValue male
      hasActor hasValue nancy_cartwright
      attends hasValue springfield_elementary
 
 instance jimbo_jones memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Jimbo Jones"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Jimbo Jones"
      hasGender hasValue male
      hasActor hasValue pamela_hayden
      attends hasValue springfield_elementary
 
 instance agnes_skinner memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Agnes Skinner"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Agnes Skinner"
      hasGender hasValue female
      hasActor hasValue tress_macneille
@@ -576,9 +576,9 @@ instance agnes_skinner memberOf character
      worshipsAt hasValue springfield_church
 
 instance seymour_skinner memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Seymour Skinner"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Seymour Skinner"
      hasGender hasValue male
      hasActor hasValue harry_shearer
@@ -587,9 +587,9 @@ instance seymour_skinner memberOf character
      worshipsAt hasValue springfield_church
 
 instance edna_krabappel memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Edna Krabappel"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Edna Krabappel"
      hasGender hasValue female
      hasActor hasValue marcia_wallace
@@ -597,45 +597,45 @@ instance edna_krabappel memberOf character
      worshipsAt hasValue springfield_church
 
 instance groundskeeper_willie memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Groundskeeper Willie"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Groundskeeper Willie"
      hasGender hasValue male
      hasActor hasValue dan_castellanata
      hasWorkingPlace hasValue springfield_elementary
 
 instance otto_mann memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Otto Mann"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Otto Mann"
      hasGender hasValue male
      hasActor hasValue harry_shearer
      hasWorkingPlace hasValue springfield_elementary
 
 instance lunchlady_doris memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Lunchlady Doris"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Lunchlady Doris"
      hasGender hasValue female
      hasActor hasValue doris_grau
      hasWorkingPlace hasValue springfield_elementary
 
 instance miss_hoover memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Miss Hoover"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Miss Hoover"
      hasGender hasValue female
      hasActor hasValue maggie_roswell
      hasWorkingPlace hasValue springfield_elementary
 
 instance reverant_lovejoy memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Reverant Lovejoy"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Reverant Lovejoy"
      hasGender hasValue male
      hasActor hasValue harry_shearer
@@ -643,18 +643,18 @@ instance reverant_lovejoy memberOf character
      reverantOf hasValue springfield_church
 
 instance helen_lovejoy memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Helen Lovejoy"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Helen Lovejoy"
      hasGender hasValue female
      hasActor hasValue maggie_roswell
      hasSpouse hasValue reverant_lovejoy
 
 instance chief_clancy_wiggum memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Chief Clancy Wiggum"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Chief Clancy Wiggum"
      hasGender hasValue male
      hasActor hasValue hank_azaria
@@ -665,9 +665,9 @@ instance chief_clancy_wiggum memberOf character
      policeChiefOf hasValue springfield
 
 instance sarah_wiggum memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Sarah Wiggum"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Sarah Wiggum"
      hasGender hasValue female
      hasActor hasValue pamela_hayden
@@ -676,9 +676,9 @@ instance sarah_wiggum memberOf character
      worshipsAt hasValue springfield_church
 
 instance ralph_wiggum memberOf character
-     nonFunctionalProperties
+     annotations
           dc#title hasValue "Ralph Wiggum"
-     endNonFunctionalProperties
+     endAnnotations
      hasName hasValue "Ralph Wiggum"
      hasGender hasValue male
      hasActor hasValue nancy_cartwright

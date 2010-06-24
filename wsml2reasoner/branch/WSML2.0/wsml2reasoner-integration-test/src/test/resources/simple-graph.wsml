@@ -14,10 +14,10 @@ namespace {_"http://www.example.org/example/#",
  
 ontology _"http://www.example.org/example/test?blabla=blabla.blabla"
    
-nonFunctionalProperties
+annotations
     dc#title hasValue "Simple Graph Ontology"
     wsml#version hasValue "$Revision: 1.2 $"
-endNonFunctionalProperties
+endAnnotations
 
 axiom fact
   definedBy

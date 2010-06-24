@@ -172,7 +172,7 @@ public class Results
 	
 	public static Term _text( String value, String lang )
 	{
-		return dataFactory.createText(value, lang);
+		return dataFactory.createPlainLiteral(value, lang);
 	}
 	
 	public static Term _xmlliteral( String tag, String lang )

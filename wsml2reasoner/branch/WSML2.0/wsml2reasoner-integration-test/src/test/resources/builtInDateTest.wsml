@@ -22,8 +22,8 @@ instance Chris memberOf c1
   hasBirthday hasValue _date(2001,09,15)
 
 axiom childDefinition 
-  nonFunctionalProperties
+  annotations
   dc#description hasValue "A human who is born after 1st of January 1995 is a child."
-  endNonFunctionalProperties
+  endAnnotations
   definedBy
   ?x[hasBirthday hasValue ?y] and ?y > _date(1995,01,01) implies ?x memberOf Child.

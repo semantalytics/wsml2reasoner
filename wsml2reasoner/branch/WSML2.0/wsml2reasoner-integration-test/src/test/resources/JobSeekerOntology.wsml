@@ -43,10 +43,10 @@ concept Candidacy
 
 
 axiom LanguageProfConstraint   
-	 nonFunctionalProperties
+	 annotations
           dc#description hasValue 
           "A Candidacy (Job Seeker) has just one language proficiency for a given language"
-     endNonFunctionalProperties  
+     endAnnotations  
      definedBy 
           !- ?x[has_competence hasValue ?c1] memberOf Candidacy and
           	 ?c1 memberOf LanOnt#Language_Proficiency and
@@ -58,13 +58,13 @@ axiom LanguageProfConstraint
 
 
 axiom ObjectiveConstraint   
-	 nonFunctionalProperties
+	 annotations
           dc#description hasValue 
           "It is not possible that a candidacy (job seeker) has a pair of objectives under 
           the same constraints except for the salary constraints, that is, the 
           same activity sector, work condition, location and job category, but 
           different max or min salary."
-     endNonFunctionalProperties  
+     endAnnotations  
      definedBy
           !- ?x[has_objective hasValue ?o1] memberOf Candidacy and          	
           	 ?x[has_objective hasValue ?o2] memberOf Candidacy and          	

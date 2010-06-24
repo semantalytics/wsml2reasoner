@@ -10,7 +10,7 @@ namespace { _"http://www.example.org/ontologies/sws-challenge/Moon#",
   Tomas Vitvar, tomas.vitvar@deri.org
 *****/
 ontology _"http://www.example.org/ontologies/sws-challenge/Moon"
-	nfp
+	annotations
 		dc#title hasValue "Moon system ontology"
 		dc#description hasValue 
 			"Ontology for Customer Relationship Management system (CRM) and
@@ -23,22 +23,22 @@ ontology _"http://www.example.org/ontologies/sws-challenge/Moon"
 		dc#language hasValue "en-US"
 		dc#rights hasValue _"http://www.deri.org/privacy.html"
 		wsml#version hasValue "$Revision: 1.1 $"
-	endnfp
+	endAnnotations
 	
 /* Contact */	
 concept Contact                        /* OM: ContectInfo             CRM: part of Customer */
-	nfp
+	annotations
 		dc#title hasValue "Contact definition for CRM and OM systems"
-	endnfp
+	endAnnotations
 	contactName ofType _string     /* OM: ContactInfo.name,       CRM: Customer.contactName */
 	telephone ofType _string        /* OM: ContactInfo.telephone,  CRM: Customer.telephone */ 
 	email ofType _string          /* OM: ContactInfo.email,      CRM: Customer.email */
 
 /* Address */
 concept Address                        /* OM: Address                 CRM: part of Customer */
-	nfp
+	annotations
 		dc#title hasValue "Address definition for CRM and OM systems"
-	endnfp
+	endAnnotations
 	businessName ofType _string  /* OM: Address.name			  CRM: Customer.businessName */
 	street ofType _string        /* OM: Address.street		  CRM: Customer.street */
 	city ofType _string          /* OM: Address.city            CRM: Customer.city */ 
@@ -48,9 +48,9 @@ concept Address                        /* OM: Address                 CRM: part 
 
 /* Customer */
 concept Customer                       /* OM: n/a                     CRM: customer */
-	nfp
+	annotations
 		dc#title hasValue "Customer definition for CRM system"
-	endnfp
+	endAnnotations
 	customerId ofType (0 1) _integer   /* OM: n/a                     CRM: Customer.customerId */  
 	roleCode ofType (0 1) _string      /* OM: n/a			          CRM: Customer.roleCode */
 	contact impliesType (0 1) Contact  /* OM: n/a                     CRM: Customer.contactName, telephone, email */ 

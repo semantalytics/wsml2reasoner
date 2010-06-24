@@ -11,7 +11,7 @@ ontology _"http://www.example.org/ontologies/shortExample"
     hasBirthday ofType _date    
 
   concept Woman subConceptOf{Human}
-    nfp dc#relation hasValue "disjoint to Man" endnfp  
+    annotations dc#relation hasValue "disjoint to Man" endAnnotations  
 
   instance Mary memberOf {Woman}
     hasChild hasValue Jack

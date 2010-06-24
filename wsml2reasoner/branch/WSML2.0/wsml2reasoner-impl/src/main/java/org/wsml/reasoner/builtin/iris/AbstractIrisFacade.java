@@ -105,8 +105,6 @@ import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.factory.WsmoFactory;
 
-import sun.security.action.GetIntegerAction;
-
 /**
  * The base class for all facades based on the iris reasoner.
  */
@@ -630,7 +628,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 		} 
 
 		// RDF Datatypes
-		else if (t.equals(RDFDataType.RDF_TEXT)) {
+		else if (t.equals(RDFDataType.RDF_PLAINLITERAL)) {
 			final ComplexDataValue cv = (ComplexDataValue) v;
 			return CONCRETE.createPlainLiteral(getStringFromValue(cv, 0),
 					getStringFromValue(cv, 1));
@@ -845,7 +843,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 			} else {
 				lang = ((IPlainLiteral) t).getLang();
 			}
-			return DATA_FACTORY.createText(((IPlainLiteral) t).getString(),
+			return DATA_FACTORY.createPlainLiteral(((IPlainLiteral) t).getString(),
 					lang);
 		} else if (t instanceof ISqName) {
 			// couldn't find this type in wsmo4j

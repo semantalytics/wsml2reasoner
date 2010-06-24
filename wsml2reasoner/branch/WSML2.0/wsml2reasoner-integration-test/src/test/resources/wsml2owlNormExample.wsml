@@ -13,16 +13,18 @@ ontology _"http://www.example.org/ontologies/example"
     hasBirthday ofType _date    
   
   concept Woman subConceptOf{Human}
-    nfp dc#relation hasValue "disjoint to Man" endnfp  
+    annotations
+      dc#relation hasValue "disjoint to Man"
+    endAnnotations  
 
   concept Child subConceptOf{Human}
     hasParent impliesType Human
 
   relation ageOfHuman (impliesType Human, ofType _integer)    
-    nfp 
+    annotations 
       dc#description hasValue "describes the age of a person" 
       dc#hasRights hasValue _"http://www.deri.org/privacy.htm"
-    endnfp
+    endAnnotations
   
   relation hasChild(impliesType {Woman, Man}, impliesType {Child})
   
