@@ -60,7 +60,7 @@ instance ITALY__IT memberOf Country
 	Code hasValue "IT"
 	Name hasValue "ITALY"
 	is_located_in_Continent hasValue EU__Europe
-	has_region_Region hasValue {Veneto,Marche,Calabria,Campania,Liguria,Valle_DAosta,Lazio,Toscana,Piemonte,Puglia,Sicilia,Basilicata,Abruzzo,EmiliaRomagna,Lombardia,Sardegna,Umbria,Friuli_VeneziaGiulia,Trentino_Süd_Tirol,Molise}
+	has_region_Region hasValue {Veneto,Marche,Calabria,Campania,Liguria,Valle_DAosta,Lazio,Toscana,Piemonte,Puglia,Sicilia,Basilicata,Abruzzo,EmiliaRomagna,Lombardia,Sardegna,Umbria,Friuli_VeneziaGiulia,Trentino_Sued_Tirol,Molise}
 
 instance IRELAND__IE memberOf Country
 	Code hasValue "IE"
@@ -124,7 +124,7 @@ instance Molise memberOf Region
 	Name hasValue "Molise"
 	is_located_in_Country hasValue ITALY__IT
 
-instance Trentino_Süd_Tirol memberOf Region
+instance Trentino_Sued_Tirol memberOf Region
 	Description hasValue "Trentino Süd Tirol"
 	Name hasValue "Trentino Süd Tirol"
 	is_located_in_Country hasValue ITALY__IT

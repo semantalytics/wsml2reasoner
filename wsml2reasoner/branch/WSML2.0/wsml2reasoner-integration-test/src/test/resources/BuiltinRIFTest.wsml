@@ -295,7 +295,7 @@ axiom testRIFBuiltin definedBy
        toTimeText(?x) 			:- ?x[?attribute hasValue ?value] and wsml#toTime(?z, xsd#dateTime( 1981, 12, 31, 14, 31, 30.0 )) and ?z  = xsd#time(14, 31, 30.0, 0, 0).
        toDayTimeDurationTest(?x) 	:- ?x[?attribute hasValue ?value] and wsml#toDayTimeDuration(?z, xsd#duration(0, 0, 5, 3, 2, 1.0)) and ?z = xsd#dayTimeDuration(5, 3, 2, 1.0).
        toYearMonthDurationTest(?x) 	:- ?x[?attribute hasValue ?value] and wsml#toYearMonthDuration(?z, xsd#duration(1, 0, 0, 0, 0, 0.0)) and ?z = xsd#yearMonthDuration(1,0).
-       toTextTest(?x) 				:- ?x[?attribute hasValue ?value] and wsml#toText(?z, xsd#string("Text", "de")) and ?z = rdf#text("Text", "de").
+       toTextTest(?x) 				:- ?x[?attribute hasValue ?value] and wsml#toText(?z, xsd#string("Text", "de")) and ?z = rdf#PlainLiteral("Text", "de").
        toXMLLiteralTest(?x) 		:- ?x[?attribute hasValue ?value] and wsml#toXMLLiteral(?z, xsd#string("<tag>Text</tag>")) and ?z = rdf#XMLLiteral("<tag>Text</tag>", "").
 	   
 	   // Section [B]
@@ -350,12 +350,12 @@ axiom testRIFBuiltin definedBy
 	   timezonePartTest3(?x) :- ?x[?attribute hasValue ?value] and wsml#timezonePart(?z, xsd#date(1981, 12, 31))  and ?z = xsd#dayTimeDuration(0, 0, 0, 0.0). 
 	   
 	   // Section [E]
-	   textFromStringLangTest(?x) 	:- ?x[?attribute hasValue ?value] and wsml#textFromStringLang(?z, xsd#string("some string"), xsd#string("en")) and ?z = rdf#text("some string", "en").  
-	   textFromStringTest(?x) 		:- ?x[?attribute hasValue ?value] and wsml#textFromString(?text, xsd#string("abc")) and ?text = rdf#text("abc", "").  
-	   stringFromTextTest(?x) 		:- ?x[?attribute hasValue ?value] and wsml#stringFromText(?z, rdf#text("abc", "de")) and wsml#stringEqual(?z, xsd#string("abc")).  
-	   langFromTextTest(?x) 		:- ?x[?attribute hasValue ?value] and wsml#langFromText(?z, rdf#text("Rdf Text","en")) and wsml#stringEqual(?z, xsd#string("en")).
-	   textLengthTest(?x) 			:- ?x[?attribute hasValue ?value] and wsml#textLength(?length, rdf#text("Rdf Text", "en")) and ?length = 8.
-	   textCompareTest(?x) 			:- ?x[?attribute hasValue ?value] and wsml#textCompare(?z, rdf#text("Rdf Text", "en") , rdf#text("Rdf Text", "en")) and ?z = 0.
+	   textFromStringLangTest(?x) 	:- ?x[?attribute hasValue ?value] and wsml#textFromStringLang(?z, xsd#string("some string"), xsd#string("en")) and ?z = rdf#PlainLiteral("some string", "en").  
+	   textFromStringTest(?x) 		:- ?x[?attribute hasValue ?value] and wsml#textFromString(?text, xsd#string("abc")) and ?text = rdf#PlainLiteral("abc", "").  
+	   stringFromTextTest(?x) 		:- ?x[?attribute hasValue ?value] and wsml#stringFromText(?z, rdf#PlainLiteral("abc", "de")) and wsml#stringEqual(?z, xsd#string("abc")).  
+	   langFromTextTest(?x) 		:- ?x[?attribute hasValue ?value] and wsml#langFromText(?z, rdf#PlainLiteral("Rdf Text","en")) and wsml#stringEqual(?z, xsd#string("en")).
+	   textLengthTest(?x) 			:- ?x[?attribute hasValue ?value] and wsml#textLength(?length, rdf#PlainLiteral("Rdf Text", "en")) and ?length = 8.
+	   textCompareTest(?x) 			:- ?x[?attribute hasValue ?value] and wsml#textCompare(?z, rdf#PlainLiteral("Rdf Text", "en") , rdf#PlainLiteral("Rdf Text", "en")) and ?z = 0.
 	   
 	   
 	   

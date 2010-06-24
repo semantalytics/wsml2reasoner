@@ -10,7 +10,7 @@ ontology About_Persons_rule
 
 	concept Person
 		name ofType xsd#string
-		slogan ofType rdf#text
+		slogan ofType rdf#PlainLiteral
 		hasChild impliesType Child
 
 	concept Man subConceptOf Person
@@ -33,7 +33,7 @@ ontology About_Persons_rule
 	
 	instance Bart memberOf Child
 		name hasValue "Bart Simpson"
-		slogan hasValue {rdf#text("Eat my shorts", "en"), rdf#text("Ay, caramba", "es")}  
+		slogan hasValue {rdf#PlainLiteral("Eat my shorts", "en"), rdf#PlainLiteral("Ay, caramba", "es")}  
 		
 	axiom IsSpanishSpeaker
 		definedBy
@@ -44,11 +44,11 @@ ontology About_Persons_rule
 
 /*
 
-a) Query the slogans of Bart. Slogans are represented by rdf#text data values, which have a text with a corresponding language.
+a) Query the slogans of Bart. Slogans are represented by rdf#PlainLiteral data values, which have a text with a corresponding language.
 
 Bart[slogan hasValue ?slogan]
 
-b) Query all spanish speakers. We make use of the new built-in "wsml#langFromText", which extracts the language part of a rdf#text data value. 
+b) Query all spanish speakers. We make use of the new built-in "wsml#langFromText", which extracts the language part of a rdf#PlainLiteral data value. 
 
 ?x memberOf SpanishSpeaker.
 */
