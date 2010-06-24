@@ -26,20 +26,20 @@ import helper.CoreHelper;
 import helper.OntologyHelper;
 import junit.framework.TestCase;
 
-import org.wsml.reasoner.api.inconsistency.InconsistencyException;
+import org.wsmo.common.exception.InvalidModelException;
 
 import abstractTests.Core;
 
 public abstract class AbstractViolation4CyclicalInheritance extends TestCase implements Core {
 
-    private static final String ONTOLOGY_FILE = "violation4_cyclical_inheritance.wsml";
-    
-    public void testInconsistency() throws Exception {
-        try{
-        	CoreHelper.queryXMemberOfY( OntologyHelper.loadOntology( ONTOLOGY_FILE ), getReasoner() );
-            fail("Should have thrown InconsistencyException");
-        }
-        catch (InconsistencyException e){
-        }
-    }
+	private static final String ONTOLOGY_FILE = "violation4_cyclical_inheritance.wsml";
+
+	public void testInconsistency() throws Exception {
+		try {
+			CoreHelper.queryXMemberOfY(OntologyHelper.loadOntology(ONTOLOGY_FILE), getReasoner());
+			fail("Should have thrown InconsistencyException");
+		} catch (RuntimeException re) { // needs to be catched since it happens already while parsing.
+			assertTrue(re.getCause() instanceof InvalidModelException);
+		}
+	}
 }
