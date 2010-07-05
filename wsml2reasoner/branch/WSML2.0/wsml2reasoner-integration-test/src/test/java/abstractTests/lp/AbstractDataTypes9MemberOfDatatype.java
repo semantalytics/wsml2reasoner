@@ -35,7 +35,7 @@ public abstract class AbstractDataTypes9MemberOfDatatype extends TestCase implem
     private static final String ONTOLOGY_FILE = "datatypes9_memberofdatatype.wsml";
 
     public void testMemberOfString() throws Exception {
-    	String query = "?x memberOf _string";
+    	String query = "?i[?a hasValue ?x] and ?x memberOf _string";
     	
     	Results r = new Results( "x" );
     	r.addBinding( Results._string( "a" ) );
@@ -45,7 +45,7 @@ public abstract class AbstractDataTypes9MemberOfDatatype extends TestCase implem
     }
     
     public void testMemberOfInteger() throws Exception {
-    	String query = "?x memberOf _integer";
+    	String query = "?i[?a hasValue ?x] and ?x memberOf _integer";
     	
     	Results r = new Results( "x" );
     	r.addBinding( Results._integer(1) );

@@ -22,6 +22,8 @@
  */
 package abstractTests.lp;
 
+import org.omwg.ontology.XmlSchemaDataType;
+
 import helper.LPHelper;
 import helper.OntologyHelper;
 import helper.Results;
@@ -32,7 +34,7 @@ public abstract class AbstractAttribute4InheritingOfType extends TestCase implem
 
 	private static final String ONTOLOGY_FILE = "attribute4_inheriting_of_type.wsml";
 	private static final String NS = "http://example.com/attribute4#";
-	private static final String WSML_STRING = "http://www.wsmo.org/wsml/wsml-syntax#string";
+	private static final String XSD_STRING = XmlSchemaDataType.XSD_STRING;
 	
 	public void testAttributeInheritance() throws Exception {
 
@@ -42,7 +44,7 @@ public abstract class AbstractAttribute4InheritingOfType extends TestCase implem
 		{
 			for( int a = i; a >= 1; --a )
 			{
-				r.addBinding( Results.iri( NS + "c" + i ), Results.iri( NS + "a" + a ), Results.iri( WSML_STRING ) );
+				r.addBinding( Results.iri( NS + "c" + i ), Results.iri( NS + "a" + a ), Results.iri( XSD_STRING ) );
 			}
 		}
 

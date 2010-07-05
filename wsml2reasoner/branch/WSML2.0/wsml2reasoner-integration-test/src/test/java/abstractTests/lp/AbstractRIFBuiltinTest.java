@@ -108,6 +108,11 @@ public abstract class AbstractRIFBuiltinTest extends TestCase implements LP {
 		checkSTD(query);
 	}
 
+	public void testisInt() throws Exception {
+		query = "isIntTest(?x)";
+		checkSTD(query);
+	}
+
 	public void testisShort() throws Exception {
 		query = "isShortTest(?x)";
 		checkSTD(query);
@@ -279,6 +284,11 @@ public abstract class AbstractRIFBuiltinTest extends TestCase implements LP {
 		checkSTD(query);
 	}
 
+	public void testisNotInt() throws Exception {
+		query = "isNotIntTest(?x)";
+		checkSTD(query);
+	}
+
 	public void testisNotShort() throws Exception {
 		query = "isNotShortTest(?x)";
 		checkSTD(query);
@@ -365,7 +375,7 @@ public abstract class AbstractRIFBuiltinTest extends TestCase implements LP {
 	}
 
 	public void testisNotNMToken() throws Exception {
-		query = "isNotNMTokenTest(?x)";
+		query = "isNotNMTOKENTest(?x)";
 		checkSTD(query);
 	}
 
@@ -488,7 +498,9 @@ public abstract class AbstractRIFBuiltinTest extends TestCase implements LP {
 	}
 
 	public void testsubString() throws Exception {
-		query = "subStringTest(?x)";
+		query = "subStringTest1(?x)";
+		checkSTD(query);
+		query = "subStringTest2(?x)";
 		checkSTD(query);
 	}
 
@@ -523,12 +535,16 @@ public abstract class AbstractRIFBuiltinTest extends TestCase implements LP {
 	}
 
 	public void testsubstringBefore() throws Exception {
-		query = "substringBeforeTest(?x)";
+		query = "substringBeforeTest1(?x)";
+		checkSTD(query);
+		query = "substringBeforeTest2(?x)";
 		checkSTD(query);
 	}
 
 	public void testsubstringAfter() throws Exception {
-		query = "substringAfterTest(?x)";
+		query = "substringAfterTest1(?x)";
+		checkSTD(query);
+		query = "substringAfterTest2(?x)";
 		checkSTD(query);
 	}
 
@@ -538,22 +554,30 @@ public abstract class AbstractRIFBuiltinTest extends TestCase implements LP {
 	}
 
 	public void testcontains() throws Exception {
-		query = "containsTest(?x)";
+		query = "containsTest1(?x)";
+		checkSTD(query);
+		query = "containsTest2(?x)";
 		checkSTD(query);
 	}
 
 	public void teststartsWith() throws Exception {
-		query = "startsWithTest(?x)";
+		query = "startsWithTest1(?x)";
+		checkSTD(query);
+		query = "startsWithTest2(?x)";
 		checkSTD(query);
 	}
 
 	public void testendsWith() throws Exception {
-		query = "endsWithTest(?x)";
+		query = "endsWithTest1(?x)";
+		checkSTD(query);
+		query = "endsWithTest2(?x)";
 		checkSTD(query);
 	}
 
 	public void testmatches() throws Exception {
-		query = "matchesTest(?x)";
+		query = "matchesTest1(?x)";
+		checkSTD(query);
+		query = "matchesTest2(?x)";
 		checkSTD(query);
 	}
 
