@@ -944,8 +944,8 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 //        case IS_STRING:
 //        	return BUILTIN.createIsString(terms.get(0));
 //        
-//        case IS_TEXT:
-//        	return BUILTIN.createIsText(terms.get(0));
+//        case IS_PLAINLITERAL:
+//        	return BUILTIN.createIsPlainLiteral(terms.get(0));
 //        
 //        case IS_TIME:
 //        	return BUILTIN.createIsTime(terms.get(0));
@@ -1009,8 +1009,8 @@ public class Wsml2EllyTranslator implements LogicalExpressionVisitor, TermVisito
 //        			else if( type.equals( XmlSchemaDataType.XSD_DAYTIMEDURATION ) )  
 //        				return new IsDayTimeDurationBuiltin( t0 );
 //        			// RDF 
-//        			else if( type.equals( RDFDataType.RDF_TEXT ) )  {
-//        				return new IsTextBuiltin( t0 );
+//        			else if( type.equals( RDFDataType.RDF_PLAINLITERAL ) )  {
+//        				return new IsPlainLiteralBuiltin( t0 );
 //        			}
 //        			else if( type.equals( RDFDataType.RDF_XMLLITERAL ) )  
 //        				return new IsXMLLiteralBuiltin( t0 );
