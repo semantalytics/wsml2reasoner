@@ -327,8 +327,8 @@ public class IrisFacadeHelper {
 			return BUILTIN.createIsNotDatatype(sortedTerms);
 		case IS_STRING:
 			return BUILTIN.createIsString(sortedTerms);
-		case IS_TEXT:
-			return BUILTIN.createIsText(sortedTerms);
+		case IS_PLAINLITERAL:
+			return BUILTIN.createIsPlainLiteral(sortedTerms);
 		case IS_TIME:
 			return BUILTIN.createIsTime(sortedTerms);
 		case IS_XMLLITERAL:
@@ -395,9 +395,9 @@ public class IrisFacadeHelper {
 			
 			// RIF String builtins
 		case COMPARE:
-			return BUILTIN.createStringCompare(wsmlTerms);
+			return BUILTIN.createStringCompare(sortedTerms);
 		case CONCAT:
-			return BUILTIN.createStringConcat(wsmlTerms);
+			return BUILTIN.createStringConcat(sortedTerms);
 		case CONCATENATE: 
 			// TODO mp needed?
 //			 return BUILTIN.createStringConcatenate(wsmlTerms);
@@ -459,16 +459,12 @@ public class IrisFacadeHelper {
 			return BUILTIN.createDurationEqual(wsmlTerms);
 		case DURATION_NOT_EQUAL:
 			return BUILTIN.createDurationNotEqual(wsmlTerms);
-		case ENCODE_FOR_URI: 
-			// TODO mp: needed 
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+		case ENCODE_FOR_URI:
+			return BUILTIN.createStringUriEncode(sortedTerms);
 		case ENDS_WITH:
-			return BUILTIN.createStringEndsWith(sortedTerms);
-		case ESCAPE_HTML_URI: 
-			// TODO mp: 
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+			return BUILTIN.createStringEndsWith(wsmlTerms);
+		case ESCAPE_HTML_URI:
+			return BUILTIN.createStringEscapeHtmlUri(sortedTerms);
 		case EXCEPT: 
 			// TODO mp: 
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
@@ -497,10 +493,8 @@ public class IrisFacadeHelper {
 					BASIC.createTuple(terms));
 		case IRI_STRING:
 			return BUILTIN.createIriString(sortedTerms);
-		case IRI_TO_URI: 
-			// TODO mp: 
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+		case IRI_TO_URI:
+			return BUILTIN.createStringIriToUri(sortedTerms);
 		case IS_LIST: 
 			// TODO mp
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
@@ -577,10 +571,8 @@ public class IrisFacadeHelper {
 			return BUILTIN.createIsNotHexBinary(wsmlTerms);
 		case IS_LITERAL_NOT_INTEGER:
 			return BUILTIN.createIsNotInteger(wsmlTerms);
-//		case IS_LITERAL_NOT_INT:
-//			// TODO mp: implement
-//			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-//					BASIC.createTuple(terms));
+		case IS_LITERAL_NOT_INT:
+			return BUILTIN.createIsNotInt(wsmlTerms);
 		case IS_LITERAL_NOT_LANGUAGE:
 			return BUILTIN.createIsNotLanguage(wsmlTerms);
 		case IS_LITERAL_NOT_LONG:
@@ -600,9 +592,7 @@ public class IrisFacadeHelper {
 		case IS_LITERAL_NOT_NORMALIZEDSTRING:
 			return BUILTIN.createIsNotNormalizedString(wsmlTerms);
 		case IS_LITERAL_NOT_PLAINLITERAL:
-			// TODO mp: 
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+			return BUILTIN.createIsNotPlainLiteral(wsmlTerms);
 		case IS_LITERAL_NOT_POSITIVEINTEGER:
 			return BUILTIN.createIsNotPositiveInteger(wsmlTerms);
 		case IS_LITERAL_NOT_SHORT:
@@ -626,9 +616,7 @@ public class IrisFacadeHelper {
 		case IS_LITERAL_NOT_YEARMONTHDURATION:
 			return BUILTIN.createIsNotYearMonthDuration(wsmlTerms);
 		case IS_LITERAL_PLAINLITERAL:
-			// TODO mp:
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+			return BUILTIN.createIsPlainLiteral(wsmlTerms);
 		case IS_LITERAL_POSITIVEINTEGER:
 			return BUILTIN.createIsPositiveInteger(wsmlTerms);
 		case IS_LITERAL_SHORT:
@@ -669,7 +657,7 @@ public class IrisFacadeHelper {
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
 		case MATCHES:
-			return BUILTIN.createStringMatches(sortedTerms);
+			return BUILTIN.createStringMatches(wsmlTerms);
 		case MATCHES_LANGUAGE_RANGE: 
 			// TODO mp: implement?
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
@@ -694,21 +682,19 @@ public class IrisFacadeHelper {
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
 		case NOT:
-			// TODO mp:
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+			return BUILTIN.createBooleanNot(wsmlTerms);
 		case NUMERIC_ADD:
 			return BUILTIN.createNumericAdd(sortedTerms);
 		case NUMERIC_DIVIDE:
 			return BUILTIN.createNumericDivide(sortedTerms);
+		case NUMERIC_INTEGER_DIVIDE:
+			return BUILTIN.createNumericIntegerDivide(sortedTerms);
 		case NUMERIC_EQUAL:
 			return BUILTIN.createNumericEqual(sortedTerms);
 		case NUMERIC_GREATER_THAN:
 			return BUILTIN.createNumericGreater(wsmlTerms);
 		case NUMERIC_GREATER_THAN_OR_EQUAL:
 			return BUILTIN.createNumericGreaterEqual(wsmlTerms);
-		case NUMERIC_INTEGER_DIVIDE:
-			return BUILTIN.createNumericIntegerDivide(wsmlTerms);
 		case NUMERIC_LESS_THAN:
 			return BUILTIN.createNumericLess(wsmlTerms);
 		case NUMERIC_LESS_THAN_OR_EQUAL:
@@ -749,7 +735,7 @@ public class IrisFacadeHelper {
 		case SECONDS_FROM_TIME:
 			return BUILTIN.createSecondsFromTime(sortedTerms);
 		case STARTS_WITH:
-			return BUILTIN.createStringStartsWith(sortedTerms);
+			return BUILTIN.createStringStartsWith(wsmlTerms);
 		case STRING_FROM_PLAINLITERAL: 				// TODO mp: error
 			return BUILTIN.createStringFromText(sortedTerms);
 		case STRING_JOIN:
@@ -766,10 +752,8 @@ public class IrisFacadeHelper {
 			return BUILTIN.createStringSubstringAfter(sortedTerms);
 		case SUBSTRING_BEFORE:
 			return BUILTIN.createStringSubstringBefore(sortedTerms);
-		case SUBTRACT_DATES: 
-			// TODO mp: 
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+		case SUBTRACT_DATES:
+			return BUILTIN.createDateSubtract(sortedTerms);
 		case SUBTRACT_DATETIMES: 
 			return BUILTIN.createDateTimeSubtract(sortedTerms);
 		case SUBTRACT_DAYTIMEDURATION_FROM_DATE:
