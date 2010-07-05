@@ -29,6 +29,8 @@ import static org.deri.iris.factory.Factory.TERM;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -612,7 +614,15 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 					getDoubleFromValue(cv, 5), getIntFromValue(cv, 6),
 					getIntFromValue(cv, 7)); // FIXME last two are optionial?
 		} else if (t.equals(XmlSchemaDataType.XSD_ANYURI)) {
-			return CONCRETE.createIri((String) v.getValue());
+			URI uri = null;
+			try {
+				String stringValue = (String) v.getValue();
+				uri = new URI(stringValue);
+			} catch (URISyntaxException e) {
+				throw new InternalReasonerException(e);
+			}
+			
+			return CONCRETE.createAnyURI(uri);
 		} else if (t.equals(XmlSchemaDataType.XSD_QNAME)) {
 			final ComplexDataValue cv = (ComplexDataValue) v;
 			return CONCRETE.createQName(getStringFromValue(cv, 0), getStringFromValue(cv, 1));
