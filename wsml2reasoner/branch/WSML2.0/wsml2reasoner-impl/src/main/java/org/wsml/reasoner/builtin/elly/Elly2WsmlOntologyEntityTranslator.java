@@ -2,6 +2,8 @@ package org.wsml.reasoner.builtin.elly;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TimeZone;
 
 import org.deri.iris.api.terms.IStringTerm;
@@ -198,8 +200,34 @@ public class Elly2WsmlOntologyEntityTranslator {
 		}
 		else if (irisTerm instanceof IDuration) {
 			final IDuration dt = (IDuration) irisTerm;
-			return container.getXmlDataFactory().createDuration(dt.getYear(), dt.getMonth(), dt.getDay(), dt.getHour(),
-					dt.getMinute(), dt.getDecimalSecond());
+			
+			List<Integer> values = new ArrayList<Integer>();
+			values.add(dt.getYear());
+			values.add(dt.getMonth());
+			values.add(dt.getDay());
+			values.add(dt.getHour());
+			values.add(dt.getMinute());
+
+			// getSeconds discards fractional part => handle seconds differently
+			double seconds = dt.getDecimalSecond();
+
+			// negative => special treatment
+			boolean signSet = dt.isPositive();
+			// attach negative sign to first non-zero value
+			if (!signSet) {
+				for (int i = 0; i < values.size(); i++) {
+					Integer value = values.get(i);
+					if (value > 0) {
+						signSet = true;
+						values.set(i, value * -1);
+						break;
+					}
+				}
+				if (!signSet) {
+					seconds *= -1;
+				}
+			}
+			return container.getXmlDataFactory().createDuration(values.get(0), values.get(1), values.get(2), values.get(3), values.get(4), seconds);
 		} else if (irisTerm instanceof IFloatTerm) {
 			return container.getXmlDataFactory().createFloat(((IFloatTerm) irisTerm).getValue().floatValue());
 		} else if (irisTerm instanceof IGDay) {

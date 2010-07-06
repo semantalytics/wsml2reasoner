@@ -3,6 +3,9 @@ package org.wsml.reasoner.builtin.elly;
 import static org.deri.iris.factory.Factory.CONCRETE;
 import static org.deri.iris.factory.Factory.TERM;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.deri.iris.api.terms.IConcreteTerm;
 import org.omwg.ontology.ComplexDataValue;
 import org.omwg.ontology.DataValue;
@@ -58,8 +61,35 @@ public class Wsml2EllyDataValueTranslator {
 			return CONCRETE.createDouble(Double.parseDouble(v.getValue().toString()));
 		} else if (t.equals(WsmlDataType.WSML_DURATION) || t.equals(XmlSchemaDataType.XSD_DURATION)) {
 			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createDuration(true, getIntFromValue(cv, 0), getIntFromValue(cv, 1),
-					getIntFromValue(cv, 2), getIntFromValue(cv, 3), getIntFromValue(cv, 4), getDoubleFromValue(cv, 5));
+			
+			int signum = 0;
+			List<Integer> values = new ArrayList<Integer>();
+			for (int i = 0; i <= 4; ++i) {
+				int value = getIntFromValue(cv, i);
+				values.add(Math.abs(value)); // Add absolute value
+				
+				if (signum == 0) { // signum not set yet
+					if (value > 0) {
+						signum = +1;
+					} else if (value < 0) {
+						signum = -1;
+					}
+				}
+			}
+			double seconds = getDoubleFromValue(cv, 5);
+			if (signum == 0) { // signum not set yet
+				if (seconds > 0.0) {
+					signum = +1;
+				} else if (seconds < 0.0) {
+					signum = -1;
+				}
+			}
+			seconds = Math.abs(seconds); // Add absolute value
+			
+			return CONCRETE.createDuration(
+					signum >= 0,
+					values.get(0), values.get(1), values.get(2),
+					values.get(3), values.get(4), seconds);
 		} else if (t.equals(WsmlDataType.WSML_FLOAT) || t.equals(XmlSchemaDataType.XSD_FLOAT)) {
 			return CONCRETE.createFloat(Float.parseFloat(v.getValue().toString()));
 		} else if (t.equals(WsmlDataType.WSML_GDAY) || t.equals(XmlSchemaDataType.XSD_GDAY)) {
