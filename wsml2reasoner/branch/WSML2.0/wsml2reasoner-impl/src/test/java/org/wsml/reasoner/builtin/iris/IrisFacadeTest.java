@@ -129,8 +129,35 @@ public class IrisFacadeTest extends TestCase {
 		assertEquals(DF.createDouble("3.1415"), IF.convertTermFromIrisToWsmo4j(CF
 				.createDouble(3.1415d)));
 		// test duration
-//		assertEquals(DF.createWsmlDuration(5, 3, 5, 12, 16, 11), IF
-//				.irisTermConverter(CF.createDuration(5, 12, 16, 11)));
+		assertEquals(DF.createDuration(5, 3, 5, 12, 16, 11.0),
+				IF.convertTermFromIrisToWsmo4j(
+						CF.createDuration(true, 5, 3, 5, 12, 16, 11.0)));
+		assertEquals(DF.createDuration(-5, 3, 5, 12, 16, 11.0),
+				IF.convertTermFromIrisToWsmo4j(
+						CF.createDuration(false, 5, 3, 5, 12, 16, 11.0)));
+		assertEquals(DF.createDuration(0, -3, 5, 12, 16, 11.0),
+				IF.convertTermFromIrisToWsmo4j(
+						CF.createDuration(false, 0, 3, 5, 12, 16, 11.0)));
+		// test daytime-duration
+		assertEquals(DF.createDayTimeDuration(5, 12, 16, 11.0),
+				IF.convertTermFromIrisToWsmo4j(
+						CF.createDayTimeDuration(true, 5, 12, 16, 11.0)));
+		assertEquals(DF.createDayTimeDuration(-5, 12, 16, 11.0),
+				IF.convertTermFromIrisToWsmo4j(
+						CF.createDayTimeDuration(false, 5, 12, 16, 11.0)));
+		assertEquals(DF.createDayTimeDuration(0, -12, 16, 11.0),
+				IF.convertTermFromIrisToWsmo4j(
+						CF.createDayTimeDuration(false, 0, 12, 16, 11.0)));
+		// test yearmonth-duration
+		assertEquals(DF.createYearMonthDuration(5, 3),
+				IF.convertTermFromIrisToWsmo4j(
+						CF.createYearMonthDuration(true, 5, 3)));
+		assertEquals(DF.createYearMonthDuration(-5, 3),
+				IF.convertTermFromIrisToWsmo4j(
+						CF.createYearMonthDuration(false, 5, 3)));
+		assertEquals(DF.createYearMonthDuration(0, -3),
+				IF.convertTermFromIrisToWsmo4j(
+						CF.createYearMonthDuration(false, 0, 3)));
 		// test float
 		assertEquals(DF.createFloat("3.1415"), IF.convertTermFromIrisToWsmo4j(CF
 				.createFloat(3.1415f)));
@@ -233,9 +260,35 @@ public class IrisFacadeTest extends TestCase {
 		assertEquals(CF.createDouble(1.3498), IrisStratifiedFacade.convertWsmo4jDataValueToIrisTerm(DF
 				.createDouble("1.3498")));
 		// test duration
-//		assertEquals(CF.createDuration(8, 13, 15, 22), IrisFacade
-//				.dataValueConverter(DF.createWsmlDuration(2007, 1, 8, 13, 15,
-//						22)));
+		assertEquals(CF.createDuration(true, 2007, 1, 8, 13, 15, 22), 
+				IrisStratifiedFacade.convertWsmo4jDataValueToIrisTerm(
+						DF.createDuration(2007, 1, 8, 13, 15, 22)));
+		assertEquals(CF.createDuration(false, 2007, 1, 8, 13, 15, 22), 
+				IrisStratifiedFacade.convertWsmo4jDataValueToIrisTerm(
+						DF.createDuration(-2007, 1, 8, 13, 15, 22)));
+		assertEquals(CF.createDuration(false, 0, 1, 8, 13, 15, 22), 
+				IrisStratifiedFacade.convertWsmo4jDataValueToIrisTerm(
+						DF.createDuration(0, -1, 8, 13, 15, 22)));
+		// test daytime-duration
+		assertEquals(CF.createDayTimeDuration(true, 8, 13, 15, 22), 
+				IrisStratifiedFacade.convertWsmo4jDataValueToIrisTerm(
+						DF.createDayTimeDuration(8, 13, 15, 22)));
+		assertEquals(CF.createDayTimeDuration(false, 8, 13, 15, 22), 
+				IrisStratifiedFacade.convertWsmo4jDataValueToIrisTerm(
+						DF.createDayTimeDuration(-8, 13, 15, 22)));
+		assertEquals(CF.createDayTimeDuration(false, 0, 13, 15, 22), 
+				IrisStratifiedFacade.convertWsmo4jDataValueToIrisTerm(
+						DF.createDayTimeDuration(0, -13, 15, 22)));
+		// test yearmonth-duration
+		assertEquals(CF.createYearMonthDuration(true, 2007, 1), 
+				IrisStratifiedFacade.convertWsmo4jDataValueToIrisTerm(
+						DF.createYearMonthDuration(2007, 1)));
+		assertEquals(CF.createYearMonthDuration(false, 2007, 1), 
+				IrisStratifiedFacade.convertWsmo4jDataValueToIrisTerm(
+						DF.createYearMonthDuration(-2007, 1)));
+		assertEquals(CF.createYearMonthDuration(false, 0, 1), 
+				IrisStratifiedFacade.convertWsmo4jDataValueToIrisTerm(
+						DF.createYearMonthDuration(0, -1)));
 		// test float
 		assertEquals(CF.createFloat(1.3498f), IrisStratifiedFacade.convertWsmo4jDataValueToIrisTerm(DF
 				.createFloat("1.3498")));
