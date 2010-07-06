@@ -524,10 +524,35 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 		} else if (t.equals(WsmlDataType.WSML_DURATION)
 				|| t.equals(XmlSchemaDataType.XSD_DURATION)) {
 			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createDuration(true, getIntFromValue(cv, 0),
-					getIntFromValue(cv, 1), getIntFromValue(cv, 2),
-					getIntFromValue(cv, 3), getIntFromValue(cv, 4),
-					getDoubleFromValue(cv, 5));
+			
+			int signum = 0;
+			List<Integer> values = new ArrayList<Integer>();
+			for (int i = 0; i <= 4; ++i) {
+				int value = getIntFromValue(cv, i);
+				values.add(Math.abs(value)); // Add absolute value
+				
+				if (signum == 0) { // signum not set yet
+					if (value > 0) {
+						signum = +1;
+					} else if (value < 0) {
+						signum = -1;
+					}
+				}
+			}
+			double seconds = getDoubleFromValue(cv, 5);
+			if (signum == 0) { // signum not set yet
+				if (seconds > 0.0) {
+					signum = +1;
+				} else if (seconds < 0.0) {
+					signum = -1;
+				}
+			}
+			seconds = Math.abs(seconds); // Add absolute value
+			
+			return CONCRETE.createDuration(
+					signum >= 0,
+					values.get(0), values.get(1), values.get(2),
+					values.get(3), values.get(4), seconds);
 		} else if (t.equals(WsmlDataType.WSML_FLOAT)
 				|| t.equals(XmlSchemaDataType.XSD_FLOAT)) {
 			return CONCRETE.createFloat((Float) v.getValue());
@@ -561,13 +586,56 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 			return CONCRETE.createInteger((BigInteger) v.getValue());
 		} else if (t.equals(XmlSchemaDataType.XSD_DAYTIMEDURATION)) {
 			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createDayTimeDuration(true, getIntFromValue(cv, 0),
-					getIntFromValue(cv, 1), getIntFromValue(cv, 2),
-					getDoubleFromValue(cv, 3));
+			
+			int signum = 0;
+			List<Integer> values = new ArrayList<Integer>();
+			for (int i = 0; i <= 2; ++i) {
+				int value = getIntFromValue(cv, i);
+				values.add(Math.abs(value)); // Add absolute value
+				
+				if (signum == 0) { // signum not set yet
+					if (value > 0) {
+						signum = +1;
+					} else if (value < 0) {
+						signum = -1;
+					}
+				}
+			}
+			double seconds = getDoubleFromValue(cv, 3);
+			if (signum == 0) { // signum not set yet
+				if (seconds > 0.0) {
+					signum = +1;
+				} else if (seconds < 0.0) {
+					signum = -1;
+				}
+			}
+			seconds = Math.abs(seconds); // Add absolute value
+			
+			return CONCRETE.createDayTimeDuration(
+					signum >= 0,
+					values.get(0), values.get(1), values.get(2),
+					seconds);
 		} else if (t.equals(XmlSchemaDataType.XSD_YEARMONTHDURATION)) {
 			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createYearMonthDuration(true,
-					getIntFromValue(cv, 0), getIntFromValue(cv, 1));
+			
+			int signum = 0;
+			List<Integer> values = new ArrayList<Integer>();
+			for (int i = 0; i <= 1; ++i) {
+				int value = getIntFromValue(cv, i);
+				values.add(Math.abs(value)); // Add absolute value
+				
+				if (signum == 0) { // signum not set yet
+					if (value > 0) {
+						signum = +1;
+					} else if (value < 0) {
+						signum = -1;
+					}
+				}
+			}
+			
+			return CONCRETE.createYearMonthDuration(
+					signum >= 0,
+					values.get(0), values.get(1));
 		} else if (t.equals(XmlSchemaDataType.XSD_LONG)) {
 			return CONCRETE.createLong((Long) v.getValue());
 		} else if (t.equals(XmlSchemaDataType.XSD_INT)) {
@@ -807,11 +875,6 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 		} else if (t instanceof IDecimalTerm) {
 			return DATA_FACTORY.createDecimal(new BigDecimal(((IDecimalTerm) t)
 					.toString()));
-		} else if (t instanceof IDuration) {
-			final IDuration dt = (IDuration) t;
-			return DATA_FACTORY.createDuration(dt.getYear(), dt.getMonth(), dt
-					.getDay(), dt.getHour(), dt.getMinute(), dt
-					.getDecimalSecond());
 		} else if (t instanceof IGDay) {
 			return DATA_FACTORY.createGregorianDay(((IGDay) t).getDay());
 		} else if (t instanceof IGMonth) {
@@ -827,14 +890,87 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 			return DATA_FACTORY.createGregorianYearMonth(md.getYear(), md
 					.getMonth());
 		} else if (t instanceof IYearMonthDuration) {
-			return DATA_FACTORY.createYearMonthDuration(
-					((IYearMonthDuration) t).getYear(),
-					((IYearMonthDuration) t).getMonth());
+			final IYearMonthDuration dt = (IYearMonthDuration) t;
+			
+			List<Integer> values = new ArrayList<Integer>();
+			values.add(dt.getYear());
+			values.add(dt.getMonth());
+
+			// negative => special treatment
+			boolean signSet = dt.isPositive();
+			// attach negative sign to first non-zero value
+			if (!signSet) {
+				for (int i = 0; i < values.size(); i++) {
+					Integer value = values.get(i);
+					if (value > 0) {
+						signSet = true;
+						values.set(i, value * -1);
+						break;
+					}
+				}
+			}
+			return DATA_FACTORY.createYearMonthDuration(values.get(0), values.get(1));
 		} else if (t instanceof IDayTimeDuration) {
-			return DATA_FACTORY.createDayTimeDuration(((IDayTimeDuration) t)
-					.getDay(), ((IDayTimeDuration) t).getHour(),
-					((IDayTimeDuration) t).getMinute(), ((IDayTimeDuration) t)
-							.getSecond());
+			final IDayTimeDuration dt = (IDayTimeDuration) t;
+			
+			List<Integer> values = new ArrayList<Integer>();
+			values.add(dt.getDay());
+			values.add(dt.getHour());
+			values.add(dt.getMinute());
+
+			// getSeconds discards fractional part => handle seconds differently
+			double seconds = dt.getDecimalSecond();
+
+			// negative => special treatment
+			boolean signSet = dt.isPositive();
+			// attach negative sign to first non-zero value
+			if (!signSet) {
+				for (int i = 0; i < values.size(); i++) {
+					Integer value = values.get(i);
+					if (value > 0) {
+						signSet = true;
+						values.set(i, value * -1);
+						break;
+					}
+				}
+				if (!signSet) {
+					seconds *= -1;
+				}
+			}
+			return DATA_FACTORY.createDayTimeDuration(values.get(0), values.get(1), values.get(2), seconds);
+		} else if (t instanceof IDuration) { 
+			// it is essential that IDuration comes after IDayTimeDuration and IYearMonthDuration
+			// since those interfaces are extend IDuration
+			// FIXME check if this applies somewhere else!
+			final IDuration dt = (IDuration) t;
+			
+			List<Integer> values = new ArrayList<Integer>();
+			values.add(dt.getYear());
+			values.add(dt.getMonth());
+			values.add(dt.getDay());
+			values.add(dt.getHour());
+			values.add(dt.getMinute());
+
+			// getSeconds discards fractional part => handle seconds differently
+			double seconds = dt.getDecimalSecond();
+
+			// negative => special treatment
+			boolean signSet = dt.isPositive();
+			// attach negative sign to first non-zero value
+			if (!signSet) {
+				for (int i = 0; i < values.size(); i++) {
+					Integer value = values.get(i);
+					if (value > 0) {
+						signSet = true;
+						values.set(i, value * -1);
+						break;
+					}
+				}
+				if (!signSet) {
+					seconds *= -1;
+				}
+			}
+			return DATA_FACTORY.createDuration(values.get(0), values.get(1), values.get(2), values.get(3), values.get(4), seconds);
 		} else if (t instanceof IXMLLiteral) {
 			// checks if there is a language string
 			String lang;
