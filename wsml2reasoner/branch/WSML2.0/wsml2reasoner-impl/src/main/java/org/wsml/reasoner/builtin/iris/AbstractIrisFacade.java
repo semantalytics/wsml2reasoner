@@ -612,7 +612,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 					getIntFromValue(cv, 1), getIntFromValue(cv, 2),
 					getIntFromValue(cv, 3), getIntFromValue(cv, 4),
 					getDoubleFromValue(cv, 5), getIntFromValue(cv, 6),
-					getIntFromValue(cv, 7)); // FIXME last two are optionial?
+					getIntFromValue(cv, 7));
 		} else if (t.equals(XmlSchemaDataType.XSD_ANYURI)) {
 			URI uri = null;
 			try {
