@@ -30,31 +30,30 @@ import abstractTests.LP;
 
 public abstract class AbstractDataTypes4DateTimeSubtraction extends TestCase implements LP {
 
-    private static final String NS = "http://example.com/datatypes4#";
+	private static final String NS = "http://example.com/datatypes4#";
 
-    private static final String ONTOLOGY_FILE = "datatypes4_date_time_subtraction.wsml";
+	private static final String ONTOLOGY_FILE = "datatypes4_date_time_subtraction.wsml";
 
-    public void testDateTimeSubtract() throws Exception {
-    	String query = "?x[age hasValue ?t]";
+	public void testDateTimeSubtract() throws Exception {
+		String query = "?x[age hasValue ?t]";
 
-    	Results r = new Results( "t", "x" );
-    	r.addBinding( Results._duration(  1, 2, 3, 4, 5, 6.7 ), Results.iri( NS + "allFields" ));
-    	r.addBinding( Results._duration(  0, 0, 0, 0, 0, 0.1 ),  Results.iri( NS + "smallPositive" ));
-    	r.addBinding( Results._duration(  0, 0, 0, 0, 0, -0.1 ), Results.iri( NS + "smallNegative" ) );
+		Results r = new Results("t", "x");
+		r.addBinding(Results._duration(1, 2, 3, 4, 5, 6.7), Results.iri(NS + "allFields"));
+		r.addBinding(Results._duration(0, 0, 0, 0, 0, 0.1), Results.iri(NS + "smallPositive"));
+		r.addBinding(Results._duration(0, 0, 0, 0, 0, -0.1), Results.iri(NS + "smallNegative"));
 
-    	// TODO mp: Problems with 3 or more numbers after the floating point.
-    	// r.addBinding(  Results._duration(  0, 0, 0, 0, 0, 0.000001 ), Results.iri( NS + "oneMicro" ) );
-    	r.addBinding(  Results._duration(  0, 0, 0, 0, 0, 0.001 ), Results.iri( NS + "oneMilli" ) );
-    	
-    	r.addBinding( Results._duration( 0, 0, 0, 0, 0, 1 ), Results.iri( NS + "oneSecond" ) );
-    	r.addBinding( Results._duration(  0, 0, 0, 0, 1, 0 ), Results.iri( NS + "oneMinute" ) );
-    	r.addBinding( Results._duration(  0, 0, 0, 1, 0, 0 ), Results.iri( NS + "oneHour" ) );
-    	
-    	r.addBinding( Results._duration(  0, 0, 1, 0, 0, 0 ),  Results.iri( NS + "oneDay" ) );
-    	r.addBinding( Results._duration(  0, 1, 0, 0, 0, 0 ), Results.iri( NS + "oneMonth" ) );
-    	r.addBinding( Results._duration(  1, 0, 0, 0, 0, 0 ),  Results.iri( NS + "oneYear" ) );
-    	
-    	LPHelper.outputON();
-    	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );
-    }
+		r.addBinding(Results._duration(0, 0, 0, 0, 0, 0.000001), Results.iri(NS + "oneMicro"));
+		r.addBinding(Results._duration(0, 0, 0, 0, 0, 0.001), Results.iri(NS + "oneMilli"));
+
+		r.addBinding(Results._duration(0, 0, 0, 0, 0, 1), Results.iri(NS + "oneSecond"));
+		r.addBinding(Results._duration(0, 0, 0, 0, 1, 0), Results.iri(NS + "oneMinute"));
+		r.addBinding(Results._duration(0, 0, 0, 1, 0, 0), Results.iri(NS + "oneHour"));
+
+		r.addBinding(Results._duration(0, 0, 1, 0, 0, 0), Results.iri(NS + "oneDay"));
+		r.addBinding(Results._duration(0, 1, 0, 0, 0, 0), Results.iri(NS + "oneMonth"));
+		r.addBinding(Results._duration(1, 0, 0, 0, 0, 0), Results.iri(NS + "oneYear"));
+
+		//LPHelper.outputON();
+		LPHelper.executeQueryAndCheckResults(OntologyHelper.loadOntology(ONTOLOGY_FILE), query, r.get(), getLPReasoner());
+	}
 }
