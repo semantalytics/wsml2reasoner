@@ -39,6 +39,7 @@ public abstract class AbstractAxiom8FlightUnSafeRules extends TestCase implement
   
     	try
     	{
+    		// this exception is not thrown for well founded since well founded augments safety!
 	    	LPHelper.executeQuery( OntologyHelper.loadOntology( ONTOLOGY_FILE ), "?x memberOf ?y", getLPReasoner() );
 	    	fail( "Some kind of exception should be thrown here, because the ontology contains an unsafe rule." );
     	}
