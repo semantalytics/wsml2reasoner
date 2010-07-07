@@ -92,7 +92,7 @@ public class DataSourceTest extends BaseReasonerTest {
 
 	public void testInstanceRetrieval() throws Exception {
 		String query = "Anne memberOf CatOwner";
-		LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
+		LogicalExpressionParser leParser = new WsmlLogicalExpressionParser(o);
 		LogicalExpression qExpression = leParser.parse(
 				query);
 		assertTrue(((LPReasoner) wsmlReasoner).ask(qExpression));
