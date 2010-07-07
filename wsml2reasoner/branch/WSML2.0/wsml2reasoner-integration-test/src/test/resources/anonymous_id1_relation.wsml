@@ -7,6 +7,7 @@ concept C
 concept D
 		
 relation rel(impliesType C, impliesType D)
+relationInstance rel(c,d)
 	
 instance c memberOf C
 instance d memberOf D
