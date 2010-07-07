@@ -84,7 +84,7 @@ public class ConstructReductionNormalizerTest extends BaseNormalizationTest
         ontology.setDefaultNamespace(iri);
         Axiom a = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
         ontology.addAxiom(a);
-        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
+        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser(ontology);
         a.addDefinition(leParser.parse(
                 "a[r1 hasValue v1, r2 hasValue v2] " +
                 "or b[r1 hasValue v2] " +
