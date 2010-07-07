@@ -71,7 +71,9 @@ public abstract class AbstractDataTypes3DateTimeDurationTypes extends TestCase i
     	r.addBinding( Results.iri( NS + "decimalSeconds" ), Results._duration( 1, 2, 3, 4, 5, 6.98765 ) );
     	r.addBinding( Results.iri( NS + "decimalSecondsWithTimeZones" ), Results._duration( 1, 2, 3, 4, 5, 6.98765 ) );
 
-//    	LPHelper.outputON();
+    	// FIXME seconds can are represented with maximally 3 fractional digits 
+    	// => internally not possible otherwise, XSD doesn't restrict the number of fractional digits
+    	// LPHelper.outputON();
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );
     }
     

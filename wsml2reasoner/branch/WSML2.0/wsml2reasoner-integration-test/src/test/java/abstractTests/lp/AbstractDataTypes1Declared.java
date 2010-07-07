@@ -98,17 +98,11 @@ public abstract class AbstractDataTypes1Declared extends TestCase implements LP 
     	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_RDF_XMLLiteral" ), Results._xmlliteral("<tag>XML Literal</tag>", ""));
     	
     	// new XSD Datatypes
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aYearMonthDuration" ), Results._duration(2008, 10, 0,0,0,0) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_YearMonthDuration" ),  Results._duration(2008, 11, 0,0,0,0) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDayTimeDuration" ), Results._duration(0,0,1, 10, 31, 15.5) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_DayTimeDuration" ), Results._duration(0,0,1, 10, 31, 15.6) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aYearMonthDuration" ), Results._yearmonthduration(2008, 10) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_YearMonthDuration" ),  Results._yearmonthduration(2008, 11) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDayTimeDuration" ), Results._daytimeduration(1, 10, 31, 15.5) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_DayTimeDuration" ), Results._daytimeduration(1, 10, 31, 15.6) );
     	
-//    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aYearMonthDuration" ), Results._yearmonthduration(2008, 10) );
-//    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_YearMonthDuration" ),  Results._yearmonthduration(2008, 11) );
-//    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDayTimeDuration" ), Results._daytimeduration(1, 10, 31, 15.5) );
-//    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_DayTimeDuration" ), Results._daytimeduration(1, 10, 31, 15.6) );
-    	
-    	LPHelper.outputON();
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );
     }
 }

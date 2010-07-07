@@ -41,8 +41,8 @@ public abstract class AbstractDataTypes10Declared extends TestCase implements LP
     	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDuration" ), Results._duration( 1, 2, 3, 4, 5, 6.0 ) );
     	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aPlainLiteral" ), Results._text( "This should be a RDF Text", "en" ) );
     	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aRDF_XMLLiteral" ), Results._xmlliteral("<tag>xml literal</tag>", "en" ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aYearMonthDuration" ), Results._duration(2009,9,0,0,0,0.0) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDayTimeDuration" ), Results._duration(0, 0, 5, 3, 2, 1.0));
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aYearMonthDuration" ), Results._yearmonthduration(2009,9) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDayTimeDuration" ), Results._daytimeduration(5, 3, 2, 1.0));
 
 //    	LPHelper.outputON();
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );
