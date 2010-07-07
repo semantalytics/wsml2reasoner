@@ -215,7 +215,7 @@ public class BaseReasonerTest extends TestCase {
             throws Exception {
         System.out.println("\n\nStarting reasoner with query '" + query + "'");
         System.out.println("\n\nExpecting " + expected.size() + " result(s)...");
-        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
+        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser(o);
 		LogicalExpression qExpression = leParser.parse(query);
         System.out.println("WSML Query LE:");
         System.out.println(logExprSerializer.serialize(qExpression));
