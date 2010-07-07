@@ -1,6 +1,8 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
 namespace { _"http://example.com/flight1#",
-       wsml _"http://www.wsmo.org/wsml/wsml-syntax#" }
+       wsml _"http://www.wsmo.org/wsml/wsml-syntax#",
+       rif-pred _"http://www.w3.org/2007/rif-builtin-predicate#",
+       rif-func _"http://www.w3.org/2007/rif-builtin-function#"}
 
 ontology lord_of_the_rings
 

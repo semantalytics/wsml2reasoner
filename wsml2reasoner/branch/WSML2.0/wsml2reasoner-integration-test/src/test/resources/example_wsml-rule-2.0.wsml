@@ -3,7 +3,7 @@ wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-rule"
 namespace {_"http://www.example.org/rule#",
 		wsml _"http://www.wsmo.org/wsml/wsml-syntax#",
 		xsd _"http://www.w3.org/2001/XMLSchema#",
-		
+		func _"http://www.w3.org/2007/rif-builtin-function#",
 		rdf _"http://www.w3.org/1999/02/22-rdf-syntax-ns#"}
 
 ontology About_Persons_rule
@@ -39,7 +39,7 @@ ontology About_Persons_rule
 		definedBy
 			?x memberOf SpanishSpeaker impliedBy
 				?x[slogan hasValue ?slogan] and
-				xsd#langFromText(?language, ?slogan) and
+				func#lang-from-PlainLiteral(?language, ?slogan) and
 				?language = "es". 
 
 /*
