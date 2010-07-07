@@ -28,7 +28,7 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.LogicalExpressionParser;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
-import org.omwg.ontology.WsmlDataType;
+import org.omwg.ontology.XmlSchemaDataType;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.api.WSMLReasonerFactory.BuiltInReasoner;
@@ -79,7 +79,7 @@ public class PreserveTypeTests extends BaseReasonerTest {
     //This test ensures that decimal equations result in decimals
     public void preserveTypeAfterOperationWithConcepts() throws Exception {
         String query = "?x[value hasValue ?y] memberOf Miles";
-        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
+        LogicalExpressionParser leParser = new WsmlLogicalExpressionParser(o);
         LogicalExpression qExpression = leParser.parse(query);
         logExprSerializer.serialize(qExpression);
         
@@ -88,7 +88,7 @@ public class PreserveTypeTests extends BaseReasonerTest {
         for (Map<Variable, Term> binding : result) {
         	SimpleDataValueImpl shouldBeDecimal = (SimpleDataValueImpl) 
         		binding.get(leFactory.createVariable("y"));	
-        	assertTrue(shouldBeDecimal.getType().toString().equals(WsmlDataType.WSML_DECIMAL));
+        	assertTrue(shouldBeDecimal.getType().toString().equals(XmlSchemaDataType.XSD_DECIMAL));
         }
         System.out.println("Finished query.");
     }
