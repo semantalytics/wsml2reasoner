@@ -22,6 +22,8 @@
  */
 package abstractTests.lp;
 
+import org.omwg.ontology.XmlSchemaDataType;
+
 import helper.LPHelper;
 import helper.OntologyHelper;
 import helper.Results;
@@ -32,7 +34,7 @@ public abstract class AbstractAttribute5InheritingFromMultipleSuperConcepts exte
 
 	private static final String ONTOLOGY_FILE = "attribute5_inheriting_from_multiple_super_concepts.wsml";
 	private static final String NS = "http://example.com/attribute5#";
-	private static final String WSML_STRING = "http://www.wsmo.org/wsml/wsml-syntax#string";
+	private static final String STRING = XmlSchemaDataType.XSD_STRING;
 	
 	public void testAttributeInheritance() throws Exception {
 
@@ -40,7 +42,7 @@ public abstract class AbstractAttribute5InheritingFromMultipleSuperConcepts exte
 		
 		for( int a = 1; a <= 15; ++a )
 		{
-			r.addBinding( Results.iri( NS + "a" + a ), Results.iri( WSML_STRING ) );
+			r.addBinding( Results.iri( NS + "a" + a ), Results.iri( STRING ) );
 		}
 
 //		System.out.println( OntologyHelper.toString( LPHelper.executeQuery(OntologyHelper.loadOntology(ONTOLOGY_FILE), "c1_10[?attribute ofType ?type]", getLPReasoner()) ) );
