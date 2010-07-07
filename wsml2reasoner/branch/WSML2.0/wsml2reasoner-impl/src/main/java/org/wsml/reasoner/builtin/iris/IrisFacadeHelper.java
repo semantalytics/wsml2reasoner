@@ -35,6 +35,7 @@ import org.omwg.ontology.WsmlDataType;
 import org.omwg.ontology.XmlSchemaDataType;
 import org.wsml.reasoner.Literal;
 import org.wsml.reasoner.WSML2DatalogTransformer;
+import org.wsml.reasoner.api.exception.InternalReasonerException;
 import org.wsmo.common.BuiltIn;
 import org.wsmo.common.RifBuiltIn;
 
@@ -101,6 +102,11 @@ public class IrisFacadeHelper {
 		// in wsml returnvalue is on first position - in iris on last position.
 		ITerm[] sortedTerms = toArray(sortListForIRIS(terms));
 		
+		// TODO mp       test GYearEqual to NumericEqual ?
+		//					  ToText rename: ToPlainLiteral ?
+		//					  InEqual to UnEqual 
+		//					  TextEqual to Equal ?
+		
 		switch (wsmlBuiltIn) {
 		case EQUAL:
 			return BUILTIN.createEqual(terms.get(0), terms.get(1));
@@ -121,7 +127,6 @@ public class IrisFacadeHelper {
 		case DATETIME_LESS_THAN:
 			return BUILTIN.createDateTimeLess(sortedTerms);
 		case DAYTIMEDURATION_EQUAL: 
-			 // TODO mp: is duration ok?
 			return BUILTIN.createDurationEqual(sortedTerms);
 		case DAYTIMEDURATION_GREATER_THAN:
 			return BUILTIN.createDayTimeDurationGreater(wsmlTerms);
@@ -132,26 +137,20 @@ public class IrisFacadeHelper {
 		case DURATION_INEQUAL:
 			return BUILTIN.createDurationNotEqual(wsmlTerms);
 		case GDAY_EQUAL: 
-			 // TODO mp: is duration ok?
-			return BUILTIN.createDurationEqual(sortedTerms);
+			return BUILTIN.createNumericEqual(sortedTerms);
 		case GMONTH_EQUAL:
-			 // TODO mp: is duration ok?
-			return BUILTIN.createDurationEqual(sortedTerms);
+			return BUILTIN.createNumericEqual(sortedTerms);
 		case GMONTHDAY_EQUAL: 
-			 // TODO mp: is duration ok?
-			return BUILTIN.createDurationEqual(sortedTerms);
+			return BUILTIN.createNumericEqual(sortedTerms);
 		case GREATER_EQUAL:
 			return BUILTIN.createGreaterEqual(terms.get(0), terms.get(1));
 		case GREATER_THAN:
 			return BUILTIN.createGreater(terms.get(0), terms.get(1));
 		case GYEAR_EQUAL: 
-			 // TODO mp: is duration ok?
-			return BUILTIN.createDurationEqual(sortedTerms);
+			return BUILTIN.createNumericEqual(sortedTerms);
 		case GYEARMONTH_EQUAL: 
-			 // TODO mp: is duration ok?
-			return BUILTIN.createDurationEqual(sortedTerms);
+			return BUILTIN.createNumericEqual(sortedTerms);
 		case INEQUAL: 
-			// TODO mp: 
 			return BUILTIN.createUnequal(terms.get(0), terms.get(1));
 		case LESS_EQUAL:
 			return BUILTIN.createLessEqual(wsmlTerms[0], wsmlTerms[1]);
@@ -176,10 +175,8 @@ public class IrisFacadeHelper {
 		case NUMERIC_SUBTRACT:
 			return BUILTIN.createNumericSubtract(sortedTerms);
 		case STRING_EQUAL: 
-			// TODO mp check
 			return BUILTIN.createEqual(terms.get(0), terms.get(1));
 		case STRING_INEQUAL: 
-			// TODO mp: 
 			return BUILTIN.createUnequal(terms.get(0), terms.get(1));
 		case TIME_EQUAL:
 			return BUILTIN.createTimeEqual(wsmlTerms);
@@ -190,18 +187,13 @@ public class IrisFacadeHelper {
 		case TIME_LESS_THAN:
 			return BUILTIN.createTimeLess(wsmlTerms);
 		case YEARMONTHDURATION_EQUAL: 
-			// TODO mp: is duration ok?
 			return BUILTIN.createDurationEqual(sortedTerms);
 		case YEARMONTHDURATION_GREATER_THAN:
 			return BUILTIN.createYearMonthDurationGreater(wsmlTerms);
 		case YEARMONTHDURATION_LESS_THAN:
 			return BUILTIN.createYearMonthDurationLess(wsmlTerms);
 		case HAS_DATATYPE:
-			// TODO mp: 
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
-			// TO_DATATYPE part
-			// TODO mp : to_datatype : sorted or wsmlTerms?
+			throw new InternalReasonerException("WSML Built-in: " + wsmlBuiltIn.getName() + " not yet supported!");
 		case TO_BASE64:
 			return BUILTIN.createToBase64Binary(sortedTerms);
 		case TO_BOOLEAN:
@@ -239,15 +231,14 @@ public class IrisFacadeHelper {
 		case TO_STRING:
 			return BUILTIN.createToString(sortedTerms);
 		case TO_TEXT:
-			// TODO mp: ToPlainLiteral
-			return BUILTIN.createToString(sortedTerms);
+			return BUILTIN.createToText(sortedTerms);
 		case TO_TIME:
 			return BUILTIN.createToTime(sortedTerms);
 		case TO_XMLLITERAL:
 			return BUILTIN.createToXMLLiteral(sortedTerms);
 		case TO_YEARMONTHDURATION:
 			return BUILTIN.createToYearMonthDuration(sortedTerms);
-		// end of TO_DATATYPE part
+		
 		case DAY_PART:
 			return BUILTIN.createDayPart(sortedTerms);
 		case HOUR_PART:
@@ -265,10 +256,8 @@ public class IrisFacadeHelper {
 		case TEXT_COMPARE:
 			return BUILTIN.createTextCompare(sortedTerms);
 		case TEXT_EQUAL:
-			// TODO mp check
 			return BUILTIN.createEqual(terms.get(0), terms.get(1));
 		case TEXT_INEQUAL:
-			// TODO mp check
 			return BUILTIN.createUnequal(terms.get(0), terms.get(1));
 		case TEXT_FROM_STRING:
 			return BUILTIN.createTextFromString(sortedTerms);
@@ -280,23 +269,20 @@ public class IrisFacadeHelper {
 			return BUILTIN.createLangFromText(sortedTerms);
 		case STRING_FROM_TEXT:
 			return BUILTIN.createStringFromText(sortedTerms);
-		// IS_DATATYPE part
+		
 		case IS_BASE64BINARY:
 			return BUILTIN.createIsBase64Binary(sortedTerms);
 		case IS_BOOLEAN:
 			return BUILTIN.createIsBoolean(sortedTerms);
 		case IS_DATATYPE:
-			// TODO mp check
 			return BUILTIN.createIsDatatype(sortedTerms);
 		case IS_DATE:
 			return BUILTIN.createIsDate(sortedTerms);
 		case IS_DATETIME:
 			return BUILTIN.createIsDateTime(sortedTerms);
 		case IS_DAYTIME_DURATION:
-			// TODO mp check:
 			return BUILTIN.createIsDuration(sortedTerms);
-		case IS_DAYTIMEDURATION:  // TODO the same as before
-			// TODO mp check:
+		case IS_DAYTIMEDURATION:  
 			return BUILTIN.createIsDuration(sortedTerms);
 		case IS_DECIMAL:
 			return BUILTIN.createIsDecimal(sortedTerms);
@@ -323,7 +309,6 @@ public class IrisFacadeHelper {
 		case IS_IRI:
 			return BUILTIN.createIsIRI(sortedTerms);
 		case IS_NOT_DATATYPE:
-			// TODO mp check
 			return BUILTIN.createIsNotDatatype(sortedTerms);
 		case IS_STRING:
 			return BUILTIN.createIsString(sortedTerms);
@@ -334,14 +319,11 @@ public class IrisFacadeHelper {
 		case IS_XMLLITERAL:
 			return BUILTIN.createIsXMLLiteral(sortedTerms);
 		case IS_YEAR_MONTH_DURATION:
-			// TODO mp the same:
-			return BUILTIN.createIsYearMonthDuration(sortedTerms);
-		case IS_YEARMONTHDURATION:
 			return BUILTIN.createIsYearMonthDuration(sortedTerms);
 		
 		default:
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+			throw new InternalReasonerException("WSML Built-in: " + wsmlBuiltIn.getName() + " not yet supported!");
+//			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),BASIC.createTuple(terms));
 		}
 
 	}
@@ -369,25 +351,23 @@ public class IrisFacadeHelper {
 		
 		switch (rifbuiltIn) {
 		case ADD_DAYTIMEDURATIONS: 
-			// TODO mp: needed?
-			return BUILTIN.createAddDayTimeDurationToDateTime(sortedTerms);
+			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+//			return BUILTIN.createAddDayTimeDuration(sortedTerms);
 		case ADD_DAYTIMEDURATION_TO_DATE:
 			return BUILTIN.createAddDayTimeDurationToDate(sortedTerms);
 		case ADD_DAYTIMEDURATION_TO_TIME:
 			return BUILTIN.createAddDayTimeDurationToTime(sortedTerms);
 		case ADD_DAYTIMEDURATION_TO_DATETIME:
 			return BUILTIN.createAddDayTimeDurationToDateTime(sortedTerms);
-		case ADD_YEARMONTHDURATIONS: // TODO mp: needed?
-			return BUILTIN.createAddYearMonthDurationToDateTime(sortedTerms);
+		case ADD_YEARMONTHDURATIONS:
+			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+//			return BUILTIN.createAddYearMonthDuration(sortedTerms);
 		case ADD_YEARMONTHDURATION_TO_DATE:
 			return BUILTIN.createAddYearMonthDurationToDate(sortedTerms);
 		case ADD_YEARMONTHDURATION_TO_DATETIME:
 			return BUILTIN.createAddYearMonthDurationToDateTime(sortedTerms);
 		case BOOLEAN_EQUAL:
 			return BUILTIN.createBooleanEqual(wsmlTerms);
-//	    case BOOLEAN_NOT_EQUAL: 
-			// TODO mp 
-//			return BUILTIN.createBooleanNot(wsmlTerms);
 		case BOOLEAN_GREATER_THAN:
 			return BUILTIN.createBooleanGreater(wsmlTerms);
 		case BOOLEAN_LESS_THAN:
@@ -399,9 +379,8 @@ public class IrisFacadeHelper {
 		case CONCAT:
 			return BUILTIN.createStringConcat(sortedTerms);
 		case CONCATENATE: 
-			// TODO mp needed?
-//			 return BUILTIN.createStringConcatenate(wsmlTerms);
-			return BUILTIN.createStringConcat(wsmlTerms);
+			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+//			return BUILTIN.createStringConcatenate(wsmlTerms);
 		case CONTAINS:
 			return BUILTIN.createStringContains(wsmlTerms);
 		case DATE_EQUAL:
@@ -443,10 +422,8 @@ public class IrisFacadeHelper {
 		case DAYTIMEDURATION_LESS_THAN_OR_EQUAL:
 			return BUILTIN.createDayTimeDurationLessEqual(wsmlTerms);
 		case DISTINCT_VALUES: 
-			// TODO mp
+			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
 //			return BUILTIN.createDistinctValues(wsmlTerms);
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
 		case DIVIDE_DAYTIMEDURATION:
 			return BUILTIN.createDayTimeDurationDivide(sortedTerms);
 		case DIVIDE_DAYTIMEDURATION_BY_DAYTIMEDURATION:
@@ -466,13 +443,11 @@ public class IrisFacadeHelper {
 		case ESCAPE_HTML_URI:
 			return BUILTIN.createStringEscapeHtmlUri(sortedTerms);
 		case EXCEPT: 
-			// TODO mp: 
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+//			return BUILTIN.createExceptValues(wsmlTerms);
 		case GET: 
-			// TODO mp:
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+//			return BUILTIN.createGet(wsmlTerms);
 		case HOURS_FROM_DATETIME:
 			return BUILTIN.createHoursFromDateTime(sortedTerms);
 		case HOURS_FROM_DURATION:
@@ -480,25 +455,21 @@ public class IrisFacadeHelper {
 		case HOURS_FROM_TIME:
 			return BUILTIN.createHoursFromTime(sortedTerms);
 		case INDEX_OF:
-			// TODO mp: 
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+//			return BUILTIN.createIndexOf(sortedTerms);
 		case INSERT_BEFORE: 
-			// TODO mp: check
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+//			return BUILTIN.createInsertBefore(sortedTerms);
 		case INTERSECT: 
-			// TODO mp:
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+//			return BUILTIN.createIntersect(sortedTerms);
 		case IRI_STRING:
 			return BUILTIN.createIriString(sortedTerms);
 		case IRI_TO_URI:
 			return BUILTIN.createStringIriToUri(sortedTerms);
 		case IS_LIST: 
-			// TODO mp
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+//			return BUILTIN.createIsList(sortedTerms);
 		case IS_LITERAL_ANYURI:
 			return BUILTIN.createIsAnyURI(wsmlTerms);
 		case IS_LITERAL_BASE64BINARY:
@@ -640,28 +611,23 @@ public class IrisFacadeHelper {
 		case IS_LITERAL_YEARMONTHDURATION:
 			return BUILTIN.createIsYearMonthDuration(wsmlTerms);
 		case LANG_FROM_PLAINLITERAL: 				
-			// TODO mp ?
 			return BUILTIN.createLangFromText(sortedTerms);
 		case LIST_CONTAINS: 
-			// TODO mp: 
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+//			return BUILTIN.createListContains(sortedTerms);
 		case LITERAL_NOT_IDENTICAL: 
-			// TODO mp:
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+//			return BUILTIN.createLiteralNotIdentical(sortedTerms);
 		case LOWER_CASE:
 			return BUILTIN.createStringToLower(sortedTerms);
 		case MAKE_LISTS: 
-			// TODO mp: ?
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+//			return BUILTIN.createMakeList(sortedTerms);
 		case MATCHES:
 			return BUILTIN.createStringMatches(wsmlTerms);
 		case MATCHES_LANGUAGE_RANGE: 
-			// TODO mp: implement?
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+//			return BUILTIN.createMatchesLanguageRange(sortedTerms);
 		case MINUTES_FROM_DATETIME:
 			return BUILTIN.createMinutesFromDateTime(sortedTerms);
 		case MINUTES_FROM_DURATION:
@@ -675,12 +641,11 @@ public class IrisFacadeHelper {
 		case MONTHS_FROM_DURATION:
 			return BUILTIN.createMonthsFromDuration(sortedTerms);
 		case MULTIPLY_DAYTIMEDURATION: 
-			// TODO mp:
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+//			return BUILTIN.createMultiplyDayTimeDuration(sortedTerms);
 		case MULTIPLY_YEARMONTHDURATION:
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+//			return BUILTIN.createMultiplyYearMonthDuration(sortedTerms);
 		case NOT:
 			return BUILTIN.createBooleanNot(wsmlTerms);
 		case NUMERIC_ADD:
@@ -708,26 +673,19 @@ public class IrisFacadeHelper {
 		case NUMERIC_SUBTRACT:
 			return BUILTIN.createNumericSubtract(sortedTerms);
 		case PLAINLITERAL_COMPARE:						
-			// TODO mp: 
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+			return BUILTIN.createTextCompare(sortedTerms);
 		case PLAINLITERAL_FROM_STRING_LANG: 			
-			// TODO mp: 
-			return BUILTIN.createTextFromStringLang(sortedTerms);
+			return BUILTIN.createLangFromText(sortedTerms);
 		case PLAINLITERAL_LENGTH:
-			// TODO mp: 
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+			return BUILTIN.createTextLength(sortedTerms);
 		case REMOVE: 
-			// TODO mp
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+//			return BUILTIN.createRemove(sortedTerms);
 		case REPLACE:
 			return BUILTIN.createStringReplace(sortedTerms);
 		case REVERSE: 
-			// TODO mp : implement
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+//			return BUILTIN.createReverse();
 		case SECONDS_FROM_DATETIME:
 			return BUILTIN.createSecondsFromDateTime(sortedTerms);
 		case SECONDS_FROM_DURATION:
@@ -743,9 +701,8 @@ public class IrisFacadeHelper {
 		case STRING_LENGTH:
 			return BUILTIN.createStringLength(sortedTerms);
 		case SUBLIST: 
-			// TODO mp: 
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+//			return BUILTIN.createSubList(sortedTerms);
 		case SUBSTRING:
 			return BUILTIN.createStringSubstring(sortedTerms);
 		case SUBSTRING_AFTER:
@@ -791,9 +748,8 @@ public class IrisFacadeHelper {
 		case TIMEZONE_FROM_TIME:
 			return BUILTIN.createTimezoneFromTime(sortedTerms);
 		case UNION: 
-			// TODO mp
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+//			return BUILTIN.createUnion(sortedTerms);
 		case UPPER_CASE:
 			return BUILTIN.createStringToUpper(sortedTerms);
 		case XMLLITERAL_EQUAL:
@@ -814,7 +770,6 @@ public class IrisFacadeHelper {
 			return BUILTIN.createYearMonthDurationLessEqual(wsmlTerms);
 		case YEARS_FROM_DURATION:
 			return BUILTIN.createYearsFromDuration(sortedTerms);
-			// TODO mp: some more builtins ? 
 		default:
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
