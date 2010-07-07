@@ -690,7 +690,7 @@ public class IrisFacadeHelper {
 		case NUMERIC_INTEGER_DIVIDE:
 			return BUILTIN.createNumericIntegerDivide(sortedTerms);
 		case NUMERIC_EQUAL:
-			return BUILTIN.createNumericEqual(sortedTerms);
+			return BUILTIN.createNumericEqual(wsmlTerms);
 		case NUMERIC_GREATER_THAN:
 			return BUILTIN.createNumericGreater(wsmlTerms);
 		case NUMERIC_GREATER_THAN_OR_EQUAL:
