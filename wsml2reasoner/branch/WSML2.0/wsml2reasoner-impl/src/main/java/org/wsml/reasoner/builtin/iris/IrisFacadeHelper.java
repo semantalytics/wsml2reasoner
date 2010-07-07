@@ -346,7 +346,7 @@ public class IrisFacadeHelper {
 		
 		// terms as array for built-ins with boolean output.
 		ITerm[] wsmlTerms = toArray(terms);
-		// in wsml returnvalue is on first position - in iris on last position.
+		// in wsml return value is on first position - in iris on last position.
 		ITerm[] sortedTerms = toArray(sortListForIRIS(terms));
 		
 		switch (rifbuiltIn) {
@@ -694,7 +694,7 @@ public class IrisFacadeHelper {
 			return BUILTIN.createSecondsFromTime(sortedTerms);
 		case STARTS_WITH:
 			return BUILTIN.createStringStartsWith(wsmlTerms);
-		case STRING_FROM_PLAINLITERAL: 				// TODO mp: error
+		case STRING_FROM_PLAINLITERAL: 				
 			return BUILTIN.createStringFromText(sortedTerms);
 		case STRING_JOIN:
 			return BUILTIN.createStringJoin(sortedTerms);
