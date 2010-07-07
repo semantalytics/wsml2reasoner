@@ -1,6 +1,7 @@
 wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
 namespace { _"http://example.com/datatypes4#",
-	wsml _"http://www.wsmo.org/wsml/wsml-syntax#" }
+	wsml _"http://www.wsmo.org/wsml/wsml-syntax#",
+	func _"http://www.w3.org/2007/rif-builtin-function#" }
 
 ontology DatatypesTestOntology4
 
@@ -40,5 +41,5 @@ instance oneYear
 	
 // Compute an age attribute from s specific timestamp and the instance's dob (date of birth)
 axiom computeAge definedBy
-	?x[age hasValue ?a] :- ?x[dob hasValue ?d] and wsml#numericSubtract(?d,_datetime( 2008, 9, 16, 23, 53, 33.8 ),?a).
+	?x[age hasValue ?a] :- ?x[dob hasValue ?d] and func#subtract-dateTimes(?a,_datetime( 2008, 9, 16, 23, 53, 33.8 ),?d).
 
