@@ -628,21 +628,6 @@ public abstract class AbstractRIFBuiltinTest extends TestCase implements LP {
 		checkSTD(query);
 	}
 
-	public void testhoursFromDate() throws Exception {
-		query = "hoursFromDateTest(?x)";
-		checkSTD(query);
-	}
-
-	public void testminutesFromDate() throws Exception {
-		query = "minutesFromDateTest(?x)";
-		checkSTD(query);
-	}
-
-	public void testsecondsFromDate() throws Exception {
-		query = "secondsFromDateTest(?x)";
-		checkSTD(query);
-	}
-
 	// rif duration built-ins
 	public void yearsFromDuration() throws Exception {
 		query = "yearsFromDurationTest(?x)";

@@ -7,9 +7,6 @@ import helper.LPHelper;
 import helper.OntologyHelper;
 import helper.ReasonerHelper;
 import helper.Results;
-
-import java.util.ArrayList;
-
 import junit.framework.TestCase;
 
 import org.wsml.reasoner.api.LPReasoner;
@@ -17,7 +14,7 @@ import org.wsml.reasoner.api.WSMLReasonerFactory;
 
 public class RIFBuiltin02Test extends TestCase {
 
-	protected static final String ONTOLOGY_FILE = "BuiltinRIFTest01.wsml";
+	protected static final String ONTOLOGY_FILE = "BuiltinRIFTest.wsml";
 
 	protected LPReasoner reasoner;
 
@@ -38,9 +35,11 @@ public class RIFBuiltin02Test extends TestCase {
 		// String query = "yearsFromDurationTest(?x)";
 		// String query = "timezoneFromDateTimeTest(?x)";
 		// String query = "addYearMonthDurationsTest(?x)";
-		// String query = "dateTimeLessThanTest(?x)";
+		 
+		 String query = "subtractDateTimeTest(?x)";
+		
 
-		ArrayList<String> queries = new ArrayList<String>();
+//		ArrayList<String> queries = new ArrayList<String>();
 		// toTest.add(new String("dateTimeEqualTest(?x)"));
 		// toTest.add(new String("dateTimeLessThanTest(?x)"));
 		// toTest.add(new String("dateTimeGreaterThanTest(?x)"));
@@ -116,33 +115,35 @@ public class RIFBuiltin02Test extends TestCase {
 		// queries.add("isLongTest(?x)");
 		// queries.add("isShortTest(?x)");
 		// queries.add("isByteTest(?x)");
-		queries.add("isNonPositiveIntegerTest(?x)");
-
-		// queries.add("isLanguageTest(?x)");
-		// queries.add("isNameTest(?x)");
-		// queries.add("isNCNameTest(?x)");
+//		queries.add("isNonPositiveIntegerTest(?x)");
+//
+//		// queries.add("isLanguageTest(?x)");
+//		// queries.add("isNameTest(?x)");
+//		// queries.add("isNCNameTest(?x)");
+//		// queries.add("isNMTokenTest(?x)");
+//		// queries.add("isNotNonNegativeIntegerTest(?x)");
+//
+//		// toTest.add(new String("plainLiteralFromStringLangTest(?x)")); // TODO
+//		// error
+//		// toTest.add(new String("stringFromPlainLiteralTest(?x)"));
+//		// toTest.add(new String("langFromPlainLiteralTest(?x)"));
+//
+//		queries.add("isUnsignedShortTest(?x)");
+//		queries.add("isUnsignedByteTest(?x)");
+//		// queries.add("isNonPositiveIntegerTest(?x)");
+//		queries.add("isDateTimeStampTest(?x)");
+//		queries.add("isNormalizedStringTest(?x)");
+//		queries.add("isTokenTest(?x)");
+//		queries.add("isLanguageTest(?x)");
+//		queries.add("isNameTest(?x)");
+//		queries.add("isNCNameTest(?x)");
 		// queries.add("isNMTokenTest(?x)");
-		// queries.add("isNotNonNegativeIntegerTest(?x)");
 
-		// toTest.add(new String("plainLiteralFromStringLangTest(?x)")); // TODO
-		// error
-		// toTest.add(new String("stringFromPlainLiteralTest(?x)"));
-		// toTest.add(new String("langFromPlainLiteralTest(?x)"));
-
-		queries.add("isUnsignedShortTest(?x)");
-		queries.add("isUnsignedByteTest(?x)");
-		// queries.add("isNonPositiveIntegerTest(?x)");
-		queries.add("isDateTimeStampTest(?x)");
-		queries.add("isNormalizedStringTest(?x)");
-		queries.add("isTokenTest(?x)");
-		queries.add("isLanguageTest(?x)");
-		queries.add("isNameTest(?x)");
-		queries.add("isNCNameTest(?x)");
-		// queries.add("isNMTokenTest(?x)");
-
-		for (String query : queries) {
-			checkSTD(query);
-		}
+//		for (String query : queries) {
+//			checkSTD(query);
+//		}
+		
+		checkSTD(query);
 	}
 
 	// WSML BUILTIN TESTS

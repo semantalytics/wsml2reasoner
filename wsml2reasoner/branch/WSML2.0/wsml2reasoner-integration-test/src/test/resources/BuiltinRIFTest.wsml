@@ -151,8 +151,8 @@ axiom testRIFBuiltin definedBy
 	   upperCaseTest(?x)				:- ?x[?attribute hasValue ?value] and rif-func#upper-case(xsd#string("STRING"), xsd#string("stRing")).
 	   lowerCaseTest(?x)				:- ?x[?attribute hasValue ?value] and rif-func#lower-case(xsd#string("string"), xsd#string("STrING")).
 	   encodeForUriTest(?x)				:- ?x[?attribute hasValue ?value] and rif-func#encode-for-uri(xsd#string("encode%20me"), xsd#string("encode me")).
-	   iriToUriTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#iri-to-uri(xsd#string("http://www.example.com/~b%C3%A9b%C3%A9"), xsd#string("http://www.example.com/~bébé")).
-	   escapeHtmlUriTest(?x)			:- ?x[?attribute hasValue ?value] and rif-func#escape-html-uri(xsd#string("javascript:if (navigator.browserLanguage == 'fr') window.open('http://www.example.com/~b%C3%A9b%C3%A9');"), xsd#string("javascript:if (navigator.browserLanguage == 'fr') window.open('http://www.example.com/~bébé');")).
+	   iriToUriTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#iri-to-uri(xsd#string("http://www.example.com/~b%C3%A9b%C3%A9"), xsd#string("http://www.example.com/~bï¿½bï¿½")).
+	   escapeHtmlUriTest(?x)			:- ?x[?attribute hasValue ?value] and rif-func#escape-html-uri(xsd#string("javascript:if (navigator.browserLanguage == 'fr') window.open('http://www.example.com/~b%C3%A9b%C3%A9');"), xsd#string("javascript:if (navigator.browserLanguage == 'fr') window.open('http://www.example.com/~bï¿½bï¿½');")).
 	   substringBeforeTest1(?x)			:- ?x[?attribute hasValue ?value] and rif-func#substring-before(xsd#string("ta"), xsd#string("tattoo"), xsd#string("tt"), xsd#string("http://www.w3.org/2005/xpath-functions/collation/codepoint")).
 	   substringBeforeTest2(?x)			:- ?x[?attribute hasValue ?value] and rif-func#substring-before(xsd#string("ta"), xsd#string("tattoo"), xsd#string("tt")).
 	   substringAfterTest1(?x)			:- ?x[?attribute hasValue ?value] and rif-func#substring-after(xsd#string("too"), xsd#string("tattoo"), xsd#string("tat"), xsd#string("http://www.w3.org/2005/xpath-functions/collation/codepoint")).
@@ -175,15 +175,12 @@ axiom testRIFBuiltin definedBy
 	   dayFromDateTimeTest(?x)			:- ?x[?attribute hasValue ?value] and rif-func#day-from-dateTime(31, xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 )).
 	   hoursFromDateTimeTest(?x)		:- ?x[?attribute hasValue ?value] and rif-func#hours-from-dateTime(20, xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 )).
 	   minutesFromDateTimeTest(?x)		:- ?x[?attribute hasValue ?value] and rif-func#minutes-from-dateTime(33, xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 )).
-	   secondsFromDateTimeTest(?x)		:- ?x[?attribute hasValue ?value] and rif-func#seconds-from-dateTime(xsd#double("23.4"), xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 )).
+	   secondsFromDateTimeTest(?x)		:- ?x[?attribute hasValue ?value] and rif-func#seconds-from-dateTime(xsd#decimal("23.4"), xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 )).
 	   
 	   // rif date part
 	   yearFromDateTest(?x)				:- ?x[?attribute hasValue ?value] and rif-func#year-from-date(1986, xsd#date( 1986, 12, 31, 0, 0)).
 	   monthFromDateTest(?x)		    :- ?x[?attribute hasValue ?value] and rif-func#month-from-date(12, xsd#date( 1986, 12, 31, 0, 0)).
 	   dayFromDateTest(?x)				:- ?x[?attribute hasValue ?value] and rif-func#day-from-date(31, xsd#date( 1986, 12, 31, 0, 0)).
-	   hoursFromDateTest(?x) 			:- ?x[?attribute hasValue ?value] and rif-func#hours-from-date(0, xsd#date( 1986, 12, 31, 0, 0)).
-	   minutesFromDateTest(?x) 			:- ?x[?attribute hasValue ?value] and rif-func#minutes-from-date(0, xsd#date( 1986, 12, 31, 0, 0)).
-	   secondsFromDateTest(?x) 			:- ?x[?attribute hasValue ?value] and rif-func#seconds-from-date(xsd#double("0.0"), xsd#date( 1986, 12, 31, 0, 0)).
 	   
 	   // rif duration
 	   yearsFromDurationTest(?x)		:- ?x[?attribute hasValue ?value] and rif-func#years-from-duration(1, xsd#duration( 1, 2, 3, 4, 5, 6.0 )).
@@ -199,7 +196,7 @@ axiom testRIFBuiltin definedBy
 	   timezoneFromTimeTest(?x)				:- ?x[?attribute hasValue ?value] and rif-func#timezone-from-time(xsd#dayTimeDuration(0,1,23,0), xsd#time(20, 33, 23.4, 1, 23 )).
 	   
 	   // rif date time manipulation 
-	   subtractDateTimesTest(?x)		:- ?x[?attribute hasValue ?value] and rif-func#subtract-dateTimes(xsd#dayTimeDuration(337,2,12,0), xsd#dateTime(2000,10,30,06,12,00,-5,0), xsd#dateTime(1999,11,28,09,00,00.0)).
+	   subtractDateTimesTest(?x)		:- ?x[?attribute hasValue ?value] and rif-func#subtract-dateTimes(xsd#duration( 11, 1, 0, 21, 12, 0.0) , xsd#dateTime(2000,10,30,06,12,0,5,0), xsd#dateTime(1999,11,28,09,0,0.0)).
 	   subtractDatesTest(?x)			:- ?x[?attribute hasValue ?value] and rif-func#subtract-dates(xsd#dayTimeDuration(337,0,0,0), xsd#date(2000,10,30), xsd#date(1999,11,28)).
 	   subtractTimesTest(?x)			:- ?x[?attribute hasValue ?value] and rif-func#subtract-times(xsd#dayTimeDuration(0,2,12,0), xsd#time(11,12,00,0,0 ), xsd#time(04,0,0,-5,0)).
 /*	

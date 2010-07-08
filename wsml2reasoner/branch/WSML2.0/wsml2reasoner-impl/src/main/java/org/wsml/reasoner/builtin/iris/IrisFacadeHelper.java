@@ -637,7 +637,7 @@ public class IrisFacadeHelper {
 		case MONTH_FROM_DATE:
 			return BUILTIN.createMonthFromDate(sortedTerms);
 		case MONTH_FROM_DATETIME:
-			return BUILTIN.createMonthFromDate(sortedTerms);
+			return BUILTIN.createMonthFromDateTime(sortedTerms);
 		case MONTHS_FROM_DURATION:
 			return BUILTIN.createMonthsFromDuration(sortedTerms);
 		case MULTIPLY_DAYTIMEDURATION: 
