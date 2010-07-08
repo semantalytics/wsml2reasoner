@@ -488,7 +488,7 @@ public class WSML2DatalogTransformer {
         body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept2, vConcept));
         body.add(new Literal(true, PRED_IMPLIES_TYPE, vConcept, vAttribute, vType));
         result.add(new Rule(head, body));
-
+        
         return result;
     }
     
@@ -589,7 +589,7 @@ public class WSML2DatalogTransformer {
 		@Override
 		public void handleTruthValue(TruthValue truthValue) {
 			boolean value = truthValue.getValue();
-			String identifier = value ? Constants.TRUE : Constants.FALSE;
+			String identifier = value ? Constants.WSML_TRUE : Constants.WSML_FALSE;
 			
 			// Create a new literal representing the truth value.
 			Literal literal = new Literal(true, identifier, new ArrayList<Term>());

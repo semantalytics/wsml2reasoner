@@ -30,6 +30,7 @@ import org.deri.iris.builtins.datatype.IsStringBuiltin;
 import org.deri.iris.builtins.datatype.IsTimeBuiltin;
 import org.deri.iris.builtins.datatype.IsXMLLiteralBuiltin;
 import org.deri.iris.builtins.datatype.IsYearMonthDurationBuiltin;
+import org.omwg.logicalexpression.Constants;
 import org.omwg.ontology.RDFDataType;
 import org.omwg.ontology.WsmlDataType;
 import org.omwg.ontology.XmlSchemaDataType;
@@ -67,6 +68,13 @@ public class IrisFacadeHelper {
 		if (!headLiteral
 				&& sym.equals(WSML2DatalogTransformer.PRED_MEMBER_OF)) {
 			return checkWSMLmemberOf(headLiteral, sym, terms);
+		}
+		
+		if (sym.equals(Constants.WSML_TRUE)) {
+			return BUILTIN.createTrue();
+		}
+		if (sym.equals(Constants.WSML_FALSE)) {
+			return BUILTIN.createFalse();
 		}
 		
 				// Is not a built-in - return an ordinary term
@@ -238,7 +246,7 @@ public class IrisFacadeHelper {
 			return BUILTIN.createToXMLLiteral(sortedTerms);
 		case TO_YEARMONTHDURATION:
 			return BUILTIN.createToYearMonthDuration(sortedTerms);
-		
+		// end of TO_DATATYPE part
 		case DAY_PART:
 			return BUILTIN.createDayPart(sortedTerms);
 		case HOUR_PART:
@@ -269,7 +277,7 @@ public class IrisFacadeHelper {
 			return BUILTIN.createLangFromText(sortedTerms);
 		case STRING_FROM_TEXT:
 			return BUILTIN.createStringFromText(sortedTerms);
-		
+		// IS_DATATYPE part
 		case IS_BASE64BINARY:
 			return BUILTIN.createIsBase64Binary(sortedTerms);
 		case IS_BOOLEAN:
@@ -280,10 +288,10 @@ public class IrisFacadeHelper {
 			return BUILTIN.createIsDate(sortedTerms);
 		case IS_DATETIME:
 			return BUILTIN.createIsDateTime(sortedTerms);
-		case IS_DAYTIME_DURATION:
-			return BUILTIN.createIsDuration(sortedTerms);
 		case IS_DAYTIMEDURATION:  
-			return BUILTIN.createIsDuration(sortedTerms);
+			return BUILTIN.createIsDayTimeDuration(sortedTerms);
+		case IS_YEARMONTHDURATION:
+			return BUILTIN.createIsYearMonthDuration(sortedTerms);
 		case IS_DECIMAL:
 			return BUILTIN.createIsDecimal(sortedTerms);
 		case IS_DOUBLE:
@@ -318,8 +326,6 @@ public class IrisFacadeHelper {
 			return BUILTIN.createIsTime(sortedTerms);
 		case IS_XMLLITERAL:
 			return BUILTIN.createIsXMLLiteral(sortedTerms);
-		case IS_YEAR_MONTH_DURATION:
-			return BUILTIN.createIsYearMonthDuration(sortedTerms);
 		
 		default:
 			throw new InternalReasonerException("WSML Built-in: " + wsmlBuiltIn.getName() + " not yet supported!");
@@ -675,7 +681,7 @@ public class IrisFacadeHelper {
 		case PLAINLITERAL_COMPARE:						
 			return BUILTIN.createTextCompare(sortedTerms);
 		case PLAINLITERAL_FROM_STRING_LANG: 			
-			return BUILTIN.createLangFromText(sortedTerms);
+			return BUILTIN.createLangFromText(sortedTerms); // FIXME correct?
 		case PLAINLITERAL_LENGTH:
 			return BUILTIN.createTextLength(sortedTerms);
 		case REMOVE: 
@@ -771,6 +777,7 @@ public class IrisFacadeHelper {
 		case YEARS_FROM_DURATION:
 			return BUILTIN.createYearsFromDuration(sortedTerms);
 		default:
+			// FIXME exception
 			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 					BASIC.createTuple(terms));
 		}
