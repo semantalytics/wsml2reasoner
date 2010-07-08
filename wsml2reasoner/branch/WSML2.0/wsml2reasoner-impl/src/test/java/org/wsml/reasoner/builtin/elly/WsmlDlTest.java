@@ -153,7 +153,7 @@ public class WsmlDlTest extends TestCase {
 		System.out.println(values);
 
 		DataValue value10 = container.getXmlDataFactory().createInteger("10");
-		DataValue queryValue = values.iterator().next();
+		DataValue queryValue = values.iterator().next(); // FIXME problem is that decimals are created in any numeric case 
 		assertEquals(value10, queryValue);
 		assertTrue("Value " + value10 + " not contained in values: " + values, values.contains(value10));
 		assertEquals(1, values.size());
