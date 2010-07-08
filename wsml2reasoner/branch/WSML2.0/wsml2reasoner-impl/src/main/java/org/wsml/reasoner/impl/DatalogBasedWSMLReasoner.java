@@ -381,6 +381,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
         
         IRI newIdentifier = wsmoFactory.createIRI("urn:org.wsml.reasoner.impl.DatalogBasedWSMLReasoner:registeredOntology");
 
+        // FIXME dw: imports do not work, if they'd work they'd need to be merged as well
         Ontology mergedOntology;
 		try {
 			mergedOntology = Merger.merge(newIdentifier , ontologies);
