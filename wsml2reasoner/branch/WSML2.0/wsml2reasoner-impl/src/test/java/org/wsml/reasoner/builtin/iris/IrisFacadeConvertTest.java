@@ -43,13 +43,13 @@ public class IrisFacadeConvertTest extends TestCase {
 		// The use of anonymous IDs causes an IllegalArgumentException().
 		// The problem seems to lie in IrisFacade.wsmoTermConverter().
 
-		assertTrue(IrisStratifiedFacade.convertTermFromWsmo4jToIris(WF
+		assertTrue(TermHelper.convertTermFromWsmo4jToIris(WF
 				.createAnonymousID()) != null);
 	}
 
 	public void testLiteral2Atom() {
 		try {
-			IrisStratifiedFacade.literal2Atom(null, false);
+			LiteralHelper.literal2Atom(null, false);
 			fail("should throw an exception"); // should throw an exception
 		} catch (Exception e) {
 		} catch (AssertionError ae) {
@@ -63,7 +63,7 @@ public class IrisFacadeConvertTest extends TestCase {
 				LiteralTestHelper.createVariable("x"), LiteralTestHelper
 						.createVariable("y"));
 
-		assertEquals("EQUAL(?x, ?y)", IrisStratifiedFacade.literal2Atom(
+		assertEquals("EQUAL(?x, ?y)", LiteralHelper.literal2Atom(
 				wsmlLiteral, true).toString());
 	}
 	
@@ -146,7 +146,7 @@ public class IrisFacadeConvertTest extends TestCase {
 		IAtom atom = null;
 		
 		l = LiteralTestHelper.createLiteral(true, ns + name , irins +  i);
-		atom = IrisStratifiedFacade.literal2Atom(l, false);
+		atom = LiteralHelper.literal2Atom(l, false);
 		if(output) {
 			System.out.println(atom);
 		}
