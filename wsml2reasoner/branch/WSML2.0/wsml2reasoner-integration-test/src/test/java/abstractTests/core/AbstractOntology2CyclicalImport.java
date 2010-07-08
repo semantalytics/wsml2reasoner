@@ -46,6 +46,7 @@ public abstract class AbstractOntology2CyclicalImport extends TestCase implement
     	importedOntology = OntologyHelper.loadOntology( ONTOLOGY_FILE2 );
     }
 
+    // imports do not work any more as they did since there isn't one big static registry any more
     public void testCyclicalImports1() throws Exception {
         
         assertNotNull( importedOntology );
