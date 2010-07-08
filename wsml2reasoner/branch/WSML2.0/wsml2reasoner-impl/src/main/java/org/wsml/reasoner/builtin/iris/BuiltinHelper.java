@@ -40,7 +40,7 @@ import org.wsml.reasoner.api.exception.InternalReasonerException;
 import org.wsmo.common.BuiltIn;
 import org.wsmo.common.RifBuiltIn;
 
-public class IrisFacadeHelper {
+public class BuiltinHelper {
 
 	/**
 	 * Returns the IRIS builtin

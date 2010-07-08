@@ -24,13 +24,10 @@ package org.wsml.reasoner.builtin.iris;
 
 import static org.deri.iris.factory.Factory.BASIC;
 import static org.deri.iris.factory.Factory.BUILTIN;
-import static org.deri.iris.factory.Factory.CONCRETE;
-import static org.deri.iris.factory.Factory.TERM;
+import static org.wsml.reasoner.builtin.iris.LiteralHelper.*;
+import static org.wsml.reasoner.builtin.iris.TermHelper.*;
+import static org.wsml.reasoner.builtin.iris.BuiltinHelper.*;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -39,7 +36,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TimeZone;
 
 import org.deri.iris.Configuration;
 import org.deri.iris.EvaluationException;
@@ -49,45 +45,14 @@ import org.deri.iris.api.basics.IPredicate;
 import org.deri.iris.api.basics.IQuery;
 import org.deri.iris.api.basics.IRule;
 import org.deri.iris.api.basics.ITuple;
-import org.deri.iris.api.terms.IConstructedTerm;
-import org.deri.iris.api.terms.IStringTerm;
 import org.deri.iris.api.terms.ITerm;
 import org.deri.iris.api.terms.IVariable;
-import org.deri.iris.api.terms.concrete.IBase64Binary;
-import org.deri.iris.api.terms.concrete.IBooleanTerm;
-import org.deri.iris.api.terms.concrete.IDateTerm;
-import org.deri.iris.api.terms.concrete.IDateTime;
-import org.deri.iris.api.terms.concrete.IDayTimeDuration;
-import org.deri.iris.api.terms.concrete.IDecimalTerm;
-import org.deri.iris.api.terms.concrete.IDoubleTerm;
-import org.deri.iris.api.terms.concrete.IDuration;
-import org.deri.iris.api.terms.concrete.IFloatTerm;
-import org.deri.iris.api.terms.concrete.IGDay;
-import org.deri.iris.api.terms.concrete.IGMonth;
-import org.deri.iris.api.terms.concrete.IGMonthDay;
-import org.deri.iris.api.terms.concrete.IGYear;
-import org.deri.iris.api.terms.concrete.IGYearMonth;
-import org.deri.iris.api.terms.concrete.IHexBinary;
-import org.deri.iris.api.terms.concrete.IIntegerTerm;
-import org.deri.iris.api.terms.concrete.IIri;
-import org.deri.iris.api.terms.concrete.IPlainLiteral;
-import org.deri.iris.api.terms.concrete.ISqName;
-import org.deri.iris.api.terms.concrete.ITime;
-import org.deri.iris.api.terms.concrete.IXMLLiteral;
-import org.deri.iris.api.terms.concrete.IYearMonthDuration;
 import org.deri.iris.facts.IDataSource;
 import org.deri.iris.querycontainment.QueryContainment;
 import org.deri.iris.storage.IRelation;
 import org.deri.iris.storage.simple.SimpleRelationFactory;
-import org.omwg.logicalexpression.terms.BuiltInConstructedTerm;
-import org.omwg.logicalexpression.terms.ConstructedTerm;
 import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.ComplexDataValue;
-import org.omwg.ontology.DataValue;
-import org.omwg.ontology.RDFDataType;
 import org.omwg.ontology.Variable;
-import org.omwg.ontology.WsmlDataType;
-import org.omwg.ontology.XmlSchemaDataType;
 import org.wsml.reasoner.ConjunctiveQuery;
 import org.wsml.reasoner.DatalogReasonerFacade;
 import org.wsml.reasoner.ExternalToolException;
@@ -98,14 +63,7 @@ import org.wsml.reasoner.api.data.ExternalDataSource;
 import org.wsml.reasoner.api.data.ExternalDataSource.HasValue;
 import org.wsml.reasoner.api.data.ExternalDataSource.MemberOf;
 import org.wsml.reasoner.api.exception.InternalReasonerException;
-import org.wsmo.common.IRI;
-import org.wsmo.common.Identifier;
-import org.wsmo.common.NumberedAnonymousID;
-import org.wsmo.common.UnnumberedAnonymousID;
-import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.FactoryContainer;
-import org.wsmo.factory.LogicalExpressionFactory;
-import org.wsmo.factory.WsmoFactory;
 
 /**
  * The base class for all facades based on the iris reasoner.
@@ -119,14 +77,8 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 	 */
 	public static final String EXTERNAL_DATA_SOURCE = "iris.external.source";
 
-	/** Factory to create the DataValues. */
-	private final DataFactory DATA_FACTORY;
-
-	/** Factory to create the DataValues. */
-	private final LogicalExpressionFactory LOGIC_FACTORY;
-
-	/** Factory to create the wsmo objects. */
-	private final WsmoFactory WSMO_FACTORY;
+	/** Factory Container */
+	private final FactoryContainer factory;
 
 	/** knowledge-base. */
 	private org.deri.iris.api.IKnowledgeBase prog;
@@ -142,11 +94,10 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 	 */
 	private final Collection<ExternalDataSource> sources;
 
+
 	public AbstractIrisFacade(final FactoryContainer factory,
 			final Map<String, Object> config) {
-		DATA_FACTORY = factory.getXmlDataFactory();
-		WSMO_FACTORY = factory.getWsmoFactory();
-		LOGIC_FACTORY = factory.getLogicalExpressionFactory();
+		this.factory = factory;
 
 		// retrieving the data source
 		final Object ds = (config != null) ? config.get(EXTERNAL_DATA_SOURCE)
@@ -204,8 +155,9 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 				IVariable variable = variableBindings.get(pos);
 				ITerm term = t.get(pos);
 
-				tmp.put((Variable) convertTermFromIrisToWsmo4j(variable),
-						convertTermFromIrisToWsmo4j(term));
+				tmp.put((Variable) 
+						convertTermFromIrisToWsmo4j(variable, factory),
+						convertTermFromIrisToWsmo4j(term, factory));
 			}
 
 			res.add(tmp);
@@ -282,11 +234,9 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 				ITuple t = QCResult.get(i);
 				final Map<Variable, Term> tmp = new HashMap<Variable, Term>();
 				for (int pos = 0; pos < t.size(); pos++) {
-					tmp
-							.put(
-									(Variable) convertTermFromIrisToWsmo4j(variableBindings
-											.get(pos)),
-									convertTermFromIrisToWsmo4j(t.get(pos)));
+					tmp.put((Variable) 
+						convertTermFromIrisToWsmo4j(variableBindings.get(pos), factory),
+						convertTermFromIrisToWsmo4j(t.get(pos), factory));
 				}
 				result.add(tmp);
 			}
@@ -319,7 +269,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 				// is transformed to a new rule, e.g. "a = b." is transformed to
 				// "a = b :- true.".
 				// TODO Maybe do this in the WSML2DatalogTransformer.
-				if (IrisFacadeHelper.containsEqualBuiltin(r.getHead())) {
+				if (containsEqualBuiltin(r.getHead())) {
 					List<ILiteral> head = Collections.singletonList(BASIC
 							.createLiteral(true, atom));
 
@@ -386,632 +336,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 	 */
 	protected abstract void configureIris(Configuration configuration);
 
-	/**
-	 * Converts a wsmo4j literal to an iris literal.
-	 * 
-	 * @param l the wsmo4j literal to convert
-	 * @return the iris literal
-	 */
-	static ILiteral literal2Literal(final Literal l, boolean headLiteral) {
-		assert l != null;
-		assert (headLiteral && l.isPositive()) || !headLiteral;
 
-		return BASIC
-				.createLiteral(l.isPositive(), literal2Atom(l, headLiteral));
-	}
-
-	/**
-	 * Converts a wsml reasoner atomic formula in a literal to an iris atom.
-	 * 
-	 * @param literal the wsmo4j literal to convert
-	 * @return the iris atom
-	 */
-	static IAtom literal2Atom(Literal literal, boolean headLiteral) {
-		// System.out.println("Literal : " + literal);
-		assert literal != null;
-
-		String sym = literal.getPredicateUri();
-		Term[] inTerms = literal.getTerms();
-
-		assert sym != null;
-		assert inTerms != null;
-
-		final List<ITerm> terms = new ArrayList<ITerm>(inTerms.length);
-		// convert the terms of the literal
-		for (final Term t : inTerms) {
-			terms.add(convertTermFromWsmo4jToIris(t));
-		}
-
-		IAtom atom = IrisFacadeHelper.checkBuiltin(headLiteral, sym, terms);
-
-		// TODO Handle built-ins with terms representing built-ins.
-		// An example for this is: wsml#equal(wsml#numericAdd(1, 1), 2).
-
-		return atom;
-	}
-
-	/**
-	 * Converts a wsmo4j term to an iris term
-	 * 
-	 * @param t the wsmo4j term
-	 * @return the converted iris term
-	 */
-	static ITerm convertTermFromWsmo4jToIris(final Term t) {
-		if (t == null) {
-			throw new NullPointerException("The term must not be null");
-		} else if (t instanceof BuiltInConstructedTerm) {
-			// TODO: builtins are skipped at the moment
-		} else if (t instanceof ConstructedTerm) {
-			// System.out.println("CONSTRUCTED TERM: " + t);
-			final ConstructedTerm ct = (ConstructedTerm) t;
-			final List<ITerm> terms = new ArrayList<ITerm>(ct.getArity());
-			for (final Term term : (List<Term>) ct.listParameters()) {
-				terms.add(convertTermFromWsmo4jToIris(term));
-			}
-			return TERM.createConstruct(ct.getFunctionSymbol().toString(),
-					terms);
-		} else if (t instanceof DataValue) {
-			// System.out.println("DATAVALUE: " + t);
-			return convertWsmo4jDataValueToIrisTerm((DataValue) t);
-		} else if (t instanceof IRI) {
-			// System.out.println("IRI: " + t);
-			return CONCRETE.createIri(t.toString());
-		} else if (t instanceof Variable) {
-			// System.out.println("VARIABLE: " + t);
-			return TERM.createVariable(((Variable) t).getName());
-		} else if (t instanceof Identifier) {
-			// System.out.println("IDENTIFIER: " + t);
-			// i doubt we got something analogous in iris -> exception
-		} else if (t instanceof NumberedAnonymousID) {
-			// System.out.println("NUMBEREDANONYMOUSID: " + t);
-			// i doubt we got something analogous in iris -> exception
-		} else if (t instanceof UnnumberedAnonymousID) {
-			// System.out.println("UNNUMBEREDANONYMOUSID: " + t);
-			// i doubt we got something analogous in iris -> exception
-		}
-		throw new IllegalArgumentException("Can't convert a term of type "
-				+ t.getClass().getName());
-	}
-
-	/**
-	 * Converts a wsmo4j DataValue to an iris ITerm.
-	 * 
-	 * @param v the wsmo4j value to convert
-	 * @return the corresponding ITerm implementation
-	 */
-	static ITerm convertWsmo4jDataValueToIrisTerm(final DataValue v) {
-		if (v == null) {
-			throw new NullPointerException("The data value must not be null");
-		}
-		final String t = v.getType().getIdentifier().toString();
-		if (t.equals(WsmlDataType.WSML_BASE64BINARY)
-				|| t.equals(XmlSchemaDataType.XSD_BASE64BINARY)) {
-			return CONCRETE.createBase64Binary((String) v.getValue());
-		} else if (t.equals(WsmlDataType.WSML_BOOLEAN)
-				|| t.equals(XmlSchemaDataType.XSD_BOOLEAN)) {
-			return CONCRETE.createBoolean((Boolean) v.getValue());
-		} else if (t.equals(WsmlDataType.WSML_DATE)
-				|| t.equals(XmlSchemaDataType.XSD_DATE)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			int length = cv.getArity();
-			return CONCRETE.createDate(getIntFromValue(cv, 0), getIntFromValue(
-					cv, 1), getIntFromValue(cv, 2),
-					length > 3 ? getIntFromValue(cv, 3) : 0,
-					length > 4 ? getIntFromValue(cv, 4) : 0);
-		} else if (t.equals(WsmlDataType.WSML_DATETIME)
-				|| t.equals(XmlSchemaDataType.XSD_DATETIME)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			int length = cv.getArity();
-			return CONCRETE.createDateTime(getIntFromValue(cv, 0),
-					getIntFromValue(cv, 1), getIntFromValue(cv, 2),
-					getIntFromValue(cv, 3), getIntFromValue(cv, 4),
-					getDoubleFromValue(cv, 5), length > 6 ? getIntFromValue(cv,
-							6) : 0, length > 7 ? getIntFromValue(cv, 7) : 0);
-		} else if (t.equals(WsmlDataType.WSML_TIME)
-				|| t.equals(XmlSchemaDataType.XSD_TIME)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			int length = cv.getArity();
-			return CONCRETE.createTime(getIntFromValue(cv, 0), getIntFromValue(
-					cv, 1), getDoubleFromValue(cv, 2),
-					length > 3 ? getIntFromValue(cv, 3) : 0,
-					length > 4 ? getIntFromValue(cv, 4) : 0);
-		} else if (t.equals(WsmlDataType.WSML_DECIMAL)
-				|| t.equals(XmlSchemaDataType.XSD_DECIMAL)) {
-			return CONCRETE.createDecimal((BigDecimal) v.getValue());
-		} else if (t.equals(WsmlDataType.WSML_DOUBLE)
-				|| t.equals(XmlSchemaDataType.XSD_DOUBLE)) {
-			return CONCRETE.createDouble((Double) v.getValue());
-		} else if (t.equals(WsmlDataType.WSML_DURATION)
-				|| t.equals(XmlSchemaDataType.XSD_DURATION)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			
-			int signum = 0;
-			List<Integer> values = new ArrayList<Integer>();
-			for (int i = 0; i <= 4; ++i) {
-				int value = getIntFromValue(cv, i);
-				values.add(Math.abs(value)); // Add absolute value
-				
-				if (signum == 0) { // signum not set yet
-					if (value > 0) {
-						signum = +1;
-					} else if (value < 0) {
-						signum = -1;
-					}
-				}
-			}
-			double seconds = getDoubleFromValue(cv, 5);
-			if (signum == 0) { // signum not set yet
-				if (seconds > 0.0) {
-					signum = +1;
-				} else if (seconds < 0.0) {
-					signum = -1;
-				}
-			}
-			seconds = Math.abs(seconds); // Add absolute value
-			
-			return CONCRETE.createDuration(
-					signum >= 0,
-					values.get(0), values.get(1), values.get(2),
-					values.get(3), values.get(4), seconds);
-		} else if (t.equals(WsmlDataType.WSML_FLOAT)
-				|| t.equals(XmlSchemaDataType.XSD_FLOAT)) {
-			return CONCRETE.createFloat((Float) v.getValue());
-		} else if (t.equals(WsmlDataType.WSML_GDAY)
-				|| t.equals(XmlSchemaDataType.XSD_GDAY)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createGDay(getIntFromValue(cv, 0));
-		} else if (t.equals(WsmlDataType.WSML_GMONTH)
-				|| t.equals(XmlSchemaDataType.XSD_GMONTH)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createGMonth(getIntFromValue(cv, 0));
-		} else if (t.equals(WsmlDataType.WSML_GMONTHDAY)
-				|| t.equals(XmlSchemaDataType.XSD_GMONTHDAY)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createGMonthDay(getIntFromValue(cv, 0),
-					getIntFromValue(cv, 1));
-		} else if (t.equals(WsmlDataType.WSML_GYEAR)
-				|| t.equals(XmlSchemaDataType.XSD_GYEAR)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createGYear(getIntFromValue(cv, 0));
-		} else if (t.equals(WsmlDataType.WSML_GYEARMONTH)
-				|| t.equals(XmlSchemaDataType.XSD_GYEARMONTH)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createGYearMonth(getIntFromValue(cv, 0),
-					getIntFromValue(cv, 1));
-		} else if (t.equals(WsmlDataType.WSML_HEXBINARY)
-				|| t.equals(XmlSchemaDataType.XSD_HEXBINARY)) {
-			return CONCRETE.createHexBinary((String) v.getValue());
-		} else if (t.equals(WsmlDataType.WSML_INTEGER)
-				|| t.equals(XmlSchemaDataType.XSD_INTEGER)) {
-			return CONCRETE.createInteger((BigInteger) v.getValue());
-		} else if (t.equals(XmlSchemaDataType.XSD_DAYTIMEDURATION)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			
-			int signum = 0;
-			List<Integer> values = new ArrayList<Integer>();
-			for (int i = 0; i <= 2; ++i) {
-				int value = getIntFromValue(cv, i);
-				values.add(Math.abs(value)); // Add absolute value
-				
-				if (signum == 0) { // signum not set yet
-					if (value > 0) {
-						signum = +1;
-					} else if (value < 0) {
-						signum = -1;
-					}
-				}
-			}
-			double seconds = getDoubleFromValue(cv, 3);
-			if (signum == 0) { // signum not set yet
-				if (seconds > 0.0) {
-					signum = +1;
-				} else if (seconds < 0.0) {
-					signum = -1;
-				}
-			}
-			seconds = Math.abs(seconds); // Add absolute value
-			
-			return CONCRETE.createDayTimeDuration(
-					signum >= 0,
-					values.get(0), values.get(1), values.get(2),
-					seconds);
-		} else if (t.equals(XmlSchemaDataType.XSD_YEARMONTHDURATION)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			
-			int signum = 0;
-			List<Integer> values = new ArrayList<Integer>();
-			for (int i = 0; i <= 1; ++i) {
-				int value = getIntFromValue(cv, i);
-				values.add(Math.abs(value)); // Add absolute value
-				
-				if (signum == 0) { // signum not set yet
-					if (value > 0) {
-						signum = +1;
-					} else if (value < 0) {
-						signum = -1;
-					}
-				}
-			}
-			
-			return CONCRETE.createYearMonthDuration(
-					signum >= 0,
-					values.get(0), values.get(1));
-		} else if (t.equals(XmlSchemaDataType.XSD_LONG)) {
-			return CONCRETE.createLong((Long) v.getValue());
-		} else if (t.equals(XmlSchemaDataType.XSD_INT)) {
-			return CONCRETE.createInt((Integer) v.getValue());
-		} else if (t.equals(XmlSchemaDataType.XSD_SHORT)) {
-			return CONCRETE.createShort((Short) v.getValue());
-		} else if (t.equals(XmlSchemaDataType.XSD_BYTE)) {
-			return CONCRETE.createByte((Byte) v.getValue());
-		} else if (t.equals(XmlSchemaDataType.XSD_NONPOSITIVEINTEGER)) {
-			return CONCRETE.createNonPositiveInteger((BigInteger) v.getValue());
-		} else if (t.equals(XmlSchemaDataType.XSD_NONNEGATIVEINTEGER)) {
-			return CONCRETE.createNonNegativeInteger((BigInteger) v.getValue());
-		} else if (t.equals(XmlSchemaDataType.XSD_NEGATIVEINTEGER)) {
-			return CONCRETE.createNegativeInteger((BigInteger) v.getValue());
-		} else if (t.equals(XmlSchemaDataType.XSD_POSITIVEINTEGER)) {
-			return CONCRETE.createPositiveInteger((BigInteger) v.getValue());
-		} else if (t.equals(XmlSchemaDataType.XSD_UNSIGNEDLONG)) {
-			return CONCRETE.createUnsignedLong((BigInteger) v.getValue());
-		} else if (t.equals(XmlSchemaDataType.XSD_UNSIGNEDINT)) {
-			return CONCRETE.createUnsignedInt((Long) v.getValue());
-		} else if (t.equals(XmlSchemaDataType.XSD_UNSIGNEDSHORT)) {
-			return CONCRETE.createUnsignedShort((Integer) v.getValue());
-		} else if (t.equals(XmlSchemaDataType.XSD_UNSIGNEDBYTE)) {
-			return CONCRETE.createUnsignedByte((Short) v.getValue());
-		} else if (t.equals(XmlSchemaDataType.XSD_NORMALIZEDSTRING)) {
-			return CONCRETE.createNormalizedString((String) v.getValue());
-		} else if (t.equals(XmlSchemaDataType.XSD_STRING)) {
-			return TERM.createString((String) v.getValue());
-		} else if (t.equals(XmlSchemaDataType.XSD_NAME)) {
-			return CONCRETE.createName((String) v.getValue());
-		} else if (t.equals(XmlSchemaDataType.XSD_TOKEN)) {
-			return CONCRETE.createToken((String) v.getValue());
-		} else if (t.equals(XmlSchemaDataType.XSD_NMTOKEN)) {
-			return CONCRETE.createNMTOKEN((String) v.getValue());
-		} else if (t.equals(XmlSchemaDataType.XSD_NCNAME)) {
-			return CONCRETE.createNCName((String) v.getValue());
-		} else if (t.equals(XmlSchemaDataType.XSD_LANGUAGE)) {
-			return CONCRETE.createLanguage((String) v.getValue());
-		} else if (t.equals(XmlSchemaDataType.XSD_DATETIMESTAMP)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createDateTimeStamp(getIntFromValue(cv, 0),
-					getIntFromValue(cv, 1), getIntFromValue(cv, 2),
-					getIntFromValue(cv, 3), getIntFromValue(cv, 4),
-					getDoubleFromValue(cv, 5), getIntFromValue(cv, 6),
-					getIntFromValue(cv, 7));
-		} else if (t.equals(XmlSchemaDataType.XSD_ANYURI)) {
-			URI uri = null;
-			try {
-				String stringValue = (String) v.getValue();
-				uri = new URI(stringValue);
-			} catch (URISyntaxException e) {
-				throw new InternalReasonerException(e);
-			}
-			
-			return CONCRETE.createAnyURI(uri);
-		} else if (t.equals(XmlSchemaDataType.XSD_QNAME)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createQName(getStringFromValue(cv, 0), getStringFromValue(cv, 1));
-		} else if (t.equals(XmlSchemaDataType.XSD_NOTATION)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createNOTATION(getStringFromValue(cv, 0), getStringFromValue(cv, 1));
-		} else if (t.equals(XmlSchemaDataType.XSD_ID)) {
-			return CONCRETE.createID((String) v.getValue());
-		} else if (t.equals(XmlSchemaDataType.XSD_IDREF)) {
-			return CONCRETE.createIDREF((String) v.getValue());
-		} else if (t.equals(XmlSchemaDataType.XSD_ENTITY)) {
-			return CONCRETE.createEntity((String) v.getValue());
-		} 
-
-		// RDF Datatypes
-		else if (t.equals(RDFDataType.RDF_PLAINLITERAL)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createPlainLiteral(getStringFromValue(cv, 0),
-					getStringFromValue(cv, 1));
-		} else if (t.equals(RDFDataType.RDF_XMLLITERAL)) {
-			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createXMLLiteral(getStringFromValue(cv, 0),
-					getStringFromValue(cv, 1));
-		}
-		throw new IllegalArgumentException("Can't convert a value of type " + t);
-	}
-
-	/**
-	 * Returns the integer value of a ComplexDataValue at a given position.
-	 * 
-	 * @param value the complex data value from where to get the int
-	 * @param pos the index of the integer
-	 * @return the extracted and converted integer
-	 */
-	private static int getIntFromValue(final ComplexDataValue value, int pos) {
-		assert value != null;
-		assert pos >= 0;
-
-		return Integer.parseInt(getFieldValue(value, pos));
-	}
-
-	/**
-	 * Returns the BigInteger value of a ComplexDataValue at a given position.
-	 * 
-	 * @param value the complex data value from where to get the BigInteger
-	 * @param pos the index of the integer
-	 * @return the extracted and converted BigInteger
-	 */
-	private static BigInteger getBigIntegerFromValue(
-			final ComplexDataValue value, int pos) {
-		assert value != null;
-		assert pos >= 0;
-
-		return new BigInteger(getFieldValue(value, pos).toString());
-	}
-
-	/**
-	 * Returns the long value of a ComplexDataValue at a given position.
-	 * 
-	 * @param value the complex data value from where to get the long
-	 * @param pos the index of the integer
-	 * @return the extracted and converted long
-	 */
-	private static Long getLongFromValue(final ComplexDataValue value, int pos) {
-		assert value != null;
-		assert pos >= 0;
-
-		return new Long(getFieldValue(value, pos).toString());
-	}
-
-	/**
-	 * Returns the String value of a ComplexDataValue at a given position.
-	 * 
-	 * @param value the complex data value from where to get the String
-	 * @param pos the index of the String
-	 * @return the extracted and converted String
-	 */
-	private static String getStringFromValue(final ComplexDataValue value,
-			int pos) {
-		assert value != null;
-		assert pos >= 0;
-
-		return new String(getFieldValue(value, pos).toString());
-	}
-
-	/**
-	 * Get a double value from the specified position.
-	 * 
-	 * @param value The complex data value from which the double is extracted.
-	 * @param pos The zero-basd index of the desired value.
-	 * @return
-	 */
-	private static double getDoubleFromValue(final ComplexDataValue value,
-			int pos) {
-		assert value != null;
-		assert pos >= 0;
-
-		return Double.parseDouble(getFieldValue(value, pos));
-	}
-
-	/**
-	 * Get a field of a complex value.
-	 * 
-	 * @param value The complex value
-	 * @param pos The position of the file (zero-based index)
-	 * @return The string-ised field value.
-	 */
-	private static String getFieldValue(final ComplexDataValue value, int pos) {
-		assert value != null;
-		assert pos >= 0;
-
-		return value.getArgumentValue((byte) pos).getValue().toString();
-	}
-
-	/**
-	 * Converts a iris term to an wsmo term
-	 * 
-	 * @param t the iris term
-	 * @return the converted wsmo term
-	 * @throws NullPointerException if the term is {@code null}
-	 * @throws IllegalArgumentException if the term-type couldn't be converted
-	 */
-	Term convertTermFromIrisToWsmo4j(final ITerm t) {
-		if (t == null) {
-			throw new NullPointerException("The term must not be null");
-		}
-		/*
-		 * subinterfaces of IStringTerm have to be handeled before the
-		 * IStringTerm block
-		 */
-		if (t instanceof IBase64Binary) {
-			return DATA_FACTORY.createBase64Binary(((IBase64Binary) t)
-					.getValue().getBytes());
-		} else if (t instanceof IHexBinary) {
-			return DATA_FACTORY.createHexBinary(((IHexBinary) t).getValue()
-					.getBytes());
-		} else if (t instanceof IIri) {
-			return WSMO_FACTORY.createIRI(((IIri) t).getValue());
-		} else if (t instanceof IStringTerm) {
-			return DATA_FACTORY.createString(((IStringTerm) t).getValue());
-		} else if (t instanceof IVariable) {
-			return LOGIC_FACTORY.createVariable(((IVariable) t).getValue());
-		} else if (t instanceof IConstructedTerm) {
-			final IConstructedTerm ct = (IConstructedTerm) t;
-			final List<Term> terms = new ArrayList<Term>(ct.getValue().size());
-			for (final ITerm term : ct.getValue()) {
-				terms.add(convertTermFromIrisToWsmo4j(term));
-			}
-			return LOGIC_FACTORY.createConstructedTerm(WSMO_FACTORY
-					.createIRI(ct.getFunctionSymbol()), terms);
-		} else if (t instanceof IBooleanTerm) {
-			return DATA_FACTORY.createBoolean(((IBooleanTerm) t).getValue());
-		} else if (t instanceof IDateTerm) {
-			final IDateTerm dt = (IDateTerm) t;
-			int[] tzData = getTZData(dt.getTimeZone());
-			return DATA_FACTORY.createDate(dt.getYear(), dt.getMonth(), dt
-					.getDay(), tzData[0], tzData[1]);
-		} else if (t instanceof IDateTime) {
-			final IDateTime dt = (IDateTime) t;
-			int[] tzData = getTZData(dt.getTimeZone());
-			return DATA_FACTORY.createDateTime(dt.getYear(), dt.getMonth(), dt
-					.getDay(), dt.getHour(), dt.getMinute(), (float) dt
-					.getDecimalSecond(), tzData[0], tzData[1]);
-			// TODO gigi: I introduced the float cast, check if this is correct
-		} else if (t instanceof ITime) {
-			final ITime time = (ITime) t;
-			int[] tzData = getTZData(time.getTimeZone());
-			return DATA_FACTORY.createTime(time.getHour(), time.getMinute(),
-					(float) time.getDecimalSecond(),
-					// TODO gigi: I introduced the float cast, check if this is
-					// correct
-					tzData[0], tzData[1]);
-		} else if (t instanceof IDoubleTerm) {
-			return DATA_FACTORY.createDouble(((IDoubleTerm) t).getValue()
-					.doubleValue());
-		} else if (t instanceof IFloatTerm) {
-			return DATA_FACTORY.createFloat(((IFloatTerm) t).getValue()
-					.floatValue());
-		} else if (t instanceof IIntegerTerm) {
-			return DATA_FACTORY.createInteger(new BigInteger(t.getValue()
-					.toString()));
-		} else if (t instanceof IDecimalTerm) {
-			return DATA_FACTORY.createDecimal(new BigDecimal(((IDecimalTerm) t)
-					.toString()));
-		} else if (t instanceof IGDay) {
-			return DATA_FACTORY.createGregorianDay(((IGDay) t).getDay());
-		} else if (t instanceof IGMonth) {
-			return DATA_FACTORY.createGregorianMonth(((IGMonth) t).getMonth());
-		} else if (t instanceof IGMonthDay) {
-			final IGMonthDay md = (IGMonthDay) t;
-			return DATA_FACTORY.createGregorianMonthDay(md.getMonth(), md
-					.getDay());
-		} else if (t instanceof IGYear) {
-			return DATA_FACTORY.createGregorianYear(((IGYear) t).getYear());
-		} else if (t instanceof IGYearMonth) {
-			final IGYearMonth md = (IGYearMonth) t;
-			return DATA_FACTORY.createGregorianYearMonth(md.getYear(), md
-					.getMonth());
-		} else if (t instanceof IYearMonthDuration) {
-			final IYearMonthDuration dt = (IYearMonthDuration) t;
-			
-			List<Integer> values = new ArrayList<Integer>();
-			values.add(dt.getYear());
-			values.add(dt.getMonth());
-
-			// negative => special treatment
-			boolean signSet = dt.isPositive();
-			// attach negative sign to first non-zero value
-			if (!signSet) {
-				for (int i = 0; i < values.size(); i++) {
-					Integer value = values.get(i);
-					if (value > 0) {
-						signSet = true;
-						values.set(i, value * -1);
-						break;
-					}
-				}
-			}
-			return DATA_FACTORY.createYearMonthDuration(values.get(0), values.get(1));
-		} else if (t instanceof IDayTimeDuration) {
-			final IDayTimeDuration dt = (IDayTimeDuration) t;
-			
-			List<Integer> values = new ArrayList<Integer>();
-			values.add(dt.getDay());
-			values.add(dt.getHour());
-			values.add(dt.getMinute());
-
-			// getSeconds discards fractional part => handle seconds differently
-			double seconds = dt.getDecimalSecond();
-
-			// negative => special treatment
-			boolean signSet = dt.isPositive();
-			// attach negative sign to first non-zero value
-			if (!signSet) {
-				for (int i = 0; i < values.size(); i++) {
-					Integer value = values.get(i);
-					if (value > 0) {
-						signSet = true;
-						values.set(i, value * -1);
-						break;
-					}
-				}
-				if (!signSet) {
-					seconds *= -1;
-				}
-			}
-			return DATA_FACTORY.createDayTimeDuration(values.get(0), values.get(1), values.get(2), seconds);
-		} else if (t instanceof IDuration) { 
-			// it is essential that IDuration comes after IDayTimeDuration and IYearMonthDuration
-			// since those interfaces are extend IDuration
-			// FIXME check if this applies somewhere else!
-			final IDuration dt = (IDuration) t;
-			
-			List<Integer> values = new ArrayList<Integer>();
-			values.add(dt.getYear());
-			values.add(dt.getMonth());
-			values.add(dt.getDay());
-			values.add(dt.getHour());
-			values.add(dt.getMinute());
-
-			// getSeconds discards fractional part => handle seconds differently
-			double seconds = dt.getDecimalSecond();
-
-			// negative => special treatment
-			boolean signSet = dt.isPositive();
-			// attach negative sign to first non-zero value
-			if (!signSet) {
-				for (int i = 0; i < values.size(); i++) {
-					Integer value = values.get(i);
-					if (value > 0) {
-						signSet = true;
-						values.set(i, value * -1);
-						break;
-					}
-				}
-				if (!signSet) {
-					seconds *= -1;
-				}
-			}
-			return DATA_FACTORY.createDuration(values.get(0), values.get(1), values.get(2), values.get(3), values.get(4), seconds);
-		} else if (t instanceof IXMLLiteral) {
-			// checks if there is a language string
-			String lang;
-			if (((IXMLLiteral) t).getLang() == null) {
-				lang = "";
-			} else {
-				lang = ((IXMLLiteral) t).getLang();
-			}
-			return DATA_FACTORY.createXMLLiteral(((IXMLLiteral) t).getString(),
-					lang);
-		} else if (t instanceof IPlainLiteral) {
-			// checks if there is a language string
-			String lang;
-			if (((IPlainLiteral) t).getLang() == null) {
-				lang = "";
-			} else {
-				lang = ((IPlainLiteral) t).getLang();
-			}
-			return DATA_FACTORY.createPlainLiteral(((IPlainLiteral) t).getString(),
-					lang);
-		} else if (t instanceof ISqName) {
-			// couldn't find this type in wsmo4j
-		}
-		throw new IllegalArgumentException("Can't convert a term of type "
-				+ t.getClass().getName());
-	}
-
-	/**
-	 * Calculates the timezone hours and timezone minutes for a given timezone
-	 * 
-	 * @param t the timezon for which to calculate the hours and minutes
-	 * @return an array with the hours at index 0 and minutes at index 1
-	 * @throws NullPointerException if the timezone is {@code null}
-	 */
-	static int[] getTZData(final TimeZone t) {
-		if (t == null) {
-			throw new NullPointerException("The TimeZone must not be null");
-		}
-		return new int[] { t.getRawOffset() / 3600000,
-				t.getRawOffset() % 3600000 / 60000 };
-	}
 
 	// ****** REMOVED. SEE BUG 2248622 **********
 	// /**
@@ -1120,14 +445,14 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 
 			if (p.equals(memberOf)) {
 				for (final MemberOf mo : source.memberOf(null, null)) {
-					r.add(BASIC.createTuple(convertTermFromWsmo4jToIris(mo
-							.getId()), convertTermFromWsmo4jToIris(mo
-							.getConcept())));
+					r.add(BASIC.createTuple(
+							convertTermFromWsmo4jToIris(mo.getId()), 
+							convertTermFromWsmo4jToIris(mo.getConcept())));
 				}
 			} else if (p.equals(hasValue)) {
 				for (final HasValue hv : source.hasValue(null, null, null)) {
-					r.add(BASIC.createTuple(convertTermFromWsmo4jToIris(hv
-							.getId()),
+					r.add(BASIC.createTuple(
+							convertTermFromWsmo4jToIris(hv.getId()),
 							convertTermFromWsmo4jToIris(hv.getName()),
 							convertTermFromWsmo4jToIris(hv.getValue())));
 				}
