@@ -38,6 +38,7 @@ import org.sti2.elly.api.terms.IIndividual;
 import org.sti2.elly.api.terms.ITerm;
 import org.sti2.elly.terms.ConcreteTerm;
 import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
+import org.wsml.reasoner.builtin.iris.TermHelper;
 import org.wsmo.common.IRI;
 import org.wsmo.common.Identifier;
 import org.wsmo.factory.FactoryContainer;
@@ -142,7 +143,7 @@ public class Elly2WsmlOntologyEntityTranslator {
 	}
 
 	/**
-	 * Converts a iris term to an wsmo term
+	 * Converts a elly term to an wsmo term
 	 * 
 	 * @param t
 	 *            the iris term
@@ -158,122 +159,11 @@ public class Elly2WsmlOntologyEntityTranslator {
 		}
 		
 		if (!(ellyTerm instanceof ConcreteTerm))
-			throw new IllegalArgumentException("The term must not be instanceof org.sti2.elly.terms.ConcreteTerm");
+			throw new IllegalArgumentException("The term must be instanceof org.sti2.elly.terms.ConcreteTerm");
 		
 		org.deri.iris.api.terms.ITerm irisTerm = ((ConcreteTerm) ellyTerm).asIRISTerm();
 		
-		/*
-		 * subinterfaces of IStringTerm have to be handeled before the
-		 * IStringTerm block
-		 */
-		if (irisTerm instanceof IBase64Binary) {
-			return container.getXmlDataFactory().createBase64Binary(((IBase64Binary) irisTerm).getValue().getBytes());
-		} else if (irisTerm instanceof IHexBinary) {
-			return container.getXmlDataFactory().createHexBinary(((IHexBinary) irisTerm).getValue().getBytes());
-//		} else if (t instanceof IIri) { // not of type DataValue
-//			return WSMO_FACTORY.createIRI(((IIri) t).getValue());
-		} else if (irisTerm instanceof IStringTerm) {
-			return container.getXmlDataFactory().createString(((IStringTerm) irisTerm).getValue());
-		} else if (irisTerm instanceof IBooleanTerm) {
-			return container.getXmlDataFactory().createBoolean(((IBooleanTerm) irisTerm).getValue());
-		} else if (irisTerm instanceof IDateTerm) {
-			final IDateTerm dt = (IDateTerm) irisTerm;
-			int[] tzData = getTZData(dt.getTimeZone());
-			return container.getXmlDataFactory().createDate(dt.getYear(), dt.getMonth(), dt.getDay(), tzData[0],
-					tzData[1]);
-		} else if (irisTerm instanceof IDateTime) {
-			final IDateTime dt = (IDateTime) irisTerm;
-			int[] tzData = getTZData(dt.getTimeZone());
-			return container.getXmlDataFactory().createDateTime(dt.getYear(), dt.getMonth(), dt.getDay(), dt.getHour(),
-					dt.getMinute(), (float) dt.getDecimalSecond(), tzData[0], tzData[1]);
-		} else if (irisTerm instanceof ITime) {
-			final ITime time = (ITime) irisTerm;
-			int[] tzData = getTZData(time.getTimeZone());
-			return container.getXmlDataFactory().createTime(time.getHour(), time.getMinute(),
-					(float) time.getDecimalSecond(),
-					tzData[0], tzData[1]);
-		} else if (irisTerm instanceof IDecimalTerm) {
-			// FIXME dw: integer byte short long double .... need to be handled
-			return container.getXmlDataFactory().createDecimal(new BigDecimal(((IDecimalTerm) irisTerm).toString()));
-		} else if (irisTerm instanceof IDoubleTerm) {
-			return container.getXmlDataFactory().createDouble(((IDoubleTerm) irisTerm).getValue().doubleValue());
-		}
-		else if (irisTerm instanceof IDuration) {
-			final IDuration dt = (IDuration) irisTerm;
-			
-			List<Integer> values = new ArrayList<Integer>();
-			values.add(dt.getYear());
-			values.add(dt.getMonth());
-			values.add(dt.getDay());
-			values.add(dt.getHour());
-			values.add(dt.getMinute());
-
-			// getSeconds discards fractional part => handle seconds differently
-			double seconds = dt.getDecimalSecond();
-
-			// negative => special treatment
-			boolean signSet = dt.isPositive();
-			// attach negative sign to first non-zero value
-			if (!signSet) {
-				for (int i = 0; i < values.size(); i++) {
-					Integer value = values.get(i);
-					if (value > 0) {
-						signSet = true;
-						values.set(i, value * -1);
-						break;
-					}
-				}
-				if (!signSet) {
-					seconds *= -1;
-				}
-			}
-			return container.getXmlDataFactory().createDuration(values.get(0), values.get(1), values.get(2), values.get(3), values.get(4), seconds);
-		} else if (irisTerm instanceof IFloatTerm) {
-			return container.getXmlDataFactory().createFloat(((IFloatTerm) irisTerm).getValue().floatValue());
-		} else if (irisTerm instanceof IGDay) {
-			return container.getXmlDataFactory().createGregorianDay(((IGDay) irisTerm).getDay());
-		} else if (irisTerm instanceof IGMonth) {
-			return container.getXmlDataFactory().createGregorianMonth(((IGMonth) irisTerm).getMonth());
-		} else if (irisTerm instanceof IGMonthDay) {
-			final IGMonthDay md = (IGMonthDay) irisTerm;
-			return container.getXmlDataFactory().createGregorianMonthDay(md.getMonth(), md.getDay());
-		} else if (irisTerm instanceof IGYear) {
-			return container.getXmlDataFactory().createGregorianYear(((IGYear) irisTerm).getYear());
-		} else if (irisTerm instanceof IGYearMonth) {
-			final IGYearMonth md = (IGYearMonth) irisTerm;
-			return container.getXmlDataFactory().createGregorianYearMonth(md.getYear(), md.getMonth());
-		} else if (irisTerm instanceof IIntegerTerm) {
-			return container.getXmlDataFactory().createInteger(new BigInteger(irisTerm.getValue().toString()));
-		} else if (irisTerm instanceof IYearMonthDuration) {
-			return container.getXmlDataFactory().createYearMonthDuration(((IYearMonthDuration) irisTerm).getYear(),
-					((IYearMonthDuration) irisTerm).getMonth());
-		} else if (irisTerm instanceof IDayTimeDuration) {
-			return container.getXmlDataFactory().createDayTimeDuration(((IDayTimeDuration) irisTerm).getDay(),
-					((IDayTimeDuration) irisTerm).getHour(), ((IDayTimeDuration) irisTerm).getMinute(),
-					((IDayTimeDuration) irisTerm).getSecond());
-		} else if (irisTerm instanceof IXMLLiteral) {
-			// checks if there is a language string
-			String lang;
-			if (((IXMLLiteral) irisTerm).getLang() == null) {
-				lang = "";
-			} else {
-				lang = ((IXMLLiteral) irisTerm).getLang();
-			}
-			return container.getXmlDataFactory().createXMLLiteral(((IXMLLiteral) irisTerm).getString(), lang);
-		} else if (irisTerm instanceof IPlainLiteral) {
-			// checks if there is a language string
-			String lang;
-			if (((IPlainLiteral) irisTerm).getLang() == null) {
-				lang = "";
-			} else {
-				lang = ((IPlainLiteral) irisTerm).getLang();
-			}
-			return container.getXmlDataFactory().createPlainLiteral(((IPlainLiteral) irisTerm).getString(), lang);
-		} else if (irisTerm instanceof ISqName) {
-			// couldn't find this type in wsmo4j
-		}
-		
-		return null;
+		return TermHelper.convertDataValueFromIrisToWsmo4j(irisTerm, container);
 	}
 
 	/**
