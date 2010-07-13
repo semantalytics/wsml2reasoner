@@ -1,33 +1,7 @@
 package org.wsml.reasoner.builtin.elly;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.TimeZone;
 
-import org.deri.iris.api.terms.IStringTerm;
-import org.deri.iris.api.terms.concrete.IBase64Binary;
-import org.deri.iris.api.terms.concrete.IBooleanTerm;
-import org.deri.iris.api.terms.concrete.IDateTerm;
-import org.deri.iris.api.terms.concrete.IDateTime;
-import org.deri.iris.api.terms.concrete.IDayTimeDuration;
-import org.deri.iris.api.terms.concrete.IDecimalTerm;
-import org.deri.iris.api.terms.concrete.IDoubleTerm;
-import org.deri.iris.api.terms.concrete.IDuration;
-import org.deri.iris.api.terms.concrete.IFloatTerm;
-import org.deri.iris.api.terms.concrete.IGDay;
-import org.deri.iris.api.terms.concrete.IGMonth;
-import org.deri.iris.api.terms.concrete.IGMonthDay;
-import org.deri.iris.api.terms.concrete.IGYear;
-import org.deri.iris.api.terms.concrete.IGYearMonth;
-import org.deri.iris.api.terms.concrete.IHexBinary;
-import org.deri.iris.api.terms.concrete.IIntegerTerm;
-import org.deri.iris.api.terms.concrete.ISqName;
-import org.deri.iris.api.terms.concrete.IPlainLiteral;
-import org.deri.iris.api.terms.concrete.ITime;
-import org.deri.iris.api.terms.concrete.IXMLLiteral;
-import org.deri.iris.api.terms.concrete.IYearMonthDuration;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Concept;
 import org.omwg.ontology.DataValue;
