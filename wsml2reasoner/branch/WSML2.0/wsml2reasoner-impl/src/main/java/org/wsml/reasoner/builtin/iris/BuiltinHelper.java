@@ -133,7 +133,7 @@ public class BuiltinHelper {
 		case DATETIME_INEQUAL:
 			return BUILTIN.createDateTimeNotEqual(wsmlTerms);
 		case DATETIME_LESS_THAN:
-			return BUILTIN.createDateTimeLess(sortedTerms);
+			return BUILTIN.createDateTimeLess(wsmlTerms);
 		case DAYTIMEDURATION_EQUAL: 
 			return BUILTIN.createDurationEqual(sortedTerms);
 		case DAYTIMEDURATION_GREATER_THAN:
@@ -777,9 +777,7 @@ public class BuiltinHelper {
 		case YEARS_FROM_DURATION:
 			return BUILTIN.createYearsFromDuration(sortedTerms);
 		default:
-			// FIXME exception
-			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
-					BASIC.createTuple(terms));
+			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
 		}
 	}
 

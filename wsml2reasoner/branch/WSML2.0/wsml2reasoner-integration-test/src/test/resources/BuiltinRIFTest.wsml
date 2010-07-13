@@ -71,16 +71,16 @@ axiom testRIFBuiltin definedBy
  	   isXMLLiteralTest(?x) 		:- ?x[?attribute hasValue ?value] and rif#is-literal-XMLLiteral(rdf#XMLLiteral("<tag>Text</tag>", "")).
 	   
 	   // rif is-not-literal tests
-	   isNotAnyURITest(?x) 			   :- ?x[?attribute hasValue ?value] and rif#is-literal-not-anyURI(xsd#string("not any uri from hell")).
-	   isNotBase64BinaryTest(?x)       :- ?x[?attribute hasValue ?value] and rif#is-literal-not-base64Binary(xsd#string("test_is_not")).
-	   isNotBooleanTest(?x)      	   :- ?x[?attribute hasValue ?value] and rif#is-literal-not-boolean(xsd#string("test_is_not")).
-	   isNotDateTest(?x)         	   :- ?x[?attribute hasValue ?value] and rif#is-literal-not-date(xsd#string("test_is_not")).
-	   isNotDateTimeTest(?x)           :- ?x[?attribute hasValue ?value] and rif#is-literal-not-dateTime(xsd#string("test_is_not")).
-       isNotDateTimeStampTest(?x)      :- ?x[?attribute hasValue ?value] and rif#is-literal-not-dateTimeStamp(xsd#string("test_is_not")).
-	   isNotDoubleTest(?x)      	   :- ?x[?attribute hasValue ?value] and rif#is-literal-not-double(xsd#string("test_is_not")).
-	   isNotFloatTest(?x)        	   :- ?x[?attribute hasValue ?value] and rif#is-literal-not-float(xsd#string("test_is_not")).
-	   isNotHexBinaryTest(?x)	       :- ?x[?attribute hasValue ?value] and rif#is-literal-not-hexBinary(xsd#string("test_is_not")).
-	   isNotDecimalTest(?x)      	   :- ?x[?attribute hasValue ?value] and rif#is-literal-not-decimal(xsd#string("test_is_not")).
+	   isNotAnyURITest(?x) 			    :- ?x[?attribute hasValue ?value] and rif#is-literal-not-anyURI(xsd#string("not any uri from hell")).
+	   isNotBase64BinaryTest(?x)        :- ?x[?attribute hasValue ?value] and rif#is-literal-not-base64Binary(xsd#string("test_is_not")).
+	   isNotBooleanTest(?x)      	    :- ?x[?attribute hasValue ?value] and rif#is-literal-not-boolean(xsd#string("test_is_not")).
+	   isNotDateTest(?x)         	    :- ?x[?attribute hasValue ?value] and rif#is-literal-not-date(xsd#string("test_is_not")).
+	   isNotDateTimeTest(?x)            :- ?x[?attribute hasValue ?value] and rif#is-literal-not-dateTime(xsd#string("test_is_not")).
+       isNotDateTimeStampTest(?x)       :- ?x[?attribute hasValue ?value] and rif#is-literal-not-dateTimeStamp(xsd#string("test_is_not")).
+	   isNotDoubleTest(?x)      	    :- ?x[?attribute hasValue ?value] and rif#is-literal-not-double(xsd#string("test_is_not")).
+	   isNotFloatTest(?x)        	    :- ?x[?attribute hasValue ?value] and rif#is-literal-not-float(xsd#string("test_is_not")).
+	   isNotHexBinaryTest(?x)	        :- ?x[?attribute hasValue ?value] and rif#is-literal-not-hexBinary(xsd#string("test_is_not")).
+	   isNotDecimalTest(?x)      	    :- ?x[?attribute hasValue ?value] and rif#is-literal-not-decimal(xsd#string("test_is_not")).
        isNotIntegerTest(?x)				:- ?x[?attribute hasValue ?value] and rif#is-literal-not-integer(xsd#string("test_is_not")).
 	   isNotLongTest(?x)         	   	:- ?x[?attribute hasValue ?value] and rif#is-literal-not-long(xsd#string("test_is_not")).
 	   isNotIntTest(?x)        	   		:- ?x[?attribute hasValue ?value] and rif#is-literal-not-int(xsd#string("test_is_not")).
@@ -204,16 +204,17 @@ axiom testRIFBuiltin definedBy
 	   // rif yearMonthDuration manipulation 
 	   // TODO: built-in not yet supported
 	   // addYearMonthDurationsTest(?x)							:- ?x[?attribute hasValue ?value] and rif-func#add-yearMonthDurations(xsd#duration( 11, 1, 0, 21, 12, 0.0), xsd#yearMonthDuration(20, 3), xsd#yearMonthDuration(12, 9)).
-	   
 	   subtractYearMonthDurationsTest(?x)						:- ?x[?attribute hasValue ?value] and rif-func#subtract-yearMonthDurations(xsd#duration( 11, 1, 0, 21, 12, 0.0), xsd#yearMonthDuration(20, 3), xsd#yearMonthDuration(12, 9)).
-	   multiplyYearMonthDurationTest(?x)						:- ?x[?attribute hasValue ?value] and rif-func#multiply-yearMonthDurations(xsd#yearMonthDuration(2, 2), xsd#integer(2)).
+	   // TODO: built-in not yet supported
+	   // multiplyYearMonthDurationTest(?x)						:- ?x[?attribute hasValue ?value] and rif-func#multiply-yearMonthDurations(xsd#yearMonthDuration(4, 4), xsd#yearMonthDuration(2, 2),  xsd#double(2.0)).
 	   divideYearMonthDurationTest(?x)							:- ?x[?attribute hasValue ?value] and rif-func#divide-yearMonthDurations(xsd#yearMonthDuration(2, 2), xsd#integer(2)).
 	   divideYearMonthDurationByYearMonthDurationTest(?x) 		:- ?x[?attribute hasValue ?value] and rif-func#divide-yearMonthDurations(xsd#yearMonthDuration(2, 2), xsd#yearMonthDuration(2, 1)).
 	   
 	   // rif dayTimeDuration manipulation
 	   //  addDayTimeDurationsTest(?x)						:- ?x[?attribute hasValue ?value] and rif-func#add-dayTimeDurations(xsd#dayTimeDuration(20, 3, 12, 33), xsd#dayTimeDuration(12, 9, 10, 33)).	
 	   subtractDayTimeDurationsTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#subtract-dayTimeDurations(xsd#duration( 11, 1, 0, 21, 12, 0.0), xsd#dayTimeDuration(20, 3, 10, 33), xsd#dayTimeDuration(12, 9, 10, 33)).	
-	   multiplyDayTimeDurationTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#multiply-dayTimeDurations(xsd#dayTimeDuration(20, 3, 10, 33), xsd#dayTimeDuration(12, 9, 10, 33)).	
+	   // TODO: built-in not yet supported
+	   // multiplyDayTimeDurationTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#multiply-dayTimeDurations(xsd#dayTimeDuration(20, 3, 10, 33), xsd#dayTimeDuration(12, 9, 10, 33)).	
 	   divideDayTimeDurationTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#divide-dayTimeDurations(xsd#dayTimeDuration(20, 3, 10, 33), xsd#dayTimeDuration(12, 9, 10, 33)).	
 	   divideDayTimeDurationBydayTimeDurationTest(?x)	:- ?x[?attribute hasValue ?value] and rif-func#divide-dayTimeDuration-by-dayTimeDurations(xsd#dayTimeDuration(20, 3, 10, 33), xsd#dayTimeDuration(12, 9, 10, 33)).	
 	   
@@ -234,27 +235,27 @@ axiom testRIFBuiltin definedBy
 	
 	   // rif dateTime boolean   
 	   dateTimeEqualTest(?x)							:- ?x[?attribute hasValue ?value] and rif-pred#dateTime-equal( xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 ), xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 )).
-	   dateTimeLessThanTest(?x)							:- ?x[?attribute hasValue ?value] and rif-pred#dateTime-less-than( xsd#dateTime( 1999, 12, 31, 20, 33, 23.4, 0, 0 ), xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 )).
-	   dateTimeGreaterThanTest(?x)						:- ?x[?attribute hasValue ?value] and rif-pred#dateTime-greater-than( xsd#dateTime( 1988, 12, 31, 20, 33, 23.4, 0, 0 ), xsd#dateTime( 2001, 12, 31, 20, 33, 23.4, 0, 0 )).
+	   dateTimeLessThanTest(?x)							:- ?x[?attribute hasValue ?value] and rif-pred#dateTime-less-than( xsd#dateTime( 1985, 12, 31, 20, 33, 23.4, 0, 0 ), xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 )).
+	   dateTimeGreaterThanTest(?x)						:- ?x[?attribute hasValue ?value] and rif-pred#dateTime-greater-than(xsd#dateTime( 2001, 12, 31, 20, 33, 23.4, 0, 0 ), xsd#dateTime( 1988, 12, 31, 20, 33, 23.4, 0, 0 )).
 	    
 	   // rif date boolean
 	   dateEqualTest(?x)								:- ?x[?attribute hasValue ?value] and rif-pred#date-equal( xsd#date( 1986, 12, 31), xsd#date( 1986, 12, 31)).
-	   dateLessThanTest(?x)								:- ?x[?attribute hasValue ?value] and rif-pred#date-less-than( xsd#date( 1999, 12, 31), xsd#date( 1986, 12, 31)).
-	   dateGreaterThanTest(?x)							:- ?x[?attribute hasValue ?value] and rif-pred#date-greater-than( xsd#date( 1988, 12, 3 ), xsd#date( 2001, 12, 31)).
+	   dateLessThanTest(?x)								:- ?x[?attribute hasValue ?value] and rif-pred#date-less-than( xsd#date( 1986, 12, 31), xsd#date( 1999, 12, 31)).
+	   dateGreaterThanTest(?x)							:- ?x[?attribute hasValue ?value] and rif-pred#date-greater-than( xsd#date( 2001, 12, 31) ,xsd#date( 1988, 12, 3 )).
 	
 	   // rif time boolean
 	   timeEqualTest(?x)								:- ?x[?attribute hasValue ?value] and rif-pred#time-equal( xsd#time(20, 33, 23.4, 0, 0 ), xsd#time(20, 33, 23.4, 0, 0 )).
-	   timeLessThanTest(?x)								:- ?x[?attribute hasValue ?value] and rif-pred#time-less-than( xsd#time(21, 33, 23.4, 0, 0 ), xsd#time(20, 33, 23.4, 0, 0 )).
-	   timeGreaterThanTest(?x)							:- ?x[?attribute hasValue ?value] and rif-pred#time-greater-than(xsd#time(7, 33, 23.4, 0, 0 ), xsd#time(20, 33, 23.4, 0, 0 )).   
+	   timeLessThanTest(?x)								:- ?x[?attribute hasValue ?value] and rif-pred#time-less-than( xsd#time(10, 33, 23.4, 0, 0 ), xsd#time(20, 33, 23.4, 0, 0 )).
+	   timeGreaterThanTest(?x)							:- ?x[?attribute hasValue ?value] and rif-pred#time-greater-than(xsd#time(21, 33, 23.4, 0, 0 ), xsd#time(20, 33, 23.4, 0, 0 )).   
 	  
 	   // rif boolean functions
 	   durationEqualTest(?x)							:- ?x[?attribute hasValue ?value] and rif-pred#duration-equal( xsd#duration( 1, 2, 3, 4, 5, 6.0 ),  xsd#duration( 1, 2, 3, 4, 5, 6.0 )).
 	   
-	   dayTimeDurationLessThanTest(?x)					:- ?x[?attribute hasValue ?value] and rif-pred#dayTimeDuration-less-than( xsd#dayTimeDuration( 6, 2, 3, 4),  xsd#dayTimeDuration( 1, 2, 3, 4 )).
-	   dayTimeDurationGreaterThanTest(?x)				:- ?x[?attribute hasValue ?value] and rif-pred#dayTimeDuration-greater-than( xsd#dayTimeDuration( 1, 2, 3, 4),  xsd#dayTimeDuration( 6, 2, 3, 4 )).
+	   dayTimeDurationLessThanTest(?x)					:- ?x[?attribute hasValue ?value] and rif-pred#dayTimeDuration-less-than(xsd#dayTimeDuration( 1, 2, 3, 4 ), xsd#dayTimeDuration( 6, 2, 3, 4)).
+	   dayTimeDurationGreaterThanTest(?x)				:- ?x[?attribute hasValue ?value] and rif-pred#dayTimeDuration-greater-than(xsd#dayTimeDuration( 6, 2, 3, 4 ), xsd#dayTimeDuration( 1, 2, 3, 4)).
  
-	   yearMonthDurationLessThanTest(?x)				:- ?x[?attribute hasValue ?value] and rif-pred#yearMonthDuration-less-than( xsd#yearMonthDuration(22, 3),  xsd#yearMonthDuration(20, 3)).
-	   yearMonthDurationGreaterThanTest(?x)				:- ?x[?attribute hasValue ?value] and rif-pred#yearMonthDuration-greater-than( xsd#yearMonthDuration(20, 3),  xsd#yearMonthDuration(20, 5)).
+	   yearMonthDurationLessThanTest(?x)				:- ?x[?attribute hasValue ?value] and rif-pred#yearMonthDuration-less-than( xsd#yearMonthDuration(10, 2),  xsd#yearMonthDuration(20, 3)).
+	   yearMonthDurationGreaterThanTest(?x)				:- ?x[?attribute hasValue ?value] and rif-pred#yearMonthDuration-greater-than( xsd#yearMonthDuration(23, 12),  xsd#yearMonthDuration(20, 5)).
 
 	   dateTimeNotEqualTest(?x)							:- ?x[?attribute hasValue ?value] and rif-pred#dateTime-not-equal( xsd#dateTime( 1986, 12, 31, 20, 33, 0.4, 1, 0 ), xsd#dateTime( 186, 12, 31, 20, 33, 23.4, 0, 0 )).
 	   dateTimeLessThanOrEqualTest(?x)					:- ?x[?attribute hasValue ?value] and rif-pred#dateTime-less-than-or-equal( xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 ), xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0 )).
@@ -268,13 +269,13 @@ axiom testRIFBuiltin definedBy
 	   timeLessThanOrEqualTest(?x)						:- ?x[?attribute hasValue ?value] and rif-pred#date-equal(xsd#time(20, 33, 23.4, 0, 0 ),xsd#time(20, 33, 23.4, 0, 0 )).
 	   timeGreaterThanOrEqualTest(?x)					:- ?x[?attribute hasValue ?value] and rif-pred#date-equal( xsd#time(20, 33, 23.4, 0, 0 ), xsd#time(20, 33, 23.4, 0, 0 )).   
 	   
-	   durationNotEqualTest(?x)							:- ?x[?attribute hasValue ?value] and rif-pred#duration-not-equal( xsd#duration( 2, 2, 3, 4, 5, 6.0 ), xsd#duration( 2, 2, 3, 4, 5, 6.0 )).
+	   durationNotEqualTest(?x)							:- ?x[?attribute hasValue ?value] and rif-pred#duration-not-equal( xsd#duration( 5, 8, 1, 7, 3, 2.1 ), xsd#duration( 2, 2, 3, 4, 5, 6.0 )).
 	   
 	   dayTimeDurationLessThanOrEqualTest(?x)			:- ?x[?attribute hasValue ?value] and rif-pred#dayTimeDuration-less-than-or-equal(  xsd#dayTimeDuration( 6, 2, 3, 4),  xsd#dayTimeDuration( 6, 2, 3, 4)).
 	   dayTimeDurationGreaterThanOrEqualTest(?x)		:- ?x[?attribute hasValue ?value] and rif-pred#dayTimeDuration-greater-than-or-equal(  xsd#dayTimeDuration( 6, 2, 3, 4),  xsd#dayTimeDuration( 6, 2, 3, 4)).
 	   
-	   yearMonthDurationLessThanOrEqualTest(?x)			:- ?x[?attribute hasValue ?value] and rif-pred#yearMonthDuration-less-than-or-equal( xsd#yearMonthDuration(22, 3),  xsd#yearMonthDuration(22, 3)).
-	   yearMonthDurationGreaterThanOrEqualTest(?x)		:- ?x[?attribute hasValue ?value] and rif-pred#yearMonthDuration-greater-than-or-equal( xsd#yearMonthDuration(22, 3),  xsd#yearMonthDuration(22, 3)).
+	   yearMonthDurationLessThanOrEqualTest(?x)			:- ?x[?attribute hasValue ?value] and rif-pred#yearMonthDuration-less-than-or-equal( xsd#yearMonthDuration(20, 3),  xsd#yearMonthDuration(22, 3)).
+	   yearMonthDurationGreaterThanOrEqualTest(?x)		:- ?x[?attribute hasValue ?value] and rif-pred#yearMonthDuration-greater-than-or-equal( xsd#yearMonthDuration(23, 3),  xsd#yearMonthDuration(22, 3)).
 	   
 	   // rif xmlLiteral
 	   xmlLiteralEqualTest(?x)							:- ?x[?attribute hasValue ?value] and rif-pred#XMLLiteral-equal( rdf#XMLLiteral("<tag>equal</tag>", ""), rdf#XMLLiteral("<tag>equal</tag>", "")).
