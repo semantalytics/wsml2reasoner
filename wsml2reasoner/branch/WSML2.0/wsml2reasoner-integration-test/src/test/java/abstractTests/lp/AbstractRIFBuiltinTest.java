@@ -680,6 +680,11 @@ public abstract class AbstractRIFBuiltinTest extends TestCase implements LP {
 		query = "subtractDateTimesTest(?x)";
 		checkSTD(query);
 	}
+	
+	public void testsubtractDateTimesNEG() throws Exception {
+		query = "subtractDateTimes_neg_Test(?x)";
+		checkSTD(query);
+	}
 
 	public void testsubtractDates() throws Exception {
 		query = "subtractDatesTest(?x)";
