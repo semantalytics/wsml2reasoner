@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 
+import org.deri.iris.api.terms.IConcreteTerm;
 import org.deri.iris.api.terms.IConstructedTerm;
 import org.deri.iris.api.terms.IStringTerm;
 import org.deri.iris.api.terms.ITerm;
@@ -285,9 +286,6 @@ public class TermHelper {
 			String localPart = ((SqName) t).getName();
 			
 			return dataFactory.createQName(namespace, localPart);
-			// couldn't find this type in wsmo4j
-			
-			
 		} else if (t instanceof INMTOKEN) {
 			return dataFactory.createNMTOKEN(((IStringTerm) t).getValue());
 		} else if (t instanceof IIDREF) {
@@ -379,10 +377,10 @@ public class TermHelper {
 	}
 
 	/**
-	 * Calculates the timezone hours and timezone minutes for a given timezone
+	 * Calculates the timezone hours and timezone minutes for a given timezone.
 	 * 
 	 * @param t
-	 *            the timezon for which to calculate the hours and minutes
+	 *            the timezone for which to calculate the hours and minutes
 	 * @return an array with the hours at index 0 and minutes at index 1
 	 * @throws NullPointerException
 	 *             if the timezone is {@code null}
@@ -443,7 +441,7 @@ public class TermHelper {
 	 *            the wsmo4j value to convert
 	 * @return the corresponding ITerm implementation
 	 */
-	public static ITerm convertWsmo4jDataValueToIrisTerm(final DataValue v) {
+	public static IConcreteTerm convertWsmo4jDataValueToIrisTerm(final DataValue v) {
 		if (v == null) {
 			throw new NullPointerException("The data value must not be null");
 		}
