@@ -31,6 +31,7 @@ import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsmo.common.WSML;
+import org.wsmo.factory.FactoryContainer;
 import org.wsmo.validator.ValidationError;
 import org.wsmo.validator.ValidationWarning;
 import org.wsmo.validator.WsmlValidator;
@@ -77,6 +78,21 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         }
         return defaultReasoner;
     }
+    
+	private FactoryContainer extractContainer(Map<String, Object> params) {
+		 assert params != null;
+		 
+		 FactoryContainer container = (FactoryContainer) params.get(PARAM_FACTORY_CONTAINER);
+		 if (container != null)
+			 return container;
+		 
+		// TODO extraction of factories doesn't work as they cannot be combined to a factory container
+		// WsmoFactory wsmoFactory = (WsmoFactory) params.get(PARAM_WSMO_FACTORY);
+		// DataFactory dataFactory = (DataFactory) params.get(PARAM_DATA_FACTORY);
+		// LogicalExpressionFactory leFactory = (LogicalExpressionFactory) params.get(PARAM_LE_FACTORY);
+
+		 return new WsmlFactoryContainer();
+	}
 
     private void setAllowImportsFlag(DatalogBasedWSMLReasoner reasoner, Map<String, Object> params) {
         assert params != null;
@@ -90,7 +106,7 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
     @Override
     public WSMLReasoner createWSMLReasoner(Map<String, Object> params, Ontology ontology) {
         if (ontology == null){
-            throw new IllegalArgumentException("The ontology paramter may not be null");
+            throw new IllegalArgumentException("The ontology paramter must not be null");
         }
         if (params == null){
             params = new HashMap<String, Object>();
@@ -99,6 +115,9 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         String wsmlVariant = determineVariant(ontology);
         if (wsmlVariant.equals(WSML.WSML_CORE)){
             return createCoreReasoner(params);
+        }
+        else if (wsmlVariant.equals(WSML.WSML_DL)){
+            return createDLReasoner(params);
         }
         else if (wsmlVariant.equals(WSML.WSML_DL2)){
             return createDL2Reasoner(params);
@@ -123,7 +142,8 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         if (params == null){
             params = new HashMap<String, Object>();
         }
-        DatalogBasedWSMLReasoner reasoner = new DatalogBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.IRIS_STRATIFIED), new WsmlFactoryContainer(), params);
+        FactoryContainer container = extractContainer(params);
+		DatalogBasedWSMLReasoner reasoner = new DatalogBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.IRIS_STRATIFIED), container, params);
         setAllowImportsFlag(reasoner, params);
         return reasoner;
     }
@@ -133,20 +153,29 @@ public class DefaultWSMLReasonerFactory implements WSMLReasonerFactory {
         if (params == null){
             params = new HashMap<String, Object>();
         }
-        DatalogBasedWSMLReasoner reasoner = new DatalogBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.IRIS_WELL_FOUNDED), new WsmlFactoryContainer(), params);
+        FactoryContainer container = extractContainer(params);
+		DatalogBasedWSMLReasoner reasoner = new DatalogBasedWSMLReasoner(extractReasoner(params, BuiltInReasoner.IRIS_WELL_FOUNDED), container, params);
         setAllowImportsFlag(reasoner, params);
         return reasoner;
     }
 
 	@Override
 	public DLReasoner createDL2Reasoner(Map<String, Object> params) {
+		return createDLReasoner(params);
+	}
+
+
+	@Override
+	public DLReasoner createDLReasoner(Map<String, Object> params) {
 		if (params == null){
             params = new HashMap<String, Object>();
         }
 
 		BuiltInReasoner builtInReasoner = extractReasoner(params, BuiltInReasoner.ELLY);
-		ELPBasedWSMLReasoner reasoner = new ELPBasedWSMLReasoner(builtInReasoner, new WsmlFactoryContainer());
+		FactoryContainer container = extractContainer(params);
+		ELPBasedWSMLReasoner reasoner = new ELPBasedWSMLReasoner(builtInReasoner, container);
 		
 		return reasoner;
 	}
+
 }
