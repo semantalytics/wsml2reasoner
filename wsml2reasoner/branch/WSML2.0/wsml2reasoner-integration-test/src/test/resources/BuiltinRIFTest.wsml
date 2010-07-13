@@ -196,12 +196,15 @@ axiom testRIFBuiltin definedBy
 	   timezoneFromTimeTest(?x)				:- ?x[?attribute hasValue ?value] and rif-func#timezone-from-time(xsd#dayTimeDuration(0,1,23,0), xsd#time(20, 33, 23.4, 1, 23 )).
 	   
 	   // rif date time manipulation 
-	   subtractDateTimesTest(?x)		:- ?x[?attribute hasValue ?value] and rif-func#subtract-dateTimes(xsd#duration( 11, 1, 0, 21, 12, 0.0) , xsd#dateTime(2000,10,30,06,12,0,5,0), xsd#dateTime(1999,11,28,09,0,0.0)).
-	   subtractDatesTest(?x)			:- ?x[?attribute hasValue ?value] and rif-func#subtract-dates(xsd#dayTimeDuration(337,0,0,0), xsd#date(2000,10,30), xsd#date(1999,11,28)).
+	   subtractDateTimesTest(?x)		:- ?x[?attribute hasValue ?value] and rif-func#subtract-dateTimes(xsd#dayTimeDuration(0,9,0,0) , xsd#dateTime(2000, 10, 30, 19, 0, 0.0 ,0,0), xsd#dateTime(2000, 10, 30, 10, 0, 0.0 ,0,0)).
+	   subtractDateTimes_neg_Test(?x)		:- ?x[?attribute hasValue ?value] and rif-func#subtract-dateTimes(xsd#dayTimeDuration(0,-9,0,0) , xsd#dateTime(2000, 10, 30, 10, 0, 0.0 ,0,0), xsd#dateTime(2000, 10, 30, 19, 0, 0.0 ,0,0)).
+	   subtractDatesTest(?x)			:- ?x[?attribute hasValue ?value] and rif-func#subtract-dates(xsd#dayTimeDuration(10,0,0,0), xsd#date(2000,10,30), xsd#date(2000,10,20)).
 	   subtractTimesTest(?x)			:- ?x[?attribute hasValue ?value] and rif-func#subtract-times(xsd#dayTimeDuration(0,2,12,0), xsd#time(11,12,00,0,0 ), xsd#time(04,0,0,-5,0)).
 
 	   // rif yearMonthDuration manipulation 
-	   // addYearMonthDurationsTest(?x)							:- ?x[?attribute hasValue ?value] and rif-func#add-yearMonthDurations(xsd#yearMonthDuration(20, 3), xsd#yearMonthDuration(12, 9)).
+	   // TODO: built-in not yet supported
+	   // addYearMonthDurationsTest(?x)							:- ?x[?attribute hasValue ?value] and rif-func#add-yearMonthDurations(xsd#duration( 11, 1, 0, 21, 12, 0.0), xsd#yearMonthDuration(20, 3), xsd#yearMonthDuration(12, 9)).
+	   
 	   subtractYearMonthDurationsTest(?x)						:- ?x[?attribute hasValue ?value] and rif-func#subtract-yearMonthDurations(xsd#duration( 11, 1, 0, 21, 12, 0.0), xsd#yearMonthDuration(20, 3), xsd#yearMonthDuration(12, 9)).
 	   multiplyYearMonthDurationTest(?x)						:- ?x[?attribute hasValue ?value] and rif-func#multiply-yearMonthDurations(xsd#yearMonthDuration(2, 2), xsd#integer(2)).
 	   divideYearMonthDurationTest(?x)							:- ?x[?attribute hasValue ?value] and rif-func#divide-yearMonthDurations(xsd#yearMonthDuration(2, 2), xsd#integer(2)).
