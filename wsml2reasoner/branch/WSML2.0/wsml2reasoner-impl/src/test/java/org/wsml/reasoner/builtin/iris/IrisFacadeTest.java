@@ -32,11 +32,11 @@ public class IrisFacadeTest extends TestCase {
 	FactoryContainer FACTORY;
 
 	public void testGetTZData() {
-		assertTrue("result must be tzHour=1, tzMin=0", Arrays.equals(new int[] { 1, 0 }, TermHelper.getTZData(TimeZone.getTimeZone("GMT+1"))));
+		assertTrue("result must be tzSign=1, tzHour=1, tzMin=0", Arrays.equals(new int[] { 1, 1, 0 }, TermHelper.getTZData(TimeZone.getTimeZone("GMT+1"))));
 		;
-		assertTrue("result must be tzHour=0, tzMin=0", Arrays.equals(new int[] { 0, 0 }, TermHelper.getTZData(TimeZone.getTimeZone("GMT"))));
+		assertTrue("result must be tzSign=0, tzHour=0, tzMin=0", Arrays.equals(new int[] { 0, 0, 0 }, TermHelper.getTZData(TimeZone.getTimeZone("GMT"))));
 		;
-		assertTrue("result must be tzHour=-10, tzMin=30", Arrays.equals(new int[] { -10, -30 }, TermHelper.getTZData(TimeZone
+		assertTrue("result must be tzSign=-1, tzHour=10, tzMin=30", Arrays.equals(new int[] { -1, 10, 30 }, TermHelper.getTZData(TimeZone
 				.getTimeZone("GMT-10:30"))));
 		;
 	}
@@ -94,32 +94,32 @@ public class IrisFacadeTest extends TestCase {
 		// test boolean
 		assertEquals(DF.createBoolean("true"), TermHelper.convertTermFromIrisToWsmo4j(CF.createBoolean(true), FACTORY));
 		// test date
-		assertEquals(DF.createDate(2007, 1, 20, 0, 0), TermHelper.convertTermFromIrisToWsmo4j(CF.createDate(2007, 1, 20), FACTORY));
+		assertEquals(DF.createDate(2007, 1, 20, 0, 0, 0), TermHelper.convertTermFromIrisToWsmo4j(CF.createDate(2007, 1, 20), FACTORY));
 		// test datetime
-		assertEquals(DF.createDateTime(2007, 1, 20, 13, 45, 11, 0, 0), TermHelper.convertTermFromIrisToWsmo4j(
-				CF.createDateTime(2007, 1, 20, 13, 45, 11, 0, 0), FACTORY));
+		assertEquals(DF.createDateTime(2007, 1, 20, 13, 45, 11, 0, 0, 0), TermHelper.convertTermFromIrisToWsmo4j(
+				CF.createDateTime(2007, 1, 20, 13, 45, 11, 0, 0, 0), FACTORY));
 		// test decimal
 		assertEquals(DF.createDecimal("3.1415"), TermHelper.convertTermFromIrisToWsmo4j(CF.createDecimal(3.1415d), FACTORY));
 		// test double
 		assertEquals(DF.createDouble("3.1415"), TermHelper.convertTermFromIrisToWsmo4j(CF.createDouble(3.1415d), FACTORY));
 		// test duration
-		assertEquals(DF.createDuration(5, 3, 5, 12, 16, 11.0), TermHelper.convertTermFromIrisToWsmo4j(
+		assertEquals(DF.createDuration(+1, 5, 3, 5, 12, 16, 11.0), TermHelper.convertTermFromIrisToWsmo4j(
 				CF.createDuration(true, 5, 3, 5, 12, 16, 11.0), FACTORY));
-		assertEquals(DF.createDuration(-5, 3, 5, 12, 16, 11.0), TermHelper.convertTermFromIrisToWsmo4j(CF
+		assertEquals(DF.createDuration(-1, 5, 3, 5, 12, 16, 11.0), TermHelper.convertTermFromIrisToWsmo4j(CF
 				.createDuration(false, 5, 3, 5, 12, 16, 11.0), FACTORY));
-		assertEquals(DF.createDuration(0, -3, 5, 12, 16, 11.0), TermHelper.convertTermFromIrisToWsmo4j(CF
+		assertEquals(DF.createDuration(-1, 0, 3, 5, 12, 16, 11.0), TermHelper.convertTermFromIrisToWsmo4j(CF
 				.createDuration(false, 0, 3, 5, 12, 16, 11.0), FACTORY));
 		// test daytime-duration
-		assertEquals(DF.createDayTimeDuration(5, 12, 16, 11.0), TermHelper.convertTermFromIrisToWsmo4j(CF
+		assertEquals(DF.createDayTimeDuration(1, 5, 12, 16, 11.0), TermHelper.convertTermFromIrisToWsmo4j(CF
 				.createDayTimeDuration(true, 5, 12, 16, 11.0), FACTORY));
-		assertEquals(DF.createDayTimeDuration(-5, 12, 16, 11.0), TermHelper.convertTermFromIrisToWsmo4j(
+		assertEquals(DF.createDayTimeDuration(-1, 5, 12, 16, 11.0), TermHelper.convertTermFromIrisToWsmo4j(
 				CF.createDayTimeDuration(false, 5, 12, 16, 11.0), FACTORY));
-		assertEquals(DF.createDayTimeDuration(0, -12, 16, 11.0), TermHelper.convertTermFromIrisToWsmo4j(
+		assertEquals(DF.createDayTimeDuration(-1, 0, 12, 16, 11.0), TermHelper.convertTermFromIrisToWsmo4j(
 				CF.createDayTimeDuration(false, 0, 12, 16, 11.0), FACTORY));
 		// test yearmonth-duration
-		assertEquals(DF.createYearMonthDuration(5, 3), TermHelper.convertTermFromIrisToWsmo4j(CF.createYearMonthDuration(true, 5, 3), FACTORY));
-		assertEquals(DF.createYearMonthDuration(-5, 3), TermHelper.convertTermFromIrisToWsmo4j(CF.createYearMonthDuration(false, 5, 3), FACTORY));
-		assertEquals(DF.createYearMonthDuration(0, -3), TermHelper.convertTermFromIrisToWsmo4j(CF.createYearMonthDuration(false, 0, 3), FACTORY));
+		assertEquals(DF.createYearMonthDuration(1, 5, 3), TermHelper.convertTermFromIrisToWsmo4j(CF.createYearMonthDuration(true, 5, 3), FACTORY));
+		assertEquals(DF.createYearMonthDuration(-1, 5, 3), TermHelper.convertTermFromIrisToWsmo4j(CF.createYearMonthDuration(false, 5, 3), FACTORY));
+		assertEquals(DF.createYearMonthDuration(-1, 0, 3), TermHelper.convertTermFromIrisToWsmo4j(CF.createYearMonthDuration(false, 0, 3), FACTORY));
 		// test float
 		assertEquals(DF.createFloat("3.1415"), TermHelper.convertTermFromIrisToWsmo4j(CF.createFloat(3.1415f), FACTORY));
 		// test gday
@@ -187,32 +187,34 @@ public class IrisFacadeTest extends TestCase {
 		// test boolean
 		assertEquals(CF.createBoolean(true), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createBoolean(true)));
 		// test date
-		assertEquals(CF.createDate(2007, 1, 8), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createDate(2007, 1, 8, 0, 0)));
+		assertEquals(CF.createDate(2007, 1, 8), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createDate(2007, 1, 8, 0, 0, 0)));
 		// test datetime
 		assertEquals(CF.createDateTime(2007, 1, 8, 13, 15, 22, 1, 0), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createDateTime(2007, 1, 8, 13,
-				15, 22, 1, 0)));
+				15, 22, 1, 1, 0)));
 		// test decimal
 		assertEquals(CF.createDecimal(1.3498), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createDecimal("1.3498")));
 		// test double
 		assertEquals(CF.createDouble(1.3498), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createDouble("1.3498")));
 		// test duration
-		assertEquals(CF.createDuration(true, 2007, 1, 8, 13, 15, 22), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createDuration(2007, 1, 8, 13,
+		assertEquals(CF.createDuration(true, 2007, 1, 8, 13, 15, 22), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createDuration(+1, 2007, 1, 8, 13,
 				15, 22)));
-		assertEquals(CF.createDuration(false, 2007, 1, 8, 13, 15, 22), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createDuration(-2007, 1, 8, 13,
+		assertEquals(CF.createDuration(false, 2007, 1, 8, 13, 15, 22), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createDuration(-1, 2007, 1, 8, 13,
 				15, 22)));
-		assertEquals(CF.createDuration(false, 0, 1, 8, 13, 15, 22), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createDuration(0, -1, 8, 13, 15,
+		assertEquals(CF.createDuration(false, 0, 1, 8, 13, 15, 22), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createDuration(-1, 0, 1, 8, 13, 15,
 				22)));
 		// test daytime-duration
-		assertEquals(CF.createDayTimeDuration(true, 8, 13, 15, 22), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createDayTimeDuration(8, 13, 15,
+		assertEquals(CF.createDayTimeDuration(true, 8, 13, 15, 22), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createDayTimeDuration(+1, 8, 13, 15,
 				22)));
-		assertEquals(CF.createDayTimeDuration(false, 8, 13, 15, 22), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createDayTimeDuration(-8, 13, 15,
+		assertEquals(CF.createDayTimeDuration(false, 8, 13, 15, 22), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createDayTimeDuration(-1, 8, 13, 15,
 				22)));
-		assertEquals(CF.createDayTimeDuration(false, 0, 13, 15, 22), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createDayTimeDuration(0, -13, 15,
+		assertEquals(CF.createDayTimeDuration(false, 0, 13, 15, 22), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createDayTimeDuration(-1, 0, 13, 15,
 				22)));
 		// test yearmonth-duration
-		assertEquals(CF.createYearMonthDuration(true, 2007, 1), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createYearMonthDuration(2007, 1)));
-		assertEquals(CF.createYearMonthDuration(false, 2007, 1), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createYearMonthDuration(-2007, 1)));
-		assertEquals(CF.createYearMonthDuration(false, 0, 1), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createYearMonthDuration(0, -1)));
+		assertEquals(CF.createYearMonthDuration(true, 2007, 1), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createYearMonthDuration(+1, 2007, 1)));
+		assertEquals(CF.createYearMonthDuration(false, 2007, 1), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createYearMonthDuration(-1, 2007, 1)));
+		assertEquals(CF.createYearMonthDuration(false, 0, 1), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createYearMonthDuration(-1, 0, 1)));
+		assertEquals(CF.createYearMonthDuration(false, 0, 0), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createYearMonthDuration(0, 0, 0)));
+		assertEquals(CF.createYearMonthDuration(true, 0, 0), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createYearMonthDuration(0, 0, 0)));
 		// test float
 		assertEquals(CF.createFloat(1.3498f), TermHelper.convertWsmo4jDataValueToIrisTerm(DF.createFloat("1.3498")));
 		// test gday

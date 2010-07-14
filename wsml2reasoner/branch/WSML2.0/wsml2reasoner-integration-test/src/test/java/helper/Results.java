@@ -102,37 +102,37 @@ public class Results
 	 * Create a duration.
 	 * @return The new wsml object.
 	 */
-	public static ComplexDataValue _duration( int year, int month, int day, int hour, int minute, double second)
+	public static ComplexDataValue _duration( int sign, int year, int month, int day, int hour, int minute, double second)
 	{
 //		FIXME gigi: add duration support
-		return dataFactory.createDuration(year, month, day, hour, minute, second );
+		return dataFactory.createDuration(sign, year, month, day, hour, minute, second );
 	}
 	
 	/**
 	 * Create a datetime.
 	 * @return The new wsml object.
 	 */
-	public static ComplexDataValue _datetime(int year, int month, int day, int hour, int minute, double second, int tzHour, int tzMinute)
+	public static ComplexDataValue _datetime(int year, int month, int day, int hour, int minute, double second, int tzSign, int tzHour, int tzMinute)
 	{
-		return dataFactory.createDateTime( year, month, day, hour, minute, (float) second, tzHour, tzMinute ); // TODO gigi: introduced the float cast, check if this makes sense
+		return dataFactory.createDateTime( year, month, day, hour, minute, (float) second, tzSign, tzHour, tzMinute ); // TODO gigi: introduced the float cast, check if this makes sense
 	}
 	
 	/**
 	 * Create a time.
 	 * @return The new wsml object.
 	 */
-	public static ComplexDataValue _time(int hour, int minute, double second, int tzHour, int tzMinute)
+	public static ComplexDataValue _time(int hour, int minute, double second, int tzSign, int tzHour, int tzMinute)
 	{
-		return dataFactory.createTime( hour, minute, (float) second, tzHour, tzMinute ); // TODO gigi: introduced the float cast, check if this makes sense
+		return dataFactory.createTime( hour, minute, (float) second, tzSign, tzHour, tzMinute ); // TODO gigi: introduced the float cast, check if this makes sense
 	}
 	
 	/**
 	 * Create a date.
 	 * @return The new wsml object.
 	 */
-	public static ComplexDataValue _date(int year, int month, int day, int tzHour, int tzMinute)
+	public static ComplexDataValue _date(int year, int month, int day, int tzSign, int tzHour, int tzMinute)
 	{
-		return dataFactory.createDate( year, month, day, tzHour, tzMinute );
+		return dataFactory.createDate( year, month, day, tzSign, tzHour, tzMinute );
 	}
 	
 	public static Term _yearMonth( int year, int month )
@@ -180,14 +180,14 @@ public class Results
 		return dataFactory.createXMLLiteral(tag, lang);
 	}
 	
-	public static Term _yearmonthduration(int year, int month)
+	public static Term _yearmonthduration(int sign, int year, int month)
 	{
-		return dataFactory.createYearMonthDuration(year, month);
+		return dataFactory.createYearMonthDuration(sign, year, month);
 	}
 	
-	public static Term _daytimeduration(int day, int hour, int minute, double second)
+	public static Term _daytimeduration(int sign, int day, int hour, int minute, double second)
 	{
-		return dataFactory.createDayTimeDuration(day, hour, minute, second);
+		return dataFactory.createDayTimeDuration(sign, day, hour, minute, second);
 	}
 
 

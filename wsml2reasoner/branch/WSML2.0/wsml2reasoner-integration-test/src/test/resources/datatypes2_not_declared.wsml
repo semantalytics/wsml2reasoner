@@ -38,9 +38,9 @@ instance anInstance memberOf anEntity
 	a_Boolean    hasValue _boolean( "true" )
 	aXSD_Boolean hasValue xsd#boolean( "true" )
 	
-	aDuration    hasValue wsml#duration( 1, 2, 3, 4, 5, 6.0)
-	a_Duration   hasValue _duration( 1, 2, 3, 4, 5, 6.1 )
-	aXSD_Duration hasValue xsd#duration( 1, 2, 3, 4, 5, 6.2)
+	aDuration    hasValue wsml#duration( 1, 1, 2, 3, 4, 5, 6.0)
+	a_Duration   hasValue _duration( 1, 1, 2, 3, 4, 5, 6.1 )
+	aXSD_Duration hasValue xsd#duration( 1, 1, 2, 3, 4, 5, 6.2)
 	
 	aDateTime    hasValue wsml#dateTime( 1981, 12, 31, 23, 59, 58.0 )
 	a_DateTime   hasValue _datetime( 1981, 12, 31, 23, 59, 58.1 )           
@@ -90,9 +90,9 @@ instance anInstance memberOf anEntity
 	a_RDF_XMLLiteral hasValue _xmlliteral("<tag>XML Literal</tag>", "")
 	
 	// new XSD Datatypes
-	aYearMonthDuration hasValue xsd#yearMonthDuration(2008, 10)
-	a_YearMonthDuration hasValue _yearmonthduration(2008, 11)    
+	aYearMonthDuration hasValue xsd#yearMonthDuration(1, 2008, 10)
+	a_YearMonthDuration hasValue _yearmonthduration(1, 2008, 11)    
 	
-	aDayTimeDuration hasValue xsd#dayTimeDuration(1, 10, 31, 15.5)
-	a_DayTimeDuration hasValue _daytimeduration(1, 10, 31, 15.6)
+	aDayTimeDuration hasValue xsd#dayTimeDuration(1, 1, 10, 31, 15.5)
+	a_DayTimeDuration hasValue _daytimeduration(1, 1, 10, 31, 15.6)
 	

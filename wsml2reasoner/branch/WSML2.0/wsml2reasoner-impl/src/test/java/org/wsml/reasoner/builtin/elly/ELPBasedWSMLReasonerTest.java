@@ -502,11 +502,11 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 			assertEquals(5, instanceMap.keySet().size());
 
 			Set<DataValue> terms = instanceMapID.get(container.getWsmoFactory().createIRI(defaultNS + "Mary"));
-			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1949, 9, 12, 0, 0)));
+			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1949, 9, 12, 0, 0, 0)));
 
 			terms = instanceMapID.get(container.getWsmoFactory().createIRI(defaultNS + "Paul2"));
-			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1976, 8, 16, 0, 0)));
-			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1967, 8, 16, 0, 0)));
+			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1976, 8, 16, 0, 0, 0)));
+			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1967, 8, 16, 0, 0, 0)));
 		}
 
 	}
@@ -549,8 +549,8 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 			assertEquals(1, valueMap.keySet().size());
 
 			Set<DataValue> terms = valueMap.get(container.getWsmoFactory().createIRI(defaultNS + "hasBirthdate"));
-			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1976, 8, 16, 0, 0)));
-			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1967, 8, 16, 0, 0)));
+			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1976, 8, 16, 0, 0, 0)));
+			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1967, 8, 16, 0, 0, 0)));
 			assertEquals(2, terms.size());
 		}
 
@@ -582,7 +582,7 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 			assertEquals(4, valueMap.keySet().size());
 
 			Set<DataValue> terms = valueMap.get(container.getWsmoFactory().createIRI(defaultNS + "hasBirthdate"));
-			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1949, 9, 12, 0, 0)));
+			assertTrue(terms.contains(container.getXmlDataFactory().createDate(1949, 9, 12, 0, 0, 0)));
 
 			terms = valueMap.get(container.getWsmoFactory().createIRI(defaultNS + "isAlive"));
 			assertTrue(terms.contains(container.getXmlDataFactory().createBoolean(true)));
@@ -591,7 +591,7 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 			assertTrue(terms.contains(container.getXmlDataFactory().createFloat("60.3")));
 
 			terms = valueMap.get(container.getWsmoFactory().createIRI(defaultNS + "dateOfDeath"));
-			assertTrue(terms.contains(container.getXmlDataFactory().createDate(2049, 9, 12, 0, 0)));
+			assertTrue(terms.contains(container.getXmlDataFactory().createDate(2049, 9, 12, 0, 0, 0)));
 
 		}
 	}
@@ -622,8 +622,8 @@ public class ELPBasedWSMLReasonerTest extends TestCase {
 					+ attributeID + ":");
 			System.out.println(valueSet);
 
-			assertTrue(valueSet.contains(container.getXmlDataFactory().createDate(1976, 8, 16, 0, 0)));
-			assertTrue(valueSet.contains(container.getXmlDataFactory().createDate(1967, 8, 16, 0, 0)));
+			assertTrue(valueSet.contains(container.getXmlDataFactory().createDate(1976, 8, 16, 0, 0, 0)));
+			assertTrue(valueSet.contains(container.getXmlDataFactory().createDate(1967, 8, 16, 0, 0, 0)));
 			assertEquals(2, valueSet.size());
 		}
 

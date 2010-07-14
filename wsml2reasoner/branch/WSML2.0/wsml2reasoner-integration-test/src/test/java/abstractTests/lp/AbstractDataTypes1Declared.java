@@ -57,18 +57,18 @@ public abstract class AbstractDataTypes1Declared extends TestCase implements LP 
     	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aBoolean" ), Results._bool( true ) );
     	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_Boolean" ), Results._bool( true ) );
     	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aXSD_Boolean" ), Results._bool( true ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDuration" ), Results._duration( 1, 2, 3, 4, 5, 6.0 ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_Duration" ), Results._duration( 1, 2, 3, 4, 5, 6.1 ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aXSD_Duration" ), Results._duration( 1, 2, 3, 4, 5, 6.2 ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDateTime" ), Results._datetime( 1981, 12, 31, 23, 59, 58.0, 0, 0));
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_DateTime" ), Results._datetime( 1981, 12, 31, 23, 59, 58.1, 0, 0));
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aXSD_DateTime" ), Results._datetime( 1981, 12, 31, 23, 59, 58.2, 0, 0 ));
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aTime" ), Results._time( 23,59,58.0,0,0 ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_Time" ), Results._time( 23,59,58.1,0,0 ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aXSD_Time" ), Results._time( 23,59,58.2,0,0 ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDate" ), Results._date( 1981, 12, 29,0,0 ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_Date" ), Results._date( 1981, 12, 30,0,0 ) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aXSD_Date" ), Results._date( 1981, 12, 31,0,0 ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDuration" ), Results._duration( +1, 1, 2, 3, 4, 5, 6.0 ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_Duration" ), Results._duration( +1, 1, 2, 3, 4, 5, 6.1 ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aXSD_Duration" ), Results._duration( +1, 1, 2, 3, 4, 5, 6.2 ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDateTime" ), Results._datetime( 1981, 12, 31, 23, 59, 58.0, 0, 0, 0));
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_DateTime" ), Results._datetime( 1981, 12, 31, 23, 59, 58.1, 0, 0, 0));
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aXSD_DateTime" ), Results._datetime( 1981, 12, 31, 23, 59, 58.2, 0, 0, 0 ));
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aTime" ), Results._time( 23,59,58.0,0, 0,0 ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_Time" ), Results._time( 23,59,58.1,0, 0,0 ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aXSD_Time" ), Results._time( 23,59,58.2,0, 0,0 ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDate" ), Results._date( 1981, 12, 29,0, 0,0 ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_Date" ), Results._date( 1981, 12, 30,0, 0,0 ) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aXSD_Date" ), Results._date( 1981, 12, 31,0, 0,0 ) );
     	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aGYearMonth" ), Results._yearMonth( 2008, 10 ) );
     	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_GYearMonth" ), Results._yearMonth( 2008, 11 ) );
     	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aXSD_GYearMonth" ), Results._yearMonth( 2008, 12 ) );
@@ -98,10 +98,10 @@ public abstract class AbstractDataTypes1Declared extends TestCase implements LP 
     	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_RDF_XMLLiteral" ), Results._xmlliteral("<tag>XML Literal</tag>", ""));
     	
     	// new XSD Datatypes
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aYearMonthDuration" ), Results._yearmonthduration(2008, 10) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_YearMonthDuration" ),  Results._yearmonthduration(2008, 11) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDayTimeDuration" ), Results._daytimeduration(1, 10, 31, 15.5) );
-    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_DayTimeDuration" ), Results._daytimeduration(1, 10, 31, 15.6) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aYearMonthDuration" ), Results._yearmonthduration(+1, 2008, 10) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_YearMonthDuration" ),  Results._yearmonthduration(+1, 2008, 11) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "aDayTimeDuration" ), Results._daytimeduration(+1, 1, 10, 31, 15.5) );
+    	r.addBinding( Results.iri( NS + "anInstance" ), Results.iri( NS + "a_DayTimeDuration" ), Results._daytimeduration(+1, 1, 10, 31, 15.6) );
     	
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );
     }

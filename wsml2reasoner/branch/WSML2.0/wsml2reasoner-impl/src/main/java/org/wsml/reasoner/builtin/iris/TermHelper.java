@@ -8,6 +8,7 @@ import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -165,100 +166,41 @@ public class TermHelper {
 		} else if (t instanceof IDateTerm) {
 			final IDateTerm dt = (IDateTerm) t;
 			int[] tzData = getTZData(dt.getTimeZone());
-			return dataFactory.createDate(dt.getYear(), dt.getMonth(), dt.getDay(), tzData[0], tzData[1]);
+			return dataFactory.createDate(dt.getYear(), dt.getMonth(), dt.getDay(), tzData[0], tzData[1], tzData[2]);
 		} else if (t instanceof IDateTimeStamp) {
 			final IDateTimeStamp dt = (IDateTimeStamp) t;
 			int[] tzData = getTZData(dt.getTimeZone());
 			return dataFactory.createDateTimeStamp(dt.getYear(), dt.getMonth(), dt.getDay(), 
 					dt.getHour(), dt.getMinute(), dt.getDecimalSecond(),
-					tzData[0], tzData[1]);
+					tzData[0], tzData[1], tzData[2]);
 		} else if (t instanceof IDateTime) {
 			final IDateTime dt = (IDateTime) t;
 			int[] tzData = getTZData(dt.getTimeZone());
 			return dataFactory.createDateTime(dt.getYear(), dt.getMonth(), dt.getDay(), 
 					dt.getHour(), dt.getMinute(), dt.getDecimalSecond(),
-					tzData[0], tzData[1]);
+					tzData[0], tzData[1], tzData[2]);
 		} else if (t instanceof IYearMonthDuration) {
 			final IYearMonthDuration dt = (IYearMonthDuration) t;
 			
-			List<Integer> values = new ArrayList<Integer>();
-			values.add(dt.getYear());
-			values.add(dt.getMonth());
-			
-			// negative => special treatment
-			boolean signSet = dt.isPositive();
-			// attach negative sign to first non-zero value
-			if (!signSet) {
-				for (int i = 0; i < values.size(); i++) {
-					Integer value = values.get(i);
-					if (value > 0) {
-						signSet = true;
-						values.set(i, value * -1);
-						break;
-					}
-				}
-			}
-			return dataFactory.createYearMonthDuration(values.get(0), values.get(1));
+			return dataFactory.createYearMonthDuration(
+					dt.getValue().getSign(), 
+					dt.getYear(), dt.getMonth());
 		} else if (t instanceof IDayTimeDuration) {
 			final IDayTimeDuration dt = (IDayTimeDuration) t;
 			
-			List<Integer> values = new ArrayList<Integer>();
-			values.add(dt.getDay());
-			values.add(dt.getHour());
-			values.add(dt.getMinute());
-			
-			// getSeconds discards fractional part => handle seconds differently
-			double seconds = dt.getDecimalSecond();
-			
-			// negative => special treatment
-			boolean signSet = dt.isPositive();
-			// attach negative sign to first non-zero value
-			if (!signSet) {
-				for (int i = 0; i < values.size(); i++) {
-					Integer value = values.get(i);
-					if (value > 0) {
-						signSet = true;
-						values.set(i, value * -1);
-						break;
-					}
-				}
-				if (!signSet) {
-					seconds *= -1;
-				}
-			}
-			return dataFactory.createDayTimeDuration(values.get(0), values.get(1), values.get(2), seconds);
+			return dataFactory.createDayTimeDuration(
+					dt.getValue().getSign(),
+					dt.getDay(), 
+					dt.getHour(), dt.getMinute(), dt.getDecimalSecond());
 		} else if (t instanceof IDuration) {
 			// it is essential that IDuration comes after IDayTimeDuration and IYearMonthDuration
 			// since those interfaces are extend IDuration
 			final IDuration dt = (IDuration) t;
 			
-			List<Integer> values = new ArrayList<Integer>();
-			values.add(dt.getYear());
-			values.add(dt.getMonth());
-			values.add(dt.getDay());
-			values.add(dt.getHour());
-			values.add(dt.getMinute());
-			
-			// getSeconds discards fractional part => handle seconds differently
-			double seconds = dt.getDecimalSecond();
-			
-			// negative => special treatment
-			boolean signSet = dt.isPositive();
-			// attach negative sign to first non-zero value
-			if (!signSet) {
-				for (int i = 0; i < values.size(); i++) {
-					Integer value = values.get(i);
-					if (value > 0) {
-						signSet = true;
-						values.set(i, value * -1);
-						break;
-					}
-				}
-				if (!signSet) {
-					seconds *= -1;
-				}
-			}
-			return dataFactory.createDuration(values.get(0), values.get(1), values.get(2), values.get(3), values.get(4), seconds);
+			return dataFactory.createDuration(
+					dt.getValue().getSign(),
+					dt.getYear(), dt.getMonth(), dt.getDay(), 
+					dt.getHour(), dt.getMinute(), dt.getDecimalSecond());
 		} else if (t instanceof IGDay) {
 			return dataFactory.createGregorianDay(((IGDay) t).getDay());
 		} else if (t instanceof IGMonth) {
@@ -311,7 +253,7 @@ public class TermHelper {
 			final ITime time = (ITime) t;
 			int[] tzData = getTZData(time.getTimeZone());
 			return dataFactory.createTime(time.getHour(), time.getMinute(), time.getDecimalSecond(),
-					tzData[0], tzData[1]);
+					tzData[0], tzData[1], tzData[2]);
 			
 		// Numeric
 		} else if (t instanceof IFloatTerm) {
@@ -389,7 +331,13 @@ public class TermHelper {
 		if (t == null) {
 			throw new NullPointerException("The TimeZone must not be null");
 		}
-		return new int[] { t.getRawOffset() / 3600000, t.getRawOffset() % 3600000 / 60000 };
+		int rawOffset = t.getRawOffset();
+		
+		int hours = Math.abs(rawOffset / 3600000);
+		int minutes = Math.abs(rawOffset % 3600000 / 60000);
+		int sign = (rawOffset == 0) ? 0 : (rawOffset > 0) ? +1 : -1;
+		
+		return new int[] { sign, hours, minutes };
 	}
 
 	/**
@@ -453,19 +401,62 @@ public class TermHelper {
 		} else if (t.equals(WsmlDataType.WSML_DATE) || t.equals(XmlSchemaDataType.XSD_DATE)) {
 			final ComplexDataValue cv = (ComplexDataValue) v;
 			int length = cv.getArity();
-			return CONCRETE.createDate(getIntFromValue(cv, 0), getIntFromValue(cv, 1), getIntFromValue(cv, 2), length > 3 ? getIntFromValue(cv, 3)
-					: 0, length > 4 ? getIntFromValue(cv, 4) : 0);
+			
+			if (length > 3) {
+				int sign = getIntFromValue(cv, 3);
+				int hours = getIntFromValue(cv, 4) * sign;
+				int mins = getIntFromValue(cv, 5) * sign;
+				
+				checkDuration(sign, hours, mins);
+				
+				return CONCRETE.createDate(
+						getIntFromValue(cv, 0), getIntFromValue(cv, 1), getIntFromValue(cv, 2),
+						hours, mins);
+			} else {
+				return CONCRETE.createDate(
+						getIntFromValue(cv, 0), getIntFromValue(cv, 1), getIntFromValue(cv, 2),
+						0, 0);
+			}
 		} else if (t.equals(WsmlDataType.WSML_DATETIME) || t.equals(XmlSchemaDataType.XSD_DATETIME)) {
 			final ComplexDataValue cv = (ComplexDataValue) v;
 			int length = cv.getArity();
-			return CONCRETE.createDateTime(getIntFromValue(cv, 0), getIntFromValue(cv, 1), getIntFromValue(cv, 2), getIntFromValue(cv, 3),
-					getIntFromValue(cv, 4), getDoubleFromValue(cv, 5), length > 6 ? getIntFromValue(cv, 6) : 0, length > 7 ? getIntFromValue(cv, 7)
-							: 0);
+			
+			if (length > 6) {
+				int sign = getIntFromValue(cv, 6);
+				int hours = getIntFromValue(cv, 7) * sign;
+				int mins = getIntFromValue(cv, 8) * sign;
+
+				checkDuration(sign, hours, mins);
+
+				return CONCRETE.createDateTime(
+						getIntFromValue(cv, 0), getIntFromValue(cv, 1), getIntFromValue(cv, 2),
+						getIntFromValue(cv, 3), getIntFromValue(cv, 4), getDoubleFromValue(cv, 5), 
+						hours, mins);
+			} else {
+				return CONCRETE.createDateTime(
+						getIntFromValue(cv, 0), getIntFromValue(cv, 1), getIntFromValue(cv, 2),
+						getIntFromValue(cv, 3), getIntFromValue(cv, 4), getDoubleFromValue(cv, 5), 
+						0, 0);
+			}
 		} else if (t.equals(WsmlDataType.WSML_TIME) || t.equals(XmlSchemaDataType.XSD_TIME)) {
 			final ComplexDataValue cv = (ComplexDataValue) v;
 			int length = cv.getArity();
-			return CONCRETE.createTime(getIntFromValue(cv, 0), getIntFromValue(cv, 1), getDoubleFromValue(cv, 2), length > 3 ? getIntFromValue(cv, 3)
-					: 0, length > 4 ? getIntFromValue(cv, 4) : 0);
+			
+			if (length > 3) {
+				int sign = getIntFromValue(cv, 3);
+				int hours = getIntFromValue(cv, 4) * sign;
+				int mins = getIntFromValue(cv, 5) * sign;
+				
+				checkDuration(sign, hours, mins);
+
+				return CONCRETE.createTime(
+						getIntFromValue(cv, 0), getIntFromValue(cv, 1), getDoubleFromValue(cv, 2),
+						hours, mins);
+			} else {
+				return CONCRETE.createTime(
+						getIntFromValue(cv, 0), getIntFromValue(cv, 1), getDoubleFromValue(cv, 2),
+						0, 0);
+			}
 		} else if (t.equals(WsmlDataType.WSML_DECIMAL) || t.equals(XmlSchemaDataType.XSD_DECIMAL)) {
 			return CONCRETE.createDecimal((BigDecimal) v.getValue());
 		} else if (t.equals(WsmlDataType.WSML_DOUBLE) || t.equals(XmlSchemaDataType.XSD_DOUBLE)) {
@@ -473,31 +464,14 @@ public class TermHelper {
 		} else if (t.equals(WsmlDataType.WSML_DURATION) || t.equals(XmlSchemaDataType.XSD_DURATION)) {
 			final ComplexDataValue cv = (ComplexDataValue) v;
 
-			int signum = 0;
-			List<Integer> values = new ArrayList<Integer>();
-			for (int i = 0; i <= 4; ++i) {
-				int value = getIntFromValue(cv, i);
-				values.add(Math.abs(value)); // Add absolute value
-
-				if (signum == 0) { // signum not set yet
-					if (value > 0) {
-						signum = +1;
-					} else if (value < 0) {
-						signum = -1;
-					}
-				}
-			}
-			double seconds = getDoubleFromValue(cv, 5);
-			if (signum == 0) { // signum not set yet
-				if (seconds > 0.0) {
-					signum = +1;
-				} else if (seconds < 0.0) {
-					signum = -1;
-				}
-			}
-			seconds = Math.abs(seconds); // Add absolute value
-
-			return CONCRETE.createDuration(signum >= 0, values.get(0), values.get(1), values.get(2), values.get(3), values.get(4), seconds);
+			checkDuration(getIntFromValue(cv, 0), 
+					getIntFromValue(cv, 1), getIntFromValue(cv, 2), getIntFromValue(cv, 3), 
+					getIntFromValue(cv, 4), getIntFromValue(cv, 5), getDoubleFromValue(cv, 6));
+			
+			return CONCRETE.createDuration(
+					getIntFromValue(cv, 0) >= 0, 
+					getIntFromValue(cv, 1), getIntFromValue(cv, 2), getIntFromValue(cv, 3), 
+					getIntFromValue(cv, 4), getIntFromValue(cv, 5), getDoubleFromValue(cv, 6));
 		} else if (t.equals(WsmlDataType.WSML_FLOAT) || t.equals(XmlSchemaDataType.XSD_FLOAT)) {
 			return CONCRETE.createFloat((Float) v.getValue());
 		} else if (t.equals(WsmlDataType.WSML_GDAY) || t.equals(XmlSchemaDataType.XSD_GDAY)) {
@@ -522,50 +496,23 @@ public class TermHelper {
 		} else if (t.equals(XmlSchemaDataType.XSD_DAYTIMEDURATION)) {
 			final ComplexDataValue cv = (ComplexDataValue) v;
 
-			int signum = 0;
-			List<Integer> values = new ArrayList<Integer>();
-			for (int i = 0; i <= 2; ++i) {
-				int value = getIntFromValue(cv, i);
-				values.add(Math.abs(value)); // Add absolute value
-
-				if (signum == 0) { // signum not set yet
-					if (value > 0) {
-						signum = +1;
-					} else if (value < 0) {
-						signum = -1;
-					}
-				}
-			}
-			double seconds = getDoubleFromValue(cv, 3);
-			if (signum == 0) { // signum not set yet
-				if (seconds > 0.0) {
-					signum = +1;
-				} else if (seconds < 0.0) {
-					signum = -1;
-				}
-			}
-			seconds = Math.abs(seconds); // Add absolute value
-
-			return CONCRETE.createDayTimeDuration(signum >= 0, values.get(0), values.get(1), values.get(2), seconds);
+			checkDuration(getIntFromValue(cv, 0), 
+					getIntFromValue(cv, 1),
+					getIntFromValue(cv, 2), getIntFromValue(cv, 3), getDoubleFromValue(cv, 4));
+			
+			return CONCRETE.createDayTimeDuration(
+					getIntFromValue(cv, 0) >= 0, 
+					getIntFromValue(cv, 1),
+					getIntFromValue(cv, 2), getIntFromValue(cv, 3), getDoubleFromValue(cv, 4));
 		} else if (t.equals(XmlSchemaDataType.XSD_YEARMONTHDURATION)) {
 			final ComplexDataValue cv = (ComplexDataValue) v;
 
-			int signum = 0;
-			List<Integer> values = new ArrayList<Integer>();
-			for (int i = 0; i <= 1; ++i) {
-				int value = getIntFromValue(cv, i);
-				values.add(Math.abs(value)); // Add absolute value
-
-				if (signum == 0) { // signum not set yet
-					if (value > 0) {
-						signum = +1;
-					} else if (value < 0) {
-						signum = -1;
-					}
-				}
-			}
-
-			return CONCRETE.createYearMonthDuration(signum >= 0, values.get(0), values.get(1));
+			checkDuration(getIntFromValue(cv, 0), 
+					getIntFromValue(cv, 1), getIntFromValue(cv, 2));
+			
+			return CONCRETE.createYearMonthDuration(
+					getIntFromValue(cv, 0) >= 0, 
+					getIntFromValue(cv, 1), getIntFromValue(cv, 2));
 		} else if (t.equals(XmlSchemaDataType.XSD_LONG)) {
 			return CONCRETE.createLong((Long) v.getValue());
 		} else if (t.equals(XmlSchemaDataType.XSD_INT)) {
@@ -606,8 +553,17 @@ public class TermHelper {
 			return CONCRETE.createLanguage((String) v.getValue());
 		} else if (t.equals(XmlSchemaDataType.XSD_DATETIMESTAMP)) {
 			final ComplexDataValue cv = (ComplexDataValue) v;
-			return CONCRETE.createDateTimeStamp(getIntFromValue(cv, 0), getIntFromValue(cv, 1), getIntFromValue(cv, 2), getIntFromValue(cv, 3),
-					getIntFromValue(cv, 4), getDoubleFromValue(cv, 5), getIntFromValue(cv, 6), getIntFromValue(cv, 7));
+			
+			int sign = getIntFromValue(cv, 6);
+			int hours = getIntFromValue(cv, 7) * sign;
+			int mins = getIntFromValue(cv, 8) * sign;
+
+			checkDuration(sign, hours, mins);
+
+			return CONCRETE.createDateTime(
+					getIntFromValue(cv, 0), getIntFromValue(cv, 1), getIntFromValue(cv, 2),
+					getIntFromValue(cv, 3), getIntFromValue(cv, 4), getDoubleFromValue(cv, 5), 
+					hours, mins);
 		} else if (t.equals(XmlSchemaDataType.XSD_ANYURI)) {
 			URI uri = null;
 			try {
@@ -641,6 +597,21 @@ public class TermHelper {
 			return CONCRETE.createXMLLiteral(getStringFromValue(cv, 0), getStringFromValue(cv, 1));
 		}
 		throw new IllegalArgumentException("Can't convert a value of type " + t);
+	}
+
+	/**
+	 * Checks Durations and Time zones.
+	 * 
+	 * @param sign The sign of the duration or time zone.
+	 * @param vals The values of the duration or time zone.
+	 */
+	private static void checkDuration(int sign, Number... vals) {
+		assert Arrays.asList(-1, 0, 1).contains(sign);
+		if (sign == 0) {
+			for (Number val : vals) {
+				assert val.doubleValue() == 0.0;
+			}
+		}
 	}
 
 	/**

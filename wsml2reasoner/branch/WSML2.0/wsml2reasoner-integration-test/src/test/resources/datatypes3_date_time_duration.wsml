@@ -10,13 +10,13 @@ instance decimalSeconds memberOf AnEntity
 	aTime hasValue _time( 23, 59, 58.98765 )
 	aDate hasValue _date( 1981, 12, 31 )
 	aDateTime hasValue _datetime( 1981, 12, 31, 23, 59, 58.98765 )
-	aDuration hasValue _duration( 1, 2, 3, 4, 5, 6.98765 )
-	aShorterDuration hasValue _duration( 1, 2, 3, 4, 5, 1.337 )
+	aDuration hasValue _duration(  1, 1, 2, 3, 4, 5, 6.98765 )
+	aShorterDuration hasValue _duration(  1, 1, 2, 3, 4, 5, 1.337 )
 
 instance decimalSecondsWithTimeZones memberOf AnEntity
-	aTime hasValue _time( 23, 59, 58.98765, 13, 30 )
-	aDate hasValue _date( 1981, 12, 31, 13, 30 )
-	aDateTime hasValue _datetime( 1981, 12, 31, 23, 59, 58.98765, 13, 30 )
-	aDuration hasValue _duration( 1, 2, 3, 4, 5, 6.98765 )
-	aShorterDuration hasValue _duration( 1, 2, 3, 4, 5, 1.337 )
+	aTime hasValue _time( 23, 59, 58.98765,  1, 13, 30 )
+	aDate hasValue _date( 1981, 12, 31,  1, 13, 30 )
+	aDateTime hasValue _datetime( 1981, 12, 31, 23, 59, 58.98765,  1, 13, 30 )
+	aDuration hasValue _duration(  1, 1, 2, 3, 4, 5, 6.98765 )
+	aShorterDuration hasValue _duration(  1, 1, 2, 3, 4, 5, 1.337 )
 

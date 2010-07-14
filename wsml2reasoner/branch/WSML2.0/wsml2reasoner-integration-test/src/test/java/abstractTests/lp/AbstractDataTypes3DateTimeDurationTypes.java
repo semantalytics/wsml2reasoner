@@ -38,8 +38,8 @@ public abstract class AbstractDataTypes3DateTimeDurationTypes extends TestCase i
     	String query = "?x[aTime hasValue ?t]";
     	
     	Results r = new Results( "x", "t" );
-    	r.addBinding( Results.iri( NS + "decimalSeconds" ), Results._time( 23,59,58.98765,0,0 ) );
-    	r.addBinding( Results.iri( NS + "decimalSecondsWithTimeZones" ), Results._time( 23,59,58.98765,13,30 ) );
+    	r.addBinding( Results.iri( NS + "decimalSeconds" ), Results._time( 23,59,58.98765,0,0,0 ) );
+    	r.addBinding( Results.iri( NS + "decimalSecondsWithTimeZones" ), Results._time( 23,59,58.98765,+1,13,30 ) );
     	
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );
     }
@@ -48,8 +48,8 @@ public abstract class AbstractDataTypes3DateTimeDurationTypes extends TestCase i
     	String query = "?x[aDate hasValue ?t]";
 
     	Results r = new Results( "x", "t" );
-    	r.addBinding( Results.iri( NS + "decimalSeconds" ), Results._date( 1981, 12, 31,0,0 ) );
-    	r.addBinding( Results.iri( NS + "decimalSecondsWithTimeZones" ), Results._date( 1981, 12, 31,13,30 ) );
+    	r.addBinding( Results.iri( NS + "decimalSeconds" ), Results._date( 1981, 12, 31,0,0,0 ) );
+    	r.addBinding( Results.iri( NS + "decimalSecondsWithTimeZones" ), Results._date( 1981, 12, 31,+1,13,30 ) );
     	
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );
     }
@@ -58,8 +58,8 @@ public abstract class AbstractDataTypes3DateTimeDurationTypes extends TestCase i
     	String query = "?x[aDateTime hasValue ?t]";
 
     	Results r = new Results( "x", "t" );
-    	r.addBinding( Results.iri( NS + "decimalSeconds" ), Results._datetime( 1981, 12, 31, 23, 59, 58.98765, 0, 0 ) );
-    	r.addBinding( Results.iri( NS + "decimalSecondsWithTimeZones" ), Results._datetime( 1981, 12, 31, 23, 59, 58.98765, 13, 30 ) );
+    	r.addBinding( Results.iri( NS + "decimalSeconds" ), Results._datetime( 1981, 12, 31, 23, 59, 58.98765, 0, 0, 0 ) );
+    	r.addBinding( Results.iri( NS + "decimalSecondsWithTimeZones" ), Results._datetime( 1981, 12, 31, 23, 59, 58.98765, +1, 13, 30 ) );
 
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );
     }
@@ -68,8 +68,8 @@ public abstract class AbstractDataTypes3DateTimeDurationTypes extends TestCase i
     	String query = "?x[aDuration hasValue ?t]";
 
     	Results r = new Results( "x", "t" );
-    	r.addBinding( Results.iri( NS + "decimalSeconds" ), Results._duration( 1, 2, 3, 4, 5, 6.98765 ) );
-    	r.addBinding( Results.iri( NS + "decimalSecondsWithTimeZones" ), Results._duration( 1, 2, 3, 4, 5, 6.98765 ) );
+    	r.addBinding( Results.iri( NS + "decimalSeconds" ), Results._duration( +1, 1, 2, 3, 4, 5, 6.98765 ) );
+    	r.addBinding( Results.iri( NS + "decimalSecondsWithTimeZones" ), Results._duration( +1, 1, 2, 3, 4, 5, 6.98765 ) );
 
     	// FIXME seconds can are represented with maximally 3 fractional digits 
     	// => internally not possible otherwise, XSD doesn't restrict the number of fractional digits
@@ -81,8 +81,8 @@ public abstract class AbstractDataTypes3DateTimeDurationTypes extends TestCase i
     	String query = "?x[aShorterDuration hasValue ?t]";
 
     	Results r = new Results( "x", "t" );
-    	r.addBinding( Results.iri( NS + "decimalSeconds" ), Results._duration( 1, 2, 3, 4, 5, 1.337 ) );
-    	r.addBinding( Results.iri( NS + "decimalSecondsWithTimeZones" ), Results._duration( 1, 2, 3, 4, 5, 1.337 ) );
+    	r.addBinding( Results.iri( NS + "decimalSeconds" ), Results._duration( +1, 1, 2, 3, 4, 5, 1.337 ) );
+    	r.addBinding( Results.iri( NS + "decimalSecondsWithTimeZones" ), Results._duration( +1, 1, 2, 3, 4, 5, 1.337 ) );
     	
 //    	LPHelper.outputON();
     	LPHelper.executeQueryAndCheckResults( OntologyHelper.loadOntology( ONTOLOGY_FILE ), query, r.get(), getLPReasoner() );
