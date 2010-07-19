@@ -105,65 +105,59 @@ public class BuiltinHelper {
 		// NOTE mp: not all longer supported - RIF Built-ins replace them mostly
 		//
 		
-		// terms as array for built-ins with boolean output.
-		ITerm[] wsmlTerms = toArray(terms);
-		// in wsml returnvalue is on first position - in iris on last position.
+		// terms for built-ins with boolean output.
+		// in wsml return value is on first position - in iris on last position.
 		ITerm[] sortedTerms = toArray(sortListForIRIS(terms));
-		
-		// TODO mp       test GYearEqual to NumericEqual ?
-		//					  ToText rename: ToPlainLiteral ?
-		//					  InEqual to UnEqual 
-		//					  TextEqual to Equal ?
 		
 		switch (wsmlBuiltIn) {
 		case EQUAL:
 			return BUILTIN.createEqual(terms.get(0), terms.get(1));
 		case DATE_EQUAL:
-			return BUILTIN.createDateEqual(wsmlTerms);
+			return BUILTIN.createDateEqual(terms.get(0), terms.get(1));
 		case DATE_GREATER_THAN:
-			return BUILTIN.createDateGreater(wsmlTerms);
+			return BUILTIN.createDateGreater(terms.get(0), terms.get(1));
 		case DATE_INEQUAL:
-			return BUILTIN.createDateNotEqual(wsmlTerms);
+			return BUILTIN.createDateNotEqual(terms.get(0), terms.get(1));
 		case DATE_LESS_THAN:
-			return BUILTIN.createDateLess(wsmlTerms);
+			return BUILTIN.createDateLess(terms.get(0), terms.get(1));
 		case DATETIME_EQUAL:
-			return BUILTIN.createDateTimeEqual(wsmlTerms);
+			return BUILTIN.createDateTimeEqual(terms.get(0), terms.get(1));
 		case DATETIME_GREATER_THAN:
-			return BUILTIN.createDateTimeGreater(wsmlTerms);
+			return BUILTIN.createDateTimeGreater(terms.get(0), terms.get(1));
 		case DATETIME_INEQUAL:
-			return BUILTIN.createDateTimeNotEqual(wsmlTerms);
+			return BUILTIN.createDateTimeNotEqual(terms.get(0), terms.get(1));
 		case DATETIME_LESS_THAN:
-			return BUILTIN.createDateTimeLess(wsmlTerms);
+			return BUILTIN.createDateTimeLess(terms.get(0), terms.get(1));
 		case DAYTIMEDURATION_EQUAL: 
-			return BUILTIN.createDurationEqual(sortedTerms);
+			return BUILTIN.createDurationEqual(terms.get(0), terms.get(1));
 		case DAYTIMEDURATION_GREATER_THAN:
-			return BUILTIN.createDayTimeDurationGreater(wsmlTerms);
+			return BUILTIN.createDayTimeDurationGreater(terms.get(0), terms.get(1));
 		case DAYTIMEDURATION_LESS_THAN:
-			return BUILTIN.createDayTimeDurationLess(wsmlTerms);
+			return BUILTIN.createDayTimeDurationLess(terms.get(0), terms.get(1));
 		case DURATION_EQUAL:
-			return BUILTIN.createDurationEqual(wsmlTerms);
+			return BUILTIN.createDurationEqual(terms.get(0), terms.get(1));
 		case DURATION_INEQUAL:
-			return BUILTIN.createDurationNotEqual(wsmlTerms);
+			return BUILTIN.createDurationNotEqual(terms.get(0), terms.get(1));
 		case GDAY_EQUAL: 
-			return BUILTIN.createNumericEqual(sortedTerms);
+			return BUILTIN.createNumericEqual(terms.get(0), terms.get(1));
 		case GMONTH_EQUAL:
-			return BUILTIN.createNumericEqual(sortedTerms);
+			return BUILTIN.createNumericEqual(terms.get(0), terms.get(1));
 		case GMONTHDAY_EQUAL: 
-			return BUILTIN.createNumericEqual(sortedTerms);
+			return BUILTIN.createNumericEqual(terms.get(0), terms.get(1));
 		case GREATER_EQUAL:
 			return BUILTIN.createGreaterEqual(terms.get(0), terms.get(1));
 		case GREATER_THAN:
 			return BUILTIN.createGreater(terms.get(0), terms.get(1));
 		case GYEAR_EQUAL: 
-			return BUILTIN.createNumericEqual(sortedTerms);
+			return BUILTIN.createNumericEqual(terms.get(0), terms.get(1));
 		case GYEARMONTH_EQUAL: 
-			return BUILTIN.createNumericEqual(sortedTerms);
+			return BUILTIN.createNumericEqual(terms.get(0), terms.get(1));
 		case INEQUAL: 
 			return BUILTIN.createUnequal(terms.get(0), terms.get(1));
 		case LESS_EQUAL:
-			return BUILTIN.createLessEqual(wsmlTerms[0], wsmlTerms[1]);
+			return BUILTIN.createLessEqual(terms.get(0), terms.get(1));
 		case LESS_THAN:
-			return BUILTIN.createLess(wsmlTerms[0], wsmlTerms[1]);
+			return BUILTIN.createLess(terms.get(0), terms.get(1));
 		case NUMERIC_ADD:
 			return BUILTIN.createNumericAdd(sortedTerms);
 		case NUMERIC_DIVIDE:
@@ -171,13 +165,13 @@ public class BuiltinHelper {
 		case NUMERIC_MODULUS:
 			return BUILTIN.createNumericModulus(sortedTerms);
 		case NUMERIC_EQUAL:
-			return BUILTIN.createNumericEqual(wsmlTerms);
+			return BUILTIN.createNumericEqual(terms.get(0), terms.get(1));
 		case NUMERIC_GREATER_THAN:
-			return BUILTIN.createNumericGreater(wsmlTerms);
+			return BUILTIN.createNumericGreater(terms.get(0), terms.get(1));
 		case NUMERIC_INEQUAL:
-			return BUILTIN.createNumericNotEqual(wsmlTerms);
+			return BUILTIN.createNumericNotEqual(terms.get(0), terms.get(1));
 		case NUMERIC_LESS_THAN:
-			return BUILTIN.createNumericLess(wsmlTerms);
+			return BUILTIN.createNumericLess(terms.get(0), terms.get(1));
 		case NUMERIC_MULTIPLY:
 			return BUILTIN.createNumericMultiply(sortedTerms);
 		case NUMERIC_SUBTRACT:
@@ -187,19 +181,19 @@ public class BuiltinHelper {
 		case STRING_INEQUAL: 
 			return BUILTIN.createUnequal(terms.get(0), terms.get(1));
 		case TIME_EQUAL:
-			return BUILTIN.createTimeEqual(wsmlTerms);
+			return BUILTIN.createTimeEqual(terms.get(0), terms.get(1));
 		case TIME_GREATER_THAN:
-			return BUILTIN.createTimeGreater(wsmlTerms);
+			return BUILTIN.createTimeGreater(terms.get(0), terms.get(1));
 		case TIME_INEQUAL:
-			return BUILTIN.createTimeNotEqual(wsmlTerms);
+			return BUILTIN.createTimeNotEqual(terms.get(0), terms.get(1));
 		case TIME_LESS_THAN:
-			return BUILTIN.createTimeLess(wsmlTerms);
+			return BUILTIN.createTimeLess(terms.get(0), terms.get(1));
 		case YEARMONTHDURATION_EQUAL: 
-			return BUILTIN.createDurationEqual(sortedTerms);
+			return BUILTIN.createDurationEqual(terms.get(0), terms.get(1));
 		case YEARMONTHDURATION_GREATER_THAN:
-			return BUILTIN.createYearMonthDurationGreater(wsmlTerms);
+			return BUILTIN.createYearMonthDurationGreater(terms.get(0), terms.get(1));
 		case YEARMONTHDURATION_LESS_THAN:
-			return BUILTIN.createYearMonthDurationLess(wsmlTerms);
+			return BUILTIN.createYearMonthDurationLess(terms.get(0), terms.get(1));
 		case HAS_DATATYPE:
 			throw new InternalReasonerException("WSML Built-in: " + wsmlBuiltIn.getName() + " not yet supported!");
 		case TO_BASE64:
@@ -350,7 +344,7 @@ public class BuiltinHelper {
 		// http://www.w3.org/2005/rules/wiki/DTB
 		// 
 		
-		// terms as array for built-ins with boolean output.
+		// terms for built-ins with boolean output.
 		ITerm[] wsmlTerms = toArray(terms);
 		// in wsml return value is on first position - in iris on last position.
 		ITerm[] sortedTerms = toArray(sortListForIRIS(terms));
@@ -373,11 +367,11 @@ public class BuiltinHelper {
 		case ADD_YEARMONTHDURATION_TO_DATETIME:
 			return BUILTIN.createAddYearMonthDurationToDateTime(sortedTerms);
 		case BOOLEAN_EQUAL:
-			return BUILTIN.createBooleanEqual(wsmlTerms);
+			return BUILTIN.createBooleanEqual(terms.get(0), terms.get(1));
 		case BOOLEAN_GREATER_THAN:
-			return BUILTIN.createBooleanGreater(wsmlTerms);
+			return BUILTIN.createBooleanGreater(terms.get(0), terms.get(1));
 		case BOOLEAN_LESS_THAN:
-			return BUILTIN.createBooleanLess(wsmlTerms);
+			return BUILTIN.createBooleanLess(terms.get(0), terms.get(1));
 			
 			// RIF String builtins
 		case COMPARE:
@@ -388,31 +382,31 @@ public class BuiltinHelper {
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
 //			return BUILTIN.createStringConcatenate(wsmlTerms);
 		case CONTAINS:
-			return BUILTIN.createStringContains(wsmlTerms);
+			return BUILTIN.createStringContains(terms.get(0), terms.get(1));
 		case DATE_EQUAL:
-			return BUILTIN.createDateEqual(wsmlTerms);
+			return BUILTIN.createDateEqual(terms.get(0), terms.get(1));
 		case DATE_NOT_EQUAL:
-			return BUILTIN.createDateNotEqual(wsmlTerms);
+			return BUILTIN.createDateNotEqual(terms.get(0), terms.get(1));
 		case DATE_GREATER_THAN:
-			return BUILTIN.createDateGreater(wsmlTerms);
+			return BUILTIN.createDateGreater(terms.get(0), terms.get(1));
 		case DATE_GREATER_THAN_OR_EQUAL:
-			return BUILTIN.createDateGreaterEqual(wsmlTerms);
+			return BUILTIN.createDateGreaterEqual(terms.get(0), terms.get(1));
 		case DATE_LESS_THAN:
-			return BUILTIN.createDateLess(wsmlTerms);
+			return BUILTIN.createDateLess(terms.get(0), terms.get(1));
 		case DATE_LESS_THAN_OR_EQUAL:
-			return BUILTIN.createDateLessEqual(wsmlTerms);
+			return BUILTIN.createDateLessEqual(terms.get(0), terms.get(1));
 		case DATETIME_EQUAL:
-			return BUILTIN.createDateTimeEqual(wsmlTerms);
+			return BUILTIN.createDateTimeEqual(terms.get(0), terms.get(1));
 		case DATETIME_NOT_EQUAL:
-			return BUILTIN.createDateTimeNotEqual(wsmlTerms);
+			return BUILTIN.createDateTimeNotEqual(terms.get(0), terms.get(1));
 		case DATETIME_GREATER_THAN:
-			return BUILTIN.createDateTimeGreater(wsmlTerms);
+			return BUILTIN.createDateTimeGreater(terms.get(0), terms.get(1));
 		case DATETIME_GREATER_THAN_OR_EQUAL:
-			return BUILTIN.createDateTimeGreaterEqual(wsmlTerms);
+			return BUILTIN.createDateTimeGreaterEqual(terms.get(0), terms.get(1));
 		case DATETIME_LESS_THAN:
-			return BUILTIN.createDateTimeLess(wsmlTerms);
+			return BUILTIN.createDateTimeLess(terms.get(0), terms.get(1));
 		case DATETIME_LESS_THAN_OR_EQUAL:
-			return BUILTIN.createDateTimeLessEqual(wsmlTerms);
+			return BUILTIN.createDateTimeLessEqual(terms.get(0), terms.get(1));
 		case DAY_FROM_DATE:
 			return BUILTIN.createDayFromDate(sortedTerms);
 		case DAY_FROM_DATETIME:
@@ -420,13 +414,13 @@ public class BuiltinHelper {
 		case DAYS_FROM_DURATION:
 			return BUILTIN.createDaysFromDuration(sortedTerms);
 		case DAYTIMEDURATION_GREATER_THAN:
-			return BUILTIN.createDayTimeDurationGreater(wsmlTerms);
+			return BUILTIN.createDayTimeDurationGreater(terms.get(0), terms.get(1));
 		case DAYTIMEDURATION_GREATER_THAN_OR_EQUAL:
-			return BUILTIN.createDayTimeDurationGreaterEqual(wsmlTerms);
+			return BUILTIN.createDayTimeDurationGreaterEqual(terms.get(0), terms.get(1));
 		case DAYTIMEDURATION_LESS_THAN:
-			return BUILTIN.createDayTimeDurationLess(wsmlTerms);
+			return BUILTIN.createDayTimeDurationLess(terms.get(0), terms.get(1));
 		case DAYTIMEDURATION_LESS_THAN_OR_EQUAL:
-			return BUILTIN.createDayTimeDurationLessEqual(wsmlTerms);
+			return BUILTIN.createDayTimeDurationLessEqual(terms.get(0), terms.get(1));
 		case DISTINCT_VALUES: 
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
 //			return BUILTIN.createDistinctValues(wsmlTerms);
@@ -439,13 +433,13 @@ public class BuiltinHelper {
 		case DIVIDE_YEARMONTHDURATION_BY_YEARMONTHDURATION:
 			return BUILTIN.createYearMonthDurationDivideByYearMonthDuration(sortedTerms);
 		case DURATION_EQUAL:
-			return BUILTIN.createDurationEqual(wsmlTerms);
+			return BUILTIN.createDurationEqual(terms.get(0), terms.get(1));
 		case DURATION_NOT_EQUAL:
-			return BUILTIN.createDurationNotEqual(wsmlTerms);
+			return BUILTIN.createDurationNotEqual(terms.get(0), terms.get(1));
 		case ENCODE_FOR_URI:
 			return BUILTIN.createStringUriEncode(sortedTerms);
 		case ENDS_WITH:
-			return BUILTIN.createStringEndsWith(wsmlTerms);
+			return BUILTIN.createStringEndsWith(terms.get(0), terms.get(1));
 		case ESCAPE_HTML_URI:
 			return BUILTIN.createStringEscapeHtmlUri(sortedTerms);
 		case EXCEPT: 
