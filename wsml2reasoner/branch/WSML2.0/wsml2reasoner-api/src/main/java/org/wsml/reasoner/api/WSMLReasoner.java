@@ -43,6 +43,9 @@ public interface WSMLReasoner {
 
     /**
      * Register all given ontologies with the reasoner.
+     * All currently registered
+     * contents of the reasoner are removed and replaced with the elements of
+     * the new ontologies.
      * 
      * @param ontologies
      *            The ontologies to register in the same reasoning space.
@@ -51,8 +54,11 @@ public interface WSMLReasoner {
     public void registerOntologies(Set<Ontology> ontologies) throws InconsistencyException;
 
     /**
-     * Registers the ontology. If the ontology is already registered, updates
-     * the ontology content.
+     * Registers the ontology. 
+     * 
+     * All currently registered
+     * contents of the reasoner are removed and replaced with the elements of
+     * the new ontologies.
      * 
      * @param ontology
      */
