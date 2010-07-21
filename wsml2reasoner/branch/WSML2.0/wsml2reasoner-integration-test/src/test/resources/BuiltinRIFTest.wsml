@@ -37,8 +37,8 @@ axiom testRIFBuiltin definedBy
 	   isBase64BinaryTest(?x) 	:- ?x[?attribute hasValue ?value] and rif#is-literal-base64Binary(xsd#base64Binary( "FFFF" )).
 	   isBooleanTest(?x) 		:- ?x[?attribute hasValue ?value] and rif#is-literal-boolean(xsd#boolean("true")).
 	   isDateTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#is-literal-date( xsd#date( 1981, 12, 31)).
-	   isDateTimeTest(?x) 		:- ?x[?attribute hasValue ?value] and rif#is-literal-dateTime( xsd#dateTime(1981, 12, 31, 20, 33, 23.4, 1, 0, 0 )).
-	   isDateTimeStampTest(?x) 	:- ?x[?attribute hasValue ?value] and rif#is-literal-dateTimeStamp( xsd#dateTimeStamp(1981, 12, 31, 20, 33, 23.4, 1, 0, 0 )).
+	   isDateTimeTest(?x) 		:- ?x[?attribute hasValue ?value] and rif#is-literal-dateTime( xsd#dateTime(1981, 12, 31, 20, 33, 23.4, 0, 0, 0 )).
+	   isDateTimeStampTest(?x) 	:- ?x[?attribute hasValue ?value] and rif#is-literal-dateTimeStamp(xsd#dateTimeStamp(1981, 12, 31, 20, 33, 23.4, 0, 0, 0 )).
 	   isDoubleTest(?x) 		:- ?x[?attribute hasValue ?value] and rif#is-literal-double(xsd#double( "12345.6789" )).
 	   isFloatTest(?x) 			:- ?x[?attribute hasValue ?value] and rif#is-literal-float(xsd#float("3.4")).
 	   isHexBinaryTest(?x)		:- ?x[?attribute hasValue ?value] and rif#is-literal-hexBinary(xsd#hexBinary("FFFF")).
@@ -199,35 +199,34 @@ axiom testRIFBuiltin definedBy
 	   subtractDateTimesTest(?x)		:- ?x[?attribute hasValue ?value] and rif-func#subtract-dateTimes(xsd#dayTimeDuration(1,0,9,0,0) , xsd#dateTime(2000, 10, 30, 19, 0, 0.0 ,0,0,0), xsd#dateTime(2000, 10, 30, 10, 0, 0.0 ,0,0,0)).
 	   subtractDateTimes_neg_Test(?x)		:- ?x[?attribute hasValue ?value] and rif-func#subtract-dateTimes(xsd#dayTimeDuration(-1, 0, 9,0,0) , xsd#dateTime(2000, 10, 30, 10, 0, 0.0, 0,0,0), xsd#dateTime(2000, 10, 30, 19, 0, 0.0 ,0,0,0)).
 	   subtractDatesTest(?x)			:- ?x[?attribute hasValue ?value] and rif-func#subtract-dates(xsd#dayTimeDuration(1,10,0,0,0), xsd#date(2000,10,30), xsd#date(2000,10,20)).
-	   subtractTimesTest(?x)			:- ?x[?attribute hasValue ?value] and rif-func#subtract-times(xsd#dayTimeDuration(1,0,2,12,0), xsd#time(11,12,2.0, 0,0,0 ), xsd#time(04,0,0, -1,5,0)).
+	   subtractTimesTest(?x)			:- ?x[?attribute hasValue ?value] and rif-func#subtract-times(xsd#dayTimeDuration(1,0,1,2,0), xsd#time(1,12,0.0, 0,0,0 ), xsd#time(0,10,0.0,0,0,0)).
 
 	   // rif yearMonthDuration manipulation 
+	   addYearMonthDurationsTest(?x)						:- ?x[?attribute hasValue ?value] and rif-func#add-yearMonthDurations(xsd#yearMonthDuration(1, 32, 12), xsd#yearMonthDuration(1, 20, 3), xsd#yearMonthDuration(1, 12, 9)).
+	   subtractYearMonthDurationsTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#subtract-yearMonthDurations(xsd#yearMonthDuration(1, 8, 2), xsd#yearMonthDuration(1, 20, 3), xsd#yearMonthDuration(1, 12, 1)).
 	   // TODO: built-in not yet supported
-	   // addYearMonthDurationsTest(?x)							:- ?x[?attribute hasValue ?value] and rif-func#add-yearMonthDurations(xsd#duration(1, 11, 1, 0, 21, 12, 0.0), xsd#yearMonthDuration(1,20, 3), xsd#yearMonthDuration(1, 12, 9)).
-	   subtractYearMonthDurationsTest(?x)						:- ?x[?attribute hasValue ?value] and rif-func#subtract-yearMonthDurations(xsd#duration(1, 11, 1, 0, 21, 12, 0.0), xsd#yearMonthDuration(1, 20, 3), xsd#yearMonthDuration(1, 12, 9)).
-	   // TODO: built-in not yet supported
-	   // multiplyYearMonthDurationTest(?x)						:- ?x[?attribute hasValue ?value] and rif-func#multiply-yearMonthDurations(xsd#yearMonthDuration(1, 4, 4), xsd#yearMonthDuration(1, 2, 2),  xsd#double(2.0)).
-	   divideYearMonthDurationTest(?x)							:- ?x[?attribute hasValue ?value] and rif-func#divide-yearMonthDurations(xsd#yearMonthDuration(1, 2, 2), xsd#integer(2)).
-	   divideYearMonthDurationByYearMonthDurationTest(?x) 		:- ?x[?attribute hasValue ?value] and rif-func#divide-yearMonthDurations(xsd#yearMonthDuration(1, 2, 2), xsd#yearMonthDuration(1, 2, 1)).
+	   // multiplyYearMonthDurationTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#multiply-yearMonthDurations(xsd#yearMonthDuration(1, 4, 4), xsd#yearMonthDuration(1, 2, 2),  xsd#double(2.0)).
+	   divideYearMonthDurationTest(?x)						:- ?x[?attribute hasValue ?value] and rif-func#divide-yearMonthDurations(xsd#yearMonthDuration(1, 2, 2), xsd#integer(2)).
+	   divideYearMonthDurationByYearMonthDurationTest(?x) 	:- ?x[?attribute hasValue ?value] and rif-func#divide-yearMonthDurations(xsd#yearMonthDuration(1, 2, 2), xsd#yearMonthDuration(1, 2, 1)).
 	   
 	   // rif dayTimeDuration manipulation
-	   //  addDayTimeDurationsTest(?x)						:- ?x[?attribute hasValue ?value] and rif-func#add-dayTimeDurations(xsd#dayTimeDuration(20, 3, 12, 33), xsd#dayTimeDuration(1, 12, 9, 10, 33)).	
-	   subtractDayTimeDurationsTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#subtract-dayTimeDurations(xsd#duration(1, 11, 1, 0, 21, 12, 0.0), xsd#dayTimeDuration(1, 20, 3, 10, 33), xsd#dayTimeDuration(1, 12, 9, 10, 33)).	
+	   subtractDayTimeDurationsTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#subtract-dayTimeDurations(xsd#dayTimeDuration(1, 10, 1, 5, 0), xsd#dayTimeDuration(1, 20, 3, 10, 33), xsd#dayTimeDuration(1, 10, 2, 5, 33)).	
 	   // TODO: built-in not yet supported
 	   // multiplyDayTimeDurationTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#multiply-dayTimeDurations(xsd#dayTimeDuration(1, 20, 3, 10, 33), xsd#dayTimeDuration(1, 12, 9, 10, 33)).	
 	   divideDayTimeDurationTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#divide-dayTimeDurations(xsd#dayTimeDuration(1, 20, 3, 10, 33), xsd#dayTimeDuration(1, 12, 9, 10, 33)).	
 	   divideDayTimeDurationBydayTimeDurationTest(?x)	:- ?x[?attribute hasValue ?value] and rif-func#divide-dayTimeDuration-by-dayTimeDurations(xsd#dayTimeDuration(1, 20, 3, 10, 33), xsd#dayTimeDuration(1, 12, 9, 10, 33)).	
 	   
 	   // rif yearMonth dayTime
-	   addYearMonthDurationToDateTimeTest(?x)			:- ?x[?attribute hasValue ?value] and rif-func#add-yearMonthDuration-to-dateTime(xsd#duration(1,1,2,3,4,5,6.0), xsd#yearMonthDuration(1, 20, 3), xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0, 0 )).	
-	   addYearMonthDurationToDateTest(?x)				:- ?x[?attribute hasValue ?value] and rif-func#add-yearMonthDuration-to-date(xsd#duration(1,1,2,3,4,5,6.0), xsd#yearMonthDuration(1,20, 3), xsd#date( 1981, 12, 31 )).
+	   addYearMonthDurationToDateTimeTest(?x)			:- ?x[?attribute hasValue ?value] and rif-func#add-yearMonthDuration-to-dateTime(xsd#dateTime( 2006, 7, 31, 20, 33, 23.4, 0, 0, 0 ), xsd#dateTime( 1986, 4, 31, 20, 33, 23.4, 0, 0, 0 ), xsd#yearMonthDuration(1, 20, 3)).	
+	   addYearMonthDurationToDateTest(?x)				:- ?x[?attribute hasValue ?value] and rif-func#add-yearMonthDuration-to-date(xsd#date(1987, 11, 8 ), xsd#date( 1981, 10, 8 ),  xsd#yearMonthDuration(1, 6, 1)).
 	   
-	   addDayTimeDurationToDateTimeTest(?x)				:- ?x[?attribute hasValue ?value] and rif-func#add-dayTimeDuration-to-dateTime(xsd#duration(1,1,2,3,4,5,6.0), xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 1, 0, 0 ), xsd#dayTimeDuration(1, 10, 33, 12, 31 )).
-	   addDayTimeDurationToDateTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#add-dayTimeDuration-to-date(xsd#duration(1,1,2,3,4,5,6.0), xsd#date( 1981, 12, 31 ), xsd#dayTimeDuration(1, 10, 12, 3, 32 ) ).
-	   addDayTimeDurationToTimeTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#add-dayTimeDuration-to-time(xsd#duration(1,1,2,3,4,5,6.0), xsd#time(20, 33, 23.4, 1, 0, 0 ), xsd#dayTimeDuration( 1, 10, 12, 3, 32  )).
+	   addDayTimeDurationsTest(?x)						:- ?x[?attribute hasValue ?value] and rif-func#add-dayTimeDurations(xsd#dayTimeDuration(1, 6, 12, 12, 33), xsd#dayTimeDuration(1, 6, 3, 12, 33), xsd#dayTimeDuration(1, 0, 9, 0, 0)).	
+	   addDayTimeDurationToDateTimeTest(?x)				:- ?x[?attribute hasValue ?value] and rif-func#add-dayTimeDuration-to-dateTime(xsd#dateTime( 1986, 12, 31, 20, 35, 53.4, 0, 0, 0 ), xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0, 0 ), xsd#dayTimeDuration(1, 0, 0, 2, 30 )).
+	   addDayTimeDurationToDateTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#add-dayTimeDuration-to-date(xsd#date( 1981, 11, 11 ), xsd#date( 1981, 11, 10 ), xsd#dayTimeDuration(1, 1, 0, 0, 0 ) ).
+	   addDayTimeDurationToTimeTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#add-dayTimeDuration-to-time( xsd#time(22, 33, 23.4, 0, 0, 0 ), xsd#time(10, 33, 23.4, 0, 0, 0 ), xsd#dayTimeDuration( 1, 0, 12, 0, 0  )).
 
-	   subtractYearMonthDurationFromDateTimeTest(?x)	:- ?x[?attribute hasValue ?value] and rif-func#subtract-yearMonthDuration-from-dateTime(xsd#duration(1,1,2,3,4,5,6.0), xsd#yearMonthDuration(1, 20, 3), xsd#dateTime(1986, 12, 31, 20, 33, 23.4, 0, 0, 0 )).	
-	   subtractYearMonthDurationFromDateTest(?x)		:- ?x[?attribute hasValue ?value] and rif-func#subtract-yearMonthDuration-from-date(xsd#duration(1,1,2,3,4,5,6.0), xsd#yearMonthDuration(1, 20, 3), xsd#date( 1981, 12, 31 )).
+	   subtractYearMonthDurationFromDateTimeTest(?x)	:- ?x[?attribute hasValue ?value] and rif-func#subtract-yearMonthDuration-from-dateTime( xsd#dateTime(1986, 3, 1, 20, 33, 24.4, 0, 0, 0 ), xsd#dateTime(2006, 6, 1, 20, 33, 24.4, 0, 0, 0 ), xsd#yearMonthDuration(1, 20, 3)).	
+	   subtractYearMonthDurationFromDateTest(?x)		:- ?x[?attribute hasValue ?value] and rif-func#subtract-yearMonthDuration-from-date(xsd#date(1,1,1, 0,0,0), xsd#date( 21, 4, 1, 0,0,0 ), xsd#yearMonthDuration(1, 20, 3)).
 	   
 	   subtractDayTimeDurationFromDateTimeTest(?x)		:- ?x[?attribute hasValue ?value] and rif-func#subtract-dayTimeDuration-from-dateTime(xsd#duration(1,1,2,3,4,5,6.0), xsd#dateTime( 1986, 12, 31, 20, 33, 23.4, 0, 0, 0 ), xsd#dayTimeDuration( 1, 10, 12, 3, 32 )).
 	   subtractDayTimeDurationFromDateTest(?x)			:- ?x[?attribute hasValue ?value] and rif-func#subtract-dayTimeDuration-from-date(xsd#duration(1,1,2,3,4,5,6.0), xsd#date( 1981, 12, 31 ), xsd#dayTimeDuration(1, 10, 12, 3, 32 ) ).
