@@ -351,8 +351,7 @@ public class BuiltinHelper {
 		
 		switch (rifbuiltIn) {
 		case ADD_DAYTIMEDURATIONS: 
-			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-//			return BUILTIN.createAddDayTimeDuration(sortedTerms);
+			return BUILTIN.createAddDayTimeDurations(sortedTerms);
 		case ADD_DAYTIMEDURATION_TO_DATE:
 			return BUILTIN.createAddDayTimeDurationToDate(sortedTerms);
 		case ADD_DAYTIMEDURATION_TO_TIME:
@@ -360,8 +359,7 @@ public class BuiltinHelper {
 		case ADD_DAYTIMEDURATION_TO_DATETIME:
 			return BUILTIN.createAddDayTimeDurationToDateTime(sortedTerms);
 		case ADD_YEARMONTHDURATIONS:
-			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-//			return BUILTIN.createAddYearMonthDuration(sortedTerms);
+			return BUILTIN.createAddYearMonthDurations(sortedTerms);
 		case ADD_YEARMONTHDURATION_TO_DATE:
 			return BUILTIN.createAddYearMonthDurationToDate(sortedTerms);
 		case ADD_YEARMONTHDURATION_TO_DATETIME:
@@ -380,7 +378,6 @@ public class BuiltinHelper {
 			return BUILTIN.createStringConcat(sortedTerms);
 		case CONCATENATE: 
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-//			return BUILTIN.createStringConcatenate(wsmlTerms);
 		case CONTAINS:
 			return BUILTIN.createStringContains(terms.get(0), terms.get(1));
 		case DATE_EQUAL:
@@ -614,20 +611,16 @@ public class BuiltinHelper {
 			return BUILTIN.createLangFromText(sortedTerms);
 		case LIST_CONTAINS: 
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-//			return BUILTIN.createListContains(sortedTerms);
 		case LITERAL_NOT_IDENTICAL: 
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-//			return BUILTIN.createLiteralNotIdentical(sortedTerms);
 		case LOWER_CASE:
 			return BUILTIN.createStringToLower(sortedTerms);
 		case MAKE_LISTS: 
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-//			return BUILTIN.createMakeList(sortedTerms);
 		case MATCHES:
 			return BUILTIN.createStringMatches(wsmlTerms);
 		case MATCHES_LANGUAGE_RANGE: 
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-//			return BUILTIN.createMatchesLanguageRange(sortedTerms);
 		case MINUTES_FROM_DATETIME:
 			return BUILTIN.createMinutesFromDateTime(sortedTerms);
 		case MINUTES_FROM_DURATION:
@@ -675,7 +668,7 @@ public class BuiltinHelper {
 		case PLAINLITERAL_COMPARE:						
 			return BUILTIN.createTextCompare(sortedTerms);
 		case PLAINLITERAL_FROM_STRING_LANG: 			
-			return BUILTIN.createLangFromText(sortedTerms); // FIXME correct?
+			return BUILTIN.createLangFromText(sortedTerms);
 		case PLAINLITERAL_LENGTH:
 			return BUILTIN.createTextLength(sortedTerms);
 		case REMOVE: 
