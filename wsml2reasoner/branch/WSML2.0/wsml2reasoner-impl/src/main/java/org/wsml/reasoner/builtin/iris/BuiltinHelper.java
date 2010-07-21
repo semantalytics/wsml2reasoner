@@ -634,11 +634,9 @@ public class BuiltinHelper {
 		case MONTHS_FROM_DURATION:
 			return BUILTIN.createMonthsFromDuration(sortedTerms);
 		case MULTIPLY_DAYTIMEDURATION: 
-			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-//			return BUILTIN.createMultiplyDayTimeDuration(sortedTerms);
+			return BUILTIN.createDayTimeDurationMultiply(sortedTerms);
 		case MULTIPLY_YEARMONTHDURATION:
-			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-//			return BUILTIN.createMultiplyYearMonthDuration(sortedTerms);
+			return BUILTIN.createYearMonthDurationMultiply(sortedTerms);
 		case NOT:
 			return BUILTIN.createBooleanNot(wsmlTerms);
 		case NUMERIC_ADD:
@@ -673,12 +671,10 @@ public class BuiltinHelper {
 			return BUILTIN.createTextLength(sortedTerms);
 		case REMOVE: 
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-//			return BUILTIN.createRemove(sortedTerms);
 		case REPLACE:
 			return BUILTIN.createStringReplace(sortedTerms);
 		case REVERSE: 
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-//			return BUILTIN.createReverse();
 		case SECONDS_FROM_DATETIME:
 			return BUILTIN.createSecondsFromDateTime(sortedTerms);
 		case SECONDS_FROM_DURATION:
@@ -695,7 +691,6 @@ public class BuiltinHelper {
 			return BUILTIN.createStringLength(sortedTerms);
 		case SUBLIST: 
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-//			return BUILTIN.createSubList(sortedTerms);
 		case SUBSTRING:
 			return BUILTIN.createStringSubstring(sortedTerms);
 		case SUBSTRING_AFTER:
@@ -742,7 +737,6 @@ public class BuiltinHelper {
 			return BUILTIN.createTimezoneFromTime(sortedTerms);
 		case UNION: 
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-//			return BUILTIN.createUnion(sortedTerms);
 		case UPPER_CASE:
 			return BUILTIN.createStringToUpper(sortedTerms);
 		case XMLLITERAL_EQUAL:

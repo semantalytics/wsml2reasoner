@@ -4,7 +4,7 @@ import org.wsml.reasoner.api.LPReasoner;
 
 import abstractTests.lp.AbstractRIFBuiltinTest;
 
-public class RIFBuiltin01Test extends AbstractRIFBuiltinTest{
+public class RIFBuiltinTest extends AbstractRIFBuiltinTest{
 
 	@Override
 	public LPReasoner getLPReasoner() {
