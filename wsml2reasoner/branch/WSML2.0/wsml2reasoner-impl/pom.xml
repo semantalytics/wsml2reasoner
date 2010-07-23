@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>wsml2reasoner</artifactId>
 		<groupId>net.sourceforge.wsml2reasoner</groupId>
-		<version>0.8.1</version>
+		<version>0.8.2-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>wsml2reasoner-impl</artifactId>
@@ -22,20 +22,20 @@
 		<dependency>
 			<groupId>net.sourceforge.wsmo4j</groupId>
 			<artifactId>wsmo4j-impl</artifactId>
-			<version>2.1.1</version>
+			<version>2.1.2-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>at.sti2.iris</groupId>
 			<artifactId>iris-impl</artifactId>
-			<version>0.7.1</version>
+			<version>0.7.2-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>at.sti2.elly</groupId>
 			<artifactId>elly-iris</artifactId>
-			<version>0.2.1</version>
+			<version>0.2.2-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
