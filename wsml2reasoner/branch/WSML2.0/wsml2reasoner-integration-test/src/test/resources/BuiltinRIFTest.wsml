@@ -151,8 +151,8 @@ axiom testRIFBuiltin definedBy
 	   upperCaseTest(?x)				:- ?x[?attribute hasValue ?value] and rif-func#upper-case(xsd#string("STRING"), xsd#string("stRing")).
 	   lowerCaseTest(?x)				:- ?x[?attribute hasValue ?value] and rif-func#lower-case(xsd#string("string"), xsd#string("STrING")).
 	   encodeForUriTest(?x)				:- ?x[?attribute hasValue ?value] and rif-func#encode-for-uri(xsd#string("encode%20me"), xsd#string("encode me")).
-	   iriToUriTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#iri-to-uri(xsd#string("http://www.example.com/~b%C3%A9b%C3%A9"), xsd#string("http://www.example.com/~b�b�")).
-	   escapeHtmlUriTest(?x)			:- ?x[?attribute hasValue ?value] and rif-func#escape-html-uri(xsd#string("javascript:if (navigator.browserLanguage == 'fr') window.open('http://www.example.com/~b%C3%A9b%C3%A9');"), xsd#string("javascript:if (navigator.browserLanguage == 'fr') window.open('http://www.example.com/~b�b�');")).
+	   iriToUriTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#iri-to-uri(xsd#string("http://www.example.com/~b%C3%A9b%C3%A9"), xsd#string("http://www.example.com/~bébé")).
+	   escapeHtmlUriTest(?x)			:- ?x[?attribute hasValue ?value] and rif-func#escape-html-uri(xsd#string("javascript:if (navigator.browserLanguage == 'fr') window.open('http://www.example.com/~b%C3%A9b%C3%A9');"), xsd#string("javascript:if (navigator.browserLanguage == 'fr') window.open('http://www.example.com/~bébé');")).
 	   substringBeforeTest1(?x)			:- ?x[?attribute hasValue ?value] and rif-func#substring-before(xsd#string("ta"), xsd#string("tattoo"), xsd#string("tt"), xsd#string("http://www.w3.org/2005/xpath-functions/collation/codepoint")).
 	   substringBeforeTest2(?x)			:- ?x[?attribute hasValue ?value] and rif-func#substring-before(xsd#string("ta"), xsd#string("tattoo"), xsd#string("tt")).
 	   substringAfterTest1(?x)			:- ?x[?attribute hasValue ?value] and rif-func#substring-after(xsd#string("too"), xsd#string("tattoo"), xsd#string("tat"), xsd#string("http://www.w3.org/2005/xpath-functions/collation/codepoint")).
@@ -206,13 +206,13 @@ axiom testRIFBuiltin definedBy
 	   subtractYearMonthDurationsTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#subtract-yearMonthDurations(xsd#yearMonthDuration(1, 8, 2), xsd#yearMonthDuration(1, 20, 3), xsd#yearMonthDuration(1, 12, 1)).
 	   multiplyYearMonthDurationTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#multiply-yearMonthDuration(xsd#yearMonthDuration(1, 4, 4), xsd#yearMonthDuration(1, 2, 2),  xsd#double("2.0")).
 	   divideYearMonthDurationTest(?x)						:- ?x[?attribute hasValue ?value] and rif-func#divide-yearMonthDuration(xsd#yearMonthDuration(1, 2, 2), xsd#yearMonthDuration(1, 4, 4), xsd#double("2.0")).
-	   divideYearMonthDurationByYearMonthDurationTest(?x) 	:- ?x[?attribute hasValue ?value] and rif-func#divide-yearMonthDuration(xsd#double("1.0"), xsd#yearMonthDuration(1, 4, 4), xsd#yearMonthDuration(1, 4, 4)).
+	   divideYearMonthDurationByYearMonthDurationTest(?x) 	:- ?x[?attribute hasValue ?value] and rif-func#divide-yearMonthDuration-by-yearMonthDuration(xsd#decimal("1.0"), xsd#yearMonthDuration(1, 4, 4), xsd#yearMonthDuration(1, 4, 4)).
 	   
 	   // rif dayTimeDuration manipulation
 	   subtractDayTimeDurationsTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#subtract-dayTimeDurations(xsd#dayTimeDuration(1, 10, 1, 5, 0), xsd#dayTimeDuration(1, 20, 3, 10, 33), xsd#dayTimeDuration(1, 10, 2, 5, 33)).	
 	   multiplyDayTimeDurationTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#multiply-dayTimeDuration(xsd#dayTimeDuration(1, 20, 6, 20, 24),  xsd#dayTimeDuration(1, 10, 3, 10, 12), xsd#double("2.0")).
-	   divideDayTimeDurationTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#divide-dayTimeDurations(xsd#dayTimeDuration(1, 4, 4, 10, 4), xsd#dayTimeDuration(1, 4, 4, 10, 4), xsd#double("1.0")).	
-	   divideDayTimeDurationBydayTimeDurationTest(?x)	:- ?x[?attribute hasValue ?value] and rif-func#divide-dayTimeDuration-by-dayTimeDurations(xsd#double("1.0"), xsd#dayTimeDuration(1, 20, 3, 10, 33),  xsd#dayTimeDuration(1, 20, 3, 10, 33)).	
+	   divideDayTimeDurationTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#divide-dayTimeDuration(xsd#dayTimeDuration(1, 4, 4, 10, 4), xsd#dayTimeDuration(1, 4, 4, 10, 4), xsd#double("1.0")).	
+	   divideDayTimeDurationBydayTimeDurationTest(?x)	:- ?x[?attribute hasValue ?value] and rif-func#divide-dayTimeDuration-by-dayTimeDuration(xsd#decimal("1.0"), xsd#dayTimeDuration(1, 20, 3, 10, 33),  xsd#dayTimeDuration(1, 20, 3, 10, 33)).	
 	   
 	   // rif yearMonth dayTime
 	   addYearMonthDurationToDateTimeTest(?x)			:- ?x[?attribute hasValue ?value] and rif-func#add-yearMonthDuration-to-dateTime(xsd#dateTime( 2006, 7, 31, 20, 33, 23.4, 0, 0, 0 ), xsd#dateTime( 1986, 4, 31, 20, 33, 23.4, 0, 0, 0 ), xsd#yearMonthDuration(1, 20, 3)).	
@@ -279,9 +279,10 @@ axiom testRIFBuiltin definedBy
 	   xmlLiteralNotEqualTest(?x)						:- ?x[?attribute hasValue ?value] and rif-pred#XMLLiteral-not-equal( rdf#XMLLiteral("<tag>not equal</tag>", ""),  rdf#XMLLiteral("<tag>really not equal!</tag>", "")).
 
 	   // rif plain literal
-	   plainLiteralFromStringLangTest(?x)				:- ?x[?attribute hasValue ?value] and rif-pred#PlainLiteral-from-string-lang(xsd#stringLang("nothing", "en"), rdf#XMLLiteral("<tag>nothing</tag>", "en") ).
-	   stringFromPlainLiteralTest(?x)					:- ?x[?attribute hasValue ?value] and rif-pred#string-from-PlainLiteral(rdf#XMLLiteral("<tag>nothing </tag>", "en"), xsd#string("nothing") ).
-	   langFromPlainLiteralTest(?x)						:- ?x[?attribute hasValue ?value] and rif-pred#lang-from-PlainLiteral(rdf#XMLLiteral("<tag>nothing</tag>", "en"), xsd#lang("en")).
+	   plainLiteralFromStringLangTest1(?x)				:- ?x[?attribute hasValue ?value] and rif-func#PlainLiteral-from-string-lang(rdf#PlainLiteral("nothing", "en"), "nothing", "En").
+	   plainLiteralFromStringLangTest2(?x)				:- ?x[?attribute hasValue ?value] and rif-func#PlainLiteral-from-string-lang(rdf#PlainLiteral("nothing", ""), "nothing").
+	   stringFromPlainLiteralTest(?x)					:- ?x[?attribute hasValue ?value] and rif-func#string-from-PlainLiteral("nothing", rdf#PlainLiteral("nothing", "en")).
+	   langFromPlainLiteralTest(?x)						:- ?x[?attribute hasValue ?value] and rif-func#lang-from-PlainLiteral("en", rdf#PlainLiteral("nothing", "en")).
 	
 	  
 ////////////////////

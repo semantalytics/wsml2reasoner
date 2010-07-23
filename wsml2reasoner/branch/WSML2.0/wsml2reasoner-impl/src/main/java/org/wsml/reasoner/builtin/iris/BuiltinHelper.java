@@ -672,8 +672,11 @@ public class BuiltinHelper {
 			return BUILTIN.createNumericSubtract(functionalTerms);
 		case PLAINLITERAL_COMPARE:						
 			return BUILTIN.createTextCompare(functionalTerms);
-		case PLAINLITERAL_FROM_STRING_LANG: 			
-			return BUILTIN.createLangFromText(functionalTerms); // FIXME different builtin!
+		case PLAINLITERAL_FROM_STRING_LANG: 
+			if (functionalTerms.length == 3)
+				return BUILTIN.createTextFromStringLang(functionalTerms);
+			if (functionalTerms.length == 2)
+				return BUILTIN.createTextFromString(functionalTerms);
 		case PLAINLITERAL_LENGTH:
 			return BUILTIN.createTextLength(functionalTerms);
 		case REMOVE: 

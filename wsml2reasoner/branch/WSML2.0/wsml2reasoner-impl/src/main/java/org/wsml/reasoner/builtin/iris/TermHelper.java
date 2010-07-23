@@ -560,7 +560,7 @@ public class TermHelper {
 
 			checkDuration(sign, hours, mins);
 
-			return CONCRETE.createDateTime(
+			return CONCRETE.createDateTimeStamp(
 					getIntFromValue(cv, 0), getIntFromValue(cv, 1), getIntFromValue(cv, 2),
 					getIntFromValue(cv, 3), getIntFromValue(cv, 4), getDoubleFromValue(cv, 5), 
 					hours, mins);

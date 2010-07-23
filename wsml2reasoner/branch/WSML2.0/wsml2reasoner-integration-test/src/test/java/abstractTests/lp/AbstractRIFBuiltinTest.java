@@ -957,7 +957,9 @@ public abstract class AbstractRIFBuiltinTest extends TestCase implements LP {
 
 	// rif plain-literal built-ins
 	public void testplainLiteralFromStringLang() throws Exception {
-		query = "plainLiteralFromStringLangTest(?x)";
+		query = "plainLiteralFromStringLangTest1(?x)";
+		checkSTD(query);
+		query = "plainLiteralFromStringLangTest2(?x)";
 		checkSTD(query);
 	}
 
