@@ -199,7 +199,7 @@ public class BuiltinHelper {
 		case YEARMONTHDURATION_LESS_THAN:
 			return BUILTIN.createYearMonthDurationLess(booleanTerms);
 		case HAS_DATATYPE:
-			throw new InternalReasonerException("WSML Built-in: " + wsmlBuiltIn.getName() + " not yet supported!");
+			return BUILTIN.createIsDatatype(functionalTerms);
 		case TO_BASE64:
 			return BUILTIN.createToBase64Binary(functionalTerms);
 		case TO_BOOLEAN:
