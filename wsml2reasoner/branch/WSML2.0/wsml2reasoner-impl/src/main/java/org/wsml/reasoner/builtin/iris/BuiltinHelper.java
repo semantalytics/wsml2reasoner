@@ -105,221 +105,225 @@ public class BuiltinHelper {
 		// NOTE mp: not all longer supported - RIF Built-ins replace them mostly
 		//
 		
-		// terms for built-ins with boolean output.
-		// in wsml return value is on first position - in iris on last position.
-		ITerm[] sortedTerms = toArray(sortListForIRIS(terms));
+		// term array for boolean built-ins.
+		ITerm[] booleanTerms = toArray(terms);
+		
+		// term array for functional built-ins:
+		// in wsml return value is on first position - in iris on last position,
+		// thus sort list for iris
+		ITerm[] functionalTerms = toArray(sortListForIRIS(terms));
 		
 		switch (wsmlBuiltIn) {
 		case EQUAL:
-			return BUILTIN.createEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createEqual(booleanTerms);
 		case DATE_EQUAL:
-			return BUILTIN.createDateEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createDateEqual(booleanTerms);
 		case DATE_GREATER_THAN:
-			return BUILTIN.createDateGreater(terms.get(0), terms.get(1));
+			return BUILTIN.createDateGreater(booleanTerms);
 		case DATE_INEQUAL:
-			return BUILTIN.createDateNotEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createDateNotEqual(booleanTerms);
 		case DATE_LESS_THAN:
-			return BUILTIN.createDateLess(terms.get(0), terms.get(1));
+			return BUILTIN.createDateLess(booleanTerms);
 		case DATETIME_EQUAL:
-			return BUILTIN.createDateTimeEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createDateTimeEqual(booleanTerms);
 		case DATETIME_GREATER_THAN:
-			return BUILTIN.createDateTimeGreater(terms.get(0), terms.get(1));
+			return BUILTIN.createDateTimeGreater(booleanTerms);
 		case DATETIME_INEQUAL:
-			return BUILTIN.createDateTimeNotEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createDateTimeNotEqual(booleanTerms);
 		case DATETIME_LESS_THAN:
-			return BUILTIN.createDateTimeLess(terms.get(0), terms.get(1));
+			return BUILTIN.createDateTimeLess(booleanTerms);
 		case DAYTIMEDURATION_EQUAL: 
-			return BUILTIN.createDurationEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createDurationEqual(booleanTerms);
 		case DAYTIMEDURATION_GREATER_THAN:
-			return BUILTIN.createDayTimeDurationGreater(terms.get(0), terms.get(1));
+			return BUILTIN.createDayTimeDurationGreater(booleanTerms);
 		case DAYTIMEDURATION_LESS_THAN:
-			return BUILTIN.createDayTimeDurationLess(terms.get(0), terms.get(1));
+			return BUILTIN.createDayTimeDurationLess(booleanTerms);
 		case DURATION_EQUAL:
-			return BUILTIN.createDurationEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createDurationEqual(booleanTerms);
 		case DURATION_INEQUAL:
-			return BUILTIN.createDurationNotEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createDurationNotEqual(booleanTerms);
 		case GDAY_EQUAL: 
-			return BUILTIN.createNumericEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createNumericEqual(booleanTerms);
 		case GMONTH_EQUAL:
-			return BUILTIN.createNumericEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createNumericEqual(booleanTerms);
 		case GMONTHDAY_EQUAL: 
-			return BUILTIN.createNumericEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createNumericEqual(booleanTerms);
 		case GREATER_EQUAL:
-			return BUILTIN.createGreaterEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createGreaterEqual(booleanTerms);
 		case GREATER_THAN:
-			return BUILTIN.createGreater(terms.get(0), terms.get(1));
+			return BUILTIN.createGreater(booleanTerms);
 		case GYEAR_EQUAL: 
-			return BUILTIN.createNumericEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createNumericEqual(booleanTerms);
 		case GYEARMONTH_EQUAL: 
-			return BUILTIN.createNumericEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createNumericEqual(booleanTerms);
 		case INEQUAL: 
-			return BUILTIN.createUnequal(terms.get(0), terms.get(1));
+			return BUILTIN.createUnequal(booleanTerms);
 		case LESS_EQUAL:
-			return BUILTIN.createLessEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createLessEqual(booleanTerms);
 		case LESS_THAN:
-			return BUILTIN.createLess(terms.get(0), terms.get(1));
+			return BUILTIN.createLess(booleanTerms);
 		case NUMERIC_ADD:
-			return BUILTIN.createNumericAdd(sortedTerms);
+			return BUILTIN.createNumericAdd(functionalTerms);
 		case NUMERIC_DIVIDE:
-			return BUILTIN.createNumericDivide(sortedTerms);
+			return BUILTIN.createNumericDivide(functionalTerms);
 		case NUMERIC_MODULUS:
-			return BUILTIN.createNumericModulus(sortedTerms);
+			return BUILTIN.createNumericModulus(functionalTerms);
 		case NUMERIC_EQUAL:
-			return BUILTIN.createNumericEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createNumericEqual(booleanTerms);
 		case NUMERIC_GREATER_THAN:
-			return BUILTIN.createNumericGreater(terms.get(0), terms.get(1));
+			return BUILTIN.createNumericGreater(booleanTerms);
 		case NUMERIC_INEQUAL:
-			return BUILTIN.createNumericNotEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createNumericNotEqual(booleanTerms);
 		case NUMERIC_LESS_THAN:
-			return BUILTIN.createNumericLess(terms.get(0), terms.get(1));
+			return BUILTIN.createNumericLess(booleanTerms);
 		case NUMERIC_MULTIPLY:
-			return BUILTIN.createNumericMultiply(sortedTerms);
+			return BUILTIN.createNumericMultiply(functionalTerms);
 		case NUMERIC_SUBTRACT:
-			return BUILTIN.createNumericSubtract(sortedTerms);
+			return BUILTIN.createNumericSubtract(functionalTerms);
 		case STRING_EQUAL: 
-			return BUILTIN.createEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createEqual(booleanTerms);
 		case STRING_INEQUAL: 
-			return BUILTIN.createUnequal(terms.get(0), terms.get(1));
+			return BUILTIN.createUnequal(booleanTerms);
 		case TIME_EQUAL:
-			return BUILTIN.createTimeEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createTimeEqual(booleanTerms);
 		case TIME_GREATER_THAN:
-			return BUILTIN.createTimeGreater(terms.get(0), terms.get(1));
+			return BUILTIN.createTimeGreater(booleanTerms);
 		case TIME_INEQUAL:
-			return BUILTIN.createTimeNotEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createTimeNotEqual(booleanTerms);
 		case TIME_LESS_THAN:
-			return BUILTIN.createTimeLess(terms.get(0), terms.get(1));
+			return BUILTIN.createTimeLess(booleanTerms);
 		case YEARMONTHDURATION_EQUAL: 
-			return BUILTIN.createDurationEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createDurationEqual(booleanTerms);
 		case YEARMONTHDURATION_GREATER_THAN:
-			return BUILTIN.createYearMonthDurationGreater(terms.get(0), terms.get(1));
+			return BUILTIN.createYearMonthDurationGreater(booleanTerms);
 		case YEARMONTHDURATION_LESS_THAN:
-			return BUILTIN.createYearMonthDurationLess(terms.get(0), terms.get(1));
+			return BUILTIN.createYearMonthDurationLess(booleanTerms);
 		case HAS_DATATYPE:
 			throw new InternalReasonerException("WSML Built-in: " + wsmlBuiltIn.getName() + " not yet supported!");
 		case TO_BASE64:
-			return BUILTIN.createToBase64Binary(sortedTerms);
+			return BUILTIN.createToBase64Binary(functionalTerms);
 		case TO_BOOLEAN:
-			return BUILTIN.createToBoolean(sortedTerms);
+			return BUILTIN.createToBoolean(functionalTerms);
 		case TO_DATE:
-			return BUILTIN.createToDate(sortedTerms);
+			return BUILTIN.createToDate(functionalTerms);
 		case TO_DATETIME:
-			return BUILTIN.createToDateTime(sortedTerms);
+			return BUILTIN.createToDateTime(functionalTerms);
 		case TO_DAYTIMEDURATION:
-			return BUILTIN.createToDayTimeDuration(sortedTerms);
+			return BUILTIN.createToDayTimeDuration(functionalTerms);
 		case TO_DECIMAL:
-			return BUILTIN.createToDecimal(sortedTerms);
+			return BUILTIN.createToDecimal(functionalTerms);
 		case TO_DOUBLE:
-			return BUILTIN.createToDouble(sortedTerms);
+			return BUILTIN.createToDouble(functionalTerms);
 		case TO_DURATION:
-			return BUILTIN.createToDuration(sortedTerms);
+			return BUILTIN.createToDuration(functionalTerms);
 		case TO_FLOAT:
-			return BUILTIN.createToFloat(sortedTerms);
+			return BUILTIN.createToFloat(functionalTerms);
 		case TO_GDAY:
-			return BUILTIN.createToGDay(sortedTerms);
+			return BUILTIN.createToGDay(functionalTerms);
 		case TO_GMONTH:
-			return BUILTIN.createToGMonth(sortedTerms);
+			return BUILTIN.createToGMonth(functionalTerms);
 		case TO_GMONTHDAY:
-			return BUILTIN.createToGMonthDay(sortedTerms);
+			return BUILTIN.createToGMonthDay(functionalTerms);
 		case TO_GYEAR:
-			return BUILTIN.createToGYear(sortedTerms);
+			return BUILTIN.createToGYear(functionalTerms);
 		case TO_GYEARMONTH:
-			return BUILTIN.createToGYearMonth(sortedTerms);
+			return BUILTIN.createToGYearMonth(functionalTerms);
 		case TO_HEXBINARY:
-			return BUILTIN.createToHexBinary(sortedTerms);
+			return BUILTIN.createToHexBinary(functionalTerms);
 		case TO_INTEGER:
-			return BUILTIN.createToInteger(sortedTerms);
+			return BUILTIN.createToInteger(functionalTerms);
 		case TO_IRI:
-			return BUILTIN.createToIRI(sortedTerms);
+			return BUILTIN.createToIRI(functionalTerms);
 		case TO_STRING:
-			return BUILTIN.createToString(sortedTerms);
+			return BUILTIN.createToString(functionalTerms);
 		case TO_TEXT:
-			return BUILTIN.createToText(sortedTerms);
+			return BUILTIN.createToText(functionalTerms);
 		case TO_TIME:
-			return BUILTIN.createToTime(sortedTerms);
+			return BUILTIN.createToTime(functionalTerms);
 		case TO_XMLLITERAL:
-			return BUILTIN.createToXMLLiteral(sortedTerms);
+			return BUILTIN.createToXMLLiteral(functionalTerms);
 		case TO_YEARMONTHDURATION:
-			return BUILTIN.createToYearMonthDuration(sortedTerms);
+			return BUILTIN.createToYearMonthDuration(functionalTerms);
 		// end of TO_DATATYPE part
 		case DAY_PART:
-			return BUILTIN.createDayPart(sortedTerms);
+			return BUILTIN.createDayPart(functionalTerms);
 		case HOUR_PART:
-			return BUILTIN.createHourPart(sortedTerms);
+			return BUILTIN.createHourPart(functionalTerms);
 		case YEAR_PART:
-			return BUILTIN.createYearPart(sortedTerms);
+			return BUILTIN.createYearPart(functionalTerms);
 		case TIMEZONE_PART:
-			return BUILTIN.createTimezonePart(sortedTerms);
+			return BUILTIN.createTimezonePart(functionalTerms);
 		case SECOND_PART:
-			return BUILTIN.createSecondPart(sortedTerms);
+			return BUILTIN.createSecondPart(functionalTerms);
 		case MINUTE_PART:
-			return BUILTIN.createMinutePart(sortedTerms);
+			return BUILTIN.createMinutePart(functionalTerms);
 		case MONTH_PART:
-			return BUILTIN.createMonthPart(sortedTerms);
+			return BUILTIN.createMonthPart(functionalTerms);
 		case TEXT_COMPARE:
-			return BUILTIN.createTextCompare(sortedTerms);
+			return BUILTIN.createTextCompare(functionalTerms);
 		case TEXT_EQUAL:
-			return BUILTIN.createEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createEqual(booleanTerms);
 		case TEXT_INEQUAL:
-			return BUILTIN.createUnequal(terms.get(0), terms.get(1));
+			return BUILTIN.createUnequal(booleanTerms);
 		case TEXT_FROM_STRING:
-			return BUILTIN.createTextFromString(sortedTerms);
+			return BUILTIN.createTextFromString(functionalTerms);
 		case TEXT_FROM_STRING_LANG:
-			return BUILTIN.createTextFromStringLang(sortedTerms);
+			return BUILTIN.createTextFromStringLang(functionalTerms);
 		case TEXT_LENGTH:
-			return BUILTIN.createTextLength(sortedTerms);
+			return BUILTIN.createTextLength(functionalTerms);
 		case LANG_FROM_TEXT:
-			return BUILTIN.createLangFromText(sortedTerms);
+			return BUILTIN.createLangFromText(functionalTerms);
 		case STRING_FROM_TEXT:
-			return BUILTIN.createStringFromText(sortedTerms);
+			return BUILTIN.createStringFromText(functionalTerms);
 		// IS_DATATYPE part
 		case IS_BASE64BINARY:
-			return BUILTIN.createIsBase64Binary(sortedTerms);
+			return BUILTIN.createIsBase64Binary(functionalTerms);
 		case IS_BOOLEAN:
-			return BUILTIN.createIsBoolean(sortedTerms);
+			return BUILTIN.createIsBoolean(functionalTerms);
 		case IS_DATATYPE:
-			return BUILTIN.createIsDatatype(sortedTerms);
+			return BUILTIN.createIsDatatype(functionalTerms);
 		case IS_DATE:
-			return BUILTIN.createIsDate(sortedTerms);
+			return BUILTIN.createIsDate(functionalTerms);
 		case IS_DATETIME:
-			return BUILTIN.createIsDateTime(sortedTerms);
+			return BUILTIN.createIsDateTime(functionalTerms);
 		case IS_DAYTIMEDURATION:  
-			return BUILTIN.createIsDayTimeDuration(sortedTerms);
+			return BUILTIN.createIsDayTimeDuration(functionalTerms);
 		case IS_YEARMONTHDURATION:
-			return BUILTIN.createIsYearMonthDuration(sortedTerms);
+			return BUILTIN.createIsYearMonthDuration(functionalTerms);
 		case IS_DECIMAL:
-			return BUILTIN.createIsDecimal(sortedTerms);
+			return BUILTIN.createIsDecimal(functionalTerms);
 		case IS_DOUBLE:
-			return BUILTIN.createIsDouble(sortedTerms);
+			return BUILTIN.createIsDouble(functionalTerms);
 		case IS_DURATION:
-			return BUILTIN.createIsDuration(sortedTerms);
+			return BUILTIN.createIsDuration(functionalTerms);
 		case IS_FLOAT:
-			return BUILTIN.createIsFloat(sortedTerms);
+			return BUILTIN.createIsFloat(functionalTerms);
 		case IS_GDAY:
-			return BUILTIN.createIsGDay(sortedTerms);
+			return BUILTIN.createIsGDay(functionalTerms);
 		case IS_GMONTH:
-			return BUILTIN.createIsGMonth(sortedTerms);
+			return BUILTIN.createIsGMonth(functionalTerms);
 		case IS_GMONTHDAY:
-			return BUILTIN.createIsGMonthDay(sortedTerms);
+			return BUILTIN.createIsGMonthDay(functionalTerms);
 		case IS_GYEAR:
-			return BUILTIN.createIsGYear(sortedTerms);
+			return BUILTIN.createIsGYear(functionalTerms);
 		case IS_GYEARMONTH:
-			return BUILTIN.createIsGYearMonth(sortedTerms);
+			return BUILTIN.createIsGYearMonth(functionalTerms);
 		case IS_HEXBINARY:
-			return BUILTIN.createIsHexBinary(sortedTerms);
+			return BUILTIN.createIsHexBinary(functionalTerms);
 		case IS_INTEGER:
-			return BUILTIN.createIsInteger(sortedTerms);
+			return BUILTIN.createIsInteger(functionalTerms);
 		case IS_IRI:
-			return BUILTIN.createIsIRI(sortedTerms);
+			return BUILTIN.createIsIRI(functionalTerms);
 		case IS_NOT_DATATYPE:
-			return BUILTIN.createIsNotDatatype(sortedTerms);
+			return BUILTIN.createIsNotDatatype(functionalTerms);
 		case IS_STRING:
-			return BUILTIN.createIsString(sortedTerms);
+			return BUILTIN.createIsString(functionalTerms);
 		case IS_PLAINLITERAL:
-			return BUILTIN.createIsPlainLiteral(sortedTerms);
+			return BUILTIN.createIsPlainLiteral(functionalTerms);
 		case IS_TIME:
-			return BUILTIN.createIsTime(sortedTerms);
+			return BUILTIN.createIsTime(functionalTerms);
 		case IS_XMLLITERAL:
-			return BUILTIN.createIsXMLLiteral(sortedTerms);
+			return BUILTIN.createIsXMLLiteral(functionalTerms);
 		
 		default:
 			throw new InternalReasonerException("WSML Built-in: " + wsmlBuiltIn.getName() + " not yet supported!");
@@ -344,101 +348,104 @@ public class BuiltinHelper {
 		// http://www.w3.org/2005/rules/wiki/DTB
 		// 
 		
-		// terms for built-ins with boolean output.
-		ITerm[] wsmlTerms = toArray(terms);
-		// in wsml return value is on first position - in iris on last position.
-		ITerm[] sortedTerms = toArray(sortListForIRIS(terms));
+		// term array for boolean built-ins.
+		ITerm[] booleanTerms = toArray(terms);
+		
+		// term array for functional built-ins:
+		// in wsml return value is on first position - in iris on last position,
+		// thus sort list for iris
+		ITerm[] functionalTerms = toArray(sortListForIRIS(terms));
 		
 		switch (rifbuiltIn) {
 		case ADD_DAYTIMEDURATIONS: 
-			return BUILTIN.createAddDayTimeDurations(sortedTerms);
+			return BUILTIN.createAddDayTimeDurations(functionalTerms);
 		case ADD_DAYTIMEDURATION_TO_DATE:
-			return BUILTIN.createAddDayTimeDurationToDate(sortedTerms);
+			return BUILTIN.createAddDayTimeDurationToDate(functionalTerms);
 		case ADD_DAYTIMEDURATION_TO_TIME:
-			return BUILTIN.createAddDayTimeDurationToTime(sortedTerms);
+			return BUILTIN.createAddDayTimeDurationToTime(functionalTerms);
 		case ADD_DAYTIMEDURATION_TO_DATETIME:
-			return BUILTIN.createAddDayTimeDurationToDateTime(sortedTerms);
+			return BUILTIN.createAddDayTimeDurationToDateTime(functionalTerms);
 		case ADD_YEARMONTHDURATIONS:
-			return BUILTIN.createAddYearMonthDurations(sortedTerms);
+			return BUILTIN.createAddYearMonthDurations(functionalTerms);
 		case ADD_YEARMONTHDURATION_TO_DATE:
-			return BUILTIN.createAddYearMonthDurationToDate(sortedTerms);
+			return BUILTIN.createAddYearMonthDurationToDate(functionalTerms);
 		case ADD_YEARMONTHDURATION_TO_DATETIME:
-			return BUILTIN.createAddYearMonthDurationToDateTime(sortedTerms);
+			return BUILTIN.createAddYearMonthDurationToDateTime(functionalTerms);
 		case BOOLEAN_EQUAL:
-			return BUILTIN.createBooleanEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createBooleanEqual(booleanTerms);
 		case BOOLEAN_GREATER_THAN:
-			return BUILTIN.createBooleanGreater(terms.get(0), terms.get(1));
+			return BUILTIN.createBooleanGreater(booleanTerms);
 		case BOOLEAN_LESS_THAN:
-			return BUILTIN.createBooleanLess(terms.get(0), terms.get(1));
+			return BUILTIN.createBooleanLess(booleanTerms);
 			
 			// RIF String builtins
 		case COMPARE:
-			return BUILTIN.createStringCompare(sortedTerms);
+			return BUILTIN.createStringCompare(functionalTerms);
 		case CONCAT:
-			return BUILTIN.createStringConcat(sortedTerms);
+			return BUILTIN.createStringConcat(functionalTerms);
 		case CONCATENATE: 
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
 		case CONTAINS:
-			return BUILTIN.createStringContains(terms.get(0), terms.get(1));
+			return BUILTIN.createStringContains(booleanTerms);
 		case DATE_EQUAL:
-			return BUILTIN.createDateEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createDateEqual(booleanTerms);
 		case DATE_NOT_EQUAL:
-			return BUILTIN.createDateNotEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createDateNotEqual(booleanTerms);
 		case DATE_GREATER_THAN:
-			return BUILTIN.createDateGreater(terms.get(0), terms.get(1));
+			return BUILTIN.createDateGreater(booleanTerms);
 		case DATE_GREATER_THAN_OR_EQUAL:
-			return BUILTIN.createDateGreaterEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createDateGreaterEqual(booleanTerms);
 		case DATE_LESS_THAN:
-			return BUILTIN.createDateLess(terms.get(0), terms.get(1));
+			return BUILTIN.createDateLess(booleanTerms);
 		case DATE_LESS_THAN_OR_EQUAL:
-			return BUILTIN.createDateLessEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createDateLessEqual(booleanTerms);
 		case DATETIME_EQUAL:
-			return BUILTIN.createDateTimeEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createDateTimeEqual(booleanTerms);
 		case DATETIME_NOT_EQUAL:
-			return BUILTIN.createDateTimeNotEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createDateTimeNotEqual(booleanTerms);
 		case DATETIME_GREATER_THAN:
-			return BUILTIN.createDateTimeGreater(terms.get(0), terms.get(1));
+			return BUILTIN.createDateTimeGreater(booleanTerms);
 		case DATETIME_GREATER_THAN_OR_EQUAL:
-			return BUILTIN.createDateTimeGreaterEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createDateTimeGreaterEqual(booleanTerms);
 		case DATETIME_LESS_THAN:
-			return BUILTIN.createDateTimeLess(terms.get(0), terms.get(1));
+			return BUILTIN.createDateTimeLess(booleanTerms);
 		case DATETIME_LESS_THAN_OR_EQUAL:
-			return BUILTIN.createDateTimeLessEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createDateTimeLessEqual(booleanTerms);
 		case DAY_FROM_DATE:
-			return BUILTIN.createDayFromDate(sortedTerms);
+			return BUILTIN.createDayFromDate(functionalTerms);
 		case DAY_FROM_DATETIME:
-			return BUILTIN.createDayFromDateTime(sortedTerms);
+			return BUILTIN.createDayFromDateTime(functionalTerms);
 		case DAYS_FROM_DURATION:
-			return BUILTIN.createDaysFromDuration(sortedTerms);
+			return BUILTIN.createDaysFromDuration(functionalTerms);
 		case DAYTIMEDURATION_GREATER_THAN:
-			return BUILTIN.createDayTimeDurationGreater(terms.get(0), terms.get(1));
+			return BUILTIN.createDayTimeDurationGreater(booleanTerms);
 		case DAYTIMEDURATION_GREATER_THAN_OR_EQUAL:
-			return BUILTIN.createDayTimeDurationGreaterEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createDayTimeDurationGreaterEqual(booleanTerms);
 		case DAYTIMEDURATION_LESS_THAN:
-			return BUILTIN.createDayTimeDurationLess(terms.get(0), terms.get(1));
+			return BUILTIN.createDayTimeDurationLess(booleanTerms);
 		case DAYTIMEDURATION_LESS_THAN_OR_EQUAL:
-			return BUILTIN.createDayTimeDurationLessEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createDayTimeDurationLessEqual(booleanTerms);
 		case DISTINCT_VALUES: 
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
 //			return BUILTIN.createDistinctValues(wsmlTerms);
 		case DIVIDE_DAYTIMEDURATION:
-			return BUILTIN.createDayTimeDurationDivide(sortedTerms);
+			return BUILTIN.createDayTimeDurationDivide(functionalTerms);
 		case DIVIDE_DAYTIMEDURATION_BY_DAYTIMEDURATION:
-			return BUILTIN.createDayTimeDurationDivideByDayTimeDuration(sortedTerms);
+			return BUILTIN.createDayTimeDurationDivideByDayTimeDuration(functionalTerms);
 		case DIVIDE_YEARMONTHDURATION:
-			return BUILTIN.createYearMonthDurationDivide(sortedTerms);
+			return BUILTIN.createYearMonthDurationDivide(functionalTerms);
 		case DIVIDE_YEARMONTHDURATION_BY_YEARMONTHDURATION:
-			return BUILTIN.createYearMonthDurationDivideByYearMonthDuration(sortedTerms);
+			return BUILTIN.createYearMonthDurationDivideByYearMonthDuration(functionalTerms);
 		case DURATION_EQUAL:
-			return BUILTIN.createDurationEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createDurationEqual(booleanTerms);
 		case DURATION_NOT_EQUAL:
-			return BUILTIN.createDurationNotEqual(terms.get(0), terms.get(1));
+			return BUILTIN.createDurationNotEqual(booleanTerms);
 		case ENCODE_FOR_URI:
-			return BUILTIN.createStringUriEncode(sortedTerms);
+			return BUILTIN.createStringUriEncode(functionalTerms);
 		case ENDS_WITH:
-			return BUILTIN.createStringEndsWith(terms.get(0), terms.get(1));
+			return BUILTIN.createStringEndsWith(booleanTerms);
 		case ESCAPE_HTML_URI:
-			return BUILTIN.createStringEscapeHtmlUri(sortedTerms);
+			return BUILTIN.createStringEscapeHtmlUri(functionalTerms);
 		case EXCEPT: 
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
 //			return BUILTIN.createExceptValues(wsmlTerms);
@@ -446,317 +453,317 @@ public class BuiltinHelper {
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
 //			return BUILTIN.createGet(wsmlTerms);
 		case HOURS_FROM_DATETIME:
-			return BUILTIN.createHoursFromDateTime(sortedTerms);
+			return BUILTIN.createHoursFromDateTime(functionalTerms);
 		case HOURS_FROM_DURATION:
-			return BUILTIN.createHoursFromDuration(sortedTerms);
+			return BUILTIN.createHoursFromDuration(functionalTerms);
 		case HOURS_FROM_TIME:
-			return BUILTIN.createHoursFromTime(sortedTerms);
+			return BUILTIN.createHoursFromTime(functionalTerms);
 		case INDEX_OF:
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-//			return BUILTIN.createIndexOf(sortedTerms);
+//			return BUILTIN.createIndexOf(functionalTerms);
 		case INSERT_BEFORE: 
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-//			return BUILTIN.createInsertBefore(sortedTerms);
+//			return BUILTIN.createInsertBefore(functionalTerms);
 		case INTERSECT: 
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-//			return BUILTIN.createIntersect(sortedTerms);
+//			return BUILTIN.createIntersect(functionalTerms);
 		case IRI_STRING:
-			return BUILTIN.createIriString(sortedTerms);
+			return BUILTIN.createIriString(functionalTerms);
 		case IRI_TO_URI:
-			return BUILTIN.createStringIriToUri(sortedTerms);
+			return BUILTIN.createStringIriToUri(functionalTerms);
 		case IS_LIST: 
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-//			return BUILTIN.createIsList(sortedTerms);
+//			return BUILTIN.createIsList(functionalTerms);
 		case IS_LITERAL_ANYURI:
-			return BUILTIN.createIsAnyURI(wsmlTerms);
+			return BUILTIN.createIsAnyURI(booleanTerms);
 		case IS_LITERAL_BASE64BINARY:
-			return BUILTIN.createIsBase64Binary(wsmlTerms);
+			return BUILTIN.createIsBase64Binary(booleanTerms);
 		case IS_LITERAL_BOOLEAN:
-			return BUILTIN.createIsBoolean(wsmlTerms);
+			return BUILTIN.createIsBoolean(booleanTerms);
 		case IS_LITERAL_BYTE:
-			return BUILTIN.createIsByte(wsmlTerms);
+			return BUILTIN.createIsByte(booleanTerms);
 		case IS_LITERAL_DATE:
-			return BUILTIN.createIsDate(wsmlTerms);
+			return BUILTIN.createIsDate(booleanTerms);
 		case IS_LITERAL_DATETIME:
-			return BUILTIN.createIsDateTime(wsmlTerms);
+			return BUILTIN.createIsDateTime(booleanTerms);
 		case IS_LITERAL_DATETIMESTAMP:
-			return BUILTIN.createIsDateTimeStamp(wsmlTerms);
+			return BUILTIN.createIsDateTimeStamp(booleanTerms);
 		case IS_LITERAL_DAYTIMEDURATION:
-			return BUILTIN.createIsDayTimeDuration(wsmlTerms);
+			return BUILTIN.createIsDayTimeDuration(booleanTerms);
 		case IS_LITERAL_DECIMAL:
-			return BUILTIN.createIsDecimal(wsmlTerms);
+			return BUILTIN.createIsDecimal(booleanTerms);
 		case IS_LITERAL_DOUBLE:
-			return BUILTIN.createIsDouble(wsmlTerms);
+			return BUILTIN.createIsDouble(booleanTerms);
 		case IS_LITERAL_FLOAT:
-			return BUILTIN.createIsFloat(wsmlTerms);
+			return BUILTIN.createIsFloat(booleanTerms);
 		case IS_LITERAL_HEXBINARY:
-			return BUILTIN.createIsHexBinary(wsmlTerms);
+			return BUILTIN.createIsHexBinary(booleanTerms);
 		case IS_LITERAL_INT:
-			return BUILTIN.createIsInt(wsmlTerms);
+			return BUILTIN.createIsInt(booleanTerms);
 		case IS_LITERAL_INTEGER:
-			return BUILTIN.createIsInteger(wsmlTerms);
+			return BUILTIN.createIsInteger(booleanTerms);
 		case IS_LITERAL_LANGUAGE:
-			return BUILTIN.createIsLanguage(wsmlTerms);
+			return BUILTIN.createIsLanguage(booleanTerms);
 		case IS_LITERAL_LONG:
-			return BUILTIN.createIsLong(wsmlTerms);
+			return BUILTIN.createIsLong(booleanTerms);
 		case IS_LITERAL_NAME:
-			return BUILTIN.createIsName(wsmlTerms);
+			return BUILTIN.createIsName(booleanTerms);
 		case IS_LITERAL_NCNAME:
-			return BUILTIN.createIsNCName(wsmlTerms);
+			return BUILTIN.createIsNCName(booleanTerms);
 		case IS_LITERAL_NEGATIVEINTEGER:
-			return BUILTIN.createIsNegativeInteger(wsmlTerms);
+			return BUILTIN.createIsNegativeInteger(booleanTerms);
 		case IS_LITERAL_NMTOKEN:
-			return BUILTIN.createIsNMTOKEN(wsmlTerms);
+			return BUILTIN.createIsNMTOKEN(booleanTerms);
 		case IS_LITERAL_NONNEGATIVEINTEGER:
-			return BUILTIN.createIsNonNegativeInteger(wsmlTerms);
+			return BUILTIN.createIsNonNegativeInteger(booleanTerms);
 		case IS_LITERAL_NONPOSITIVEINTEGER:
-			return BUILTIN.createIsNonPositiveInteger(wsmlTerms);
+			return BUILTIN.createIsNonPositiveInteger(booleanTerms);
 		case IS_LITERAL_NORMALIZEDSTRING:
-			return BUILTIN.createIsNormalizedString(wsmlTerms);
+			return BUILTIN.createIsNormalizedString(booleanTerms);
 		case IS_LITERAL_NOT_ANYURI:
-			return BUILTIN.createIsNotAnyURI(wsmlTerms);
+			return BUILTIN.createIsNotAnyURI(booleanTerms);
 		case IS_LITERAL_NOT_BASE64BINARY:
-			return BUILTIN.createIsNotBase64Binary(wsmlTerms);
+			return BUILTIN.createIsNotBase64Binary(booleanTerms);
 		case IS_LITERAL_NOT_BOOLEAN:
-			return BUILTIN.createIsNotBoolean(wsmlTerms);
+			return BUILTIN.createIsNotBoolean(booleanTerms);
 		case IS_LITERAL_NOT_BYTE:
-			return BUILTIN.createIsNotByte(wsmlTerms);
+			return BUILTIN.createIsNotByte(booleanTerms);
 		case IS_LITERAL_NOT_DATE:
-			return BUILTIN.createIsNotDate(wsmlTerms);
+			return BUILTIN.createIsNotDate(booleanTerms);
 		case IS_LITERAL_NOT_DATETIME:
-			return BUILTIN.createIsNotDateTime(wsmlTerms);
+			return BUILTIN.createIsNotDateTime(booleanTerms);
 		case IS_LITERAL_NOT_DATETIMESTAMP:
-			return BUILTIN.createIsNotDateTimeStamp(wsmlTerms);
+			return BUILTIN.createIsNotDateTimeStamp(booleanTerms);
 		case IS_LITERAL_NOT_DAYTIMEDURATION:
-			return BUILTIN.createIsNotDayTimeDuration(wsmlTerms);
+			return BUILTIN.createIsNotDayTimeDuration(booleanTerms);
 		case IS_LITERAL_NOT_DECIMAL:
-			return BUILTIN.createIsNotDecimal(wsmlTerms);
+			return BUILTIN.createIsNotDecimal(booleanTerms);
 		case IS_LITERAL_NOT_DOUBLE:
-			return BUILTIN.createIsNotDouble(wsmlTerms);
+			return BUILTIN.createIsNotDouble(booleanTerms);
 		case IS_LITERAL_NOT_FLOAT:
-			return BUILTIN.createIsNotFloat(wsmlTerms);
+			return BUILTIN.createIsNotFloat(booleanTerms);
 		case IS_LITERAL_NOT_HEXBINARY:
-			return BUILTIN.createIsNotHexBinary(wsmlTerms);
+			return BUILTIN.createIsNotHexBinary(booleanTerms);
 		case IS_LITERAL_NOT_INTEGER:
-			return BUILTIN.createIsNotInteger(wsmlTerms);
+			return BUILTIN.createIsNotInteger(booleanTerms);
 		case IS_LITERAL_NOT_INT:
-			return BUILTIN.createIsNotInt(wsmlTerms);
+			return BUILTIN.createIsNotInt(booleanTerms);
 		case IS_LITERAL_NOT_LANGUAGE:
-			return BUILTIN.createIsNotLanguage(wsmlTerms);
+			return BUILTIN.createIsNotLanguage(booleanTerms);
 		case IS_LITERAL_NOT_LONG:
-			return BUILTIN.createIsNotLong(wsmlTerms);
+			return BUILTIN.createIsNotLong(booleanTerms);
 		case IS_LITERAL_NOT_NAME:
-			return BUILTIN.createIsNotName(wsmlTerms);
+			return BUILTIN.createIsNotName(booleanTerms);
 		case IS_LITERAL_NOT_NCNAME:
-			return BUILTIN.createIsNotNCName(wsmlTerms);
+			return BUILTIN.createIsNotNCName(booleanTerms);
 		case IS_LITERAL_NOT_NEGATIVEINTEGER:
-			return BUILTIN.createIsNotNegativeInteger(wsmlTerms);
+			return BUILTIN.createIsNotNegativeInteger(booleanTerms);
 		case IS_LITERAL_NOT_NMTOKEN:
-			return BUILTIN.createIsNotNMTOKEN(wsmlTerms);
+			return BUILTIN.createIsNotNMTOKEN(booleanTerms);
 		case IS_LITERAL_NOT_NONNEGATIVEINTEGER:
-			return BUILTIN.createIsNotNonNegativeInteger(wsmlTerms);
+			return BUILTIN.createIsNotNonNegativeInteger(booleanTerms);
 		case IS_LITERAL_NOT_NONPOSITIVEINTEGER:
-			return BUILTIN.createIsNotNonPositiveInteger(wsmlTerms);
+			return BUILTIN.createIsNotNonPositiveInteger(booleanTerms);
 		case IS_LITERAL_NOT_NORMALIZEDSTRING:
-			return BUILTIN.createIsNotNormalizedString(wsmlTerms);
+			return BUILTIN.createIsNotNormalizedString(booleanTerms);
 		case IS_LITERAL_NOT_PLAINLITERAL:
-			return BUILTIN.createIsNotPlainLiteral(wsmlTerms);
+			return BUILTIN.createIsNotPlainLiteral(booleanTerms);
 		case IS_LITERAL_NOT_POSITIVEINTEGER:
-			return BUILTIN.createIsNotPositiveInteger(wsmlTerms);
+			return BUILTIN.createIsNotPositiveInteger(booleanTerms);
 		case IS_LITERAL_NOT_SHORT:
-			return BUILTIN.createIsNotShort(wsmlTerms);
+			return BUILTIN.createIsNotShort(booleanTerms);
 		case IS_LITERAL_NOT_STRING:
-			return BUILTIN.createIsNotString(wsmlTerms);
+			return BUILTIN.createIsNotString(booleanTerms);
 		case IS_LITERAL_NOT_TIME:
-			return BUILTIN.createIsNotTime(wsmlTerms);
+			return BUILTIN.createIsNotTime(booleanTerms);
 		case IS_LITERAL_NOT_TOKEN:
-			return BUILTIN.createIsNotToken(wsmlTerms);
+			return BUILTIN.createIsNotToken(booleanTerms);
 		case IS_LITERAL_NOT_UNSIGNEDBYTE:
-			return BUILTIN.createIsNotUnsignedByte(wsmlTerms);
+			return BUILTIN.createIsNotUnsignedByte(booleanTerms);
 		case IS_LITERAL_NOT_UNSIGNEDINT:
-			return BUILTIN.createIsNotUnsignedInt(wsmlTerms);
+			return BUILTIN.createIsNotUnsignedInt(booleanTerms);
 		case IS_LITERAL_NOT_UNSIGNEDLONG:
-			return BUILTIN.createIsNotUnsignedLong(wsmlTerms);
+			return BUILTIN.createIsNotUnsignedLong(booleanTerms);
 		case IS_LITERAL_NOT_UNSIGNEDSHORT:
-			return BUILTIN.createIsNotUnsignedShort(wsmlTerms);
+			return BUILTIN.createIsNotUnsignedShort(booleanTerms);
 		case IS_LITERAL_NOT_XMLLITERAL:
-			return BUILTIN.createIsNotXMLLiteral(wsmlTerms);
+			return BUILTIN.createIsNotXMLLiteral(booleanTerms);
 		case IS_LITERAL_NOT_YEARMONTHDURATION:
-			return BUILTIN.createIsNotYearMonthDuration(wsmlTerms);
+			return BUILTIN.createIsNotYearMonthDuration(booleanTerms);
 		case IS_LITERAL_PLAINLITERAL:
-			return BUILTIN.createIsPlainLiteral(wsmlTerms);
+			return BUILTIN.createIsPlainLiteral(booleanTerms);
 		case IS_LITERAL_POSITIVEINTEGER:
-			return BUILTIN.createIsPositiveInteger(wsmlTerms);
+			return BUILTIN.createIsPositiveInteger(booleanTerms);
 		case IS_LITERAL_SHORT:
-			return BUILTIN.createIsShort(wsmlTerms);
+			return BUILTIN.createIsShort(booleanTerms);
 		case IS_LITERAL_STRING:
-			return BUILTIN.createIsString(wsmlTerms);
+			return BUILTIN.createIsString(booleanTerms);
 		case IS_LITERAL_TIME:
-			return BUILTIN.createIsTime(wsmlTerms);
+			return BUILTIN.createIsTime(booleanTerms);
 		case IS_LITERAL_TOKEN:
-			return BUILTIN.createIsToken(wsmlTerms);
+			return BUILTIN.createIsToken(booleanTerms);
 		case IS_LITERAL_UNSIGNEDBYTE:
-			return BUILTIN.createIsUnsignedByte(wsmlTerms);
+			return BUILTIN.createIsUnsignedByte(booleanTerms);
 		case IS_LITERAL_UNSIGNEDINT:
-			return BUILTIN.createIsUnsignedInt(wsmlTerms);
+			return BUILTIN.createIsUnsignedInt(booleanTerms);
 		case IS_LITERAL_UNSIGNEDLONG:
-			return BUILTIN.createIsUnsignedLong(wsmlTerms);
+			return BUILTIN.createIsUnsignedLong(booleanTerms);
 		case IS_LITERAL_UNSIGNEDSHORT:
-			return BUILTIN.createIsUnsignedShort(wsmlTerms);
+			return BUILTIN.createIsUnsignedShort(booleanTerms);
 		case IS_LITERAL_XMLLITERAL:
-			return BUILTIN.createIsXMLLiteral(wsmlTerms);
+			return BUILTIN.createIsXMLLiteral(booleanTerms);
 		case IS_LITERAL_YEARMONTHDURATION:
-			return BUILTIN.createIsYearMonthDuration(wsmlTerms);
+			return BUILTIN.createIsYearMonthDuration(booleanTerms);
 		case LANG_FROM_PLAINLITERAL: 				
-			return BUILTIN.createLangFromText(sortedTerms);
+			return BUILTIN.createLangFromText(functionalTerms);
 		case LIST_CONTAINS: 
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
 		case LITERAL_NOT_IDENTICAL: 
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
 		case LOWER_CASE:
-			return BUILTIN.createStringToLower(sortedTerms);
+			return BUILTIN.createStringToLower(functionalTerms);
 		case MAKE_LISTS: 
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
 		case MATCHES:
-			return BUILTIN.createStringMatches(wsmlTerms);
+			return BUILTIN.createStringMatches(booleanTerms);
 		case MATCHES_LANGUAGE_RANGE: 
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
 		case MINUTES_FROM_DATETIME:
-			return BUILTIN.createMinutesFromDateTime(sortedTerms);
+			return BUILTIN.createMinutesFromDateTime(functionalTerms);
 		case MINUTES_FROM_DURATION:
-			return BUILTIN.createMinutesFromDuration(sortedTerms);
+			return BUILTIN.createMinutesFromDuration(functionalTerms);
 		case MINUTES_FROM_TIME:
-			return BUILTIN.createMinutesFromTime(sortedTerms);
+			return BUILTIN.createMinutesFromTime(functionalTerms);
 		case MONTH_FROM_DATE:
-			return BUILTIN.createMonthFromDate(sortedTerms);
+			return BUILTIN.createMonthFromDate(functionalTerms);
 		case MONTH_FROM_DATETIME:
-			return BUILTIN.createMonthFromDateTime(sortedTerms);
+			return BUILTIN.createMonthFromDateTime(functionalTerms);
 		case MONTHS_FROM_DURATION:
-			return BUILTIN.createMonthsFromDuration(sortedTerms);
+			return BUILTIN.createMonthsFromDuration(functionalTerms);
 		case MULTIPLY_DAYTIMEDURATION: 
-			return BUILTIN.createDayTimeDurationMultiply(sortedTerms);
+			return BUILTIN.createDayTimeDurationMultiply(functionalTerms);
 		case MULTIPLY_YEARMONTHDURATION:
-			return BUILTIN.createYearMonthDurationMultiply(sortedTerms);
+			return BUILTIN.createYearMonthDurationMultiply(functionalTerms);
 		case NOT:
-			return BUILTIN.createBooleanNot(wsmlTerms);
+			return BUILTIN.createBooleanNot(booleanTerms);
 		case NUMERIC_ADD:
-			return BUILTIN.createNumericAdd(sortedTerms);
+			return BUILTIN.createNumericAdd(functionalTerms);
 		case NUMERIC_DIVIDE:
-			return BUILTIN.createNumericDivide(sortedTerms);
+			return BUILTIN.createNumericDivide(functionalTerms);
 		case NUMERIC_INTEGER_DIVIDE:
-			return BUILTIN.createNumericIntegerDivide(sortedTerms);
+			return BUILTIN.createNumericIntegerDivide(functionalTerms);
 		case NUMERIC_EQUAL:
-			return BUILTIN.createNumericEqual(wsmlTerms);
+			return BUILTIN.createNumericEqual(booleanTerms);
 		case NUMERIC_GREATER_THAN:
-			return BUILTIN.createNumericGreater(wsmlTerms);
+			return BUILTIN.createNumericGreater(booleanTerms);
 		case NUMERIC_GREATER_THAN_OR_EQUAL:
-			return BUILTIN.createNumericGreaterEqual(wsmlTerms);
+			return BUILTIN.createNumericGreaterEqual(booleanTerms);
 		case NUMERIC_LESS_THAN:
-			return BUILTIN.createNumericLess(wsmlTerms);
+			return BUILTIN.createNumericLess(booleanTerms);
 		case NUMERIC_LESS_THAN_OR_EQUAL:
-			return BUILTIN.createNumericLessEqual(wsmlTerms);
+			return BUILTIN.createNumericLessEqual(booleanTerms);
 		case NUMERIC_MOD:
-			return BUILTIN.createNumericModulus(sortedTerms);
+			return BUILTIN.createNumericModulus(functionalTerms);
 		case NUMERIC_MULTIPLY:
-			return BUILTIN.createNumericMultiply(sortedTerms);
+			return BUILTIN.createNumericMultiply(functionalTerms);
 		case NUMERIC_NOT_EQUAL:
-			return BUILTIN.createNumericNotEqual(wsmlTerms);
+			return BUILTIN.createNumericNotEqual(booleanTerms);
 		case NUMERIC_SUBTRACT:
-			return BUILTIN.createNumericSubtract(sortedTerms);
+			return BUILTIN.createNumericSubtract(functionalTerms);
 		case PLAINLITERAL_COMPARE:						
-			return BUILTIN.createTextCompare(sortedTerms);
+			return BUILTIN.createTextCompare(functionalTerms);
 		case PLAINLITERAL_FROM_STRING_LANG: 			
-			return BUILTIN.createLangFromText(sortedTerms);
+			return BUILTIN.createLangFromText(functionalTerms); // FIXME different builtin!
 		case PLAINLITERAL_LENGTH:
-			return BUILTIN.createTextLength(sortedTerms);
+			return BUILTIN.createTextLength(functionalTerms);
 		case REMOVE: 
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
 		case REPLACE:
-			return BUILTIN.createStringReplace(sortedTerms);
+			return BUILTIN.createStringReplace(functionalTerms);
 		case REVERSE: 
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
 		case SECONDS_FROM_DATETIME:
-			return BUILTIN.createSecondsFromDateTime(sortedTerms);
+			return BUILTIN.createSecondsFromDateTime(functionalTerms);
 		case SECONDS_FROM_DURATION:
-			return BUILTIN.createSecondsFromDuration(sortedTerms);
+			return BUILTIN.createSecondsFromDuration(functionalTerms);
 		case SECONDS_FROM_TIME:
-			return BUILTIN.createSecondsFromTime(sortedTerms);
+			return BUILTIN.createSecondsFromTime(functionalTerms);
 		case STARTS_WITH:
-			return BUILTIN.createStringStartsWith(wsmlTerms);
+			return BUILTIN.createStringStartsWith(booleanTerms);
 		case STRING_FROM_PLAINLITERAL: 				
-			return BUILTIN.createStringFromText(sortedTerms);
+			return BUILTIN.createStringFromText(functionalTerms);
 		case STRING_JOIN:
-			return BUILTIN.createStringJoin(sortedTerms);
+			return BUILTIN.createStringJoin(functionalTerms);
 		case STRING_LENGTH:
-			return BUILTIN.createStringLength(sortedTerms);
+			return BUILTIN.createStringLength(functionalTerms);
 		case SUBLIST: 
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
 		case SUBSTRING:
-			return BUILTIN.createStringSubstring(sortedTerms);
+			return BUILTIN.createStringSubstring(functionalTerms);
 		case SUBSTRING_AFTER:
-			return BUILTIN.createStringSubstringAfter(sortedTerms);
+			return BUILTIN.createStringSubstringAfter(functionalTerms);
 		case SUBSTRING_BEFORE:
-			return BUILTIN.createStringSubstringBefore(sortedTerms);
+			return BUILTIN.createStringSubstringBefore(functionalTerms);
 		case SUBTRACT_DATES:
-			return BUILTIN.createDateSubtract(sortedTerms);
+			return BUILTIN.createDateSubtract(functionalTerms);
 		case SUBTRACT_DATETIMES: 
-			return BUILTIN.createDateTimeSubtract(sortedTerms);
+			return BUILTIN.createDateTimeSubtract(functionalTerms);
 		case SUBTRACT_DAYTIMEDURATION_FROM_DATE:
-			return BUILTIN.createSubtractDayTimeDurationFromDate(sortedTerms);
+			return BUILTIN.createSubtractDayTimeDurationFromDate(functionalTerms);
 		case SUBTRACT_DAYTIMEDURATION_FROM_DATETIME:
-			return BUILTIN.createSubtractDayTimeDurationFromDateTime(sortedTerms);
+			return BUILTIN.createSubtractDayTimeDurationFromDateTime(functionalTerms);
 		case SUBTRACT_DAYTIMEDURATION_FROM_TIME:
-			return BUILTIN.createSubtractDayTimeDurationFromTime(sortedTerms);
+			return BUILTIN.createSubtractDayTimeDurationFromTime(functionalTerms);
 		case SUBTRACT_DAYTIMEDURATIONS: 
-			return BUILTIN.createDayTimeDurationSubtract(sortedTerms);
+			return BUILTIN.createDayTimeDurationSubtract(functionalTerms);
 		case SUBTRACT_TIMES: 
-			return BUILTIN.createTimeSubtract(sortedTerms);
+			return BUILTIN.createTimeSubtract(functionalTerms);
 		case SUBTRACT_YEARMONTHDURATION_FROM_DATE:
-			return BUILTIN.createSubtractYearMonthDurationFromDate(sortedTerms);
+			return BUILTIN.createSubtractYearMonthDurationFromDate(functionalTerms);
 		case SUBTRACT_YEARMONTHDURATION_FROM_DATETIME:
-			return BUILTIN.createSubtractYearMonthDurationFromDateTime(sortedTerms);
+			return BUILTIN.createSubtractYearMonthDurationFromDateTime(functionalTerms);
 		case SUBTRACT_YEARMONTHDURATIONS:
-			return BUILTIN.createYearMonthDurationSubtract(sortedTerms);
+			return BUILTIN.createYearMonthDurationSubtract(functionalTerms);
 		case TIME_EQUAL:
-			return BUILTIN.createTimeEqual(wsmlTerms);
+			return BUILTIN.createTimeEqual(booleanTerms);
 		case TIME_GREATER_THAN:
-			return BUILTIN.createTimeGreater(wsmlTerms);
+			return BUILTIN.createTimeGreater(booleanTerms);
 		case TIME_GREATER_THAN_OR_EQUAL:
-			return BUILTIN.createTimeGreaterEqual(wsmlTerms);
+			return BUILTIN.createTimeGreaterEqual(booleanTerms);
 		case TIME_LESS_THAN:
-			return BUILTIN.createTimeLess(wsmlTerms);
+			return BUILTIN.createTimeLess(booleanTerms);
 		case TIME_LESS_THAN_OR_EQUAL:
-			return BUILTIN.createTimeLessEqual(wsmlTerms);
+			return BUILTIN.createTimeLessEqual(booleanTerms);
 		case TIME_NOT_EQUAL:
-			return BUILTIN.createTimeNotEqual(wsmlTerms);
+			return BUILTIN.createTimeNotEqual(booleanTerms);
 		case TIMEZONE_FROM_DATE:
-			return BUILTIN.createTimezoneFromDate(sortedTerms);
+			return BUILTIN.createTimezoneFromDate(functionalTerms);
 		case TIMEZONE_FROM_DATETIME:
-			return BUILTIN.createTimezoneFromDateTime(sortedTerms);
+			return BUILTIN.createTimezoneFromDateTime(functionalTerms);
 		case TIMEZONE_FROM_TIME:
-			return BUILTIN.createTimezoneFromTime(sortedTerms);
+			return BUILTIN.createTimezoneFromTime(functionalTerms);
 		case UNION: 
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
 		case UPPER_CASE:
-			return BUILTIN.createStringToUpper(sortedTerms);
+			return BUILTIN.createStringToUpper(functionalTerms);
 		case XMLLITERAL_EQUAL:
-			return BUILTIN.createXMLLiteralEqual(wsmlTerms);
+			return BUILTIN.createXMLLiteralEqual(booleanTerms);
 		case XMLLITERAL_NOT_EQUAL:
-			return BUILTIN.createXMLLiteralNotEqual(wsmlTerms);
+			return BUILTIN.createXMLLiteralNotEqual(booleanTerms);
 		case YEAR_FROM_DATE:
-			return BUILTIN.createYearFromDate(sortedTerms);
+			return BUILTIN.createYearFromDate(functionalTerms);
 		case YEAR_FROM_DATETIME:
-			return BUILTIN.createYearFromDateTime(sortedTerms);
+			return BUILTIN.createYearFromDateTime(functionalTerms);
 		case YEARMONTHDURATION_GREATER_THAN:
-			return BUILTIN.createYearMonthDurationGreater(wsmlTerms);
+			return BUILTIN.createYearMonthDurationGreater(booleanTerms);
 		case YEARMONTHDURATION_GREATER_THAN_OR_EQUAL:
-			return BUILTIN.createYearMonthDurationGreaterEqual(wsmlTerms);
+			return BUILTIN.createYearMonthDurationGreaterEqual(booleanTerms);
 		case YEARMONTHDURATION_LESS_THAN:
-			return BUILTIN.createYearMonthDurationLess(wsmlTerms);
+			return BUILTIN.createYearMonthDurationLess(booleanTerms);
 		case YEARMONTHDURATION_LESS_THAN_OR_EQUAL:
-			return BUILTIN.createYearMonthDurationLessEqual(wsmlTerms);
+			return BUILTIN.createYearMonthDurationLessEqual(booleanTerms);
 		case YEARS_FROM_DURATION:
-			return BUILTIN.createYearsFromDuration(sortedTerms);
+			return BUILTIN.createYearsFromDuration(functionalTerms);
 		default:
 			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
 		}
