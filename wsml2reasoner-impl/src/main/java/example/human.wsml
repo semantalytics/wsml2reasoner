@@ -1,0 +1,198 @@
+namespace {_"http://www.example.org/example/",
+    dc _"http://purl.org/dc/elements/1.1#",
+    xsd _"http://www.w3.org/2001/XMLSchema#",
+    wsml _"http://www.wsmo.org/2004/wsml",
+    loc _"http://www.example.org/loc#",
+    oo _"http://www.example.org/oo#",
+    foaf _"http://www.example.org/foaf#"}
+
+ontology _"http://www.example.org/ontologies/example"
+      annotations
+            dc#title hasValue "WSML example ontology"
+            dc#subject hasValue "family"
+            dc#description hasValue "fragments of a family ontology to provide WSML examples"
+            dc#contributor hasValue { _"http://uibk.ac.at/~c703240/foaf.rdf",
+                  _"http://uibk.ac.at/~c703239/foaf.rdf",
+                  _"http://uibk.ac.at/~c703319/various/foaf.rdf" }
+            dc#date hasValue xsd#date(2004,11,22)
+            dc#format hasValue "text/html"
+            dc#language hasValue "en-US"
+            dc#rights hasValue _"http://www.deri.org/privacy.html"
+            wsml#version hasValue "$Revision: 1.17 $"
+      endAnnotations
+
+      /*
+       * This Concept illustrates the use of different styles of
+       * attributes.
+       */
+      concept Human
+            annotations
+                  dc#description hasValue "concept of a human being"
+            endAnnotations
+            hasName ofType foaf#name
+            hasRelative symmetric impliesType Human
+            hasAncestor transitive impliesType Human
+            hasParent inverseOf(hasChild) subAttributeOf(hasAncestor) impliesType Human 
+  			hasMother ofType FemaleHuman
+  			hasMother impliesType Mother
+            hasChild subAttributeOf(hasRelative) impliesType Human
+            hasWeightInKG ofType xsd#float
+            hasBirthdate ofType xsd#date
+            dateOfDeath ofType xsd#date
+            hasBirthplace ofType loc#location
+            isMarriedTo symmetric impliesType Human
+            hasCitizenship ofType oo#country
+            isAlive ofType xsd#boolean
+                        annotations
+                              dc#relation hasValue {IsAlive}
+                        endAnnotations
+
+      relation ageOfHuman (ofType Human, ofType _integer)
+             annotations
+                   dc#relation hasValue {FunctionalDependencyAge}
+             endAnnotations
+             
+      concept Man subConceptOf Human
+            annotations
+                  dc#relation hasValue ManDisjointWoman
+            endAnnotations
+
+      concept Woman subConceptOf Human
+            annotations
+                  dc#relation hasValue ManDisjointWoman
+            endAnnotations
+
+      /*
+       * Illustrating general disjointness between two classes
+       * via a constraint
+       */
+      axiom ManDisjointWoman
+            definedBy
+                  !- ?x memberOf Man and ?x memberOf Woman.
+
+      /*
+       * Refining a concept and restricting an existing attribute
+       */
+      concept Parent subConceptOf Human
+            annotations
+                  dc#description hasValue "Human with at least one child"
+            endAnnotations
+            hasChild impliesType Human
+
+      /*
+       * Using an axiom to define class membership and an additional
+       * axiom as constraint
+       */
+      concept Child subConceptOf Human
+            annotations
+                  dc#relation hasValue { ChildDef, ValidChild }
+            endAnnotations
+
+      /*
+       * Defining complete subclasses by use of axioms
+       */
+      concept Girl subConceptOf Woman
+            annotations
+                  dc#relation hasValue CompletenessOfChildren
+            endAnnotations
+
+      concept Boy
+            annotations
+                  dc#relation hasValue {ABoy,CompletenessOfChildren}
+            endAnnotations
+
+      /*
+       * This axiom implies that Boy is a Man and a Child and every Man which
+       * is also a Child is a Boy
+       */
+      axiom ABoy
+            definedBy
+                  ?x memberOf Boy equivalent ?x memberOf Man and ?x memberOf Child.
+
+      instance Mary memberOf {Parent, Woman}
+            annotations
+                  dc#description hasValue "Mary is parent of the twins Paul and Susan"
+            endAnnotations
+            hasName hasValue "Maria Smith"
+            hasBirthdate hasValue xsd#date(1949,09,12)
+            hasChild hasValue { Paul, Susan }
+
+      instance Paul memberOf { Parent, Man }
+            hasName hasValue "Paul Smith"
+            hasBirthdate hasValue xsd#date(1976,08,16)
+            hasChild hasValue George
+            hasCitizenship hasValue oo#de
+
+      instance Susan memberOf Woman
+            hasName hasValue "Susan Jones"
+            hasBirthdate hasValue xsd#date(1976,08,16)
+
+       /*
+        * This will be automatically an instance of Boy, since George is a
+        * Man younger than 14.
+        */
+      instance George memberOf Man
+            hasName hasValue "George Smith"
+            /*hasAncestor hasValue Mary - can be inferred from the rest of this example */
+            hasWeighthasWeightInKG hasValue 3.52
+            hasBirthdate hasValue xsd#date(1977,10,21)
+            
+		relationInstance ageOfHuman(George, 1)
+		
+
+/*****************************
+ * WEBSERVICE
+ *****************************/
+webService _"http://example.org/Germany/BirthRegistration"
+      annotations
+            dc#title hasValue "Birth registration service for Germany"
+            dc#type hasValue _"http://www.wsmo.org/TR/d2/v1.2/#services"
+            wsml#version hasValue "$Revision: 1.17 $"
+      endAnnotations
+
+      usesMediator { _"http://example.org/ooMediator" }
+
+      importsOntology { _"http://www.example.org/ontologies/example",
+            _"http://www.wsmo.org/ontologies/location" }
+            
+      nonFunctionalProperty
+        price hasValue ?price
+            annotations
+                  dc#description hasValue "If the client is older than 60 or younger than 10 years old the
+                  invocation price is lower than 10 euro"
+            endAnnotations
+            definedBy
+                ?client[age hasValue ?age] memberOf human and ?age[amount hasValue ?years, units hasValue yearsDuration]
+                memberOf age and (greaterEqual(?years, 60) or lessEqual(?years,10))
+                implies ?price[hasAmount hasValue ?amount, hasCurrency hasValue Euro] memberOf
+                absoultePrice and lessEqual(?amount, 10).      
+
+      capability
+            sharedVariables ?child
+            precondition
+                  annotations
+                        dc#description hasValue "The input has to be boy or a girl
+                              with birthdate in the past and be born in Germany."
+                  endAnnotations
+                  definedBy
+                        ?child memberOf Child
+                              and ?child[hasBirthdate hasValue ?birthdate]
+                              and wsml#dateLessThan(?birthdate,wsml#currentDate())
+                              and ?child[hasBirthplace hasValue ?location]
+                              and ?location[locatedIn hasValue oo#de]
+                              or (?child[hasParent hasValue ?parent]
+                                and?parent[hasCitizenship hasValue oo#de] ) .
+
+            effect
+                  annotations
+                        dc#description hasValue "After the registration the child
+                              is a German citizen"
+                  endAnnotations
+                  definedBy
+                        ?child memberOf Child
+                              and ?child[hasCitizenship hasValue oo#de].
+
+      interface
+            choreography _"http://example.org/tobedone"
+            orchestration _"http://example.org/tobedone"
+
