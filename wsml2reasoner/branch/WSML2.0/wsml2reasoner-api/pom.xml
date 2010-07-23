@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>wsml2reasoner</artifactId>
 		<groupId>net.sourceforge.wsml2reasoner</groupId>
-		<version>0.8.1-SNAPSHOT</version>
+		<version>0.8.1</version>
 	</parent>
 
 	<artifactId>wsml2reasoner-api</artifactId>
