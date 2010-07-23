@@ -1,0 +1,83 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"webode://mccarthy.dia.fi.upm.es/Labour_Regulatory_Ontology#" , wsml _"http://www.wsmo.org/wsml/wsml-syntax#" ,
+	JobOffOnt _"webode://mccarthy.dia.fi.upm.es/Job_Offer_Ontology#",
+	JobSeeOnt _"webode://mccarthy.dia.fi.upm.es/Job_Seeker_Ontology#",
+	Time _"webode://mccarthy.dia.fi.upm.es/Time_Ontology#"}
+	
+ontology Labour_Regulatory_Ontology
+
+
+importsOntology { JobOffOnt#Job_Offer_Ontology,
+	JobSeeOnt#Job_Seeker_Ontology,
+	Time#Time_Ontology }
+
+
+concept Contract_Type
+	Name ofType (1) _string
+	Description ofType (0 1) _string
+	Limited_duration ofType (0 1) _boolean // time contract or open-ended contract
+	is_associated_with_Vacancy ofType (0 *) JobOffOnt#Vacancy
+	is_associated_to_Objective ofType (0 *) JobSeeOnt#Objective
+
+concept Work_Condition
+	Name ofType (1) _string
+	Description ofType (0 1) _string
+	work_time ofType (1) Work_Time
+	execution_time ofType (0 1) Time#DurationDescription
+	hours_week ofType (0 1) _integer
+	relocation_required ofType (0 1) _boolean
+	is_associated_with_Vacancy ofType (0 *) JobOffOnt#Vacancy
+	is_associated_to_Objective ofType (0 *) JobSeeOnt#Objective
+
+
+instance Consultant memberOf Contract_Type
+	Name hasValue "Consultant"
+
+instance Temporary memberOf Contract_Type
+	Name hasValue "Interim"
+	Description hasValue "provisional contract or staff-leasing contract"
+
+instance Recruitment_public_services memberOf Contract_Type
+	Name hasValue "Recruitment public services"
+
+instance Seasonal_job memberOf Contract_Type
+	Name hasValue "Seasonal job"
+	Description hasValue "agriculture tasks, entertainers for holidays organizations, waiters, ..."
+
+instance Autonomous memberOf Contract_Type // employer-coordinated freelance work or project-by-project employment contract
+	Name hasValue "Autonomous"
+	Description hasValue "freelance worker who is responsible for the final result, in coordination with the employer’s organisation and regardless of the time taken to complete the work"
+
+instance Traineeship memberOf Contract_Type
+	Name hasValue "Traineeship"
+	
+instance Work_entry memberOf Contract_Type // social insertion
+	Name hasValue "work-entry contract"
+	Description hasValue "for particular categories, such as young people aged 18 to 29 and disadvantaged workers (long-term unemployed people aged under 32, unemployed workers aged over 45, women resident in areas with high levels of female unemployment etc), in order to achieve 'by means of an individual project' to adjust the worker’s professional skills to a particular job, his or her labour market entry or re-entry'. 
+	In addition, in order to back this kind of contracts, the employers will enjoy fees or advantages given by government agencies, such as reduction of taxes"
+
+instance Job_sharing memberOf Contract_Type
+	Name hasValue "Job sharing"
+	Description hasValue "an arrangement based on 'a special contract whereby two or more workers jointly assume the responsibilities of a single work obligation"
+	
+instance Occasional_job memberOf Contract_Type
+	Name hasValue "supplementary and occasional employment contract"
+	Description hasValue "work of a merely occasional nature undertaken by persons at risk of social exclusion or who have not yet entered the labour market or who are about to leave it'. By 'merely occasional' is meant activities involving a worker for no more than 30 days per calendar year, and for which in any case the remuneration amounts to no more that EUR 5,000 in a calendar year. The service performed must take the form of minor and exceptional domestic work (for instance, child-minding or care for the elderly), private tuition, gardening or the organisation of social, sporting, cultural or charitable events."
+	
+instance On_call_job memberOf Contract_Type
+	Name hasValue "On-call job"
+	Description hasValue "intermittent jobs, the worker is available to be used by the employer during a pre-established period of time. However, the employer may make use of the worker for only a limited number of days in this period, depending on production peaks and organisational needs, and must notify the worker that his or her services are needed at least one working day in advance"
+
+instance Hotel_restaurant memberOf Contract_Type
+	Name hasValue "Hotel/restaurant"
+	Description hasValue "a specific contract with time and work periods that are specific to hotels and restaurants"
+
+
+
+concept Work_Time
+	shifts ofType Time#DateTimeInterval	
+
+concept Full_time subConceptOf Work_Time
+
+concept Partial_time subConceptOf Work_Time 
+	
