@@ -15,14 +15,14 @@
 		<dependency>
 			<groupId>net.sourceforge.wsmo4j</groupId>
 			<artifactId>wsmo4j-api</artifactId>
-			<version>2.1.1-SNAPSHOT</version>
+			<version>2.1.1</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.wsmo4j</groupId>
 			<artifactId>wsmo4j-impl</artifactId>
-			<version>2.1.1-SNAPSHOT</version>
+			<version>2.1.1</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
