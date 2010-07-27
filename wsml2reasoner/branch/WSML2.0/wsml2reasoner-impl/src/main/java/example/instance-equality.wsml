@@ -1,0 +1,20 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-full"
+namespace { _"http://www.example.org/example#",
+	wsml _"http://www.wsmo.org/wsml/wsml-syntax#", 
+	rif  _"http://www.w3.org/2007/rif-builtin-function#"
+}
+ontology exampleOntology
+	concept C1
+	concept C2
+
+	instance A memberOf C1
+		name hasValue _string("Gordon Freeman")
+
+	instance B memberOf C2
+		nomen hasValue _string("Gordon Freeman")
+
+	axiom exampleAxiom definedBy
+		?x = ?y :- ?x[name hasValue ?name]
+			and ?y[nomen hasValue ?nomen]
+			and rif#compare(0, ?name, ?nomen).
+		p(?x) :- ?x memberOf C2.
