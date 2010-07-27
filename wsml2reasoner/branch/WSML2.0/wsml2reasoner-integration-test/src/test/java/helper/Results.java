@@ -114,7 +114,7 @@ public class Results
 	 */
 	public static ComplexDataValue _datetime(int year, int month, int day, int hour, int minute, double second, int tzSign, int tzHour, int tzMinute)
 	{
-		return dataFactory.createDateTime( year, month, day, hour, minute, (float) second, tzSign, tzHour, tzMinute ); // TODO gigi: introduced the float cast, check if this makes sense
+		return dataFactory.createDateTime( year, month, day, hour, minute, second, tzSign, tzHour, tzMinute );
 	}
 	
 	/**
@@ -123,7 +123,7 @@ public class Results
 	 */
 	public static ComplexDataValue _time(int hour, int minute, double second, int tzSign, int tzHour, int tzMinute)
 	{
-		return dataFactory.createTime( hour, minute, (float) second, tzSign, tzHour, tzMinute ); // TODO gigi: introduced the float cast, check if this makes sense
+		return dataFactory.createTime( hour, minute, second, tzSign, tzHour, tzMinute );
 	}
 	
 	/**
