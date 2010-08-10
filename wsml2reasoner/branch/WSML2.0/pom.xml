@@ -105,7 +105,7 @@
 			<url>http://maven.sti2.at/archiva/repository/external</url>
 		</repository>
 		<repository>
-			<id>sti2-archiva-snapshot</id>
+			<id>sti2-archiva-snapshots</id>
 			<url>http://maven.sti2.at/archiva/repository/snapshots</url>
 		</repository>
 	</repositories>
