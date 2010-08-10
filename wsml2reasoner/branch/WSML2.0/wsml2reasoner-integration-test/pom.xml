@@ -16,7 +16,6 @@
 			<groupId>net.sourceforge.wsml2reasoner</groupId>
 			<artifactId>wsml2reasoner-impl</artifactId>
 			<version>${project.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
