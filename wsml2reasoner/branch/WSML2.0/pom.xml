@@ -93,7 +93,7 @@
 			<url>http://maven.sti2.at/archiva/repository/external</url>
 		</repository>
 		<snapshotRepository>
-			<id>sti2-archiva-snapshot</id>
+			<id>sti2-archiva-snapshots</id>
 			<name>STI Innsbruck Snapshot Repository</name>
 			<url>http://maven.sti2.at/archiva/repository/snapshots</url>
 		</snapshotRepository>
