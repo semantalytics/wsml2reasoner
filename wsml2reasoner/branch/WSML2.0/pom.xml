@@ -91,11 +91,13 @@
 			<id>sti2-archiva-external</id>
 			<name>STI Innsbruck External Release Repository</name>
 			<url>http://maven.sti2.at/archiva/repository/external</url>
+			<uniqueVersion>false</uniqueVersion>
 		</repository>
 		<snapshotRepository>
 			<id>sti2-archiva-snapshots</id>
 			<name>STI Innsbruck Snapshot Repository</name>
 			<url>http://maven.sti2.at/archiva/repository/snapshots</url>
+			<uniqueVersion>false</uniqueVersion>
 		</snapshotRepository>
 	</distributionManagement>
 
