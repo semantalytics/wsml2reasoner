@@ -38,14 +38,14 @@ public interface WSMLReasoner {
      * 
      * @param ontology
      *            The ontology to register
+     * @throws InconsistencyException
      */
     public void registerOntology(Ontology ontology) throws InconsistencyException;
 
     /**
      * Register all given ontologies with the reasoner.
-     * All currently registered
-     * contents of the reasoner are removed and replaced with the elements of
-     * the new ontologies.
+     * All currently registered contents of the reasoner are removed and replaced with 
+     * the elements of the new ontologies.
      * 
      * @param ontologies
      *            The ontologies to register in the same reasoning space.
@@ -54,11 +54,9 @@ public interface WSMLReasoner {
     public void registerOntologies(Set<Ontology> ontologies) throws InconsistencyException;
 
     /**
-     * Registers the ontology. 
-     * 
-     * All currently registered
+     * Registers the ontology. All currently registered
      * contents of the reasoner are removed and replaced with the elements of
-     * the new ontologies.
+     * the new ontology. No verification is performed.
      * 
      * @param ontology
      */
@@ -80,6 +78,8 @@ public interface WSMLReasoner {
     /**
      * Deregisters the ontology. Any further request using this ontologyID will
      * result in an exception.
+     * 
+     * TODO danwin has no parameters how does this work
      * 
      * @param ontologyID
      */

@@ -25,10 +25,9 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.inconsistency.ConsistencyViolation;
-import org.wsmo.common.IRI;
 
 /**
- * An interface for invoking a WSML-DL reasoner with a particular reasoning
+ * An interface for invoking a WSML-LP reasoner with a particular reasoning
  * task.
  * 
  * @author grahen
@@ -37,6 +36,10 @@ import org.wsmo.common.IRI;
 public interface LPReasoner extends WSMLReasoner {
 
     /**
+     * Check the consistency of the reasoner instance. 
+     * 
+     * TODO wanwin does this really check the consistency of the reasoner 
+     * 
      * @return a set of violation objects, or an empty set, if the ontology is
      *         consistent (satisfiable)
      */
@@ -67,8 +70,6 @@ public interface LPReasoner extends WSMLReasoner {
      *            the query that may be contained within query2.
      * @param query2
      *            the query that may contain query1.
-     * @param ontologyID
-     *            the orginal logical ontology URI
      * @return true if query1 is contained within query2, false otherwise.
      */
     public boolean checkQueryContainment(LogicalExpression query1, LogicalExpression query2);
@@ -81,17 +82,14 @@ public interface LPReasoner extends WSMLReasoner {
      *            the query that may be contained within query2.
      * @param query2
      *            the query that may contain query1.
-     * @param ontologyID
-     *            the orginal logical ontology URI
      * @return Set containing the resulting variable mapping, mapping variables
      *         to terms
-     * @see WSMLReasoner#checkQueryContainment(LogicalExpression,
-     *      LogicalExpression, IRI)
      */
     public Set<Map<Variable, Term>> getQueryContainment(LogicalExpression query1, LogicalExpression query2);
 
     /**
      * Execute a query.
+     * 
      * @param query A WSML logical expression with or without variables.
      * @return The variable bindings.
      */
@@ -100,6 +98,7 @@ public interface LPReasoner extends WSMLReasoner {
     /**
      * Ask if a given logical expression is satisfied.
      * The given query is executed and if one or more results are returned then the method returns true.
+     * 
      * @param query The logical expression to test. 
      * @return true, if the logical expression can be satisfied.
      */
