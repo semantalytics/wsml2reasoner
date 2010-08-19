@@ -96,7 +96,7 @@ public class DatalogBasedWSMLReasoner implements LPReasoner {
 
     protected final static String WSML_RESULT_PREDICATE = "http://www.wsmo.org/reasoner/" + "wsml_query_result";
 
-    protected final org.wsml.reasoner.DatalogReasonerFacade builtInFacade;
+    protected org.wsml.reasoner.DatalogReasonerFacade builtInFacade;
 
     protected WsmoFactory wsmoFactory;
     protected LogicalExpressionFactory leFactory;
