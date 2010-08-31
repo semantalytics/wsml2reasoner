@@ -45,8 +45,6 @@ import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.WsmoFactory;
 import org.wsmo.wsml.Parser;
 
-import base.BaseReasonerTest;
-
 import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 /**
@@ -60,8 +58,6 @@ public class DLSimpleInferenceTests extends TestCase {
 
     private DLReasoner wsmlReasoner = null;
     
-    private BuiltInReasoner previous;
-
     private Parser parser = null;
     
     private Ontology ontology = null;
@@ -74,7 +70,6 @@ public class DLSimpleInferenceTests extends TestCase {
 		super.setUp();
 		FactoryContainer factory = new WsmlFactoryContainer();
         wsmoFactory = factory.getWsmoFactory();
-        previous = BaseReasonerTest.reasoner;
         wsmlReasoner = null;
 		parser = new WsmlParser();
 		params = new HashMap<String, Object>();
@@ -89,14 +84,13 @@ public class DLSimpleInferenceTests extends TestCase {
         wsmlReasoner=null;
         parser=null;
         ontology=null;
-        BaseReasonerTest.resetReasoner(previous);
         System.gc();
     }
 	
     public void testRun() throws Exception {
     	
     	/*
-    	 * Do simple inference tests with Pellet and KAON2
+    	 * Do simple inference tests 
     	 */
     	
     	// read test file and parse it 
@@ -107,8 +101,7 @@ public class DLSimpleInferenceTests extends TestCase {
         ontology = (Ontology)parser.parse(new InputStreamReader(is))[0]; 
         ns = ontology.getDefaultNamespace().getIRI().toString();
         // Elly
-        base.BaseReasonerTest.resetReasoner(WSMLReasonerFactory.BuiltInReasoner.ELLY);
-        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createDL2Reasoner(new HashMap <String, Object> ());
+        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createDLReasoner(new HashMap <String, Object> ());
         doTestAll();
         
         /*
@@ -123,7 +116,7 @@ public class DLSimpleInferenceTests extends TestCase {
         ontology = (Ontology)parser.parse(new InputStreamReader(is))[0]; 
         // Elly
         params.put(DefaultWSMLReasonerFactory.PARAM_BUILT_IN_REASONER, BuiltInReasoner.ELLY);
-        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createDL2Reasoner(params);
+        wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createDLReasoner(params);
         doTestInconsistentOntology();
     }
     
