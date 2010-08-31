@@ -38,20 +38,20 @@ public abstract class AbstractDataTypes4DateTimeSubtraction extends TestCase imp
 		String query = "?x[age hasValue ?t]";
 
 		Results r = new Results("t", "x");
-		r.addBinding(Results._duration(+1, 1, 2, 3, 4, 5, 6.7), Results.iri(NS + "allFields"));
-		r.addBinding(Results._duration(+1, 0, 0, 0, 0, 0, 0.1), Results.iri(NS + "smallPositive"));
-		r.addBinding(Results._duration(-1, 0, 0, 0, 0, 0, 0.1), Results.iri(NS + "smallNegative"));
+		r.addBinding(Results._daytimeduration(+1, 1*365 + 31 + 28 + 3, 4, 5, 6.7), Results.iri(NS + "allFields"));
+		r.addBinding(Results._daytimeduration(+1, 0, 0, 0, 0.1), Results.iri(NS + "smallPositive"));
+		r.addBinding(Results._daytimeduration(-1, 0, 0, 0, 0.1), Results.iri(NS + "smallNegative"));
 
-		r.addBinding(Results._duration(+1, 0, 0, 0, 0, 0, 0.000001), Results.iri(NS + "oneMicro"));
-		r.addBinding(Results._duration(+1, 0, 0, 0, 0, 0, 0.001), Results.iri(NS + "oneMilli"));
+		r.addBinding(Results._daytimeduration(+1, 0, 0, 0, 0.000001), Results.iri(NS + "oneMicro"));
+		r.addBinding(Results._daytimeduration(+1, 0, 0, 0, 0.001), Results.iri(NS + "oneMilli"));
 
-		r.addBinding(Results._duration(+1, 0, 0, 0, 0, 0, 1), Results.iri(NS + "oneSecond"));
-		r.addBinding(Results._duration(+1, 0, 0, 0, 0, 1, 0), Results.iri(NS + "oneMinute"));
-		r.addBinding(Results._duration(+1, 0, 0, 0, 1, 0, 0), Results.iri(NS + "oneHour"));
+		r.addBinding(Results._daytimeduration(+1, 0, 0, 0, 1), Results.iri(NS + "oneSecond"));
+		r.addBinding(Results._daytimeduration(+1, 0, 0, 1, 0), Results.iri(NS + "oneMinute"));
+		r.addBinding(Results._daytimeduration(+1, 0, 1, 0, 0), Results.iri(NS + "oneHour"));
 
-		r.addBinding(Results._duration(+1, 0, 0, 1, 0, 0, 0), Results.iri(NS + "oneDay"));
-		r.addBinding(Results._duration(+1, 0, 1, 0, 0, 0, 0), Results.iri(NS + "oneMonth"));
-		r.addBinding(Results._duration(+1, 1, 0, 0, 0, 0, 0), Results.iri(NS + "oneYear"));
+		r.addBinding(Results._daytimeduration(+1, 1, 0, 0, 0), Results.iri(NS + "oneDay"));
+		r.addBinding(Results._daytimeduration(+1, 31, 0, 0, 0), Results.iri(NS + "oneMonth"));
+		r.addBinding(Results._daytimeduration(+1, 365, 0, 0, 0), Results.iri(NS + "oneYear"));
 
 		//LPHelper.outputON();
 		LPHelper.executeQueryAndCheckResults(OntologyHelper.loadOntology(ONTOLOGY_FILE), query, r.get(), getLPReasoner());
