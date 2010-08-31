@@ -121,17 +121,12 @@ public class BaseReasonerTest extends TestCase {
         	params.putAll(config);
         }
         
-		if (reasoner
-				.equals(WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED)
-				|| reasoner
-						.equals(WSMLReasonerFactory.BuiltInReasoner.IRIS_SLDNF)
-				|| reasoner
-						.equals(WSMLReasonerFactory.BuiltInReasoner.IRIS_WELL_FOUNDED)) {
-			wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
-					.createFlightReasoner(params);
+		if (reasoner.equals(WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED)
+				|| reasoner.equals(WSMLReasonerFactory.BuiltInReasoner.IRIS_SLDNF)
+				|| reasoner.equals(WSMLReasonerFactory.BuiltInReasoner.IRIS_WELL_FOUNDED)) {
+			wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createFlightReasoner(params);
 		} else if (reasoner.equals(WSMLReasonerFactory.BuiltInReasoner.ELLY)) {
-			wsmlReasoner = DefaultWSMLReasonerFactory.getFactory()
-					.createDL2Reasoner(params);
+			wsmlReasoner = DefaultWSMLReasonerFactory.getFactory().createDLReasoner(params);
 		}
         
         return wsmlReasoner;
