@@ -1,6 +1,0 @@
-wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
-namespace { _"urn://deri2/", r _"http://www.wsmo.org/reasoner/"}
-
-ontology o2
-concept c3
-instance i3 memberOf c3
