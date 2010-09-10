@@ -1,0 +1,25 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-dl"
+
+namespace { _"http://www.example.org/ontologies/example#",
+  dc  _"http://purl.org/dc/elements/1.1#"}
+
+ontology _"http://www.example.org/ontologies/example"  
+  
+  concept _# subConceptOf {Human}
+  
+  concept _#
+    annotations dc#description hasValue "annotations test" endAnnotations
+  
+  concept _# subConceptOf _#
+  
+  concept Woman subConceptOf _#
+    annotations dc#relation hasValue "disjoint to Man" endAnnotations
+    
+  concept _#
+    hasName impliesType _string
+      annotations dc#description hasValue "attr annotations test" endAnnotations
+      
+  instance bla memberOf _#
+    hasName hasValue "Anna"
+  
+  instance _#

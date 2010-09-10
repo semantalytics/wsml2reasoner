@@ -1,0 +1,15 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://example.com/attribute6#" }
+
+ontology attribute6
+
+concept c1
+     a1 ofType (2 2) _string
+
+concept c2 subConceptOf c1
+     a2 ofType _string
+
+instance i2 memberOf c2
+	a1 hasValue "1"
+//	a1 hasValue "2"	// without this, there should be a cardinality violation
+	

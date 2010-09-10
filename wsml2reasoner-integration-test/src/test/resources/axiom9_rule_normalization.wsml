@@ -1,0 +1,35 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://example.com/axiom9#" } 
+
+ontology AxiomTestOntology9
+
+concept A
+concept B
+concept C
+concept D
+concept E
+
+instance a1 memberOf A
+instance b1 memberOf B
+instance c1 memberOf C
+instance d1 memberOf D
+instance e1 memberOf E
+
+
+
+axiom X definedBy
+    // This is translated correctly!
+    //  (?x memberOf A implies ?x memberOf B) and (?x memberOf C implies ?x memberOf D) :- ?x memberOf Z.
+    
+    // But this is not, because it leaves an 'implies' in the expression after normalization.
+   	   ?x memberOf A implies ?x memberOf B and ?x memberOf C implies ?x memberOf D :- ?x memberOf Z.
+   	   
+   	// But this is not, because it leaves an 'implies' in the expression after normalization.
+    //	?x memberOf A equivalent ?x memberOf B and ?x memberOf C equivalent ?x memberOf D :- ?x memberOf Z.
+    
+   	// But this is not, because it leaves an 'implies' in the expression after normalization.
+     //	?x memberOf A equivalent ?x memberOf B and ?x memberOf C equivalent ?x memberOf D :- ?x memberOf Z.
+
+	// But this is not, because it leaves an 'implies' in the expression after normalization.
+    //?x memberOf A  :- ?x memberOf Z implies ?x memberOf B
+    
