@@ -1,7 +1,0 @@
-wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
-namespace { _"http://example.com/relations5_super#" }
-
-ontology SuperOntology
-
-concept Human
-     hasName impliesType _string
