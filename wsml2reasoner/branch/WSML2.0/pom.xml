@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>net.sourceforge.wsml2reasoner</groupId>
 	<artifactId>wsml2reasoner</artifactId>
-	<version>0.8.2-SNAPSHOT</version>
+	<version>0.8.2</version>
 	<packaging>pom</packaging>
 	<name>WSML2Reasoner</name>
 
@@ -20,9 +19,9 @@
 	</properties>
 
 	<scm>
-		<connection>scm:svn:https://wsml2reasoner.svn.sourceforge.net/svnroot/wsml2reasoner/branch/WSML2.0</connection>
-		<developerConnection>scm:svn:https://wsml2reasoner.svn.sourceforge.net/svnroot/wsml2reasoner/branch/WSML2.0</developerConnection>
-		<url>http://wsml2reasoner.svn.sourceforge.net/viewvc/wsml2reasoner/branch/WSML2.0</url>
+		<connection>scm:svn:https://wsml2reasoner.svn.sourceforge.net/svnroot/wsml2reasoner/branch/WSML2.0/tags/wsml2reasoner-0.8.2</connection>
+		<developerConnection>scm:svn:https://wsml2reasoner.svn.sourceforge.net/svnroot/wsml2reasoner/branch/WSML2.0/tags/wsml2reasoner-0.8.2</developerConnection>
+		<url>http://wsml2reasoner.svn.sourceforge.net/viewvc/wsml2reasoner/branch/WSML2.0/tags/wsml2reasoner-0.8.2</url>
 	</scm>
 	
 	<build>
