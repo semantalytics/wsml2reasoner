@@ -1,0 +1,53 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-dl"
+
+namespace { _"http://example.com/concept_satisfiability1#" } 
+
+ontology ConceptSaisfiability1
+
+concept Animal
+  
+concept Human
+    hasWeight ofType {_decimal, _integer}
+    hasName ofType _string
+ 
+concept Person subConceptOf Human
+
+concept Woman subConceptOf Human
+
+concept Child subConceptOf Human
+    hasParent impliesType Human
+  
+concept Machine 
+  
+relation hasChild(impliesType {Human}, impliesType {Child})
+  
+instance Mary memberOf {Woman, Mother}
+    hasChild hasValue Jim
+    hasWeight hasValue 62
+    hasName hasValue "Mary Jones"
+    
+instance Jack memberOf{Human} 
+
+instance Jim memberOf{Child}
+
+
+
+relation hasMother(impliesType {Child}, impliesType {Woman}) 
+  		subRelationOf hasParent
+  
+relation hasParent(impliesType {Child}, impliesType {Person})
+  		subRelationOf hasRelative
+
+relationInstance isMarriedTo(Mary, Jack)
+
+axiom definedBy
+	  // subconcept definition
+	  Human subConceptOf Animal.
+ 	  
+	  // Negation
+	  neg(?x memberOf Human) impliedBy ?x memberOf Machine.
+ 	  
+	  // Symmetric relation
+	  ?x[isMarriedTo hasValue ?y] impliedBy ?y[isMarriedTo hasValue ?x].
+
+        	  
