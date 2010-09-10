@@ -1,0 +1,24 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-dl"
+
+namespace { _"http://www.example.org/ontologies/inconsistentExample#",
+  dc  _"http://purl.org/dc/elements/1.1#"}
+
+ontology _"http://www.example.org/ontologies/inconsistentExample"
+  
+  concept Human
+  
+  concept Woman subConceptOf{Human}
+    annotations dc#relation hasValue "disjoint to Man" endAnnotations  
+  
+  relation hasChild(impliesType {Woman, Man}, impliesType {Child})
+
+  instance Mary memberOf {Woman}
+    hasChild hasValue Jack
+
+  axiom
+    definedBy
+
+	  // Negation
+	  neg(?x memberOf Human) impliedBy ?x memberOf Machine.
+	  ?x memberOf Man implies neg(?x memberOf Woman).
+	  

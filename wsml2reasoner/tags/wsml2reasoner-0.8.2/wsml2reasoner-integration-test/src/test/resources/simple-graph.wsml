@@ -1,0 +1,50 @@
+/*
+  A simple ontology that can be used to test the WSML Core reasoner.
+  It simply represents a small simple directed graph and some predicates on
+  direct graphs.
+  Queries can then make use of these predicates to find elements of the graph
+  with certain properties.
+*/
+
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+
+namespace {_"http://www.example.org/example/#",
+    dc _"http://purl.org/dc/elements/1.1#",
+    wsml _"http://www.wsmo.org/2004/wsml"}
+ 
+ontology _"http://www.example.org/example/test?blabla=blabla.blabla"
+   
+annotations
+    dc#title hasValue "Simple Graph Ontology"
+    wsml#version hasValue "$Revision: 1.2 $"
+endAnnotations
+
+axiom fact
+  definedBy
+    arc(a,b).
+    arc(b,c).
+    arc(c,d).
+    arc(c,e).
+    arc(c,a).
+    arc(c,f).
+    arc(f,g).
+    arc(g,f).
+    arc(h,g).
+    arc(g,h).
+    arc(h,i).
+    
+axiom pathDefinition1
+  definedBy
+    path(?x,?y) impliedBy arc(?x,?y).
+    
+axiom pathDefinition2
+  definedBy
+    path(?x,?y) impliedBy path(?x,?z) and path(?z,?y).
+    
+axiom strongComponentElementDefinition
+  definedBy
+    path(?x,?y) and path(?y,?x) implies scElement(?x).
+    
+axiom composedRuleDefinition
+  definedBy
+    composedRule(?x,?y) impliedBy scElement(?x) and path(?x,?y) and path(?y,?x). 

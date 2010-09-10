@@ -1,0 +1,726 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://example.com/flight2#", 
+     wsml _"http://www.wsmo.org/wsml/wsml-syntax#", 
+     dc _"http://purl.org/dc/elements/1.1/" }
+
+ontology simpsons
+
+axiom priniciples_work_too
+     definedBy 
+          ?x[principleOf hasValue ?y] memberOf character
+implies
+?x[hasWorkingPlace hasValue ?y]. 
+
+axiom spouses_are_in_love
+     definedBy 
+          ?x[hasSpouse hasValue ?y] memberOf character
+implies
+?x[inLoveWith hasValue ?y]. 
+
+//axiom definedBy
+//  _"http://temp/indirect/indirectRelation"(?x,?y) :- 
+//		?z[?x hasValue ?w] implies ?z[?y hasValue ?w].
+//  _"http://temp/indirect/directRelation"(?x,?w) :- 
+//  		_"http://temp/indirect/temp3"(?x,?w) and naf(_"http://temp/indirect/indirectRelation"(?x,?w)).
+//  _"http://temp/indirect/indirectRelation"(?x,?y) :- 
+//  		_"http://temp/indirect/temp"(?x,?z) and _"http://temp/indirect/temp2"(?z,?y).
+//  _"http://temp/indirect/directRelation"(?x,?w) :- 
+//  		_"http://temp/indirect/temp3"(?x,?w) and naf(_"http://temp/indirect/indirectRelation"(?x,?w)).
+//  _"http://temp/indirect/subConceptOf"(?x,?y,?z) :- 
+//		?x subConceptOf ?y and ?y subConceptOf ?z and ?x != ?y and ?y != ?z.
+//  _"http://temp/direct/subConceptOf"(?x,?y) :- 
+//		?x subConceptOf ?y and  naf(_"http://temp/indirect/subConceptOf"(?x,?y)).
+//  place subConceptOf university.
+
+concept gender
+
+concept actor
+     annotations
+          dc#title hasValue "Actor"
+     endAnnotations
+     hasName ofType _string
+     hasGender ofType gender
+
+concept place
+     hasName ofType _string
+
+concept town subConceptOf place
+     hasMayor ofType character
+     hasPoliceChief ofType character
+
+concept workplace subConceptOf place
+     hasOwner ofType character
+     hasLocation ofType town
+
+concept school subConceptOf place
+     hasPrinciple ofType character
+     hasLocation ofType town
+     
+concept university subConceptOf school			// test
+
+concept church subConceptOf place
+     hasReverant ofType character
+     hasLocation ofType town
+
+concept character
+     hasName ofType _string
+     hasGender ofType gender
+     hasActor ofType actor
+     hasSpouse ofType character
+     hasChild ofType character
+     hasParent ofType character
+     hasSibling ofType character
+     hasFriend ofType character
+     hasNeighbour ofType character
+     hasCatchPhrase ofType _string
+     inLoveWith ofType character
+     isCustomerOf ofType workplace
+     hasWorkingPlace ofType place
+     worshipsAt ofType church
+     principleOf ofType school
+     attends ofType school
+     owns ofType workplace
+     mayorOf ofType town
+     policeChiefOf ofType town
+     reverantOf ofType church
+     testAttribute impliesType actor			// test
+     secondTestAttribute impliesType _string	// test
+
+instance male memberOf gender
+
+instance female memberOf gender
+
+instance dan_castellanata memberOf actor
+     annotations
+          dc#title hasValue "Dan Castellanata"
+     endAnnotations
+     hasName hasValue "Dan Castellaneta"
+     hasGender hasValue male
+
+instance julie_kavner memberOf actor
+     annotations
+          dc#title hasValue "Julie Kavner"
+     endAnnotations
+     hasName hasValue "Julie Kavner"
+     hasGender hasValue female
+
+instance yeardley_smith memberOf actor
+     annotations
+          dc#title hasValue "Yeardley Smith"
+     endAnnotations
+     hasName hasValue "Yeardley Smith"
+     hasGender hasValue female
+
+instance nancy_cartwright memberOf actor
+     annotations
+          dc#title hasValue "Nancy Cartwright"
+     endAnnotations
+     hasName hasValue "Nancy Cartwright"
+     hasGender hasValue female
+
+instance hank_azaria memberOf actor
+     annotations
+          dc#title hasValue "Hank Azaria"
+     endAnnotations
+     hasName hasValue "Hank Azaria"
+     hasGender hasValue male
+
+instance harry_shearer memberOf actor
+     annotations
+          dc#title hasValue "Harry Shearer"
+     endAnnotations
+     hasName hasValue "Harry Shearer"
+     hasGender hasValue male
+
+instance marcia_wallace memberOf actor
+     annotations
+          dc#title hasValue "Marcia Wallace"
+     endAnnotations
+     hasName hasValue "Marcia Wallace"
+     hasGender hasValue female
+
+instance pamela_hayden memberOf actor
+     annotations
+          dc#title hasValue "Pamela Hayden"
+     endAnnotations
+     hasName hasValue "Pamela Hayden"
+     hasGender hasValue female
+
+instance tress_macneille memberOf actor
+     annotations
+          dc#title hasValue "Tress MacNeille"
+     endAnnotations
+     hasName hasValue "Tress MacNeille"
+     hasGender hasValue female
+
+instance maggie_roswell memberOf actor
+     annotations
+          dc#title hasValue "Maggie Roswell"
+     endAnnotations
+     hasName hasValue "Maggie Roswell"
+     hasGender hasValue female
+
+instance doris_grau memberOf actor
+     annotations
+          dc#title hasValue "Doris Grau"
+     endAnnotations
+     hasName hasValue "Doris Grau"
+     hasGender hasValue female
+
+instance kelsey_grammar memberOf actor
+     annotations
+          dc#title hasValue "Kelsey Grammar"
+     endAnnotations
+     hasName hasValue "Kelsey Grammar"
+     hasGender hasValue male
+
+instance springfield memberOf town
+     annotations
+          dc#title hasValue "Springfield"
+     endAnnotations
+     hasName hasValue "Springfield"
+     hasMayor hasValue joe_quimby
+     hasPoliceChief hasValue chief_clancy_wiggum
+
+instance shelbyville memberOf town
+     annotations
+          dc#title hasValue "Shelbyville"
+     endAnnotations
+     hasName hasValue "Shelbyville"
+
+instance nuclear_plant memberOf workplace
+     annotations
+          dc#title hasValue "Springfield Nuclear Plant"
+     endAnnotations
+     hasName hasValue "Springfield Nuclear Plant"
+     hasOwner hasValue monty_burns
+     hasLocation hasValue springfield
+
+instance kwik_e_mart memberOf workplace
+     annotations
+          dc#title hasValue "Kwik E Mart"
+     endAnnotations
+     hasName hasValue "Kwik E Mart"
+     hasOwner hasValue apu_nahasapeemapetilon
+     hasLocation hasValue springfield
+
+instance channel_6 memberOf workplace
+     annotations
+          dc#title hasValue "Channel 6"
+     endAnnotations
+     hasName hasValue "Channel 6"
+     hasLocation hasValue springfield
+
+instance moes_tavern memberOf workplace
+     annotations
+          dc#title hasValue "Moe's Tavern"
+     endAnnotations
+     hasName hasValue "Moe's Tavern"
+     hasOwner hasValue moe_szyslak
+     hasLocation hasValue springfield
+
+instance police_station memberOf workplace
+     annotations
+          dc#title hasValue "Springfield Police Station"
+     endAnnotations
+     hasName hasValue "Springfield Police Station"
+     hasLocation hasValue springfield
+
+instance springfield_elementary memberOf {school, workplace} 
+     hasName hasValue "Springfield Elementary"
+     hasPrinciple hasValue seymour_skinner
+     hasLocation hasValue springfield
+
+instance springfield_church memberOf church
+     hasName hasValue "First Church of Springfield"
+     hasReverant hasValue reverant_lovejoy
+     hasLocation hasValue springfield
+
+instance homer_simpson memberOf character
+     annotations
+          dc#title hasValue "Homer J Simpson"
+     endAnnotations
+     hasName hasValue "Homer J Simpson"
+     hasGender hasValue male
+     hasActor hasValue dan_castellanata
+     hasSpouse hasValue marge_simpson
+     hasParent hasValue abe_simpson
+     hasChild hasValue {bart_simpson, lisa_simpson, maggie_simpson }
+     hasFriend hasValue {barney_gumble, lenny, carl }
+     hasNeighbour hasValue {ned_flanders, maude_flanders, todd_flanders }
+     hasCatchPhrase hasValue "D'oh"
+     isCustomerOf hasValue {kwik_e_mart, moes_tavern }
+     hasWorkingPlace hasValue nuclear_plant
+     worshipsAt hasValue springfield_church				
+	 testAttribute hasValue dan_castellanata			// test
+	 secondTestAttribute hasValue "test"				// test
+	 
+instance marge_simpson memberOf character
+     annotations
+          dc#title hasValue "Marge Simpson"
+     endAnnotations
+     hasName hasValue "Marge Simpson"
+     hasGender hasValue female
+     hasActor hasValue julie_kavner
+     hasSpouse hasValue homer_simpson
+     hasParent hasValue grandma_bouvier
+     hasChild hasValue {bart_simpson, lisa_simpson, maggie_simpson }
+     hasSibling hasValue {patty_bouvier, selma_bouvier }
+     hasNeighbour hasValue {ned_flanders, maude_flanders, todd_flanders }
+     hasCatchPhrase hasValue "Hmmmmmm"
+     isCustomerOf hasValue kwik_e_mart
+     worshipsAt hasValue springfield_church
+
+instance lisa_simpson memberOf character
+     annotations
+          dc#title hasValue "Lisa Simpson"
+     endAnnotations
+     hasName hasValue "Lisa Simpson"
+     hasGender hasValue female
+     hasActor hasValue yeardley_smith
+     hasParent hasValue {homer_simpson, marge_simpson }
+     hasSibling hasValue {bart_simpson, maggie_simpson }
+     hasNeighbour hasValue {ned_flanders, maude_flanders, todd_flanders }
+     attends hasValue springfield_elementary
+     worshipsAt hasValue springfield_church
+
+instance bart_simpson memberOf character
+     annotations
+          dc#title hasValue "Bart Simpson"
+     endAnnotations
+     hasName hasValue "Bart Simpson"
+     hasGender hasValue male
+     hasActor hasValue nancy_cartwright
+     hasParent hasValue {homer_simpson, marge_simpson }
+     hasSibling hasValue {lisa_simpson, maggie_simpson }
+     hasFriend hasValue milhouse_van_houten
+     hasNeighbour hasValue {ned_flanders, maude_flanders, todd_flanders }
+     hasCatchPhrase hasValue {"I'm Bart Simpson, who the hell are you", "Dont have a cow man", "Aye carumba" }
+     attends hasValue springfield_elementary
+     worshipsAt hasValue springfield_church
+
+instance maggie_simpson memberOf character
+     annotations
+          dc#title hasValue "Maggie Simpson"
+     endAnnotations
+     hasName hasValue "Maggie Simpson"
+     hasGender hasValue female
+     hasParent hasValue {homer_simpson, marge_simpson }
+     hasSibling hasValue {bart_simpson, lisa_simpson }
+     hasNeighbour hasValue {ned_flanders, maude_flanders, todd_flanders }
+     worshipsAt hasValue springfield_church
+
+instance abe_simpson memberOf character
+     annotations
+          dc#title hasValue "Abraham Simpson"
+     endAnnotations
+     hasName hasValue "Abraham Simpson"
+     hasGender hasValue male
+     hasActor hasValue dan_castellanata
+     hasChild hasValue homer_simpson
+
+instance grandma_bouvier memberOf character
+     annotations
+          dc#title hasValue "Grandma Bouvier"
+     endAnnotations
+     hasName hasValue "Grandma Bouvier"
+     hasGender hasValue female
+     hasChild hasValue {marge_simpson, patty_bouvier, selma_bouvier }
+
+instance patty_bouvier memberOf character
+     annotations
+          dc#title hasValue "Patty Bouvier"
+     endAnnotations
+     hasName hasValue "Patty Bouvier"
+     hasGender hasValue female
+     hasActor hasValue julie_kavner
+     hasParent hasValue grandma_bouvier
+     hasSibling hasValue {marge_simpson, selma_bouvier }
+
+instance selma_bouvier memberOf character
+     annotations
+          dc#title hasValue "Selma Bouvier"
+     endAnnotations
+     hasName hasValue "Selma Bouvier"
+     hasGender hasValue female
+     hasActor hasValue julie_kavner
+     hasParent hasValue grandma_bouvier
+     hasSibling hasValue {marge_simpson, patty_bouvier }
+
+instance milhouse_van_houten memberOf character
+     annotations
+          dc#title hasValue "Milhouse van Houten"
+     endAnnotations
+     hasName hasValue "Milhouse van Houten"
+     hasGender hasValue male
+     hasActor hasValue pamela_hayden
+     hasParent hasValue {kirk_van_houten, louanne_van_houten }
+     hasFriend hasValue bart_simpson
+     attends hasValue springfield_elementary
+     worshipsAt hasValue springfield_church
+
+instance kirk_van_houten memberOf character
+     annotations
+          dc#title hasValue "Kirk van Houten"
+     endAnnotations
+     hasName hasValue "Kirk van Houten"
+     hasGender hasValue male
+     hasActor hasValue hank_azaria
+     hasChild hasValue milhouse_van_houten
+     worshipsAt hasValue springfield_church
+
+instance louanne_van_houten memberOf character
+     annotations
+          dc#title hasValue "Louanne van Houten"
+     endAnnotations
+     hasName hasValue "Louanne van Houten"
+     hasGender hasValue female
+     hasActor hasValue maggie_roswell
+     hasChild hasValue milhouse_van_houten
+     worshipsAt hasValue springfield_church
+
+instance ned_flanders memberOf character
+     annotations
+          dc#title hasValue "Ned Flanders"
+     endAnnotations
+     hasName hasValue "Ned Flanders"
+     hasGender hasValue male
+     hasActor hasValue harry_shearer
+     hasNeighbour hasValue {homer_simpson, marge_simpson, bart_simpson, lisa_simpson, maggie_simpson }
+     worshipsAt hasValue springfield_church
+
+instance maude_flanders memberOf character
+     annotations
+          dc#title hasValue "Maude Flanders"
+     endAnnotations
+     hasName hasValue "Maude Flanders"
+     hasGender hasValue female
+     hasActor hasValue maggie_roswell
+     hasNeighbour hasValue {homer_simpson, marge_simpson, bart_simpson, lisa_simpson, maggie_simpson }
+     worshipsAt hasValue springfield_church
+
+instance rod_flanders memberOf character
+     annotations
+          dc#title hasValue "Rod Flanders"
+     endAnnotations
+     hasName hasValue "Rod Flanders"
+     hasGender hasValue male
+     hasActor hasValue pamela_hayden
+     hasNeighbour hasValue {homer_simpson, marge_simpson, bart_simpson, lisa_simpson, maggie_simpson }
+     attends hasValue springfield_elementary
+     worshipsAt hasValue springfield_church
+
+instance todd_flanders memberOf character
+     annotations
+          dc#title hasValue "Todd Flanders"
+     endAnnotations
+     hasName hasValue "Todd Flanders"
+     hasGender hasValue male
+     hasActor hasValue nancy_cartwright
+     hasNeighbour hasValue {homer_simpson, marge_simpson, bart_simpson, lisa_simpson, maggie_simpson }
+     attends hasValue springfield_elementary
+     worshipsAt hasValue springfield_church
+
+instance joe_quimby memberOf character
+     annotations
+          dc#title hasValue "'Diamond' Joe Quimby"
+     endAnnotations
+     hasName hasValue "'Diamond' Joe Quimby"
+     hasGender hasValue male
+     hasActor hasValue dan_castellanata
+     mayorOf hasValue springfield
+
+instance monty_burns memberOf character
+     annotations
+          dc#title hasValue "Charles Montgomery Burns"
+     endAnnotations
+     hasName hasValue "Charles Montgomery Burns"
+     hasGender hasValue male
+     hasActor hasValue harry_shearer
+     owns hasValue nuclear_plant
+
+instance waylon_smithers memberOf character
+     annotations
+          dc#title hasValue "Waylon Smithers"
+     endAnnotations
+     hasName hasValue "Waylon Smithers"
+     hasGender hasValue male
+     hasActor hasValue harry_shearer
+     hasWorkingPlace hasValue nuclear_plant
+     inLoveWith hasValue monty_burns
+
+instance apu_nahasapeemapetilon memberOf character
+     annotations
+          dc#title hasValue "Apu Nahasapeemapetilon"
+     endAnnotations
+     hasName hasValue "Apu Nahasapeemapetilon"
+     hasGender hasValue male
+     hasActor hasValue hank_azaria
+     owns hasValue kwik_e_mart
+
+instance moe_szyslak memberOf character
+     annotations
+          dc#title hasValue "Moe Szyslak"
+     endAnnotations
+     hasName hasValue "Moe Szyslak"
+     hasGender hasValue male
+     hasActor hasValue hank_azaria
+     owns hasValue moes_tavern
+     worshipsAt hasValue springfield_church
+
+instance krusty_the_clown memberOf character
+     annotations
+          dc#title hasValue "Krusty The Clown"
+     endAnnotations
+     hasName hasValue "Krusty The Clown"
+     hasGender hasValue male
+     hasActor hasValue dan_castellanata
+     hasWorkingPlace hasValue channel_6
+
+instance kent_brockman memberOf character
+     annotations
+          dc#title hasValue "Kent Brockman"
+     endAnnotations
+     hasName hasValue "Kent Brockman"
+     hasGender hasValue male
+     hasActor hasValue harry_shearer
+     hasWorkingPlace hasValue channel_6
+
+instance bumblebee_man memberOf character
+     annotations
+          dc#title hasValue "Bumblebee Man"
+     endAnnotations
+     hasName hasValue "Bumblebee Man"
+     hasGender hasValue male
+     hasActor hasValue hank_azaria
+     hasWorkingPlace hasValue channel_6
+
+instance sideshow_bob memberOf character
+     annotations
+          dc#title hasValue "Sideshow Bob"
+     endAnnotations
+     hasName hasValue "Sideshow Bob"
+     hasGender hasValue male
+     hasActor hasValue kelsey_grammar
+     hasWorkingPlace hasValue channel_6
+
+instance sideshow_mel memberOf character
+     annotations
+          dc#title hasValue "Sideshow Mel"
+     endAnnotations
+     hasName hasValue "Sideshow Mel"
+     hasGender hasValue male
+     hasActor hasValue dan_castellanata
+     hasWorkingPlace hasValue channel_6
+
+instance barney_gumble memberOf character
+     annotations
+          dc#title hasValue "Barney Gumble"
+     endAnnotations
+     hasName hasValue "Barney Gumble"
+     hasGender hasValue male
+     hasActor hasValue dan_castellanata
+     hasFriend hasValue {homer_simpson, lenny, carl }
+     isCustomerOf hasValue moes_tavern
+
+instance lenny memberOf character
+     annotations
+          dc#title hasValue "Lenny"
+     endAnnotations
+     hasName hasValue "Lenny"
+     hasGender hasValue male
+     hasActor hasValue harry_shearer
+     hasFriend hasValue {homer_simpson, carl, barney_gumble }
+     isCustomerOf hasValue moes_tavern
+     hasWorkingPlace hasValue nuclear_plant
+     worshipsAt hasValue springfield_church
+
+instance carl memberOf character
+     annotations
+          dc#title hasValue "Carl"
+     endAnnotations
+     hasName hasValue "Carl"
+     hasGender hasValue male
+     hasActor hasValue hank_azaria
+     hasFriend hasValue {homer_simpson, lenny, barney_gumble }
+     isCustomerOf hasValue moes_tavern
+     hasWorkingPlace hasValue nuclear_plant
+     worshipsAt hasValue springfield_church
+
+instance nelson_muntz memberOf character
+     annotations
+          dc#title hasValue "Nelson Muntz"
+     endAnnotations
+     hasName hasValue "Nelson Muntz"
+     hasGender hasValue male
+     hasActor hasValue nancy_cartwright
+     attends hasValue springfield_elementary
+
+instance jimbo_jones memberOf character
+     annotations
+          dc#title hasValue "Jimbo Jones"
+     endAnnotations
+     hasName hasValue "Jimbo Jones"
+     hasGender hasValue male
+     hasActor hasValue pamela_hayden
+     attends hasValue springfield_elementary
+
+instance agnes_skinner memberOf character
+     annotations
+          dc#title hasValue "Agnes Skinner"
+     endAnnotations
+     hasName hasValue "Agnes Skinner"
+     hasGender hasValue female
+     hasActor hasValue tress_macneille
+     hasChild hasValue seymour_skinner
+     worshipsAt hasValue springfield_church
+
+instance seymour_skinner memberOf character
+     annotations
+          dc#title hasValue "Seymour Skinner"
+     endAnnotations
+     hasName hasValue "Seymour Skinner"
+     hasGender hasValue male
+     hasActor hasValue harry_shearer
+     hasParent hasValue agnes_skinner
+     principleOf hasValue springfield_elementary
+     worshipsAt hasValue springfield_church
+
+instance edna_krabappel memberOf character
+     annotations
+          dc#title hasValue "Edna Krabappel"
+     endAnnotations
+     hasName hasValue "Edna Krabappel"
+     hasGender hasValue female
+     hasActor hasValue marcia_wallace
+     hasWorkingPlace hasValue springfield_elementary
+     worshipsAt hasValue springfield_church
+
+instance groundskeeper_willie memberOf character
+     annotations
+          dc#title hasValue "Groundskeeper Willie"
+     endAnnotations
+     hasName hasValue "Groundskeeper Willie"
+     hasGender hasValue male
+     hasActor hasValue dan_castellanata
+     hasWorkingPlace hasValue springfield_elementary
+
+instance otto_mann memberOf character
+     annotations
+          dc#title hasValue "Otto Mann"
+     endAnnotations
+     hasName hasValue "Otto Mann"
+     hasGender hasValue male
+     hasActor hasValue harry_shearer
+     hasWorkingPlace hasValue springfield_elementary
+
+instance lunchlady_doris memberOf character
+     annotations
+          dc#title hasValue "Lunchlady Doris"
+     endAnnotations
+     hasName hasValue "Lunchlady Doris"
+     hasGender hasValue female
+     hasActor hasValue doris_grau
+     hasWorkingPlace hasValue springfield_elementary
+
+instance miss_hoover memberOf character
+     annotations
+          dc#title hasValue "Miss Hoover"
+     endAnnotations
+     hasName hasValue "Miss Hoover"
+     hasGender hasValue female
+     hasActor hasValue maggie_roswell
+     hasWorkingPlace hasValue springfield_elementary
+
+instance reverant_lovejoy memberOf character
+     annotations
+          dc#title hasValue "Reverant Lovejoy"
+     endAnnotations
+     hasName hasValue "Reverant Lovejoy"
+     hasGender hasValue male
+     hasActor hasValue harry_shearer
+     hasSpouse hasValue helen_lovejoy
+     reverantOf hasValue springfield_church
+
+instance helen_lovejoy memberOf character
+     annotations
+          dc#title hasValue "Helen Lovejoy"
+     endAnnotations
+     hasName hasValue "Helen Lovejoy"
+     hasGender hasValue female
+     hasActor hasValue maggie_roswell
+     hasSpouse hasValue reverant_lovejoy
+
+instance chief_clancy_wiggum memberOf character
+     annotations
+          dc#title hasValue "Chief Clancy Wiggum"
+     endAnnotations
+     hasName hasValue "Chief Clancy Wiggum"
+     hasGender hasValue male
+     hasActor hasValue hank_azaria
+     hasSpouse hasValue sarah_wiggum
+     hasChild hasValue ralph_wiggum
+     hasWorkingPlace hasValue police_station
+     worshipsAt hasValue springfield_church
+     policeChiefOf hasValue springfield
+
+instance sarah_wiggum memberOf character
+     annotations
+          dc#title hasValue "Sarah Wiggum"
+     endAnnotations
+     hasName hasValue "Sarah Wiggum"
+     hasGender hasValue female
+     hasActor hasValue pamela_hayden
+     hasSpouse hasValue chief_clancy_wiggum
+     hasChild hasValue ralph_wiggum
+     worshipsAt hasValue springfield_church
+
+instance ralph_wiggum memberOf character
+     annotations
+          dc#title hasValue "Ralph Wiggum"
+     endAnnotations
+     hasName hasValue "Ralph Wiggum"
+     hasGender hasValue male
+     hasActor hasValue nancy_cartwright
+     hasParent hasValue {chief_clancy_wiggum, sarah_wiggum }
+     attends hasValue springfield_elementary
+     worshipsAt hasValue springfield_church
+     
+
+/* --------------------------------------------------------------------- */
+/* Relations added to the original simpson ontology for testing purposes */
+/* --------------------------------------------------------------------- */
+
+relation hasRelative(ofType character, ofType character)
+relation hasParent(ofType character, ofType character) subRelationOf hasRelative
+relation hasMother(ofType character, ofType woman) subRelationOf hasParent
+concept boy
+    hasFather ofType father
+    hasMother impliesType mother   
+     
+/* ----------------------------------------------------------------- */
+/* Axiom added to the original simpson ontology for testing purposes */
+/* ----------------------------------------------------------------- */
+     
+axiom definedBy
+	woman subConceptOf character.
+	boy subConceptOf man.
+	mary memberOf woman.
+	
+    new_simpson_member[hasName hasValue "Ellie Simpson"].
+	new_simpson_member[worshipsAt hasValue new_springfield_cafe].
+	new_simpson_member subConceptOf simpson_member.
+	simpson_member subConceptOf character.
+	?x memberOf character equivalent ?x memberOf member.
+	!- character = simpson_member.
+	simpson_real_member[newAttribute hasValue "new"].
+	actor[speaksCharacter ofType character].
+
+	// inverse relations
+    ?x[hasHolder hasValue ?y] implies ?y[hasPet hasValue ?x].	
+    
+    // equivalent relations
+    ?x[isPetOf hasValue ?y] implies ?x[hasHolder hasValue ?y].
+    ?x[hasHolder hasValue ?y] implies ?x[isPetOf hasValue ?y].	
+    
+    
