@@ -15,11 +15,16 @@
 	</modules>
 
 	<properties>
-		<project.version>0.8.2-SNAPSHOT</project.version>
 		<compiler.version>1.6</compiler.version>
 		<source.encoding>UTF-8</source.encoding>
 	</properties>
 
+	<scm>
+		<connection>scm:svn:https://wsml2reasoner.svn.sourceforge.net/svnroot/wsml2reasoner/branch/WSML2.0</connection>
+		<developerConnection>scm:svn:https://wsml2reasoner.svn.sourceforge.net/svnroot/wsml2reasoner/branch/WSML2.0</developerConnection>
+		<url>http://wsml2reasoner.svn.sourceforge.net/viewvc/wsml2reasoner/branch/WSML2.0</url>
+	</scm>
+	
 	<build>
 		<plugins>
 			<!--
