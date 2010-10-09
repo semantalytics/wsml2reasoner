@@ -37,11 +37,11 @@ ontology _"http://www.example.org/example/location"
             annotations
                   dc#description hasValue "Add the codes to the CIA country properties"
             endAnnotations
-            fipsCode ofType wsml#string
+            fipsCode ofType xsd#string
             annotations
                   dc#description hasValue "FIPS 10-4 Country Code"
             endAnnotations
-            isoCode ofType wsml#string
+            isoCode ofType xsd#string
             annotations
                   dc#description hasValue "ISO 3166 Country Code"
             endAnnotations
@@ -51,9 +51,9 @@ ontology _"http://www.example.org/example/location"
                   dc#description hasValue "Extended address, adding more details to
                         city, state and country"
             endAnnotations
-            //city ofType city
-            hasState ofType state
-            hasCountry ofType country
+            //city impliesType city
+            hasState impliesType state
+            hasCountry impliesType country
 
       concept city //subConceptOf geo#city
             annotations
@@ -64,7 +64,7 @@ ontology _"http://www.example.org/example/location"
                   annotations
                         dc#description hasValue "Extension of the city in square kilometers"
                   endAnnotations
-            zipcodes ofType wsml#string
+            zipcodes ofType xsd#string
             
       concept bigCity subConceptOf city
       
@@ -74,7 +74,7 @@ ontology _"http://www.example.org/example/location"
             annotations
                   dc#description hasValue "State"
             endAnnotations
-            cities ofType city
+            cities impliesType city
             population ofType _integer
             extension ofType _integer
 
@@ -85,15 +85,15 @@ ontology _"http://www.example.org/example/location"
                         constraint = 2 for the country property. However, it is not clear
                         how to do this in F-Logic"
             endAnnotations
-            countryA ofType country
-            countryB ofType country
+            countryA impliesType country
+            countryB impliesType country
 
       concept distance
             annotations
                   dc#description hasValue "Distance between two points"
             endAnnotations
             amount ofType _float
-            units ofType wsml#string
+            units ofType xsd#string
 
       axiom validDistance
             annotations
