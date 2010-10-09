@@ -127,9 +127,9 @@ public class EllyReasonerExample {
         
         identifier = container.getWsmoFactory().createIRI("http://www.example.org/example/hasName");
         System.out.println("Concepts of hasName: " + reasoner.getConceptsOf(identifier));
-        System.out.println("RangesOfConstraintAttribute of hasName: " + reasoner.getRangesOfConstraintAttribute(identifier));
+//        System.out.println("RangesOfConstraintAttribute of hasName: " + reasoner.getRangesOfConstraintAttribute(identifier));
         System.out.println("RangesOfInferingAttribute of hasName: " + reasoner.getRangesOfInferingAttribute(identifier));
-        System.out.println("ConstraintAttributeInstances of hasName: " + reasoner.getConstraintAttributeInstances(identifier));
+//        System.out.println("ConstraintAttributeInstances of hasName: " + reasoner.getConstraintAttributeInstances(identifier));
     }
     
     /**

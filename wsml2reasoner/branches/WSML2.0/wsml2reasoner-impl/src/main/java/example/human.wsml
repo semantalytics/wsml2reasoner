@@ -29,28 +29,28 @@ ontology _"http://www.example.org/ontologies/example"
             annotations
                   dc#description hasValue "concept of a human being"
             endAnnotations
-            hasName ofType foaf#name
+            hasName impliesType foaf#name
             hasRelative symmetric impliesType Human
             hasAncestor transitive impliesType Human
             hasParent inverseOf(hasChild) subAttributeOf(hasAncestor) impliesType Human 
-  			hasMother ofType FemaleHuman
+  			hasMother impliesType FemaleHuman
   			hasMother impliesType Mother
             hasChild subAttributeOf(hasRelative) impliesType Human
             hasWeightInKG ofType xsd#float
             hasBirthdate ofType xsd#date
             dateOfDeath ofType xsd#date
-            hasBirthplace ofType loc#location
+            hasBirthplace impliesType loc#location
             isMarriedTo symmetric impliesType Human
-            hasCitizenship ofType oo#country
+            hasCitizenship impliesType oo#country
             isAlive ofType xsd#boolean
                         annotations
                               dc#relation hasValue {IsAlive}
                         endAnnotations
 
-      relation ageOfHuman (ofType Human, ofType _integer)
-             annotations
-                   dc#relation hasValue {FunctionalDependencyAge}
-             endAnnotations
+//      relation ageOfHuman (impliesType Human, ofType _integer)
+//             annotations
+//                   dc#relation hasValue {FunctionalDependencyAge}
+//             endAnnotations
              
       concept Man subConceptOf Human
             annotations
@@ -137,7 +137,7 @@ ontology _"http://www.example.org/ontologies/example"
             hasWeighthasWeightInKG hasValue 3.52
             hasBirthdate hasValue xsd#date(1977,10,21)
             
-		relationInstance ageOfHuman(George, 1)
+		// relationInstance ageOfHuman(George, 1)
 		
 
 /*****************************
