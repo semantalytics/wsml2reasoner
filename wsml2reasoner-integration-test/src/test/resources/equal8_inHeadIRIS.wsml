@@ -1,0 +1,26 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
+namespace { _"http://simple8#"
+}
+
+ontology simple_8
+
+concept C1
+concept C2 subConceptOf C1
+concept C3 subConceptOf C2
+concept C4 
+concept C5
+	
+instance A memberOf C1
+	
+instance B memberOf C2 
+		
+instance C memberOf C3
+
+instance D memberOf C4
+
+instance E memberOf C5
+		
+axiom equal definedBy
+	A = B :- true.
+	C = D :- true.
+	p(?x) :- ?x memberOf C1.
