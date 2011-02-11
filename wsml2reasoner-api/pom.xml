@@ -3,7 +3,7 @@
 
 	<parent>
 		<artifactId>wsml2reasoner</artifactId>
-		<groupId>net.sourceforge.wsml2reasoner</groupId>
+		<groupId>eu.soa4all.wp3</groupId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
