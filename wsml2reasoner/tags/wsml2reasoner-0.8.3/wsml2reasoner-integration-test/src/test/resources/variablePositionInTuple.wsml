@@ -1,0 +1,7 @@
+namespace { _"http://www.cardinality_0_1-00010-ontology.org#"}
+
+ontology o
+
+instance i1 memberOf c1
+     a1 hasValue i2
+     

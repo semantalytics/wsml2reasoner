@@ -1,0 +1,194 @@
+namespace {_"http://www.example.org/example/",
+    dc _"http://purl.org/dc/elements/1.1#",
+    xsd _"http://www.w3.org/2001/XMLSchema#",
+    wsml _"http://www.wsmo.org/2004/wsml",
+    loc _"http://www.example.org/loc#",
+    oo _"http://www.example.org/oo#",
+    foaf _"http://www.example.org/foaf#"}
+
+ontology _"http://www.example.org/ontologies/example"
+      concept Human
+            hasName			impliesType foaf#name
+            hasRelative		impliesType Human
+            hasAncestor		impliesType Human
+            hasParent		impliesType Human
+  			hasMother		impliesType FemaleHuman
+  			hasMother		impliesType Mother
+            hasWeightInKG	ofType xsd#float
+            hasBirthdate	ofType xsd#date
+            dateOfDeath		ofType xsd#date
+            hasBirthplace	impliesType loc#location
+            isMarriedTo		impliesType Human
+            hasCitizenship	impliesType oo#country
+            isAlive			ofType xsd#boolean
+
+		axiom MotherSubParent
+			definedBy
+				?x[hasMother hasValue ?y] implies ?x[hasParent hasValue ?y].
+
+		axiom MotherSubMum
+			definedBy
+				?x[hasMother hasValue ?y] implies ?x[hasMum hasValue ?y].
+
+		axiom MumSubMother
+			definedBy
+				?x[hasMum hasValue ?y] implies ?x[hasMother hasValue ?y].
+
+		axiom ParentSubAncestor
+			definedBy
+				?x[hasParent hasValue ?y] implies ?x[hasAncestor hasValue ?y].
+
+		axiom AncestorSubRelative
+			definedBy
+				?x[hasAncestor hasValue ?y] implies ?x[hasRelative hasValue ?y].
+
+		axiom MarriedSubRelative
+			definedBy
+				?x[isMarriedTo hasValue ?y] implies ?x[hasRelative hasValue ?y].
+
+		axiom ChildSubRelative
+			definedBy
+				?x[hasChild hasValue ?y] implies ?x[hasRelative hasValue ?y].
+
+		axiom ChildTransitive
+			definedBy
+				?x[hasChild hasValue ?y] and ?y[hasChild hasValue ?z]  implies ?x[hasRelative hasValue ?z].
+
+
+      concept Man subConceptOf Human
+      
+      concept Woman subConceptOf Human
+
+      axiom ManDisjointWoman
+            definedBy
+                  !- ?x memberOf Man and ?x memberOf Woman.
+
+      concept Parent subConceptOf Human
+            hasChild impliesType Child
+
+      concept Father subConceptOf Parent
+      
+      concept Daddy subConceptOf Father
+      
+      axiom FatherSubDaddy
+      	definedBy
+      		?x memberOf Father implies ?x memberOf Daddy.
+
+      concept Child subConceptOf Human
+
+      concept Girl subConceptOf Woman
+
+      concept Boy
+
+      axiom ABoy
+            definedBy
+                  ?x memberOf Boy equivalent ?x memberOf Man and ?x memberOf Child.
+
+      instance Mary memberOf {Parent, Woman}
+            annotations
+                  dc#description hasValue "Mary is parent of the twins Paul and Susan"
+            endAnnotations
+            hasName hasValue "Maria Smith"
+            hasBirthdate hasValue xsd#date(1949,09,12)
+            isAlive hasValue xsd#boolean("true")
+            hasWeightInKG hasValue xsd#float("60.3")
+            dateOfDeath hasValue xsd#date(2049,09,12)
+            hasChild hasValue { Paul, Susan }
+
+      instance Paul memberOf { Parent, Man }
+            hasName hasValue "Paul Smith"
+            hasBirthdate hasValue xsd#date(1976,08,16)
+            hasChild hasValue George
+            hasCitizenship hasValue oo#de
+            hasAncestor		hasValue Frank
+  			hasMother		hasValue Mary
+            hasBirthplace	hasValue Innsbruck
+            isMarriedTo		hasValue Paula
+
+      instance Susan memberOf Woman
+            hasName hasValue "Susan Jones"
+            hasBirthdate hasValue xsd#date(1976,08,16)
+
+       /*
+        * This will be automatically an instance of Boy, since George is a
+        * Man younger than 14.
+        */
+      instance George memberOf Man
+            hasName hasValue "George Smith"
+            /*hasAncestor hasValue Mary - can be inferred from the rest of this example */
+            hasWeightInKG hasValue xsd#float("3.52")
+            hasBirthdate hasValue xsd#date(1977,10,21)
+            
+ontology _"http://www.example.org/ontologies/example2"
+      concept Human2
+            hasName2		impliesType foaf#name
+            hasRelative2	impliesType Human
+            hasAncestor2	impliesType Human
+            hasParent2		impliesType Human
+            hasMother2		impliesType Mother2
+            hasWeightInKG2	ofType xsd#float
+            hasBirthdate2	ofType xsd#date
+            /*
+             * The following will match the ones from the first ontology
+             */
+  			hasMother		impliesType FemaleHuman2
+            hasWeightInKG	ofType xsd#float
+            hasBirthdate	ofType xsd#date
+            dateOfDeath		ofType xsd#date
+            hasBirthplace	impliesType loc#location
+            isMarriedTo		impliesType Human
+            hasCitizenship	impliesType oo#country
+            isAlive			ofType xsd#boolean
+	                        annotations
+	                              dc#relation hasValue {IsAlive}
+	                        endAnnotations
+                        
+
+      concept Man2 subConceptOf Human2
+
+      concept Woman2 subConceptOf Human
+
+      concept Parent subConceptOf Human
+            hasChild2 impliesType Human
+
+      concept Child subConceptOf Human
+
+      concept Girl2 subConceptOf Woman
+
+      concept Boy
+
+      /*
+       * This axiom implies that Boy is a Man and a Child and every Man which
+       * is also a Child is a Boy
+       */
+      axiom ABoy
+            definedBy
+                  ?x memberOf Boy equivalent ?x memberOf Man and ?x memberOf Child.
+
+      instance Mary memberOf {Parent, Woman}
+            annotations
+                  dc#description hasValue "Mary is parent of the twins Paul and Susan"
+            endAnnotations
+            hasName hasValue "Maria Smith"
+            hasBirthdate hasValue xsd#date(1949,09,12)
+
+      instance Paul2 memberOf { Parent, Man2 }
+            hasName hasValue "Paul Smith"
+            hasBirthdate hasValue xsd#date(1976,08,16)
+            hasBirthdate hasValue xsd#date(1967,08,16)
+            hasCitizenship hasValue oo#en
+            hasMother2 hasValue Mary
+
+      instance Susan memberOf Woman
+            hasName hasValue "Susan Jones"
+
+       /*
+        * This will be automatically an instance of Boy, since George is a
+        * Man younger than 14.
+        */
+      instance George2 memberOf Man
+            hasName hasValue "George Smith"
+            /*hasAncestor hasValue Mary - can be inferred from the rest of this example */
+            hasWeightInKG hasValue xsd#float("3.52")
+            
+            
