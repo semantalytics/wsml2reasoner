@@ -3,7 +3,7 @@
 
 	<groupId>net.sourceforge.wsml2reasoner</groupId>
 	<artifactId>wsml2reasoner</artifactId>
-	<version>0.8.3</version>
+	<version>0.8.4-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>WSML2Reasoner</name>
 
@@ -19,9 +19,9 @@
 	</properties>
 
 	<scm>
-		<connection>scm:svn:https://wsml2reasoner.svn.sourceforge.net/svnroot/wsml2reasoner/wsml2reasoner/tags/wsml2reasoner-0.8.3</connection>
-		<developerConnection>scm:svn:https://wsml2reasoner.svn.sourceforge.net/svnroot/wsml2reasoner/wsml2reasoner/tags/wsml2reasoner-0.8.3</developerConnection>
-		<url>http://wsml2reasoner.svn.sourceforge.net/viewvc/wsml2reasoner/wsml2reasoner/tags/wsml2reasoner-0.8.3</url>
+		<connection>scm:svn:https://wsml2reasoner.svn.sourceforge.net/svnroot/wsml2reasoner/wsml2reasoner/branches/WSML2.0</connection>
+		<developerConnection>scm:svn:https://wsml2reasoner.svn.sourceforge.net/svnroot/wsml2reasoner/wsml2reasoner/branches/WSML2.0</developerConnection>
+		<url>http://wsml2reasoner.svn.sourceforge.net/viewvc/wsml2reasoner/wsml2reasoner/branches/WSML2.0</url>
 	</scm>
 	
 	<build>
