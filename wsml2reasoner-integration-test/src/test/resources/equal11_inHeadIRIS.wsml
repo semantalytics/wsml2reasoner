@@ -1,0 +1,23 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
+namespace { _"http://simple11#"
+}
+
+ontology simple_11
+
+concept C1
+	aInteger ofType _integer
+
+concept C2
+    aString ofType _string 
+	
+concept C3 subConceptOf C1
+
+instance A memberOf C2
+	aString hasValue _string( "string-value" )
+	aBoolean hasValue _boolean( "true" )
+
+instance B memberOf C3
+	//aInteger hasValue _integer( 12345 )
+		
+axiom equal definedBy
+	A = B :- true.

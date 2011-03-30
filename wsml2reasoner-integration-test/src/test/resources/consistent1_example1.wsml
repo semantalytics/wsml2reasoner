@@ -1,0 +1,65 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://example.com/consistent1#" } 
+
+ontology consistent1
+
+concept relieve subConceptOf managementEvent
+
+concept schedule subConceptOf managementEvent
+
+concept start subConceptOf initialEvent
+
+concept manualSkip subConceptOf skip
+
+concept autoSkip subConceptOf skip
+
+concept successfulExecutionEvent subConceptOf finalEvent
+
+concept piAbort subConceptOf { managementEvent, unsuccessfulExecutionEvent}
+
+concept complete subConceptOf successfulExecutionEvent
+
+concept intermediateEvent subConceptOf executionEvent
+     occurredInActivity ofType (0 0) _"http://www.ip-super.org/ontologies/ddpo#activity"
+
+concept assign subConceptOf managementEvent
+
+concept executionEvent subConceptOf processEvent
+
+concept skip subConceptOf { managementEvent, successfulExecutionEvent}
+
+concept ateAbort subConceptOf unsuccessfulExecutionEvent
+
+concept withdraw subConceptOf { managementEvent, unsuccessfulExecutionEvent}
+
+concept initialEvent subConceptOf executionEvent
+
+concept processEvent subConceptOf monitoringEvent
+     generatedBy ofType  (1 1) _"http://www.ip-super.org/ontologies/ddpo#actor"
+     occurredInProcess ofType  (1 1) _"http://www.ip-super.org/ontologies/ddpo#process"
+     occurredInActivity ofType  (0 1) _"http://www.ip-super.org/ontologies/ddpo#activity"
+
+concept managementEvent subConceptOf processEvent
+
+concept unsuccessfulExecutionEvent subConceptOf finalEvent
+
+concept finalEvent subConceptOf executionEvent
+
+concept suspend subConceptOf intermediateEvent
+
+concept reassign subConceptOf assign
+
+concept resume subConceptOf intermediateEvent
+
+concept dataEvent subConceptOf monitoringEvent
+     processedBy ofType _"http://www.ip-super.org/ontologies/ddpo#actor"
+     timeToLive ofType  (0 1) _dateTime
+
+concept monitoringEvent
+     generatedBy ofType  (0 1) _"http://www.ip-super.org/ontologies/ddpo#actor"
+     hasCreationTimestamp ofType  (1 1) _dateTime
+     hasReceptionTimestamp ofType  (1 1) _dateTime
+
+concept piComplete subConceptOf { complete, managementEvent}
+
+ 	  	 
