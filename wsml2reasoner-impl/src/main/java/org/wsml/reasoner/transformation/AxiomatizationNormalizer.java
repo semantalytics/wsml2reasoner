@@ -184,6 +184,10 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
             resultExpressions.addAll(normalizeConceptAttribute(conceptID, attribute));
         }
 
+        // FIXME dirty hack; but otherwise concept gets lost
+        if (resultExpressions.isEmpty())
+        	resultExpressions.add(leFactory.createSubConceptMolecule(conceptID, conceptID));
+
         return resultExpressions;
     }
 
@@ -471,6 +475,10 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
             ++paramIndex;
         }
         resultExpressions.addAll(parameterAxioms);
+        
+        // FIXME dirty hack; but otherwise relation gets lost
+        if (resultExpressions.isEmpty())
+        	resultExpressions.add(leFactory.createImplication(relP, relP));
 
         return resultExpressions;
     }
