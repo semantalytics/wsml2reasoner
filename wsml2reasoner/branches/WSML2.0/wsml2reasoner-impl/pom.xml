@@ -21,13 +21,13 @@
 		<dependency>
 			<groupId>at.sti2.iris</groupId>
 			<artifactId>iris-impl</artifactId>
-			<version>0.7.2</version>
+			<version>0.7.3-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>at.sti2.elly</groupId>
 			<artifactId>elly-iris</artifactId>
-			<version>0.2.2</version>
+			<version>0.2.3-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
