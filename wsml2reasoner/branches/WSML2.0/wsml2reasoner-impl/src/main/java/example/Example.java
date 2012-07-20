@@ -32,12 +32,12 @@ public class Example {
 
 	public static void main(String[] args) throws IOException, ParserException,
 			InvalidModelException, InconsistencyException {
-		
+
 		// Create a parser and parse the example ontology file.
 		// For simplicity we do not take care of exceptions at the moment.
 		Parser wsmlParser = new WsmlParser();
 		InputStream is = wsmlParser.getClass().getClassLoader()
-				.getResourceAsStream("example/instance-equality.wsml");
+				.getResourceAsStream("instance-equality.wsml");
 		TopEntity[] identifiable = wsmlParser.parse(new InputStreamReader(is));
 
 		// We can be sure here, that we only parse a single ontology.
@@ -50,9 +50,9 @@ public class Example {
 		// the parameters. Here IRIS reasoner with well-founded semantics is
 		// used.
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER, WSMLReasonerFactory.BuiltInReasoner.IRIS_WELL_FOUNDED);
+		params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
+				WSMLReasonerFactory.BuiltInReasoner.IRIS_WELL_FOUNDED);
 
-		
 		// Instantiate the desired reasoner using the default reasoner factory.
 		LPReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
 				.createRuleReasoner(params);
