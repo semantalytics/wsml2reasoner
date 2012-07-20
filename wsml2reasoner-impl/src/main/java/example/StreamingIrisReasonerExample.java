@@ -20,17 +20,16 @@ package example;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.ServerSocket;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
 import org.deri.wsmo4j.io.serializer.wsml.SerializeWSMLTermsVisitor;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
-import org.omwg.ontology.Variable;
-import org.wsml.reasoner.api.LPReasoner;
+import org.wsml.reasoner.api.StreamingLPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsmo.common.TopEntity;
@@ -43,14 +42,14 @@ import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
  * 
  * @author Holger Lausen, DERI Innsbruck
  */
-public class IrisReasonerExample {
+public class StreamingIrisReasonerExample {
 
 	/**
 	 * @param args
 	 *            none expected
 	 */
 	public static void main(String[] args) {
-		IrisReasonerExample ex = new IrisReasonerExample();
+		StreamingIrisReasonerExample ex = new StreamingIrisReasonerExample();
 		try {
 			ex.doTestRun();
 			System.exit(0);
@@ -78,28 +77,33 @@ public class IrisReasonerExample {
 		// get A reasoner
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
-				WSMLReasonerFactory.BuiltInReasoner.IRIS_STRATIFIED);
-		LPReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
-				.createFlightReasoner(params);
+				WSMLReasonerFactory.BuiltInReasoner.STREAMING_IRIS_STRATIFIED);
+		StreamingLPReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
+				.createStreamingFlightReasoner(params);
 
-		// Register ontology
-		reasoner.registerOntology(exampleOntology);
-		// reasoner.registerOntologyNoVerification(exampleOntology);
+		// create the configuration
+		Map<String, Object> configuration = new HashMap<String, Object>();
 
-		// Execute query request
-		Set<Map<Variable, Term>> result = reasoner.executeQuery(query);
+		// Start reasoner
+		reasoner.startReasoner(exampleOntology, configuration);
 
-		// print out the results:
-		System.out.println("The query\n'" + query
-				+ "'\nhas the following results:");
-		for (Map<Variable, Term> vBinding : result) {
-			for (Variable var : vBinding.keySet()) {
-				System.out.print(var + ": "
-						+ termToString(vBinding.get(var), exampleOntology)
-						+ "\t ");
-			}
-			System.out.println();
-		}
+		// Register query listener
+		ServerSocket server = new ServerSocket(0);
+		reasoner.registerQueryListener(query, "localhost",
+				server.getLocalPort());
+
+		// TODO: start input streamer
+
+		Thread.sleep(13000);
+
+		reasoner.deregisterQueryListener(query, "localhost",
+				server.getLocalPort());
+		server.close();
+
+		Thread.sleep(5000);
+
+		// do not forget to shut down the reasoner
+		reasoner.shutdownReasoner();
 	}
 
 	/**

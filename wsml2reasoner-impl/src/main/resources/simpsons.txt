@@ -1,0 +1,11 @@
+m-an('homer simpson').
+wo-man('marge simpson').
+has-Son('homer simpson','bart simpson').
+
+isMale(?x) :- man(?x).
+isFemale(?x) :- woman(?x).
+isMale(?y) :- hasSon(?x,?y).
+isFemale(?y) :- hasDaughter(?x,?y).
+isAnimal(?y) :- hasPet(?x,?y).
+
+?- isMale(?x). 
