@@ -19,6 +19,8 @@
 
 package org.wsml.reasoner;
 
+import static org.wsml.reasoner.TransformerPredicates.*;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -78,164 +80,142 @@ import org.wsmo.factory.LogicalExpressionFactory;
  */
 public class WSML2DatalogTransformer {
 
-    // Some predicates that are used to represent the oo-based molecules
-    // of WSML in datalog.
-    public final static String PRED_SUB_CONCEPT_OF = "wsml-subconcept-of";
+	FactoryContainer wsmoManager;
 
-    public final static String PRED_OF_TYPE = "wsml-of-type";
+	/**
+	 * Generates a WSML2Datalog converter.
+	 */
+	public WSML2DatalogTransformer(FactoryContainer wsmoManager) {
+		this.wsmoManager = wsmoManager;
+	}
 
-    public final static String PRED_IMPLIES_TYPE = "wsml-implies-type";
+	/**
+	 * Transforms the given set of logical expressions to datalog. It is
+	 * required that the logical expressions are rules of a specific syntactic
+	 * kind (simple rules) which ensures that they can be converted to datalog.
+	 * 
+	 * The conversion in particular transformes the object-oriented modelling
+	 * elements in rules, like slots or instance-of molecules.
+	 * 
+	 * If this is not the case an exception will be thrown.
+	 * 
+	 * @param rules
+	 *            - the set of (simple) WSML rules
+	 * @throws IllegalArgumentException
+	 *             - if the given set of logical expressions does not satisfy
+	 *             the syntactic requirements described above.
+	 * @return a datalog program that represents the given set of WSML rules.
+	 */
+	public Set<Rule> transform(Set<? extends LogicalExpression> rules)
+			throws IllegalArgumentException {
+		Set<Rule> result = new HashSet<Rule>();
 
-    public final static String PRED_MEMBER_OF = "wsml-member-of";
+		DatalogVisitor datalogVisitor = new DatalogVisitor();
 
-    public final static String PRED_HAS_VALUE = "wsml-has-value";
+		for (LogicalExpression r : rules) {
+			r.accept(datalogVisitor);
+			Set<Rule> translation = datalogVisitor.getSerializedObject();
+			if (translation.size() != 0) {
+				for (Rule r1 : translation) {
+					result.add(r1);
+				}
+			} else {
+				throw new IllegalArgumentException(
+						"WSML rule can not be translated to datalog: "
+								+ r.toString());
+			}
+			datalogVisitor.reset();
 
-    // public final static String PRED_DECLARED_IRI =
-    // "http://www.wsmo.org/wsml/wsml-syntax/extensions#wsml_is_declared_iri";
+			// Now add some additional facts stating that the found terms
+			// represent in fact concepts of the ontology (needed for correct
+			// implementation of reflexivity
+			// of subConceptOf)
 
-    public final static String PRED_DIRECT_SUBCONCEPT = "http://temp/direct/subConceptOf";
+			Set<Term> conceptDenotingTerms = extractConstantsUsedAsConcepts(r);
 
-    public final static String PRED_INDIRECT_SUBCONCEPT = "http://temp/indirect/subConceptOf";
+			List<Literal> body = new LinkedList<Literal>(); // empty body
+			Literal head;
 
-    public final static String PRED_DIRECT_CONCEPT = "http://temp/direct/memberOf";
+			for (Term t : conceptDenotingTerms) {
 
-    public final static String PRED_INDIRECT_CONCEPT = "http://temp/indirect/memberOf";
+				// Create a fact: knownConcept(t).
+				head = new Literal(true, PRED_KNOWN_CONCEPT, t);
+				result.add(new Rule(head, body));
 
-    public final static String PRED_KNOWN_CONCEPT = "http://temp/knownConcept";
+			}
 
-    FactoryContainer wsmoManager;
+			// TODO: we need to construct in the same way the known_concept
+			// facts for the query before handing the
+			// datalog programm to the datalog engine!
 
-    /**
-     * Generates a WSML2Datalog converter.
-     */
-    public WSML2DatalogTransformer(FactoryContainer wsmoManager) {
-        this.wsmoManager = wsmoManager;
-    }
+		}
+		return result;
+	}
 
-    /**
-     * Transforms the given set of logical expressions to datalog. It is
-     * required that the logical expressions are rules of a specific syntactic
-     * kind (simple rules) which ensures that they can be converted to datalog.
-     * 
-     * The conversion in particular transformes the object-oriented modelling
-     * elements in rules, like slots or instance-of molecules.
-     * 
-     * If this is not the case an exception will be thrown.
-     * 
-     * @param rules -
-     *            the set of (simple) WSML rules
-     * @throws IllegalArgumentException -
-     *             if the given set of logical expressions does not satisfy the
-     *             syntactic requirements described above.
-     * @return a datalog program that represents the given set of WSML rules.
-     */
-    public Set<Rule> transform(Set< ? extends LogicalExpression> rules) throws IllegalArgumentException {
-        Set<Rule> result = new HashSet<Rule>();
+	// An inner class for detecting if a term contains any variables (and
+	// therefore
+	// is no ground term)
 
-        DatalogVisitor datalogVisitor = new DatalogVisitor();
+	class DetectVariablesTermVisitor extends ConstructedTermVisitor {
+		boolean foundVariable = false;
 
-        for (LogicalExpression r : rules) {
-            r.accept(datalogVisitor);
-            Set <Rule> translation = datalogVisitor.getSerializedObject();
-            if (translation.size() != 0) {
-            	for (Rule r1 : translation) {
-            		result.add(r1);
-            	}
-            }
-            else {
-                throw new IllegalArgumentException("WSML rule can not be translated to datalog: " + r.toString());
-            }
-            datalogVisitor.reset();
+		@Override
+		public void visit(Variable arg0) {
+			foundVariable = true;
+		}
 
-            // Now add some additional facts stating that the found terms
-            // represent in fact concepts of the ontology (needed for correct
-            // implementation of reflexivity
-            // of subConceptOf)
+		public void reset() {
+			foundVariable = false;
+		}
 
-            Set<Term> conceptDenotingTerms = extractConstantsUsedAsConcepts(r);
+		public boolean foundVariable() {
+			return foundVariable;
+		}
 
-            List<Literal> body = new LinkedList<Literal>(); // empty body
-            Literal head;
+	}
 
-            for (Term t : conceptDenotingTerms) {
+	static class BodyMoleculeCollector extends DatalogVisitor {
+		List<Molecule> bodyMolecules = new LinkedList<Molecule>();
 
-                // Create a fact: knownConcept(t).
-                head = new Literal(true, PRED_KNOWN_CONCEPT, t);
-                result.add(new Rule(head, body));
+		List<Molecule> getMolecules() {
+			return bodyMolecules;
+		}
 
-            }
+		public void reset() {
+			bodyMolecules = new LinkedList<Molecule>();
+		}
 
-            // TODO: we need to construct in the same way the known_concept
-            // facts for the query before handing the
-            // datalog programm to the datalog engine!
+		@Override
+		public void handleAttributeConstraintMolecule(
+				AttributeConstraintMolecule arg0) {
+			if (inBodyOfRule) {
+				bodyMolecules.add(arg0);
+			}
+		}
 
-        }
-        return result;
-    }
+		@Override
+		public void handleAttributeInferenceMolecule(
+				AttributeInferenceMolecule arg0) {
+			if (inBodyOfRule) {
+				bodyMolecules.add(arg0);
+			}
+		}
 
-    // An inner class for detecting if a term contains any variables (and
-    // therefore
-    // is no ground term)
+		@Override
+		public void handleMemberShipMolecule(MembershipMolecule arg0) {
+			if (inBodyOfRule) {
+				bodyMolecules.add(arg0);
+			}
+		}
 
-    class DetectVariablesTermVisitor extends ConstructedTermVisitor {
-        boolean foundVariable = false;
+		@Override
+		public void handleSubConceptMolecule(SubConceptMolecule arg0) {
+			if (inBodyOfRule) {
+				bodyMolecules.add(arg0);
+			}
+		}
 
-        @Override
-        public void visit(Variable arg0) {
-            foundVariable = true;
-        }
-
-        public void reset() {
-            foundVariable = false;
-        }
-
-        public boolean foundVariable() {
-            return foundVariable;
-        }
-
-    }
-
-    static class BodyMoleculeCollector extends DatalogVisitor {
-        List<Molecule> bodyMolecules = new LinkedList<Molecule>();
-
-        List<Molecule> getMolecules() {
-            return bodyMolecules;
-        }
-
-        public void reset() {
-            bodyMolecules = new LinkedList<Molecule>();
-        }
-
-        @Override
-        public void handleAttributeConstraintMolecule(AttributeConstraintMolecule arg0) {
-            if (inBodyOfRule) {
-                bodyMolecules.add(arg0);
-            }
-        }
-
-        @Override
-        public void handleAttributeInferenceMolecule(AttributeInferenceMolecule arg0) {
-            if (inBodyOfRule) {
-                bodyMolecules.add(arg0);
-            }
-        }
-
-        @Override
-        public void handleMemberShipMolecule(MembershipMolecule arg0) {
-            if (inBodyOfRule) {
-                bodyMolecules.add(arg0);
-            }
-        }
-
-        @Override
-        public void handleSubConceptMolecule(SubConceptMolecule arg0) {
-            if (inBodyOfRule) {
-                bodyMolecules.add(arg0);
-            }
-        }
-        
-
-        @Override
+		@Override
 		public void handleImplication(Implication arg0) {
 			super.handleImplication(arg0);
 		}
@@ -246,263 +226,274 @@ public class WSML2DatalogTransformer {
 		}
 
 		@Override
-        public void handleAtom(Atom atom) {
-            // do nothing.
-        }
+		public void handleAtom(Atom atom) {
+			// do nothing.
+		}
 
-        @Override
-        public void handleAttributeValueMolecule(AttributeValueMolecule arg0) {
-            // do nothing.
-        }
-        
-        @Override
-        public void handleTruthValue(TruthValue truthValue) {
-        	// do nothing.
-        }
+		@Override
+		public void handleAttributeValueMolecule(AttributeValueMolecule arg0) {
+			// do nothing.
+		}
 
-    }
+		@Override
+		public void handleTruthValue(TruthValue truthValue) {
+			// do nothing.
+		}
 
-    public Set<Term> extractConstantsUsedAsConcepts(LogicalExpression rule) {
+	}
 
-        Set<Term> result = new HashSet<Term>();
-        DetectVariablesTermVisitor variableDetector = new DetectVariablesTermVisitor();
+	public Set<Term> extractConstantsUsedAsConcepts(LogicalExpression rule) {
 
-        BodyMoleculeCollector bmCollector = new BodyMoleculeCollector();
-        rule.accept(bmCollector);
-        List<Molecule> bodyMolecules = bmCollector.getMolecules();
+		Set<Term> result = new HashSet<Term>();
+		DetectVariablesTermVisitor variableDetector = new DetectVariablesTermVisitor();
 
-        for (Molecule l : bodyMolecules) {
-            org.omwg.logicalexpression.Molecule currentMolecule = l;
-            if (currentMolecule instanceof org.omwg.logicalexpression.MembershipMolecule) {
+		BodyMoleculeCollector bmCollector = new BodyMoleculeCollector();
+		rule.accept(bmCollector);
+		List<Molecule> bodyMolecules = bmCollector.getMolecules();
 
-                currentMolecule.getRightParameter().accept(variableDetector);
-                if (!variableDetector.foundVariable()) {
-                    result.add(currentMolecule.getRightParameter());
-                }
-                variableDetector.reset();
+		for (Molecule l : bodyMolecules) {
+			org.omwg.logicalexpression.Molecule currentMolecule = l;
+			if (currentMolecule instanceof org.omwg.logicalexpression.MembershipMolecule) {
 
-            }
-            else if (currentMolecule instanceof org.omwg.logicalexpression.SubConceptMolecule) {
+				currentMolecule.getRightParameter().accept(variableDetector);
+				if (!variableDetector.foundVariable()) {
+					result.add(currentMolecule.getRightParameter());
+				}
+				variableDetector.reset();
 
-                currentMolecule.getLeftParameter().accept(variableDetector);
-                if (!variableDetector.foundVariable()) {
-                    result.add(currentMolecule.getLeftParameter());
-                }
-                variableDetector.reset();
+			} else if (currentMolecule instanceof org.omwg.logicalexpression.SubConceptMolecule) {
 
-                currentMolecule.getRightParameter().accept(variableDetector);
-                if (!variableDetector.foundVariable()) {
-                    result.add(currentMolecule.getRightParameter());
-                }
-                variableDetector.reset();
+				currentMolecule.getLeftParameter().accept(variableDetector);
+				if (!variableDetector.foundVariable()) {
+					result.add(currentMolecule.getLeftParameter());
+				}
+				variableDetector.reset();
 
-            }
-            else if (currentMolecule instanceof org.omwg.logicalexpression.AttributeMolecule) {
-                currentMolecule.getLeftParameter().accept(variableDetector);
-                if (!variableDetector.foundVariable()) {
-                    result.add(currentMolecule.getLeftParameter());
-                }
-                variableDetector.reset();
+				currentMolecule.getRightParameter().accept(variableDetector);
+				if (!variableDetector.foundVariable()) {
+					result.add(currentMolecule.getRightParameter());
+				}
+				variableDetector.reset();
 
-                currentMolecule.getRightParameter().accept(variableDetector);
-                if (!variableDetector.foundVariable()) {
-                    result.add(currentMolecule.getRightParameter());
-                }
-                variableDetector.reset();
-            }
-        }
+			} else if (currentMolecule instanceof org.omwg.logicalexpression.AttributeMolecule) {
+				currentMolecule.getLeftParameter().accept(variableDetector);
+				if (!variableDetector.foundVariable()) {
+					result.add(currentMolecule.getLeftParameter());
+				}
+				variableDetector.reset();
 
-        bmCollector.reset();
+				currentMolecule.getRightParameter().accept(variableDetector);
+				if (!variableDetector.foundVariable()) {
+					result.add(currentMolecule.getRightParameter());
+				}
+				variableDetector.reset();
+			}
+		}
 
-        return result;
-    }
+		bmCollector.reset();
 
-    /**
-     * Transforms a single (simple) WSML (datalog) rule to datalog. In general,
-     * the result consists of several datalog rules i.e. a datalog program
-     * 
-     * @param rule -
-     *            the rule to be translated
-     * @return a datalog program that represents the given simple WSML rule.
-     * @throws IllegalArgumentException -
-     *             if the given rule can not be translated to datalog.
-     */
-    public Set<Rule> transform(LogicalExpression rule) throws IllegalArgumentException {
-        // System.out.println(rule.toString());
-        Set<LogicalExpression> rules = new HashSet<LogicalExpression>();
-        rules.add(rule);
-        return transform(rules);
-    }
+		return result;
+	}
 
-    public Set<Rule> generateAuxilliaryRules() {
-        Set<Rule> result = new HashSet<Rule>();
+	/**
+	 * Transforms a single (simple) WSML (datalog) rule to datalog. In general,
+	 * the result consists of several datalog rules i.e. a datalog program
+	 * 
+	 * @param rule
+	 *            - the rule to be translated
+	 * @return a datalog program that represents the given simple WSML rule.
+	 * @throws IllegalArgumentException
+	 *             - if the given rule can not be translated to datalog.
+	 */
+	public Set<Rule> transform(LogicalExpression rule)
+			throws IllegalArgumentException {
+		// System.out.println(rule.toString());
+		Set<LogicalExpression> rules = new HashSet<LogicalExpression>();
+		rules.add(rule);
+		return transform(rules);
+	}
 
-        LogicalExpressionFactory f = this.wsmoManager.getLogicalExpressionFactory();
+	public Set<Rule> generateAuxilliaryRules() {
+		Set<Rule> result = new HashSet<Rule>();
 
-        Variable vConcept = f.createVariable("concept");
-        Variable vConcept2 = f.createVariable("concept2");
-        Variable vConcept3 = f.createVariable("concept3");
-        Variable vAttribute = f.createVariable("attribute");
-        // Variable vRange = f.createVariable("range");
-        Variable vInstance = f.createVariable("instance");
-        Variable vInstance2 = f.createVariable("instance2");
-        // Variable vAttributeValue = f.createVariable("attributevalue");
-        Variable vType = f.createVariable("type");
+		LogicalExpressionFactory f = this.wsmoManager
+				.getLogicalExpressionFactory();
 
-        List<Literal> body;
-        Literal head;
+		Variable vConcept = f.createVariable("concept");
+		Variable vConcept2 = f.createVariable("concept2");
+		Variable vConcept3 = f.createVariable("concept3");
+		Variable vAttribute = f.createVariable("attribute");
+		// Variable vRange = f.createVariable("range");
+		Variable vInstance = f.createVariable("instance");
+		Variable vInstance2 = f.createVariable("instance2");
+		// Variable vAttributeValue = f.createVariable("attributevalue");
+		Variable vType = f.createVariable("type");
 
-        // transitivity: sco(?c1,?c3) <- sco(?c1,?c2) and sco(?c2,?c3)
-        // extension-subset: mo(?o,?c2) <- mo(?o,?c1) and sco(?c1,?c2)
-        body = new LinkedList<Literal>();
-        head = new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept3);
-        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept2));
-        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept2, vConcept3));
-        result.add(new Rule(head, body));
+		List<Literal> body;
+		Literal head;
 
-        // memberOf(instance, concept2) <- memberOf(instance, concept),
-        // subConceptOf(concept, concept2)
-        body = new LinkedList<Literal>();
-        head = new Literal(true, PRED_MEMBER_OF, vInstance, vConcept2);
-        body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept));
-        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept2));
-        result.add(new Rule(head, body));
+		// transitivity: sco(?c1,?c3) <- sco(?c1,?c2) and sco(?c2,?c3)
+		// extension-subset: mo(?o,?c2) <- mo(?o,?c1) and sco(?c1,?c2)
+		body = new LinkedList<Literal>();
+		head = new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept3);
+		body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept2));
+		body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept2, vConcept3));
+		result.add(new Rule(head, body));
 
-        // reflexivity: sco(?c,?c) :- ?c is a known concept IRI in the ontology
-        // (explicit or inferred)
-        body = new LinkedList<Literal>();
-        head = new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept);
-        body.add(new Literal(true, PRED_KNOWN_CONCEPT, vConcept));
-        result.add(new Rule(head, body));
+		// memberOf(instance, concept2) <- memberOf(instance, concept),
+		// subConceptOf(concept, concept2)
+		body = new LinkedList<Literal>();
+		head = new Literal(true, PRED_MEMBER_OF, vInstance, vConcept2);
+		body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept));
+		body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept2));
+		result.add(new Rule(head, body));
 
-        // knownConcept(?c) :- ?i memberOf ?c
-        body = new LinkedList<Literal>();
-        head = new Literal(true, PRED_KNOWN_CONCEPT, vConcept);
-        body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept));
-        result.add(new Rule(head, body));
+		// reflexivity: sco(?c,?c) :- ?c is a known concept IRI in the ontology
+		// (explicit or inferred)
+		body = new LinkedList<Literal>();
+		head = new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept);
+		body.add(new Literal(true, PRED_KNOWN_CONCEPT, vConcept));
+		result.add(new Rule(head, body));
 
-        // knownConcept(?c1) :- ?c1 subConceptOf ?c2
-        body = new LinkedList<Literal>();
-        head = new Literal(true, PRED_KNOWN_CONCEPT, vConcept2);
-        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept2, vConcept3));
-        result.add(new Rule(head, body));
+		// knownConcept(?c) :- ?i memberOf ?c
+		body = new LinkedList<Literal>();
+		head = new Literal(true, PRED_KNOWN_CONCEPT, vConcept);
+		body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept));
+		result.add(new Rule(head, body));
 
-        // knownConcept(?c2) :- ?c1 subConceptOf ?c2
-        body = new LinkedList<Literal>();
-        head = new Literal(true, PRED_KNOWN_CONCEPT, vConcept3);
-        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept2, vConcept3));
-        result.add(new Rule(head, body));
+		// knownConcept(?c1) :- ?c1 subConceptOf ?c2
+		body = new LinkedList<Literal>();
+		head = new Literal(true, PRED_KNOWN_CONCEPT, vConcept2);
+		body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept2, vConcept3));
+		result.add(new Rule(head, body));
 
-        // knownConcept(?c) :- ?c[?a ofType ?t]
-        body = new LinkedList<Literal>();
-        head = new Literal(true, PRED_KNOWN_CONCEPT, vConcept);
-        body.add(new Literal(true, PRED_OF_TYPE, vConcept, vAttribute, vConcept2));
-        result.add(new Rule(head, body));
+		// knownConcept(?c2) :- ?c1 subConceptOf ?c2
+		body = new LinkedList<Literal>();
+		head = new Literal(true, PRED_KNOWN_CONCEPT, vConcept3);
+		body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept2, vConcept3));
+		result.add(new Rule(head, body));
 
-        // knownConcept(?c) :- ?c[?a impilesType ?t]
-        body = new LinkedList<Literal>();
-        head = new Literal(true, PRED_KNOWN_CONCEPT, vConcept);
-        body.add(new Literal(true, PRED_IMPLIES_TYPE, vConcept, vAttribute, vConcept2));
-        result.add(new Rule(head, body));
+		// knownConcept(?c) :- ?c[?a ofType ?t]
+		body = new LinkedList<Literal>();
+		head = new Literal(true, PRED_KNOWN_CONCEPT, vConcept);
+		body.add(new Literal(true, PRED_OF_TYPE, vConcept, vAttribute,
+				vConcept2));
+		result.add(new Rule(head, body));
 
-        // Inference of attr value types: mo(v,c2) <- itype(c1, att,
-        // c2), mo(o,c1), hval(o,att, v)
-        // mo(v1,v2) <- itype(v3, v4, v2), mo(v5,v3), hval(v5,v4, v1)
-        body = new LinkedList<Literal>();
-        head = new Literal(true, PRED_MEMBER_OF, vInstance2, vConcept2);
-        body.add(new Literal(true, PRED_IMPLIES_TYPE, vConcept, vAttribute, vConcept2));
-        body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept));
-        body.add(new Literal(true, PRED_HAS_VALUE, vInstance, vAttribute, vInstance2));
-        result.add(new Rule(head, body));
+		// knownConcept(?c) :- ?c[?a impilesType ?t]
+		body = new LinkedList<Literal>();
+		head = new Literal(true, PRED_KNOWN_CONCEPT, vConcept);
+		body.add(new Literal(true, PRED_IMPLIES_TYPE, vConcept, vAttribute,
+				vConcept2));
+		result.add(new Rule(head, body));
 
-        /*
-         * Rules for: - getting all direct subConcepts of a specific concepts -
-         * getting all direct concepts a specific instance is member of
-         */
-        // Indirect concepts: indirect(?x,?z) :- ?x subConceptOf ?y and
-        // ?y subConceptOf ?z and ?x != ?y and ?y != ?z.
-        body = new LinkedList<Literal>();
-        head = new Literal(true, PRED_INDIRECT_SUBCONCEPT, vConcept, vConcept2);
-        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept3));
-        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept3, vConcept2));
-        body.add(new Literal(true, BuiltIn.INEQUAL.getFullName(), vConcept, vConcept3));
-        body.add(new Literal(true, BuiltIn.INEQUAL.getFullName(), vConcept3, vConcept2));
-        result.add(new Rule(head, body));
-        // Direct concepts: direct(?x,?y) :- ?x subConceptOf ?y and
-        // naf(indirect(?x,?y)).
-        body = new LinkedList<Literal>();
-        head = new Literal(true, PRED_DIRECT_SUBCONCEPT, vConcept, vConcept3);
-        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept3));
-        body.add(new Literal(false, PRED_INDIRECT_SUBCONCEPT, vConcept, vConcept3));
-        result.add(new Rule(head, body));
-        // Indirect concepts of: indirectOf(?x,?y) :- ?x memberOf ?y and
-        // ?x memberOf ?z and ?z subConceptOf ?y and ?z != ?y.
-        body = new LinkedList<Literal>();
-        head = new Literal(true, PRED_INDIRECT_CONCEPT, vInstance, vConcept);
-        body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept));
-        body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept2));
-        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept2, vConcept));
-        body.add(new Literal(true, BuiltIn.INEQUAL.getFullName(), vConcept2, vConcept));
-        result.add(new Rule(head, body));
-        // Direct concepts of: directOf(?x,?y) :- ?x memberOf ?y and
-        // naf(indirectOf(?x,?y)).
-        body = new LinkedList<Literal>();
-        head = new Literal(true, PRED_DIRECT_CONCEPT, vInstance, vConcept);
-        body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept));
-        body.add(new Literal(false, PRED_INDIRECT_CONCEPT, vInstance, vConcept));
-        result.add(new Rule(head, body));
+		// Inference of attr value types: mo(v,c2) <- itype(c1, att,
+		// c2), mo(o,c1), hval(o,att, v)
+		// mo(v1,v2) <- itype(v3, v4, v2), mo(v5,v3), hval(v5,v4, v1)
+		body = new LinkedList<Literal>();
+		head = new Literal(true, PRED_MEMBER_OF, vInstance2, vConcept2);
+		body.add(new Literal(true, PRED_IMPLIES_TYPE, vConcept, vAttribute,
+				vConcept2));
+		body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept));
+		body.add(new Literal(true, PRED_HAS_VALUE, vInstance, vAttribute,
+				vInstance2));
+		result.add(new Rule(head, body));
 
-        // TODO: subRelationOf not covered yet
+		/*
+		 * Rules for: - getting all direct subConcepts of a specific concepts -
+		 * getting all direct concepts a specific instance is member of
+		 */
+		// Indirect concepts: indirect(?x,?z) :- ?x subConceptOf ?y and
+		// ?y subConceptOf ?z and ?x != ?y and ?y != ?z.
+		body = new LinkedList<Literal>();
+		head = new Literal(true, PRED_INDIRECT_SUBCONCEPT, vConcept, vConcept2);
+		body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept3));
+		body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept3, vConcept2));
+		body.add(new Literal(true, BuiltIn.INEQUAL.getFullName(), vConcept,
+				vConcept3));
+		body.add(new Literal(true, BuiltIn.INEQUAL.getFullName(), vConcept3,
+				vConcept2));
+		result.add(new Rule(head, body));
+		// Direct concepts: direct(?x,?y) :- ?x subConceptOf ?y and
+		// naf(indirect(?x,?y)).
+		body = new LinkedList<Literal>();
+		head = new Literal(true, PRED_DIRECT_SUBCONCEPT, vConcept, vConcept3);
+		body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept, vConcept3));
+		body.add(new Literal(false, PRED_INDIRECT_SUBCONCEPT, vConcept,
+				vConcept3));
+		result.add(new Rule(head, body));
+		// Indirect concepts of: indirectOf(?x,?y) :- ?x memberOf ?y and
+		// ?x memberOf ?z and ?z subConceptOf ?y and ?z != ?y.
+		body = new LinkedList<Literal>();
+		head = new Literal(true, PRED_INDIRECT_CONCEPT, vInstance, vConcept);
+		body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept));
+		body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept2));
+		body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept2, vConcept));
+		body.add(new Literal(true, BuiltIn.INEQUAL.getFullName(), vConcept2,
+				vConcept));
+		result.add(new Rule(head, body));
+		// Direct concepts of: directOf(?x,?y) :- ?x memberOf ?y and
+		// naf(indirectOf(?x,?y)).
+		body = new LinkedList<Literal>();
+		head = new Literal(true, PRED_DIRECT_CONCEPT, vInstance, vConcept);
+		body.add(new Literal(true, PRED_MEMBER_OF, vInstance, vConcept));
+		body.add(new Literal(false, PRED_INDIRECT_CONCEPT, vInstance, vConcept));
+		result.add(new Rule(head, body));
 
-        /*
-         * // Semantics of C1[att => C2] (oftype constraint) // !- oftype(c1,
-         * att, c2), mo(i,c1), hval(i, att, v), NAF mo(v,c2) // With variables:
-         * oftype(v1, v2, v3), mo(v4,v1), hval(v4, v2, v5), NAF // mo(v5,v3)
-         *  // Commented out, because it is handled by
-         * 
-         * body = new LinkedList<Literal>(); body.add(new Literal(true,
-         * PRED_OF_TYPE, vConcept, vAttribute, vRange)); body.add(new
-         * Literal(true, PRED_MEMBER_OF, vInstance, vConcept)); body.add(new
-         * Literal(true, PRED_HAS_VALUE, vInstance, vAttribute,
-         * vAttributeValue)); body.add(new Literal(false, PRED_MEMBER_OF,
-         * vAttributeValue, vRange)); result.add(new Rule(null, body));
-         */
-        
-        /*
-         * The following two rules have been added so that the reasoner infers the attributes.
-         * The was previously done programmatically in:
-         * 		DatalogBasedWSMLReasoner.inheritAttributesToSubConcepts()
-         */
-        
-        //wsml-of-type(?sub, ?a, ?t) :- wsml-subconcept-of(?sub, ?super), wsml-of-type(?super, ?a, ?t).
-        head = new Literal(true, PRED_OF_TYPE, vConcept2, vAttribute, vType);
-        body = new LinkedList<Literal>();
-        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept2, vConcept));
-        body.add(new Literal(true, PRED_OF_TYPE, vConcept, vAttribute, vType));
-        result.add(new Rule(head, body));
+		// TODO: subRelationOf not covered yet
 
-        // baz
-        //wsml-implies-type(?sub, ?a, ?t) :- wsml-subconcept-of(?sub, ?super), wsml-implies-type(?super, ?a, ?t).
-        head = new Literal(true, PRED_IMPLIES_TYPE, vConcept2, vAttribute, vType);
-        body = new LinkedList<Literal>();
-        body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept2, vConcept));
-        body.add(new Literal(true, PRED_IMPLIES_TYPE, vConcept, vAttribute, vType));
-        result.add(new Rule(head, body));
-        
-        return result;
-    }
-    
-  
-    // -- Inner class for visiting rules (logical expressions) ...
+		/*
+		 * // Semantics of C1[att => C2] (oftype constraint) // !- oftype(c1,
+		 * att, c2), mo(i,c1), hval(i, att, v), NAF mo(v,c2) // With variables:
+		 * oftype(v1, v2, v3), mo(v4,v1), hval(v4, v2, v5), NAF // mo(v5,v3) //
+		 * Commented out, because it is handled by
+		 * 
+		 * body = new LinkedList<Literal>(); body.add(new Literal(true,
+		 * PRED_OF_TYPE, vConcept, vAttribute, vRange)); body.add(new
+		 * Literal(true, PRED_MEMBER_OF, vInstance, vConcept)); body.add(new
+		 * Literal(true, PRED_HAS_VALUE, vInstance, vAttribute,
+		 * vAttributeValue)); body.add(new Literal(false, PRED_MEMBER_OF,
+		 * vAttributeValue, vRange)); result.add(new Rule(null, body));
+		 */
 
-    /**
-     * Given a WSML rule the visitor generates a new datalog rule that
-     * represents the original WSML rule but where all non-predicate molecules
-     * are replaced by respective atomic formulaes that use specific predicates
-     * 
-     * Implements a left-first, depth-first, infix traversal.
-     */
-    private static class DatalogVisitor extends
+		/*
+		 * The following two rules have been added so that the reasoner infers
+		 * the attributes. The was previously done programmatically in:
+		 * DatalogBasedWSMLReasoner.inheritAttributesToSubConcepts()
+		 */
+
+		// wsml-of-type(?sub, ?a, ?t) :- wsml-subconcept-of(?sub, ?super),
+		// wsml-of-type(?super, ?a, ?t).
+		head = new Literal(true, PRED_OF_TYPE, vConcept2, vAttribute, vType);
+		body = new LinkedList<Literal>();
+		body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept2, vConcept));
+		body.add(new Literal(true, PRED_OF_TYPE, vConcept, vAttribute, vType));
+		result.add(new Rule(head, body));
+
+		// baz
+		// wsml-implies-type(?sub, ?a, ?t) :- wsml-subconcept-of(?sub, ?super),
+		// wsml-implies-type(?super, ?a, ?t).
+		head = new Literal(true, PRED_IMPLIES_TYPE, vConcept2, vAttribute,
+				vType);
+		body = new LinkedList<Literal>();
+		body.add(new Literal(true, PRED_SUB_CONCEPT_OF, vConcept2, vConcept));
+		body.add(new Literal(true, PRED_IMPLIES_TYPE, vConcept, vAttribute,
+				vType));
+		result.add(new Rule(head, body));
+
+		return result;
+	}
+
+	// -- Inner class for visiting rules (logical expressions) ...
+
+	/**
+	 * Given a WSML rule the visitor generates a new datalog rule that
+	 * represents the original WSML rule but where all non-predicate molecules
+	 * are replaced by respective atomic formulaes that use specific predicates
+	 * 
+	 * Implements a left-first, depth-first, infix traversal.
+	 */
+	private static class DatalogVisitor extends
 			InfixOrderLogicalExpressionVisitor {
 
 		private List<Literal> datalogBody;
@@ -585,14 +576,16 @@ public class WSML2DatalogTransformer {
 					new ArrayList<Term>());
 			storeLiteral(l);
 		}
-		
+
 		@Override
 		public void handleTruthValue(TruthValue truthValue) {
 			boolean value = truthValue.getValue();
-			String identifier = value ? Constants.WSML_TRUE : Constants.WSML_FALSE;
-			
+			String identifier = value ? Constants.WSML_TRUE
+					: Constants.WSML_FALSE;
+
 			// Create a new literal representing the truth value.
-			Literal literal = new Literal(true, identifier, new ArrayList<Term>());
+			Literal literal = new Literal(true, identifier,
+					new ArrayList<Term>());
 			storeLiteral(literal);
 		}
 
@@ -637,41 +630,41 @@ public class WSML2DatalogTransformer {
 
 		@Override
 		public void handleSubConceptMolecule(SubConceptMolecule arg0) {
-			Literal l = new Literal(positive, PRED_SUB_CONCEPT_OF, arg0
-					.getLeftParameter(), arg0.getRightParameter());
+			Literal l = new Literal(positive, PRED_SUB_CONCEPT_OF,
+					arg0.getLeftParameter(), arg0.getRightParameter());
 			storeLiteral(l);
 		}
 
 		@Override
 		public void handleMemberShipMolecule(MembershipMolecule arg0) {
-			Literal l = new Literal(positive, PRED_MEMBER_OF, arg0
-					.getLeftParameter(), arg0.getRightParameter());
+			Literal l = new Literal(positive, PRED_MEMBER_OF,
+					arg0.getLeftParameter(), arg0.getRightParameter());
 			storeLiteral(l);
 		}
 
 		@Override
 		public void handleAttributeInferenceMolecule(
 				AttributeInferenceMolecule arg0) {
-			Literal l = new Literal(positive, PRED_IMPLIES_TYPE, arg0
-					.getLeftParameter(), arg0.getAttribute(), arg0
-					.getRightParameter());
+			Literal l = new Literal(positive, PRED_IMPLIES_TYPE,
+					arg0.getLeftParameter(), arg0.getAttribute(),
+					arg0.getRightParameter());
 			storeLiteral(l);
 		}
 
 		@Override
 		public void handleAttributeConstraintMolecule(
 				AttributeConstraintMolecule arg0) {
-			Literal l = new Literal(positive, PRED_OF_TYPE, arg0
-					.getLeftParameter(), arg0.getAttribute(), arg0
-					.getRightParameter());
+			Literal l = new Literal(positive, PRED_OF_TYPE,
+					arg0.getLeftParameter(), arg0.getAttribute(),
+					arg0.getRightParameter());
 			storeLiteral(l);
 		}
 
 		@Override
 		public void handleAttributeValueMolecule(AttributeValueMolecule arg0) {
-			Literal l = new Literal(positive, PRED_HAS_VALUE, arg0
-					.getLeftParameter(), arg0.getAttribute(), arg0
-					.getRightParameter());
+			Literal l = new Literal(positive, PRED_HAS_VALUE,
+					arg0.getLeftParameter(), arg0.getAttribute(),
+					arg0.getRightParameter());
 			storeLiteral(l);
 		}
 

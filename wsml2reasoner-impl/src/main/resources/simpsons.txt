@@ -1,6 +1,6 @@
-m-an('homer simpson').
-wo-man('marge simpson').
-has-Son('homer simpson','bart simpson').
+man('homer simpson').
+woman('marge simpson').
+hasSon('homer simpson','bart simpson').
 
 isMale(?x) :- man(?x).
 isFemale(?x) :- woman(?x).

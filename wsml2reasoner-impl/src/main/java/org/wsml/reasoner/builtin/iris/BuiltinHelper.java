@@ -2,6 +2,7 @@ package org.wsml.reasoner.builtin.iris;
 
 import static org.deri.iris.factory.Factory.BASIC;
 import static org.deri.iris.factory.Factory.BUILTIN;
+import static org.wsml.reasoner.TransformerPredicates.PRED_MEMBER_OF;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,6 @@ import org.omwg.ontology.RDFDataType;
 import org.omwg.ontology.WsmlDataType;
 import org.omwg.ontology.XmlSchemaDataType;
 import org.wsml.reasoner.Literal;
-import org.wsml.reasoner.WSML2DatalogTransformer;
 import org.wsml.reasoner.api.exception.InternalReasonerException;
 import org.wsmo.common.BuiltIn;
 import org.wsmo.common.RifBuiltIn;
@@ -59,27 +59,25 @@ public class BuiltinHelper {
 
 		if (rifBuiltIn != null) {
 			return getRIFBuiltin(headLiteral, sym, terms, rifBuiltIn);
-		} 
-		
+		}
+
 		if (wsmlBuiltIn != null) {
 			return getWSMLbuiltin(headLiteral, sym, terms, wsmlBuiltIn);
 		}
-		
-		if (!headLiteral
-				&& sym.equals(WSML2DatalogTransformer.PRED_MEMBER_OF)) {
+
+		if (!headLiteral && sym.equals(PRED_MEMBER_OF)) {
 			return checkWSMLmemberOf(headLiteral, sym, terms);
 		}
-		
+
 		if (sym.equals(Constants.WSML_TRUE)) {
 			return BUILTIN.createTrue();
 		}
 		if (sym.equals(Constants.WSML_FALSE)) {
 			return BUILTIN.createFalse();
 		}
-		
-				// Is not a built-in - return an ordinary term
-		return BASIC.createAtom(
-				BASIC.createPredicate(sym, terms.size()), 
+
+		// Is not a built-in - return an ordinary term
+		return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 				BASIC.createTuple(terms));
 
 		// return an ordinary atom
@@ -104,15 +102,15 @@ public class BuiltinHelper {
 		// http://www.wsmo.org/TR/d16/d16.1/v1.0/#cha:built-ins
 		// NOTE mp: not all longer supported - RIF Built-ins replace them mostly
 		//
-		
+
 		// term array for boolean built-ins.
 		ITerm[] booleanTerms = toArray(terms);
-		
+
 		// term array for functional built-ins:
 		// in wsml return value is on first position - in iris on last position,
 		// thus sort list for iris
 		ITerm[] functionalTerms = toArray(sortListForIRIS(terms));
-		
+
 		switch (wsmlBuiltIn) {
 		case EQUAL:
 			return BUILTIN.createEqual(booleanTerms);
@@ -132,7 +130,7 @@ public class BuiltinHelper {
 			return BUILTIN.createDateTimeNotEqual(booleanTerms);
 		case DATETIME_LESS_THAN:
 			return BUILTIN.createDateTimeLess(booleanTerms);
-		case DAYTIMEDURATION_EQUAL: 
+		case DAYTIMEDURATION_EQUAL:
 			return BUILTIN.createDurationEqual(booleanTerms);
 		case DAYTIMEDURATION_GREATER_THAN:
 			return BUILTIN.createDayTimeDurationGreater(booleanTerms);
@@ -142,21 +140,21 @@ public class BuiltinHelper {
 			return BUILTIN.createDurationEqual(booleanTerms);
 		case DURATION_INEQUAL:
 			return BUILTIN.createDurationNotEqual(booleanTerms);
-		case GDAY_EQUAL: 
+		case GDAY_EQUAL:
 			return BUILTIN.createNumericEqual(booleanTerms);
 		case GMONTH_EQUAL:
 			return BUILTIN.createNumericEqual(booleanTerms);
-		case GMONTHDAY_EQUAL: 
+		case GMONTHDAY_EQUAL:
 			return BUILTIN.createNumericEqual(booleanTerms);
 		case GREATER_EQUAL:
 			return BUILTIN.createGreaterEqual(booleanTerms);
 		case GREATER_THAN:
 			return BUILTIN.createGreater(booleanTerms);
-		case GYEAR_EQUAL: 
+		case GYEAR_EQUAL:
 			return BUILTIN.createNumericEqual(booleanTerms);
-		case GYEARMONTH_EQUAL: 
+		case GYEARMONTH_EQUAL:
 			return BUILTIN.createNumericEqual(booleanTerms);
-		case INEQUAL: 
+		case INEQUAL:
 			return BUILTIN.createUnequal(booleanTerms);
 		case LESS_EQUAL:
 			return BUILTIN.createLessEqual(booleanTerms);
@@ -180,9 +178,9 @@ public class BuiltinHelper {
 			return BUILTIN.createNumericMultiply(functionalTerms);
 		case NUMERIC_SUBTRACT:
 			return BUILTIN.createNumericSubtract(functionalTerms);
-		case STRING_EQUAL: 
+		case STRING_EQUAL:
 			return BUILTIN.createEqual(booleanTerms);
-		case STRING_INEQUAL: 
+		case STRING_INEQUAL:
 			return BUILTIN.createUnequal(booleanTerms);
 		case TIME_EQUAL:
 			return BUILTIN.createTimeEqual(booleanTerms);
@@ -192,7 +190,7 @@ public class BuiltinHelper {
 			return BUILTIN.createTimeNotEqual(booleanTerms);
 		case TIME_LESS_THAN:
 			return BUILTIN.createTimeLess(booleanTerms);
-		case YEARMONTHDURATION_EQUAL: 
+		case YEARMONTHDURATION_EQUAL:
 			return BUILTIN.createDurationEqual(booleanTerms);
 		case YEARMONTHDURATION_GREATER_THAN:
 			return BUILTIN.createYearMonthDurationGreater(booleanTerms);
@@ -244,7 +242,7 @@ public class BuiltinHelper {
 			return BUILTIN.createToXMLLiteral(functionalTerms);
 		case TO_YEARMONTHDURATION:
 			return BUILTIN.createToYearMonthDuration(functionalTerms);
-		// end of TO_DATATYPE part
+			// end of TO_DATATYPE part
 		case DAY_PART:
 			return BUILTIN.createDayPart(functionalTerms);
 		case HOUR_PART:
@@ -275,7 +273,7 @@ public class BuiltinHelper {
 			return BUILTIN.createLangFromText(functionalTerms);
 		case STRING_FROM_TEXT:
 			return BUILTIN.createStringFromText(functionalTerms);
-		// IS_DATATYPE part
+			// IS_DATATYPE part
 		case IS_BASE64BINARY:
 			return BUILTIN.createIsBase64Binary(functionalTerms);
 		case IS_BOOLEAN:
@@ -286,7 +284,7 @@ public class BuiltinHelper {
 			return BUILTIN.createIsDate(functionalTerms);
 		case IS_DATETIME:
 			return BUILTIN.createIsDateTime(functionalTerms);
-		case IS_DAYTIMEDURATION:  
+		case IS_DAYTIMEDURATION:
 			return BUILTIN.createIsDayTimeDuration(functionalTerms);
 		case IS_YEARMONTHDURATION:
 			return BUILTIN.createIsYearMonthDuration(functionalTerms);
@@ -324,10 +322,12 @@ public class BuiltinHelper {
 			return BUILTIN.createIsTime(functionalTerms);
 		case IS_XMLLITERAL:
 			return BUILTIN.createIsXMLLiteral(functionalTerms);
-		
+
 		default:
-			throw new InternalReasonerException("WSML Built-in: " + wsmlBuiltIn.getName() + " not yet supported!");
-//			return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),BASIC.createTuple(terms));
+			throw new InternalReasonerException("WSML Built-in: "
+					+ wsmlBuiltIn.getName() + " not yet supported!");
+			// return BASIC.createAtom(BASIC.createPredicate(sym,
+			// terms.size()),BASIC.createTuple(terms));
 		}
 
 	}
@@ -346,18 +346,18 @@ public class BuiltinHelper {
 		//
 		// RIF BuiltIn ///////////////////////////////////////////
 		// http://www.w3.org/2005/rules/wiki/DTB
-		// 
-		
+		//
+
 		// term array for boolean built-ins.
 		ITerm[] booleanTerms = toArray(terms);
-		
+
 		// term array for functional built-ins:
 		// in wsml return value is on first position - in iris on last position,
 		// thus sort list for iris
 		ITerm[] functionalTerms = toArray(sortListForIRIS(terms));
-		
+
 		switch (rifbuiltIn) {
-		case ADD_DAYTIMEDURATIONS: 
+		case ADD_DAYTIMEDURATIONS:
 			return BUILTIN.createAddDayTimeDurations(functionalTerms);
 		case ADD_DAYTIMEDURATION_TO_DATE:
 			return BUILTIN.createAddDayTimeDurationToDate(functionalTerms);
@@ -370,21 +370,23 @@ public class BuiltinHelper {
 		case ADD_YEARMONTHDURATION_TO_DATE:
 			return BUILTIN.createAddYearMonthDurationToDate(functionalTerms);
 		case ADD_YEARMONTHDURATION_TO_DATETIME:
-			return BUILTIN.createAddYearMonthDurationToDateTime(functionalTerms);
+			return BUILTIN
+					.createAddYearMonthDurationToDateTime(functionalTerms);
 		case BOOLEAN_EQUAL:
 			return BUILTIN.createBooleanEqual(booleanTerms);
 		case BOOLEAN_GREATER_THAN:
 			return BUILTIN.createBooleanGreater(booleanTerms);
 		case BOOLEAN_LESS_THAN:
 			return BUILTIN.createBooleanLess(booleanTerms);
-			
+
 			// RIF String builtins
 		case COMPARE:
 			return BUILTIN.createStringCompare(functionalTerms);
 		case CONCAT:
 			return BUILTIN.createStringConcat(functionalTerms);
-		case CONCATENATE: 
-			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+		case CONCATENATE:
+			throw new InternalReasonerException("RIF Built-in: "
+					+ rifbuiltIn.getName() + " not yet supported!");
 		case CONTAINS:
 			return BUILTIN.createStringContains(booleanTerms);
 		case DATE_EQUAL:
@@ -425,17 +427,20 @@ public class BuiltinHelper {
 			return BUILTIN.createDayTimeDurationLess(booleanTerms);
 		case DAYTIMEDURATION_LESS_THAN_OR_EQUAL:
 			return BUILTIN.createDayTimeDurationLessEqual(booleanTerms);
-		case DISTINCT_VALUES: 
-			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-//			return BUILTIN.createDistinctValues(wsmlTerms);
+		case DISTINCT_VALUES:
+			throw new InternalReasonerException("RIF Built-in: "
+					+ rifbuiltIn.getName() + " not yet supported!");
+			// return BUILTIN.createDistinctValues(wsmlTerms);
 		case DIVIDE_DAYTIMEDURATION:
 			return BUILTIN.createDayTimeDurationDivide(functionalTerms);
 		case DIVIDE_DAYTIMEDURATION_BY_DAYTIMEDURATION:
-			return BUILTIN.createDayTimeDurationDivideByDayTimeDuration(functionalTerms);
+			return BUILTIN
+					.createDayTimeDurationDivideByDayTimeDuration(functionalTerms);
 		case DIVIDE_YEARMONTHDURATION:
 			return BUILTIN.createYearMonthDurationDivide(functionalTerms);
 		case DIVIDE_YEARMONTHDURATION_BY_YEARMONTHDURATION:
-			return BUILTIN.createYearMonthDurationDivideByYearMonthDuration(functionalTerms);
+			return BUILTIN
+					.createYearMonthDurationDivideByYearMonthDuration(functionalTerms);
 		case DURATION_EQUAL:
 			return BUILTIN.createDurationEqual(booleanTerms);
 		case DURATION_NOT_EQUAL:
@@ -446,12 +451,14 @@ public class BuiltinHelper {
 			return BUILTIN.createStringEndsWith(booleanTerms);
 		case ESCAPE_HTML_URI:
 			return BUILTIN.createStringEscapeHtmlUri(functionalTerms);
-		case EXCEPT: 
-			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-//			return BUILTIN.createExceptValues(wsmlTerms);
-		case GET: 
-			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-//			return BUILTIN.createGet(wsmlTerms);
+		case EXCEPT:
+			throw new InternalReasonerException("RIF Built-in: "
+					+ rifbuiltIn.getName() + " not yet supported!");
+			// return BUILTIN.createExceptValues(wsmlTerms);
+		case GET:
+			throw new InternalReasonerException("RIF Built-in: "
+					+ rifbuiltIn.getName() + " not yet supported!");
+			// return BUILTIN.createGet(wsmlTerms);
 		case HOURS_FROM_DATETIME:
 			return BUILTIN.createHoursFromDateTime(functionalTerms);
 		case HOURS_FROM_DURATION:
@@ -459,21 +466,25 @@ public class BuiltinHelper {
 		case HOURS_FROM_TIME:
 			return BUILTIN.createHoursFromTime(functionalTerms);
 		case INDEX_OF:
-			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-//			return BUILTIN.createIndexOf(functionalTerms);
-		case INSERT_BEFORE: 
-			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-//			return BUILTIN.createInsertBefore(functionalTerms);
-		case INTERSECT: 
-			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-//			return BUILTIN.createIntersect(functionalTerms);
+			throw new InternalReasonerException("RIF Built-in: "
+					+ rifbuiltIn.getName() + " not yet supported!");
+			// return BUILTIN.createIndexOf(functionalTerms);
+		case INSERT_BEFORE:
+			throw new InternalReasonerException("RIF Built-in: "
+					+ rifbuiltIn.getName() + " not yet supported!");
+			// return BUILTIN.createInsertBefore(functionalTerms);
+		case INTERSECT:
+			throw new InternalReasonerException("RIF Built-in: "
+					+ rifbuiltIn.getName() + " not yet supported!");
+			// return BUILTIN.createIntersect(functionalTerms);
 		case IRI_STRING:
 			return BUILTIN.createIriString(functionalTerms);
 		case IRI_TO_URI:
 			return BUILTIN.createStringIriToUri(functionalTerms);
-		case IS_LIST: 
-			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-//			return BUILTIN.createIsList(functionalTerms);
+		case IS_LIST:
+			throw new InternalReasonerException("RIF Built-in: "
+					+ rifbuiltIn.getName() + " not yet supported!");
+			// return BUILTIN.createIsList(functionalTerms);
 		case IS_LITERAL_ANYURI:
 			return BUILTIN.createIsAnyURI(booleanTerms);
 		case IS_LITERAL_BASE64BINARY:
@@ -614,20 +625,24 @@ public class BuiltinHelper {
 			return BUILTIN.createIsXMLLiteral(booleanTerms);
 		case IS_LITERAL_YEARMONTHDURATION:
 			return BUILTIN.createIsYearMonthDuration(booleanTerms);
-		case LANG_FROM_PLAINLITERAL: 				
+		case LANG_FROM_PLAINLITERAL:
 			return BUILTIN.createLangFromText(functionalTerms);
-		case LIST_CONTAINS: 
-			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
-		case LITERAL_NOT_IDENTICAL: 
-			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+		case LIST_CONTAINS:
+			throw new InternalReasonerException("RIF Built-in: "
+					+ rifbuiltIn.getName() + " not yet supported!");
+		case LITERAL_NOT_IDENTICAL:
+			throw new InternalReasonerException("RIF Built-in: "
+					+ rifbuiltIn.getName() + " not yet supported!");
 		case LOWER_CASE:
 			return BUILTIN.createStringToLower(functionalTerms);
-		case MAKE_LISTS: 
-			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+		case MAKE_LISTS:
+			throw new InternalReasonerException("RIF Built-in: "
+					+ rifbuiltIn.getName() + " not yet supported!");
 		case MATCHES:
 			return BUILTIN.createStringMatches(booleanTerms);
-		case MATCHES_LANGUAGE_RANGE: 
-			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+		case MATCHES_LANGUAGE_RANGE:
+			throw new InternalReasonerException("RIF Built-in: "
+					+ rifbuiltIn.getName() + " not yet supported!");
 		case MINUTES_FROM_DATETIME:
 			return BUILTIN.createMinutesFromDateTime(functionalTerms);
 		case MINUTES_FROM_DURATION:
@@ -640,7 +655,7 @@ public class BuiltinHelper {
 			return BUILTIN.createMonthFromDateTime(functionalTerms);
 		case MONTHS_FROM_DURATION:
 			return BUILTIN.createMonthsFromDuration(functionalTerms);
-		case MULTIPLY_DAYTIMEDURATION: 
+		case MULTIPLY_DAYTIMEDURATION:
 			return BUILTIN.createDayTimeDurationMultiply(functionalTerms);
 		case MULTIPLY_YEARMONTHDURATION:
 			return BUILTIN.createYearMonthDurationMultiply(functionalTerms);
@@ -670,21 +685,23 @@ public class BuiltinHelper {
 			return BUILTIN.createNumericNotEqual(booleanTerms);
 		case NUMERIC_SUBTRACT:
 			return BUILTIN.createNumericSubtract(functionalTerms);
-		case PLAINLITERAL_COMPARE:						
+		case PLAINLITERAL_COMPARE:
 			return BUILTIN.createTextCompare(functionalTerms);
-		case PLAINLITERAL_FROM_STRING_LANG: 
+		case PLAINLITERAL_FROM_STRING_LANG:
 			if (functionalTerms.length == 3)
 				return BUILTIN.createTextFromStringLang(functionalTerms);
 			if (functionalTerms.length == 2)
 				return BUILTIN.createTextFromString(functionalTerms);
 		case PLAINLITERAL_LENGTH:
 			return BUILTIN.createTextLength(functionalTerms);
-		case REMOVE: 
-			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+		case REMOVE:
+			throw new InternalReasonerException("RIF Built-in: "
+					+ rifbuiltIn.getName() + " not yet supported!");
 		case REPLACE:
 			return BUILTIN.createStringReplace(functionalTerms);
-		case REVERSE: 
-			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+		case REVERSE:
+			throw new InternalReasonerException("RIF Built-in: "
+					+ rifbuiltIn.getName() + " not yet supported!");
 		case SECONDS_FROM_DATETIME:
 			return BUILTIN.createSecondsFromDateTime(functionalTerms);
 		case SECONDS_FROM_DURATION:
@@ -693,14 +710,15 @@ public class BuiltinHelper {
 			return BUILTIN.createSecondsFromTime(functionalTerms);
 		case STARTS_WITH:
 			return BUILTIN.createStringStartsWith(booleanTerms);
-		case STRING_FROM_PLAINLITERAL: 				
+		case STRING_FROM_PLAINLITERAL:
 			return BUILTIN.createStringFromText(functionalTerms);
 		case STRING_JOIN:
 			return BUILTIN.createStringJoin(functionalTerms);
 		case STRING_LENGTH:
 			return BUILTIN.createStringLength(functionalTerms);
-		case SUBLIST: 
-			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+		case SUBLIST:
+			throw new InternalReasonerException("RIF Built-in: "
+					+ rifbuiltIn.getName() + " not yet supported!");
 		case SUBSTRING:
 			return BUILTIN.createStringSubstring(functionalTerms);
 		case SUBSTRING_AFTER:
@@ -709,22 +727,27 @@ public class BuiltinHelper {
 			return BUILTIN.createStringSubstringBefore(functionalTerms);
 		case SUBTRACT_DATES:
 			return BUILTIN.createDateSubtract(functionalTerms);
-		case SUBTRACT_DATETIMES: 
+		case SUBTRACT_DATETIMES:
 			return BUILTIN.createDateTimeSubtract(functionalTerms);
 		case SUBTRACT_DAYTIMEDURATION_FROM_DATE:
-			return BUILTIN.createSubtractDayTimeDurationFromDate(functionalTerms);
+			return BUILTIN
+					.createSubtractDayTimeDurationFromDate(functionalTerms);
 		case SUBTRACT_DAYTIMEDURATION_FROM_DATETIME:
-			return BUILTIN.createSubtractDayTimeDurationFromDateTime(functionalTerms);
+			return BUILTIN
+					.createSubtractDayTimeDurationFromDateTime(functionalTerms);
 		case SUBTRACT_DAYTIMEDURATION_FROM_TIME:
-			return BUILTIN.createSubtractDayTimeDurationFromTime(functionalTerms);
-		case SUBTRACT_DAYTIMEDURATIONS: 
+			return BUILTIN
+					.createSubtractDayTimeDurationFromTime(functionalTerms);
+		case SUBTRACT_DAYTIMEDURATIONS:
 			return BUILTIN.createDayTimeDurationSubtract(functionalTerms);
-		case SUBTRACT_TIMES: 
+		case SUBTRACT_TIMES:
 			return BUILTIN.createTimeSubtract(functionalTerms);
 		case SUBTRACT_YEARMONTHDURATION_FROM_DATE:
-			return BUILTIN.createSubtractYearMonthDurationFromDate(functionalTerms);
+			return BUILTIN
+					.createSubtractYearMonthDurationFromDate(functionalTerms);
 		case SUBTRACT_YEARMONTHDURATION_FROM_DATETIME:
-			return BUILTIN.createSubtractYearMonthDurationFromDateTime(functionalTerms);
+			return BUILTIN
+					.createSubtractYearMonthDurationFromDateTime(functionalTerms);
 		case SUBTRACT_YEARMONTHDURATIONS:
 			return BUILTIN.createYearMonthDurationSubtract(functionalTerms);
 		case TIME_EQUAL:
@@ -745,8 +768,9 @@ public class BuiltinHelper {
 			return BUILTIN.createTimezoneFromDateTime(functionalTerms);
 		case TIMEZONE_FROM_TIME:
 			return BUILTIN.createTimezoneFromTime(functionalTerms);
-		case UNION: 
-			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+		case UNION:
+			throw new InternalReasonerException("RIF Built-in: "
+					+ rifbuiltIn.getName() + " not yet supported!");
 		case UPPER_CASE:
 			return BUILTIN.createStringToUpper(functionalTerms);
 		case XMLLITERAL_EQUAL:
@@ -768,7 +792,8 @@ public class BuiltinHelper {
 		case YEARS_FROM_DURATION:
 			return BUILTIN.createYearsFromDuration(functionalTerms);
 		default:
-			throw new InternalReasonerException("RIF Built-in: " + rifbuiltIn.getName() + " not yet supported!");
+			throw new InternalReasonerException("RIF Built-in: "
+					+ rifbuiltIn.getName() + " not yet supported!");
 		}
 	}
 
@@ -850,8 +875,7 @@ public class BuiltinHelper {
 			}
 
 		}
-		return BASIC.createAtom(
-				BASIC.createPredicate(sym, terms.size()),
+		return BASIC.createAtom(BASIC.createPredicate(sym, terms.size()),
 				BASIC.createTuple(terms));
 	}
 
@@ -904,7 +928,8 @@ public class BuiltinHelper {
 	 * Changes the order of the terms for IRIS. The first entry becomes the last
 	 * one. http://www.w3.org/2005/rules/wg/wiki/List_of_functions_and_operators
 	 * 
-	 * @param terms a list of terms in normal order.
+	 * @param terms
+	 *            a list of terms in normal order.
 	 * @return a list of terms where the first entry is the last one.
 	 */
 	private static List<ITerm> sortListForIRIS(List<ITerm> terms) {

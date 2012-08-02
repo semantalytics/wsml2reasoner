@@ -27,14 +27,13 @@ import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 
 /**
- * This interface represents a facade to various datalog engines that allows to
- * perform a query answering request, e.g. DLV, KAON2.
+ * This interface represents a facade to various streaming datalog engines that
+ * allows to perform a query answering request, e.g. Streaming IRIS.
  * 
  * For each such system a specific facade must be implemented to integrate the
  * component into the system.
  * 
- * @author Uwe Keller, DERI Innsbruck
- * @author Gabor Nagypal, FZI
+ * @author Norbert Lanzanasto, STI Innsbruck
  */
 public interface StreamingDatalogReasonerFacade {
 
@@ -66,8 +65,7 @@ public interface StreamingDatalogReasonerFacade {
 	 * @throws ExternalToolException
 	 *             if some exception happens during ontology registration
 	 */
-	public void register(Set<Rule> kb)
-			throws ExternalToolException;
+	public void register(Set<Rule> kb) throws ExternalToolException;
 
 	/**
 	 * Removes the ontology from the external reasoner
