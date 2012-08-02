@@ -41,10 +41,7 @@ public class StreamingIrisStratifiedFacade extends AbstractStreamingIrisFacade {
 		super(factory, config);
 	}
 
-	// public IrisFacade() {
-	// }
-
-	protected void configureIris(Configuration configuration) {
-		// Nothing to do. Accept defaults.
+	protected void configureStreamingIris(Configuration configuration) {
+		configuration.timeWindowMilliseconds = 60000;
 	}
 }

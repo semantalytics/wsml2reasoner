@@ -2,6 +2,7 @@ package org.wsml.reasoner.builtin.streamingiris;
 
 import static at.sti2.streamingiris.factory.Factory.BASIC;
 import static at.sti2.streamingiris.factory.Factory.BUILTIN;
+import static org.wsml.reasoner.TransformerPredicates.PRED_MEMBER_OF;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,6 @@ import org.omwg.ontology.RDFDataType;
 import org.omwg.ontology.WsmlDataType;
 import org.omwg.ontology.XmlSchemaDataType;
 import org.wsml.reasoner.Literal;
-import org.wsml.reasoner.WSML2DatalogTransformer;
 import org.wsml.reasoner.api.exception.InternalReasonerException;
 import org.wsmo.common.BuiltIn;
 import org.wsmo.common.RifBuiltIn;
@@ -66,7 +66,7 @@ public class BuiltinHelper {
 			return getWSMLbuiltin(headLiteral, sym, terms, wsmlBuiltIn);
 		}
 
-		if (!headLiteral && sym.equals(WSML2DatalogTransformer.PRED_MEMBER_OF)) {
+		if (!headLiteral && sym.equals(PRED_MEMBER_OF)) {
 			return checkWSMLmemberOf(headLiteral, sym, terms);
 		}
 

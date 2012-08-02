@@ -9,9 +9,3 @@ concept Man
 instance Graham memberOf Man
 
 
-
-
-
-
-
-

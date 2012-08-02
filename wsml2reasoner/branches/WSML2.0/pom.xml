@@ -114,5 +114,9 @@
 			<id>sti2-archiva-snapshots</id>
 			<url>http://maven.sti2.at/archiva/repository/snapshots</url>
 		</repository>
+		<repository>
+            <id>envision~maven</id>
+            <url>https://svn.kenai.com/svn/envision~maven/</url>
+        </repository>
 	</repositories>
 </project>

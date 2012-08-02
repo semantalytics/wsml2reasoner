@@ -24,9 +24,13 @@ package org.wsml.reasoner.builtin.iris;
 
 import static org.deri.iris.factory.Factory.BASIC;
 import static org.deri.iris.factory.Factory.BUILTIN;
-import static org.wsml.reasoner.builtin.iris.LiteralHelper.*;
-import static org.wsml.reasoner.builtin.iris.TermHelper.*;
-import static org.wsml.reasoner.builtin.iris.BuiltinHelper.*;
+import static org.wsml.reasoner.TransformerPredicates.PRED_HAS_VALUE;
+import static org.wsml.reasoner.TransformerPredicates.PRED_MEMBER_OF;
+import static org.wsml.reasoner.builtin.iris.BuiltinHelper.containsEqualBuiltin;
+import static org.wsml.reasoner.builtin.iris.LiteralHelper.literal2Atom;
+import static org.wsml.reasoner.builtin.iris.LiteralHelper.literal2Literal;
+import static org.wsml.reasoner.builtin.iris.TermHelper.convertTermFromIrisToWsmo4j;
+import static org.wsml.reasoner.builtin.iris.TermHelper.convertTermFromWsmo4jToIris;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,7 +62,6 @@ import org.wsml.reasoner.DatalogReasonerFacade;
 import org.wsml.reasoner.ExternalToolException;
 import org.wsml.reasoner.Literal;
 import org.wsml.reasoner.Rule;
-import org.wsml.reasoner.WSML2DatalogTransformer;
 import org.wsml.reasoner.api.data.ExternalDataSource;
 import org.wsml.reasoner.api.data.ExternalDataSource.HasValue;
 import org.wsml.reasoner.api.data.ExternalDataSource.MemberOf;
@@ -93,7 +96,6 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 	 * The external data sources.
 	 */
 	private final Collection<ExternalDataSource> sources;
-
 
 	public AbstractIrisFacade(final FactoryContainer factory,
 			final Map<String, Object> config) {
@@ -155,9 +157,8 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 				IVariable variable = variableBindings.get(pos);
 				ITerm term = t.get(pos);
 
-				tmp.put((Variable) 
-						convertTermFromIrisToWsmo4j(variable, factory),
-						convertTermFromIrisToWsmo4j(term, factory));
+				tmp.put((Variable) convertTermFromIrisToWsmo4j(variable,
+						factory), convertTermFromIrisToWsmo4j(term, factory));
 			}
 
 			res.add(tmp);
@@ -234,9 +235,9 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 				ITuple t = QCResult.get(i);
 				final Map<Variable, Term> tmp = new HashMap<Variable, Term>();
 				for (int pos = 0; pos < t.size(); pos++) {
-					tmp.put((Variable) 
-						convertTermFromIrisToWsmo4j(variableBindings.get(pos), factory),
-						convertTermFromIrisToWsmo4j(t.get(pos), factory));
+					tmp.put((Variable) convertTermFromIrisToWsmo4j(
+							variableBindings.get(pos), factory),
+							convertTermFromIrisToWsmo4j(t.get(pos), factory));
 				}
 				result.add(tmp);
 			}
@@ -336,8 +337,6 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 	 */
 	protected abstract void configureIris(Configuration configuration);
 
-
-
 	// ****** REMOVED. SEE BUG 2248622 **********
 	// /**
 	// * Returns the rules for the wsml-member-of rules.
@@ -414,11 +413,11 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 
 		/** Predicate for the iris member-of facts. */
 		private final IPredicate memberOf = BASIC.createPredicate(
-				WSML2DatalogTransformer.PRED_MEMBER_OF, 2);
+				PRED_MEMBER_OF, 2);
 
 		/** Predicate for the iris has-value facts. */
 		private final IPredicate hasValue = BASIC.createPredicate(
-				WSML2DatalogTransformer.PRED_HAS_VALUE, 3);
+				PRED_HAS_VALUE, 3);
 
 		/** Data source from where to get the values from. */
 		private final ExternalDataSource source;
@@ -446,7 +445,7 @@ public abstract class AbstractIrisFacade implements DatalogReasonerFacade {
 			if (p.equals(memberOf)) {
 				for (final MemberOf mo : source.memberOf(null, null)) {
 					r.add(BASIC.createTuple(
-							convertTermFromWsmo4jToIris(mo.getId()), 
+							convertTermFromWsmo4jToIris(mo.getId()),
 							convertTermFromWsmo4jToIris(mo.getConcept())));
 				}
 			} else if (p.equals(hasValue)) {

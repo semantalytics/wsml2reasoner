@@ -58,16 +58,9 @@ public class StreamingIrisOutputServerThread extends Thread {
 			Parser parser = new Parser();
 			while (!Thread.interrupted()
 					&& (factLine = streamReader.readLine()) != null) {
-				logger.info("Datalog fact: {}", factLine);
-
-				// FIXME Norbert: hack
-				factLine = factLine.replaceAll("-", "\\_");
-				logger.info("Datalog fact: {}", factLine);
-
 				parser.parse(factLine);
 				Map<IPredicate, IRelation> newFacts = parser.getFacts();
 				if (newFacts != null && newFacts.size() != 0) {
-					logger.info("WSML fact: {}", newFacts);
 					facade.sendResults(query, newFacts);
 				}
 			}

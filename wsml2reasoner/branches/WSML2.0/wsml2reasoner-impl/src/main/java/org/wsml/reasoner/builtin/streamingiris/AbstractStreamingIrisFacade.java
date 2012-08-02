@@ -23,6 +23,9 @@
 package org.wsml.reasoner.builtin.streamingiris;
 
 import static at.sti2.streamingiris.factory.Factory.BASIC;
+import static org.wsml.reasoner.TransformerPredicates.PRED_HAS_VALUE;
+import static org.wsml.reasoner.TransformerPredicates.PRED_MEMBER_OF;
+import static org.wsml.reasoner.TransformerPredicates.PRED_SUB_CONCEPT_OF;
 import static org.wsml.reasoner.builtin.streamingiris.LiteralHelper.literal2Atom;
 import static org.wsml.reasoner.builtin.streamingiris.LiteralHelper.literal2Literal;
 import static org.wsml.reasoner.builtin.streamingiris.TermHelper.convertTermFromIrisToWsmo4j;
@@ -35,6 +38,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -47,7 +51,6 @@ import org.wsml.reasoner.ExternalToolException;
 import org.wsml.reasoner.Literal;
 import org.wsml.reasoner.Rule;
 import org.wsml.reasoner.StreamingDatalogReasonerFacade;
-import org.wsml.reasoner.WSML2DatalogTransformer;
 import org.wsml.reasoner.api.data.ExternalDataSource;
 import org.wsml.reasoner.api.data.ExternalDataSource.HasValue;
 import org.wsml.reasoner.api.data.ExternalDataSource.MemberOf;
@@ -201,8 +204,7 @@ public abstract class AbstractStreamingIrisFacade implements
 			 * working. More precisely, to get the functional test
 			 * AbstractQueryContainment1.testSubclassQueryContainment working.
 			 */
-			if (r.getHead().getPredicateUri()
-					.equals(WSML2DatalogTransformer.PRED_SUB_CONCEPT_OF)
+			if (r.getHead().getPredicateUri().equals(PRED_SUB_CONCEPT_OF)
 					&& r.isFact() && DO_THE_QC_HACK) {
 				final List<ILiteral> head = new ArrayList<ILiteral>(1);
 				final List<ILiteral> body = new ArrayList<ILiteral>(r.getBody()
@@ -257,7 +259,7 @@ public abstract class AbstractStreamingIrisFacade implements
 					.add(new StreamingIrisDataSource(ext));
 		}
 
-		configureIris(kbConfiguration);
+		configureStreamingIris(kbConfiguration);
 
 		try {
 			prog = KnowledgeBaseFactory.createKnowledgeBase(facts, rules,
@@ -273,7 +275,7 @@ public abstract class AbstractStreamingIrisFacade implements
 			inputPort = (Integer) configuration.get("inputPort");
 		}
 
-		inputThread = new StreamingIrisInputServer(this, inputPort);
+		inputThread = new StreamingIrisInputServer(this, factory, inputPort);
 		inputThread.start();
 	}
 
@@ -397,7 +399,10 @@ public abstract class AbstractStreamingIrisFacade implements
 
 	public void sendResults(IQuery query, Map<IPredicate, IRelation> facts) {
 
-		// convert facts to string
+		// convert facts to wsml to string
+		for (Entry<IPredicate, IRelation> entry : facts.entrySet()) {
+			logger.debug("IRelation: " + entry.getValue());
+		}
 
 		if (queryListenerMap.containsKey(query)) {
 			for (String pair : queryListenerMap.get(query)) {
@@ -535,21 +540,11 @@ public abstract class AbstractStreamingIrisFacade implements
 	}
 
 	public void addFacts(Set<Rule> kb) {
-		Map<IPredicate, IRelation> facts = new HashMap<IPredicate, IRelation>();
+		Map<IPredicate, IRelation> facts = getFactsFromKnowledgeBase(kb);
 
-		// translating all the facts
-		for (final Rule r : kb) {
-			if (r.isFact()) { // the rule is a fact
-				IAtom atom = literal2Atom(r.getHead(), true);
-				IPredicate pred = atom.getPredicate();
-
-				IRelation relation = facts.get(atom.getPredicate());
-				if (relation == null) {
-					relation = new SimpleRelationFactory().createRelation();
-					facts.put(pred, relation);
-				}
-				relation.add(atom.getTuple());
-			}
+		logger.debug("Adding facts:");
+		for (Entry<IPredicate, IRelation> fact : facts.entrySet()) {
+			logger.debug(fact);
 		}
 
 		try {
@@ -565,9 +560,12 @@ public abstract class AbstractStreamingIrisFacade implements
 	}
 
 	public Map<IPredicate, IRelation> getFactsFromOntology(Ontology ontology) {
-		Map<IPredicate, IRelation> facts = new HashMap<IPredicate, IRelation>();
-
 		Set<Rule> kb = convertOntologyToKnowledgeBase(ontology);
+		return getFactsFromKnowledgeBase(kb);
+	}
+
+	private Map<IPredicate, IRelation> getFactsFromKnowledgeBase(Set<Rule> kb) {
+		Map<IPredicate, IRelation> facts = new HashMap<IPredicate, IRelation>();
 
 		// translating all the facts
 		for (final Rule r : kb) {
@@ -651,7 +649,7 @@ public abstract class AbstractStreamingIrisFacade implements
 	 * 
 	 * @return
 	 */
-	protected abstract void configureIris(Configuration configuration);
+	protected abstract void configureStreamingIris(Configuration configuration);
 
 	/**
 	 * Wrapper for the w2r datasource to the iris datasource.
@@ -660,11 +658,11 @@ public abstract class AbstractStreamingIrisFacade implements
 
 		/** Predicate for the iris member-of facts. */
 		private final IPredicate memberOf = BASIC.createPredicate(
-				WSML2DatalogTransformer.PRED_MEMBER_OF, 2);
+				PRED_MEMBER_OF, 2);
 
 		/** Predicate for the iris has-value facts. */
 		private final IPredicate hasValue = BASIC.createPredicate(
-				WSML2DatalogTransformer.PRED_HAS_VALUE, 3);
+				PRED_HAS_VALUE, 3);
 
 		/** Datasource from where to get the values from. */
 		private final ExternalDataSource source;

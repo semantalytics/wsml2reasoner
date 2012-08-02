@@ -18,6 +18,7 @@
  */
 package example;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
@@ -25,22 +26,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
-import org.deri.wsmo4j.io.serializer.wsml.SerializeWSMLTermsVisitor;
 import org.omwg.logicalexpression.LogicalExpression;
-import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.wsml.reasoner.api.StreamingLPReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
+import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsmo.common.TopEntity;
 import org.wsmo.wsml.Parser;
+import org.wsmo.wsml.ParserException;
 
 import com.ontotext.wsmo4j.parser.wsml.WsmlParser;
 
 /**
  * Usage Example for the wsml2Reasoner Framework
  * 
- * @author Holger Lausen, DERI Innsbruck
+ * @author Norbert Lanzanasto, STI Innsbruck
  */
 public class StreamingIrisReasonerExample {
 
@@ -58,26 +59,17 @@ public class StreamingIrisReasonerExample {
 		}
 	}
 
-	/**
-	 * loads an Ontology and performs sample query
-	 */
-	public void doTestRun() throws Exception {
-		Ontology exampleOntology = loadOntology("simpleOntology.wsml");
-		if (exampleOntology == null)
-			return;
+	public void doTestLoad() throws InterruptedException {
+		Ontology ontology = loadOntology("simpleAxiomOntology.wsml");
 
-		String queryString = "?x memberOf ?y";
-		// String queryString = "?x = ?y";
-		// String queryString =
-		// "?x = ?y :- ?x[name hasValue ?n1] and ?y[name hasValue ?n2] and ?n1=?n2.";
-
-		LogicalExpression query = new WsmlLogicalExpressionParser(
-				exampleOntology).parse(queryString);
-
-		// get A reasoner
+		// Define the desired reasoner by setting the corresponding values in
+		// the parameters. Here IRIS reasoner with well-founded semantics is
+		// used.
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
 				WSMLReasonerFactory.BuiltInReasoner.STREAMING_IRIS_STRATIFIED);
+
+		// Instantiate the desired reasoner using the default reasoner factory.
 		StreamingLPReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
 				.createStreamingFlightReasoner(params);
 
@@ -85,7 +77,41 @@ public class StreamingIrisReasonerExample {
 		Map<String, Object> configuration = new HashMap<String, Object>();
 
 		// Start reasoner
-		reasoner.startReasoner(exampleOntology, configuration);
+		reasoner.startReasoner(ontology, configuration);
+
+		Thread.sleep(5000);
+
+		// do not forget to shut down the reasoner
+		reasoner.shutdownReasoner();
+	}
+
+	public void doTestRun2() throws IllegalArgumentException, ParserException,
+			InconsistencyException, IOException, InterruptedException {
+		Ontology ontology = loadOntology("instance-equality.wsml");
+
+		// Create a query, that should bind x to both instances A and B.
+		String queryString = "p(?x)";
+
+		// Define the desired reasoner by setting the corresponding values in
+		// the parameters. Here IRIS reasoner with well-founded semantics is
+		// used.
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
+				WSMLReasonerFactory.BuiltInReasoner.STREAMING_IRIS_STRATIFIED);
+
+		// Instantiate the desired reasoner using the default reasoner factory.
+		StreamingLPReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
+				.createStreamingFlightReasoner(params);
+
+		// Transform the query in string form to a logical expression object.
+		LogicalExpression query = new WsmlLogicalExpressionParser(ontology)
+				.parse(queryString);
+
+		// create the configuration
+		Map<String, Object> configuration = new HashMap<String, Object>();
+
+		// Start reasoner
+		reasoner.startReasoner(ontology, configuration);
 
 		// Register query listener
 		ServerSocket server = new ServerSocket(0);
@@ -107,11 +133,69 @@ public class StreamingIrisReasonerExample {
 	}
 
 	/**
+	 * loads an Ontology and performs sample query
+	 */
+	public void doTestRun() throws Exception {
+		Ontology exampleOntology = loadOntology("exampleOntology.wsml");
+		if (exampleOntology == null)
+			return;
+
+		String queryString = "?x memberOf ?y";
+		// String queryString = "?x = ?y";
+		// String queryString =
+		// "?x = ?y :- ?x[name hasValue ?n1] and ?y[name hasValue ?n2] and ?n1=?n2.";
+
+		LogicalExpression query = new WsmlLogicalExpressionParser(
+				exampleOntology).parse(queryString);
+
+		// get A reasoner
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER,
+				WSMLReasonerFactory.BuiltInReasoner.STREAMING_IRIS_STRATIFIED);
+		StreamingLPReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
+				.createStreamingFlightReasoner(params);
+
+		// create the configuration
+		Map<String, Object> configuration = new HashMap<String, Object>();
+		configuration.put("inputPort", 45821);
+
+		// Start reasoner
+		reasoner.startReasoner(exampleOntology, configuration);
+
+		// Register query listener
+		ServerSocket server = new ServerSocket(0);
+		Wsml2ReasonerListener wsml2ReasonerListener = new Wsml2ReasonerListener(
+				server);
+
+		wsml2ReasonerListener.start();
+
+		reasoner.registerQueryListener(query, "localhost",
+				server.getLocalPort());
+
+		// start input streamer
+		new Wsml2ReasonerInputStreamer(
+				"45821",
+				"D:\\workspaces\\workspace_wsml2reasoner\\WSML2.0\\wsml2reasoner-impl\\src\\main\\resources\\exampleEvents.txt");
+
+		Thread.sleep(23000);
+
+		reasoner.deregisterQueryListener(query, "localhost",
+				server.getLocalPort());
+
+		wsml2ReasonerListener.interrupt();
+
+		Thread.sleep(5000);
+
+		// do not forget to shut down the reasoner
+		reasoner.shutdownReasoner();
+	}
+
+	/**
 	 * Utility Method to get the object model of a wsml ontology
 	 * 
 	 * @param file
-	 *            location of source file (It will be attemted to be loaded from
-	 *            current class path)
+	 *            location of source file (It will be attempted to be loaded
+	 *            from current class path)
 	 * @return object model of ontology at file location
 	 */
 	private Ontology loadOntology(String file) {
@@ -134,11 +218,5 @@ public class StreamingIrisReasonerExample {
 			return null;
 		}
 
-	}
-
-	private String termToString(Term t, Ontology o) {
-		SerializeWSMLTermsVisitor v = new SerializeWSMLTermsVisitor(o);
-		t.accept(v);
-		return v.getSerializedObject();
 	}
 }
