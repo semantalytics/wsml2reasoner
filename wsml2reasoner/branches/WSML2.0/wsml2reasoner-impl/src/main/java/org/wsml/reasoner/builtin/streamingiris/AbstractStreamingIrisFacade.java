@@ -42,6 +42,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.deri.wsmo4j.io.serializer.wsml.SerializeWSMLTermsVisitor;
+import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
@@ -141,6 +143,12 @@ public abstract class AbstractStreamingIrisFacade implements
 	 */
 	private Map<String, OutputStreamer> outputStreamers;
 
+	private long executionInterval;
+
+	private Ontology ontology;
+
+	private Map<IQuery, LogicalExpression> queryMap;
+
 	public AbstractStreamingIrisFacade(final FactoryContainer factory,
 			final Map<String, Object> config) {
 		this.factory = factory;
@@ -158,11 +166,13 @@ public abstract class AbstractStreamingIrisFacade implements
 		queryListenerMap = new HashMap<IQuery, List<String>>();
 		streamingIrisOutputServers = new HashMap<IQuery, StreamingIrisOutputServer>();
 		outputStreamers = new HashMap<String, OutputStreamer>();
+		queryMap = new HashMap<IQuery, LogicalExpression>();
 	}
 
 	@Override
 	public synchronized void startReasoner(Ontology ontology,
 			Map<String, Object> configuration) throws ExternalToolException {
+		this.ontology = ontology;
 		Set<Rule> kb = convertOntologyToKnowledgeBase(ontology);
 
 		startReasoner(kb, configuration);
@@ -217,7 +227,7 @@ public abstract class AbstractStreamingIrisFacade implements
 				body.add(trueLiteral);
 				rules.add(BASIC.createRule(head, body));
 				/* </hack> */
-				logger.debug("Added RULE: " + BASIC.createRule(head, body));
+				// logger.debug("Added RULE: " + BASIC.createRule(head, body));
 			} else if (r.isFact()) { // the rule is a fact
 				IAtom atom = literal2Atom(r.getHead(), true);
 				IPredicate pred = atom.getPredicate();
@@ -228,8 +238,8 @@ public abstract class AbstractStreamingIrisFacade implements
 					facts.put(pred, relation);
 				}
 				relation.add(atom.getTuple());
-				logger.debug("Added FACT: " + atom.getPredicate() + " "
-						+ atom.getTuple());
+				// logger.debug("Added FACT: " + atom.getPredicate() + " "
+				// + atom.getTuple());
 			} else { // the rule is an ordinary rule
 				final List<ILiteral> head = new ArrayList<ILiteral>(1);
 				final List<ILiteral> body = new ArrayList<ILiteral>(r.getBody()
@@ -241,7 +251,7 @@ public abstract class AbstractStreamingIrisFacade implements
 					body.add(literal2Literal(l, false));
 				}
 				rules.add(BASIC.createRule(head, body));
-				logger.debug("Added RULE: " + BASIC.createRule(head, body));
+				// logger.debug("Added RULE: " + BASIC.createRule(head, body));
 			}
 		}
 		// add the wsml-member-of rules for primitive data types
@@ -260,6 +270,8 @@ public abstract class AbstractStreamingIrisFacade implements
 		}
 
 		configureStreamingIris(kbConfiguration);
+
+		this.executionInterval = kbConfiguration.executionIntervallMilliseconds;
 
 		try {
 			prog = KnowledgeBaseFactory.createKnowledgeBase(facts, rules,
@@ -293,10 +305,11 @@ public abstract class AbstractStreamingIrisFacade implements
 		// Shut down the output streamers.
 		for (StreamingIrisOutputServer streamer : streamingIrisOutputServers
 				.values()) {
-			if (!streamer.shutdown())
-				logger.error("IIrisOutputStreamer could not be shut down!");
-			else
-				logger.info("IIrisOutputStreamer shut down!");
+			streamer.interrupt();
+			// if (!streamer.shutdown())
+			// logger.error("IIrisOutputStreamer could not be shut down!");
+			// else
+			// logger.info("IIrisOutputStreamer shut down!");
 		}
 
 	}
@@ -357,9 +370,10 @@ public abstract class AbstractStreamingIrisFacade implements
 		return res;
 	}
 
-	public synchronized void registerQueryListener(ConjunctiveQuery q,
+	public synchronized void registerQueryListener(
+			ConjunctiveQuery datalogQuery, LogicalExpression query,
 			String host, int port) {
-		if (q == null) {
+		if (datalogQuery == null) {
 			throw new NullPointerException("The query must not be null");
 		}
 		if (prog == null) {
@@ -368,28 +382,30 @@ public abstract class AbstractStreamingIrisFacade implements
 		}
 
 		// constructing the query -- i.e. rule with no head
-		final List<ILiteral> body = new ArrayList<ILiteral>(q.getLiterals()
-				.size());
+		final List<ILiteral> body = new ArrayList<ILiteral>(datalogQuery
+				.getLiterals().size());
 		// converting the literals of the query
-		for (final Literal l : q.getLiterals()) {
+		for (final Literal l : datalogQuery.getLiterals()) {
 			body.add(literal2Literal(l, false));
 		}
 
 		// create query
-		final IQuery query = BASIC.createQuery(body);
+		final IQuery q = BASIC.createQuery(body);
+
+		queryMap.put(q, query);
 
 		String hostPortPair = host + ":" + port;
 
-		if (!queryListenerMap.containsKey(query)) {
+		if (!queryListenerMap.containsKey(q)) {
 			ArrayList<String> arrayList = new ArrayList<String>();
 			arrayList.add(hostPortPair);
-			queryListenerMap.put(query, arrayList);
+			queryListenerMap.put(q, arrayList);
 			StreamingIrisOutputServer streamingIrisOutputServer = new StreamingIrisOutputServer(
-					this, query, prog);
+					this, q, prog, executionInterval);
 			streamingIrisOutputServer.start();
-			streamingIrisOutputServers.put(query, streamingIrisOutputServer);
+			streamingIrisOutputServers.put(q, streamingIrisOutputServer);
 		} else {
-			queryListenerMap.get(query).add(hostPortPair);
+			queryListenerMap.get(q).add(hostPortPair);
 		}
 
 		OutputStreamer outputStreamer = new OutputStreamer(host, port);
@@ -397,11 +413,90 @@ public abstract class AbstractStreamingIrisFacade implements
 		outputStreamers.put(hostPortPair, outputStreamer);
 	}
 
+	public void sendResults(IQuery query, IRelation result,
+			List<IVariable> variableBindings) {
+		if (queryListenerMap.containsKey(query)) {
+			final Set<Map<Variable, Term>> res = new HashSet<Map<Variable, Term>>();
+
+			for (int i = 0; i < result.size(); ++i) {
+				ITuple t = result.get(i);
+
+				assert t.size() == variableBindings.size();
+
+				Map<Variable, Term> tmp = new HashMap<Variable, Term>();
+
+				for (int pos = 0; pos < t.size(); ++pos) {
+					IVariable variable = variableBindings.get(pos);
+					ITerm term = t.get(pos);
+
+					tmp.put((Variable) convertTermFromIrisToWsmo4j(variable,
+							factory),
+							convertTermFromIrisToWsmo4j(term, factory));
+				}
+
+				res.add(tmp);
+			}
+
+			StringBuilder results = new StringBuilder();
+			String queryString = queryMap.get(query).toString();
+			String resultString;
+
+			for (Map<Variable, Term> vBinding : res) {
+				resultString = queryString;
+				for (Variable var : vBinding.keySet()) {
+					String value = termToString(vBinding.get(var));
+					resultString = resultString.replace(var.toString(), value);
+				}
+				results.append(resultString);
+				results.append("\n");
+			}
+
+			String stream = results.toString();
+
+			for (String pair : queryListenerMap.get(query)) {
+				outputStreamers.get(pair).stream(stream);
+			}
+		}
+
+	}
+
 	public void sendResults(IQuery query, Map<IPredicate, IRelation> facts) {
+		IRelation relation;
+		IPredicate predicate;
 
 		// convert facts to wsml to string
 		for (Entry<IPredicate, IRelation> entry : facts.entrySet()) {
-			logger.debug("IRelation: " + entry.getValue());
+			relation = entry.getValue();
+			predicate = entry.getKey();
+
+			for (int i = 0; i < relation.size(); i++) {
+				logger.debug(predicate + " " + relation.get(i));
+			}
+
+			logger.debug("IRelation: " + relation);
+
+			final Set<Map<Variable, Term>> res = new HashSet<Map<Variable, Term>>();
+
+			// for (int i = 0; i < relation.size(); ++i) {
+			// ITuple t = relation.get(i);
+			//
+			// assert t.size() == variableBindings.size();
+			//
+			// Map<Variable, Term> tmp = new HashMap<Variable, Term>();
+			//
+			// for (int pos = 0; pos < t.size(); ++pos) {
+			// IVariable variable = variableBindings.get(pos);
+			// ITerm term = t.get(pos);
+			//
+			// tmp.put((Variable) convertTermFromIrisToWsmo4j(variable,
+			// factory),
+			// convertTermFromIrisToWsmo4j(term, factory));
+			// }
+			//
+			// res.add(tmp);
+			// }
+
+			// TermHelper.convertTermFromIrisToWsmo4j(t, factory);
 		}
 
 		if (queryListenerMap.containsKey(query)) {
@@ -409,6 +504,12 @@ public abstract class AbstractStreamingIrisFacade implements
 				outputStreamers.get(pair).stream(facts.toString());
 			}
 		}
+	}
+
+	private String termToString(Term t) {
+		SerializeWSMLTermsVisitor v = new SerializeWSMLTermsVisitor(ontology);
+		t.accept(v);
+		return v.getSerializedObject();
 	}
 
 	public void deregisterQueryListener(ConjunctiveQuery q, String host,
@@ -449,9 +550,11 @@ public abstract class AbstractStreamingIrisFacade implements
 						queryListenerMap.remove(query);
 					}
 					synchronized (streamingIrisOutputServers) {
-						streamingIrisOutputServers.get(query).shutdown();
+						// streamingIrisOutputServers.get(query).shutdown();
+						streamingIrisOutputServers.get(query).interrupt();
 						streamingIrisOutputServers.remove(query);
 					}
+					queryMap.remove(query);
 				}
 			}
 		}
@@ -703,4 +806,5 @@ public abstract class AbstractStreamingIrisFacade implements
 			}
 		}
 	}
+
 }

@@ -22,6 +22,7 @@ package org.wsml.reasoner;
 import java.util.Map;
 import java.util.Set;
 
+import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
@@ -119,28 +120,30 @@ public interface StreamingDatalogReasonerFacade {
 	/**
 	 * Register a query and a listener.
 	 * 
+	 * @param datalogQuery
+	 *            The datalog query.
 	 * @param query
-	 *            The query.
+	 *            The WSML query.
 	 * @param host
 	 *            The host of the listener.
 	 * @param port
 	 *            The port of the listener.
 	 */
-	public void registerQueryListener(ConjunctiveQuery query, String host,
-			int port);
+	public void registerQueryListener(ConjunctiveQuery datalogQuery,
+			LogicalExpression query, String host, int port);
 
 	/**
 	 * Deregister a query and a listener.
 	 * 
-	 * @param query
-	 *            The query.
+	 * @param datalogQuery
+	 *            The datalog query.
 	 * @param host
 	 *            The host of the listener.
 	 * @param port
 	 *            The port of the listener.
 	 */
-	public void deregisterQueryListener(ConjunctiveQuery query, String host,
-			int port);
+	public void deregisterQueryListener(ConjunctiveQuery datalogQuery,
+			String host, int port);
 
 	/**
 	 * Checks whether query1 is contained within query2.
