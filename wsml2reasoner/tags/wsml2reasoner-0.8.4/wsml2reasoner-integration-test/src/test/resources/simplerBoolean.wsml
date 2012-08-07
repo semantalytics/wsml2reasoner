@@ -1,0 +1,14 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
+namespace { _"http://www.yabooleantest.org#"}
+
+ontology yabooleantest
+
+concept conceptualizations
+reallyExists ofType _boolean
+
+instance truth memberOf conceptualizations
+reallyExists hasValue _boolean("true")
+
+instance mysticism memberOf conceptualizations
+reallyExists hasValue _boolean("false")
+ 
