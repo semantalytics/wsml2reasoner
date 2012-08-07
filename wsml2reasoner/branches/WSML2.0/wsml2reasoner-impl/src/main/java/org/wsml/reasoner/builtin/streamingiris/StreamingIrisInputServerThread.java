@@ -50,7 +50,7 @@ public class StreamingIrisInputServerThread extends Thread {
 		try {
 			InputStream inputStream = socket.getInputStream();
 
-			// get syntax of incoming facts (RDF/XML, N3, Turtle, N-Triples)
+			// TODO Norbert: get syntax of incoming facts (RDF/XML, N3)
 			Syntax syntax = Syntax.N3;
 
 			// create corresponding parser

@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>wsml2reasoner</artifactId>
 		<groupId>net.sourceforge.wsml2reasoner</groupId>
-		<version>0.8.4-SNAPSHOT</version>
+		<version>0.8.4</version>
 	</parent>
 
 	<artifactId>wsml2reasoner-impl</artifactId>
@@ -27,7 +27,7 @@
 		<dependency>
 			<groupId>at.sti2.streamingiris</groupId>
 			<artifactId>streaming-iris-impl</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
+			<version>0.0.3</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
