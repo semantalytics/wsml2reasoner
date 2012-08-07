@@ -688,7 +688,8 @@ public class DatalogBasedStreamingWSMLReasoner implements StreamingLPReasoner {
 		Set<org.wsml.reasoner.ConjunctiveQuery> datalogQueries = convertQuery(query);
 		for (ConjunctiveQuery datalogQuery : datalogQueries) {
 			try {
-				builtInFacade.registerQueryListener(datalogQuery, host, port);
+				builtInFacade.registerQueryListener(datalogQuery, query, host,
+						port);
 			} catch (DatalogException e) {
 				throw new InternalReasonerException(e);
 			}

@@ -63,26 +63,27 @@ public class OutputStreamer {
 	}
 
 	public void stream(String facts) {
-		long factCounter = 0;
+		// long factCounter = 0;
 
 		try {
 			streamWriter = new PrintWriter(socket.getOutputStream());
 			BufferedReader bufferedReader = new BufferedReader(
 					new StringReader(facts));
 			String factLine = null;
-			logger.info("Beginning of streaming.");
+			// logger.info("Beginning of streaming.");
 
 			while ((factLine = bufferedReader.readLine()) != null) {
 				streamWriter.println(factLine);
-				logger.debug(factLine);
-				factCounter++;
+				// logger.debug(factLine);
+				// factCounter++;
 			}
 
 			streamWriter.flush();
 
-			logger.info("End of streaming.");
-			logger.info("Streamed " + factCounter + " fact(s) to " + host + ":"
-					+ port + ".");
+			// logger.info("End of streaming.");
+			// logger.info("Streamed " + factCounter + " fact(s) to " + host +
+			// ":"
+			// + port + ".");
 
 			bufferedReader.close();
 		} catch (IOException e) {

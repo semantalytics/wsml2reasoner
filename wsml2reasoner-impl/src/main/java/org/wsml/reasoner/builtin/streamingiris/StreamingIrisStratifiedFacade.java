@@ -42,6 +42,5 @@ public class StreamingIrisStratifiedFacade extends AbstractStreamingIrisFacade {
 	}
 
 	protected void configureStreamingIris(Configuration configuration) {
-		configuration.timeWindowMilliseconds = 60000;
 	}
 }

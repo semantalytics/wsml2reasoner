@@ -76,7 +76,7 @@ public class Wsml2ReasonerInputStreamer {
 			PrintWriter streamWriter = new PrintWriter(sock.getOutputStream());
 			BufferedReader bufferedReader = new BufferedReader(new FileReader(
 					fileName));
-			logger.info("Beginning of streaming.");
+			logger.info("Start of streaming.");
 
 			String factLine = bufferedReader.readLine();
 			while (factLine != null) {

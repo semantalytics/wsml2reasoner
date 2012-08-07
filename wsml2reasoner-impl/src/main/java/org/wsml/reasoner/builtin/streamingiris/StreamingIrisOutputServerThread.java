@@ -56,9 +56,16 @@ public class StreamingIrisOutputServerThread extends Thread {
 			String factLine = null;
 
 			Parser parser = new Parser();
+			StringBuilder builder;
 			while (!Thread.interrupted()
 					&& (factLine = streamReader.readLine()) != null) {
-				parser.parse(factLine);
+				builder = new StringBuilder();
+				builder.append(factLine);
+				while (!Thread.interrupted() && streamReader.ready()) {
+					factLine = streamReader.readLine();
+					builder.append(factLine);
+				}
+				parser.parse(builder.toString());
 				Map<IPredicate, IRelation> newFacts = parser.getFacts();
 				if (newFacts != null && newFacts.size() != 0) {
 					facade.sendResults(query, newFacts);

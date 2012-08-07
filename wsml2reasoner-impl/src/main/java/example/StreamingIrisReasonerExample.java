@@ -177,7 +177,7 @@ public class StreamingIrisReasonerExample {
 				"45821",
 				"D:\\workspaces\\workspace_wsml2reasoner\\WSML2.0\\wsml2reasoner-impl\\src\\main\\resources\\exampleEvents.txt");
 
-		Thread.sleep(23000);
+		Thread.sleep(123000);
 
 		reasoner.deregisterQueryListener(query, "localhost",
 				server.getLocalPort());
