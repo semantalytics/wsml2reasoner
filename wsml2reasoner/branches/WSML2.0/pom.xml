@@ -3,7 +3,7 @@
 
 	<groupId>net.sourceforge.wsml2reasoner</groupId>
 	<artifactId>wsml2reasoner</artifactId>
-	<version>0.8.4</version>
+	<version>0.8.5-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>WSML2Reasoner</name>
 
