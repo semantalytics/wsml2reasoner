@@ -1,0 +1,21 @@
+_:node16viq8m6fx1 a <http://www.w3.org/2002/07/owl#Ontology> .
+_:node16viq8m6fx2 <http://purl.org/ifgi/event-observation#memberOf> <http://purl.org/ifgi/event-observation#EventObservation> .
+_:node16viq8m6fx3 <http://purl.org/ifgi/event-observation#memberOf> <http://purl.org/ifgi/event-observation#EventObservationDescription> .
+_:node16viq8m6fx4 a <http://purl.org/ifgi/water/flood#NormalStageToActionStage> .
+_:node16viq8m6fx5 a <http://purl.org/ifgi/geodesc#LocationDescription> .
+_:node16viq8m6fx3 <http://purl.org/ifgi/dul#describes> _:node16viq8m6fx2 ;
+	<http://purl.org/ifgi/geodesc#describedLocation> _:node16viq8m6fx5 .
+_:node16viq8m6fx2 <http://purl.org/ifgi/dul#isClassifiedBy> _:node16viq8m6fx4 .
+_:node16viq8m6fx5 <http://purl.org/ifgi/geosparql#asWKT> "SRID:4326;POINT (38.94977778 -77.12763889)" ;
+	<http://purl.org/ifgi/time#inXSDDateTime> "2011-10-18T17:45" .
+
+_:node16viq8m8gx1 a <http://www.w3.org/2002/07/owl#Ontology> .
+_:node16viq8m8gx2 a <http://purl.org/ifgi/geomodels#PredictedEventObservation> .
+_:node16viq8m8gx3 a <http://purl.org/ifgi/geomodels#PredictedEventObservationDescription> .
+_:node16viq8m8gx4 a <http://purl.org/ifgi/water/flood#Flood> .
+_:node16viq8m8gx5 a <http://purl.org/ifgi/geodesc#LocationDescription> .
+_:node16viq8m8gx3 <http://purl.org/ifgi/dul#describes> _:node16viq8m8gx2 ;
+	<http://purl.org/ifgi/geodesc#describedLocation> _:node16viq8m8gx5 .
+_:node16viq8m8gx2 <http://purl.org/ifgi/geomodels#predicts> _:node16viq8m8gx4 .
+_:node16viq8m8gx5 <http://purl.org/ifgi/geosparql#asWKT> "SRID:4326;POINT (37.27150554 -81.3048227)" ;
+	<http://purl.org/ifgi/time#inXSDDateTime> "2011-10-18T18:45" .
