@@ -53,19 +53,11 @@ public class OutputStreamer {
 		this.port = port;
 	}
 
-	public void connect() {
-		try {
-			socket = new Socket(host, port);
-			logger.info("Connected.");
-		} catch (IOException e) {
-			logger.debug("Cannot connect to server.");
-		}
-	}
-
 	public void stream(String facts) {
 		// long factCounter = 0;
 
 		try {
+			socket = new Socket(host, port);
 			streamWriter = new PrintWriter(socket.getOutputStream());
 			BufferedReader bufferedReader = new BufferedReader(
 					new StringReader(facts));
@@ -86,6 +78,7 @@ public class OutputStreamer {
 			// + port + ".");
 
 			bufferedReader.close();
+			socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

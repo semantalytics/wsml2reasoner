@@ -409,7 +409,6 @@ public abstract class AbstractStreamingIrisFacade implements
 		}
 
 		OutputStreamer outputStreamer = new OutputStreamer(host, port);
-		outputStreamer.connect();
 		outputStreamers.put(hostPortPair, outputStreamer);
 	}
 
