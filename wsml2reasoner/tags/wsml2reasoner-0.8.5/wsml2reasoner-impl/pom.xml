@@ -1,0 +1,53 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<artifactId>wsml2reasoner</artifactId>
+		<groupId>net.sourceforge.wsml2reasoner</groupId>
+		<version>0.8.5</version>
+	</parent>
+
+	<artifactId>wsml2reasoner-impl</artifactId>
+
+	<name>WSML2Reasoner Reference Implementation</name>
+	<dependencies>
+		<dependency>
+			<groupId>net.sourceforge.wsml2reasoner</groupId>
+			<artifactId>wsml2reasoner-api</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>at.sti2.iris</groupId>
+			<artifactId>iris-impl</artifactId>
+			<version>0.7.2</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>at.sti2.streamingiris</groupId>
+			<artifactId>streaming-iris-impl</artifactId>
+			<version>0.0.3</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>at.sti2.elly</groupId>
+			<artifactId>elly-iris</artifactId>
+			<version>0.2.3-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.ifgi.envision</groupId>
+			<artifactId>wsmo4j-rdf-extensions</artifactId>
+			<version>2.1.3.envision-SNAPSHOT</version>
+			<type>jar</type>
+		</dependency>
+	</dependencies>
+</project>
