@@ -1,0 +1,18 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"http://example.com/anonymous_id1#" }
+
+ontology anonymous1
+
+concept C
+concept D
+		
+relation rel(impliesType C, impliesType D)
+relationInstance rel(c,d)
+	
+instance c memberOf C
+instance d memberOf D
+		
+axiom definedBy
+	?c memberOf C implies
+	_#1 memberOf D and
+	rel(?c, _#1).

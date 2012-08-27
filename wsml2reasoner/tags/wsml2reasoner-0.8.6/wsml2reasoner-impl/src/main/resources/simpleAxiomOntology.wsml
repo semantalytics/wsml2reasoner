@@ -1,0 +1,33 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
+namespace { _"http://simple#",
+gDesc _"http://test.com#",
+geomod _"http://test2.com#",
+dul _"http://test3.com#",
+gsparql _"http://test4.com#",
+flood _"http://test5.com#",
+ae _"http://test6.com#",
+gspace _"http://test7.com#"
+}
+
+ontology simple
+
+axiom change_state_to_flooded
+		definedBy
+			?predictedeventobsdesc[gDesc#describedLocation hasValue ?descloc, dul#describes hasValue ?predictedeventobs, geomod#associatedHazardLevel hasValue ?hazlevdesc, geomod#hasSource hasValue ?eventobsdesc] memberOf geomod#PredictedEventObservationDescription
+        	and ?descloc [gsparql#asWKT hasValue ?locvalue] memberOf gDesc#LocationDescription
+        	and ?predictedeventobs [geomod#predicts hasValue ?event] memberOf geomod#PredictedEventObservation
+         	and ?hazlevdesc [geomod#hasHazardLevel hasValue ?probability] memberOf geomod#HazardLevelDescription
+         	and ?event memberOf flood#Flood
+         	and ?probability > 50
+         	and ?watlevsensdesc [gDesc#describes hasValue ?watlevsens, gDesc#describedLocation hasValue ?watlevsensloc] memberOf gDesc#GeographicalDescription
+         	and ?watlevsensloc [gsparql#asWKT hasValue ?locvalue2] memberOf gDesc#LocationDescription
+         	and ?locvalue = ?locvalue2
+         	and ?watlevsens memberOf flood#WaterLevelSensor
+         	and ?obj [ae#has_state hasValue ?state] memberOf gspace#geographical_unit
+         	and ?dam memberOf flood#Dam
+         	and ?watlevsens[flood#downstream hasValue ?obj]
+		and ?watlevsens[flood#downstream hasValue ?dam]
+		and ?state memberOf ae#state
+		and naf ?dam[flood#downstream hasValue ?obj]
+         	implies
+         	?state memberOf flooded.

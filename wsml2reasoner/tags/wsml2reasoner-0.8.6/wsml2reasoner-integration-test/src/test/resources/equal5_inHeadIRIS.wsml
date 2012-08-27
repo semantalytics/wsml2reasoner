@@ -1,0 +1,23 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
+namespace { _"http://simple5#"
+}
+
+ontology simple_5
+
+concept A
+concept B
+
+	
+instance A1 memberOf A
+	some hasValue a
+	other hasValue aa
+
+instance B1 memberOf B
+	some hasValue a
+	other hasValue bb 
+	
+axiom S definedBy
+	 ?a = ?b :- ?a[?x hasValue ?n1] and ?b[?x hasValue ?n2] and ?n1=?n2.
+	 p(?x) :- ?x memberOf B.
+	
+
