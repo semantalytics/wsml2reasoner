@@ -1,0 +1,25 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-rule"
+namespace { _"wsmt://munit#",
+        dc _"http://purl.org/dc/elements/1.1#"
+ }
+
+ontology munit
+
+concept testsuite
+        annotations
+                dc#title hasValue "MUnit Test Suite"
+                dc#creator hasValue "Mick Kerrigan"
+        endAnnotations
+        sourceOntology ofType _iri
+        targetOntology ofType _iri
+        hasTest ofType test
+        
+
+concept test
+        annotations
+                dc#title hasValue "MUnit Test"
+                dc#creator hasValue "Mick Kerrigan"
+        endAnnotations
+        hasSourceInstance ofType _iri
+        hasTargetInstance ofType _iri
+        

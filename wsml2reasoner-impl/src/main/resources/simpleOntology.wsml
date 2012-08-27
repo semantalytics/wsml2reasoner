@@ -1,0 +1,11 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-core"
+namespace { _"http://simple#"
+}
+
+ontology simple
+
+concept Man
+	
+instance Graham memberOf Man
+
+
