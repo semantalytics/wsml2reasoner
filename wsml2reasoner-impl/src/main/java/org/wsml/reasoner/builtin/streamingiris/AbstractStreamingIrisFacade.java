@@ -69,6 +69,8 @@ import org.wsmo.factory.FactoryContainer;
 import at.sti2.streamingiris.Configuration;
 import at.sti2.streamingiris.EvaluationException;
 import at.sti2.streamingiris.KnowledgeBaseFactory;
+import at.sti2.streamingiris.ProgramNotStratifiedException;
+import at.sti2.streamingiris.RuleUnsafeException;
 import at.sti2.streamingiris.api.IKnowledgeBase;
 import at.sti2.streamingiris.api.basics.IAtom;
 import at.sti2.streamingiris.api.basics.ILiteral;
@@ -127,12 +129,6 @@ public abstract class AbstractStreamingIrisFacade implements
 	private StreamingIrisInputServer inputThread;
 
 	/**
-	 * This map links the query with the thread that is listening for the
-	 * results of this query coming from streaming iris.
-	 */
-	private Map<IQuery, StreamingIrisOutputServer> streamingIrisOutputServers;
-
-	/**
 	 * This map links the query to the sockets that are listening for results.
 	 */
 	private Map<IQuery, List<String>> queryListenerMap;
@@ -142,8 +138,6 @@ public abstract class AbstractStreamingIrisFacade implements
 	 * results to the socket.
 	 */
 	private Map<String, OutputStreamer> outputStreamers;
-
-	private long executionInterval;
 
 	private Ontology ontology;
 
@@ -164,7 +158,6 @@ public abstract class AbstractStreamingIrisFacade implements
 
 		knowledgeBase = new HashSet<Rule>();
 		queryListenerMap = new HashMap<IQuery, List<String>>();
-		streamingIrisOutputServers = new HashMap<IQuery, StreamingIrisOutputServer>();
 		outputStreamers = new HashMap<String, OutputStreamer>();
 		queryMap = new HashMap<IQuery, LogicalExpression>();
 	}
@@ -271,8 +264,6 @@ public abstract class AbstractStreamingIrisFacade implements
 
 		configureStreamingIris(kbConfiguration);
 
-		this.executionInterval = kbConfiguration.executionIntervallMilliseconds;
-
 		try {
 			prog = KnowledgeBaseFactory.createKnowledgeBase(facts, rules,
 					kbConfiguration);
@@ -301,17 +292,6 @@ public abstract class AbstractStreamingIrisFacade implements
 
 		// Shut down the input streamer.
 		inputThread.shutdown();
-
-		// Shut down the output streamers.
-		for (StreamingIrisOutputServer streamer : streamingIrisOutputServers
-				.values()) {
-			streamer.interrupt();
-			// if (!streamer.shutdown())
-			// logger.error("IIrisOutputStreamer could not be shut down!");
-			// else
-			// logger.info("IIrisOutputStreamer shut down!");
-		}
-
 	}
 
 	public void register(Set<Rule> kb) throws ExternalToolException {
@@ -400,10 +380,6 @@ public abstract class AbstractStreamingIrisFacade implements
 			ArrayList<String> arrayList = new ArrayList<String>();
 			arrayList.add(hostPortPair);
 			queryListenerMap.put(q, arrayList);
-			StreamingIrisOutputServer streamingIrisOutputServer = new StreamingIrisOutputServer(
-					this, q, prog, executionInterval);
-			streamingIrisOutputServer.start();
-			streamingIrisOutputServers.put(q, streamingIrisOutputServer);
 		} else {
 			queryListenerMap.get(q).add(hostPortPair);
 		}
@@ -459,52 +435,6 @@ public abstract class AbstractStreamingIrisFacade implements
 
 	}
 
-	public void sendResults(IQuery query, Map<IPredicate, IRelation> facts) {
-		IRelation relation;
-		IPredicate predicate;
-
-		// convert facts to wsml to string
-		for (Entry<IPredicate, IRelation> entry : facts.entrySet()) {
-			relation = entry.getValue();
-			predicate = entry.getKey();
-
-			for (int i = 0; i < relation.size(); i++) {
-				logger.debug(predicate + " " + relation.get(i));
-			}
-
-			logger.debug("IRelation: " + relation);
-
-			final Set<Map<Variable, Term>> res = new HashSet<Map<Variable, Term>>();
-
-			// for (int i = 0; i < relation.size(); ++i) {
-			// ITuple t = relation.get(i);
-			//
-			// assert t.size() == variableBindings.size();
-			//
-			// Map<Variable, Term> tmp = new HashMap<Variable, Term>();
-			//
-			// for (int pos = 0; pos < t.size(); ++pos) {
-			// IVariable variable = variableBindings.get(pos);
-			// ITerm term = t.get(pos);
-			//
-			// tmp.put((Variable) convertTermFromIrisToWsmo4j(variable,
-			// factory),
-			// convertTermFromIrisToWsmo4j(term, factory));
-			// }
-			//
-			// res.add(tmp);
-			// }
-
-			// TermHelper.convertTermFromIrisToWsmo4j(t, factory);
-		}
-
-		if (queryListenerMap.containsKey(query)) {
-			for (String pair : queryListenerMap.get(query)) {
-				outputStreamers.get(pair).stream(facts.toString());
-			}
-		}
-	}
-
 	private String termToString(Term t) {
 		SerializeWSMLTermsVisitor v = new SerializeWSMLTermsVisitor(ontology);
 		t.accept(v);
@@ -547,11 +477,6 @@ public abstract class AbstractStreamingIrisFacade implements
 				if (list.isEmpty()) {
 					synchronized (queryListenerMap) {
 						queryListenerMap.remove(query);
-					}
-					synchronized (streamingIrisOutputServers) {
-						// streamingIrisOutputServers.get(query).shutdown();
-						streamingIrisOutputServers.get(query).interrupt();
-						streamingIrisOutputServers.remove(query);
 					}
 					queryMap.remove(query);
 				}
@@ -653,6 +578,22 @@ public abstract class AbstractStreamingIrisFacade implements
 			prog.addFacts(facts);
 		} catch (EvaluationException e) {
 			e.printStackTrace();
+		}
+
+		List<IVariable> variableBinding;
+		IRelation result;
+		for (IQuery query : queryMap.keySet()) {
+			try {
+				variableBinding = new ArrayList<IVariable>();
+				result = prog.execute(query, variableBinding);
+				sendResults(query, result, variableBinding);
+			} catch (ProgramNotStratifiedException e) {
+				e.printStackTrace();
+			} catch (RuleUnsafeException e) {
+				e.printStackTrace();
+			} catch (EvaluationException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
