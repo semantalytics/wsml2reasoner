@@ -18,6 +18,7 @@
  */
 package org.wsml.reasoner.api;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,16 +39,15 @@ import org.wsmo.common.IRI;
 public interface StreamingLPReasoner extends WSMLReasoner {
 
 	/**
-	 * Registers the ontology at the external reasoner and starts the reasoner
-	 * (if ontology is not null previously registered ontologies are overridden,
-	 * if ontology is null preivously registred ontologies are used).
+	 * Registers the ontologies at the external reasoner and starts the
+	 * reasoner.
 	 * 
 	 * @param ontology
 	 *            the ontology
 	 * @param configuration
 	 *            the configuration for the reasoner
 	 */
-	public void startReasoner(Ontology ontology,
+	public void startReasoner(List<Ontology> ontologies,
 			Map<String, Object> configuration);
 
 	/**

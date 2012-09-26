@@ -19,6 +19,7 @@
 
 package org.wsml.reasoner;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -47,7 +48,7 @@ public interface StreamingDatalogReasonerFacade {
 	 *            the configuration for the reasoner
 	 * @throws ExternalToolException
 	 */
-	public void startReasoner(Ontology ontology,
+	public void startReasoner(List<Ontology> ontologies,
 			Map<String, Object> configuration) throws ExternalToolException;
 
 	/**
