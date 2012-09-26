@@ -710,11 +710,11 @@ public class DatalogBasedStreamingWSMLReasoner implements StreamingLPReasoner {
 	}
 
 	@Override
-	public void startReasoner(Ontology ontology,
+	public void startReasoner(List<Ontology> ontologies,
 			Map<String, Object> configuration) {
 		if (!isReasonerStarted) {
 			try {
-				builtInFacade.startReasoner(ontology, configuration);
+				builtInFacade.startReasoner(ontologies, configuration);
 				isReasonerStarted = true;
 			} catch (ExternalToolException e) {
 				e.printStackTrace();

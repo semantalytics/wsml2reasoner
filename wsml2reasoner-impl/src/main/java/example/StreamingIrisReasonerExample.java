@@ -22,7 +22,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.deri.wsmo4j.io.parser.wsml.WsmlLogicalExpressionParser;
@@ -76,8 +78,11 @@ public class StreamingIrisReasonerExample {
 		// create the configuration
 		Map<String, Object> configuration = new HashMap<String, Object>();
 
+		List<Ontology> ontologies = new ArrayList<Ontology>();
+		ontologies.add(ontology);
+
 		// Start reasoner
-		reasoner.startReasoner(ontology, configuration);
+		reasoner.startReasoner(ontologies, configuration);
 
 		Thread.sleep(5000);
 
@@ -110,8 +115,11 @@ public class StreamingIrisReasonerExample {
 		// create the configuration
 		Map<String, Object> configuration = new HashMap<String, Object>();
 
+		List<Ontology> ontologies = new ArrayList<Ontology>();
+		ontologies.add(ontology);
+
 		// Start reasoner
-		reasoner.startReasoner(ontology, configuration);
+		reasoner.startReasoner(ontologies, configuration);
 
 		// Register query listener
 		ServerSocket server = new ServerSocket(0);
@@ -159,8 +167,11 @@ public class StreamingIrisReasonerExample {
 		Map<String, Object> configuration = new HashMap<String, Object>();
 		configuration.put("inputPort", 45821);
 
+		List<Ontology> ontologies = new ArrayList<Ontology>();
+		ontologies.add(exampleOntology);
+
 		// Start reasoner
-		reasoner.startReasoner(exampleOntology, configuration);
+		reasoner.startReasoner(ontologies, configuration);
 
 		// Register query listener
 		ServerSocket server = new ServerSocket(0);

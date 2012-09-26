@@ -139,7 +139,7 @@ public abstract class AbstractStreamingIrisFacade implements
 	 */
 	private Map<String, OutputStreamer> outputStreamers;
 
-	private Ontology ontology;
+	private List<Ontology> ontologies;
 
 	private Map<IQuery, LogicalExpression> queryMap;
 
@@ -163,10 +163,14 @@ public abstract class AbstractStreamingIrisFacade implements
 	}
 
 	@Override
-	public synchronized void startReasoner(Ontology ontology,
+	public synchronized void startReasoner(List<Ontology> ontologies,
 			Map<String, Object> configuration) throws ExternalToolException {
-		this.ontology = ontology;
-		Set<Rule> kb = convertOntologyToKnowledgeBase(ontology);
+		this.ontologies = ontologies;
+		Set<Rule> kb = new HashSet<Rule>();
+
+		for (Ontology ontology : ontologies) {
+			kb.addAll(convertOntologyToKnowledgeBase(ontology));
+		}
 
 		startReasoner(kb, configuration);
 	}
@@ -436,9 +440,19 @@ public abstract class AbstractStreamingIrisFacade implements
 	}
 
 	private String termToString(Term t) {
-		SerializeWSMLTermsVisitor v = new SerializeWSMLTermsVisitor(ontology);
-		t.accept(v);
-		return v.getSerializedObject();
+		// TODO Norbert: don't know if this works
+		String result = null;
+		for (Ontology ontology : ontologies) {
+			SerializeWSMLTermsVisitor v = new SerializeWSMLTermsVisitor(
+					ontology);
+			t.accept(v);
+			result = v.getSerializedObject();
+
+			if (result != null)
+				break;
+		}
+
+		return result;
 	}
 
 	public void deregisterQueryListener(ConjunctiveQuery q, String host,
