@@ -1,0 +1,411 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace {_"http://purl.org/ifgi/notification#",
+	dc _"http://purl.org/dc/elements/1.1/",
+	ae _"http://purl.org/ifgi/affenv#",
+	os _"http://purl.org/ifgi/oilspill#",
+	gspace _"http://purl.org/ifgi/geospace#",
+	flood _"http://purl.org/ifgi/water/flood#",
+	eo _"http://purl.org/ifgi/event-observation#",
+	gDesc _"http://purl.org/ifgi/geodesc#",
+	ssn _"http://purl.org/ifgi/ssn#",
+	dul _"http://purl.org/ifgi/dul#",
+	geomod _"http://purl.org/ifgi/geomodels#",
+	dolce _"http://purl.org/ifgi/dolce#",
+	gq _"http://purl.org/ifgi/geoqualities#",
+	xsd _"http://www.w3.org/2001/XMLSchema#",
+	ge _"http://purl.org/ifgi/geoevents#",
+	gsparql _"http://purl.org/ifgi/geosparql#"
+}
+
+
+ontology NotificationOntology
+	annotations
+     	dc#creator hasValue "Henry Michels (ifgi)"
+		dc#contributor hasValue "Marcell Roth (ifgi)"
+		dc#publisher hasValue "(a)IfGI, University of Muenster"
+		dc#rights hasValue "http://creativecommons.org/licenses/by/3.0/"
+		dc#type hasValue "Domain Ontology"
+		dc#description hasValue "" 
+		dc#title hasValue "Notification Ontology"	
+		dc#subject hasValue ""			
+	endAnnotations
+     
+	importsOntology {_"http://purl.org/ifgi/affenv#", 
+					 _"http://purl.org/ifgi/water/flood#",
+					 _"http://purl.org/ifgi/geomodels#",
+					 _"http://purl.org/ifgi/oilspill#",
+					 _"http://purl.org/ifgi/geoevents#",
+					 _"http://purl.org/ifgi/geodesc#",
+					 _"http://purl.org/ifgi/dul#",
+					 _"http://purl.org/ifgi/time#",
+					 _"http://purl.org/ifgi/event-observation#",
+					 _"http://purl.org/ifgi/water/flood#",
+					 _"http://purl.org/ifgi/ssn#",
+					 _"http://purl.org/ifgi/geosparql#"}
+
+	concept stay_at_place subConceptOf ae#activity
+        ae#define ofType stay_at_place_environment
+        dolce#participant ofType subscriber
+                     
+    concept stay_at_place_environment subConceptOf ae#affecting_environment
+        ae#contains ofType os#region           
+        ae#is_defined_by ofType stay_at_place
+                     
+    concept subscriber subConceptOf ae#agent
+        dolce#participant_in ofType stay_at_place    
+        has_contact ofType xsd#string                   
+        has_kind_of_contact ofType xsd#string
+        subscribed_to ofType ge#geographical_event
+                     
+    concept affected subConceptOf ae#state
+    
+    concept flooded subConceptOf affected
+       
+    concept normal subConceptOf ae#state
+    
+    concept city subConceptOf gspace#geographical_unit
+    	gspace#situated_in impliesType os#region
+    
+    concept village subConceptOf gspace#geographical_unit
+    	gspace#situated_in impliesType os#region
+    
+    
+    
+    //axioms to create predicted events with probabilities
+    //axioms if predicted event is related to flood and the prob is higher than 50% than change state of affected objects
+    axiom predict_flooding_50
+        definedBy
+             ?eventobsdesc[gDesc#describedLocation hasValue ?descloc, dul#describes hasValue ?eventobs] memberOf eo#EventObservationDescription
+             and ?descloc[gsparql#asWKT hasValue ?locvalue] memberOf gDesc#LocationDescription
+             and ?eventobs[dul#isClassifiedBy hasValue ?eventobstype] memberOf eo#EventObservation
+             and ?eventobstype memberOf flood#ActionStageToMinorFloodingStage
+             and ?predictedeventobsdesc[gDesc#describedLocation hasValue ?descloc2, dul#describes hasValue ?predictedeventobs, geomod#associatedHazardLevel hasValue ?hazlevdesc] memberOf geomod#PredictedEventObservationDescription
+             and ?predictedeventobs[geomod#predicts hasValue ?event] memberOf geomod#PredictedEventObservation
+             and ?hazlevdesc memberOf geomod#HazardLevelDescription
+             and ?event memberOf ge#geographical_event
+			 and ?descloc2 memberOf gDesc#LocationDescription
+             implies
+             ?predictedeventobsdesc[gDesc#describedLocation hasValue ?descloc2, dul#describes hasValue ?predictedeventobs, geomod#associatedHazardLevel hasValue ?hazlevdesc, geomod#hasSource hasValue ?eventobsdesc] memberOf geomod#PredictedEventObservationDescription
+             and ?descloc2[gsparql#asWKT hasValue ?locvalue] memberOf gDesc#LocationDescription
+             and ?predictedeventobs[geomod#predicts hasValue ?event] memberOf geomod#PredictedEventObservation
+             and ?hazlevdesc[geomod#hasHazardLevel hasValue 50] memberOf geomod#HazardLevelDescription
+             and ?event memberOf flood#Flood.
+             
+	axiom predict_flooding_70
+        definedBy
+             ?eventobsdesc[gDesc#describedLocation hasValue ?descloc, dul#describes hasValue ?eventobs] memberOf eo#EventObservationDescription
+             and ?descloc[gsparql#asWKT hasValue ?locvalue] memberOf gDesc#LocationDescription
+             and ?eventobs[dul#isClassifiedBy hasValue ?eventobstype] memberOf eo#EventObservation
+             and ?eventobstype memberOf flood#MinorFloodingStageToModerateFloodingStage
+             and ?predictedeventobsdesc[gDesc#describedLocation hasValue ?descloc2, dul#describes hasValue ?predictedeventobs, geomod#associatedHazardLevel hasValue ?hazlevdesc] memberOf geomod#PredictedEventObservationDescription
+             and ?predictedeventobs[geomod#predicts hasValue ?event] memberOf geomod#PredictedEventObservation
+             and ?hazlevdesc memberOf geomod#HazardLevelDescription
+             and ?event memberOf ge#geographical_event
+			 and ?descloc2 memberOf gDesc#LocationDescription
+             implies
+             ?predictedeventobsdesc[gDesc#describedLocation hasValue ?descloc2, dul#describes hasValue ?predictedeventobs, geomod#associatedHazardLevel hasValue ?hazlevdesc, geomod#hasSource hasValue ?eventobsdesc] memberOf geomod#PredictedEventObservationDescription
+             and ?descloc2[gsparql#asWKT hasValue ?locvalue] memberOf gDesc#LocationDescription
+             and ?predictedeventobs[geomod#predicts hasValue ?event] memberOf geomod#PredictedEventObservation
+             and ?hazlevdesc[geomod#hasHazardLevel hasValue 70] memberOf geomod#HazardLevelDescription
+             and ?event memberOf flood#Flood.
+
+	axiom test_predict_flooding_70
+        definedBy
+             ?eventobsdesc[gDesc#describedLocation hasValue ?descloc, dul#describes hasValue ?eventobs] memberOf eo#EventObservationDescription
+             and ?descloc[gsparql#asWKT hasValue ?locvalue] memberOf gDesc#LocationDescription
+             and ?test memberOf normal
+             implies
+             ?test memberOf flooded.
+
+	axiom predict_flooding_90
+        definedBy
+             ?eventobsdesc[gDesc#describedLocation hasValue ?descloc, dul#describes hasValue ?eventobs] memberOf eo#EventObservationDescription
+             and ?descloc[gsparql#asWKT hasValue ?locvalue] memberOf gDesc#LocationDescription
+             and ?eventobs[dul#isClassifiedBy hasValue ?eventobstype] memberOf eo#EventObservation
+             and ?eventobstype memberOf flood#ModerateFloodingStageToMajorFloodingStage
+             and ?predictedeventobsdesc[gDesc#describedLocation hasValue ?descloc2, dul#describes hasValue ?predictedeventobs, geomod#associatedHazardLevel hasValue ?hazlevdesc] memberOf geomod#PredictedEventObservationDescription
+             and ?predictedeventobs[geomod#predicts hasValue ?event] memberOf geomod#PredictedEventObservation
+             and ?hazlevdesc memberOf geomod#HazardLevelDescription
+             and ?event memberOf ge#geographical_event
+			 and ?descloc2 memberOf gDesc#LocationDescription
+             implies
+             ?predictedeventobsdesc[gDesc#describedLocation hasValue ?descloc2, dul#describes hasValue ?predictedeventobs, geomod#associatedHazardLevel hasValue ?hazlevdesc, geomod#hasSource hasValue ?eventobsdesc] memberOf geomod#PredictedEventObservationDescription
+             and ?descloc2[gsparql#asWKT hasValue ?locvalue] memberOf gDesc#LocationDescription
+             and ?predictedeventobs[geomod#predicts hasValue ?event] memberOf geomod#PredictedEventObservation
+             and ?hazlevdesc[geomod#hasHazardLevel hasValue 90] memberOf geomod#HazardLevelDescription
+             and ?event memberOf flood#Flood.
+           
+	axiom change_state_to_flooded
+		definedBy
+			?predictedeventobsdesc[gDesc#describedLocation hasValue ?descloc, dul#describes hasValue ?predictedeventobs, geomod#associatedHazardLevel hasValue ?hazlevdesc, geomod#hasSource hasValue ?eventobsdesc] memberOf geomod#PredictedEventObservationDescription
+        	and ?descloc[gsparql#asWKT hasValue ?locvalue] memberOf gDesc#LocationDescription
+        	and ?predictedeventobs[geomod#predicts hasValue ?event] memberOf geomod#PredictedEventObservation
+         	and ?hazlevdesc[geomod#hasHazardLevel hasValue ?probability] memberOf geomod#HazardLevelDescription
+         	and ?event memberOf flood#Flood
+         	and ?probability > 50
+         	and ?watlevsensdesc[dul#describes hasValue ?watlevsens, gDesc#describedLocation hasValue ?watlevsensloc] memberOf gDesc#GeographicalDescription
+         	and ?watlevsensloc[gsparql#asWKT hasValue ?locvalue] memberOf gDesc#LocationDescription
+         	and ?watlevsens[flood#downstream hasValue ?obj] memberOf flood#WaterLevelSensor
+         	and ?obj[ae#has_state hasValue ?state] memberOf gspace#geographical_unit
+         	and ?dam memberOf flood#Dam
+			and ?watlevsens[flood#downstream hasValue ?dam]
+			and ?state memberOf ae#state
+//			and naf ?dam[flood#downstream hasValue ?obj]
+			implies
+			?state memberOf flooded.
+	
+//	axiom change_state_to_not_flooded
+//		definedBy
+//			?obj[ae#has_state hasValue ?state] memberOf gspace#geographical_unit
+//			and ?state memberOf affected
+//			and ?dam[ae#has_state hasValue ?statedam] memberOf flood#Dam
+//			and ?statedam memberOf affected
+//			and ?dam[flood#downstream hasValue ?obj]
+//			implies
+//			notAffectedByFlood(?obj).
+//					
+//	relation notAffectedByFlood/1
+            
+//	Geographical objects in the USGS scenario = test dataset
+
+//	river
+	
+	instance schoharie_creek memberOf flood#River
+
+//	villages
+
+	instance test memberOf normal
+
+	instance gilboa memberOf village
+		ae#has_state hasValue state_of_gilboa
+		dul#hasQuality hasValue altitude_of_gilboa
+		gspace#nearBy hasValue schoharie_creek
+		gspace#situated_in hasValue node1783e3ct7x6
+	
+	instance description_about_gilboa memberOf gDesc#GeographicalDescription
+		dul#describes hasValue gilboa
+		gDesc#describedLocation hasValue location_of_gilboa
+	
+	instance location_of_gilboa memberOf gDesc#LocationDescription
+		gsparql#asWKT hasValue "SRID:4326;POINT (42.3973 -74.44598)"
+		gsparql#spatialDimension hasValue 1
+	
+	instance altitude_of_gilboa memberOf gq#altitude
+		dul#hasDataValue hasValue 323
+	
+	instance state_of_gilboa memberOf normal
+	
+	instance breakabeen memberOf village
+		ae#has_state hasValue state_of_breakabeen
+		dul#hasQuality hasValue altitude_of_breakabeen
+		gspace#nearBy hasValue schoharie_creek
+		gspace#situated_in hasValue node1783e3ct7x6
+	
+	instance description_about_breakabeen memberOf gDesc#GeographicalDescription
+		dul#describes hasValue breakabeen
+		gDesc#describedLocation hasValue location_of_breakabeen
+	
+	instance location_of_breakabeen memberOf gDesc#LocationDescription
+		gsparql#asWKT hasValue "SRID:4326;POINT (42.52424 -74.40959)"
+		gsparql#spatialDimension hasValue 1
+	
+	instance altitude_of_breakabeen memberOf gq#altitude
+		dul#hasDataValue hasValue 226
+	
+	instance state_of_breakabeen memberOf normal
+	
+	instance fultonham memberOf village
+		ae#has_state hasValue state_of_fultonham
+		dul#hasQuality hasValue altitude_of_fultonham
+		gspace#nearBy hasValue schoharie_creek
+		gspace#situated_in hasValue node1783e3ct7x6
+	
+	instance description_about_fultonham memberOf gDesc#GeographicalDescription
+		dul#describes hasValue fultonham
+		gDesc#describedLocation hasValue location_of_fultonham
+	
+	instance location_of_fultonham memberOf gDesc#LocationDescription
+		gsparql#asWKT hasValue "SRID:4326;POINT (42.56841 -74.39542)"
+		gsparql#spatialDimension hasValue 1
+	
+	instance altitude_of_fultonham memberOf gq#altitude
+		dul#hasDataValue hasValue 214
+	
+	instance state_of_fultonham memberOf normal
+	
+	instance middleburgh memberOf village
+		ae#has_state hasValue state_of_middleburgh
+		dul#hasQuality hasValue altitude_of_middleburgh
+		gspace#nearBy hasValue schoharie_creek
+		gspace#situated_in hasValue node1783e3ct7x6
+	
+	instance description_about_middleburgh memberOf gDesc#GeographicalDescription
+		dul#describes hasValue middleburgh
+		gDesc#describedLocation hasValue location_of_middleburgh
+	
+	instance location_of_middleburgh memberOf gDesc#LocationDescription
+		gsparql#asWKT hasValue "SRID:4326;POINT (42.59869 -74.33292)"
+		gsparql#spatialDimension hasValue 1
+	
+	instance altitude_of_middleburgh memberOf gq#altitude
+		dul#hasDataValue hasValue 195
+		
+	instance state_of_middleburgh memberOf normal
+	
+	instance schoharie memberOf village
+		ae#has_state hasValue state_of_schoharie
+		dul#hasQuality hasValue altitude_of_schoharie
+		gspace#nearBy hasValue schoharie_creek
+		gspace#situated_in hasValue node1783e3ct7x6
+	
+	instance description_about_schoharie memberOf gDesc#GeographicalDescription
+		dul#describes hasValue schoharie
+		gDesc#describedLocation hasValue location_of_schoharie
+	
+	instance location_of_schoharie memberOf gDesc#LocationDescription
+		gsparql#asWKT hasValue "SRID:4326;POINT (42.66638 -74.31374)"
+		gsparql#spatialDimension hasValue 1
+	
+	instance altitude_of_schoharie memberOf gq#altitude
+		dul#hasDataValue hasValue 182
+	
+	instance state_of_schoharie memberOf normal
+	
+	instance esperance memberOf village
+		ae#has_state hasValue state_of_esperance
+		dul#hasQuality hasValue altitude_of_esperance
+		gspace#nearBy hasValue schoharie_creek
+		gspace#situated_in hasValue node1783e3ct7x6
+	
+	instance description_about_esperance memberOf gDesc#GeographicalDescription
+		dul#describes hasValue esperance
+		gDesc#describedLocation hasValue location_of_esperance
+	
+	instance location_of_esperance memberOf gDesc#LocationDescription
+		gsparql#asWKT hasValue "SRID:4326;POINT (42.76119 -74.25652)"
+		gsparql#spatialDimension hasValue 1
+	
+	instance altitude_of_esperance memberOf gq#altitude
+		dul#hasDataValue hasValue 177
+	
+	instance state_of_esperance memberOf normal
+	
+	instance burtonsville memberOf village
+		ae#has_state hasValue state_of_burtonsville
+		dul#hasQuality hasValue altitude_of_burtonsville
+		gspace#nearBy hasValue schoharie_creek
+		gspace#situated_in hasValue node1783e3ct7x6
+	
+	instance description_about_burtonsville memberOf gDesc#GeographicalDescription
+		dul#describes hasValue esperance
+		gDesc#describedLocation hasValue location_of_burtonsville
+	
+	instance location_of_burtonsville memberOf gDesc#LocationDescription
+		gsparql#asWKT hasValue "SRID:4326;POINT (42.80507 -74.2593)"
+		gsparql#spatialDimension hasValue 1
+	
+	instance altitude_of_burtonsville memberOf gq#altitude
+		dul#hasDataValue hasValue 157
+	
+	instance state_of_burtonsville memberOf normal
+	
+//	dams
+
+	instance gilboa_dam memberOf flood#Dam
+		ae#has_state hasValue state_of_gilboa_dam
+		dul#hasQuality hasValue altitude_of_gilboa_dam
+		gspace#nearBy hasValue schoharie_creek
+		gspace#situated_in hasValue node1783e3ct7x6
+	
+	instance description_about_gilboa_dam memberOf gDesc#GeographicalDescription
+		dul#describes hasValue gilboa_dam
+		gDesc#describedLocation hasValue location_of_gilboa_dam
+	
+	instance location_of_gilboa_dam memberOf gDesc#LocationDescription
+		gsparql#asWKT hasValue "SRID:4326;POINT (42.39175 -74.44959)"
+		gsparql#spatialDimension hasValue 1
+	
+	instance altitude_of_gilboa_dam memberOf gq#altitude
+		dul#hasDataValue hasValue 313
+	
+	instance state_of_gilboa_dam memberOf normal
+	
+//	water level sensors
+	
+	instance prattsville_water_level_sensor memberOf flood#WaterLevelSensor
+		dul#hasQuality hasValue altitude_of_prattsville_water_level_sensor
+		gspace#nearBy hasValue schoharie_creek
+		gspace#situated_in hasValue node1783e3ct7x6
+	
+	instance description_about_prattsville_water_level_sensor memberOf gDesc#GeographicalDescription
+		dul#describes hasValue prattsville_water_level_sensor
+		gDesc#describedLocation hasValue location_of_prattsville_water_level_sensor
+	
+	instance location_of_prattsville_water_level_sensor memberOf gDesc#LocationDescription
+		gsparql#asWKT hasValue "SRID:4326;POINT (42.31481 -74.43293)"
+		gsparql#spatialDimension hasValue 1
+	
+	instance altitude_of_prattsville_water_level_sensor memberOf gq#altitude
+		dul#hasDataValue hasValue 355
+	
+	instance gilboa_water_level_sensor memberOf flood#WaterLevelSensor
+		dul#hasQuality hasValue altitude_of_gilboa_water_level_sensor
+		gspace#nearBy hasValue schoharie_creek
+		gspace#situated_in hasValue node1783e3ct7x6
+	
+	instance description_about_gilboa_water_level_sensor memberOf gDesc#GeographicalDescription
+		dul#describes hasValue gilboa_water_level_sensor
+		gDesc#describedLocation hasValue location_of_gilboa_water_level_sensor
+	
+	instance location_of_gilboa_water_level_sensor memberOf gDesc#LocationDescription
+		gsparql#asWKT hasValue "SRID:4326;POINT (42.3973 -74.44598)"
+		gsparql#spatialDimension hasValue 1
+	
+	instance altitude_of_gilboa_water_level_sensor memberOf gq#altitude
+		dul#hasDataValue hasValue 313
+	
+	instance breakabeen_water_level_sensor memberOf flood#WaterLevelSensor
+		dul#hasQuality hasValue altitude_of_breakabeen_water_level_sensor
+		gspace#nearBy hasValue schoharie_creek
+		gspace#situated_in hasValue node1783e3ct7x6
+	
+	instance description_about_breakabeen_water_level_sensor memberOf gDesc#GeographicalDescription
+		dul#describes hasValue breakabeen_water_level_sensor
+		gDesc#describedLocation hasValue location_of_breakabeen_water_level_sensor
+	
+	instance location_of_breakabeen_water_level_sensor memberOf gDesc#LocationDescription
+		gsparql#asWKT hasValue "SRID:4326;POINT (42.52424 -74.40959)"
+		gsparql#spatialDimension hasValue 1
+	
+	instance altitude_of_breakabeen_water_level_sensor memberOf gq#altitude
+		dul#hasDataValue hasValue 226
+	
+	instance node1783e3ct7x2 memberOf ge#earthquake
+       
+	instance node1783e3ct7x3 memberOf flood#Flood
+   
+    instance node1783e3ct7x8 memberOf gDesc#LocationDescription
+          gsparql#asWKT hasValue "POINT(42.46147, -74.53297);POINT(42.73613, -74.133)"
+          gsparql#spatialDimension hasValue _int("2")
+          gsparql#asCRS hasValue "EPSG:3857"
+   
+   	instance node1783e3ct7x7 memberOf gDesc#GeographicalDescription
+          dul#describes hasValue node1783e3ct7x6
+          gDesc#describedLocation hasValue node1783e3ct7x8
+   
+   	instance node1783e3ct7x6 memberOf os#region
+   
+   	instance node1783e3ct7x5 memberOf stay_at_place_environment
+          ae#is_defined_by hasValue node1783e3ct7x4
+          ae#contains hasValue node1783e3ct7x6
+   
+   	instance node1783e3ct7x4 memberOf stay_at_place
+          dolce#participant hasValue node1783e3ct7x1
+          ae#define hasValue node1783e3ct7x5
+   
+   	instance node1783e3ct7x1 memberOf subscriber
+          has_contact hasValue "henry.michels@googlemail.com"
+          has_kind_of_contact hasValue "email"
+          subscribed_to hasValue {node1783e3ct7x2, node1783e3ct7x3, node1783e3huux1}
+          dolce#participant_in hasValue node1783e3ct7x4
+	
