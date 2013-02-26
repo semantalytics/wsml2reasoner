@@ -1,22 +1,3 @@
-/**
- * WSML Reasoner Implementation.
- *
- * Copyright (c) 2005, University of Innsbruck, Austria.
- *
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
- * any later version.
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- * You should have received a copy of the GNU Lesser General Public License along
- * with this library; if not, write to the Free Software Foundation, Inc.,
- * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
- */
-
 package org.wsml.reasoner.transformation;
 
 import java.util.ArrayList;
@@ -86,126 +67,129 @@ import org.wsmo.factory.WsmoFactory;
  * @author Holger Lausen, DERI Innsbruck
  */
 public class AxiomatizationNormalizer implements OntologyNormalizer {
-    private WsmoFactory wsmoFactory;
+	private WsmoFactory wsmoFactory;
 
-    private LogicalExpressionFactory leFactory;
+	private LogicalExpressionFactory leFactory;
 
-    private Map<LogicalExpression, String> axiomIDs;
+	private Map<LogicalExpression, String> axiomIDs;
 
-    public AxiomatizationNormalizer(FactoryContainer factory) {
-        this.leFactory = factory.getLogicalExpressionFactory();
-        this.wsmoFactory = factory.getWsmoFactory();
-        this.axiomIDs = new HashMap<LogicalExpression, String>();
-    }
+	public AxiomatizationNormalizer(FactoryContainer factory) {
+		this.leFactory = factory.getLogicalExpressionFactory();
+		this.wsmoFactory = factory.getWsmoFactory();
+		this.axiomIDs = new HashMap<LogicalExpression, String>();
+	}
 
-    public Set<Axiom> normalizeAxioms(Collection<Axiom> theAxioms) {
-        throw new UnsupportedOperationException();
-    }
+	public Set<Axiom> normalizeAxioms(Collection<Axiom> theAxioms) {
+		throw new UnsupportedOperationException();
+	}
 
-    /**
-     * Performs the transformation that is described above.
-     * 
-     * @param o -
-     *            the ontology for which we need to resolve the conceptual
-     *            syntax part.
-     * 
-     * @return an ontology represent o semantically but only consists of axioms
-     */
+	/**
+	 * Performs the transformation that is described above.
+	 * 
+	 * @param o
+	 *            - the ontology for which we need to resolve the conceptual
+	 *            syntax part.
+	 * 
+	 * @return an ontology represent o semantically but only consists of axioms
+	 */
 
-    public Set<Entity> normalizeEntities(Collection<Entity> theEntities) {
-        Set<Entity> result = new HashSet<Entity>();
+	public Set<Entity> normalizeEntities(Collection<Entity> theEntities) {
+		Set<Entity> result = new HashSet<Entity>();
 
-        for (Entity e : theEntities) {
-            if (e instanceof Axiom) {
-                Axiom axiom = (Axiom) e;
-                Identifier newAxiomId;
-                if (axiom.getIdentifier() instanceof UnnumberedAnonymousID) {
-                    newAxiomId = wsmoFactory.createAnonymousID();
-                }
-                else {
-                    // create an axiom such that original one is not touched.
-                    newAxiomId = wsmoFactory.createIRI(axiom.getIdentifier() + AnonymousIdUtils.NAMED_AXIOM_SUFFIX + System.currentTimeMillis());
-                }
+		for (Entity e : theEntities) {
+			if (e instanceof Axiom) {
+				Axiom axiom = (Axiom) e;
+				Identifier newAxiomId;
+				if (axiom.getIdentifier() instanceof UnnumberedAnonymousID) {
+					newAxiomId = wsmoFactory.createAnonymousID();
+				} else {
+					// create an axiom such that original one is not touched.
+					newAxiomId = wsmoFactory.createIRI(axiom.getIdentifier()
+							+ AnonymousIdUtils.NAMED_AXIOM_SUFFIX
+							+ System.currentTimeMillis());
+				}
 
-                Axiom newAxiom = wsmoFactory.createAxiom(newAxiomId);
-                for (LogicalExpression definition : axiom.listDefinitions()) {
-                    newAxiom.addDefinition(definition);
-                }
-                result.add(newAxiom);
-            }
-            else if (e instanceof Concept) {
-                result.addAll(getAxioms(normalizeConcept((Concept) e)));
-            }
-            else if (e instanceof Relation) {
-                result.addAll(getAxioms(normalizeRelation((Relation) e)));
-            }
-            else if (e instanceof RelationInstance) {
-                result.addAll(getAxioms(normalizeRelationInstance((RelationInstance) e)));
-            }
-            else if (e instanceof Instance) {
-                result.addAll(getAxioms(normalizeInstance((Instance) e)));
-            }
-        }
-        return result;
-    }
+				Axiom newAxiom = wsmoFactory.createAxiom(newAxiomId);
+				for (LogicalExpression definition : axiom.listDefinitions()) {
+					newAxiom.addDefinition(definition);
+				}
+				result.add(newAxiom);
+			} else if (e instanceof Concept) {
+				result.addAll(getAxioms(normalizeConcept((Concept) e)));
+			} else if (e instanceof Relation) {
+				result.addAll(getAxioms(normalizeRelation((Relation) e)));
+			} else if (e instanceof RelationInstance) {
+				result.addAll(getAxioms(normalizeRelationInstance((RelationInstance) e)));
+			} else if (e instanceof Instance) {
+				result.addAll(getAxioms(normalizeInstance((Instance) e)));
+			}
+		}
+		return result;
+	}
 
-    protected Set<Axiom> getAxioms(Collection<LogicalExpression> expressions) {
-        Set<Axiom> axioms = new HashSet<Axiom>();
-        if (!expressions.isEmpty()) {
-            for (LogicalExpression expression : expressions) {
-                // corelate IDs to type of axioms
-                Identifier id;
-                if (axiomIDs.containsKey(expression)) {
-                    id = wsmoFactory.createIRI(axiomIDs.get(expression));
-                }
-                else {
-                    id = wsmoFactory.createAnonymousID();
-                }
-                Axiom axiom = wsmoFactory.createAxiom(id);
-                axiom.addDefinition(expression);
-                axioms.add(axiom);
-            }
-        }
-        return axioms;
-    }
+	protected Set<Axiom> getAxioms(Collection<LogicalExpression> expressions) {
+		Set<Axiom> axioms = new HashSet<Axiom>();
+		if (!expressions.isEmpty()) {
+			for (LogicalExpression expression : expressions) {
+				// corelate IDs to type of axioms
+				Identifier id;
+				if (axiomIDs.containsKey(expression)) {
+					id = wsmoFactory.createIRI(axiomIDs.get(expression));
+				} else {
+					id = wsmoFactory.createAnonymousID();
+				}
+				Axiom axiom = wsmoFactory.createAxiom(id);
+				axiom.addDefinition(expression);
+				axioms.add(axiom);
+			}
+		}
+		return axioms;
+	}
 
-    protected Set<LogicalExpression> normalizeConcept(Concept concept) {
-        Identifier conceptID = concept.getIdentifier();
-        Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
+	protected Set<LogicalExpression> normalizeConcept(Concept concept) {
+		Identifier conceptID = concept.getIdentifier();
+		Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
 
-        // process superconcepts:
-        for (Concept superconcept : concept.listSuperConcepts()) {
-            Identifier superconceptID = superconcept.getIdentifier();
-            resultExpressions.add(leFactory.createSubConceptMolecule(conceptID, superconceptID));
-        }
+		// process superconcepts:
+		for (Concept superconcept : concept.listSuperConcepts()) {
+			Identifier superconceptID = superconcept.getIdentifier();
+			resultExpressions.add(leFactory.createSubConceptMolecule(conceptID,
+					superconceptID));
+		}
 
-        // process attributes:
-        for (Attribute attribute : concept.listAttributes()) {
-            resultExpressions.addAll(normalizeConceptAttribute(conceptID, attribute));
-        }
+		// process attributes:
+		for (Attribute attribute : concept.listAttributes()) {
+			resultExpressions.addAll(normalizeConceptAttribute(conceptID,
+					attribute));
+		}
 
-        // FIXME dirty hack; but otherwise concept gets lost
-        if (resultExpressions.isEmpty())
-        	resultExpressions.add(leFactory.createSubConceptMolecule(conceptID, conceptID));
+		// FIXME dirty hack; but otherwise concept gets lost
+		if (resultExpressions.isEmpty())
+			resultExpressions.add(leFactory.createSubConceptMolecule(conceptID,
+					conceptID));
 
-        return resultExpressions;
-    }
+		return resultExpressions;
+	}
 
-    protected Set<LogicalExpression> normalizeConceptAttribute(Identifier conceptID, Attribute attribute) {
-        Identifier attributeID = attribute.getIdentifier();
+	protected Set<LogicalExpression> normalizeConceptAttribute(
+			Identifier conceptID, Attribute attribute) {
+		Identifier attributeID = attribute.getIdentifier();
 
-        Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
+		Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
 
 		// process range types:
 		if (attribute.isConstraining()) {
 			for (Type type : attribute.listConstrainingTypes()) {
 				// determine Id of range type:
 				Identifier typeID = type.getIdentifier();
-				
+
 				// create an appropriate molecule per range type:
-				LogicalExpression ofTypeConstraint = leFactory.createAttributeConstraint(conceptID, attributeID, typeID);
+				LogicalExpression ofTypeConstraint = leFactory
+						.createAttributeConstraint(conceptID, attributeID,
+								typeID);
 				resultExpressions.add(ofTypeConstraint);
-				proclaimAxiomID(ofTypeConstraint, AnonymousIdUtils.getNewOfTypeIri());
+				proclaimAxiomID(ofTypeConstraint,
+						AnonymousIdUtils.getNewOfTypeIri());
 			}
 		}
 
@@ -215,339 +199,403 @@ public class AxiomatizationNormalizer implements OntologyNormalizer {
 				Identifier typeID = type.getIdentifier();
 
 				// create an appropriate molecule per range type:
-				resultExpressions.add(leFactory.createAttributeInference(conceptID, attributeID, typeID));
+				resultExpressions.add(leFactory.createAttributeInference(
+						conceptID, attributeID, typeID));
 			}
 		}
 
-        // process attribute properties:
-        if (attribute.isReflexive()) {
-            resultExpressions.add(createReflexivityConstraint(conceptID, attributeID));
-        }
-        if (attribute.isSymmetric()) {
-            resultExpressions.add(createSymmetryConstraint(conceptID, attributeID));
-        }
-        if (attribute.isTransitive()) {
-            resultExpressions.add(createTransitivityConstraint(conceptID, attributeID));
-        }
-        if (attribute.getInverseOf() != null) {
-            resultExpressions.addAll(createInverseConstraints(conceptID, attributeID, attribute.getInverseOf()));
-        }
+		// process attribute properties:
+		if (attribute.isReflexive()) {
+			resultExpressions.add(createReflexivityConstraint(conceptID,
+					attributeID));
+		}
+		if (attribute.isSymmetric()) {
+			resultExpressions.add(createSymmetryConstraint(conceptID,
+					attributeID));
+		}
+		if (attribute.isTransitive()) {
+			resultExpressions.add(createTransitivityConstraint(conceptID,
+					attributeID));
+		}
+		if (attribute.getInverseOf() != null) {
+			resultExpressions.addAll(createInverseConstraints(conceptID,
+					attributeID, attribute.getInverseOf()));
+		}
 
-        // process cardinality constraints:
-        if (attribute.getMinCardinality() > 0) {
-            resultExpressions.addAll(createMinCardinalityConstraints(conceptID, attributeID, attribute.getMinCardinality()));
-        }
-        if (attribute.getMaxCardinality() < Integer.MAX_VALUE) {
-            resultExpressions.add(createMaxCardinalityConstraint(conceptID, attributeID, attribute.getMaxCardinality()));
-        }
-        
-        // process attribute hierarchy:
-        Identifier superAttributeID = attribute.getSubAttributeOf();
-        if (superAttributeID != null) {
-        	resultExpressions.add(createSubAttributeConstraints(conceptID, attributeID, superAttributeID));
-        }
+		// process cardinality constraints:
+		if (attribute.getMinCardinality() > 0) {
+			resultExpressions.addAll(createMinCardinalityConstraints(conceptID,
+					attributeID, attribute.getMinCardinality()));
+		}
+		if (attribute.getMaxCardinality() < Integer.MAX_VALUE) {
+			resultExpressions.add(createMaxCardinalityConstraint(conceptID,
+					attributeID, attribute.getMaxCardinality()));
+		}
 
-        return resultExpressions;
-    }
+		// process attribute hierarchy:
+		Identifier superAttributeID = attribute.getSubAttributeOf();
+		if (superAttributeID != null) {
+			resultExpressions.add(createSubAttributeConstraints(conceptID,
+					attributeID, superAttributeID));
+		}
 
-    private void proclaimAxiomID(LogicalExpression expression, String id) {
-        axiomIDs.put(expression, id);
-    }
+		return resultExpressions;
+	}
 
-    protected LogicalExpression createTransitivityConstraint(Identifier conceptID, Identifier attributeID) {
-        Variable xVariable = leFactory.createVariable("x");
-        Variable yVariable = leFactory.createVariable("y");
-        Variable zVariable = leFactory.createVariable("z");
-        LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable, conceptID);
-        LogicalExpression moY = leFactory.createMemberShipMolecule(yVariable, conceptID);
-        LogicalExpression valXY = leFactory.createAttributeValue(xVariable, attributeID, yVariable);
-        LogicalExpression valYZ = leFactory.createAttributeValue(yVariable, attributeID, zVariable);
-        LogicalExpression valXZ = leFactory.createAttributeValue(xVariable, attributeID, zVariable);
+	private void proclaimAxiomID(LogicalExpression expression, String id) {
+		axiomIDs.put(expression, id);
+	}
 
-        Set<LogicalExpression> conjuncts = new HashSet<LogicalExpression>();
-        conjuncts.add(moX);
-        conjuncts.add(moY);
-        conjuncts.add(valXY);
-        conjuncts.add(valYZ);
-        return leFactory.createImplication(LEUtil.buildNaryConjunction(leFactory, conjuncts), valXZ);
-    }
+	protected LogicalExpression createTransitivityConstraint(
+			Identifier conceptID, Identifier attributeID) {
+		Variable xVariable = leFactory.createVariable("x");
+		Variable yVariable = leFactory.createVariable("y");
+		Variable zVariable = leFactory.createVariable("z");
+		LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable,
+				conceptID);
+		LogicalExpression moY = leFactory.createMemberShipMolecule(yVariable,
+				conceptID);
+		LogicalExpression valXY = leFactory.createAttributeValue(xVariable,
+				attributeID, yVariable);
+		LogicalExpression valYZ = leFactory.createAttributeValue(yVariable,
+				attributeID, zVariable);
+		LogicalExpression valXZ = leFactory.createAttributeValue(xVariable,
+				attributeID, zVariable);
 
-    protected LogicalExpression createSymmetryConstraint(Identifier conceptID, Identifier attributeID) {
-        Variable xVariable = leFactory.createVariable("x");
-        Variable yVariable = leFactory.createVariable("y");
-        LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable, conceptID);
-        LogicalExpression moY = leFactory.createMemberShipMolecule(yVariable, conceptID);
-        LogicalExpression valXY = leFactory.createAttributeValue(xVariable, attributeID, yVariable);
-        LogicalExpression valYX = leFactory.createAttributeValue(yVariable, attributeID, xVariable);
+		Set<LogicalExpression> conjuncts = new HashSet<LogicalExpression>();
+		conjuncts.add(moX);
+		conjuncts.add(moY);
+		conjuncts.add(valXY);
+		conjuncts.add(valYZ);
+		return leFactory.createImplication(
+				LEUtil.buildNaryConjunction(leFactory, conjuncts), valXZ);
+	}
 
-        Set<LogicalExpression> conjuncts = new HashSet<LogicalExpression>();
-        conjuncts.add(moX);
-        conjuncts.add(moY);
-        conjuncts.add(valXY);
-        return leFactory.createImplication(LEUtil.buildNaryConjunction(leFactory, conjuncts), valYX);
-    }
+	protected LogicalExpression createSymmetryConstraint(Identifier conceptID,
+			Identifier attributeID) {
+		Variable xVariable = leFactory.createVariable("x");
+		Variable yVariable = leFactory.createVariable("y");
+		LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable,
+				conceptID);
+		LogicalExpression moY = leFactory.createMemberShipMolecule(yVariable,
+				conceptID);
+		LogicalExpression valXY = leFactory.createAttributeValue(xVariable,
+				attributeID, yVariable);
+		LogicalExpression valYX = leFactory.createAttributeValue(yVariable,
+				attributeID, xVariable);
 
-    protected LogicalExpression createReflexivityConstraint(Identifier conceptID, Identifier attributeID) {
-        Variable xVariable = leFactory.createVariable("x");
-        LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable, conceptID);
-        LogicalExpression valXX = leFactory.createAttributeValue(xVariable, attributeID, xVariable);
-        return leFactory.createImplication(moX, valXX);
-    }
+		Set<LogicalExpression> conjuncts = new HashSet<LogicalExpression>();
+		conjuncts.add(moX);
+		conjuncts.add(moY);
+		conjuncts.add(valXY);
+		return leFactory.createImplication(
+				LEUtil.buildNaryConjunction(leFactory, conjuncts), valYX);
+	}
 
-    protected Collection<LogicalExpression> createInverseConstraints(Identifier conceptID, Identifier attributeID, Identifier inverseAttributeID) {
-        Collection<LogicalExpression> inverseConstraints = new ArrayList<LogicalExpression>(2);
+	protected LogicalExpression createReflexivityConstraint(
+			Identifier conceptID, Identifier attributeID) {
+		Variable xVariable = leFactory.createVariable("x");
+		LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable,
+				conceptID);
+		LogicalExpression valXX = leFactory.createAttributeValue(xVariable,
+				attributeID, xVariable);
+		return leFactory.createImplication(moX, valXX);
+	}
 
-        // build required LE elements:
-        Variable xVariable = leFactory.createVariable("x");
-        Variable yVariable = leFactory.createVariable("y");
-        LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable, conceptID);
-        LogicalExpression moY = leFactory.createMemberShipMolecule(yVariable, conceptID);
-        LogicalExpression valXY = leFactory.createAttributeValue(xVariable, attributeID, yVariable);
-        LogicalExpression valInvXY = leFactory.createAttributeValue(xVariable, inverseAttributeID, yVariable);
-        LogicalExpression valYX = leFactory.createAttributeValue(yVariable, attributeID, xVariable);
-        LogicalExpression valInvYX = leFactory.createAttributeValue(yVariable, inverseAttributeID, xVariable);
+	protected Collection<LogicalExpression> createInverseConstraints(
+			Identifier conceptID, Identifier attributeID,
+			Identifier inverseAttributeID) {
+		Collection<LogicalExpression> inverseConstraints = new ArrayList<LogicalExpression>(
+				2);
 
-        // build implication : "..."
-        LogicalExpression conjunction = leFactory.createConjunction(moX, valXY);
-        inverseConstraints.add(leFactory.createImplication(conjunction, valInvYX));
+		// build required LE elements:
+		Variable xVariable = leFactory.createVariable("x");
+		Variable yVariable = leFactory.createVariable("y");
+		LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable,
+				conceptID);
+		LogicalExpression moY = leFactory.createMemberShipMolecule(yVariable,
+				conceptID);
+		LogicalExpression valXY = leFactory.createAttributeValue(xVariable,
+				attributeID, yVariable);
+		LogicalExpression valInvXY = leFactory.createAttributeValue(xVariable,
+				inverseAttributeID, yVariable);
+		LogicalExpression valYX = leFactory.createAttributeValue(yVariable,
+				attributeID, xVariable);
+		LogicalExpression valInvYX = leFactory.createAttributeValue(yVariable,
+				inverseAttributeID, xVariable);
 
-        // build implication : "..."
-        conjunction = leFactory.createConjunction(moY, valInvXY);
-        inverseConstraints.add(leFactory.createImplication(conjunction, valYX));
+		// build implication : "..."
+		LogicalExpression conjunction = leFactory.createConjunction(moX, valXY);
+		inverseConstraints.add(leFactory.createImplication(conjunction,
+				valInvYX));
 
-        return inverseConstraints;
-    }
+		// build implication : "..."
+		conjunction = leFactory.createConjunction(moY, valInvXY);
+		inverseConstraints.add(leFactory.createImplication(conjunction, valYX));
 
-    protected LogicalExpression createSubAttributeConstraints(Identifier conceptID, Identifier subAttributeID, Identifier superAttributeID) {
-        // build required LE elements:
-        Variable xVariable = leFactory.createVariable("x");
-        Variable yVariable = leFactory.createVariable("y");
-        LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable, conceptID);
-        LogicalExpression valSubXY = leFactory.createAttributeValue(xVariable, subAttributeID, yVariable);
-        LogicalExpression valSuperXY = leFactory.createAttributeValue(xVariable, superAttributeID, yVariable);
+		return inverseConstraints;
+	}
 
-        // build implication : "..."
-        LogicalExpression subConjunction = leFactory.createConjunction(moX, valSubXY);
+	protected LogicalExpression createSubAttributeConstraints(
+			Identifier conceptID, Identifier subAttributeID,
+			Identifier superAttributeID) {
+		// build required LE elements:
+		Variable xVariable = leFactory.createVariable("x");
+		Variable yVariable = leFactory.createVariable("y");
+		LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable,
+				conceptID);
+		LogicalExpression valSubXY = leFactory.createAttributeValue(xVariable,
+				subAttributeID, yVariable);
+		LogicalExpression valSuperXY = leFactory.createAttributeValue(
+				xVariable, superAttributeID, yVariable);
 
-        return leFactory.createImplication(subConjunction, valSuperXY);
-    }
-    	
-    protected Collection<LogicalExpression> createMinCardinalityConstraints(Identifier conceptID, Identifier attributeID, int cardinality) {
-        Collection<LogicalExpression> minCardConstraints = new ArrayList<LogicalExpression>(2);
+		// build implication : "..."
+		LogicalExpression subConjunction = leFactory.createConjunction(moX,
+				valSubXY);
 
-        // build required LE elements:
-        Variable xVariable = leFactory.createVariable("x");
-        Variable[] yVariable = new Variable[cardinality];
-        for (int i = 0; i < yVariable.length; i++) {
-            yVariable[i] = leFactory.createVariable("y" + Integer.toString(i));
-        }
-        LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable, conceptID);
-        LogicalExpression[] valXY = new LogicalExpression[cardinality];
-        for (int i = 0; i < valXY.length; i++) {
-            valXY[i] = leFactory.createAttributeValue(xVariable, attributeID, yVariable[i]);
-        }
-        Collection<LogicalExpression> inEqualities = new ArrayList<LogicalExpression>((cardinality * cardinality + cardinality) / 2 + 1);
-        for (int i = 0; i < cardinality; i++) {
-            for (int j = i + 1; j < cardinality; j++) {
-                List<Term> args = new ArrayList<Term>(2);
-                args.add(yVariable[i]);
-                args.add(yVariable[j]);
-                inEqualities.add(leFactory.createAtom(wsmoFactory.createIRI(BuiltIn.INEQUAL.getFullName()), args));
-            }
-        }
+		return leFactory.createImplication(subConjunction, valSuperXY);
+	}
 
-        // build LP-rule: "Pnew(?x,<attrID>) :- ?x memberOf <concept> and
-        // ?x[<attribute>
-        // hasValue ?y1, ... <attribute> hasValue yn] and ?y1!=?y2 and ... and
-        // yn-1!=yn."
-        Set<LogicalExpression> conjuncts = new HashSet<LogicalExpression>();
-        conjuncts.add(moX);
-        conjuncts.addAll(Arrays.asList(valXY));
-        conjuncts.addAll(inEqualities);
-        LogicalExpression conjunction = LEUtil.buildNaryConjunction(leFactory, conjuncts);
-        IRI newPIRI = wsmoFactory.createIRI(AnonymousIdUtils.getNewAnonymousIri());
-        Atom newPX = leFactory.createAtom(newPIRI, Arrays.asList(new Term[] { xVariable, attributeID }));
-        minCardConstraints.add(leFactory.createLogicProgrammingRule(newPX, conjunction));
+	protected Collection<LogicalExpression> createMinCardinalityConstraints(
+			Identifier conceptID, Identifier attributeID, int cardinality) {
+		Collection<LogicalExpression> minCardConstraints = new ArrayList<LogicalExpression>(
+				2);
 
-        // build constraint: "!- ?x memberOf <concept> and naf
-        // Pnew(?x,<attrID>)."
-        NegationAsFailure naf = leFactory.createNegationAsFailure(newPX);
-        conjunction = leFactory.createConjunction(moX, naf);
-        LogicalExpression minCardConstraint = leFactory.createConstraint(conjunction);
-        proclaimAxiomID(minCardConstraint, AnonymousIdUtils.getNewMinCardIri());
-        minCardConstraints.add(minCardConstraint);
+		// build required LE elements:
+		Variable xVariable = leFactory.createVariable("x");
+		Variable[] yVariable = new Variable[cardinality];
+		for (int i = 0; i < yVariable.length; i++) {
+			yVariable[i] = leFactory.createVariable("y" + Integer.toString(i));
+		}
+		LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable,
+				conceptID);
+		LogicalExpression[] valXY = new LogicalExpression[cardinality];
+		for (int i = 0; i < valXY.length; i++) {
+			valXY[i] = leFactory.createAttributeValue(xVariable, attributeID,
+					yVariable[i]);
+		}
+		Collection<LogicalExpression> inEqualities = new ArrayList<LogicalExpression>(
+				(cardinality * cardinality + cardinality) / 2 + 1);
+		for (int i = 0; i < cardinality; i++) {
+			for (int j = i + 1; j < cardinality; j++) {
+				List<Term> args = new ArrayList<Term>(2);
+				args.add(yVariable[i]);
+				args.add(yVariable[j]);
+				inEqualities.add(leFactory.createAtom(
+						wsmoFactory.createIRI(BuiltIn.INEQUAL.getFullName()),
+						args));
+			}
+		}
 
-        return minCardConstraints;
-    }
+		// build LP-rule: "Pnew(?x,<attrID>) :- ?x memberOf <concept> and
+		// ?x[<attribute>
+		// hasValue ?y1, ... <attribute> hasValue yn] and ?y1!=?y2 and ... and
+		// yn-1!=yn."
+		Set<LogicalExpression> conjuncts = new HashSet<LogicalExpression>();
+		conjuncts.add(moX);
+		conjuncts.addAll(Arrays.asList(valXY));
+		conjuncts.addAll(inEqualities);
+		LogicalExpression conjunction = LEUtil.buildNaryConjunction(leFactory,
+				conjuncts);
+		IRI newPIRI = wsmoFactory.createIRI(AnonymousIdUtils
+				.getNewAnonymousIri());
+		Atom newPX = leFactory.createAtom(newPIRI,
+				Arrays.asList(new Term[] { xVariable, attributeID }));
+		minCardConstraints.add(leFactory.createLogicProgrammingRule(newPX,
+				conjunction));
 
-    protected LogicalExpression createMaxCardinalityConstraint(Identifier conceptID, Identifier attributeID, int cardinality) {
-        cardinality++;
+		// build constraint: "!- ?x memberOf <concept> and naf
+		// Pnew(?x,<attrID>)."
+		NegationAsFailure naf = leFactory.createNegationAsFailure(newPX);
+		conjunction = leFactory.createConjunction(moX, naf);
+		LogicalExpression minCardConstraint = leFactory
+				.createConstraint(conjunction);
+		proclaimAxiomID(minCardConstraint, AnonymousIdUtils.getNewMinCardIri());
+		minCardConstraints.add(minCardConstraint);
 
-        // build required LE elements:
-        Variable xVariable = leFactory.createVariable("x");
-        Variable[] yVariable = new Variable[cardinality];
-        for (int i = 0; i < yVariable.length; i++) {
-            yVariable[i] = leFactory.createVariable("y" + Integer.toString(i));
-        }
-        LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable, conceptID);
-        Molecule[] valXY = new Molecule[cardinality];
-        for (int i = 0; i < valXY.length; i++) {
-            valXY[i] = leFactory.createAttributeValue(xVariable, attributeID, yVariable[i]);
-        }
-        Collection<LogicalExpression> inEqualities = new ArrayList<LogicalExpression>((cardinality * cardinality + cardinality) / 2 + 1);
-        for (int i = 0; i < cardinality; i++) {
-            for (int j = i + 1; j < cardinality; j++) {
-                List<Term> args = new ArrayList<Term>(2);
-                args.add(yVariable[i]);
-                args.add(yVariable[j]);
-                inEqualities.add(leFactory.createAtom(wsmoFactory.createIRI(BuiltIn.INEQUAL.getFullName()), args));
-            }
-        }
+		return minCardConstraints;
+	}
 
-        // build constraint: "!- ?x memberOf <concept> and ?x[<attribute>
-        // hasValue ?y1, ... <attribute> hasValue yn+1] and ?y1!=?y2 and ... and
-        // yn!=yn+1."
-        Set<LogicalExpression> conjuncts = new HashSet<LogicalExpression>();
-        conjuncts.add(moX);
-        if (cardinality == 1) {
-            conjuncts.addAll(Arrays.asList(valXY));
-        }
-        else {
-            conjuncts.add(leFactory.createCompoundMolecule(Arrays.asList(valXY)));
-        }
-        conjuncts.addAll(inEqualities);
-        LogicalExpression conjunction = LEUtil.buildNaryConjunction(leFactory, conjuncts);
-        LogicalExpression maxCardConstraint = leFactory.createConstraint(conjunction);
-        proclaimAxiomID(maxCardConstraint, AnonymousIdUtils.getNewMaxCardIri());
-        return maxCardConstraint;
-    }
+	protected LogicalExpression createMaxCardinalityConstraint(
+			Identifier conceptID, Identifier attributeID, int cardinality) {
+		cardinality++;
 
-    protected Set<LogicalExpression> normalizeRelation(Relation relation) {
-        Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
-        Identifier relationID = relation.getIdentifier();
+		// build required LE elements:
+		Variable xVariable = leFactory.createVariable("x");
+		Variable[] yVariable = new Variable[cardinality];
+		for (int i = 0; i < yVariable.length; i++) {
+			yVariable[i] = leFactory.createVariable("y" + Integer.toString(i));
+		}
+		LogicalExpression moX = leFactory.createMemberShipMolecule(xVariable,
+				conceptID);
+		Molecule[] valXY = new Molecule[cardinality];
+		for (int i = 0; i < valXY.length; i++) {
+			valXY[i] = leFactory.createAttributeValue(xVariable, attributeID,
+					yVariable[i]);
+		}
+		Collection<LogicalExpression> inEqualities = new ArrayList<LogicalExpression>(
+				(cardinality * cardinality + cardinality) / 2 + 1);
+		for (int i = 0; i < cardinality; i++) {
+			for (int j = i + 1; j < cardinality; j++) {
+				List<Term> args = new ArrayList<Term>(2);
+				args.add(yVariable[i]);
+				args.add(yVariable[j]);
+				inEqualities.add(leFactory.createAtom(
+						wsmoFactory.createIRI(BuiltIn.INEQUAL.getFullName()),
+						args));
+			}
+		}
 
+		// build constraint: "!- ?x memberOf <concept> and ?x[<attribute>
+		// hasValue ?y1, ... <attribute> hasValue yn+1] and ?y1!=?y2 and ... and
+		// yn!=yn+1."
+		Set<LogicalExpression> conjuncts = new HashSet<LogicalExpression>();
+		conjuncts.add(moX);
+		if (cardinality == 1) {
+			conjuncts.addAll(Arrays.asList(valXY));
+		} else {
+			conjuncts
+					.add(leFactory.createCompoundMolecule(Arrays.asList(valXY)));
+		}
+		conjuncts.addAll(inEqualities);
+		LogicalExpression conjunction = LEUtil.buildNaryConjunction(leFactory,
+				conjuncts);
+		LogicalExpression maxCardConstraint = leFactory
+				.createConstraint(conjunction);
+		proclaimAxiomID(maxCardConstraint, AnonymousIdUtils.getNewMaxCardIri());
+		return maxCardConstraint;
+	}
 
-        // process super relations:
-        int arity = relation.listParameters().size();
-        List<Term> terms = new ArrayList<Term>(arity);
-        for (int i = 0; i < arity; i++) {
-            terms.add(leFactory.createVariable("x" + Integer.toString(i)));
-        }
-        Atom relP = leFactory.createAtom(relationID, terms);
-        for (Relation superRelation : relation.listSuperRelations()) {
-            Atom superRelP = leFactory.createAtom(superRelation.getIdentifier(), terms);
-            resultExpressions.add(leFactory.createImplication(relP, superRelP));
-        }
+	protected Set<LogicalExpression> normalizeRelation(Relation relation) {
+		Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
+		Identifier relationID = relation.getIdentifier();
 
-        // process relation parameters:
-        List<Parameter> parameters = relation.listParameters();
-        Collection<LogicalExpression> parameterAxioms = new LinkedList<LogicalExpression>();
-        int paramIndex = 0;
-        for (Parameter parameter : parameters) {
-            List<Molecule> typeMemberships = new ArrayList<Molecule>(parameter.listTypes().size());
-            for (Type type : parameter.listTypes()) {
-                Identifier typeID;
-                if (type instanceof Concept) {
-                    typeID = ((Concept) type).getIdentifier();
-                }
-                else if (type instanceof SimpleDataType) {
-                    typeID = ((SimpleDataType) type).getIdentifier();
-                }
-                else {
-                    typeID = ((ComplexDataType) type).getIdentifier();
-                }
-                typeMemberships.add(leFactory.createMemberShipMolecule(terms.get(paramIndex), typeID));
-            }
-            if (!typeMemberships.isEmpty()) {
-                if (parameter.isConstraining()) {
-                    // One rule for each param and each constraining type
-                	for( Molecule type : typeMemberships ) {
-	                    NegationAsFailure naf = leFactory.createNegationAsFailure(type);
-	                    Conjunction conjunction = leFactory.createConjunction(relP, naf);
-	                    parameterAxioms.add(leFactory.createConstraint(conjunction));
-	                }
-                }
-                else {
-                    LogicalExpression molecule = buildMolecule(typeMemberships);
-                    parameterAxioms.add(leFactory.createImplication(relP, molecule));
-                }
-            }
-            ++paramIndex;
-        }
-        resultExpressions.addAll(parameterAxioms);
-        
-        // FIXME dirty hack; but otherwise relation gets lost
-        if (resultExpressions.isEmpty())
-        	resultExpressions.add(leFactory.createImplication(relP, relP));
+		// process super relations:
+		int arity = relation.listParameters().size();
+		List<Term> terms = new ArrayList<Term>(arity);
+		for (int i = 0; i < arity; i++) {
+			terms.add(leFactory.createVariable("x" + Integer.toString(i)));
+		}
+		Atom relP = leFactory.createAtom(relationID, terms);
+		for (Relation superRelation : relation.listSuperRelations()) {
+			Atom superRelP = leFactory.createAtom(
+					superRelation.getIdentifier(), terms);
+			resultExpressions.add(leFactory.createImplication(relP, superRelP));
+		}
 
-        return resultExpressions;
-    }
+		// process relation parameters:
+		List<Parameter> parameters = relation.listParameters();
+		Collection<LogicalExpression> parameterAxioms = new LinkedList<LogicalExpression>();
+		int paramIndex = 0;
+		for (Parameter parameter : parameters) {
+			List<Molecule> typeMemberships = new ArrayList<Molecule>(parameter
+					.listTypes().size());
+			for (Type type : parameter.listTypes()) {
+				Identifier typeID;
+				if (type instanceof Concept) {
+					typeID = ((Concept) type).getIdentifier();
+				} else if (type instanceof SimpleDataType) {
+					typeID = ((SimpleDataType) type).getIdentifier();
+				} else {
+					typeID = ((ComplexDataType) type).getIdentifier();
+				}
+				typeMemberships.add(leFactory.createMemberShipMolecule(
+						terms.get(paramIndex), typeID));
+			}
+			if (!typeMemberships.isEmpty()) {
+				if (parameter.isConstraining()) {
+					// One rule for each param and each constraining type
+					for (Molecule type : typeMemberships) {
+						NegationAsFailure naf = leFactory
+								.createNegationAsFailure(type);
+						Conjunction conjunction = leFactory.createConjunction(
+								relP, naf);
+						parameterAxioms.add(leFactory
+								.createConstraint(conjunction));
+					}
+				} else {
+					LogicalExpression molecule = buildMolecule(typeMemberships);
+					parameterAxioms.add(leFactory.createImplication(relP,
+							molecule));
+				}
+			}
+			++paramIndex;
+		}
+		resultExpressions.addAll(parameterAxioms);
 
-    protected Set<LogicalExpression> normalizeRelationInstance(RelationInstance relationInstance) {
-        Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
-    	
-        Relation relation = relationInstance.getRelation();
-        if( relation != null ) {
-	        Identifier relationID = relation.getIdentifier();
-	        
-	        if( relationID != null ) {
-		        List<Term> args = new LinkedList<Term>();
-		        for (Value value : relationInstance.listParameterValues()) {
-		            if (value instanceof Instance) {
-		                args.add(((Instance) value).getIdentifier());
-		            }
-		            else if (value instanceof DataValue) {
-		                args.add((DataValue) value);
-		            }
-		        }
-		        resultExpressions.add(leFactory.createAtom(relationID, args));
-	        }
-        }
-        return resultExpressions;
-    }
+		// FIXME dirty hack; but otherwise relation gets lost
+		if (resultExpressions.isEmpty())
+			resultExpressions.add(leFactory.createImplication(relP, relP));
 
-    protected LogicalExpression buildMolecule(List<Molecule> molecules) {
-        if (molecules.size() == 1) {
-            return molecules.get(0);
-        }
-        else {
-            return leFactory.createCompoundMolecule(molecules);
-        }
-    }
+		return resultExpressions;
+	}
 
-    protected Set<LogicalExpression> normalizeInstance(Instance instance) {
-        Identifier instanceID = instance.getIdentifier();
+	protected Set<LogicalExpression> normalizeRelationInstance(
+			RelationInstance relationInstance) {
+		Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
 
-        Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
+		Relation relation = relationInstance.getRelation();
+		if (relation != null) {
+			Identifier relationID = relation.getIdentifier();
 
-        // process concepts:
-        for (Concept concept : instance.listConcepts()) {
-            resultExpressions.add(leFactory.createMemberShipMolecule(instanceID, concept.getIdentifier()));
-        }
+			if (relationID != null) {
+				List<Term> args = new LinkedList<Term>();
+				for (Value value : relationInstance.listParameterValues()) {
+					if (value instanceof Instance) {
+						args.add(((Instance) value).getIdentifier());
+					} else if (value instanceof DataValue) {
+						args.add((DataValue) value);
+					}
+				}
+				resultExpressions.add(leFactory.createAtom(relationID, args));
+			}
+		}
+		return resultExpressions;
+	}
 
-        // process attribute values:
-        Map<Identifier, Set<Value>> attributeValues = instance.listAttributeValues();
-        for (Identifier attribute : attributeValues.keySet()) {
-            Set<Value> values = attributeValues.get(attribute);
-            List<Molecule> molecules = new ArrayList<Molecule>(values.size());
-            for (Value value : values) {
-                Term valueTerm = null;
-                if (value instanceof Instance) {
-                    Instance i = ((Instance) value);
-                    valueTerm = i.getIdentifier();
-                }
-                else if (value instanceof DataValue) {
-                    valueTerm = ((DataValue) value);
-                }
-                molecules.add(leFactory.createAttributeValue(instanceID, attribute, valueTerm));
-            }
-            if (molecules.size() > 1) {
-                resultExpressions.add(leFactory.createCompoundMolecule(molecules));
-            }
-            else if (molecules.size() == 1) {
-                resultExpressions.add(molecules.get(0));
-            }
-        }
-        return resultExpressions;
-    }
+	protected LogicalExpression buildMolecule(List<Molecule> molecules) {
+		if (molecules.size() == 1) {
+			return molecules.get(0);
+		} else {
+			return leFactory.createCompoundMolecule(molecules);
+		}
+	}
+
+	protected Set<LogicalExpression> normalizeInstance(Instance instance) {
+		Identifier instanceID = instance.getIdentifier();
+
+		Set<LogicalExpression> resultExpressions = new HashSet<LogicalExpression>();
+
+		// process concepts:
+		for (Concept concept : instance.listConcepts()) {
+			resultExpressions.add(leFactory.createMemberShipMolecule(
+					instanceID, concept.getIdentifier()));
+		}
+
+		// process attribute values:
+		Map<Identifier, Set<Value>> attributeValues = instance
+				.listAttributeValues();
+		for (Identifier attribute : attributeValues.keySet()) {
+			Set<Value> values = attributeValues.get(attribute);
+			List<Molecule> molecules = new ArrayList<Molecule>(values.size());
+			for (Value value : values) {
+				Term valueTerm = null;
+				if (value instanceof Instance) {
+					Instance i = ((Instance) value);
+					valueTerm = i.getIdentifier();
+				} else if (value instanceof DataValue) {
+					valueTerm = ((DataValue) value);
+				}
+				molecules.add(leFactory.createAttributeValue(instanceID,
+						attribute, valueTerm));
+			}
+			if (molecules.size() > 1) {
+				resultExpressions.add(leFactory
+						.createCompoundMolecule(molecules));
+			} else if (molecules.size() == 1) {
+				resultExpressions.add(molecules.get(0));
+			}
+		}
+		return resultExpressions;
+	}
 }

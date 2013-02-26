@@ -1,21 +1,3 @@
-/**
- * WSML Reasoner Implementation.
- *
- * Copyright (c) 2005, FZI, Germany.
- *
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
- * any later version.
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- * You should have received a copy of the GNU Lesser General Public License along
- * with this library; if not, write to the Free Software Foundation, Inc.,
- * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
- */
 package org.wsml.reasoner.transformation;
 
 import java.util.ArrayList;
@@ -38,50 +20,52 @@ import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.WsmoFactory;
 
 public class ConstructReductionNormalizer implements OntologyNormalizer {
-    protected LogicalExpressionNormalizer leNormalizer;
+	protected LogicalExpressionNormalizer leNormalizer;
 
-    protected WsmoFactory wsmoFactory;
+	protected WsmoFactory wsmoFactory;
 
-    protected AnonymousIdTranslator anonymousIdTranslator;
+	protected AnonymousIdTranslator anonymousIdTranslator;
 
-    public ConstructReductionNormalizer(FactoryContainer factory) {
-        List<NormalizationRule> preOrderRules = new ArrayList<NormalizationRule>();
-        preOrderRules.addAll(new ImplicationReductionRules(factory).getRules());
-        preOrderRules.addAll(new NegationPushRules(factory).getRules());
-        
-        List<NormalizationRule> postOrderRules = new ArrayList<NormalizationRule>();
-        postOrderRules.addAll(new MoleculeDecompositionRules(factory).getRules());
-        postOrderRules.addAll(new DisjunctionPullRules(factory).getRules());
-        
-        leNormalizer = new OnePassReplacementNormalizer(preOrderRules, postOrderRules, factory);
-        wsmoFactory = factory.getWsmoFactory();
-        anonymousIdTranslator = new AnonymousIdTranslator(wsmoFactory);
-    }
+	public ConstructReductionNormalizer(FactoryContainer factory) {
+		List<NormalizationRule> preOrderRules = new ArrayList<NormalizationRule>();
+		preOrderRules.addAll(new ImplicationReductionRules(factory).getRules());
+		preOrderRules.addAll(new NegationPushRules(factory).getRules());
 
-    public Set<Entity> normalizeEntities(Collection<Entity> theEntities) {
-        throw new UnsupportedOperationException();
-    }
+		List<NormalizationRule> postOrderRules = new ArrayList<NormalizationRule>();
+		postOrderRules.addAll(new MoleculeDecompositionRules(factory)
+				.getRules());
+		postOrderRules.addAll(new DisjunctionPullRules(factory).getRules());
 
-    public Set<Axiom> normalizeAxioms(Collection<Axiom> theAxioms) {
-        Set<Axiom> result = new HashSet<Axiom>();
-        // gather logical expressions from axioms in ontology:
-        Set<LogicalExpression> expressions = new HashSet<LogicalExpression>();
-        for (Axiom axiom : theAxioms) {
-            expressions.addAll(axiom.listDefinitions());
-        }
+		leNormalizer = new OnePassReplacementNormalizer(preOrderRules,
+				postOrderRules, factory);
+		wsmoFactory = factory.getWsmoFactory();
+		anonymousIdTranslator = new AnonymousIdTranslator(wsmoFactory);
+	}
 
-        // iteratively normalize logical expressions:
-        Set<LogicalExpression> resultExp = new HashSet<LogicalExpression>();
-        for (LogicalExpression expression : expressions) {
-            anonymousIdTranslator.setScope(expression);
-            resultExp.add(leNormalizer.normalize(expression));
-        }
+	public Set<Entity> normalizeEntities(Collection<Entity> theEntities) {
+		throw new UnsupportedOperationException();
+	}
 
-        Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
-        for (LogicalExpression expression : resultExp) {
-            axiom.addDefinition(expression);
-        }
-        result.add(axiom);
-        return result;
-    }
+	public Set<Axiom> normalizeAxioms(Collection<Axiom> theAxioms) {
+		Set<Axiom> result = new HashSet<Axiom>();
+		// gather logical expressions from axioms in ontology:
+		Set<LogicalExpression> expressions = new HashSet<LogicalExpression>();
+		for (Axiom axiom : theAxioms) {
+			expressions.addAll(axiom.listDefinitions());
+		}
+
+		// iteratively normalize logical expressions:
+		Set<LogicalExpression> resultExp = new HashSet<LogicalExpression>();
+		for (LogicalExpression expression : expressions) {
+			anonymousIdTranslator.setScope(expression);
+			resultExp.add(leNormalizer.normalize(expression));
+		}
+
+		Axiom axiom = wsmoFactory.createAxiom(wsmoFactory.createAnonymousID());
+		for (LogicalExpression expression : resultExp) {
+			axiom.addDefinition(expression);
+		}
+		result.add(axiom);
+		return result;
+	}
 }

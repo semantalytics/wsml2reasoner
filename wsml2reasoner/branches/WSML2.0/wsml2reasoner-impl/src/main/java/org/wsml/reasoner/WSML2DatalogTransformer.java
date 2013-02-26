@@ -1,25 +1,15 @@
-/**
- * WSML Reasoner Implementation.
- *
- * Copyright (c) 2005, University of Innsbruck, Austria.
- *
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
- * any later version.
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- * You should have received a copy of the GNU Lesser General Public License along
- * with this library; if not, write to the Free Software Foundation, Inc.,
- * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
- */
-
 package org.wsml.reasoner;
 
-import static org.wsml.reasoner.TransformerPredicates.*;
+import static org.wsml.reasoner.TransformerPredicates.PRED_DIRECT_CONCEPT;
+import static org.wsml.reasoner.TransformerPredicates.PRED_DIRECT_SUBCONCEPT;
+import static org.wsml.reasoner.TransformerPredicates.PRED_HAS_VALUE;
+import static org.wsml.reasoner.TransformerPredicates.PRED_IMPLIES_TYPE;
+import static org.wsml.reasoner.TransformerPredicates.PRED_INDIRECT_CONCEPT;
+import static org.wsml.reasoner.TransformerPredicates.PRED_INDIRECT_SUBCONCEPT;
+import static org.wsml.reasoner.TransformerPredicates.PRED_KNOWN_CONCEPT;
+import static org.wsml.reasoner.TransformerPredicates.PRED_MEMBER_OF;
+import static org.wsml.reasoner.TransformerPredicates.PRED_OF_TYPE;
+import static org.wsml.reasoner.TransformerPredicates.PRED_SUB_CONCEPT_OF;
 
 import java.util.ArrayList;
 import java.util.HashSet;

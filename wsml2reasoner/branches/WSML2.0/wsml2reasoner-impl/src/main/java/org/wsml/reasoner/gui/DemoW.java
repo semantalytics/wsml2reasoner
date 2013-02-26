@@ -1,25 +1,3 @@
-/*
- * Integrated Rule Inference System (IRIS):
- * An extensible rule inference system for datalog with extensions.
- * 
- * Copyright (C) 2008 Semantic Technology Institute (STI) Innsbruck, 
- * University of Innsbruck, Technikerstrasse 21a, 6020 Innsbruck, Austria.
- * 
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
- * MA  02110-1301, USA.
- */
 package org.wsml.reasoner.gui;
 
 import java.awt.BorderLayout;
@@ -260,44 +238,41 @@ public class DemoW {
 
 			// @Override
 			public void run() {
-					try {
-						LPReasoner reasoner = ReasonerHelper
-								.getLPReasoner(BuiltInReasoner.IRIS_WELL_FOUNDED);
+				try {
+					LPReasoner reasoner = ReasonerHelper
+							.getLPReasoner(BuiltInReasoner.IRIS_WELL_FOUNDED);
 
-						Ontology ontology = OntologyHelper
-								.parseOntology(mOntology);
+					Ontology ontology = OntologyHelper.parseOntology(mOntology);
 
-						reasoner.registerOntology(ontology);
+					reasoner.registerOntology(ontology);
 
-						new IRIImpl(
-								"http://ip-super.org/etel/bpel/Fulfilment/Fulfilment#sequence-activity-line-114");
+					new IRIImpl(
+							"http://ip-super.org/etel/bpel/Fulfilment/Fulfilment#sequence-activity-line-114");
 
-						String strResults;
-						// if( true ) {
-						LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
-						LogicalExpression qExpression = leParser.parse(mQuery);
+					String strResults;
+					// if( true ) {
+					LogicalExpressionParser leParser = new WsmlLogicalExpressionParser();
+					LogicalExpression qExpression = leParser.parse(mQuery);
 
-						Set<Map<Variable, Term>> results = reasoner
-								.executeQuery(qExpression);
-						strResults = OntologyHelper.toString(results);
-						// }
-						// else {
-						// DLUtilities dlUtils = new DLUtilities( reasoner,
-						// factory
-						// );
-						// Set<Instance> instances = dlUtils.getAllInstances();
-						// strResults = OntologyHelper.toStringInstances(
-						// instances
-						// );
-						// }
+					Set<Map<Variable, Term>> results = reasoner
+							.executeQuery(qExpression);
+					strResults = OntologyHelper.toString(results);
+					// }
+					// else {
+					// DLUtilities dlUtils = new DLUtilities( reasoner,
+					// factory
+					// );
+					// Set<Instance> instances = dlUtils.getAllInstances();
+					// strResults = OntologyHelper.toStringInstances(
+					// instances
+					// );
+					// }
 
-						SwingUtilities
-								.invokeLater(new NotifyOutput(strResults));
-					} catch (Exception e) {
-						SwingUtilities.invokeLater(new NotifyOutput(e
-								.toString()));
-					}
+					SwingUtilities.invokeLater(new NotifyOutput(strResults));
+				} catch (Exception e) {
+					SwingUtilities.invokeLater(new NotifyOutput(e.toString()));
 				}
+			}
 
 			private final String mOntology;
 			private final String mQuery;
