@@ -1,0 +1,35 @@
+namespace {_"http://www.example.org/example/",
+    dc _"http://purl.org/dc/elements/1.1#",
+    xsd _"http://www.w3.org/2001/XMLSchema#",
+    wsml _"http://www.wsmo.org/2004/wsml",
+    loc _"http://www.example.org/loc#",
+    oo _"http://www.example.org/oo#",
+    foaf _"http://www.example.org/foaf#"}
+
+ontology _"http://www.example.org/ontologies/example"
+      concept Human
+      		hasMother impliesType Mother
+      		
+      concept Man subConceptOf Human
+      concept Woman subConceptOf Human
+      concept Parent subConceptOf Human
+            hasChild impliesType Human
+      concept Child subConceptOf Human
+      concept Girl subConceptOf {Woman, Child}
+      concept Boy subConceptOf {Man, Child}
+
+
+	/*
+	 * Instances
+	 */
+	 
+		instance Mary memberOf {Parent, Woman}
+		
+		instance Paul memberOf {Parent, Man}
+			hasMother hasValue Mary
+		
+		instance Susan memberOf Woman
+		
+		instance George memberOf Boy
+            
+	 

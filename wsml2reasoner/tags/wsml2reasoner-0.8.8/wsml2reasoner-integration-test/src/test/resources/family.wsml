@@ -1,0 +1,32 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-full"
+
+namespace { _"http://www.example.org#"}
+
+ontology example
+
+  concept Human
+            hasParent inverseOf(hasChild) impliesType Human
+            hasChild impliesType Human
+            hasAncestor transitive impliesType Human
+            hasRelative symmetric impliesType Human
+
+  concept Parent subConceptOf Human
+
+  axiom definedBy
+    forall ?x (?x[hasChild hasValue ?y] implies ?x[hasRelative hasValue ?y]).
+    forall ?x (?x[hasParent hasValue ?y] implies ?x[hasRelative hasValue ?y]).
+    forall ?x (?x[hasParent hasValue ?y] implies ?x[hasAncestor hasValue ?y]).
+
+  axiom definedBy
+    exists {?y} (?x memberOf Parent implies ?x[hasChild hasValue?y]).
+
+  instance someChild memberOf Human
+     hasParent hasValue someParent
+
+  instance Lisa memberOf Human
+     hasParent hasValue Homer
+
+  instance Homer memberOf Human
+     hasParent hasValue GrandPa
+
+  instance March memberOf Parent

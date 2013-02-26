@@ -1,0 +1,15 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-rule"
+namespace { _"wsmt://munit-test-case#"
+ }
+
+ontology ontology1
+
+concept human
+        hasName ofType _string
+        hasAge ofType _integer
+
+ontology ontology2
+
+concept person
+        name ofType _string
+        age ofType _integer

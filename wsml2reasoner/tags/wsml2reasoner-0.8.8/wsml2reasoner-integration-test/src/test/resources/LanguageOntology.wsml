@@ -1,0 +1,114 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+namespace { _"webode://mccarthy.dia.fi.upm.es/Language_Ontology#" , wsml _"http://www.wsmo.org/wsml/wsml-syntax#" ,
+	Com _"webode://mccarthy.dia.fi.upm.es/Competence_Ontology#",
+	JobOffOnt _"webode://mccarthy.dia.fi.upm.es/Job_Offer_Ontology#",
+	JobSeeOnt _"webode://mccarthy.dia.fi.upm.es/Job_Seeker_Ontology#"}
+
+ontology Language_Ontology
+
+
+importsOntology { JobOffOnt#Job_Offer_Ontology,
+	Com#Competence_Ontology,
+	JobSeeOnt#Job_Seeker_Ontology }
+
+
+concept Language
+	Name ofType (1) _string
+	Code ofType (1) _string
+	is_mother_tongue_of_Candidacy ofType (0 *) JobSeeOnt#Candidacy
+	is_spoken_by_Candidacy ofType (0 *) JobSeeOnt#Candidacy
+
+concept Language_Level
+	Name ofType (1) _string
+	Description ofType (0 1) _string
+	is_listening_level_Language_Proficiency ofType (0 1) Language_Proficiency
+	is_reading_level_Language_Proficiency ofType (0 1) Language_Proficiency
+	is_spoken_interaction_level_Language_Proficiency ofType (0 1) Language_Proficiency
+	is_spoken_production_level_Language_Proficiency ofType (0 1) Language_Proficiency
+	is_writing_level_Language_Proficiency ofType (0 1) Language_Proficiency
+
+concept Language_Proficiency subConceptOf Com#Competence
+	related_language ofType (1) Language
+	has_listening_level ofType (0 1) Language_Level
+	has_reading_level ofType (0 1) Language_Level
+	has_spoken_interaction_level ofType (0 1) Language_Level
+	has_spoken_production_level ofType (0 1) Language_Level
+	has_writing_level ofType (0 1) Language_Level
+
+instance dut__Dutch_Flemish memberOf Language
+	Code hasValue "dut"
+	Name hasValue "Dutch; Flemish"
+
+instance eng__English memberOf Language
+	Code hasValue "eng"
+	Name hasValue "English"
+
+instance fre__French memberOf Language
+	Code hasValue "fre"
+	Name hasValue "French"
+
+instance ger__German memberOf Language
+	Code hasValue "ger"
+	Name hasValue "German"
+
+instance ita__Italian memberOf Language
+	Code hasValue "ita"
+	Name hasValue "Italian"
+
+instance spa__Spanish_Castilian memberOf Language
+	Code hasValue "spa"
+	Name hasValue "Spanish; Castilian"
+
+instance por__Portuguese memberOf Language
+	Code hasValue "por"
+	Name hasValue "Portuguese"
+
+instance pol__Polish memberOf Language
+	Code hasValue "pol"
+	Name hasValue "Polish"
+
+instance C2 memberOf Language_Level
+	Name hasValue "C2"
+
+instance B2 memberOf Language_Level
+	Name hasValue "B2"
+
+instance C1 memberOf Language_Level
+	Name hasValue "C1"
+
+instance A1 memberOf Language_Level
+	Name hasValue "A1"
+
+instance B1 memberOf Language_Level
+	Name hasValue "B1"
+
+instance A2 memberOf Language_Level
+	Name hasValue "A2"
+
+
+// axioms for reverse relationships
+
+axiom is_listening_level_Language_Proficiency_has_listening_level
+definedBy
+	?x[is_listening_level_Language_Proficiency hasValue ?y] memberOf Language_Level :- ?y[has_listening_level hasValue ?x] memberOf Language_Proficiency.
+	?x[has_listening_level hasValue ?y] memberOf Language_Proficiency :- ?y[is_listening_level_Language_Proficiency hasValue ?x] memberOf Language_Level.
+
+axiom is_reading_level_Language_Proficiency_has_reading_level
+definedBy
+	?x[is_reading_level_Language_Proficiency hasValue ?y] memberOf Language_Level :- ?y[has_reading_level hasValue ?x] memberOf Language_Proficiency.
+	?x[has_reading_level hasValue ?y] memberOf Language_Proficiency :- ?y[is_reading_level_Language_Proficiency hasValue ?x] memberOf Language_Level.
+
+axiom is_spoken_interaction_level_Language_Proficiency_has_spoken_interaction_level
+definedBy
+	?x[is_spoken_interaction_level_Language_Proficiency hasValue ?y] memberOf Language_Level :- ?y[has_spoken_interaction_level hasValue ?x] memberOf Language_Proficiency.
+	?x[has_spoken_interaction_level hasValue ?y] memberOf Language_Proficiency :- ?y[is_spoken_interaction_level_Language_Proficiency hasValue ?x] memberOf Language_Level.
+
+axiom is_spoken_production_level_Language_Proficiency_has_spoken_production_level
+definedBy
+	?x[is_spoken_production_level_Language_Proficiency hasValue ?y] memberOf Language_Level :- ?y[has_spoken_production_level hasValue ?x] memberOf Language_Proficiency.
+	?x[has_spoken_production_level hasValue ?y] memberOf Language_Proficiency :- ?y[is_spoken_production_level_Language_Proficiency hasValue ?x] memberOf Language_Level.
+
+axiom is_writing_level_Language_Proficiency_has_writing_level
+definedBy
+	?x[is_writing_level_Language_Proficiency hasValue ?y] memberOf Language_Level :- ?y[has_writing_level hasValue ?x] memberOf Language_Proficiency.
+	?x[has_writing_level hasValue ?y] memberOf Language_Proficiency :- ?y[is_writing_level_Language_Proficiency hasValue ?x] memberOf Language_Level.

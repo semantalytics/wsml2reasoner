@@ -1,0 +1,26 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+
+namespace {_"http://example.com/violation1#"}
+ 
+/*
+	A *BAD* ontology that will cause an inconsistency violation.
+	
+	This ontology is problematic, because without a concept definition like this:
+	
+		concept Concept
+			attribute ofType OtherConcept
+	
+	An inconsistency violation is caused by assigning a value to an attribute of unknown type.
+*/
+
+ontology Violation1
+
+concept Concept
+	attribute ofType OtherConcept
+
+instance f memberOf Concept
+	attribute hasValue 10
+
+  
+  
+  

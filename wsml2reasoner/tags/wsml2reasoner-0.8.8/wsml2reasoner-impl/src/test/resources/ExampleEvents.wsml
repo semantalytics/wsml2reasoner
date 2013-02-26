@@ -1,0 +1,26 @@
+@prefix dul: <http://purl.org/ifgi/dul#> .
+_:node1781jevtkx1 a <http://www.w3.org/2002/07/owl#Ontology> ;
+	<http://www.w3.org/2002/07/owl#imports> <http://purl.org/ifgi/geomodels#> , <http://purl.org/ifgi/geoevents#> , <http://purl.org/ifgi/geodesc#> .
+_:node1781jevtkx2 a <http://purl.org/ifgi/geomodels#PredictedEventObservation> .
+_:node1781jevtkx3 a <http://purl.org/ifgi/geomodels#PredictedEventObservationDescription> .
+_:node1781jevtkx4 a <http://purl.org/ifgi/geoevents#geographical_event> .
+_:node1781jevtkx5 a <http://purl.org/ifgi/geomodels#HazardLevelDescription> .
+_:node1781jevtkx6 a <http://purl.org/ifgi/geodesc#LocationDescription> .
+_:node1781jevtkx3 dul:describes _:node1781jevtkx2 ;
+	<http://purl.org/ifgi/geodesc#describedLocation> _:node1781jevtkx6 ;
+	<http://purl.org/ifgi/geomodels#associatedHazardLevel> _:node1781jevtkx5 .
+_:node1781jevtkx2 <http://purl.org/ifgi/geomodels#predicts> _:node1781jevtkx4 .
+
+_:node176ghvkcqx1 a <http://www.w3.org/2002/07/owl#Ontology> ;
+	<http://www.w3.org/2002/07/owl#imports> <http://purl.org/ifgi/dul#> , <http://purl.org/ifgi/time#> , <http://purl.org/ifgi/event-observation#> , <http://purl.org/ifgi/water/flood#> , <http://purl.org/ifgi/ssn#> , <http://purl.org/ifgi/geosparql#> , <http://purl.org/ifgi/geodesc#> .
+_:node176ghvkcqx2 a <http://purl.org/ifgi/event-observation#EventObservation> .
+_:node176ghvkcqx3 a <http://purl.org/ifgi/event-observation#EventObservationDescription> .
+_:node176ghvkcqx4 a <http://purl.org/ifgi/water/flood#MinorFloodingStageToModerateFloodingStage> .
+_:node176ghvkcqx5 a <http://purl.org/ifgi/water/flood#WaterLevel> .
+_:node176ghvkcqx6 a <http://purl.org/ifgi/geodesc#LocationDescription> .
+_:node176ghvkcqx3 <http://purl.org/ifgi/dul#describes> _:node176ghvkcqx2 ;
+	<http://purl.org/ifgi/geodesc#describedLocation> _:node176ghvkcqx6 .
+_:node176ghvkcqx2 <http://purl.org/ifgi/ssn#observedProperty> _:node176ghvkcqx5 ;
+	<http://purl.org/ifgi/dul#isClassifiedBy> _:node176ghvkcqx4 .
+_:node176ghvkcqx6 <http://purl.org/ifgi/geosparql#asWKT> "SRID:4326;POINT (42.31481 -74.43293)" ;
+	<http://purl.org/ifgi/time#inXSDDateTime> "1985-03-21T00:30" .
